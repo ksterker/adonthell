@@ -31,12 +31,17 @@ if __name__ == '__main__':
     cont.setSize (50, 50)
     cont.setLocation (20, 30)
 
-    a = gui.base ()
-    a.setSize (40,20)
-    a.setLocation (30, 10)
+    for i in range (5):
+        a = gui.base ()
+        a.setSize (40,20)
+        a.setLocation (30, 10)
+        cont.addChild (a)
 
-    cont.addChild (a)
-
+    # set the layout
+    z = gui.layout ()
+    cont.setLayout (z)
+    
+    
     ## Run this loop until letsexit is set to 1 by the
     ## callback function. Every time a key event is raised,
     ## the input manager will send it to the listeners it handles
