@@ -1,8 +1,10 @@
 #include <iostream>
+#include "base/base.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
-#include "main/adonthell.h"
 #include "gui/gui.h"
+#include "main/adonthell.h"
+
 
 class Exit {
 public:
@@ -74,6 +76,7 @@ class GuiTest : public adonthell::app {
     // (that is, only the one we've connected) which will call the
     // callback function that has been connected to handle keyboard events.
     while (!myExit.letsexit) {
+      ::base::Timer.update ();
       ::gfx::screen::update ();
       ::input::manager::update();
       cont.draw ();

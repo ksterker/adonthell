@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.3 2003/11/22 09:35:21 ksterker Exp $
+   $Id: screen.h,v 1.4 2004/12/21 19:31:46 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -158,7 +158,7 @@ namespace gfx
         static u_int16 height_;
         static u_int8 bytes_per_pixel_; 
         
-        static bool (*set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth = 0);
+        static bool (*set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth);
         static void (*update_p)();
         static u_int32 (*trans_color_p)();
         static void (*clear_p)();

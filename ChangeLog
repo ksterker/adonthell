@@ -1,2 +1,8 @@
-Currently, our change log is our CVS ;>
+2004-12-21(jol):
+	- fix test/Makefile.am to compile inputest and guitest, note that i were 
+	  obliged to link these two examples with the libswigruntime library, 
+	- fix g++ 3.4.3 compilation error,
+	- fix inside py_base endian.h to our local endians.h,
+	- fix configure.in, in fact on linux -framework Python is not supported.
 
+Currently, our change log is our CVS ;>
