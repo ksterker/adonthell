@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.3 2004/10/18 07:40:23 ksterker Exp $
+   $Id: quest.cc,v 1.4 2004/11/15 08:54:33 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -237,7 +237,7 @@ void quest::cleanup ()
         delete (*q).second;
 }
 
-// check wether a given quest (step) is in progress
+// check wether a given quest (step) has been started
 bool quest::is_started (const std::string & id)
 {
     const quest_part *part = get_part (id);
@@ -245,7 +245,7 @@ bool quest::is_started (const std::string & id)
     return false;
 }
 
-// check wether a given quest (step) is in progress
+// check wether a given quest (step) has been completed
 bool quest::is_completed (const std::string & id)
 {
     const quest_part *part = get_part (id);
@@ -354,7 +354,7 @@ const quest_part* quest::get_part (const std::string & path)
     if ((q = Quests.find (*i)) != Quests.end ())
         part = (*q).second;
     else
-        fprintf (stderr, "*** quest::set_completed: quest '%s' no found!\n", (*i).c_str ());
+        fprintf (stderr, "*** quest::get_part: quest '%s' no found!\n", (*i).c_str ());
     
     for (i = i++; i != result.end () && part != NULL; i++)
         part = part->child (*i);

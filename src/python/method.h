@@ -1,5 +1,5 @@
 /*
-   $Id: method.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
+   $Id: method.h,v 1.7 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,9 @@
 namespace python
 {
     /**
-     *
+     * This class is a wrapper around a single python method. It can be called (of course)
+     * but is also serializable, so that it can be restored later, given that the script
+     * containing the method still exists.
      */
     class method
     {

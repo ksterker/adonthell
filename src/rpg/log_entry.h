@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.h,v 1.4 2004/08/23 06:33:47 ksterker Exp $
+   $Id: log_entry.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,14 +51,21 @@ namespace rpg
             log_entry (const std::string & topic, const std::string & text, const std::string & uid);
             
             /**
-             *
+             * @name Member Access
+             */
+            //@{
+            /**
+             * Return the text of this log entry.
+             * @return text of the log entry.
              */
             std::string text () const { return Text; }
             
             /**
-             *
+             * Return unique id of this log entry. This allows to find a certain log entry.
+             * @return unique id of this log entry.
              */
             std::string uid () const { return Uid; }
+            //@}
             
             /**
              * @name Loading/Saving

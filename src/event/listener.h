@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
+   $Id: listener.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,7 +72,6 @@ namespace event
         //@{
         /**
          * Get type of associated %event.
-         *
          * @return type of associated %event
          */
         u_int8 type () const
@@ -80,6 +79,10 @@ namespace event
             return Event->type ();
         }
         
+        /**
+         * Get the %event this 5listener waits for.
+         * @return %event attached to the %listener.
+         */
         const event * get_event () const
         {
             return Event;
@@ -87,7 +90,6 @@ namespace event
         
         /**
          * Get the event's id.
-         *
          * @return id of the %event.
          */
         const string & id () const
@@ -172,8 +174,10 @@ namespace event
         s_int32 raise_event (const event* evnt);
 
         /** 
-         *
-         *
+         * Check whether the given %event matches the %event attached to
+         * the %listener.
+         * @param e %event to compare with the attached %event.
+         * @return \b true if events compare equal, \b false otherwise.
          */
         bool equals (const event *e) const
         {

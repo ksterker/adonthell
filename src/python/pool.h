@@ -1,5 +1,5 @@
 /*
-   $Id: pool.h,v 1.2 2004/10/25 06:50:09 ksterker Exp $
+   $Id: pool.h,v 1.3 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,12 +44,12 @@ namespace python
     {
         public:
             /**
-             *
+             * Initialize the %pool. This is currently a no-op.
              */
             static void init ();
 
             /**
-             *
+             * Remove all scripts contained in the %pool.
              */
             static void cleanup ();
             

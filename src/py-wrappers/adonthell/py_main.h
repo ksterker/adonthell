@@ -1,5 +1,5 @@
 /*
-   $Id: py_main.h,v 1.3 2004/11/01 17:41:30 ksterker Exp $
+   $Id: py_main.h,v 1.4 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,7 +53,8 @@
  *
  *   if __name__ == '__main__':
  *       theApp = App ()
- *       theApp.init (theApp.main) * \endcode
+ *       theApp.init (theApp.main) 
+ * \endcode
  *
  * This will ensure that your python scripts run on any platform supported by the
  * Adonthell framework.

@@ -1,5 +1,5 @@
 /*
-   $Id: slot.h,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: slot.h,v 1.3 2004/11/15 08:54:33 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -126,8 +126,12 @@ namespace rpg
         {
             return Count;
         }
-        //@}
-    
+        //@}    
+            
+        /**
+         * @name Attribute access
+         */
+        //@{
         /**
          * Return the inventory this slot belongs to.
          * @return inventory this slot belongs to.
@@ -136,11 +140,7 @@ namespace rpg
         {
             return Owner;
         }
-            
-        /**
-         * Attribute access
-         */
-        //@{
+
         /**
          * Retrieve the slot's id.
          * @return id of the %slot.
@@ -187,6 +187,10 @@ namespace rpg
             return Equipment;
         }    
         
+        /**
+         * Set whether this slot may take equipped items.
+         * @param equipment \b true to allow inserting equipment, \b false otherwise.
+         */
         void set_equipment (const bool & equipment)
         {
             Equipment = equipment;

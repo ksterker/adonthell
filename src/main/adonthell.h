@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.5 2004/11/01 17:41:29 ksterker Exp $
+   $Id: adonthell.h,v 1.6 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,6 +37,10 @@
 
 using std::string;
 
+/**
+ * Engine initialization functions are provided by this module.
+ *
+ */
 namespace adonthell {
     /**
      * Subclass adonthell::app to create the entry point for any application
@@ -96,11 +100,11 @@ namespace adonthell {
             /**
              * Parse the given command line arguments for those required by
              * the engine. The following arguments are currently handled:
-             * -b <backend> 	specifiy the backend to use (default 'sdl')
-             * -c <config>		use given config file (default 'adonthell')
-             * -g <directory> 	specify user game directory
-             * -h				print help message and exit
-             * -v 				print version number and exit
+             * \li -b <backend> 	specifiy the backend to use (default 'sdl')
+             * \li -c <config>		use given config file (default 'adonthell')
+             * \li -g <directory> 	specify user game directory
+             * \li -h				print help message and exit
+             * \li -v 				print version number and exit
              *
              * @param argc argument count
              * @param argv argument vector

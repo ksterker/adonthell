@@ -1,5 +1,5 @@
 /*
-   $Id: item.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: item.h,v 1.4 2004/11/15 08:54:33 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -396,12 +396,10 @@ namespace rpg {
          * to the next item in the stack.
          */
         item *Next;
-        
-        /**
-         * @name Item Stack handling
-         */
-        //@{
+
+        /// This method may make changes to the item's stack. 
         friend u_int32 slot::add (item * itm, const u_int32 & count = 1);
+        /// This method may make changes to the item's stack.
         friend u_int32 slot::remove (item * itm, const u_int32 & count = 1);
     
         /**
@@ -423,7 +421,6 @@ namespace rpg {
          * @return the item(s) remaining in this stack.
          */
         item *split (u_int32 number = 1);
-        //@}
     };
 }
 #endif // RPG_ITEM_H

@@ -1,0 +1,15 @@
+/*! 
+ \mainpage
+ \section intro Welcome to the Adonthell Programmer's documentation
+
+ These pages contain the Adonthell API documentation, to aid new programmers and script
+ writers. It is accompanied by the 
+ <a href="http://adonthell.linuxgames.com/files/architecture.pdf">Adonthell Engine 
+ Architecture</a> documentation, which gives an overview over basic design principles 
+ and all the <a href="namespaces.html">modules</a> that form the engine.
+ 
+ The <a href="http://adonthell.linuxgames.com/files/scripting_guide.pdf">Adonthell 
+ Scripting Guide</a> is focused on writing the various Pythons scripts required to turn
+ the engine into a true role playing game. Read this to learn more about the scripts'
+ layout; then use the API to write the code. 
+*/

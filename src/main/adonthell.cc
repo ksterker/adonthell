@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.7 2004/11/02 10:52:16 ksterker Exp $
+   $Id: adonthell.cc,v 1.8 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,6 +39,7 @@
 #include "input/input.h"
 #include "python/python.h"
 #include "main/adonthell.h"
+#include "event/manager.h"
 
 using namespace adonthell;
 using std::cerr;
@@ -95,6 +96,7 @@ bool app::init_modules (const u_int16 & modules)
     // startup event system
     if (m & EVENT)
     {
+        event::manager::init ();
     }
     
     return true;
@@ -212,6 +214,7 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
+    if (Modules & EVENT) event::manager::cleanup ();
 	if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();

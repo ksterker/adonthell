@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
+   $Id: event.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,9 @@
 
 #include "base/flat.h"
 
+/**
+ * Support for various events used to drive the game world and the plot.
+ */
 namespace event 
 {
 #ifndef SWIG

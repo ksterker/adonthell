@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.9 2004/11/03 07:30:16 ksterker Exp $
+   $Id: flat.h,v 1.10 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -149,47 +149,97 @@ namespace base
              * @name Methods to flatten data
              */
             //@{
+            /**
+             * Store a boolean value.
+             * @param name id used to retrieve the value later on.
+             * @param b value to store.
+             */
             void put_bool (const string & name, const bool & b) {
                 char sb = (u_int8) b;
                 put (name, T_BOOL, 1, (void *) &sb);  
             }
             
+            /**
+             * Store a character value.
+             * @param name id used to retrieve the value later on.
+             * @param c value to store.
+             */
             void put_char (const string & name, const char & c) {
                 put (name, T_CHAR, 1, (void *) &c);
             }
             
+            /**
+             * Store 8 bit unsigned integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_uint8 (const string & name, const u_int8 & i) {
                 put (name, T_UINT8, 1, (void*) &i);
             }
 
+            /**
+             * Store 8 bit signed integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_sint8 (const string & name, const s_int8 & i) {
                 put (name, T_SINT8, 1, (void*) &i);
             }
 
+            /**
+             * Store 16 bit unsigned integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_uint16 (const string & name, const u_int16 & i) {
 	        SwapLE16 (i);
                 put (name, T_UINT16, 2, (void*) &i);
             }
 
+            /**
+             * Store 16 bit signed integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_sint16 (const string & name, const s_int16 & i) {
 	        SwapLE16 (i);
                 put (name, T_SINT16, 2, (void*) &i);
             }
 
+            /**
+             * Store 32 bit unsigned integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_uint32 (const string & name, const u_int32 & i) {
 	        SwapLE32 (i);
                 put (name, T_UINT32, 4, (void*) &i);
             }
 
+            /**
+             * Store 32 bit signed integer value.
+             * @param name id used to retrieve the value later on.
+             * @param i value to store.
+             */
             void put_sint32 (const string & name, const s_int32 & i) {
 	        SwapLE32 (i);
                 put (name, T_SINT32, 4, (void*) &i);
             }
 
+            /**
+             * Store character string.
+             * @param name id used to retrieve the value later on.
+             * @param s string to store.
+             */
             void put_string (const string & name, const string & s) {
                 put (name, T_STRING, s.length () + 1, s.c_str ());
             }
             
+            /**
+             * Store floating point value.
+             * @param name id used to retrieve the value later on.
+             * @param f value to store.
+             */
             void put_float (const string & name, const float & f) {
                 // store floats in a format that is compatible across platforms
                 char buffer[32];
@@ -197,6 +247,11 @@ namespace base
                 put (name, T_FLOAT, strlen (buffer) + 1, buffer);
             }
             
+            /**
+             * Store double value.
+             * @param name id used to retrieve the value later on.
+             * @param d value to store.
+             */
             void put_double (const string & name, const double & d) {
                 // store doubles in a format that is compatible across platforms
                 char buffer[64];
@@ -204,10 +259,22 @@ namespace base
                 put (name, T_DOUBLE, strlen (buffer) + 1, buffer);
             }
 
+            /**
+             * Store binary data of arbitrary length.
+             * @param name id used to retrieve the value later on.
+             * @param b binary data to store.
+             * @param size length of data stored.
+             */
             void put_block (const string & name, void *b, const u_int32 & size) {
                 put (name, T_BLOB, size, b);
             }
             
+            /**
+             * Store another flat. Used to create nested structures for easier
+             * and safer value retrieval.
+             * @param name id used to retrieve the value later on.
+             * @param out flat to store.
+             */
             void put_flat (const string & name, const flat & out) {
                 put (name, T_FLAT, out.size (), out.getBuffer ());
             }
@@ -217,42 +284,84 @@ namespace base
              * @name Methods to retrieve flattened data
              */
             //@{
+            /**
+             * Retrieve a boolean value previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b false on error.
+             */
             bool get_bool (const string & name) {
                 data *d = get (name, T_BOOL);
                 if (d) return (bool) *((u_int8*) d->Content);
                 else return false;
             }
             
+            /**
+             * Retrieve a character value previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b '\0' on error.
+             */
             char get_char (const string & name) {
                 data *d = get (name, T_CHAR);
                 if (d) return (char) *d->Content;
                 else return '\0';
             }
             
+            /**
+             * Retrieve 8 bit unsigned integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b 0 on error.
+             */
             u_int8 get_uint8 (const string & name) {
                 data *d = get (name, T_UINT8);
                 if (d) return *((u_int8*) d->Content);
                 else return 0;
             }
 
+            /**
+             * Retrieve 8 bit signed integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b -1 on error.
+             */
             s_int8 get_sint8 (const string & name) {
                 data *d = get (name, T_SINT8);
                 if (d) return *((s_int8*) d->Content);
                 else return -1;
             }
 
+            /**
+             * Retrieve 16 bit unsigned integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b 0 on error.
+             */
             u_int16 get_uint16 (const string & name) {
                 data *d = get (name, T_UINT16);
                 if (d) return SwapLE16 (*((u_int16*) d->Content));
                 else return 0;
             }
 
+            /**
+             * Retrieve 16 bit signed integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b -1 on error.
+             */
             s_int16 get_sint16 (const string & name) {
                 data *d = get (name, T_SINT16);
                 if (d) return SwapLE16 (*((s_int16*) d->Content));
                 else return -1;
             }
 
+            /**
+             * Retrieve 32 bit unsigned integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b 0 on error.
+             */
             u_int32 get_uint32 (const string & name) {
                 data *d = get (name, T_UINT32);
                 if (d) return SwapLE32 (*((u_int32*) d->Content));
@@ -260,30 +369,61 @@ namespace base
                 
             }
 
+            /**
+             * Retrieve 32 bit signed integer previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b -1 on error.
+             */
             s_int32 get_sint32 (const string & name) {
                 data *d = get (name, T_SINT32);
                 if (d) return SwapLE32 (*((s_int32*) d->Content));
                 else return -1;
             }
 
+            /**
+             * Retrieve string previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b "" (empty string) on error.
+             */
             string get_string (const string & name) {
                 data *d = get (name, T_STRING);
                 if (d) return string (d->Content);
                 else return string ("");
             }
             
+            /**
+             * Retrieve floating point number previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b 0.0 on error.
+             */
             float get_float (const string & name) {
                 data *d = get (name, T_FLOAT);
                 if (d) return (float) strtod (d->Content, NULL);
                 else return 0.0;
             }
 
+            /**
+             * Retrieve double value previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b 0.0 on error.
+             */
             double get_double (const string & name) {
                 data *d = get (name, T_DOUBLE);
                 if (d) return strtod (d->Content, NULL);
                 else return 0.0;
             }
 
+            /**
+             * Retrieve binary data previously stored with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @param size will contain number of bytes returned.
+             * @return value stored or \b NULL on error.
+             */
             void* get_block (const string & name, int *size = NULL) {
                 data *d = get (name, T_BLOB);
                 if (d) {
@@ -296,6 +436,12 @@ namespace base
                 return NULL;
             }
             
+            /**
+             * Retrieve a nested flat with given id. Call 
+             * success() to check whether value retrieval was successful.
+             * @param name id used to retrieve the value later on.
+             * @return value stored or \b empty flat on error.
+             */
             flat get_flat (const string & name) {
                 data *d = get (name, T_FLAT);
                 if (d) return flat (d->Content, d->Size);
@@ -316,8 +462,17 @@ namespace base
             GET_TYPE_NAME_VIRTUAL(base::flat)
 #endif // SWIG
         protected:
+            /**
+             * Return internal buffer of this flattener.
+             * @return byte array containing the flattened data.
+             */
             const char *getBuffer () const { return Buffer; }
             
+            /**
+             * Assign a new buffer with given size to this flattener.
+             * @param buffer byte array containing flattened data.
+             * @param size length of the byte array.
+             */
             void setBuffer (char* buffer, const u_int32 & size) {
                 delete[] Buffer;
                 delete Data;

@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.4 2004/10/25 06:50:09 ksterker Exp $
+   $Id: quest.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,6 +34,9 @@
 #include <vector>
 #include "rpg/log_entry.h"
 
+/**
+ * All the basic role playing functionality is defined here.
+ */
 namespace rpg
 {
 #ifndef SWIG

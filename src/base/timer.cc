@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.6 2004/10/18 07:40:23 ksterker Exp $
+   $Id: timer.cc,v 1.7 2004/11/15 08:54:33 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -18,6 +18,13 @@
    along with Adonthell; if not, write to the Free Software 
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+/** 
+ * @file base/timer.cc
+ * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @brief A timer implementation.
+ */ 
+
 
 #include <errno.h>
 
