@@ -38,7 +38,7 @@ if __name__ == '__main__':
         cont.addChild (a)
 
     # set the layout
-    z = gui.layout ()
+    z = gui.listlayout ()
     cont.setLayout (z)
     
     
