@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.4 2003/11/22 09:38:09 ksterker Exp $
+   $Id: callback.h,v 1.5 2004/06/01 07:26:29 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -94,7 +94,7 @@ namespace python
             
             if (pyres)
             {
-                retvalue = retrieve_instance<RT>(pyres);
+                retvalue = retrieve_instance<RT, RT>(pyres);
                 Py_XDECREF(pyres);
             }
 
@@ -177,7 +177,7 @@ namespace python
 
             if (pyres)
             {
-                retvalue = retrieve_instance<RT>(pyres);
+                retvalue = retrieve_instance<RT, RT>(pyres);
                 show_traceback();
                 Py_XDECREF(pyres);
             }

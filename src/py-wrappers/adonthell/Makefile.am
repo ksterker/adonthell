@@ -57,7 +57,7 @@ _main_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_main -L$(top_builddir)/
 _rpg_la_SOURCES = py_rpg_wrap.cc
 _rpg_la_CXXFLAGS = $(PY_CFLAGS)
 _rpg_la_LDFLAGS = -avoid-version -module
-_rpg_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_rpg -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
+_rpg_la_LIBADD = -L$(top_builddir)/src/rpg -ladonthell_rpg -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
 
 
 ## Rules for SWIG runtime library generation
