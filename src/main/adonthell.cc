@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.6 2004/11/01 17:41:29 ksterker Exp $
+   $Id: adonthell.cc,v 1.7 2004/11/02 10:52:16 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,11 +61,11 @@ app::~app ()
 bool app::init_modules (const u_int16 & modules)
 {
     // don't initialize previously loaded modules
-    modules ^= Modules;
-    Modules |= modules;
+    u_int16 m = Modules ^ modules;
+    Modules |= m;
     
     // startup python
-    if (modules & PYTHON)
+    if (m & PYTHON)
     {
         // but not if we're called from a Python script
         if (!Py_IsInitialized ())
@@ -81,19 +81,19 @@ bool app::init_modules (const u_int16 & modules)
     }
 
     // startup graphics
-    if (modules & GFX)
+    if (m & GFX)
     {
         if (!gfx::init (Backend)) return false;
     }
     
     // startup input
-    if (modules & INPUT)
+    if (m & INPUT)
     {
         if (!input::init (Backend)) return false;
     }
     
     // startup event system
-    if (modules & EVENT)
+    if (m & EVENT)
     {
     }
     
