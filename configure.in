@@ -192,6 +192,7 @@ src/Makefile
 src/base/Makefile
 src/gfx/Makefile
 src/input/Makefile
+src/gui/Makefile
 src/python/Makefile
 src/py-wrappers/Makefile
 src/py-wrappers/adonthell/Makefile
