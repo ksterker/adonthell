@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
+   $Id: callback.h,v 1.7 2004/12/28 02:03:59 jol Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,7 +101,7 @@ namespace python
         }
     };
     
-    /**
+  /**
      * Python callback, one argument, no return value.
      * 
      */
@@ -137,6 +137,50 @@ namespace python
             Py_XDECREF(pyres);
         }
     };
+
+
+
+  /**
+     * Python callback, two arguments, no return value.
+     * 
+     */
+  template <class P1, class P2>
+    class functor_2 : public base::functor_2<P1, P2>, public python::functor_base
+    {
+    public:
+      functor_2 (PyObject * c) : base::functor_2<P1, P2>(),
+				 python::functor_base(c)
+      {
+	*((base::functor_2<P1, P2>*)this) = base::membertranslator_2<P1, P2,functor_2<P1, P2>,void (functor_2<P1, P2>::*)(P1, P2)>(*this, &python::functor_2<P1, P2>::run);
+      }
+        
+    private:
+        void run(P1 arg1, P2 arg2)
+        {
+            PyObject * pyarg1;
+	    PyObject * pyarg2;
+            PyObject * pyres;
+            
+            PyObject * pyargs = PyTuple_New(2);
+            pyarg1 = pass_instance(arg1);
+	    pyarg2 = pass_instance(arg2);
+            if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+	    if (!pyarg2) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+            
+            // The SetItem steals our reference to pyarg1
+            PyTuple_SetItem(pyargs, 0, pyarg1);
+	    PyTuple_SetItem(pyargs, 1, pyarg2);
+            
+            // We can finally call our function
+            pyres = PyObject_CallObject(callable, pyargs);
+            
+            show_traceback();
+            
+            Py_DECREF(pyargs);
+            Py_XDECREF(pyres);
+        }
+    };
+
 
 
     /**

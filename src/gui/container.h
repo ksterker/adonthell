@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.10 2004/12/21 22:03:17 jol Exp $
+   $Id: container.h,v 1.11 2004/12/28 02:03:59 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,7 @@ namespace gui {
     {
     public:
       container ();
-
+      
       /**
        * Add an element in this container
        */

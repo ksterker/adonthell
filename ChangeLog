@@ -1,3 +1,6 @@
+2004-12-28(jol):
+	- add callback support with two parameters,
+	- update callbacktest example.
 2004-12-21(jol):
 	- rename function to a more common stardard, nothing else (for now :).
 	- fix test/Makefile.am to compile inputest and guitest, note that i were 

@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.3 2003/11/22 09:35:21 ksterker Exp $
+   $Id: callback.h,v 1.4 2004/12/28 02:03:59 jol Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -408,10 +408,139 @@ namespace base
         return make_functor((functor_1<P1> *) NULL, f);
     }
 
-    /* *******************************************************
-     * One argument, return value.
-     * *******************************************************
+
+  
+  /* *******************************************************
+   * Two arguments, no return value.
+   * *******************************************************
+   */
+  template <class P1, class P2> class functor_2 : public functor_base {
+  public:
+    functor_2() {}
+    virtual ~functor_2() {}
+    void operator () (P1 p1, P2 p2) const
+    {
+      thunk (*this, p1, p2);
+    }
+  protected:
+    typedef void (*Thunk) (const functor_base &, P1, P2);
+    functor_2 (Thunk t, void *c, PFunc f, const void *mf, size_t sz)
+      : functor_base (c, f, mf, sz), thunk (t) { }
+  private:
+    Thunk thunk;
+  };
+  
+  
+  template <class P1, class P2, class Callee, class MemFunc>
+  class membertranslator_2 : public functor_2<P1, P2> {
+  public:
+    membertranslator_2 (Callee & c, const MemFunc & m)
+      : functor_2<P1, P2> (thunk, &c, 0, &m, sizeof (MemFunc)) { }
+    static void thunk (const functor_base & ftor, P1 p1, P2 p2) {
+      Callee *callee = (Callee *) ftor.getCallee ();
+      MemFunc & memFunc (*(MemFunc *) (void *)(ftor.getMemFunc ()));
+      (callee->*memFunc) (p1, p2);
+    }
+  };
+  
+  
+  template <class P1, class P2, class Func> 
+  class functiontranslator_2 : public functor_2 <P1, P2> {
+  public:
+    functiontranslator_2 (Func f) : functor_2 <P1, P2> (thunk, 0, (functor_base::PFunc)f, 0, 0) { }
+    static void thunk (const functor_base & ftor, P1 p1, P2 p2) {
+      (Func (ftor.getFunc())) (p1, p2);
+    }
+  };
+  
+  
+  /**
+   * Create a functor for a method
+   * 
+   */
+  template <class P1, class P2, class Callee, class TRT, class CallType, class TP1, class TP2>
+  inline functor_2<P1, P2> *
+  make_functor (functor_2<P1, P2> *, Callee & c, TRT (CallType::* f) (TP1, TP2))
+  {
+    functor_2<P1, P2> * ret = new functor_2<P1, P2>();
+    typedef TRT (CallType::*MemFunc) (TP1, TP2);
+    *ret = membertranslator_2 <P1, P2, Callee, MemFunc> (c, f);
+    return ret;
+  }
+
+  
+  /**
+   * Shorter version - function arguments must exactly match their declaration
+   * to use this version
+   * 
+   */
+  template <class P1, class P2, class Callee, class TRT, class CallType>
+  inline functor_2<P1, P2> *
+  make_functor (Callee & c, TRT (CallType::* f) (P1, P2))
+  {
+    return make_functor((functor_2<P1, P2> *) NULL, c, f);
+  }
+  
+  
+  /**
+   * Create a functor for a method of a const object
+   * 
+   */
+  template <class P1, class P2, class Callee, class TRT, class CallType, class TP1, class TP2>
+  inline functor_2<P1, P2> *
+  make_functor (functor_2<P1, P2> *, const Callee & c, TRT (CallType::*const &f) (TP1, TP2) const)
+  {
+    functor_2<P1, P2> * ret = new functor_2<P1, P2>();
+    typedef TRT (CallType::*MemFunc) (TP1, TP2) const;
+    *ret = membertranslator_2 <P1, P2, const Callee, MemFunc> (c, f);
+    return ret;
+  }
+  
+  
+  /**
+   * Shorter version - function arguments must exactly match their declaration
+   * to use this version
+   * 
+   */
+  template <class P1, class P2, class Callee, class TRT, class CallType>
+  inline functor_2<P1, P2> *
+  make_functor (const Callee & c, TRT (CallType::*const f) (P1, P2)const)
+  {
+    return make_functor((functor_2<P1, P2> *) NULL, c, f);
+  }
+  
+
+  /**
+   * Create a functor for a non-member function.
+   * 
+   */
+  template <class P1, class P2, class TRT, class TP1, class TP2>
+  inline functor_2<P1, P2> *
+  make_functor (functor_2<P1, P2> *, TRT (*f) (TP1, TP2))
+  {
+    functor_2<P1, P2> * ret = new functor_2<P1, P2>();
+    *ret = functiontranslator_2 <P1,P2, TRT (*)(TP1, TP2) > (f);
+    return ret;
+  }
+    
+    /**
+     * Shorter version - function arguments must exactly match their declaration
+     * to use this version
+     * 
      */
+    template <class P1, class P2, class TRT>
+    inline functor_2<P1, P2> *
+    make_functor (TRT (*f) (P1, P2))
+    {
+      return make_functor((functor_2<P1, P2> *) NULL, f);
+    }
+
+
+  
+  /* *******************************************************
+   * One argument, return value.
+   * *******************************************************
+   */
     
     /**
      * Functor class - takes one argument, returns a value.

@@ -20,6 +20,11 @@ public:
         std::cout << "Method, arg: " << c << " no return\n";
     }
 
+  void callb2 (char c, char d)
+  {
+    std::cout << "Method, args: " << c  << " " << d << " no return\n";
+  }
+
     unsigned int callb1ret(char c)
     {
         std::cout << "Method, arg: " << c << " returning " << (unsigned int) c << "\n";
@@ -42,6 +47,13 @@ void callb1(char c)
 {
     std::cout << "Function, arg: " << c << " no return\n";
 }
+
+
+void callb2(char c, char d)
+{
+  std::cout << "Function, args: " << c << " " << d << " no return\n";
+}
+
 
 unsigned int callb1ret(char c)
 {
@@ -80,6 +92,15 @@ int main(int argc, char * argv[])
     f1ret = base::make_functor_ret(&callb1ret);
     std::cout << "Got: " << (*f1ret)('b') << std::endl;
     delete f1ret;
+    
+    base::functor_2<char, char> * f2 = base::make_functor(ctest, &calltest::callb2);
+    (*f2)('a','x');
+    delete f2;
+    f2 = base::make_functor(&callb2);
+    (*f2)('b','y');
+    delete f2;
 
+
+    
     return 0;
 }
