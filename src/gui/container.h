@@ -55,4 +55,8 @@ namespace gui {
     };
 }
 
+#ifndef SWIG
+PYTHON_AS_CALLBACK_ARGUMENT(gui::container)
+#endif // SWIG
+
 #endif

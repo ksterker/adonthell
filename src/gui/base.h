@@ -122,4 +122,8 @@ namespace gui {
     };
 }
 
+#ifndef SWIG
+PYTHON_AS_CALLBACK_ARGUMENT(gui::base)
+#endif // SWIG
+
 #endif

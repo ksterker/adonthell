@@ -10,6 +10,8 @@ def handle_keys (ev):
         if ev.key() == input.keyboard_event.ESCAPE_KEY:
             letsexit = 1
             print "Escape pressed, leaving..."
+    return 1
+
 if __name__ == '__main__':
     ## Initialize the gfx and input systems
     if not gfx.init("sdl"): raise "Can't load gfx backend!"
@@ -31,11 +33,17 @@ if __name__ == '__main__':
     cont.setSize (50, 50)
     cont.setLocation (20, 30)
 
-    for i in range (5):
-        a = gui.base ()
-        a.setSize (40,20)
-        a.setLocation (30, 10)
-        cont.addChild (a)
+    #for i in range (2):
+    a = gui.base ()
+    a.setSize (40,20)
+    a.setLocation (30, 10)
+    cont.addChild (a)
+    b = gui.base ()
+    b.setSize (40,20)
+    b.setLocation (30, 10)
+    cont.addChild (b)
+
+    
 
     # set the layout
     z = gui.listlayout ()

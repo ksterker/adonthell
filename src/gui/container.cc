@@ -1,3 +1,4 @@
+#include <iostream>
 #include "gui/container.h"
 
 using namespace gui;
@@ -6,6 +7,8 @@ using namespace gui;
 container::container () : base ()
 {
   m_layout = NULL;
+  m_space_child = m_space_border = 5;
+  
 }
 
 void container::addChild (base * m)
@@ -20,7 +23,6 @@ void container::addChild (base * m)
   // because if there is a lot's of childs it can take a long time ...
   updateLayout ();
 }
-
 
 void container::removeChild (base * m)
 {
@@ -56,7 +58,6 @@ void container::destroyAll ()
   m_childs.clear ();
 }
 
-
 bool container::drawContents ()
 {
   if (base::drawContents ())
@@ -70,7 +71,6 @@ bool container::drawContents ()
     }
   return false;
 }
-
 
 void container::setSpaceChild (s_int16 space)
 {
@@ -93,6 +93,7 @@ container::~container ()
 
 void container::setLayout (layout * l)
 {
+  
   if (m_layout) delete m_layout;
   m_layout = l;
   if (m_layout) m_layout->setContainer (this);
