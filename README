@@ -1,0 +1,148 @@
+
+
+                             Adonthell 0.3 
+                           
+
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    COPYING file for more details.
+
+
+
+Installation:
+=============
+
+See the INSTALL and NEWBIE files for details.
+
+Note that this package alone doesn't allow you to play anything - 
+you'll need a game package in addition to this one. The official
+game package for this release is Waste's Edge release 0.3. If you
+don't already have it, you should download it and install it next to
+this package.
+
+
+Configuring Adonthell:
+======================
+
+The first time you run Adonthell, a configuration file is created:
+$HOME/.adonthell/adonthellrc. Edit it to customise the game to your
+convenience.
+
+The available options and what they do are:
+
+- Screen-mode
+  Whether Adonthell should run fullscreen or in windowed mode 
+  0 = Windowed mode, 1 = Fullscreen mode
+  
+  (If you have trouble with the fullscreen mode, see the NEWBIE
+  file for help)
+
+- Audio-channels
+  Whether sound should be mono or stereo
+  0 = Mono, 1 = Stereo
+
+- Audio-resolution
+  Whether audio output should be 8 or 16 bit
+  0 = 8 bit, 1 = 16 bit
+
+- Audio-sample-rate
+  0 = 11025 Hz, 1 = 22050 Hz, 2 = 44100 Hz
+
+- Audio-volume
+  The mixer setting, 0 - 100 %
+  
+  (Note that a value of 0 will turn audio completely off)
+
+
+Running Adonthell:
+==================
+
+Okay, now you're ready to launch the program. Type
+
+$> adonthell <gamename>
+
+to run the game named <gamename>. To get a list of currently 
+installed games you can play, type:
+
+$> adonthell -l
+
+This will print a list of the installed games you can launch
+with above command.
+
+For further information on how to play Adonthell, please refer to the
+PLAYING file that comes with the game data.
+
+
+Directories:
+============
+
+- $HOME/.adonthell 
+  contains the configuration file and your saved games.
+
+- Global data directory
+  You can get this directory by invoking 'adonthell -d' (by default
+  /usr/local/share/adonthell). This is the directory where games will
+  install to. If you have a game installed somewhere else, you can
+  play it by invoking 'adonthell -g </full/path/to/my/game>'
+
+
+Release Notes:
+==============
+
+The main purpose of this release is to attract new programmers, 
+artists and writers in order to shorten the time until the next 
+version.  So if you have experience in C++ (and optionally Python), 
+or if you are good at computer graphics or writing we would like to
+hear from you.  Please have a look at our development site 
+  
+  http://adonthell.linuxgames.com/development/
+
+for further details.
+
+Adonthell - Waste's Edge -, or v0.3 for short is no complete RPG.
+As the v0.3 implies, the engine is far from being finished, although
+it should be free of severe bugs.  Missing features include combat, 
+items and magic.  But you can interact with NPC's and the game world, 
+and the internals enable us to create a basic plot, so v0.3 is actually
+playable!
+
+You're greatly invited to report us bugs, problems, or anything you
+think we should know. Any feedback is appreciated, so don't hesitate!
+
+
+Contact:
+========
+
+You can reach us in various ways:
+
+Email:         adonthell@linuxgames.com
+Mailing list:  adonthell-general@mail.freesoftware.fsf.org
+Web site:      http://adonthell.linuxgames.com
+Tech support:  http://savannah.gnu.org/support/?group_id=702
+
+There is a Message Board for user to user discussion at
+    http://www.3dforums.com/?action=forumpage&loc=49&forum_id=158
+
+If you want to rate Adonthell, feel free to do so at
+    http://www.happypenguin.org/show?Adonthell
+
+
+Reporting Bugs:
+===============
+
+We hope you'll never have to, but if you discover a problem, we
+would like to hear about it. Please use the Development mailing list
+(adonthell-devel@mail.freesoftware.fsf.org) for that. You can 
+subscribe to the mailing lists at 
+
+  http://adonthell.linuxgames.com/contact/mailinglist.shtml
+
+
+Thank you for trying this software.
+- The Adonthell team.

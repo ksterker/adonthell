@@ -1,0 +1,200 @@
+dnl **************************************************************
+dnl Process this file with autoconf to produce a configure script.
+dnl **************************************************************
+
+AC_PREREQ(2.50)
+AC_INIT(README)
+AC_CONFIG_AUX_DIR(.)
+
+dnl Detect the canonical host and target build environment
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
+AM_INIT_AUTOMAKE(adonthell, 0.4dev1)
+AM_CONFIG_HEADER(config.h)
+
+CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
+
+dnl ********************
+dnl Checks for programs.
+dnl ********************
+
+AC_PROG_LN_S
+AC_PROG_CXX
+AC_PROG_CXXCPP
+AC_PROG_MAKE_SET
+
+AC_LIBTOOL_DLOPEN
+AC_LIBLTDL_CONVENIENCE
+AM_PROG_LIBTOOL
+AC_SUBST(LIBLTDL)
+CPPFLAGS="$CPPFLAGS $INCLTDL"
+AC_CONFIG_SUBDIRS(libltdl)
+
+
+dnl ********************
+dnl Additional arguments
+dnl ********************
+AC_ARG_WITH(py-libs,
+[  --with-py-libs=DIR     Override Python libraries auto-detection],
+            pylibs="$withval", pylibs=none)
+AC_ARG_WITH(py-cflags,
+[  --with-py-cflags=DIR   Override Python cflags auto-detection],
+            pycflags="$withval", pycflags=none)
+
+
+AC_CHECK_LIB(z, main,,echo "Adonthell requires Zlib. Exitting...";exit 1)
+
+
+dnl *************
+dnl Check for SDL
+dnl *************
+SDL_VERSION=1.2.0
+AM_PATH_SDL($SDL_VERSION,
+    :,
+	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
+)
+
+
+dnl ****************
+dnl Check for Python
+dnl ****************
+AM_PATH_PYTHON()
+if test x$pylibs = xnone; then
+   
+   dnl Find Python executable
+   AC_PATH_PROGS(PYPACKAGE, python)
+
+   dnl Extract the version using Python, check against 1.5+
+
+   changequote(<<, >>)
+   PYTHON_VERSION=`$PYPACKAGE -c 'import sys ; print (int(sys.version[0]) * 10 + int(sys.version[2]))'`
+   PY_VERSION=`$PYPACKAGE -c 'import sys ; print sys.version[0:3]'`
+   changequote([, ])
+
+   if test $PYTHON_VERSION -lt 15; then
+	echo "Sorry, you need to have Python 1.5+ installed - update your version!"
+	AC_MSG_ERROR([*** Python 1.5 or better required])
+   fi
+
+   dnl Find the Python.h header file
+
+   AC_MSG_CHECKING(for Python header files)
+   changequote(<<, >>)
+   PYINCLUDE=`$PYPACKAGE -c 'import sys ; print "%s/include/python%s" % (sys.prefix, sys.version[:3])'`
+   changequote([, ])
+
+   if test -r "$PYINCLUDE/Python.h"; then
+      PY_CFLAGS="-I$PYINCLUDE"
+      AC_SUBST(PY_CFLAGS)
+   else
+      AC_MSG_ERROR([Could not find Python.h in $PYINCLUDE])
+   fi
+   AC_MSG_RESULT(found)
+
+
+   dnl Find the Python library
+
+   AC_MSG_CHECKING(for Python library)
+   PYLIB=""
+   changequote(<<, >>)
+   PYPREFIX=`$PYPACKAGE -c 'import sys; print sys.prefix'`
+   PYLIBVER=`$PYPACKAGE -c 'import sys; print sys.version[:3]'`
+   changequote([, ])
+
+   py_paths="$PYPREFIX/lib/python$PYLIBVER/config $PYPREFIX/lib"
+   py_suffix="$PYLIBVER.so $PYLIBVER.a .so .a"
+   
+   dnl Try for specific version first, then the generic version, then panic
+
+   for ppath in $py_paths ; do
+     if test -r "$ppath/libpython$PYLIBVER.so" -o \
+	     -r "$ppath/libpython$PYLIBVER.a"; then
+        PYLIB="-L$ppath -lpython$PYLIBVER"
+        break
+     fi
+     if test -r "$ppath/libpython.so" -o \
+             -r "$ppath/libpython.a"; then
+        PYLIB="-L$ppath -lpython"
+        break
+     fi
+   done
+
+   if test "x$PYLIB" != x ; then
+      PY_LIBS="$PYLIB $PY_LIBS"
+      AC_MSG_RESULT(found)
+   else
+      AC_MSG_ERROR([*** Python library not found])
+   fi
+
+   dnl Get the libraries that python depends on
+
+   AC_PATH_PROG(haveldd, ldd)
+   AC_MSG_CHECKING(for Python's dependencies)
+
+   if test x$haveldd != x ; then
+       changequote(<<, >>)
+       py_deps=`ldd $PYPACKAGE | sed 's/\( *lib\([^\/]*\)\.so.*=.*$\)/-l\2/p; d' | grep -v 'stdc++'`
+       for py_lib in $py_deps ; do
+         if test "$py_lib" != "-lm" && test "$py_lib" != "-lc" ; then
+            PY_DEPS="$PY_DEPS $py_lib"
+         fi
+      done
+      changequote([, ])
+   fi
+
+   case $target in
+       *-sun-solaris*)
+         PY_DEPS="$PY_DEPS -lsocket -lnsl -ldl"
+           ;;
+   esac
+
+   AC_MSG_RESULT($PY_DEPS)
+
+   dnl only GNU ld seems to know -E flag
+   if $LD -v 2>&1 </dev/null | egrep '(GNU|with BFD)' 1>&5; then
+       PY_LIBS="-Wl,-E $PY_LIBS $PY_DEPS"
+   else
+       PY_LIBS="$PY_LIBS $PY_DEPS"
+   fi
+   AC_SUBST(PY_LIBS)
+
+else
+   PY_CFLAGS=${pycflags}
+   AC_MSG_CHECKING(for Python cflags)
+   AC_MSG_RESULT($PY_CFLAGS)
+   AC_SUBST(PY_CFLAGS)
+   PY_LIBS=${pylibs}
+   AC_MSG_CHECKING(for Python library flags)
+   AC_MSG_RESULT($PY_LIBS)
+   AC_SUBST(PY_LIBS)
+   PY_VERSION="Manually specified"   
+fi
+
+
+dnl **************
+dnl Check for SWIG
+dnl **************
+SWIG_VERSION=1.3.19
+SWIG_PROG($SWIG_VERSION)
+SWIG_ENABLE_CXX()
+
+dnl *****************************
+dnl SWIG runtime library settings
+dnl *****************************
+SWIGRUNTIME_LIBS='-L${top_builddir}/libswigruntime -lswigruntime'
+AC_SUBST(SWIGRUNTIME_LIBS)
+
+AC_OUTPUT([
+Makefile
+libswigruntime/Makefile
+src/Makefile
+src/base/Makefile
+src/gfx/Makefile
+src/input/Makefile
+src/python/Makefile
+src/py-wrappers/Makefile
+src/py-wrappers/adonthell/Makefile
+doc/Makefile
+test/Makefile
+])

@@ -1,0 +1,22 @@
+version 0.3
+- Added Python scripting
+- Added Dialogue system
+- Fullscreen support
+- Now using Ogg Vorbis for music playback
+- Waste's Edge released
+
+version 0.2.1
+- Switched from GGI to SDL
+- Added sound system
+- Basic Window/Text system
+- Basic FMV system
+
+version 0.1.a 
+- First release
+
+_________________________________________________________________________
+For the latest news on the functionality of the Adonthell Project,  
+please visit the project's website:
+
+http://adonthell.linuxgames.com/en_frames/whats_new.shtml
+
