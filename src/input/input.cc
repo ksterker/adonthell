@@ -1,5 +1,5 @@
 /*
-   $Id: input.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: input.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,58 +46,60 @@ static bool (*inputinit)() = 0;
  */
 static void (*inputcleanup)() = 0;
 
-
-bool input::init(const std::string & backend_name)
+namespace input
 {
-    if (lt_dlinit()) 
-    { 
-        std::cerr << lt_dlerror() << std::endl;
-        std::cerr << "Error initializing liblt!\n"; 
+    bool init(const std::string & backend_name)
+    {
+        if (lt_dlinit()) 
+        { 
+            std::cerr << lt_dlerror() << std::endl;
+            std::cerr << "Error initializing liblt!\n"; 
+            return false;
+        }
+
+        dlhandle = base::get_module(std::string("/input/") + backend_name);
+    
+        if (!dlhandle) goto bigerror;
+
+        inputinit = (bool(*)()) lt_dlsym(dlhandle, "input_init");
+        if (!inputinit)
+        {
+            std::cerr << lt_dlerror() << std::endl;
+            goto bigerror;
+        }
+    
+        inputcleanup = (void(*)()) lt_dlsym(dlhandle, "input_cleanup");
+        if (!inputcleanup)
+        {
+            std::cerr << lt_dlerror() << std::endl;
+            goto bigerror;
+        }
+
+        input::manager::update_p = (void(*)()) lt_dlsym(dlhandle, "input_manager_update");
+        if (!input::manager::update_p)
+        {
+            std::cerr << lt_dlerror() << std::endl;
+            goto bigerror;
+        }
+
+        goto success;
+    
+    bigerror:
+        if (dlhandle) lt_dlclose(dlhandle);
+        lt_dlexit();
         return false;
-    }
 
-    dlhandle = base::get_module(std::string("/input/") + backend_name);
-    
-    if (!dlhandle) goto bigerror;
-
-    inputinit = (bool(*)()) lt_dlsym(dlhandle, "input_init");
-    if (!inputinit)
-    {
-        std::cerr << lt_dlerror() << std::endl;
-        goto bigerror;
-    }
-    
-    inputcleanup = (void(*)()) lt_dlsym(dlhandle, "input_cleanup");
-    if (!inputcleanup)
-    {
-        std::cerr << lt_dlerror() << std::endl;
-        goto bigerror;
-    }
-
-    input::manager::update_p = (void(*)()) lt_dlsym(dlhandle, "input_manager_update");
-    if (!input::manager::update_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
-        goto bigerror;
-    }
-
-    goto success;
-    
- bigerror:
-    if (dlhandle) lt_dlclose(dlhandle);
-    lt_dlexit();
-    return false;
-
- success:
+    success:
         
-    return inputinit();
-}
+        return inputinit();
+    }
 
-void input::cleanup()
-{
-    if (inputcleanup) inputcleanup();
-    inputcleanup = NULL;
+    void cleanup()
+    {
+        if (inputcleanup) inputcleanup();
+        inputcleanup = NULL;
 
-    if (dlhandle) lt_dlclose(dlhandle);
-    lt_dlexit();
+        if (dlhandle) lt_dlclose(dlhandle);
+        lt_dlexit();
+    }
 }

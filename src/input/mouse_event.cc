@@ -1,5 +1,5 @@
 /*
-   $Id: mouse_event.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: mouse_event.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,28 +25,29 @@
 
 #include "mouse_event.h"
 
-using namespace input;
-
-std::string mouse_event::Button_symbol[mouse_event::NBR_BUTTONS] =
+namespace input
 {
-    "no button",
-    "left button",
-    "middle button",
-    "right_button",
-    "wheel up",
-    "wheel down"
-};
+    std::string mouse_event::Button_symbol[mouse_event::NBR_BUTTONS] =
+        {
+            "no button",
+            "left button",
+            "middle button",
+            "right_button",
+            "wheel up",
+            "wheel down"
+        };
 
-mouse_event::mouse_event (event_type t, button_type b, u_int16 xpos, u_int16 ypos)
-    : event (MOUSE_EVENT)
-{
-    Type = t;
-    Button = b;
-    X = xpos;
-    Y = ypos;
-}
+    mouse_event::mouse_event (event_type t, button_type b, u_int16 xpos, u_int16 ypos)
+        : event (MOUSE_EVENT)
+    {
+        Type = t;
+        Button = b;
+        X = xpos;
+        Y = ypos;
+    }
 
-const std::string & mouse_event::button_symbol() const
-{
-    return Button_symbol[button()];
+    const std::string & mouse_event::button_symbol() const
+    {
+        return Button_symbol[button()];
+    }
 }

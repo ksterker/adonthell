@@ -1,4 +1,4 @@
-// $Id: drawable.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+// $Id: drawable.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 /*
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,22 +21,24 @@
 
 
 #include "drawable.h"
- 
+
 // Public methods.
 
-using namespace gfx;
-
-drawable::drawable () 
+namespace gfx
 {
-    set_length (0);
-    set_height (0); 
-}
-
-drawable::~drawable ()
-{ 
-}
-
-bool drawable::update ()
-{
-    return true; 
+    
+    drawable::drawable () 
+        : length_(0), height_(0)
+    {
+    }
+    
+    drawable::~drawable ()
+    { 
+    }
+    
+    bool drawable::update ()
+    {
+        return true; 
+    }
+    
 }

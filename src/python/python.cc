@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: python.cc,v 1.2 2003/07/24 12:57:59 gnurou Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -23,46 +23,49 @@
 
 #include "python/python.h"
 
-void python::show_traceback()
+namespace python
 {
-    if ( PyErr_Occurred() )
+    void show_traceback()
     {
-        PyErr_Print();
-        fflush (stderr);
+        if ( PyErr_Occurred() )
+        {
+            PyErr_Print();
+            fflush (stderr);
+        }
     }
-}
 
-void python::init()
-{
-    Py_Initialize();
-}
+    void init()
+    {
+        Py_Initialize();
+    }
+    
+    void cleanup()
+    {
+        Py_Finalize();
+    }
+    
+    bool add_search_path(const std::string & path)
+    {
+        std::string buf = "import sys; sys.path.insert(0, \"";
+        buf += path;
+        buf += "\")";
+        
+        return run_string(buf);
+    }
+    
+    bool run_string(const std::string & statements)
+    {
+        bool ret = PyRun_SimpleString((char *)statements.c_str());
+        
+        show_traceback();
+        return ret;
+    }
 
-void python::cleanup()
-{
-    Py_Finalize();
-}
-
-bool python::add_search_path(const std::string & path)
-{
-    std::string buf = "import sys; sys.path.insert(0, \"";
-    buf += path;
-    buf += "\")";
-
-    return run_string(buf);
-}
-
-bool python::run_string(const std::string & statements)
-{
-    bool ret = PyRun_SimpleString((char *)statements.c_str());
-
-    show_traceback();
-    return ret;
-}
-
-PyObject * python::import_module(const std::string & name)
-{
-    PyObject * ret = PyImport_ImportModule((char *)name.c_str());
-
-    show_traceback();
-    return ret;
+    PyObject * import_module(const std::string & name)
+    {
+        PyObject * ret = PyImport_ImportModule((char *)name.c_str());
+        
+        show_traceback();
+        return ret;
+    }
 }

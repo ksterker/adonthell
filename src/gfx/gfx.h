@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: gfx.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,6 +37,8 @@
  */
 namespace gfx
 {
+    class surface;
+    
     /** 
      * Initialize the gfx module. This function \e must be called
      * before doing anything gfx-related.
@@ -69,7 +71,7 @@ namespace gfx
      * @return a new surface (NULL if failed) corresponding to
      * the current backend.
      */
-    gfx::surface * create_surface();
+    surface * create_surface();
 }
 
 

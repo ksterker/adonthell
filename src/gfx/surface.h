@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: surface.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -62,7 +62,6 @@ namespace gfx
          * 
          */
         virtual ~surface () = 0;
-    
 
         /**
          * @name Settings
@@ -276,7 +275,7 @@ namespace gfx
          * @attention Not available from Python. Use copy() from Python instead.
          * @sa copy ()
          */
-        virtual surface& operator = (surface& src) = 0;
+        virtual surface& operator = (const surface& src) = 0;
 #endif
 
         /**
@@ -284,7 +283,7 @@ namespace gfx
          *
          * @sa operator = 
          */
-        void copy (surface& src) 
+        void copy (const surface& src) 
         {
             *this = src; 
         }
@@ -412,10 +411,11 @@ namespace gfx
          * Forbid copy construction.
          * 
          */ 
-        surface (surface & src); 
+        surface (const surface & src); 
     };
 }
 
+#ifndef SWIG
 PYTHON_AS_CALLBACK_ARGUMENT(gfx::surface)
-
+#endif // SWIG
 #endif

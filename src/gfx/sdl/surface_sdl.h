@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: surface_sdl.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,7 +49,7 @@ namespace gfx
         void put_pix (u_int16 x, u_int16 y, u_int32 col); 
         u_int32 get_pix (u_int16 x, u_int16 y) const; 
     
-        surface& operator = (surface& src); 
+        surface& operator = (const surface& src); 
 
         void resize (u_int16 l, u_int16 h);
 

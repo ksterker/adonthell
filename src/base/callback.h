@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: callback.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,17 +47,8 @@ namespace base
             char memFunc[MEM_FUNC_SIZE];
         };
         void *callee;
-        functor_base():func(0),callee(0){}
-        functor_base(const void *c,PFunc f, const void *mf,size_t sz):callee((void *)c)
-        {
-            if(c)
-            {
-                memcpy(memFunc,mf,sz);
-                if(sz<MEM_FUNC_SIZE)
-                    memset(memFunc+sz,0,MEM_FUNC_SIZE-sz);
-            }
-            else func = f;
-        }
+        functor_base();  
+        functor_base(void *c, PFunc func, const void *memFunc, size_t sz);
         
     public:
         operator bool()const{return callee||func;}
@@ -81,10 +72,10 @@ namespace base
         typedef void (*Thunk)(const functor_base &);
         Thunk thunk;
     protected:
-        functor_0(Thunk t,const void *c,PFunc f,const void *mf,size_t sz):functor_base(c,f,mf,sz),thunk(t){}
+      functor_0(Thunk t, void * c,PFunc f, const void * mf,size_t sz);
     public:
-        functor_0(){}
-        virtual ~functor_0() {}
+      functor_0();
+      virtual ~functor_0();
         void operator()()const
         {
             thunk(*this);
@@ -173,7 +164,7 @@ namespace base
         }
     protected:
 	typedef RT (*Thunk)(const functor_base &);
-	functor_0ret(Thunk t,const void *c,PFunc f,const void *mf,size_t sz):
+	functor_0ret(Thunk t,void *c,PFunc f,const void *mf,size_t sz):
             functor_base(c,f,mf,sz),thunk(t){}
     private:
 	Thunk thunk;
@@ -302,7 +293,7 @@ namespace base
         }
     protected:
         typedef void (*Thunk) (const functor_base &, P1);
-        functor_1 (Thunk t, const void *c, PFunc f, const void *mf, size_t sz)
+        functor_1 (Thunk t, void *c, PFunc f, const void *mf, size_t sz)
             : functor_base (c, f, mf, sz), thunk (t) { }
     private:
         Thunk thunk;
@@ -444,7 +435,7 @@ namespace base
         
     protected:
         typedef RT (*Thunk)(const functor_base &,P1);
-        functor_1ret(Thunk t,const void *c,PFunc f,const void *mf,size_t sz):
+        functor_1ret(Thunk t,void *c,PFunc f,const void *mf,size_t sz):
             functor_base(c,f,mf,sz),thunk(t){}
         
     private:

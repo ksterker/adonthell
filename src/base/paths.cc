@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: paths.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,27 +28,33 @@
 
 #define MODULES_ENV "ADONTHELL_MODULES_PATH"
 
-lt_dlhandle base::get_module(const std::string & modname)
+using namespace std;
+
+namespace base
 {
-    lt_dlhandle ret;
-
-    /* Try the MODULES_ENV variable first */
-    const char * mod_env_str = getenv(MODULES_ENV);
-    std::string mod_env = (mod_env_str ? mod_env_str : "");
-
-    if (!mod_env.empty())
+    
+    lt_dlhandle get_module(const string & modname)
     {
-        mod_env += modname;
+        lt_dlhandle ret;
+        
+        /* Try the MODULES_ENV variable first */
+        const char * mod_env_str = getenv(MODULES_ENV);
+        string mod_env = (mod_env_str ? mod_env_str : "");
+        
+        if (!mod_env.empty())
+        {
+            mod_env += modname;
+            ret = lt_dlopenext(mod_env.c_str());
+            if (ret) return ret;
+        }
+        
+        /* Try the hard-coded path then */
+        mod_env = PKGLIBDIR + modname;
         ret = lt_dlopenext(mod_env.c_str());
         if (ret) return ret;
-    }
-
-    /* Try the hard-coded path then */
-    mod_env = PKGLIBDIR + modname;
-    ret = lt_dlopenext(mod_env.c_str());
-    if (ret) return ret;
-
-    std::cerr << "Failed to load module " << modname << ": " << lt_dlerror() << std::endl;
-
-    return NULL;
+        
+        cerr << "Failed to load module " << modname << ": " << lt_dlerror() << endl;
+        
+        return NULL;
+    }   
 }

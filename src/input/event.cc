@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: event.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -24,13 +24,14 @@
 
 #include "event.h"
 
-using namespace input;
-
-event::event (input_type t)
+namespace input
 {
-    Type = t; 
-}
-
-event::~event()
-{
+    event::event (input_type t)
+    {
+        Type = t; 
+    }
+    
+    event::~event()
+    {
+    }
 }

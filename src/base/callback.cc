@@ -1,5 +1,5 @@
 /*
-   $Id: callback.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: callback.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -24,4 +24,40 @@
 
 #include "callback.h"
 
-using namespace base;
+namespace base
+{
+    functor_base::functor_base()
+        : func(0), callee(0)
+    {
+    }
+    
+    functor_base::functor_base(void* c, PFunc f, const void* mf, size_t sz)
+        : func(0), callee(c)
+    {
+        if(callee)
+        {
+            memcpy(memFunc, mf, sz);
+            if(sz < MEM_FUNC_SIZE)
+            {
+                memset(memFunc+sz, 0, MEM_FUNC_SIZE-sz);
+            }
+        }
+        else
+        {
+            func = f;
+        }
+    }
+    
+    functor_0::functor_0(Thunk t, void * c,PFunc f, const void * mf,size_t sz)
+        : functor_base(c,f,mf,sz), thunk(t)
+    {
+    }
+    
+    functor_0::functor_0()
+    {
+    }
+    
+    functor_0::~functor_0()
+    {
+    }   
+}

@@ -1,5 +1,5 @@
 /*
-   $Id: input_sdl.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: input_sdl.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,15 +34,15 @@ bool input_init()
     }
     int nbr_joy = SDL_NumJoysticks();
     for (int i = 0; i < nbr_joy; i++)
-        joysticks.push_back(SDL_JoystickOpen(i));
+        input::joysticks.push_back(SDL_JoystickOpen(i));
     SDL_EnableUNICODE(1);
     return true;
 }
 
 void input_cleanup()
 {
-    for (std::vector<SDL_Joystick *>::iterator i = joysticks.begin(); 
-         i != joysticks.end(); i++)
+    for (std::vector<SDL_Joystick *>::iterator i = input::joysticks.begin(); 
+         i != input::joysticks.end(); i++)
         SDL_JoystickClose(*i);
     SDL_QuitSubSystem (SDL_INIT_JOYSTICK);
     SDL_EnableUNICODE(0);

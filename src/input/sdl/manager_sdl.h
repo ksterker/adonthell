@@ -1,5 +1,5 @@
 /*
-   $Id: manager_sdl.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: manager_sdl.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,13 +29,15 @@
 #include "SDL.h"
 #include <vector>
 
-extern input::keyboard_event::key_type sdl_key_trans[SDLK_LAST];
-extern input::mouse_event::button_type sdl_button_trans[SDL_BUTTON_RIGHT + 3];
-extern input::joystick_event::button_type sdl_axis_trans[input::joystick_event::NBR_BUTTONS - 
-                                                         input::joystick_event::AXIS0_FORE];
-extern input::joystick_event::button_type sdl_joy_button_trans[input::joystick_event::AXIS0_FORE];
-extern bool joystick_state_table[input::joystick_event::NBR_BUTTONS * 10];
-extern std::vector<SDL_Joystick *> joysticks;
-
+namespace input
+{
+    extern keyboard_event::key_type sdl_key_trans[SDLK_LAST];
+    extern mouse_event::button_type sdl_button_trans[SDL_BUTTON_RIGHT + 3];
+    extern joystick_event::button_type sdl_axis_trans[joystick_event::NBR_BUTTONS - 
+                                                      joystick_event::AXIS0_FORE];
+    extern joystick_event::button_type sdl_joy_button_trans[joystick_event::AXIS0_FORE];
+    extern bool joystick_state_table[joystick_event::NBR_BUTTONS * 10];
+    extern std::vector<SDL_Joystick *> joysticks;
+}
 
 #endif

@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: gfx.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,11 +22,18 @@
  * 
  */
 
+#include <iostream>
+
+#include "gfx/drawing_area.h"
+#include "gfx/drawable.h"
+#include "gfx/surface.h"
+#include "gfx/screen.h"
 #include "base/paths.h"
-#include "gfx/gfx.h"
 
 #include "ltdl.h"
-#include <iostream>
+
+#include "gfx/gfx.h"
+
 
 /**
  * The handler of our library file.
@@ -50,92 +57,98 @@ static void (*gfxcleanup)() = 0;
  * Virtual backend surface creation function.
  * 
  */
-static gfx::surface * (*create_surface_p)() = 0;
+static gfx::surface * (*create_surface_p)() = 0;  
 
-bool gfx::init(const std::string & backend_name)
+using namespace std;
+
+namespace gfx
 {
+  bool init(const string & backend_name)
+  {
     if (lt_dlinit())
-    {
-        std::cerr << lt_dlerror() << std::endl;
-        std::cerr << "Error initializing liblt!\n"; 
+      {
+        cerr << lt_dlerror() << endl;
+        cerr << "Error initializing liblt!\n"; 
         return false;
-    }
-
-//     dlhandle = lt_dlopenext(libname.c_str());
-    dlhandle = base::get_module(std::string("/gfx/") + backend_name);
+      }
+    
+    //     dlhandle = lt_dlopenext(libname.c_str());
+    dlhandle = base::get_module(string("/gfx/") + backend_name);
     
     if (!dlhandle) goto bigerror;
-        
+    
     gfxinit = (bool(*)()) lt_dlsym(dlhandle, "gfx_init");
     if (!gfxinit)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
+      }
     
     gfxcleanup = (void(*)()) lt_dlsym(dlhandle, "gfx_cleanup");
     if (!gfxcleanup)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
+      }
     
     screen::set_video_mode_p = (bool(*)(u_int16, u_int16, u_int8)) lt_dlsym(dlhandle, "gfx_screen_set_video_mode");
     if (!screen::set_video_mode_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
-
+      }
+    
     screen::update_p = (void(*)()) lt_dlsym(dlhandle, "gfx_screen_update");
     if (!screen::update_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
-
+      }
+    
     screen::trans_color_p = (u_int32(*)()) lt_dlsym(dlhandle, "gfx_screen_trans_color");
     if (!screen::trans_color_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
-
+      }
+    
     screen::clear_p = (void(*)()) lt_dlsym(dlhandle, "gfx_screen_clear");
     if (!screen::clear_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
-
-    create_surface_p = (gfx::surface *(*)()) lt_dlsym(dlhandle, "gfx_create_surface");
+      }
+    
+    create_surface_p = (surface *(*)()) lt_dlsym(dlhandle, "gfx_create_surface");
     if (!create_surface_p)
-    {
-        std::cerr << lt_dlerror() << std::endl;
+      {
+        cerr << lt_dlerror() << endl;
         goto bigerror;
-    }
-
+      }
+    
     goto success;
     
  bigerror:
     if (dlhandle) lt_dlclose(dlhandle);
     lt_dlexit();
     return false;
-
+    
  success:        
     return gfxinit();
-}
+  }
 
-void gfx::cleanup()
-{
+  void cleanup()
+  {
     if (gfxcleanup) gfxcleanup();
     gfxcleanup = NULL;
-
+    
     if (dlhandle) lt_dlclose(dlhandle);
     lt_dlexit();
-}
+  }
 
-gfx::surface * gfx::create_surface()
-{
+  surface * create_surface()
+  {
     return create_surface_p();
+  }
+  
 }
