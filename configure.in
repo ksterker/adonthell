@@ -130,9 +130,10 @@ if test x$pylibs = xnone; then
    fw=`echo "$PYPREFIX" | sed 's/.*\(Python\.framework\).*/\1/;'`
    if test "x$fw" != x; then
        PY_LIBS="-framework Python"
-       dnl FIXME: fix target directory for Python framework build
-       dnl pyexecdir="$PYPREFIX/lib/python$PYLIBVER/site-packages"
-       dnl AC_SUBST(pyexecdir)
+       PY_FWDIR="$PYPREFIX/lib/python$PYLIBVER/site-packages"
+       PY_SPDIR="$libdir/python$PYLIBVER/site-packages"
+       AC_SUBST(PY_FWDIR)
+       AC_SUBST(PY_SPDIR)
        AC_MSG_RESULT(found)
    else
        py_paths="$PYPREFIX/lib/python$PYLIBVER/config $PYPREFIX/lib"
@@ -205,6 +206,7 @@ else
    PY_VERSION="Manually specified"   
 fi
 
+AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x)
 
 dnl **************
 dnl Check for SWIG
