@@ -1,7 +1,7 @@
 /*
-   $Id: time_event.h,v 1.4 2004/12/07 16:46:27 ksterker Exp $
+   $Id: time_event.h,v 1.5 2005/03/08 09:41:47 ksterker Exp $
 
-   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -64,9 +64,8 @@ namespace events
         /**
          * Standard constructor.
          */
-        time_event ()
+        time_event () : event ()
         {
-            Type = TIME_EVENT;
             Repeat = 1;
         }
         
@@ -76,9 +75,8 @@ namespace events
          *
          * @param time The "alarm" time in %gametime minutes.
          */
-        time_event (const u_int32 & time)
+        time_event (const u_int32 & time) : event ()
         {
-            Type = TIME_EVENT;
             Time = time;
             Repeat = 1;
         }
@@ -101,7 +99,7 @@ namespace events
         /**
          * Compare two time events for equality.
          *
-         * @param evnt The time event to compare this to.
+         * @param e The time event to compare this to.
          * @return <b>True</b> if the two events equal, <b>false</b> otherwise.
          */
         bool equals (const event * e)
@@ -115,6 +113,15 @@ namespace events
          * amount specified with time_event::set_repeat ().
          */
         void do_repeat ();
+
+        /**
+         * Get name of %event.
+         * @return the string "time_event";
+         */
+        const char* name () const
+        {
+            return "time_event";
+        }
 #endif // SWIG
         //@}
         
@@ -156,7 +163,7 @@ namespace events
         /**
          * Allow %event to be passed as python argument
          */
-        GET_TYPE_NAME(event::time_event)
+        GET_TYPE_NAME(events::time_event)
 #endif
 
     private:

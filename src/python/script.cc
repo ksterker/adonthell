@@ -1,5 +1,5 @@
 /*
-   $Id: script.cc,v 1.4 2005/01/18 12:05:05 ksterker Exp $
+   $Id: script.cc,v 1.5 2005/03/08 09:41:48 ksterker Exp $
   
    Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
    Copyright (C) 2001 Alexandre Courbot
@@ -200,7 +200,7 @@ void script::set_attribute (const string &name, PyObject *value)
 }
 
 // Set an int attribute of the instance
-void script::set_attribute_int (const string &name, int value)
+void script::set_attribute_int (const string &name, s_int32 value)
 {
     if (Instance)
     {

@@ -1,7 +1,7 @@
 /*
-   $Id: time_event_manager.cc,v 1.4 2004/12/07 16:46:27 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.5 2005/03/08 09:41:47 ksterker Exp $
 
-   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -28,11 +28,28 @@
 
 #include <algorithm>
 #include "event/date.h"
+#include "event/types.h"
 #include "event/time_event.h"
 #include "event/time_event_manager.h"
 
 using std::vector;
 using events::time_event_manager;
+using events::event_type;
+
+// function returning a new time event
+NEW_EVENT (time_event)
+
+// register time events with event subsystem 
+void time_event_manager::init ()
+{
+    event_type::register_type ("time_event", new time_event_manager (), &new_time_event);
+}
+
+// remove time events from event subsystem
+void time_event_manager::cleanup ()
+{
+    event_type::remove_type ("time_event");
+}
 
 // See whether a matching event is registered and execute the
 // according script(s) 

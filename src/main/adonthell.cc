@@ -1,7 +1,7 @@
 /*
-   $Id: adonthell.cc,v 1.9 2004/12/07 16:46:27 ksterker Exp $
+   $Id: adonthell.cc,v 1.10 2005/03/08 09:41:48 ksterker Exp $
 
-   Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -39,7 +39,7 @@
 #include "input/input.h"
 #include "python/python.h"
 #include "main/adonthell.h"
-#include "event/manager.h"
+#include "event/time_event_manager.h"
 
 using namespace adonthell;
 using std::cerr;
@@ -96,7 +96,7 @@ bool app::init_modules (const u_int16 & modules)
     // startup event system
     if (m & EVENT)
     {
-        events::manager::init ();
+        events::time_event_manager::init ();
     }
 
     return true;
@@ -214,7 +214,7 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
-    if (Modules & EVENT) events::manager::cleanup ();
+    if (Modules & EVENT) events::time_event_manager::cleanup ();
 	if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();

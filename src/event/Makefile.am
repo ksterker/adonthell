@@ -11,7 +11,8 @@ pkgincludeevent_HEADERS = \
 	manager.h \
 	manager_base.h \
 	time_event.h \
-	time_event_manager.h
+	time_event_manager.h \
+    types.h
     
 ## Main library
 lib_LTLIBRARIES = libadonthell_event.la
@@ -22,9 +23,9 @@ libadonthell_event_la_SOURCES = \
 	event.cc \
 	factory.cc \
 	listener.cc \
-	manager.cc \
 	time_event.cc \
-	time_event_manager.cc
+	time_event_manager.cc \
+    types.cc
 
     
 libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS)

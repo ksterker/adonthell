@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.10 2004/11/15 08:54:33 ksterker Exp $
+   $Id: flat.h,v 1.11 2005/03/08 09:41:47 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -125,7 +125,7 @@ namespace base
             
             /**
              * Return size of data stored in this object.
-             * @param length of flattened data in bytes.
+             * @return length of flattened data in bytes.
              */
             u_int32 size () const {
                 return Size;
@@ -300,7 +300,7 @@ namespace base
              * Retrieve a character value previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
-             * @return value stored or \b '\0' on error.
+             * @return value stored or \b '\\0' on error.
              */
             char get_char (const string & name) {
                 data *d = get (name, T_CHAR);

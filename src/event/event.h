@@ -1,7 +1,7 @@
 /*
-   $Id: event.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
+   $Id: event.h,v 1.7 2005/03/08 09:41:47 ksterker Exp $
 
-   Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2000/2001/2002/2003/2004/2005 Kai Sterker 
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -42,19 +42,6 @@ namespace events
      * Directory where %event scripts reside.
      */
     #define EVENTS_DIR "game_events."
-
-    /**
-     * Available %event types.
-     */
-    enum
-    {
-        ENTER_EVENT     = 0,            // Characters reach a new tile
-        LEAVE_EVENT     = 1,            // Characters leave a tile
-        TIME_EVENT      = 2,            // Certain point in gametime reached
-        ACTION_EVENT    = 3,            // Character "acts" on a square
-        MAX_EVENTS      = 4
-    };
-
 #endif // SWIG
 
     /**
@@ -89,10 +76,15 @@ namespace events
          *
          * @return type of the %event
          */
-        u_int8 type () const
-        {
-            return Type;
-        }
+        u_int8 type ();
+
+#ifndef SWIG
+        /**
+         * Get name of %event.
+         * @return name of %event.
+         */
+        virtual const char* name () const = 0;
+#endif // SWIG
 
         /**
          * Return whether this event should be repeated.
@@ -164,7 +156,7 @@ namespace events
         /**
          * Allow %event to be passed as python argument
          */
-        GET_TYPE_NAME_VIRTUAL (event::event)
+        GET_TYPE_NAME_VIRTUAL (events::event)
 #endif
 
     protected:

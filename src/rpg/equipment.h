@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.h,v 1.3 2004/10/18 07:40:23 ksterker Exp $
+   $Id: equipment.h,v 1.4 2005/03/08 09:41:48 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,12 +36,20 @@
 
 namespace rpg
 {
+    /// comparator for storing strings in a set
     struct lstr {
+        /**
+         * lexical comparation of strings.
+         * @param s1 first string
+         * @param s2 second string
+         * @return whether s1 comes before s2 or not
+         */
         bool operator() (const std::string & s1, const std::string & s2) const {
             return s1 < s2;
         }
     };
 
+    /// abbrevation for a set of strings
     typedef std::set<std::string, lstr> slot_list;
 
     /**

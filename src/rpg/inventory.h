@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.h,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: inventory.h,v 1.3 2005/03/08 09:41:48 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,8 @@ namespace rpg
         /**
          * Create an %inventory with 'count' anonymous slots.
          * @param size Initial size of the %inventory.
-         * @param limited Whether %inventory has fixed size or not.
+         * @param limited Whether %inventory has fixed size or can grow at runtime.
+         * @param owner (optional) %character to whom this inventory belongs.
          */
         inventory (const u_int16 & size = 0, const bool & limited = true,
             character *owner = NULL);

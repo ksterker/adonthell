@@ -1,5 +1,5 @@
 /*
-   $Id: manager.h,v 1.2 2004/12/07 16:46:27 ksterker Exp $
+   $Id: manager.h,v 1.3 2005/03/08 09:41:47 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #ifndef EVENT_MANAGER_H
 #define EVENT_MANAGER_H
 
+#include "event/types.h"
 #include "event/factory.h"
 #include "event/manager_base.h"
 
@@ -42,27 +43,19 @@ namespace events
     class manager
     {
     public:
-        /**
-         * Instanciate the actual event managers. Event managers
-         * can be specific to a certain event, or take care of
-         * different events.
-         */
-        static void init ();
-    
-        /**
-         * Delete the %event managers.
-         */
-        static void cleanup ();
-    
         /** 
-         * Unregister an %event.
+         * Unregister an %event %listener.
          * 
-         * @param ev pointer to the %event to unregister.
+         * @param li pointer to the %listener to unregister.
          */
         static void remove (listener* li)
         {
-            li->set_registered (false);
-            Manager[li->type ()]->remove (li);
+            manager_base *manager = event_type::get_manager (li->type ());
+            if (manager != NULL)
+            {
+                li->set_registered (false);
+                manager->remove (li);
+            }
         }
     
         /** 
@@ -72,7 +65,11 @@ namespace events
          */
         static void raise_event (const event* ev)
         {
-            Manager[ev->type ()]->raise_event (ev);
+            manager_base *manager = event_type::get_manager (((event *) ev)->type ());
+            if (manager != NULL)
+            {
+                manager->raise_event (ev);
+            }
         }
     
     protected:
@@ -83,8 +80,12 @@ namespace events
          */
         static void add (listener* li)
         {
-            li->set_registered (true);
-            Manager[li->type ()]->add (li);
+            manager_base *manager = event_type::get_manager (li->type ());
+            if (manager != NULL)
+            {
+                li->set_registered (true);
+                manager->add (li);
+            }
         }
     
         /**
@@ -97,12 +98,6 @@ namespace events
          * As is %listener::resume
          */
         friend void listener::resume ();
-        
-    private:
-        /**
-         * A list of the actual %event handlers
-         */
-        static manager_base* Manager[MAX_EVENTS];
     };
 }
 #endif // EVENT_MANAGER_H

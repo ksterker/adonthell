@@ -1,5 +1,5 @@
 /*
-   $Id: configuration.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: configuration.h,v 1.4 2005/03/08 09:41:47 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -174,7 +174,6 @@ namespace base
             /**
              * Create a new choice.
              * @param value value of option.
-             * @param valType type of given value.
              */
             cfg_choice (const string & value);
         

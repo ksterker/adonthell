@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.h,v 1.2 2004/12/07 16:46:27 ksterker Exp $
+   $Id: time_event_manager.h,v 1.3 2005/03/08 09:41:47 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -70,7 +70,17 @@ namespace events
          *      minutes.
          */
         void raise_event (const event *evnt);
-                
+        
+        /**
+         * Register %time events with %event subsystem.
+         */
+        static void init ();
+        
+        /**
+         * Remove %time events from %event subsystem. 
+         */
+        static void cleanup ();
+        
     private:
         /// storage for registered listeners.
         std::vector<listener*> Listeners;

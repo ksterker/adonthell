@@ -1,7 +1,7 @@
 /*
-   $Id: listener.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
+   $Id: listener.h,v 1.7 2005/03/08 09:41:47 ksterker Exp $
 
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -32,13 +32,6 @@
 
 #include "python/method.h"
 #include "event/event.h"
-
-#ifndef SWIG
-/**
- * Pointer to a function returning a newly allocated %event
- */
-typedef events::event* (*new_event)();
-#endif // SWIG
 
 namespace events
 {
@@ -233,22 +226,9 @@ namespace events
 
 #ifndef SWIG
         /**
-         * Register an %event for loading. Before the %event %factory can load
-         * an %event from file, it needs a callback function that returns
-         * a new instance of the %event of the given type.
-         *
-         * @param type the type of the %event to register
-         * @param e a callback returning a new instance of an %event of the 
-         *      given type.
-         *
-         * @sa get_state ()
-         */
-        static void register_event (u_int8 type, new_event e);
-        
-        /**
          * Allow %listener to be passed as python argument
          */
-        GET_TYPE_NAME(event::listener)
+        GET_TYPE_NAME(events::listener)
 #endif // SWIG
 
     private:
@@ -286,28 +266,7 @@ namespace events
          * The %event %factory that created this listener.
          */
         factory *Factory;
-        
-        /**
-         * Array with callbacks that return a newly allocated instance of an %event.
-         * The event's type is the postion of the according callback in the array.
-         */
-        static new_event instanciate_event[MAX_EVENTS];
     };
 }
 
-#ifndef SWIG
-/**
- * Registers an %event with the %event %factory, allowing it to load this %event
- * without knowing about it at compile time.
- */
-#define REGISTER_EVENT(type,evt)\
-    listener::register_event (type, (new_event) &new_ ## evt);
-    
-/**
- * A function that returns a new instance of an %event.
- */
-#define NEW_EVENT(evt)\
-    events::event* new_ ## evt () { return (events::event*) new events::evt; }
-
-#endif // SWIG
 #endif // EVENT_LISTENER_H

@@ -1,5 +1,5 @@
 /*
-   $Id: configio.h,v 1.1 2004/05/13 06:43:59 ksterker Exp $
+   $Id: configio.h,v 1.2 2005/03/08 09:41:47 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,11 +50,17 @@ namespace base {
         
             /**
              * Read a configuration from file.
+             * @param filename name of configuration file without path and suffix.
+             * @param config configuration to load given file into.
+             * @return \c true on success, \c false otherwise
              */
             static bool read (const std::string & filename, base::configuration *config);
 
             /**
-             *
+             * Write configuration to file.
+             * @param filename name of configuration file without path and suffix.
+             * @param config configuration to write to given file.
+             * @return \c true on success, \c false otherwise
              */
             static bool write (const std::string & filename, const base::configuration *config);
     };

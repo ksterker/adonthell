@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.12 2004/10/25 06:50:09 ksterker Exp $
+   $Id: python.h,v 1.13 2005/03/08 09:41:48 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -66,10 +66,15 @@ namespace python
      * 
      */
     //@{
-
+    /**
+     * Initialize the embedded Python interpreter.
+     */
     void init();
-    void cleanup();
 
+    /**
+     * Shutdown the embedded Python interpreter.
+     */
+    void cleanup();
     //@}
 
     /**
@@ -88,7 +93,7 @@ namespace python
      * Execute a python statement and return resulting object.
      * This is a new reference that needs to be Py_DECREF'd when done.
      * @param statement Python code to execute.
-     * @param one of Py_eval_input, Py_file_input or Py_single_input
+     * @param start one of Py_eval_input, Py_file_input or Py_single_input
      * @return \b result on success, \b NULL otherwise.
      */
     PyObject* run_string (const std::string & statement, const int & start = Py_eval_input);
@@ -100,6 +105,11 @@ namespace python
      */
     bool run_simple_string (const std::string & statement);
 
+    /**
+     * Import %python module with given name.
+     * @param name name of module to import
+     * @return imported module or \c NULL on error.
+     */
     PyObject * import_module(const std::string & name);
 
     //@}
@@ -310,7 +320,7 @@ namespace python
     //@{
     /**
      * Read the contents of a tuple from given stream.
-     * @param out flattener to read the tuple from.
+     * @param in flattener to read the tuple from.
      * @param start index from where to start filling the tuple.
      * @return a new tuple filled with the data read from stream.
      */
@@ -320,7 +330,7 @@ namespace python
      * Write the contents of a tuple to given stream. Only supports integer and
      * string objects.
      * @param tuple Python tuple whose contents to save.
-     * @param in flattener to store the tuple in.
+     * @param out flattener to store the tuple in.
      * @param start index from where to start flattening the tuple.
      */
     void put_tuple (PyObject *tuple, base::flat & out, u_int16 start = 0);
