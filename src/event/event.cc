@@ -1,7 +1,7 @@
 /*
-   $Id: event.cc,v 1.6 2004/12/13 08:50:31 ksterker Exp $
+   $Id: event.cc,v 1.7 2005/03/08 09:43:36 ksterker Exp $
 
-   Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2000/2001/2002/2003/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -27,20 +27,29 @@
  */
 
 #include "event/event.h"
+#include "event/types.h"
 
 using events::event;
+using events::event_type;
 
 // constructor
 event::event ()
 {
     // repeat forever
     Repeat = -1;
+    Type = 255;
+}
+
+u_int8 event::type ()
+{
+    if (Type != 255) return Type;
+    return (Type = event_type::get_id (name ()));
 }
 
 // save the state of the script associated with the event
 void event::put_state (base::flat & out) const
 {
-    out.put_uint8 ("etp", Type);
+    out.put_string ("etp", name ());
     out.put_sint32 ("erp", Repeat);
 }
 

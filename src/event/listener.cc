@@ -1,7 +1,7 @@
 /*
-   $Id: listener.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
+   $Id: listener.cc,v 1.6 2005/03/08 09:43:36 ksterker Exp $
 
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -33,9 +33,6 @@
 
 using events::factory;
 using events::listener;
-
-// Array with callbacks to return a newly instanciated event
-new_event listener::instanciate_event[MAX_EVENTS];
 
 // ctor
 listener::listener (factory *f, event *e)
@@ -218,16 +215,15 @@ bool listener::get_state (base::flat & in)
     // load event structure
     if (in.get_bool ("lev") == true)
     {
-        u_int8 type = in.get_uint8 ("etp");
+        std::string type = in.get_string ("etp");
         
         // Instanciate an event of the given type
-        if (type < MAX_EVENTS && instanciate_event[type] != NULL)
-            Event = instanciate_event[type]();
+        Event = event_type::instanciate_event (type);
  
         // try to load it
         if (Event == NULL || Event->get_state (in) == false)
         {
-            fprintf (stderr, "*** listener::get_state: could not load event of type %i!\n", type);
+            fprintf (stderr, "*** listener::get_state: could not load event of type '%s'!\n", type.c_str ());
             return false;
         }    
     }
@@ -235,10 +231,4 @@ bool listener::get_state (base::flat & in)
     return in.success ();
 }
 
-// Register an event for loading
-void listener::register_event (u_int8 type, new_event e)
-{
-    if (type < MAX_EVENTS)
-        instanciate_event[type] = e;
-}
 
