@@ -1,5 +1,5 @@
 /*
-   $Id: log_index.cc,v 1.1 2004/07/03 05:55:38 ksterker Exp $
+   $Id: log_index.cc,v 1.2 2004/07/11 16:19:29 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,10 +31,11 @@ using rpg::log_index;
 using rpg::log_entry;
 
 // ctor
-log_index_entry::log_index_entry (const std::string & key)
+log_index_entry::log_index_entry (const std::string & key, const u_int32 & pos)
 {
     Key = key;
     Parts = 0;
+    Pos = pos;
     
     // multi-part key?
     for (u_int32 i = 0; i < key.length (); i++)
@@ -51,7 +52,7 @@ log_index_entry::log_index_entry (const std::string & key)
 void log_index::add (const log_entry *entry)
 {
     std::map<u_int16, std::set<log_index_entry*, ltlie> > words;
-    std::string text = entry->text ();
+    const std::string & text = entry->text ();
     u_int32 i, start = 0;
     u_int16 first;
     
@@ -66,8 +67,12 @@ void log_index::add (const log_entry *entry)
         
         // don't care if word is shorter than shortest index entry (or no entry begins with that letter)
         if (MinLengths.find (first) != MinLengths.end () && (i - start) >= MinLengths[first])
+        {
             // otherwise add it to wordlist
-            words[first].insert (new log_index_entry (text.substr (start, i - start)));
+            log_index_entry *e = new log_index_entry (text.substr (start, i - start), start);
+            std::pair<std::set<log_index_entry*, ltlie>::iterator, bool> result = words[first].insert (e);
+            if (result.second == false) delete e;
+        }
         
         // search for beginning of next word
         while (i < text.length () && !isalpha (text[i])) i++; 
@@ -82,7 +87,12 @@ void log_index::add (const log_entry *entry)
         first = toupper (text[start]);
         
         if (MinLengths.find (first) != MinLengths.end () && (i - start) >= MinLengths[first])
-            words[first].insert (new log_index_entry (text.substr (start, i - start)));
+        {
+            // otherwise add it to wordlist
+            log_index_entry *e = new log_index_entry (text.substr (start, i - start), start);
+            std::pair<std::set<log_index_entry*, ltlie>::iterator, bool> result = words[first].insert (e);
+            if (result.second == false) delete e;
+        }
     }
     
     std::set<log_index_entry*, ltlie>::iterator w;
@@ -101,7 +111,7 @@ void log_index::add (const log_entry *entry)
                 // for multi-part keys, check that text contains the other parts
                 if ((*e)->Parts > 0)
                 {
-                    if (text.find ((*e)->key ()) == text.npos)
+                    if (text.find ((*e)->key (), (*w)->Pos) == text.npos)
                     {
                         delete *w;
                         continue;
@@ -145,7 +155,7 @@ std::vector<const char*> log_index::keys ()
     
     std::set<log_index_entry*, ltlie> tmp;
 
-    log_index_entries::iterator e;
+    log_index_entries::const_iterator e;
     std::map<u_int16, log_index_entries>::const_iterator i;
     std::set<log_index_entry*, ltlie>::const_iterator t;
     
@@ -174,13 +184,15 @@ std::vector<const char*> log_index::refs (const std::string & key) const
     // do we have a valid key?
     if (key.length () > 0)
     {
-        u_int16 index = toupper (key[0]);
+        std::map<u_int16, log_index_entries>::const_iterator i;
+        std::vector<std::string>::const_iterator k;
+        log_index_entries::const_iterator j;
         log_index_entry entry (key);
-        log_index_entries::const_iterator e;
-
-        if ((e = Entries[index].find (&entry)) != Entries[index].end ())
-            for (std::vector<std::string>::const_iterator i = (*e)->Uids.begin (); i != (*e)->Uids.end (); i++)
-                refs.push_back ((*i).c_str ());
+                
+        if ((i = Entries.find (toupper (key[0]))) != Entries.end ())
+            if ((j = (*i).second.find (&entry)) != (*i).second.end ())
+                for (k = (*j)->Uids.begin (); k != (*j)->Uids.end (); k++)
+                    refs.push_back ((*k).c_str ());
     }
     
     return refs;

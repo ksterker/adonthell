@@ -1,5 +1,5 @@
 /*
-   $Id: log_index.h,v 1.1 2004/07/03 05:55:38 ksterker Exp $
+   $Id: log_index.h,v 1.2 2004/07/11 16:19:29 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,8 +46,9 @@ namespace rpg
             /**
              * Create a new index entry.
              * @param key name of the index entry.
+             * @param pos first appearance of key in log entry.
              */
-            log_index_entry (const std::string & key);
+            log_index_entry (const std::string & key, const u_int32 & pos = 0);
         
             /**
              * Return the key of this index entry, i.e. the name to display in the index.
@@ -79,7 +80,10 @@ namespace rpg
             std::string Key;
             
             /// Multi-part key?
-           	int Parts;
+           	u_int16 Parts;
+            
+            /// First occurance of key in log entry
+            u_int32 Pos;
             
             /// Unique IDs of log entries referenced by that keyowrd
             std::vector<std::string> Uids;
@@ -135,8 +139,17 @@ namespace rpg
 #endif // SWIG
 
     /**
+     * Index for log entries. For one it stores a list of index keys, i.e. words which
+     * are used to categorize log entries. This is done by searching a log entry for these
+     * words. If it contains them, a reference to that log entry is stored under the matching
+     * index key.
      *
+     * @bug multi word index keys with the same prefix (e.g. 'Mountains of Dawn' and 
+     * 'Mountains of Making') can not both be used, as the hash_set used to store index
+     * keys is not able to store both (only first word is used as key). 
      *
+     * @note To find a key in a log entry, it must contain that key. Otherwise there 
+     * will be no match.
      */
     class log_index
     {
