@@ -1,7 +1,7 @@
 /*
-   $Id: method.h,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
+   $Id: method.h,v 1.3 2004/04/09 11:57:51 ksterker Exp $
 
-   Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -41,8 +41,17 @@ namespace python
     class method
     {
     public:
+#ifndef SWIG
+        /**
+         * Standard constructor.
+         */
+        method () : Script (NULL), Method (NULL) { }
+#endif // SWIG
+
         /**
          * Constructor.
+         * @param scrpt Python %script this 5method belongs to.
+         * @param mtd name of the %method to connect to.
          */
         method (python::script *scrpt, const std::string & mtd);
         
@@ -52,7 +61,8 @@ namespace python
         ~method ();
         
         /**
-         *
+         * Execute the connected %method with the given arguments.
+         * @param args a python tuple to be passed to the %method.
          */
         bool execute (PyObject *args);
 
@@ -66,18 +76,18 @@ namespace python
          * That is, filename of the Python script, name of the class and finally
          * the name of the method itself.
          * 
-         * @param out file where to save the %event.
+         * @param out stream where to save the %method.
          */ 
-        void put_state (base::ogzstream& out) const;
+        void put_state (base::flat& out) const;
     
         /** 
          * Re-connect this method to its script. This is done via the %script
          * pools reconnect method.
          *
-         * @param in file to load the %method from.
+         * @param in stream to load the %method from.
          * @return \b true if the %method could be reconnected, \b false otherwise
          */
-        bool get_state (base::igzstream& in);
+        bool get_state (base::flat& in);
         //@}
         
     private:

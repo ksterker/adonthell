@@ -1,5 +1,5 @@
 /*
-   $Id: manager.h,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: manager.h,v 1.3 2004/04/09 11:57:51 ksterker Exp $
 
    Copyright (C) 2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   manager.h
+ * @file   input/manager.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Declares the manager static class.
@@ -58,7 +58,7 @@ namespace input
     public:
         /**
          * Update the manager status. This method should be 
-         * called once per game cycle. It will reads all the events
+         * called once per game cycle. It will read all the events
          * in the event queues and call the connected callback methods 
          * accordingly.
          * 

@@ -1,7 +1,7 @@
 /*
-   $Id: method.cc,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
+   $Id: method.cc,v 1.3 2004/04/09 11:57:51 ksterker Exp $
 
-   Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -73,33 +73,28 @@ bool method::execute (PyObject *args)
 }
 
 // save callback connection to disk
-void method::put_state (base::ogzstream & file) const
+void method::put_state (base::flat & out) const
 {
-    if (!Script) 
-    {
-        false >> file;
-        return;
-    }
-    else true >> file;
+    out.put_bool ("msc", Script != NULL);
     
-    Script->file_name () >> file;
-    Script->class_name () >> file;
-    PyModule_GetName (Method) >> file;
+    if (Script) 
+    {
+        out.put_string ("mfn", Script->file_name ());
+        out.put_string ("mcn", Script->class_name ());
+        out.put_string ("mmn", PyModule_GetName (Method));
+    }
 }
 
 // load callback connection from disk and reconnect
-bool method::get_state (base::igzstream & file)
+bool method::get_state (base::flat & in)
 {
-    bool connected;
-    
-    connected << file;
-    if (connected)
+    if (in.get_bool ("msc") == true)
     {
         std::string filename, classname, methodname;
 
-        filename << file;
-        classname << file;
-        methodname << file;
+        filename = in.get_string ("mfn");
+        classname = in.get_string ("mcn");
+        methodname = in.get_string ("mmn");
         
         Script = pool::reconnect (filename, classname);
         if (!Script) return false;

@@ -1,7 +1,7 @@
 /*
-   $Id: python.h,v 1.4 2003/12/01 22:42:21 ksterker Exp $
+   $Id: python.h,v 1.5 2004/04/09 11:57:51 ksterker Exp $
 
-   Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -36,7 +36,14 @@
 #include <string>
 
 #include "python/callback_support.h"
+#include "base/flat.h"
 
+struct swig_type_info;
+extern "C" {
+    swig_type_info *SWIG_TypeQuery (const char*);
+    int SWIG_ConvertPtr (PyObject*, void**, swig_type_info*, int);
+    PyObject *SWIG_NewPointerObj (void*, swig_type_info*, int);
+}
 
 /**
  * Provides a bridge between C++ and Python,
@@ -277,9 +284,29 @@ namespace python
         return std::string(PyString_AsString(pyinstance));
         show_traceback();
     }
-
     //@}
 
+    /**
+     * @name Loading / Saving
+     */
+    //@{
+    /**
+     * Read the contents of a tuple from given stream.
+     * @param out flattener to read the tuple from.
+     * @param start index from where to start filling the tuple.
+     * @return a new tuple filled with the data read from stream.
+     */
+    PyObject *get_tuple (base::flat & in, u_int16 start = 0);
+
+    /**
+     * Write the contents of a tuple to given stream. Only supports integer and
+     * string objects.
+     * @param tuple Python tuple whose contents to save.
+     * @param in flattener to store the tuple in.
+     * @param start index from where to start flattening the tuple.
+     */
+    void put_tuple (PyObject *tuple, base::flat & out, u_int16 start = 0);
+    //@}
 }
 
 #include "python/callback.h"

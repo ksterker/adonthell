@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.1 2004/03/13 12:38:10 ksterker Exp $
+   $Id: flat.h,v 1.2 2004/04/09 11:57:51 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,24 +42,6 @@ namespace base
     class flat
     {
         /**
-         * Data types that can be flattened.
-         */
-        enum {
-            T_BOOL,
-            T_CHAR,
-            T_UINT8,
-            T_SINT8,
-            T_UINT16,
-            T_SINT16,
-            T_UINT32,
-            T_SINT32,
-            T_STRING,
-            T_FLOAT,
-            T_DOUBLE,
-            T_BLOB
-        };
-        
-        /**
          * Internal structure to store unflattened data
          */
         class data {
@@ -74,13 +56,32 @@ namespace base
                 ~data () { delete Next; }
         };
 
-            public:
+        public:
+        /**
+         * Data types that can be flattened.
+         */
+            enum {
+                T_BOOL, T_CHAR, T_UINT8, T_SINT8, T_UINT16,
+                T_SINT16, T_UINT32, T_SINT32, T_STRING,
+                T_FLOAT, T_DOUBLE, T_BLOB, T_FLAT
+            };
+        
             /**
              * Create a new flattener.
              * @param size initial size of the internal buffer
              */
-            flat (const u_int16 & size = 16);
-            
+            flat (const u_int16 & size = 32);
+
+#ifndef SWIG
+            /**
+             * Create a new flattener. A copy of the given buffer
+             * will be made.
+             * @param buffer a buffer with flattened date.
+             * @param size size of buffer in bytes
+             */
+            flat (const char *buffer, const u_int32 & size);
+#endif // SWIG            
+
             /**
              * Destructor
              */
@@ -97,10 +98,15 @@ namespace base
                 delete Data;
                 Data = NULL;
                 Ptr = Buffer;
+                Success = true;
             }
             
             u_int32 size () const {
                 return Size;
+            }
+            
+            bool success () const {
+                return Success;
             }
             
             u_int32 checksum () const;
@@ -163,6 +169,10 @@ namespace base
             void put_block (const string & name, void *b, const u_int32 & size) {
                 put (name, T_BLOB, size, b);
             }
+            
+            void put_flat (const string & name, const flat & out) {
+                put (name, T_FLAT, out.size (), out.getBuffer ());
+            }
             //@}
             
             /**
@@ -171,83 +181,119 @@ namespace base
             //@{
             bool get_bool (const string & name) {
                 data *d = get (name, T_BOOL);
-                return (bool) *((u_int8*) d->Content);  
+                if (d) return (bool) *((u_int8*) d->Content);
+                else return false;
             }
             
             char get_char (const string & name) {
                 data *d = get (name, T_CHAR);
-                return (char) *d->Content;
+                if (d) return (char) *d->Content;
+                else return '\0';
             }
             
             u_int8 get_uint8 (const string & name) {
                 data *d = get (name, T_UINT8);
-                return *((u_int8*) d->Content);
+                if (d) return *((u_int8*) d->Content);
+                else return 0;
             }
 
             s_int8 get_sint8 (const string & name) {
                 data *d = get (name, T_SINT8);
-                return *((s_int8*) d->Content);
+                if (d) return *((s_int8*) d->Content);
+                else return -1;
             }
 
             u_int16 get_uint16 (const string & name) {
                 data *d = get (name, T_UINT16);
-                return SwapLE16 (*((u_int16*) d->Content));
+                if (d) return SwapLE16 (*((u_int16*) d->Content));
+                else return 0;
             }
 
             s_int16 get_sint16 (const string & name) {
                 data *d = get (name, T_SINT16);
-                return SwapLE16 (*((s_int16*) d->Content));
+                if (d) return SwapLE16 (*((s_int16*) d->Content));
+                else return -1;
             }
 
             u_int32 get_uint32 (const string & name) {
                 data *d = get (name, T_UINT32);
-                return SwapLE32 (*((u_int32*) d->Content));
+                if (d) return SwapLE32 (*((u_int32*) d->Content));
+                else return 0;
+                
             }
 
             s_int32 get_sint32 (const string & name) {
                 data *d = get (name, T_SINT32);
-                return SwapLE32 (*((s_int32*) d->Content));
+                if (d) return SwapLE32 (*((s_int32*) d->Content));
+                else return -1;
             }
 
             string get_string (const string & name) {
                 data *d = get (name, T_STRING);
-                return string (d->Content);
+                if (d) return string (d->Content);
+                else return string ("");
             }
             
             float get_float (const string & name) {
                 data *d = get (name, T_FLOAT);
-                return (float) strtod (d->Content, NULL);
+                if (d) return (float) strtod (d->Content, NULL);
+                else return 0.0;
             }
 
             double get_double (const string & name) {
                 data *d = get (name, T_DOUBLE);
-                return strtod (d->Content, NULL);
+                if (d) return strtod (d->Content, NULL);
+                else return 0.0;
             }
 
-            void* get_block (const string & name) {
+            void* get_block (const string & name, int *size = NULL) {
                 data *d = get (name, T_BLOB);
-                char *ret = new char[d->Size];
-                return memcpy (ret, d->Content, d->Size);
+                if (d) {
+                    if (size != NULL) *size = d->Size;
+                    char *ret = new char[d->Size];
+                    return memcpy (ret, d->Content, d->Size);
+                }
+                
+                if (size != NULL) *size = 0;
+                return NULL;
             }
+            
+            flat *get_flat (const string & name) {
+                data *d = get (name, T_FLAT);
+                if (d) return new flat (d->Content, d->Size);
+                else return new flat ();
+            }
+            
+            /**
+             * Retrieve the next value in stream.
+             * @param value will contain a pointer to the value
+             * @param size will contain the size of value
+             * @return type of value fetched.
+             */
+            int next (void **value, int *size = NULL);
             //@}
 
         protected:
             const char *getBuffer () const { return Buffer; }
             
-            void setBuffer ( char* buffer, const u_int32 & size) {
+            void setBuffer (char* buffer, const u_int32 & size) {
                 delete[] Buffer;
                 delete Data;
 
                 Buffer = buffer;
                 Capacity = size;
+                Success = true;
                 Ptr = Buffer;
                 Size = size;
-                Data = Data;
+                Data = NULL;
             }
             
         private:
             /// Pointer to unflattened data. Valid after first call to parse().
             data *Data;
+            
+            /// Points to record last fetched with get_*() or next()
+            data *Decoded;
             
             /**
              * Writes data into the buffer, growing it if neccessary.
@@ -274,22 +320,7 @@ namespace base
             /**
              * Grow the internal buffer. This will double its current capacity.
              */
-            void grow () {
-                Capacity *= 2;
-                char *tmp = new char[Capacity];
-                
-                if (tmp == NULL) {
-                    fprintf (stderr, "*** flat::grow: failed to allocate %i more bytes. Giving up ...\n", Capacity);
-                    exit (1);
-                }
-                
-                memcpy (tmp, Buffer, Size);
-                memset (tmp + Size, '\0', Capacity - Size);
-                delete[] Buffer;
-                
-                Buffer = tmp;
-                Ptr = Buffer + Size;
-            }
+            void grow ();
             
             /// Buffer storing the flattened objects
             char *Buffer;
@@ -302,6 +333,9 @@ namespace base
             
             /// Maximum capacity of the Buffer
             u_int32 Capacity;
+            
+            /// Indicates an error during get
+            bool Success;
     };
 }
 #endif // BASE_FLAT

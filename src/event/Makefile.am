@@ -4,26 +4,28 @@ DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 ## Our header files
 pkgincludeeventdir = $(pkgincludedir)/event
 pkgincludeevent_HEADERS = \
-	date.h 
-#    event.h \
-#    handler.h \
-#    handler_base.h \
-#    list.h \
-#    time_event.h \
-#    time_event_handler.h
+	date.h \
+	event.h \
+	factory.h \
+	listener.h \
+	manager.h \
+	manager_base.h \
+	time_event.h \
+	time_event_manager.h
     
 ## Main library
 lib_LTLIBRARIES = libadonthell_event.la
 
-## Rules to build libpython
+## Rules to build libevent
 libadonthell_event_la_SOURCES = \
-	date.cc 
-#    event.cc \
-#    handler.cc \
-#    list.cc \
-#    time_event.cc \
-#    time_event_handler.cc
+	date.cc \
+	event.cc \
+	factory.cc \
+	listener.cc \
+	manager.cc \
+	time_event.cc \
+	time_event_manager.cc
 
     
-# libadonthell_event_la_CXXFLAGS =
-libadonthell_event_la_LIBADD = -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++
+libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_event_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

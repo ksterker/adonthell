@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.cc,v 1.1 2004/03/13 12:38:10 ksterker Exp $
+   $Id: diskio.cc,v 1.2 2004/04/09 11:57:38 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -58,7 +58,7 @@ bool diskio::get_record (igzstream & in)
     
     checksum << in;
     if (checksum != this->checksum ()) {
-        fprintf (stderr, "*** diskio::get_record: checksum error. Data may be corrupted.\n");
+        fprintf (stderr, "*** diskio::get_record: checksum error. Data might be corrupted.\n");
         return false;
     }
     

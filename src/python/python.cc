@@ -1,7 +1,7 @@
 /*
-   $Id: python.cc,v 1.5 2003/12/01 22:42:21 ksterker Exp $
+   $Id: python.cc,v 1.6 2004/04/09 11:57:51 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -77,5 +77,69 @@ namespace python
         
         show_traceback();
         return ret;
+    }
+    
+    // unflatten the contents of a tuple
+    PyObject *get_tuple (base::flat & in, u_int16 start)
+    {
+        u_int16 len = in.get_uint16 ("pln");
+        PyObject *tuple = PyTuple_New (len);
+        void *value;
+        
+        for (u_int16 i = start; i < len; i++) 
+        {
+            switch (int type = in.next (&value)) 
+            {
+                case base::flat::T_STRING:
+                {
+                    // Stolen reference
+                    PyTuple_SetItem (tuple, i, pass_instance ((*(string*) value).c_str ()));
+                    break;
+                }   
+                case base::flat::T_SINT32:
+                {
+                    // Stolen reference
+                    PyTuple_SetItem (tuple, i, pass_instance (*((int*) value)));
+                    break; 
+                }
+                default:
+                {
+                    fprintf (stderr, "*** python::get_tuple: unsupported type: %i!\n", type);
+                    break;
+                }
+            }
+        }
+        
+        return tuple; 
+    }
+    
+    // flatten the contents of a tuple
+    void put_tuple (PyObject * tuple, base::flat & out, u_int16 start)
+    {
+        u_int16 len = PyTuple_Size (tuple);
+        out.put_uint16 ("pln", len);
+        
+        for (u_int16 i = start; i < len; i++) 
+        {
+            // Borrowed reference
+            PyObject *item = PyTuple_GetItem (tuple, i);
+            
+            // Check for the type of this object
+            // String?
+            if (PyString_Check (item)) 
+                out.put_string ("s", PyString_AsString (item));
+            
+            // Integer?
+            else if (PyInt_Check (item)) 
+                out.put_sint32 ("i", PyInt_AsLong (item));
+            
+            // Not saveable
+            else
+            {
+                PyObject *repr = PyObject_Repr (item);
+                fprintf (stderr, "*** python::put_tuple: cannot save '%s'!\n", PyString_AsString (repr));
+                Py_DECREF (repr);
+            }
+        }
     }
 }

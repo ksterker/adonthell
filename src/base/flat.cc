@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.1 2004/03/13 12:38:10 ksterker Exp $
+   $Id: flat.cc,v 1.2 2004/04/09 11:57:50 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,9 +37,22 @@ flat::flat (const u_int16 & size)
     Buffer = new char[size];
     memset (Buffer, '\0', size);
     Capacity = size;
+    Success = true;
     Ptr = Buffer;
     Data = NULL;
     Size = 0;
+}
+
+// 'copy' ctor
+flat::flat (const char *buffer, const u_int32 & size) 
+{
+    Data = NULL;
+    Buffer = NULL;
+    Success = true;
+    
+    char *tmp = new char[size];
+    memcpy (tmp, buffer, size);
+    setBuffer (tmp, size);
 }
 
 // flatten the given data
@@ -58,47 +71,76 @@ void flat::put (const string & name, const u_int8 & type, const u_int32 & size, 
     
     Ptr += size + 5;
     Size += need;
+    *Ptr = 0;	// make sure that parse() does not miss end of stream
 }
 
 // retrieve given data
 flat::data* flat::get (const string & name, const u_int8 & type)
 {
-    if (Data == NULL) parse ();
-    
-    static data *decoded = Data;
-    data *current = decoded;
-    
-    while (decoded != NULL) {
-        if (strcmp (decoded->Name, name.c_str ()) == 0) {
-            if (decoded->Type == type) {
-                return decoded;
-            } else {
-                fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type\n", decoded->Name);
-                return decoded;
-            }
-        } else {
-            decoded = decoded->Next;
-        }
+    if (Data == NULL) 
+    {
+        parse ();
+        Decoded = Data;
     }
     
+    data *result = NULL;
+    data *current = Decoded;
+    
+    for (; Decoded != NULL; Decoded = Decoded->Next)
+        if (strcmp (Decoded->Name, name.c_str ()) == 0) {
+            result = Decoded;
+            break;
+        }
+        
     // not found, so restart from beginning
-    decoded = Data;
-    while (decoded != current) {
-        if (strcmp (decoded->Name, name.c_str ()) == 0) {
-            if (decoded->Type == type) {
-                return decoded;
-            } else {
-                fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type\n", decoded->Name);
-                return decoded;
+    if (result == NULL)
+        for (Decoded = Data; Decoded != current; Decoded = Decoded->Next)
+            if (strcmp (Decoded->Name, name.c_str ()) == 0) {
+                result = Decoded;
+                break;
             }
+
+    // in case we have a result ...
+    if (result != NULL) {
+        // fetch next piece of data
+        Decoded = Decoded->Next;
+        
+        // check whether types match
+        if (result->Type == type) {
+            return result;
         } else {
-            decoded = decoded->Next;
-        }        
+            fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type\n", Decoded->Name);
+            return result;
+        }
     }
     
     // still not found -> panic
     fprintf (stderr, "*** error: flat::get: parameter '%s' not available\n", name.c_str ());
+    Success = false;
     return NULL;
+}
+
+// iterate over data
+int flat::next (void **value, int *size)
+{
+    if (Data == NULL)
+    {
+        parse ();
+        Decoded = Data;
+    }
+    
+    if (Decoded != NULL)
+    {
+        *value = Decoded->Content;
+        if (size != NULL) *size = Decoded->Size;
+        int type = Decoded->Type;
+    
+        Decoded = Decoded->Next;
+        return type;
+    }
+    
+    // error
+    return -1;
 }
 
 // unflatten data
@@ -134,8 +176,28 @@ void flat::parse ()
     Data = first;
 }
 
+// calculate checksum of internal buffer
 u_int32 flat::checksum () const
 {
     u_int a32 = adler32 (0, NULL, 0);
     return adler32 (a32, (Bytef*) Buffer, Size);
+}
+
+// grow internal buffer
+void flat::grow ()
+{
+    Capacity *= 2;
+    char *tmp = new char[Capacity];
+    
+    if (tmp == NULL) {
+        fprintf (stderr, "*** flat::grow: failed to allocate %i more bytes. Giving up ...\n", Capacity);
+        exit (1);
+    }
+    
+    memcpy (tmp, Buffer, Size);
+    memset (tmp + Size, '\0', Capacity - Size);
+    delete[] Buffer;
+    
+    Buffer = tmp;
+    Ptr = Buffer + Size;
 }
