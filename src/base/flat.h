@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.8 2004/10/25 06:50:08 ksterker Exp $
+   $Id: flat.h,v 1.9 2004/11/03 07:30:16 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,7 @@
 
 #include <stdio.h>
 #include <string>
-#include "base/endian.h"
+#include "base/endians.h"
 #include "python/callback_support.h"
 
 using std::string;

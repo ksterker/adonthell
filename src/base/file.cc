@@ -1,5 +1,5 @@
 /*
-   $Id: file.cc,v 1.1 2003/12/29 10:01:59 uid66230 Exp $
+   $Id: file.cc,v 1.2 2004/11/03 07:30:16 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "base/endian.h"
+#include "base/endians.h"
 #include "base/file.h"
 
 using base::gz_file;
