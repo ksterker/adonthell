@@ -7,7 +7,8 @@ pkgincludebase_HEADERS = \
 	types.h \
 	base.h \
 	paths.h \
-	callback.h
+	callback.h \
+	timer.h
 
 ## Main library
 lib_LTLIBRARIES = libadonthell_base.la
@@ -15,7 +16,8 @@ lib_LTLIBRARIES = libadonthell_base.la
 ## Rules to build libbase
 libadonthell_base_la_SOURCES = \
 	paths.cc \
-	callback.cc
+	callback.cc \
+	timer.cc
 
 libadonthell_base_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\"
 libadonthell_base_la_LIBADD = $(LIBLTDL) -lz 
