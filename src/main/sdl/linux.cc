@@ -1,5 +1,5 @@
 /*
-   $Id: linux.cc,v 1.1 2003/11/22 09:37:53 ksterker Exp $
+   $Id: linux.cc,v 1.2 2004/11/02 16:46:20 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@ extern "C" {
 int main_init (const adonthell::app *theApp)
 {
     // no need to initialize anything, so just start the application ...
-    int retval = theApp->main ();
+    int retval = ((adonthell::app *) theApp)->main ();
     return retval;
 }
 
