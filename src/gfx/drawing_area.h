@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: drawing_area.h,v 1.2 2003/07/22 17:40:39 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -184,6 +184,7 @@ namespace gfx
     }; 
 }
 
+#ifndef SWIG
 PYTHON_AS_CALLBACK_ARGUMENT(gfx::drawing_area)
-
+#endif // SWIG
 #endif
