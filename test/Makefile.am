@@ -7,4 +7,4 @@ callbacktest_SOURCES = callbacktest.cc
 callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
 
 inputtest_SOURCES = inputtest.cc
-inputtest_LDADD = -L$(top_builddir)/src/gfx/ -ladonthell_gfx -L$(top_builddir)/src/input/ -ladonthell_input
+inputtest_LDADD = -L$(top_builddir)/src/gfx/ -ladonthell_gfx -L$(top_builddir)/src/input/ -ladonthell_input -L$(top_builddir)/src/ -ladonthell_main

@@ -1,54 +1,59 @@
 /*
-   $Id: gfx_sdl.cc,v 1.2 2003/07/24 09:58:19 ksterker Exp $
+   $Id: gfx_sdl.cc,v 1.3 2003/11/22 09:37:12 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+   Adonthell is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
-   See the COPYING file for more details.
+   Adonthell is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Adonthell; if not, write to the Free Software 
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /* exported names for libltdl */
 #define gfx_init sdl_LTX_gfx_init
 #define gfx_cleanup sdl_LTX_gfx_cleanup
-
 #define gfx_create_surface sdl_LTX_gfx_create_surface
 
 #include <iostream>
 #include "surface_sdl.h"
+#include "screen_sdl.h"
 #include "SDL.h"
 
 extern "C"
 {
     bool gfx_init();
     void gfx_cleanup();
-#ifdef __APPLE__
-    int osxinit();
-#endif // __APPLE__
 
     gfx::surface * gfx_create_surface();
 }
 
+gfx::screen_surface_sdl *display = NULL;
+
 bool gfx_init()
 {
-#ifdef __APPLE__
-    osxinit ();
-#endif // __APPLE__
-
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0)
     {
         std::cerr << "Couldn't init display: " << SDL_GetError () << std::endl;
         return false;
     }
+
+    display = new gfx::screen_surface_sdl ();
     return true;
 }
 
 void gfx_cleanup()
 {
+    delete display;
     SDL_QuitSubSystem (SDL_INIT_VIDEO);
 }
 

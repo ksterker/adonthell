@@ -1,16 +1,13 @@
-from adonthell import gfx, input
+from adonthell import gfx, input, main
 import sys, time
-
-## Our exit variable
-letsexit = 0
-
+    
 ## Callback fonction to handle keyboard events.
 ## It will be passed a keyboard_event as a parameter
 ## and is supposed to return nonzero if it took the
 ## event.
-def handle_keys(ev):
+def handle_keys (ev):
     global letsexit
-
+    
     ## If the key is released
     if ev.type() == input.keyboard_event.KEY_RELEASED:
         print "Key", ev.key_symbol(), "has been released."
@@ -28,8 +25,7 @@ def handle_keys(ev):
 
     return 1
 
-
-if __name__ == '__main__':
+def inputtest ():
     ## Initialize the gfx and input systems
     if not gfx.init("sdl"): raise "Can't load gfx backend!"
     if not input.init("sdl"): raise "Can't load input backend!"
@@ -58,3 +54,11 @@ if __name__ == '__main__':
     gfx.cleanup()
 
     sys.exit(0)
+
+if __name__ == '__main__':
+        ## Our exit variable
+        letsexit = 0
+
+        myApp = main.AdonthellApp ()
+        myApp.init (inputtest)
+

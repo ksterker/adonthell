@@ -1,7 +1,7 @@
 /*
-   $Id: listlayout.h,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: linux.cc,v 1.1 2003/11/22 09:37:53 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -19,23 +19,29 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef GUI_LISTLAYOUT_H_
-#define GUI_LISTLAYOUT_H_
 
-#include "gui/layout.h"
+/**
+ * @file   main/sdl/linux.cc 
+ * @author Kai Sterker <kaisterker@linuxgames.com>
+ * 
+ * @brief  SDL initialization for Linux target. Nothing to be done ...
+ * 
+ * 
+ */
 
-namespace gui
+#include "main/adonthell.h"
+
+/* exported names for libltdl */
+#define main_init sdl_LTX_main_init
+
+extern "C" {
+
+/* Init */
+int main_init (const adonthell::app *theApp)
 {
-  class listlayout : public layout
-    {
-    public:
-      listlayout ();
-      
-      bool update ();
-      
-    protected:
-
-    };
+    // no need to initialize anything, so just start the application ...
+    int retval = theApp->main ();
+    return retval;
 }
 
-#endif
+}

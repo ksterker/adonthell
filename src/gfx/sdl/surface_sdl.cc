@@ -1,15 +1,22 @@
 /*
-   $Id: surface_sdl.cc,v 1.5 2003/07/28 15:02:18 gnurou Exp $
+   $Id: surface_sdl.cc,v 1.6 2003/11/22 09:37:12 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License.
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY.
+   Adonthell is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
-   See the COPYING file for more details.
+   Adonthell is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Adonthell; if not, write to the Free Software 
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 
@@ -31,7 +38,8 @@ namespace gfx
 
     surface_sdl::~surface_sdl() 
     {
-        if (vis) SDL_FreeSurface (vis); 
+        if (vis) SDL_FreeSurface (vis);
+        vis = NULL;
     }
 
     void surface_sdl::set_mask (bool m)
@@ -57,7 +65,7 @@ namespace gfx
     { 
         SDL_Surface * display_target;
 
-        if (target == NULL) display_target = display.vis; 
+        if (target == NULL) display_target = display->vis; 
         else display_target = ((surface_sdl *)target)->vis;
 
         setup_rects (x, y, sx, sy, sl, sh, da_opt); 
@@ -315,11 +323,11 @@ namespace gfx
 
         vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
                                     length (), height (),
-                                    display.vis->format->BitsPerPixel,
-                                    display.vis->format->Rmask,
-                                    display.vis->format->Gmask,
-                                    display.vis->format->Bmask,
-                                    display.vis->format->Amask); 
+                                    display->vis->format->BitsPerPixel,
+                                    display->vis->format->Rmask,
+                                    display->vis->format->Gmask,
+                                    display->vis->format->Bmask,
+                                    display->vis->format->Amask); 
     }
 
     void surface_sdl::clear () 

@@ -1,4 +1,4 @@
-from adonthell import gfx, input, gui
+from adonthell import gfx, input, gui, main
 import sys, time
 
 ## Our exit variable
@@ -12,7 +12,7 @@ def handle_keys (ev):
             print "Escape pressed, leaving..."
     return 1
 
-if __name__ == '__main__':
+def guitest ():
     ## Initialize the gfx and input systems
     if not gfx.init("sdl"): raise "Can't load gfx backend!"
     if not input.init("sdl"): raise "Can't load input backend!"
@@ -67,3 +67,7 @@ if __name__ == '__main__':
     gfx.cleanup()
 
     sys.exit(0)
+    
+if __name__ == '__main__':
+    myApp = main.AdonthellApp ()
+    myApp.init (guitest)

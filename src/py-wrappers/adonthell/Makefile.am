@@ -1,11 +1,11 @@
 CXXFLAGS += -I$(top_srcdir)/src/
-EXTRA_DIST = py_base.i py_gfx.i py_input.i py_gui.i
+EXTRA_DIST = py_base.i py_gfx.i py_input.i py_gui.i py_main.i
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py gfx.py input.py gui.py
+pkgpyexec_PYTHON = __init__.py base.py gfx.py input.py gui.py main.py
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _gfx.la _input.la _gui.la
+pkgpyexec_LTLIBRARIES = _base.la _gfx.la _input.la _gui.la _main.la
 
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
@@ -25,12 +25,17 @@ _input_la_CXXFLAGS = $(PY_CFLAGS)
 _input_la_LDFLAGS = -avoid-version -module
 _input_la_LIBADD = -L$(top_builddir)/src/input/ -ladonthell_input -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
-
 ## Rules to build libpygui (libgui's Python wrapper)
 _gui_la_SOURCES = py_gui_wrap.cc
 _gui_la_CXXFLAGS = $(PY_CFLAGS)
 _gui_la_LDFLAGS = -avoid-version -module
 _gui_la_LIBADD = -L$(top_builddir)/src/gui/ -ladonthell_gui -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
+
+## Rules to build libpymain (libmain's Python wrapper)
+_main_la_SOURCES = py_main_wrap.cc py_main.h $(top_srcdir)/src/main/adonthell.cc
+_main_la_CXXFLAGS = $(PY_CFLAGS)
+_main_la_LDFLAGS = -avoid-version -module
+_main_la_LIBADD = -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
 
 ## Rules for Python wrappers generation
@@ -48,6 +53,10 @@ py_input_wrap.cc: py_input.i $(top_srcdir)/src/input/*.h
 
 gui.py: py_gui_wrap.cc
 py_gui_wrap.cc: py_gui.i $(top_srcdir)/src/gui/*.h
+	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
+
+main.py: py_main_wrap.cc
+py_main_wrap.cc: py_main.i $(top_srcdir)/src/main/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 __init__.py:

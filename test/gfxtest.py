@@ -1,8 +1,9 @@
-from adonthell import gfx, input
+from adonthell import gfx, input, main
 import time
 
+letsexit = 0
 
-if __name__ == '__main__':
+def gfxtest ():
     def key_callback(ev):
         global letsexit
         if ev.type() == input.keyboard_event.KEY_PUSHED:
@@ -18,8 +19,6 @@ if __name__ == '__main__':
     li.connect_keyboard_function(key_callback)
     input.manager.add(li)
 
-    letsexit = 0
-
     while not letsexit:
         ssurface = gfx.screen.get_surface()
         ssurface.lock()
@@ -31,3 +30,8 @@ if __name__ == '__main__':
 
     input.cleanup()
     gfx.cleanup()
+
+if __name__ == '__main__':
+    myApp = main.AdonthellApp ()
+    myApp.init (gfxtest)
+    
