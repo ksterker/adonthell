@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.6 2004/04/29 08:07:49 ksterker Exp $
+   $Id: python.h,v 1.7 2004/04/30 13:47:25 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -132,7 +132,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<int>(int arg, const ownership own)
+    PyObject * pass_instance<int>(int arg, const ownership own = c_owns)
     { 
         return PyInt_FromLong(arg);
         show_traceback();
@@ -148,7 +148,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<bool>(bool arg, const ownership own)
+    PyObject * pass_instance<bool>(bool arg, const ownership own = c_owns)
     { 
         return PyInt_FromLong((int)arg);
         show_traceback();
@@ -164,7 +164,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<std::string &>(std::string & arg, const ownership own) 
+    PyObject * pass_instance<std::string &>(std::string & arg, const ownership own = c_owns) 
     { 
         return PyString_FromString(arg.c_str());
         show_traceback();
@@ -180,7 +180,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<const char *>(const char * arg, const ownership own) 
+    PyObject * pass_instance<const char *>(const char * arg, const ownership own = c_owns) 
     { 
         return PyString_FromString((char *) arg);
         show_traceback();

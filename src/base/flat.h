@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
+   $Id: flat.h,v 1.5 2004/04/30 13:47:25 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
 #ifndef BASE_FLAT
 #define BASE_FLAT
 
-
+#include <stdio.h>
 #include "base/types.h"
 #include <string>
 #include "base/endian.h"
