@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.5 2004/01/06 22:39:56 jol Exp $
+   $Id: container.cc,v 1.6 2004/01/13 23:01:15 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,6 +20,7 @@
 */
 
 #include <iostream>
+#include <cassert>
 #include "gui/container.h"
 
 using namespace gui;

@@ -67,7 +67,7 @@ py_gui_wrap.cc: py_gui.i $(top_srcdir)/src/gui/*.h
 
 main.py: py_main_wrap.cc
 py_main_wrap.cc: py_main.i $(top_srcdir)/src/main/*.h
-	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
+	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -I$(top_srcdir)/src/py-wrappers/adonthell -o $(srcdir)/$@ $<
 
 __init__.py:
 	touch $(srcdir)/$@
