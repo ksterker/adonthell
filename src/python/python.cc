@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.10 2004/08/02 07:35:28 ksterker Exp $
+   $Id: python.cc,v 1.11 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -81,9 +81,9 @@ namespace python
     }
 
     // execute given python code
-    PyObject *run_string (const std::string & statement)
+    PyObject *run_string (const std::string & statement, const int & start)
     {
-        PyObject *ret = PyRun_String ((char *) statement.c_str (), Py_eval_input, NULL, NULL);
+        PyObject *ret = PyRun_String ((char *) statement.c_str (), start, NULL, NULL);
         if (ret == NULL) show_traceback ();
 
         return ret;

@@ -147,6 +147,27 @@ void CustomApplicationMain (const adonthell::app *theApp)
     Application->cleanup ();
     exit (status);
 }
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+{
+    printf ("applicationShouldTerminateAfterLastWindowClosed\n");
+    fflush (stdout);
+    return YES;
+}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+    printf ("NSApplicationTerminateReply\n");
+    fflush (stdout);
+    return NSTerminateNow;
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+    printf ("applicationWillTerminate\n");
+    fflush (stdout);
+    Application->cleanup ();
+}
 @end
 
 extern "C" {

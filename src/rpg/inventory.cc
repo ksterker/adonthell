@@ -1,8 +1,13 @@
 /*
-   $Id: inventory.cc,v 1.2 2004/06/27 11:20:58 ksterker Exp $
+   $Id: inventory.cc,v 1.3 2004/08/23 06:33:47 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
+
+   Adonthell is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
    Adonthell is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of

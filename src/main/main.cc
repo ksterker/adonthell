@@ -1,5 +1,5 @@
 /*
-   $Id: main.cc,v 1.1 2003/11/22 09:37:39 ksterker Exp $
+   $Id: main.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,7 @@
 #include "adonthell.h"
 
 class AdonthellApp;
-extern AdonthellApp theApp;
+extern "C" AdonthellApp theApp;
 
 // initialize the engine and call the user's main method
 int main (int argc, char *argv[]) 

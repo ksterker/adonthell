@@ -1,5 +1,5 @@
 /*
-   $Id: configuration.h,v 1.2 2004/08/02 07:35:28 ksterker Exp $
+   $Id: configuration.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -362,7 +362,7 @@ namespace base
              * @param get_undef unless \c true, only list options with type != UNDEF 
              * @return list of labels for options in given section.
              */
-            vector<const char*> get_options (const string & section, const bool & get_undef = true) const;
+            vector<const char*> get_options (const string & section, const bool & get_undef = false) const;
             //@}
             
             /**

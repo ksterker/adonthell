@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.3 2004/08/02 07:35:28 ksterker Exp $
+   $Id: adonthell.cc,v 1.4 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,24 +34,81 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "gfx/gfx.h"
 #include "base/base.h"
+#include "input/input.h"
+#include "python/python.h"
 #include "main/adonthell.h"
 
 using namespace adonthell;
 using std::cerr;
 using std::endl;
 
+/// The handler of our library file.
+static lt_dlhandle dlhandle = 0;
+            
+/// pointer to method with backend/platform specific intialization code.
+static bool (*init_p)(adonthell::app* application) = 0;
+
+// dtor
+app::~app ()
+{
+    if (dlhandle) lt_dlclose (dlhandle);
+    lt_dlexit ();
+}
+
+// initialize engine subsystems 
+bool app::init_modules (const u_int16 & modules)
+{
+    Modules = modules;
+    
+    // startup python
+    if (modules & PYTHON)
+    {
+        // but not if we're called from a Python script
+        if (!Py_IsInitialized ())
+        {
+            python::init ();
+            PySys_SetArgv (Argc, Argv);
+        }
+        else
+        {
+            Modules -= PYTHON;
+        }
+    }
+
+    // startup graphics
+    if (modules & GFX)
+    {
+        if (!gfx::init (Backend)) return false;
+    }
+    
+    // startup input
+    if (modules & INPUT)
+    {
+        if (!input::init (Backend)) return false;
+    }
+    
+    // startup event system
+    if (modules & EVENT)
+    {
+    }
+    
+    return true;
+}
+
 // read command line arguments
-void app::parse_args (int & ac, char *av[])
+void app::parse_args (int & argc, char *argv[])
 {
     int c;
     
-    argc = ac;
-    argv = av;
+    Argc = argc;
+    Argv = argv;
 
-    backend = "";
-    userdatadir = "";
-    config = "adonthell";
+    Game = "";
+    Backend = "";
+    Userdatadir = "";
+    Config = "adonthell";
 
     // Check for options
     while ((c = getopt (argc, argv, "b:c:g:hv")) != -1)
@@ -60,15 +117,15 @@ void app::parse_args (int & ac, char *av[])
         { 
             // backend:
             case 'b':
-                backend = optarg;
+                Backend = optarg;
                 break;
             // configuration file:
             case 'c':
-                config = optarg;
+                Config = optarg;
                 break;
             // user supplied data directory:
             case 'g':
-                userdatadir = optarg;
+                Userdatadir = optarg;
                 break;
             // help message:
             case 'h':
@@ -88,13 +145,15 @@ void app::parse_args (int & ac, char *av[])
     // check whether the GAME parameter is given
     if (argc - optind == 1)
     {
-        game = argv[argc-1];
+        Game = argv[argc-1];
     }
 }
 
 // initialize the Adonthell framework
 bool app::init ()
 {
+    dlhandle = NULL;
+    
     // init libltdl
     if (lt_dlinit ())
     {
@@ -104,21 +163,23 @@ bool app::init ()
     }
     
     // load configuration file
-    if (!cfg.read (config))
+    if (!Cfg.read (Config))
     {
         // print message if that fails, but don't panic yet ...
-        cerr << "Error reading configuration '" << config << ".xml'" << endl;
+        cerr << "Error reading configuration '" << Config << ".xml'" << endl;
     }
     
     // if we have been given no backend on the command line, 
     // try to get it from config file; fallback to sdl if that fails
-    if (backend == "")
+    if (Backend == "")
     {
-        backend = cfg.get_string ("General", "Backend", "sdl");
+        Backend = Cfg.get_string ("General", "Backend", "sdl");
+        // set type of config option (free form text entry)
+        Cfg.option ("General", "Backend", base::cfg_option::FREE);
     }
     
     // load backend init module
-    dlhandle = base::get_module (string ("/main/") + backend);
+    dlhandle = base::get_module (string ("/main/") + Backend);
     if (!dlhandle)
     {
         cerr << lt_dlerror() << endl;
@@ -134,7 +195,7 @@ bool app::init ()
     }
     
     // init base module
-    base::init (userdatadir, game);
+    base::init (Userdatadir, Game);
     
     // platform / backend specific initialization
     return init_p (this);
@@ -144,16 +205,18 @@ bool app::init ()
 void app::cleanup () const
 {
     // save configuration to disk
-    cfg.write (config);
-    
-    if (dlhandle) lt_dlclose (dlhandle);
-    lt_dlexit ();
+    Cfg.write (Config);
+
+    // cleanup modules
+	if (Modules & INPUT) input::cleanup ();
+    if (Modules & GFX) gfx::cleanup ();
+    if (Modules & PYTHON) python::cleanup ();
 }
 
 // display a help message
 void app::print_help () const
 {
-    std::cout << "Usage: " << argv[0] << " [OPTIONS] GAME" << endl;
+    std::cout << "Usage: " << Argv[0] << " [OPTIONS] [GAME]" << endl;
     std::cout << endl;
     std::cout << "Where [OPTIONS] can be:\n";
     std::cout << "-b <backend>     specifiy the backend to use (default 'sdl')\n";

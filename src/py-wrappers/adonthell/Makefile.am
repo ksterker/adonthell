@@ -9,13 +9,17 @@ noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc gui.pyc main.
 pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _gui.la _main.la _rpg.la
 
 ## SWIG runtime support
-lib_LTLIBRARIES = libswigruntime.la
+lib_LTLIBRARIES = libswigruntime.la libadonthell_py_main.la
 
 ## Rules to build SWIG's runtime library
 libswigruntime_la_SOURCES = swigruntime_wrap.cc
 libswigruntime_la_CXXFLAGS = $(PY_CFLAGS)
-#-lswigruntime_LDFLAGS = -avoid-version -module
 libswigruntime_la_LIBADD = $(PY_LIBS)
+
+## Rules to build libadonthell_py_main
+libadonthell_py_main_la_SOURCES = py_main.cc
+libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_py_main_la_LIBADD = $(PY_LIBS)
 
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
@@ -48,10 +52,10 @@ _gui_la_LDFLAGS = -avoid-version -module
 _gui_la_LIBADD = -L$(top_builddir)/src/gui/ -ladonthell_gui -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
 
 ## Rules to build libpymain (libmain's Python wrapper)
-_main_la_SOURCES = py_main_wrap.cc py_main.h $(top_srcdir)/src/main/adonthell.cc
+_main_la_SOURCES = py_main_wrap.cc
 _main_la_CXXFLAGS = $(PY_CFLAGS)
 _main_la_LDFLAGS = -avoid-version -module
-_main_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_main -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
+_main_la_LIBADD = -ladonthell_py_main -L$(top_builddir)/src/main -ladonthell_main -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -L$(top_builddir)/src/gfx -ladonthell_gfx -L$(top_builddir)/src/input -ladonthell_input -lswigruntime
 
 ## Rules to build libpyrpg (librpg's Python wrapper)
 _rpg_la_SOURCES = py_rpg_wrap.cc
@@ -110,6 +114,6 @@ py_rpg_wrap.cc: py_rpg.i swigruntime_wrap.cc $(top_srcdir)/src/rpg/*.h
 	$(SWIG) -noruntime -python -modern -I$(top_srcdir)/src -I$(top_srcdir)/src/py-wrappers/adonthell -o $(srcdir)/$@ $<
 
 __init__.pyc: __init__.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
+	$(PYTHON) -c "import py_compile; py_compile.compile(\" $(srcdir)/$<\", \"./$@\");"
 __init__.py:
 	touch $(srcdir)/$@

@@ -1,5 +1,4 @@
 CXXFLAGS += -I$(top_srcdir)/src/
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 
 ## Our header files
 pkgincludemaindir = $(pkgincludedir)/main/
@@ -14,6 +13,9 @@ libadonthell_main_la_SOURCES = \
 	adonthell.cc \
 	main.cc
 
+libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_main_la_LIBADD = $(PY_LIBS)
+
 
 ###### Following definitions are for the backends
 pkglibmaindir = $(pkglibdir)/main
@@ -25,7 +27,7 @@ pkglibmain_LTLIBRARIES = sdl.la
 ## MacOS X specific files
 if OSX_COMPILE
 sdl_hdrs = sdl/osx.h
-sdl_la_SOURCES = sdl/osx.m $(sdl_hdrs) 
+sdl_la_SOURCES = sdl/osx.m $(sdl_hdrs)
 
 ## Files specific to Linux (and others)
 else

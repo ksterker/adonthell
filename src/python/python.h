@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.10 2004/08/02 07:35:28 ksterker Exp $
+   $Id: python.h,v 1.11 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -91,9 +91,10 @@ namespace python
      * Execute a python statement and return resulting object.
      * This is a new reference that needs to be Py_DECREF'd when done.
      * @param statement Python code to execute.
+     * @param one of Py_eval_input, Py_file_input or Py_single_input
      * @return \b result on success, \b NULL otherwise.
      */
-    PyObject* run_string (const std::string & statement);
+    PyObject* run_string (const std::string & statement, const int & start = Py_eval_input);
     
     /** 
      * Execute a python statement and return success.

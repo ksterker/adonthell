@@ -25,13 +25,12 @@ public:
 
 class GuiTest : public adonthell::app {
 
-  int main () const {
+  int main () {
     
     Exit myExit;
     
     // Initialize the gfx and input systems
-    gfx::init("sdl");
-    input::init("sdl");
+    init_modules (GFX | INPUT);
     
     // Set us a nice window
     gfx::screen::set_video_mode(640, 480);
@@ -80,12 +79,9 @@ class GuiTest : public adonthell::app {
       cont.draw ();
     }
     
+    // Do some cleanup, and we're ready to exit!
     cont.destroyAll ();
 
-    // Do some cleanup, and we're ready to exit!
-    input::cleanup();
-    gfx::cleanup();
-    
     return 0;
   }
 } theApp;

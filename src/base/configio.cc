@@ -1,5 +1,5 @@
 /*
-   $Id: configio.cc,v 1.1 2004/05/13 06:43:59 ksterker Exp $
+   $Id: configio.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -264,13 +264,13 @@ bool config_io::write (const std::string & filename, const configuration *config
     vector<const char*> options;
     
     // get all sections in configuration
-    vector<const char*> sections = config->get_sections ();
+    vector<const char*> sections = config->get_sections (true);
     for (vector<const char*>::const_iterator i = sections.begin (); i != sections.end (); i++)
     {
         section = xmlNewTextChild (document->children, NULL, (const xmlChar *) *i, NULL);
         
         // get all options of section
-        options = config->get_options (*i);
+        options = config->get_options (*i, true);
         for (vector<const char*>::const_iterator o = options.begin (); o != options.end (); o++)
         {
             cfg_option *opt = config->option (*i, *o, cfg_option::UNDEF);

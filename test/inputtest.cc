@@ -1,6 +1,6 @@
 #include <iostream>
-#include "base/timer.h"
 #include "gfx/gfx.h"
+#include "base/base.h"
 #include "input/input.h"
 #include "main/adonthell.h"
 
@@ -44,13 +44,12 @@ public:
         
 class AdonthellApp : public adonthell::app
 {
-    int main () const
+    int main ()
     {
         myClass myObject;
         
         // Initialize the gfx and input systems
-        gfx::init("sdl");
-        input::init("sdl");
+        init_modules (GFX | INPUT);
     
         // Set us a nice window
         gfx::screen::set_video_mode(640, 480);
@@ -63,22 +62,15 @@ class AdonthellApp : public adonthell::app
         // Add the listener to the manager
         input::manager::add(&il);
         
-	
-        base::timer time;
-
         // Run this loop until letsexit is set to 1 by the
         // callback function. Every time a key event is raised,
         // the input manager will send it to the listeners it handles
         // (that is, only the one we've connected) which will call the
         // callback function that has been connected to handle keyboard events.
         while (!myObject.letsexit) {
-            time.update ();
+            base::Timer.update ();
             input::manager::update();
         }
-        
-        // Do some cleanup, and we're ready to exit!
-        input::cleanup();
-        gfx::cleanup();
         
         return 0;
     }

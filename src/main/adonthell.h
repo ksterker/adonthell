@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.2 2004/08/02 07:35:28 ksterker Exp $
+   $Id: adonthell.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,28 +49,48 @@ namespace adonthell {
     class app {
         public:
             /**
+             * The different parts of the engine that can be initialized
+             * seperately.
+             */
+            enum { GFX = 1, INPUT = 2, EVENT = 4, PYTHON = 8, RPG = 16, GUI = 32, AUDIO = 64 };
+        
+            /**
              * Destructor.
              */
-            virtual ~app () { }
+            virtual ~app ();
             
             /**
              * This method is called after the engine has been initialized.
              * Overwrite it to add your game's main loop. Once this method
              * returns, the engine will quit.
              */
-            virtual int main () const = 0;
+            virtual int main () = 0;
         
+            /**
+             * Call this to initialize selected subystems of the engine. These
+             * will be shutdown automatically once the engine quits.
+             * @param modules combination of GFX, INPUT, EVENT, PYTHON, RPG, GUI
+             * @return true on success \b false otherwise.
+             */
+            bool init_modules (const u_int16 & modules);
+
+/// allow main to call the following methods, but nobody else 
+#ifndef SWIG
             /**
              * Called by the engine before main(). Used to do platform specific
              * initialization work. What needs to be done depends mainly on the
              * backend and OS used. For example, SDL on both MacOS X and Win32
              * needs to 'connect' to the windowing system before it can display
              * any windows or recieve input.
+             *
              * This method does not initialize any subsystems of the Adonthell
-             * engine itself. Do that in your main() method.  
+             * engine itself. Do that in your main method using init_modules()
+             * or the desired module's init function.
+             *
+             * @return \b true on success \b false otherwise.
              */
             bool init ();
-            
+
             /**
              * Parse the given command line arguments for those required by
              * the engine. The following arguments are currently handled:
@@ -90,16 +110,17 @@ namespace adonthell {
              * any resources aquired by init(). Don't call it manually. 
              */
             void cleanup () const;
-
+#endif // SWIG
+            
         protected:
             /// Commandline argument count.
-            int argc;
+            int Argc;
             
             /// Commandline argument vector.
-            char **argv;
+            char **Argv;
 
             /// Engine configuration
-            base::configuration cfg;
+            base::configuration Cfg;
             
         private:
             /**
@@ -107,23 +128,20 @@ namespace adonthell {
              */
             void print_help () const;
         
-            /// The handler of our library file.
-            lt_dlhandle dlhandle;
-
-            /// pointer to method with backend/platform specific intialization code.
-            bool (*init_p)(app* application);
-            
             /// the backend we're using
-            string backend;
+            string Backend;
             
             /// the config file we're loading
-            string config;
+            string Config;
             
             /// user supplied data directory
-            string userdatadir;
+            string Userdatadir;
             
             /// game to launch
-            string game;
+            string Game;
+            
+            /// modules currently loaded
+            u_int16 Modules;
     };
 }
 
