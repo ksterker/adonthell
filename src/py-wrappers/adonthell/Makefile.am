@@ -50,7 +50,7 @@ _gui_la_LIBADD = -L$(top_builddir)/src/gui/ -ladonthell_gui -L$(top_builddir)/sr
 _main_la_SOURCES = py_main_wrap.cc py_main.h $(top_srcdir)/src/main/adonthell.cc
 _main_la_CXXFLAGS = $(PY_CFLAGS)
 _main_la_LDFLAGS = -avoid-version -module
-_main_la_LIBADD = -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
+_main_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_main -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
 
 
 ## Rules for SWIG runtime library generation
