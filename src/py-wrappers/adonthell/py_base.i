@@ -4,7 +4,7 @@
 #include <string>
 #include "base/types.h"
 #include "base/timer.h"
-#include "base/file.h"
+#include "base/diskio.h"
 %}
 
 %include "std_string.i"
@@ -12,6 +12,8 @@
 %include "base/types.h"
 %include "base/timer.h"
 %include "base/file.h"
+%include "base/flat.h"
+%include "base/diskio.h"
 
 
 /* implement friend operators of igzstream */

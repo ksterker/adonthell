@@ -6,8 +6,10 @@ pkgincludebasedir = $(pkgincludedir)/base
 pkgincludebase_HEADERS = \
 	base.h \
 	callback.h \
-    endian.h \
-    file.h \
+    diskio.h \
+	endian.h \
+	file.h \
+	flat.h \
 	paths.h \
 	timer.h \
 	types.h
@@ -18,7 +20,9 @@ lib_LTLIBRARIES = libadonthell_base.la
 ## Rules to build libbase
 libadonthell_base_la_SOURCES = \
 	callback.cc \
-    file.cc \
+    diskio.cc \
+	file.cc \
+	flat.cc \
 	paths.cc \
 	timer.cc
 

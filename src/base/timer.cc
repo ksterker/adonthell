@@ -1,7 +1,7 @@
 /*
-   $Id: timer.cc,v 1.4 2004/02/25 22:31:43 ksterker Exp $
+   $Id: timer.cc,v 1.5 2004/03/13 12:38:10 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -43,9 +43,8 @@ namespace base
         return convert_timeval(tv);
     }
 
-    void timer::sleep(unsigned long int msecs) const
+    void timer::sleep (unsigned long int msecs) const
     {
-/*
         unsigned char err;
         struct timespec req, rem;
         rem.tv_sec = msecs / 1000;
@@ -56,8 +55,6 @@ namespace base
             req = rem;
             err = nanosleep (&req, &rem);
         } while (err && (errno == EINTR));
-*/
-        
     }
 
     void timer::update ()
@@ -65,14 +62,14 @@ namespace base
         register u_int16 delay = current_time () - Lasttime;
 
         // wait if the current frame was calculated too fast
-        while (delay < Slice)
-        {
-            usleep (Slice - delay);
+        if (Slice > delay) {
+            sleep (Slice - delay);
             delay = current_time () - Lasttime;
+            Frames_missed = 0;
         }
-        
         // see whether calculating the current frame took too long
-        Frames_missed = delay / Slice - 1;
+        else Frames_missed = delay / Slice;
+        
         Lasttime += delay;
     }
 }

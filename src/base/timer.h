@@ -1,5 +1,5 @@
 /*
-   $Id: timer.h,v 1.2 2003/11/22 09:35:21 ksterker Exp $
+   $Id: timer.h,v 1.3 2004/03/13 12:38:10 ksterker Exp $
 
    Copyright (C) 2003 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,7 @@ namespace base
         unsigned long int slice() const { return Slice; }
         unsigned long int current_time() const;
         unsigned long int frames_missed() const { return Frames_missed; }
+        unsigned long int uptime () const { return Lasttime; }
         void sleep(unsigned long int msecs) const;
 
         void set_slice(unsigned long int sl);
