@@ -1,11 +1,12 @@
 SUBDIRS = main base event gfx input gui python py-wrappers
 
-noinst_SCRIPTS = run.sh python.sh
+noinst_SCRIPTS = $(top_builddir)/src/run.sh $(top_builddir)/src/python.sh
 
 ## Script to run binaries while the libraries aren't installed
-run.sh:
+$(top_builddir)/src/run.sh:
 	echo -e "#/bin/sh\nADONTHELL_MODULES_PATH=\"`pwd`\" \$$$$@@" > $@
 
 ## Script to run Python programs while the libraries aren't installed
-python.sh:
-	echo -e "#/bin/sh\nPYTHONPATH=\"$$PYTHONPATH:`pwd`/$(top_srcdir)/src/py-wrappers:`pwd`/py-wrappers/adonthell/.libs\" source `pwd`/run.sh python \$$$$@@" > $@
+$(top_builddir)/src/python.sh:
+	echo -e "#/bin/sh\nPYTHONPATH=\"$$PYTHONPATH:`pwd`/py-wrappers:`pwd`/py-wrappers/adonthell/.libs\" source `pwd`/run.sh python \$$$$@@" > $@
+
