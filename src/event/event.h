@@ -1,0 +1,176 @@
+/*
+   $Id: event.h,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+
+   Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Part of the Adonthell Project http://adonthell.linuxgames.com
+
+   Adonthell is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   Adonthell is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Adonthell; if not, write to the Free Software 
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/**
+ * @file   event/event.h
+ * @author Kai Sterker <kaisterker@linuxgames.com>
+ * 
+ * @brief  Declares the %event class.
+ * 
+ */
+
+#ifndef EVENT_EVENT_H
+#define EVENT_EVENT_H
+
+#include "base/flat.h"
+
+/**
+ * Directory where %event scripts reside.
+ */ 
+#define EVENTS_DIR "game_events."
+
+namespace event 
+{
+#ifndef SWIG
+    /**
+     * Available %event types.
+     */ 
+    enum
+    {
+        ENTER_EVENT     = 0,            // Characters reach a new tile
+        LEAVE_EVENT     = 1,            // Characters leave a tile
+        TIME_EVENT      = 2,            // Certain point in gametime reached
+        ACTION_EVENT    = 3,            // Character "acts" on a square 
+        MAX_EVENTS      = 4
+    };
+#endif // SWIG
+
+    /**
+     * Base class for events. You can create your own %event types that can
+     * be handled by the event_list and event_handler by inheriting from
+     * this class.
+     *
+     * Events are used to notify when certain things happen during the game.
+     * They may either execute the "run" method of an exclusive %python script
+     * or a simple %python callback defined elsewhere.
+     */ 
+    class event
+    {
+    public:
+#ifndef SWIG
+        /**
+         * Constructor. Needs to be called by any derived class!
+         */
+        event ();
+#endif
+        /** 
+         * Destructor.
+         */ 
+        virtual ~event () { }
+
+        /**
+         * @name Member access
+         */
+        //@{
+        /**
+         * Get the event's type.
+         *
+         * @return type of the %event
+         */
+        u_int8 type () const
+        { 
+            return Type;
+        }
+    
+        /**
+         * Return whether this event should be repeated.
+         *
+         * @return the number of times this event should be repeated or
+         *      -1 in case it should be repeated unlimited times.
+         */
+        s_int32 repeat () const
+        {
+            return Repeat;
+        }
+        
+        /**
+         * Set whether this event should be repeated. A number greater than 0
+         * will execute the event that many times, a number less than 0 will
+         * repeat the event forever. A number equal to 0 won't repeat the event.
+         *
+         * @param count How often the event should be repeated.
+         */
+        void set_repeat (s_int32 count)
+        {
+            Repeat = count;
+        }
+        
+        /** 
+         * Compare two events for equality.
+         * 
+         * @param evnt pointer to the %event to compare with.
+         * @return \e true if the events are equal, \e false otherwise.
+         */
+        virtual bool equals (const event* evnt) = 0;
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+    
+        /** 
+         * Saves the basic %event %data (such as the type or repeat data)
+         * to a file. Call this method from the derived class.
+         * 
+         * @param out stream where to save the %event.
+         */ 
+        virtual void put_state (base::flat& out) const;
+        
+        /** 
+         * Loads the basic %event %data from stream. Call this method from 
+         * the derived class.
+         * 
+         * @param in flattener to load the %event from.
+         * @return \e true if the %event could be loaded, \e false otherwise
+         */
+        virtual bool get_state (base::flat& in);
+    
+        //@}
+        
+    protected:
+        /**
+         * Decrease the event's repeat count and return the number of repeats 
+         * left. If the repeat-count reaches 0, the %event will be destroyed.
+         *
+         * @return the number of times this event should be repeated or
+         *      -1 in case it should be repeated unlimited times.
+         */
+        s_int32 do_repeat ();
+    
+        /**
+         * @name Basic Event Data
+         */
+        //@{
+        /**
+         * Event type - see enum above.
+         */ 
+        u_int8 Type;
+            
+        /**
+         * Defines how often the %event should be repeated. <b>0</b> means
+         * never, <b>-1</b> means infinitely and <b>n</b> (n > 0) means 
+         * exactly n times.
+         */
+        s_int32 Repeat;
+        //@}
+    };
+}
+#endif // EVENT_EVENT_H

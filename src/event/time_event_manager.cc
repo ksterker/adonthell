@@ -1,0 +1,95 @@
+/*
+   $Id: time_event_manager.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+
+   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Part of the Adonthell Project http://adonthell.linuxgames.com
+
+   Adonthell is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   Adonthell is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with Adonthell; if not, write to the Free Software 
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/**
+ * @file 	event/time_event_manager.cc
+ *
+ * @author 	Kai Sterker
+ * @brief 	Implements the time_event_manager class.
+ */
+
+#include <algorithm>
+#include "event/date.h"
+#include "event/time_event.h"
+#include "event/time_event_manager.h"
+
+using std::vector;
+using event::time_event_manager;
+
+// See whether a matching event is registered and execute the
+// according script(s) 
+void time_event_manager::raise_event (const event * e)
+{
+    s_int32 repeat;
+    listener *li;
+
+    // As long as matching events are in the list
+    while (!Listeners.empty () && (li = Listeners.back ())->equals (e))
+    {
+        // no matter whether the listener will be destroyed or not,
+        // it needs to be reregistered, so remove it in any case
+        Listeners.pop_back ();
+
+        // do we need to destroy the listener?
+        if (li->is_destroyed ())
+        {
+            delete li;
+            continue;
+        }
+        
+        // execute event if required
+        repeat = li->raise_event (e);
+
+        // only re-register listener if time event is repeating
+        if (repeat) add (li);
+        else delete li;
+    }
+    
+    return;
+}
+
+// Unregister a listener
+void time_event_manager::remove (listener *li)
+{
+    vector<listener*>::iterator i;
+
+    // Search for the event we want to remove
+    i = find (Listeners.begin (), Listeners.end (), li);
+
+    // found? -> get rid of it :)
+    if (i != Listeners.end ()) Listeners.erase (i);
+}
+
+// register a listener with the manager
+void time_event_manager::add (listener *li)
+{
+    vector<listener*>::iterator i = Listeners.end ();
+
+    // search for the proper place to insert new listener
+    while (i != Listeners.begin ())
+    {
+        i--;
+        // skip events that are raised earlier than e
+        if (((time_event *) li->get_event ())->time () <= ((time_event *) (*i)->get_event ())->time ()) break;
+    }
+
+    Listeners.insert (i, li);
+}
