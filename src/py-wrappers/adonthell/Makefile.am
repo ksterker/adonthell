@@ -114,6 +114,6 @@ py_rpg_wrap.cc: py_rpg.i swigruntime_wrap.cc $(top_srcdir)/src/rpg/*.h
 	$(SWIG) -noruntime -python -modern -I$(top_srcdir)/src -I$(top_srcdir)/src/py-wrappers/adonthell -o $(srcdir)/$@ $<
 
 __init__.pyc: __init__.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\" $(srcdir)/$<\", \"./$@\");"
+	$(PYTHON) -c "import py_compile; py_compile.compile(\"$(srcdir)/$<\", \"./$@\");"
 __init__.py:
 	touch $(srcdir)/$@

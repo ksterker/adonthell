@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
+   $Id: listener.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,10 +37,10 @@
 /**
  * Pointer to a function returning a newly allocated %event
  */
-typedef event::event* (*new_event)();
+typedef events::event* (*new_event)();
 #endif // SWIG
 
-namespace event
+namespace events
 {
     class factory;
 
@@ -307,7 +307,7 @@ namespace event
  * A function that returns a new instance of an %event.
  */
 #define NEW_EVENT(evt)\
-    event::event* new_ ## evt () { return (event::event*) new event::evt; }
+    events::event* new_ ## evt () { return (events::event*) new events::evt; }
 
 #endif // SWIG
 #endif // EVENT_LISTENER_H

@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.4 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,7 @@
 #include "event/time_event_manager.h"
 
 using std::vector;
-using event::time_event_manager;
+using events::time_event_manager;
 
 // See whether a matching event is registered and execute the
 // according script(s) 

@@ -8,7 +8,7 @@ pkgincludebase_HEADERS = \
     configuration.h \
     configio.h \
     diskio.h \
-	endian.h \
+	endians.h \
 	file.h \
 	flat.h \
     hash_map.h \
@@ -31,5 +31,5 @@ libadonthell_base_la_SOURCES = \
 	paths.cc \
 	timer.cc
 
-libadonthell_base_la_CXXFLAGS = $(XML_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\"
-libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz 
+libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\"
+libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz

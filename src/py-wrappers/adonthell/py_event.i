@@ -10,7 +10,7 @@
 
 %include "std_string.i"
 
-namespace event {
+namespace events {
     // make sure that C++ gets ownership of the event passed to factory::add
     %feature("shadow") factory::add {
         def add(self, ev): 

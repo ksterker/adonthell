@@ -1,5 +1,5 @@
 /*
-   $Id: factory.h,v 1.4 2004/06/27 11:20:57 ksterker Exp $
+   $Id: factory.h,v 1.5 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,7 +37,7 @@
 
 using std::string;
 
-namespace event
+namespace events
 {
     /**
      * Base class for objects that want to register events. It keeps track of

@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.4 2004/06/27 11:20:57 ksterker Exp $
+   $Id: factory.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,9 +34,9 @@
 #include "event/manager.h"
 
 using std::vector;
-using event::factory;
-using event::listener;
-using event::manager;
+using events::factory;
+using events::listener;
+using events::manager;
 
 // constructor
 factory::factory ()

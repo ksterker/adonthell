@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
+   $Id: event.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -15,16 +15,16 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   event/event.h
  * @author Kai Sterker <kaisterker@linuxgames.com>
- * 
+ *
  * @brief  Declares the %event class.
- * 
+ *
  */
 
 #ifndef EVENT_EVENT_H
@@ -35,25 +35,26 @@
 /**
  * Support for various events used to drive the game world and the plot.
  */
-namespace event 
+namespace events
 {
 #ifndef SWIG
     /**
      * Directory where %event scripts reside.
-     */ 
+     */
     #define EVENTS_DIR "game_events."
 
     /**
      * Available %event types.
-     */ 
+     */
     enum
     {
         ENTER_EVENT     = 0,            // Characters reach a new tile
         LEAVE_EVENT     = 1,            // Characters leave a tile
         TIME_EVENT      = 2,            // Certain point in gametime reached
-        ACTION_EVENT    = 3,            // Character "acts" on a square 
+        ACTION_EVENT    = 3,            // Character "acts" on a square
         MAX_EVENTS      = 4
     };
+
 #endif // SWIG
 
     /**
@@ -64,7 +65,7 @@ namespace event
      * Events are used to notify when certain things happen during the game.
      * They may either execute the "run" method of an exclusive %python script
      * or a simple %python callback defined elsewhere.
-     */ 
+     */
     class event
     {
     public:
@@ -74,9 +75,9 @@ namespace event
          */
         event ();
 #endif
-        /** 
+        /**
          * Destructor.
-         */ 
+         */
         virtual ~event () { }
 
         /**
@@ -89,10 +90,10 @@ namespace event
          * @return type of the %event
          */
         u_int8 type () const
-        { 
+        {
             return Type;
         }
-    
+
         /**
          * Return whether this event should be repeated.
          *
@@ -103,7 +104,7 @@ namespace event
         {
             return Repeat;
         }
-        
+
         /**
          * Set whether this event should be repeated. A number greater than 0
          * will execute the event that many times, a number less than 0 will
@@ -115,11 +116,11 @@ namespace event
         {
             Repeat = count;
         }
-        
+
 #ifndef SWIG
         /**
-         * This is called by the %event %listener when the %event has been 
-         * triggered to decrease the event's repeat count. If the repeat-count 
+         * This is called by the %event %listener when the %event has been
+         * triggered to decrease the event's repeat count. If the repeat-count
          * reaches 0, the %event needs to be destroyed.
          */
         virtual void do_repeat ()
@@ -128,31 +129,31 @@ namespace event
         }
 #endif // SWIG
 
-        /** 
+        /**
          * Compare two events for equality.
-         * 
+         *
          * @param evnt pointer to the %event to compare with.
          * @return \e true if the events are equal, \e false otherwise.
          */
         virtual bool equals (const event* evnt) = 0;
-        
+
         /**
          * @name Loading / Saving
          */
         //@{
-    
-        /** 
+
+        /**
          * Saves the basic %event %data (such as the type or repeat data)
          * to a file. Call this method from the derived class.
-         * 
+         *
          * @param out stream where to save the %event.
-         */ 
+         */
         virtual void put_state (base::flat& out) const;
-        
-        /** 
-         * Loads the basic %event %data from stream. Call this method from 
+
+        /**
+         * Loads the basic %event %data from stream. Call this method from
          * the derived class.
-         * 
+         *
          * @param in flattener to load the %event from.
          * @return \e true if the %event could be loaded, \e false otherwise
          */
@@ -173,12 +174,12 @@ namespace event
         //@{
         /**
          * Event type - see enum above.
-         */ 
+         */
         u_int8 Type;
-            
+
         /**
          * Defines how often the %event should be repeated. <b>0</b> means
-         * never, <b>-1</b> means infinitely and <b>n</b> (n > 0) means 
+         * never, <b>-1</b> means infinitely and <b>n</b> (n > 0) means
          * exactly n times.
          */
         s_int32 Repeat;

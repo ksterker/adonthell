@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.4 2004/05/13 06:44:00 ksterker Exp $
+   $Id: event.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,8 +28,9 @@
 
 #include "event/event.h"
 
-using event::event;
+using events::event;
 
+int event = 5;
 // constructor
 event::event ()
 {

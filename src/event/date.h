@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: date.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2002 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -15,7 +15,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
@@ -43,7 +43,7 @@
 #define DAYS_PER_WEEK 7
 #endif // SWIG
 
-namespace event 
+namespace events
 {
 /**
  * Keeps track of the time the player spent within the game so far. This
@@ -56,9 +56,9 @@ class date
 public:
 
     /**
-     * Update the %game date. Whenever a minute of %gametime has 
-     * passed, a time event will be raised.  
-     */        
+     * Update the %game date. Whenever a minute of %gametime has
+     * passed, a time event will be raised.
+     */
     static void update ();
 
     /**
@@ -66,8 +66,8 @@ public:
      * @return %gametime in seconds since start of the game.
      */
     static u_int32 time ()
-    { 
-        return Time; 
+    {
+        return Time;
     }
 
     /**
@@ -115,7 +115,7 @@ public:
      * @param out stream to write the state to
      */
     static void put_state (base::ogzstream & out);
-    
+
 private:
 #ifndef SWIG
     // number of game time seconds before a time event will be raised
@@ -126,7 +126,7 @@ private:
 
     // number of game cycles since the last 1/10 gametime minute passed
     static double Ticks;
-    
+
     // how many game cycles make one second of game time
     static float Scale;
 #endif // SWIG

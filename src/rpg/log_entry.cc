@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.cc,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: log_entry.cc,v 1.4 2004/12/07 16:46:27 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,7 +36,7 @@ using std::string;
 // create new log entry
 log_entry::log_entry (const string & topic, const string & text, const string & uid)
 {
-    Timestamp = event::date::time ();
+    Timestamp = events::date::time ();
     Topic = topic;
     Text = text;
     Uid = uid;

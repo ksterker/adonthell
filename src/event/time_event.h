@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: time_event.h,v 1.4 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,7 @@
 
 #include "event/event.h"
 
-namespace event
+namespace events
 {
     /**
      * The time %event executes the attached script or callback at a certain 

@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.8 2004/11/15 08:54:33 ksterker Exp $
+   $Id: adonthell.cc,v 1.9 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -15,7 +15,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
@@ -23,7 +23,7 @@
 /**
  * @file   main/adonthell.cc
  * @author Kai Sterker <kaisterker@linuxgames.com>
- * 
+ *
  * @brief  The main application class for programs using the Adonthell framework.
  */
 
@@ -47,7 +47,7 @@ using std::endl;
 
 /// The handler of our library file.
 static lt_dlhandle dlhandle = 0;
-            
+
 /// pointer to method with backend/platform specific intialization code.
 static bool (*init_p)(adonthell::app* application) = 0;
 
@@ -58,13 +58,13 @@ app::~app ()
     lt_dlexit ();
 }
 
-// initialize engine subsystems 
+// initialize engine subsystems
 bool app::init_modules (const u_int16 & modules)
 {
     // don't initialize previously loaded modules
     u_int16 m = Modules ^ modules;
     Modules |= m;
-    
+
     // startup python
     if (m & PYTHON)
     {
@@ -86,19 +86,19 @@ bool app::init_modules (const u_int16 & modules)
     {
         if (!gfx::init (Backend)) return false;
     }
-    
+
     // startup input
     if (m & INPUT)
     {
         if (!input::init (Backend)) return false;
     }
-    
+
     // startup event system
     if (m & EVENT)
     {
-        event::manager::init ();
+        events::manager::init ();
     }
-    
+
     return true;
 }
 
@@ -106,7 +106,7 @@ bool app::init_modules (const u_int16 & modules)
 void app::parse_args (int & argc, char *argv[])
 {
     int c;
-    
+
     Argc = argc;
     Argv = argv;
 
@@ -117,9 +117,9 @@ void app::parse_args (int & argc, char *argv[])
 
     // Check for options
     while ((c = getopt (argc, argv, "b:c:g:hv")) != -1)
-    {        
+    {
         switch (c)
-        { 
+        {
             // backend:
             case 'b':
                 Backend = optarg;
@@ -146,7 +146,7 @@ void app::parse_args (int & argc, char *argv[])
                 break;
         }
     }
-    
+
     // check whether the GAME parameter is given
     if (argc - optind == 1)
     {
@@ -159,26 +159,26 @@ bool app::init ()
 {
     Modules = 0;
     dlhandle = NULL;
-    
+
     // init libltdl
     if (lt_dlinit ())
     {
         cerr << lt_dlerror() << endl;
-        cerr << "Error initializing liblt!" << endl; 
+        cerr << "Error initializing liblt!" << endl;
         return false;
     }
 
     // init base module (required for reading config file)
     base::init (Userdatadir, Game);
-        
+
     // load configuration file
     if (!Cfg.read (Config))
     {
         // print message if that fails, but don't panic yet ...
         cerr << "Error reading configuration '" << Config << ".xml'" << endl;
     }
-    
-    // if we have been given no backend on the command line, 
+
+    // if we have been given no backend on the command line,
     // try to get it from config file; fallback to sdl if that fails
     if (Backend == "")
     {
@@ -186,7 +186,7 @@ bool app::init ()
         // set type of config option (free form text entry)
         Cfg.option ("General", "Backend", base::cfg_option::FREE);
     }
-    
+
     // load backend init module
     dlhandle = base::get_module (string ("/main/") + Backend);
     if (!dlhandle)
@@ -194,7 +194,7 @@ bool app::init ()
         cerr << lt_dlerror() << endl;
         return false;
     }
-    
+
     // get pointer to init method
     init_p = (bool (*)(app*)) lt_dlsym (dlhandle, "main_init");
     if (!init_p)
@@ -202,7 +202,7 @@ bool app::init ()
         cerr << lt_dlerror() << endl;
         return false;
     }
-    
+
     // platform / backend specific initialization
     return init_p (this);
 }
@@ -214,7 +214,7 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
-    if (Modules & EVENT) event::manager::cleanup ();
+    if (Modules & EVENT) events::manager::cleanup ();
 	if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();

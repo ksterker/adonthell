@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.4 2004/06/27 11:20:57 ksterker Exp $
+   $Id: listener.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,8 +31,8 @@
 #include "event/manager.h"
 #include "event/listener.h"
 
-using event::factory;
-using event::listener;
+using events::factory;
+using events::listener;
 
 // Array with callbacks to return a newly instanciated event
 new_event listener::instanciate_event[MAX_EVENTS];

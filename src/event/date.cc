@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.6 2004/10/18 07:40:23 ksterker Exp $
+   $Id: date.cc,v 1.7 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,7 +34,7 @@
 #include "event/manager.h"
 #include "event/time_event.h"
 
-using event::date;
+using events::date;
 
 // gametime minutes spent in the gameworld so far
 u_int32 date::Time = 0;

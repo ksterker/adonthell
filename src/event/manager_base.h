@@ -1,5 +1,5 @@
 /*
-   $Id: manager_base.h,v 1.2 2004/10/25 06:50:08 ksterker Exp $
+   $Id: manager_base.h,v 1.3 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,7 @@
 
 #include "event/listener.h"
 
-namespace event
+namespace events
 {
     /**
      * This is the base class for actual event managers. It

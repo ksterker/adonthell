@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.5 2004/10/18 07:40:23 ksterker Exp $
+   $Id: paths.cc,v 1.6 2004/12/07 16:46:26 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -15,17 +15,17 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   base/paths.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * 
+ *
  * @brief  Defines some primitives to get essential game paths.
- * 
- * 
+ *
+ *
  */
 
 #include <cstdlib>
@@ -47,27 +47,27 @@ namespace base
     lt_dlhandle get_module (const std::string & modname)
     {
         lt_dlhandle ret;
-        
+
         /* Try the MODULES_ENV variable first */
         const char * mod_env_str = getenv(MODULES_ENV);
         std::string mod_env = (mod_env_str ? mod_env_str : "");
-        
+
         if (!mod_env.empty())
         {
             mod_env += modname;
             ret = lt_dlopenext(mod_env.c_str());
             if (ret) return ret;
         }
-        
+
         /* Try the hard-coded path then */
         mod_env = PKGLIBDIR + modname;
         ret = lt_dlopenext(mod_env.c_str());
         if (ret) return ret;
-        
+
         cerr << "Failed to load module " << modname << ": " << lt_dlerror() << endl;
-        
+
         return NULL;
-    }   
+    }
 }
 
 // initialize data search paths
@@ -76,7 +76,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     // no save game directory unless we actually load a game
     IncludeSaveDir = false;
     IncludeUserDir = false;
-    
+
     // set OS specific directory containing configuration and saved games
 #if defined(__APPLE__)		// OSX
     CfgDataDir = string (getenv ("HOME")) + "/Library/Adonthell/";
@@ -93,20 +93,20 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 
     // user data dir might be optional
     UserDataDir = userdatadir;
-    if (UserDataDir != "") 
+    if (UserDataDir != "")
     {
         if (UserDataDir[UserDataDir.size () - 1] != '/') UserDataDir += "/";
         UserDataDir += game + "/";
-        
+
         // make sure the given user data dir is actually accessible
-        if (exists (UserDataDir)) IncludeUserDir = true;        
+        if (exists (UserDataDir)) IncludeUserDir = true;
     }
-    
+
     // builtin data directory
     GameDataDir = DATA_DIR;
     GameDataDir += "/games/";
     GameDataDir += game + "/";
-    
+
     // make sure game data dir exists
     return exists (GameDataDir);
 }
@@ -117,11 +117,11 @@ void paths::set_save_dir (const std::string & dir)
     if (dir != "" && exists (CfgDataDir + dir))
     {
         SaveDataDir = CfgDataDir + dir;
-        IncludeSaveDir = true;  
+        IncludeSaveDir = true;
     }
     else
     {
-        IncludeSaveDir = false;        
+        IncludeSaveDir = false;
         SaveDataDir = "";
     }
 }
@@ -130,7 +130,7 @@ void paths::set_save_dir (const std::string & dir)
 bool paths::open (igzstream & file, const std::string & path)
 {
     if (file.is_open ()) file.close ();
-    
+
     if (IncludeSaveDir && file.open (SaveDataDir + path)) return true;
     if (IncludeUserDir && file.open (UserDataDir + path)) return true;
     if (file.open (GameDataDir + path)) return true;
@@ -152,8 +152,9 @@ bool paths::exists (const std::string & path)
         closedir (dir);
         return true;
     }
-    
+
     // dir doesn't exist or not enough privileges ...
     fprintf (stderr, "*** warning: directory '%s' cannot be accessed!\n", path.c_str ());
     return false;
 }
+

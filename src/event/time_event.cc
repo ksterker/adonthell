@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.cc,v 1.4 2004/10/25 06:50:08 ksterker Exp $
+   $Id: time_event.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,8 +29,8 @@
 #include "event/time_event.h"
 #include "event/date.h"
 
-using event::date;
-using event::time_event;
+using events::date;
+using events::time_event;
 
 // create a new time event
 time_event::time_event (const string & time, bool absolute)
