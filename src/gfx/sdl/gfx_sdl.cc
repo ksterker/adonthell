@@ -1,5 +1,5 @@
 /*
-   $Id: gfx_sdl.cc,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: gfx_sdl.cc,v 1.2 2003/07/24 09:58:19 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,12 +26,19 @@ extern "C"
 {
     bool gfx_init();
     void gfx_cleanup();
+#ifdef __APPLE__
+    int osxinit();
+#endif // __APPLE__
 
     gfx::surface * gfx_create_surface();
 }
 
 bool gfx_init()
 {
+#ifdef __APPLE__
+    osxinit ();
+#endif // __APPLE__
+
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0)
     {
         std::cerr << "Couldn't init display: " << SDL_GetError () << std::endl;

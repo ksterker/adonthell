@@ -35,14 +35,14 @@ pkglibgfx_LTLIBRARIES = sdl.la
 pkgincludegfxsdldir = $(pkgincludedir)/gfx/sdl
 pkgincludegfxsdl_HEADERS = \
 	sdl/screen_sdl.h \
-	sdl/surface_sdl.h
+	sdl/surface_sdl.h 
 
 ## Rules to build libgfx_sdl
 sdl_la_SOURCES = \
 	sdl/gfx_sdl.cc \
 	sdl/screen_sdl.cc \
-	sdl/surface_sdl.cc
+	sdl/surface_sdl.cc 
 
 sdl_la_CXXFLAGS = $(SDL_CFLAGS)
-sdl_la_LDFLAGS = -avoid-version -module
-sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx -lstdc++
+sdl_la_LDFLAGS = -module -avoid-version
+sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx

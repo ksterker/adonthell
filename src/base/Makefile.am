@@ -18,4 +18,4 @@ libadonthell_base_la_SOURCES = \
 	callback.cc
 
 libadonthell_base_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\"
-libadonthell_base_la_LIBADD = $(LIBLTDL) -lz -lstdc++
+libadonthell_base_la_LIBADD = $(LIBLTDL) -lz 

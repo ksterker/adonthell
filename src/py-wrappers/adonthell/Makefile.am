@@ -11,19 +11,19 @@ pkgpyexec_LTLIBRARIES = _base.la _gfx.la _input.la
 _base_la_SOURCES = py_base_wrap.cc
 _base_la_CXXFLAGS = $(PY_CFLAGS)
 _base_la_LDFLAGS = -avoid-version -module
-_base_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_base -L$(top_builddir)/src/python -ladonthell_python $(SWIGRUNTIME_LIBS)
+_base_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
 ## Rules to build libpygfx (libgfx's Python wrapper)
 _gfx_la_SOURCES = py_gfx_wrap.cc
 _gfx_la_CXXFLAGS = $(PY_CFLAGS)
 _gfx_la_LDFLAGS = -avoid-version -module
-_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/gfx/ -ladonthell_gfx -L$(top_builddir)/src/python -ladonthell_python $(SWIGRUNTIME_LIBS)
+_gfx_la_LIBADD = -L$(top_builddir)/src/gfx/ -ladonthell_gfx -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
 ## Rules to build libpyinput (libinput's Python wrapper)
 _input_la_SOURCES = py_input_wrap.cc
 _input_la_CXXFLAGS = $(PY_CFLAGS)
 _input_la_LDFLAGS = -avoid-version -module
-_input_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/input/ -ladonthell_input -L$(top_builddir)/src/python -ladonthell_python $(SWIGRUNTIME_LIBS)
+_input_la_LIBADD = -L$(top_builddir)/src/input/ -ladonthell_input -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
 ## Rules for Python wrappers generation
 base.py: py_base_wrap.cc
