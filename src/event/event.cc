@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: event.cc,v 1.2 2004/04/26 07:11:13 gnurou Exp $
 
    Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,7 +28,8 @@
 
 #include "event/event.h"
 
-using event::event;
+namespace event
+{
 
 // constructor
 event::event ()
@@ -60,4 +61,6 @@ s_int32 event::do_repeat ()
     if (Repeat > 0) Repeat--;
     
     return Repeat;
+}
+
 }

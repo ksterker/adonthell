@@ -42,19 +42,19 @@ extern "C" {
    header should only be included in files that actually use them.
 */
 #if defined(__GNUC__) && defined(__i386__)
-static __inline__ u_int16 SDL_Swap16(u_int16 x)
+static __inline__ u_int16 Swap16(u_int16 x)
 {
 	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
 	return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static __inline__ u_int16 SDL_Swap16(u_int16 x)
+static __inline__ u_int16 Swap16(u_int16 x)
 {
 	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
 	return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static __inline__ u_int16 SDL_Swap16(u_int16 x)
+static __inline__ u_int16 Swap16(u_int16 x)
 {
 	u_int16 result;
 
@@ -62,25 +62,25 @@ static __inline__ u_int16 SDL_Swap16(u_int16 x)
 	return result;
 }
 #else
-static __inline__ u_int16 SDL_Swap16(u_int16 x) {
+static __inline__ u_int16 Swap16(u_int16 x) {
 	return((x<<8)|(x>>8));
 }
 #endif
 
 #if defined(__GNUC__) && defined(__i386__)
-static __inline__ u_int32 SDL_Swap32(u_int32 x)
+static __inline__ u_int32 Swap32(u_int32 x)
 {
 	__asm__("bswap %0" : "=r" (x) : "0" (x));
 	return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-static __inline__ u_int32 SDL_Swap32(u_int32 x)
+static __inline__ u_int32 Swap32(u_int32 x)
 {
 	__asm__("bswapl %0" : "=r" (x) : "0" (x));
 	return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-static __inline__ u_int32 SDL_Swap32(u_int32 x)
+static __inline__ u_int32 Swap32(u_int32 x)
 {
 	u_int32 result;
 
@@ -90,7 +90,7 @@ static __inline__ u_int32 SDL_Swap32(u_int32 x)
 	return result;
 }
 #else
-static __inline__ u_int32 SDL_Swap32(u_int32 x) {
+static __inline__ u_int32 Swap32(u_int32 x) {
 	return((x<<24)|((x<<8)&0x00FF0000)|((x>>8)&0x0000FF00)|(x>>24));
 }
 #endif

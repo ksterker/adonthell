@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.2 2004/04/09 11:57:51 ksterker Exp $
+   $Id: flat.h,v 1.3 2004/04/26 07:11:13 gnurou Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,7 +28,9 @@
 
 #ifndef BASE_FLAT
 #define BASE_FLAT
- 
+
+
+#include "base/types.h"
 #include <string>
 #include "base/endian.h"
 
@@ -133,19 +135,23 @@ namespace base
             }
 
             void put_uint16 (const string & name, const u_int16 & i) {
-                put (name, T_UINT16, 2, (void*) &(SwapLE16 (i)));
+	        SwapLE16 (i);
+                put (name, T_UINT16, 2, (void*) &i);
             }
 
             void put_sint16 (const string & name, const s_int16 & i) {
-                put (name, T_SINT16, 2, (void*) &(SwapLE16 (i)));
+	        SwapLE16 (i);
+                put (name, T_SINT16, 2, (void*) &i);
             }
 
             void put_uint32 (const string & name, const u_int32 & i) {
-                put (name, T_UINT32, 4, (void*) &(SwapLE32 (i)));
+	        SwapLE32 (i);
+                put (name, T_UINT32, 4, (void*) &i);
             }
 
             void put_sint32 (const string & name, const s_int32 & i) {
-                put (name, T_SINT32, 4, (void*) &(SwapLE32 (i)));
+	        SwapLE32 (i);
+                put (name, T_SINT32, 4, (void*) &i);
             }
 
             void put_string (const string & name, const string & s) {

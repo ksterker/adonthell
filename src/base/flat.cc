@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.2 2004/04/09 11:57:50 ksterker Exp $
+   $Id: flat.cc,v 1.3 2004/04/26 07:11:13 gnurou Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,8 +26,8 @@
  * @brief An internal class used to flatten various data.
  */
 
-#include <zlib.h>
 #include "base/flat.h"
+#include <zlib.h>
 
 using base::flat;
  

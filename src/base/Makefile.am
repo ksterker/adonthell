@@ -1,12 +1,12 @@
 CXXFLAGS += -I$(top_srcdir)/src/
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir)
 
 ## Our header files
 pkgincludebasedir = $(pkgincludedir)/base
 pkgincludebase_HEADERS = \
 	base.h \
 	callback.h \
-    diskio.h \
+	diskio.h \
 	endian.h \
 	file.h \
 	flat.h \
