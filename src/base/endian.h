@@ -1,6 +1,6 @@
 /*
     SDL - Simple DirectMedia Layer
-    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002  Sam Lantinga
+    Copyright (C) 1997-2004 Sam Lantinga
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -36,30 +36,62 @@
 extern "C" {
 #endif
 
-/* The macros used to swap values */
-/* Try to use superfast macros on systems that support them */
-#ifdef HAVE_ASM_BYTEORDER_H
-#include <asm/byteorder.h>
-#ifdef __arch__swab16
-#define Swap16  __arch__swab16
-#endif
-#ifdef __arch__swab32
-#define Swap32  __arch__swab32
-#endif
-#endif // HAVE_ASM_BYTEORDER_H
 /* Use inline functions for compilers that support them, and static
    functions for those that do not.  Because these functions become
    static for compilers that do not support inline functions, this
    header should only be included in files that actually use them.
 */
-#ifndef Swap16
-static __inline__ u_int16 Swap16(u_int16 D) {
-	return((D<<8)|(D>>8));
+#if defined(__GNUC__) && defined(__i386__)
+static __inline__ u_int16 SDL_Swap16(u_int16 x)
+{
+	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
+	return x;
+}
+#elif defined(__GNUC__) && defined(__x86_64__)
+static __inline__ u_int16 SDL_Swap16(u_int16 x)
+{
+	__asm__("xchgb %b0,%h0" : "=q" (x) :  "0" (x));
+	return x;
+}
+#elif defined(__GNUC__) && defined(__powerpc__)
+static __inline__ u_int16 SDL_Swap16(u_int16 x)
+{
+	u_int16 result;
+
+	__asm__("rlwimi %0,%2,8,16,23" : "=&r" (result) : "0" (x >> 8), "r" (x));
+	return result;
+}
+#else
+static __inline__ u_int16 SDL_Swap16(u_int16 x) {
+	return((x<<8)|(x>>8));
 }
 #endif
-#ifndef Swap32
-static __inline__ u_int32 Swap32(u_int32 D) {
-	return((D<<24)|((D<<8)&0x00FF0000)|((D>>8)&0x0000FF00)|(D>>24));
+
+#if defined(__GNUC__) && defined(__i386__)
+static __inline__ u_int32 SDL_Swap32(u_int32 x)
+{
+	__asm__("bswap %0" : "=r" (x) : "0" (x));
+	return x;
+}
+#elif defined(__GNUC__) && defined(__x86_64__)
+static __inline__ u_int32 SDL_Swap32(u_int32 x)
+{
+	__asm__("bswapl %0" : "=r" (x) : "0" (x));
+	return x;
+}
+#elif defined(__GNUC__) && defined(__powerpc__)
+static __inline__ u_int32 SDL_Swap32(u_int32 x)
+{
+	u_int32 result;
+
+	__asm__("rlwimi %0,%2,24,16,23" : "=&r" (result) : "0" (x>>24), "r" (x));
+	__asm__("rlwimi %0,%2,8,8,15"   : "=&r" (result) : "0" (result),    "r" (x));
+	__asm__("rlwimi %0,%2,24,0,7"   : "=&r" (result) : "0" (result),    "r" (x));
+	return result;
+}
+#else
+static __inline__ u_int32 SDL_Swap32(u_int32 x) {
+	return((x<<24)|((x<<8)&0x00FF0000)|((x>>8)&0x0000FF00)|(x>>24));
 }
 #endif
 

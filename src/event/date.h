@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
+   $Id: date.h,v 1.3 2004/02/25 22:31:43 ksterker Exp $
 
    Copyright (C) 2002 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -118,11 +118,17 @@ public:
     
 private:
 #ifndef SWIG
+    // number of game time seconds before a time event will be raised
+    static u_int16 Resolution;
+
     // Time spent in the game in 1/10 gametime minutes
     static u_int32 Time;
 
     // number of game cycles since the last 1/10 gametime minute passed
     static double Ticks;
+    
+    // how many game cycles make one second of game time
+    static float Scale;
 #endif // SWIG
 };
 

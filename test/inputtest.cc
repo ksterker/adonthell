@@ -1,4 +1,5 @@
 #include <iostream>
+#include "base/timer.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "main/adonthell.h"
@@ -63,16 +64,18 @@ class AdonthellApp : public adonthell::app
         input::manager::add(&il);
         
 	
-
+        base::timer time;
 
         // Run this loop until letsexit is set to 1 by the
         // callback function. Every time a key event is raised,
         // the input manager will send it to the listeners it handles
         // (that is, only the one we've connected) which will call the
         // callback function that has been connected to handle keyboard events.
-        while (!myObject.letsexit)
+        while (!myObject.letsexit) {
+            time.update ();
             input::manager::update();
-    
+        }
+        
         // Do some cleanup, and we're ready to exit!
         input::cleanup();
         gfx::cleanup();

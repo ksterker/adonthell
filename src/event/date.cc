@@ -1,7 +1,7 @@
 /*
-   $Id: date.cc,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
+   $Id: date.cc,v 1.3 2004/02/25 22:31:43 ksterker Exp $
 
-   Copyright (C) 2002/2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -40,27 +40,35 @@ using event::date;
 // gametime minutes spent in the gameworld so far
 u_int32 date::Time = 0;
 
-// number of game cycles since the last gametime minute passed
+// how many game cycles make one second of game time
+float date::Scale = 10.0;
+
+// number of game time seconds before a time event will be raised
+u_int16 date::Resolution = 1;
+
+// number of game cycles since the last gametime second passed
 double date::Ticks = 0.0;
+
 
 // Increase gametime 
 void date::update ()
 {
-    static double tenth_minute = 0; // gametime::minute () / 10.0;
-    
     // fts contains the number of cycles that passed since the last
     // call to date::update
-    // Ticks += timer::frames_missed ();
+    // Ticks += 1 + timer::frames_missed ();
 
-    // check whether an in-game minute has passed
-    while (Ticks >= tenth_minute)
+    // check whether to trigger time events
+    while (Ticks >= Scale)
     {
-        Ticks -= tenth_minute;
+        Ticks -= Scale;
         Time++;
         
         // raise time event
-        // time_event evt (Time);
-        // event_handler::raise_event (&evt);
+        if (Time % Resolution == 0) 
+        {
+            // time_event evt (Time);
+            // event_handler::raise_event (&evt);
+        }
     }
 }
 
@@ -69,6 +77,8 @@ bool date::get_state (base::igzstream &in)
 {
     // read the current date as (gametime) minutes since start of the game
     Time << in;
+    Scale << in;
+    Resolution << in;
     
     return true;
 }
@@ -78,6 +88,8 @@ void date::put_state (base::ogzstream &out)
 {
     // write the time to disk
     Time >> out;
+    Scale >> out;
+    Resolution >> out;
 }
 
 // calculate the current weekday
@@ -110,7 +122,7 @@ u_int16 date::minute ()
 // convert the time string to gametime minutes
 u_int32 date::parse_time (const std::string & time)
 {
-    u_int32 t_minutes = 0, number = 0;
+    u_int32 secs = 0, number = 0;
     char num[2] = "0";
 
     for (u_int32 i = 0; i < time.length (); i++)
@@ -129,31 +141,31 @@ u_int32 date::parse_time (const std::string & time)
                 // weeks
                 case 'w':
                 {
-                    t_minutes += number * DAYS_PER_WEEK * HOURS_PER_DAY * 600;
+                    secs += number * DAYS_PER_WEEK * HOURS_PER_DAY * 600;
                     break;
                 }
                 // days
                 case 'd':
                 {
-                    t_minutes += number * HOURS_PER_DAY * 600;
+                    secs += number * HOURS_PER_DAY * 600;
                     break;
                 }
                 // hours
                 case 'h':
                 {
-                    t_minutes += number * 600;
+                    secs += number * 600;
                     break;
                 }
                 // minutes
                 case 'm':
                 {
-                    t_minutes += number * 10;
+                    secs += number * 10;
                     break;
                 }
-                // 1/10 minutes
-                case 't':
+                // seconds
+                case 's':
                 {
-                    t_minutes += number;
+                    secs += number;
                     break;
                 }
                 // error
@@ -168,5 +180,5 @@ u_int32 date::parse_time (const std::string & time)
         }
     }
 
-    return t_minutes;
+    return secs;
 }

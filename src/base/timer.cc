@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.3 2003/12/02 22:13:10 ksterker Exp $
+   $Id: timer.cc,v 1.4 2004/02/25 22:31:43 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,6 +21,7 @@
 
 #include <errno.h>
 
+#include "base/types.h"
 #include "base/timer.h"
 
 namespace base
@@ -44,6 +45,7 @@ namespace base
 
     void timer::sleep(unsigned long int msecs) const
     {
+/*
         unsigned char err;
         struct timespec req, rem;
         rem.tv_sec = msecs / 1000;
@@ -52,23 +54,25 @@ namespace base
         do
         {
             req = rem;
-            err = nanosleep(&req, &rem);
+            err = nanosleep (&req, &rem);
         } while (err && (errno == EINTR));
-
+*/
         
     }
 
-    void timer::update()
+    void timer::update ()
     {
-        unsigned long int curtime = current_time();
+        register u_int16 delay = current_time () - Lasttime;
 
-        while (curtime - Lasttime < Slice)
+        // wait if the current frame was calculated too fast
+        while (delay < Slice)
         {
-            //this->sleep(1);
-            curtime = current_time();
+            usleep (Slice - delay);
+            delay = current_time () - Lasttime;
         }
         
-        Frames_missed = (curtime - Lasttime) / Slice - 1;
-        Lasttime = curtime - (curtime - Lasttime) % Slice;
+        // see whether calculating the current frame took too long
+        Frames_missed = delay / Slice - 1;
+        Lasttime += delay;
     }
 }
