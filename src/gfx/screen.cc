@@ -1,5 +1,5 @@
 /*
-   $Id: screen.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
+   $Id: screen.cc,v 1.3 2003/07/27 14:08:20 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,6 +26,7 @@
 
 namespace gfx
 {
+    // All the static data for the screen.
     u_int16 screen::length_, screen::height_;
     u_int8 screen::bytes_per_pixel_;
     bool screen::fullscreen_;
@@ -34,6 +35,7 @@ namespace gfx
     void (*screen::update_p)() = NULL;
     u_int32 (*screen::trans_color_p)() = NULL;
     void (*screen::clear_p)() = NULL;
+    surface * (*screen::get_surface_p)() = NULL;
     
     bool screen::set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
     {

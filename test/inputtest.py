@@ -1,5 +1,5 @@
 from adonthell import gfx, input
-import sys
+import sys, time
 
 ## Our exit variable
 letsexit = 0

@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: screen.h,v 1.2 2003/07/27 14:08:20 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,7 +28,7 @@
 
 #include <string>
 
-// #include "gfx/surface.h"
+#include "gfx/surface.h"
 
 namespace gfx
 {
@@ -91,6 +91,8 @@ namespace gfx
          */
         static u_int32 trans_color() { return trans_color_p(); }
 
+        static surface * get_surface() { return get_surface_p(); }
+
         /** Returns whether the current mode is fullscreen or windowed.
          *  @return
          *     - true: fullscreen.
@@ -107,7 +109,7 @@ namespace gfx
          */
         static void clear() { clear_p(); }
         
-    /** Sets fullscreen/windowed mode.
+        /** Sets fullscreen/windowed mode.
          *  @param mode
          *     - true: fullscreen mode.
          *     - false: windowed mode.
@@ -116,8 +118,8 @@ namespace gfx
          *    @li false if the mode is already set, or the system doesn't support
          *        this mode.
          */ 
-//         static bool set_fullscreen (bool m); 
-    
+        //         static bool set_fullscreen (bool m); 
+        
         /** 
          * Returns information about the current screen settings,
          * suitable for being displayed to the user.
@@ -125,34 +127,35 @@ namespace gfx
          * 
          * @return printable information about the current screen settings.
          */
-//         static std::string info (); 
-
+        //         static std::string info (); 
+        
         /**
          * @name Transparent color settings
          * 
          */
         ///@{
-
+        
         /// Red componant
         static const u_int8 TRANS_RED = 0xff;
         /// Green componant
         static const u_int8 TRANS_GREEN = 0x00;        
         /// Blue componant
         static const u_int8 TRANS_BLUE = 0xff;
-
+        
         ///@}
-
-    private:
+        
+    protected:
         static bool fullscreen_; 
         
         static u_int16 length_;
         static u_int16 height_;
         static u_int8 bytes_per_pixel_; 
-
+        
         static bool (*set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth = 0);
         static void (*update_p)();
         static u_int32 (*trans_color_p)();
         static void (*clear_p)();
+        static surface * (*get_surface_p)();
 
         friend bool gfx::init(const std::string &);
     };

@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
     // callback function that has been connected to handle keyboard events.
     while (!myObject.letsexit)
         input::manager::update();
-    
+
     // Do some cleanup, and we're ready to exit!
     input::cleanup();
     gfx::cleanup();

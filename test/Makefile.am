@@ -1,6 +1,6 @@
 CXXFLAGS += -I$(top_srcdir)/src/
 
-EXTRA_DIST = inputtest.py
+EXTRA_DIST = gfxtest.py inputtest.py
 noinst_PROGRAMS = callbacktest inputtest
 
 callbacktest_SOURCES = callbacktest.cc

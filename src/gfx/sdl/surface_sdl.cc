@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
+   $Id: surface_sdl.cc,v 1.3 2003/07/27 14:08:20 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,7 +57,7 @@ namespace gfx
     { 
         SDL_Surface * display_target;
 
-        if (target == NULL) display_target = display; 
+        if (target == NULL) display_target = display.vis; 
         else display_target = ((surface_sdl *)target)->vis;
 
         setup_rects (x, y, sx, sy, sl, sh, da_opt); 
@@ -313,11 +313,11 @@ namespace gfx
 
         vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
                                     length (), height (),
-                                    display->format->BitsPerPixel,
-                                    display->format->Rmask,
-                                    display->format->Gmask,
-                                    display->format->Bmask,
-                                    display->format->Amask); 
+                                    display.vis->format->BitsPerPixel,
+                                    display.vis->format->Rmask,
+                                    display.vis->format->Gmask,
+                                    display.vis->format->Bmask,
+                                    display.vis->format->Amask); 
     }
 
     void surface_sdl::clear () 
