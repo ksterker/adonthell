@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.3 2003/07/25 11:26:57 gnurou Exp $
+   $Id: drawing_area.cc,v 1.4 2003/07/25 11:31:03 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,7 +26,6 @@
 
 namespace gfx
 {
-    
     drawing_area::drawing_area ()
         : x_(0), y_(0),
           w_(0), h_(0),
