@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.6 2004/02/05 21:52:38 jol Exp $
+   $Id: base.h,v 1.7 2004/02/07 00:03:37 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -24,6 +24,7 @@
 
 #include "gfx/surface.h"
 #include "gfx/drawing_area.h"
+#include "input/input.h"
 
 namespace gui {
   
@@ -213,6 +214,9 @@ namespace gui {
        */
       gfx::drawing_area * getDrawingArea () { return (gfx::drawing_area*) this; }
 
+      /**
+       * Return the Parent drawing Area. If no parent return null
+       */
       gfx::drawing_area * getParentDrawingArea ();
       
       /**
@@ -225,6 +229,31 @@ namespace gui {
        */
       void setHorizontalAlign ( u_int8 align);
 
+      /**
+       * Set Listener. By default a basic object have no listener
+       * If there was already a listener remove it 
+       */
+      void setListener (::input::listener * list, u_int8 device = 0);
+       
+      /**
+       * Return the listener of this composant
+       */
+      ::input::listener * getListener () const;
+
+      /**
+       * Define the Input methods
+       */
+      virtual bool on_mouse_event (input::mouse_event * evt);
+
+      virtual bool on_keyboard_event (input::keyboard_event * evt);
+      
+      virtual bool on_joystick_event (input::joystick_event * evt);
+      
+      virtual bool on_control_event (input::control_event * evt);
+      
+      /**
+       * Free memory
+       */
       virtual ~base ();
       
       /* Constant value */
@@ -235,6 +264,13 @@ namespace gui {
       static const u_int8 ALIGN_TOP = 4;
       static const u_int8 ALIGN_BOTTOM = 5;
 
+      /* Constant Value for select device, maybe move this stuff to input namespace*/
+      static const u_int8 NO_DEVICE = 0;
+      static const u_int8 KEYBOARD_DEVICE = 1;
+      static const u_int8 MOUSE_DEVICE = 2;
+      static const u_int8 JOYSTICK_DEVICE = 4;
+      static const u_int8 CONTROL_DEVICE = 8;
+      
     protected:
       
       s_int16 m_x; //virtual position
@@ -249,7 +285,7 @@ namespace gui {
       
       u_int8 m_horizontal_align; // horizontal alignment
       
-      bool m_visible; //if the object is visible
+      bool m_visible; // if the object is visible
       
       bool m_focus; // if the object has focus
       
@@ -261,9 +297,11 @@ namespace gui {
       
       container * m_parent; // a pointer to his parent
       
-      // container * m_old_parent; // a pointer to the old parent
+      ::input::listener * m_listener;
 
-    private:
+      u_int32 m_id;
+
+      static u_int32 gui_objects;
       
     };
 }

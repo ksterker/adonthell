@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.6 2004/02/05 21:52:38 jol Exp $
+   $Id: container.h,v 1.7 2004/02/07 00:03:37 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -66,8 +66,14 @@ namespace gui {
        */
       void setSpaceChild (s_int16 space);
       
+      /**
+       * Get The Space between each child
+       */
       s_int16 getSpaceChild () { return m_space_child; }
       
+      /**
+       * Get space between Child and border
+       */
       s_int16 getSpaceBorder () { return m_space_border; }
 
       /**

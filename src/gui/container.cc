@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.7 2004/02/05 21:52:38 jol Exp $
+   $Id: container.cc,v 1.8 2004/02/07 00:03:37 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,10 +43,13 @@ void container::addChild (base * m)
   // WARNING: I think update layout must be called manually
   // because if there is a lot's of childs it can take a long time ...
   updateLayout ();
+
+  std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
 }
 
 void container::removeChild (base * m)
 {
+  
   m_childs.remove (m);
   
   m->setParent (NULL);
@@ -54,6 +57,7 @@ void container::removeChild (base * m)
   m->updatePosition ();
 
   updateLayout ();
+  std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
 }
 
 void container::updatePosition ()
@@ -79,6 +83,7 @@ void container::updateLayout ()
       if (m_layout->getMaxLength () > l) l = m_layout->getMaxLength ();
       if (m_layout->getMaxHeight () > h) h = m_layout->getMaxHeight ();
       setSize (l, h);
+      updateLayout ();
       break;
     
     case POLICY_EXPAND_CHILD:
