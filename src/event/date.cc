@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.1 2003/12/02 22:15:22 ksterker Exp $
+   $Id: date.cc,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
 
    Copyright (C) 2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,7 +34,6 @@
 
 using event::date;
 
-// #include "gametime.h"
 // #include "time_event.h"
 // #include "event_handler.h"
 
@@ -64,9 +63,9 @@ void date::update ()
         // event_handler::raise_event (&evt);
     }
 }
-/*
+
 // load state from disk
-bool date::get_state (igzstream &in)
+bool date::get_state (base::igzstream &in)
 {
     // read the current date as (gametime) minutes since start of the game
     Time << in;
@@ -75,12 +74,12 @@ bool date::get_state (igzstream &in)
 }
 
 // save state to disk
-void date::put_state (ogzstream &out)
+void date::put_state (base::ogzstream &out)
 {
     // write the time to disk
     Time >> out;
 }
-*/
+
 // calculate the current weekday
 u_int16 date::weekday ()
 {

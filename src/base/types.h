@@ -1,5 +1,5 @@
 /*
-   $Id: types.h,v 1.2 2003/11/22 09:35:21 ksterker Exp $
+   $Id: types.h,v 1.3 2003/12/29 10:01:59 uid66230 Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,8 @@
  */ 
 
  
-#ifndef TYPES_H__
-#define TYPES_H__
+#ifndef BASE_TYPES_H
+#define BASE_TYPES_H
 
 
 // We should put ifdefs here to put the correct int values accordingly to the system type
@@ -52,4 +52,4 @@
 /// 32 bits long signed integer
 #define s_int32 signed int
 
-#endif
+#endif // BASE_TYPES_H

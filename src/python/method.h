@@ -1,5 +1,5 @@
 /*
-   $Id: method.h,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+   $Id: method.h,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #define PYTHON_METHOD_H
 
 #include "python/script.h"
+#include "base/file.h"
 
 namespace python
 {
@@ -67,7 +68,7 @@ namespace python
          * 
          * @param out file where to save the %event.
          */ 
-        // void put_state (ogzstream& out) const;
+        void put_state (base::ogzstream& out) const;
     
         /** 
          * Re-connect this method to its script. This is done via the %script
@@ -76,7 +77,7 @@ namespace python
          * @param in file to load the %method from.
          * @return \b true if the %method could be reconnected, \b false otherwise
          */
-        // bool get_state (igzstream& in);
+        bool get_state (base::igzstream& in);
         //@}
         
     private:

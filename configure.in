@@ -24,6 +24,13 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 AC_PROG_MAKE_SET
 
+dnl *********
+dnl Endianess
+dnl *********
+
+AC_C_BIGENDIAN(CXXFLAGS="$CXXFLAGS -DBIG_ENDIAN", :, :)
+AC_CHECK_HEADERS([asm/byteorder.h])
+
 dnl ************************************
 dnl set up Objective C compiler for OS X
 dnl ************************************
@@ -33,7 +40,7 @@ OBJC="gcc"
 AC_SUBST(OBJC)
 
 case "$target" in
-    *-*-darwin*)
+    *-apple-darwin*)
 		CXXFLAGS="$CXXFLAGS -Wno-long-double"
         osx="yes"
         ;;

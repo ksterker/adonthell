@@ -1,5 +1,5 @@
 /*
-   $Id: method.cc,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+   $Id: method.cc,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,7 @@ void method::init (const std::string & mtd)
     Method = Script->get_attribute (mtd);
     if (!PyCallable_Check (Method))
     {
-        fprintf (stderr, "*** python::method init: method %s.%s not found!\n", 
+        fprintf (stderr, "*** python::method::init: method %s.%s not found!\n", 
             Script->class_name ().c_str (), mtd.c_str ());
         Method = NULL;
     }
@@ -72,8 +72,8 @@ bool method::execute (PyObject *args)
     return false;
 }
 
-/*
-void method::put_state (ogzstream & file)
+// save callback connection to disk
+void method::put_state (base::ogzstream & file) const
 {
     if (!Script) 
     {
@@ -86,10 +86,9 @@ void method::put_state (ogzstream & file)
     Script->class_name () >> file;
     PyModule_GetName (Method) >> file;
 }
-*/
 
-/*
-bool method::get_state (igzstream & file)
+// load callback connection from disk and reconnect
+bool method::get_state (base::igzstream & file)
 {
     bool connected;
     
@@ -111,4 +110,3 @@ bool method::get_state (igzstream & file)
     
     return true;
 }
-*/

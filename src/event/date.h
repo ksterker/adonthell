@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.1 2003/12/02 22:15:22 ksterker Exp $
+   $Id: date.h,v 1.2 2003/12/29 10:01:59 uid66230 Exp $
 
    Copyright (C) 2002 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,9 +29,7 @@
 #ifndef EVENT_DATE_H
 #define EVENT_DATE_H
 
-#include <string>
-#include "base/types.h"
-// #include "fileops.h"
+#include "base/file.h"
 
 #ifndef SWIG
 /**
@@ -67,7 +65,10 @@ public:
      * Get the current %gametime.
      * @return %gametime in 1/10 minutes since start of the game.
      */
-    static u_int32 time ()      { return Time; }
+    static u_int32 time ()
+    { 
+        return Time; 
+    }
 
     /**
      * Get the current weekday.
@@ -105,15 +106,15 @@ public:
     /**
      * Load the state of the %gamedate class from disk
      * @param in stream to read the state from
-     * @return <b>true</b> if the state was successfully retrieved,
-     *      <b>false</b> otherwise.
+     * @return \b true if the state was successfully retrieved,
+     *      \b false otherwise.
      */
-    // static bool get_state (igzstream &in);
+    static bool get_state (base::igzstream & in);
     /**
      * Save the state of the %gamedate class to disk
      * @param out stream to write the state to
      */
-    // static void put_state (ogzstream &out);
+    static void put_state (base::ogzstream & out);
     
 private:
 #ifndef SWIG
