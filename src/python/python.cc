@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.4 2003/11/22 09:38:09 ksterker Exp $
+   $Id: python.cc,v 1.5 2003/12/01 22:42:21 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
  */
 
 #include "python/python.h"
+#include "python/pool.h"
 
 namespace python
 {
@@ -43,12 +44,14 @@ namespace python
 
     void init()
     {
-        Py_Initialize();
+        Py_Initialize ();
+        pool::init ();
     }
 
-    void cleanup()
+    void cleanup ()
     {
-        Py_Finalize();
+        pool::cleanup ();
+        Py_Finalize ();
     }
     
     bool add_search_path(const std::string & path)

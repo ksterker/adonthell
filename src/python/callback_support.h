@@ -1,5 +1,5 @@
 /*
-   $Id: callback_support.h,v 1.2 2003/11/22 09:38:09 ksterker Exp $
+   $Id: callback_support.h,v 1.3 2003/12/01 22:42:21 ksterker Exp $
    
    Copyright (C) 2003 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,7 +43,7 @@ namespace python
      * Specialize this template function every time you declare a type that should
      * be passable as an argument to Python callback functions.
      * 
-     * This function should actually \e never been called. A warning message will be issued
+     * This function should actually \e never be called. A warning message will be issued
      * to ask the forgetful programmer to declare his class with PYTHON_AS_CALLBACK_ARGUMENT.
      * 
      * Don't use this directly - use PYTHON_AS_CALLBACK_ARGUMENT instead.
@@ -53,7 +53,7 @@ namespace python
     template<class A> inline
     const char* get_type_name() 
     { 
-        std::cerr << "Warning! Trying to pass an object to Python which class has not been declared with PYTHON_AS_CALLBACK_ARGUMENT! Expect crash!\n";
+        std::cerr << "Warning! Trying to pass an object to Python that has not been declared with PYTHON_AS_CALLBACK_ARGUMENT! Expect segfault!\n";
         return "";
     }   
 }

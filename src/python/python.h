@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.3 2003/11/22 09:38:09 ksterker Exp $
+   $Id: python.h,v 1.4 2003/12/01 22:42:21 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -187,9 +187,9 @@ namespace python
      */
     inline void set_ownership(PyObject * obj, const ownership o)
     {
-	PyObject * n = PyInt_FromLong(o);
-	PyObject_SetAttrString (obj, (char*)"thisown", n);
-	Py_DECREF(n);
+        PyObject * n = PyInt_FromLong(o);
+        PyObject_SetAttrString (obj, (char*)"thisown", n);
+        Py_DECREF(n);
         show_traceback();
     }
     
