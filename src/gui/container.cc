@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.6 2004/01/13 23:01:15 gnurou Exp $
+   $Id: container.cc,v 1.7 2004/02/05 21:52:38 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -24,7 +24,6 @@
 #include "gui/container.h"
 
 using namespace gui;
-
 
 container::container () : base ()
 {
@@ -97,22 +96,16 @@ void container::destroyAll ()
   m_childs.clear ();
 }
 
-bool container::drawContents ()
-{
-  if (base::drawContents ())
-    {
-      for (ListChild::iterator i = m_childs.begin (); i!= m_childs.end (); ++i)
-	{
-	  (*i)->assignArea (this);
-	  (*i)->draw ();
-	  (*i)->detachArea ();
-	}
-    }
+bool container::drawContents (gfx::surface * sf) {
+  if (base::drawContents (sf)) {
+    for (ListChild::iterator i = m_childs.begin (); i!= m_childs.end (); ++i)
+      (*i)->draw (sf, this);
+    return true;
+  }
   return false;
 }
 
-void container::setSpaceChild (s_int16 space)
-{
+void container::setSpaceChild (s_int16 space) {
   m_space_child = space;
   updateLayout ();
 }
@@ -130,9 +123,7 @@ container::~container ()
   if (m_layout) delete m_layout;
 }
 
-void container::setLayout (layout * l)
-{
-  
+void container::setLayout (layout * l) {
   if (m_layout) delete m_layout;
   m_layout = l;
   if (m_layout) m_layout->setContainer (this);

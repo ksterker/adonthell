@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.5 2004/01/06 22:39:56 jol Exp $
+   $Id: container.h,v 1.6 2004/02/05 21:52:38 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,18 +59,16 @@ namespace gui {
       /**
        * Draw the contents of this object
        */
-      virtual bool drawContents ();
-
+      virtual bool drawContents (gfx::surface * sf);
+      
       /**
        * Define the space between 2 childs
        */
       void setSpaceChild (s_int16 space);
       
-      s_int16 getSpaceChild ()
-	{ return m_space_child; }
+      s_int16 getSpaceChild () { return m_space_child; }
       
-      s_int16 getSpaceBorder ()
-	{ return m_space_border; }
+      s_int16 getSpaceBorder () { return m_space_border; }
 
       /**
        * Define the space between a child and the border
@@ -90,8 +88,7 @@ namespace gui {
       /**
        * Get all childs
        */
-      ListChild & getChilds ()
-	{ return m_childs; }
+      ListChild & getChilds () { return m_childs; }
 
       /**
        * Define the policy used to extend the container

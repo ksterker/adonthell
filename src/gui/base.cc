@@ -1,5 +1,5 @@
 /*
-   $Id: base.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: base.cc,v 1.4 2004/02/05 21:52:38 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,6 +20,7 @@
 */
 
 #include <iostream>
+#include <assert.h>
 
 #include "gfx/screen.h"
 #include "gfx/surface.h"
@@ -30,15 +31,12 @@
 using namespace gui;
 
 
-base::base (): drawing_area ()
-{
+base::base (): drawing_area () {
   m_parent = NULL;
-
   m_x = m_y = m_padx = m_pady = 0;
-
   m_vertical_align = m_horizontal_align = base::ALIGN_NONE;
-
-  m_visible = m_enable = true;
+  m_selectable = m_visible = m_enabled = true;
+  m_focus = m_selected = false;
 }
 
 
@@ -65,50 +63,47 @@ void base::updatePosition ()
   else gfx::drawing_area::move (getX () + getPadX (), getY () + getPadY ());
 }
 
-bool base::update ()
-{
+bool base::update() {
   return true;
 }
 
 
-bool base::draw ()
-{
-  if (m_visible)
-    {
-      return drawContents ();
-    }
+bool base::draw(gfx::surface * sf, gfx::drawing_area * da ) {
+  if (m_visible) {
+    bool b;
+    assignArea(da);
+    if (sf) b = drawContents (sf);
+    else b = drawContents (gfx::screen::get_surface());
+    detachArea();
+    return b;
+  }
   return false;
 }
 
 
-bool base::drawContents ()
-{
-  gfx::surface * s = gfx::screen::get_surface();
-  if (s == NULL) return false;
-
+bool base::drawContents(gfx::surface * sf) {
+  assert (sf != NULL);
+  
   //top
-  s->draw_line (getRealX(), getRealY(), 
+  sf->draw_line (getRealX(), getRealY(), 
 		getRealX () + getLength () - 1, getRealY (), 0x888899, this);
   //bottom
-  s->draw_line (getRealX(), getRealY() + getHeight () - 1, 
+  sf->draw_line (getRealX(), getRealY() + getHeight () - 1, 
 		getRealX () + getLength () - 1, getRealY () + getHeight () - 1, 0x888899, this);
   //left
-  s->draw_line (getRealX(), getRealY(), 
+  sf->draw_line (getRealX(), getRealY(), 
 		getRealX (), getRealY () + getHeight () - 1, 0x888899, this);
   //right
-  s->draw_line (getRealX() + getLength () - 1, getRealY(), 
+  sf->draw_line (getRealX() + getLength () - 1, getRealY(), 
 		getRealX () + getLength () - 1, getRealY () + getHeight () - 1, 0x888899, this);
   return true;
 }
 
-void base::updateSize ()
-{
+void base::updateSize () {
 }
 
-void base::setParent (container * parent)
-{ 
+void base::setParent (container * parent) { 
   m_parent = parent;
-  
   updatePosition ();
 }
 
@@ -138,6 +133,3 @@ base::~base ()
 {
   if (m_parent) m_parent->removeChild (this);
 }
-
-
-
