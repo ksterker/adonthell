@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.9 2004/05/13 06:44:00 ksterker Exp $
+   $Id: container.h,v 1.10 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,67 +39,67 @@ namespace gui {
       /**
        * Add an element in this container
        */
-      virtual void addChild (base * m);
+      virtual void add_child (base * m);
 
       /**
        * Remove an element
        */
-      virtual void removeChild (base * m);
+      virtual void remove_child (base * m);
       
       /**
        * Update the position of this object an all object inside its
        */
-      virtual void updatePosition ();
+      virtual void update_position ();
       
       /**
        * Make an layout update
        */
-      void updateLayout ();
+      void update_layout ();
 
       /**
        * Draw the contents of this object
        */
-      virtual bool drawContents (gfx::surface * sf);
+      virtual bool draw_contents (gfx::surface * sf);
       
       /**
        * Define the space between 2 childs
        */
-      void setSpaceChild (s_int16 space);
+      void set_space_child (s_int16 space);
       
       /**
        * Get The Space between each child
        */
-      s_int16 getSpaceChild () { return m_space_child; }
+      s_int16 get_space_child () { return m_space_child; }
       
       /**
        * Get space between Child and border
        */
-      s_int16 getSpaceBorder () { return m_space_border; }
+      s_int16 get_space_border () { return m_space_border; }
 
       /**
        * Define the space between a child and the border
        */
-      void setSpaceBorder (s_int16 space);
+      void set_space_border (s_int16 space);
 
       /**
        * Define the layout used by this container
        */
-      void setLayout (layout * l);
+      void set_layout (layout * l);
 
       /**
        * Delete from memory all child
        */
-      void destroyAll ();
+      void destroy_all ();
 
       /**
        * Get all childs
        */
-      ListChild & getChilds () { return m_childs; }
+      ListChild & get_childs () { return m_childs; }
 
       /**
        * Define the policy used to extend the container
        */
-      void setExtendPolicy (u_int8 extend);
+      void set_extend_policy (u_int8 extend);
 
       /**
        * Destructor: free all memory

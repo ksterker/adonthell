@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.9 2004/05/13 06:44:00 ksterker Exp $
+   $Id: base.h,v 1.10 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -23,6 +23,7 @@
 #define GUI_BASE_H_
 
 #include "gfx/surface.h"
+#include "gfx/screen.h"
 #include "gfx/drawing_area.h"
 #include "input/input.h"
 
@@ -44,56 +45,57 @@ namespace gui {
        * Return the X relative position of an object.
        * @return the X relative position
        */
-      s_int16 getX () const { return m_x; }
+      s_int16 get_x () const { return m_x; }
       
       /**
        * Return the Y relative position of an object.
        * @return the Y relative position
        */
-      s_int16 getY () const { return m_y; }
+      s_int16 get_y () const { return m_y; }
       
       /**
        * Return the Pad X (by default there is no pad)
        * @return the Pad X
        */
-      s_int16 getPadX () const { return m_padx; }
+      s_int16 get_pad_x () const { return m_padx; }
       
       /**
        * Return the Pad Y (by default there is no pad)
        * @return the Pad Y
        */
-      s_int16 getPadY () const { return m_pady; }
+      s_int16 get_pad_y () const { return m_pady; }
       
       /**
        * Return the X absolute (Vodka?) position of this object.
        * @return the X absolute position.
        */
-      s_int16 getRealX () const
+      s_int16 get_real_x () const
 	{ return gfx::drawing_area::x (); }
       
       /**
        * Return the Y absolute (Vodka?) position of this object.
        * @return the Y absolute position.
        */
-      s_int16 getRealY () const
+      s_int16 get_real_y () const
 	{ return gfx::drawing_area::y (); }
       
       /**
        * Return the X absolute (Vodka?) position of this object.
        * @return the X absolute position.
        */
-      u_int16 getHeight () const
+      u_int16 get_height () const
 	{ return gfx::drawing_area::height (); }
       
-      u_int16 getLength () const
+      u_int16 get_length () const
 	{ return gfx::drawing_area::length (); }
       
       /**
        * Define the location of the window
+       * - the update_position method is called.
        * @param nx: The new X position.
        * @param ny: The new Y position.
        */
-      virtual void setLocation (s_int16 nx, s_int16 ny);
+      virtual void set_location (s_int16 nx, s_int16 ny);
 
       
       /**
@@ -103,10 +105,14 @@ namespace gui {
       virtual bool update ();
       
       /**
-       * If the Object is visible, draw the object.It's calling drawContents.
+       * If the Object is visible, draw the object.
+       *  - assign this object to the drawing area passed as parameter,
+       *  - call draw contents,
+       *  - detach the drawing area
        * @param sf: The surface where we can draw. If the surface is null then use the screen surface
+       * @param da: the drawing area border.
        */
-      bool draw (gfx::surface * sf = NULL, gfx::drawing_area * da = NULL);
+      bool draw (gfx::surface * sf = gfx::screen::get_surface(), gfx::drawing_area * da = NULL);
       
 
       /**
@@ -114,131 +120,134 @@ namespace gui {
        * @param sf: The surface must not be null
        * 
        */
-      virtual bool drawContents (gfx::surface * sf);
+      virtual bool draw_contents (gfx::surface * sf);
 
       /**
        * Assign a drawing area for this object
        */
-      void assignArea (gfx::drawing_area * da)
+      void assign_area (gfx::drawing_area * da)
 	{ this->assign_drawing_area (da); }
       
       /**
        * Detach the drawing area
        */
-      void detachArea ()
+      void detach_area ()
 	{ this->detach_drawing_area (); }
 
       /**
        * Update the position
        */
-      virtual void updatePosition ();
+      virtual void update_position ();
       
       /**
        * Update the Size
        */
-      virtual void updateSize ();
+      virtual void update_size ();
 
-      void setSize (u_int16 nl, u_int16 nh);
+      /**
+       * Define the size of the component
+       * - the update_size method is called.
+       */
+      void set_size (u_int16 nl, u_int16 nh);
       
       /**
        * Define if this object is visible
        * @param b: if true the object become visible
        */
-      void setVisible (const bool b) { m_visible = b; }
+      void set_visible (const bool b) { m_visible = b; }
       
       /**
        * Return true if the object is visible
        * @return true if the object is visible.
        */
-      bool isVisible () const { return m_visible;}
+      bool is_visible () const { return m_visible;}
 
       /**
        * Enable this object. An enabled object can be editable
        */
-      void setEnabled (const bool b) { m_enabled = b; }
+      void set_enabled (const bool b) { m_enabled = b; }
 
       /**
        * Return true is the object is enabled. By default it's enabled
        * @return true if the project is enabled
        */
-      bool isEnabled () const { return m_enabled; }
+      bool is_enabled () const { return m_enabled; }
 
       /**
        * Select this object.
        */
-      void setSelected (const bool b) { m_selected = b; }
+      void set_selected (const bool b) { m_selected = b; }
 
       /**
        * Return true is the object is selected. By default it's not selected
        * @return true if the project is selected
        */
-      bool isSelected () const { return m_selected; }
+      bool is_selected () const { return m_selected; }
 
       /**
        * Specify that this object is selectable
        */
-      void setSelectable (const bool b) { m_selectable = b; }
+      void set_selectable (const bool b) { m_selectable = b; }
 
       /**
        * Return true is the object is selectable. By default it's selectable
        * @return true if the project is selectable
        */
-      bool isSelectable () const { return m_selectable; }
+      bool is_selectable () const { return m_selectable; }
 
       /**
        * Set the focus on this object.
        */
-      void setFocus (const bool b) { m_focus = b; }
+      void set_focus (const bool b) { m_focus = b; }
 
       /**
        * Return true is the object has the focus.
        * @return true if the project has the focus
        */
-      bool isFocus () const { return m_focus; }
+      bool is_focus () const { return m_focus; }
 
       /**
        * Set the parent of this object. 
-       * It's calling update Position.
-       * 
+       * - update position.
        */
-      void setParent (container * parent);
+      void set_parent (container * parent);
       
       /**
        * Get the parent of this object
        * @return the Parent
        */
-      container * getParent () { return m_parent; }
+      container * get_parent () { return m_parent; }
 
       /**
        * Return the drawing area of this object
        */
-      gfx::drawing_area * getDrawingArea () { return (gfx::drawing_area*) this; }
+      gfx::drawing_area * get_drawing_area () { return (gfx::drawing_area*) this; }
 
       /**
        * Return the Parent drawing Area. If no parent return null
        */
-      gfx::drawing_area * getParentDrawingArea ();
+      gfx::drawing_area * get_parent_drawing_area ();
       
       /**
        * Align this object in vertical
        */
-      void setVerticalAlign ( u_int8 align);
+      void set_vertical_align ( u_int8 align);
 
       /**
        * Align this object in horizontal
        */
-      void setHorizontalAlign ( u_int8 align);
+      void set_horizontal_align ( u_int8 align);
 
       /**
        * Set Listener. By default a basic object have no listener
        * If there was already a listener remove it 
        */
-      void setListener (::input::listener * list, u_int8 device = 0);
+      void set_listener (::input::listener * list, u_int8 device = 0);
        
       /**
        * Return the listener of this composant
        */
-      ::input::listener * getListener () const;
+      ::input::listener * get_listener () const;
 
       /**
        * Define the Input methods

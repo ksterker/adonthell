@@ -1,5 +1,5 @@
 /*
-   $Id: listlayout.cc,v 1.5 2004/01/13 23:01:15 gnurou Exp $
+   $Id: listlayout.cc,v 1.6 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,20 +39,20 @@ bool listlayout::update ()
   if (m_container) // be sure that there is a container
     {
       // define the initial value for x
-      s_int16 nx = m_container->getPadX () + m_container->getSpaceBorder (), 
-	ny =  m_container->getPadY () + m_container->getSpaceBorder ();
+      s_int16 nx = m_container->get_pad_x () + m_container->get_space_border (), 
+	ny =  m_container->get_pad_y () + m_container->get_space_border ();
       
       m_height = m_length = 0;
 
-      for (ListChild::iterator i = m_container->getChilds ().begin (); 
-	   i != m_container->getChilds ().end (); ++i)
+      for (ListChild::iterator i = m_container->get_childs ().begin (); 
+	   i != m_container->get_childs ().end (); ++i)
 	{
-	  (*i)->setLocation (nx, ny);
-	  ny += (*i)->getHeight () + m_container->getSpaceChild ();
-	  if ((*i)->getLength () > m_length) m_length = (*i)->getLength ();
+	  (*i)->set_location (nx, ny);
+	  ny += (*i)->get_height () + m_container->get_space_child ();
+	  if ((*i)->get_length () > m_length) m_length = (*i)->get_length ();
 	}
-      m_height = ny - m_container->getSpaceChild () + m_container->getSpaceBorder ();
-      m_length += m_container->getPadX () + (m_container->getSpaceBorder () << 1);
+      m_height = ny - m_container->get_space_child () + m_container->get_space_border ();
+      m_length += m_container->get_pad_x () + (m_container->get_space_border () << 1);
       return true;
     }
   return false;

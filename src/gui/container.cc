@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.9 2004/02/07 19:45:15 jol Exp $
+   $Id: container.cc,v 1.10 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,50 +29,48 @@ container::container () : base ()
 {
   m_layout = NULL;
   m_space_child = m_space_border = 5;
-  setExtendPolicy (POLICY_NORMAL);
+  set_extend_policy (POLICY_NORMAL);
 }
 
-void container::addChild (base * m)
+void container::add_child (base * m)
 {
   m_childs.push_back (m);
   
-  m->setParent (this);
+  m->set_parent (this);
   
-  m->updatePosition ();
+  m->update_position ();
 
   // WARNING: I think update layout must be called manually
   // because if there is a lot's of childs it can take a long time ...
-  updateLayout ();
+  update_layout ();
 
 #ifdef DEBUG
   std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
 #endif DEBUG
 }
 
-void container::removeChild (base * m)
+void container::remove_child (base * m)
 {
   
   m_childs.remove (m);
   
-  m->setParent (NULL);
+  m->set_parent (NULL);
   
-  m->updatePosition ();
-
-  updateLayout ();
+  update_layout ();
 #ifdef DEBUG
   std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
 #endif
 }
 
-void container::updatePosition ()
+void container::update_position ()
 {
-  base::updatePosition (); // update his position
+  base::update_position (); // update his position
 
   for (ListChild::iterator i = m_childs.begin (); i!= m_childs.end (); ++i)
-    (*i)->updatePosition ();
+    (*i)->update_position ();
 }
 
-void container::updateLayout ()
+void container::update_layout ()
 {
   // by default no layout ...
   // we can imagine a solution with a pluggable system
@@ -81,13 +79,13 @@ void container::updateLayout ()
     m_layout->update ();
     
     // check the policy used
-    u_int16 l = getLength (), h = getHeight ();
+    u_int16 l = get_length (), h = get_height ();
     switch (m_extend) {
     case POLICY_EXPAND_CONTAINER:
-      if (m_layout->getMaxLength () > l) l = m_layout->getMaxLength ();
-      if (m_layout->getMaxHeight () > h) h = m_layout->getMaxHeight ();
-      setSize (l, h);
-      updateLayout ();
+      if (m_layout->get_max_length () > l) l = m_layout->get_max_length ();
+      if (m_layout->get_max_height () > h) h = m_layout->get_max_height ();
+      set_size (l, h);
+      update_layout ();
       break;
     
     case POLICY_EXPAND_CHILD:
@@ -98,15 +96,15 @@ void container::updateLayout ()
   }
 }
 
-void container::destroyAll ()
+void container::destroy_all ()
 {
   for (ListChild::iterator i = m_childs.begin (); i!= m_childs.end (); ++i)
     delete *i;
   m_childs.clear ();
 }
 
-bool container::drawContents (gfx::surface * sf) {
-  if (base::drawContents (sf)) {
+bool container::draw_contents (gfx::surface * sf) {
+  if (base::draw_contents (sf)) {
     for (ListChild::iterator i = m_childs.begin (); i!= m_childs.end (); ++i)
       (*i)->draw (sf, this);
     return true;
@@ -114,34 +112,34 @@ bool container::drawContents (gfx::surface * sf) {
   return false;
 }
 
-void container::setSpaceChild (s_int16 space) {
+void container::set_space_child (s_int16 space) {
   m_space_child = space;
-  updateLayout ();
+  update_layout ();
 }
 
-void container::setSpaceBorder (s_int16 space)
+void container::set_space_border (s_int16 space)
 {
   m_space_border = space;
-  updateLayout ();
+  update_layout ();
 }
 
 container::~container ()
 {
-  destroyAll ();
-  if (m_parent) m_parent->removeChild (this);
+  destroy_all ();
+  if (m_parent) m_parent->remove_child (this);
   if (m_layout) delete m_layout;
 }
 
-void container::setLayout (layout * l) {
+void container::set_layout (layout * l) {
   if (m_layout) delete m_layout;
   m_layout = l;
-  if (m_layout) m_layout->setContainer (this);
-  updateLayout ();
+  if (m_layout) m_layout->set_container (this);
+  update_layout ();
 }
 
-void container::setExtendPolicy (u_int8 extend) {
+void container::set_extend_policy (u_int8 extend) {
   m_extend = extend;
-  updateLayout ();
+  update_layout ();
   switch (m_extend) {
   case POLICY_EXPAND_CHILD:
   case POLICY_STRETCH_CHILD:

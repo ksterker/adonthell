@@ -50,18 +50,18 @@ class GuiTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
     gui::container cont;
-    cont.setSize (150, 150);
-    cont.setLocation (20, 30);
+    cont.set_size (150, 150);
+    cont.set_location (20, 30);
     
     for (unsigned int i = 0; i < 150; ++i) {
       gui::base * a = new gui::base ();
-      a->setSize (40, 20);
-      a->setLocation (30, 10);
-      cont.addChild (a);
+      a->set_size (40, 20);
+      a->set_location (30, 10);
+      cont.add_child (a);
     }
     
     gui::listlayout * layout = new gui::listlayout;
-    cont.setLayout (layout);
+    cont.set_layout (layout);
     
     /*************************************************************************/
     /*************************************************************************/
@@ -83,7 +83,7 @@ class GuiTest : public adonthell::app {
     }
     
     // Do some cleanup, and we're ready to exit!
-    cont.destroyAll ();
+    cont.destroy_all ();
 
     return 0;
   }

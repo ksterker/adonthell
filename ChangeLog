@@ -1,4 +1,5 @@
 2004-12-21(jol):
+	- rename function to a more common stardard, nothing else (for now :).
 	- fix test/Makefile.am to compile inputest and guitest, note that i were 
 	  obliged to link these two examples with the libswigruntime library, 
 	- fix g++ 3.4.3 compilation error,

@@ -1,5 +1,5 @@
 /*
-   $Id: base.cc,v 1.7 2004/02/08 22:25:07 ksterker Exp $
+   $Id: base.cc,v 1.8 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,7 +22,6 @@
 #include <iostream>
 #include <assert.h>
 
-#include "gfx/screen.h"
 #include "gfx/surface.h"
 #include "input/manager.h"
 
@@ -51,26 +50,28 @@ gui::base::base (): drawing_area () {
 }
 
 
-void gui::base::setLocation (s_int16 nx, s_int16 ny) {
+void gui::base::set_location (s_int16 nx, s_int16 ny) {
   m_x = nx;
   m_y = ny;
 
-  updatePosition ();
+  update_position ();
 }
 
-void gui::base::setSize (u_int16 nl, u_int16 nh)
+void gui::base::set_size (u_int16 nl, u_int16 nh)
 {
   gfx::drawing_area::resize (nl, nh);
   
-  updateSize ();
+  update_size ();
 }
 
-void gui::base::updatePosition ()
+void gui::base::update_position ()
 {
   if (m_parent) 
-    gfx::drawing_area::move (m_parent->getRealX () + getX () + getPadX (),
-			     m_parent->getRealY () + getY () + getPadY ());
-  else gfx::drawing_area::move (getX () + getPadX (), getY () + getPadY ());
+    gfx::drawing_area::move (m_parent->get_real_x () + get_x () + get_pad_x (),
+			     m_parent->get_real_y () + get_y () + get_pad_y ());
+  
+  else gfx::drawing_area::move (get_x () + get_pad_x (), 
+				get_y () + get_pad_y ());
 }
 
 bool gui::base::update() {
@@ -81,64 +82,64 @@ bool gui::base::update() {
 bool gui::base::draw(gfx::surface * sf, gfx::drawing_area * da ) {
   if (m_visible) {
     bool b;
-    assignArea(da);
-    if (sf) b = drawContents (sf);
-    else b = drawContents (gfx::screen::get_surface());
-    detachArea();
+    assign_area(da);
+    if (sf) b = draw_contents (sf);
+    else b = draw_contents (gfx::screen::get_surface());
+    detach_area();
     return b;
   }
   return false;
 }
 
 
-bool gui::base::drawContents(gfx::surface * sf) {
+bool gui::base::draw_contents(gfx::surface * sf) {
   assert (sf != NULL);
   
   //top
-  sf->draw_line (getRealX(), getRealY(), 
-		 getRealX () + getLength () - 1, getRealY (), 0x888899, this);
+  sf->draw_line (get_real_x (), get_real_y(), 
+		 get_real_x () + get_length () - 1, get_real_y (), 0x888899, this);
   //bottom
-  sf->draw_line (getRealX(), getRealY() + getHeight () - 1, 
-		 getRealX () + getLength () - 1, getRealY () + getHeight () - 1, 0x888899, this);
+  sf->draw_line (get_real_x(), get_real_y() + get_height () - 1, 
+		 get_real_x () + get_length () - 1, get_real_y () + get_height () - 1, 0x888899, this);
   //left
-  sf->draw_line (getRealX(), getRealY(), 
-		 getRealX (), getRealY () + getHeight () - 1, 0x888899, this);
+  sf->draw_line (get_real_x(), get_real_y(), 
+		 get_real_x (), get_real_y () + get_height () - 1, 0x888899, this);
   //right
-  sf->draw_line (getRealX() + getLength () - 1, getRealY(), 
-		 getRealX () + getLength () - 1, getRealY () + getHeight () - 1, 0x888899, this);
+  sf->draw_line (get_real_x() + get_length () - 1, get_real_y(), 
+		 get_real_x () + get_length () - 1, get_real_y () + get_height () - 1, 0x888899, this);
   return true;
 }
 
-void gui::base::updateSize () {
+void gui::base::update_size () {
 }
 
-void gui::base::setParent (container * parent) { 
+void gui::base::set_parent (container * parent) { 
   m_parent = parent;
-  updatePosition ();
+  update_position ();
 }
 
 
-gfx::drawing_area * gui::base::getParentDrawingArea ()
+gfx::drawing_area * gui::base::get_parent_drawing_area ()
 {
-  if (m_parent) return m_parent->getDrawingArea ();
-  return getDrawingArea ();
+  if (m_parent) return m_parent->get_drawing_area ();
+  return get_drawing_area ();
 }
 
-void gui::base::setVerticalAlign (u_int8 align)
+void gui::base::set_vertical_align (u_int8 align)
 {
   m_vertical_align = align;
   // TODO
   std::cout << "setVerticalAlign:: TODO\n";
 }
 
-void gui::base::setHorizontalAlign (u_int8 align)
+void gui::base::set_horizontal_align (u_int8 align)
 {
   m_horizontal_align = align;
   // TODO
   std::cout << "setHorizontalAlign:: TODO\n";
 }
 
-void gui::base::setListener(::input::listener * list, u_int8 device) {
+void gui::base::set_listener(::input::listener * list, u_int8 device) {
   if(m_listener) {
     input::manager::remove (m_listener);
     delete m_listener;
@@ -154,7 +155,7 @@ void gui::base::setListener(::input::listener * list, u_int8 device) {
   }
 }
 
-::input::listener * gui::base::getListener () const {
+::input::listener * gui::base::get_listener () const {
   return m_listener;
 }
 
@@ -175,7 +176,7 @@ bool gui::base::on_control_event (input::control_event * evt) {
 }
 
 gui::base::~base () {
-  setListener (NULL);
+  set_listener (NULL);
   --gui_objects;
 
 #ifdef DEBUG

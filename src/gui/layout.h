@@ -1,5 +1,5 @@
 /*
-   $Id: layout.h,v 1.3 2004/01/06 22:39:56 jol Exp $
+   $Id: layout.h,v 1.4 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,12 +33,12 @@ namespace gui
       
       virtual bool update ();
       
-      void setContainer (container * ct);
+      void set_container (container * ct);
 
-      u_int16 getMaxLength () const 
+      u_int16 get_max_length () const 
 	{ return m_length; }
 
-      u_int16 getMaxHeight () const 
+      u_int16 get_max_height () const 
 	{return m_height; }
       
     protected:

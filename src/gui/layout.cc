@@ -1,5 +1,5 @@
 /*
-   $Id: layout.cc,v 1.3 2004/01/06 22:39:56 jol Exp $
+   $Id: layout.cc,v 1.4 2004/12/21 22:03:17 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,9 +37,8 @@ bool layout::update ()
   return true;
 }
 
-void layout::setContainer (container * ct)
+void layout::set_container (container * ct)
 {
   m_container = ct;
   if (ct) update ();
 }
-
