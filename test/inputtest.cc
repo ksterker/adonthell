@@ -3,6 +3,7 @@
 #include "input/input.h"
 #include "main/adonthell.h"
 
+
 class myClass
 {
 public:
@@ -61,6 +62,9 @@ class AdonthellApp : public adonthell::app
         // Add the listener to the manager
         input::manager::add(&il);
         
+	
+
+
         // Run this loop until letsexit is set to 1 by the
         // callback function. Every time a key event is raised,
         // the input manager will send it to the listeners it handles

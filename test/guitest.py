@@ -33,23 +33,13 @@ def guitest ():
     cont.setSize (150, 150)
     cont.setLocation (20, 30)
 
-    #for i in range (2):
-    a = gui.base ()
-    a.setSize (40,20)
-    a.setLocation (30, 10)
-    cont.addChild (a)
-
-    b = gui.base ()
-    b.setSize (40,20)
-    b.setLocation (30, 10)
-    cont.addChild (b)
-
-    c = gui.base ()
-    c.setSize (40,20)
-    c.setLocation (30, 10)
-    cont.addChild (c)
-
-    
+    a = dict ()
+    for i in range (0,7):
+    	a[i] = gui.base ()
+	a[i].setSize (40,20)
+	a[i].setLocation (30, 10)
+	cont.addChild (a[i])
+  
     # set the layout
     cont.setExtendPolicy (2)
     z = gui.listlayout ()

@@ -1,5 +1,5 @@
 /*
-   $Id: base.cc,v 1.5 2004/02/07 00:03:36 jol Exp $
+   $Id: base.cc,v 1.6 2004/02/07 19:45:15 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,6 +42,7 @@ u_int32 ::gui::base::gui_objects = 0;
   std::cerr  << "GUI Allocated object: " << (u_int32) gui_objects << std::endl;
 #endif
 
+  m_listener = NULL;
   m_parent = NULL;
   m_x = m_y = m_padx = m_pady = 0;
   m_vertical_align = m_horizontal_align = base::ALIGN_NONE;
@@ -175,8 +176,8 @@ bool ::gui::base::on_control_event (input::control_event * evt) {
 
 ::gui::base::~base () {
   setListener (NULL);
-  if (m_parent) m_parent->removeChild (this);
-  
+  --gui_objects;
+
 #ifdef DEBUG
   std::cerr  << "GUI Allocated object: " << (u_int32) gui_objects << std::endl;
 #endif

@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.8 2004/02/07 00:03:37 jol Exp $
+   $Id: container.cc,v 1.9 2004/02/07 19:45:15 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,9 @@ void container::addChild (base * m)
   // because if there is a lot's of childs it can take a long time ...
   updateLayout ();
 
+#ifdef DEBUG
   std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
+#endif DEBUG
 }
 
 void container::removeChild (base * m)
@@ -57,7 +59,9 @@ void container::removeChild (base * m)
   m->updatePosition ();
 
   updateLayout ();
+#ifdef DEBUG
   std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
+#endif
 }
 
 void container::updatePosition ()
