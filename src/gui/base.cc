@@ -1,5 +1,5 @@
 /*
-   $Id: base.cc,v 1.6 2004/02/07 19:45:15 jol Exp $
+   $Id: base.cc,v 1.7 2004/02/08 22:25:07 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,9 +33,9 @@
 //using namespace gui;
 
 
-u_int32 ::gui::base::gui_objects = 0;
+u_int32 gui::base::gui_objects = 0;
 
-::gui::base::base (): drawing_area () {
+gui::base::base (): drawing_area () {
 
   m_id = gui_objects++;
 #ifdef DEBUG
@@ -51,21 +51,21 @@ u_int32 ::gui::base::gui_objects = 0;
 }
 
 
-void ::gui::base::setLocation (s_int16 nx, s_int16 ny) {
+void gui::base::setLocation (s_int16 nx, s_int16 ny) {
   m_x = nx;
   m_y = ny;
 
   updatePosition ();
 }
 
-void ::gui::base::setSize (u_int16 nl, u_int16 nh)
+void gui::base::setSize (u_int16 nl, u_int16 nh)
 {
   gfx::drawing_area::resize (nl, nh);
   
   updateSize ();
 }
 
-void ::gui::base::updatePosition ()
+void gui::base::updatePosition ()
 {
   if (m_parent) 
     gfx::drawing_area::move (m_parent->getRealX () + getX () + getPadX (),
@@ -73,12 +73,12 @@ void ::gui::base::updatePosition ()
   else gfx::drawing_area::move (getX () + getPadX (), getY () + getPadY ());
 }
 
-bool ::gui::base::update() {
+bool gui::base::update() {
   return true;
 }
 
 
-bool ::gui::base::draw(gfx::surface * sf, gfx::drawing_area * da ) {
+bool gui::base::draw(gfx::surface * sf, gfx::drawing_area * da ) {
   if (m_visible) {
     bool b;
     assignArea(da);
@@ -91,7 +91,7 @@ bool ::gui::base::draw(gfx::surface * sf, gfx::drawing_area * da ) {
 }
 
 
-bool ::gui::base::drawContents(gfx::surface * sf) {
+bool gui::base::drawContents(gfx::surface * sf) {
   assert (sf != NULL);
   
   //top
@@ -109,36 +109,36 @@ bool ::gui::base::drawContents(gfx::surface * sf) {
   return true;
 }
 
-void ::gui::base::updateSize () {
+void gui::base::updateSize () {
 }
 
-void ::gui::base::setParent (container * parent) { 
+void gui::base::setParent (container * parent) { 
   m_parent = parent;
   updatePosition ();
 }
 
 
-gfx::drawing_area * ::gui::base::getParentDrawingArea ()
+gfx::drawing_area * gui::base::getParentDrawingArea ()
 {
   if (m_parent) return m_parent->getDrawingArea ();
   return getDrawingArea ();
 }
 
-void ::gui::base::setVerticalAlign (u_int8 align)
+void gui::base::setVerticalAlign (u_int8 align)
 {
   m_vertical_align = align;
   // TODO
   std::cout << "setVerticalAlign:: TODO\n";
 }
 
-void ::gui::base::setHorizontalAlign (u_int8 align)
+void gui::base::setHorizontalAlign (u_int8 align)
 {
   m_horizontal_align = align;
   // TODO
   std::cout << "setHorizontalAlign:: TODO\n";
 }
 
-void ::gui::base::setListener(::input::listener * list, u_int8 device) {
+void gui::base::setListener(::input::listener * list, u_int8 device) {
   if(m_listener) {
     input::manager::remove (m_listener);
     delete m_listener;
@@ -154,27 +154,27 @@ void ::gui::base::setListener(::input::listener * list, u_int8 device) {
   }
 }
 
-::input::listener * ::gui::base::getListener () const {
+::input::listener * gui::base::getListener () const {
   return m_listener;
 }
 
-bool ::gui::base::on_mouse_event (input::mouse_event * evt) {
+bool gui::base::on_mouse_event (input::mouse_event * evt) {
   return false;
 }
 
-bool ::gui::base::on_keyboard_event (input::keyboard_event * evt) {
+bool gui::base::on_keyboard_event (input::keyboard_event * evt) {
   return false;
 }
       
-bool ::gui::base::on_joystick_event (input::joystick_event * evt) {
+bool gui::base::on_joystick_event (input::joystick_event * evt) {
   return false;
 }
       
-bool ::gui::base::on_control_event (input::control_event * evt) {
+bool gui::base::on_control_event (input::control_event * evt) {
   return false;
 }
 
-::gui::base::~base () {
+gui::base::~base () {
   setListener (NULL);
   --gui_objects;
 
