@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
+   $Id: drawing_area.cc,v 1.3 2003/07/25 11:26:57 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,6 +22,7 @@
  */
 
 #include "drawing_area.h"
+#include <algorithm>
 
 namespace gfx
 {
@@ -42,37 +43,20 @@ namespace gfx
     
     drawing_area drawing_area::setup_rects () const
     {
-        drawing_area ret;
-        if (draw_to)
-        {
-            drawing_area temp = draw_to->setup_rects ();
+        drawing_area ret = *this;
+        ret.assign_drawing_area(NULL);
+        for(drawing_area* it = this->assigned_drawing_area(); it; it = it->assigned_drawing_area())
+	{
+            s_int32 x = std::max(ret.x(), it->x());
+            s_int32 y = std::max(ret.y(), it->y());
+            s_int32 w = std::min(it->x() + it->length(), ret.x() + ret.length()) - x;
+            s_int32 h = std::min(it->y() + it->length(), ret.y() + ret.length()) - y;
             
-            ret.move(temp.x() > x ()? temp.x() : x (),
-                     temp.y() > y ()? temp.y() : y ());
-            
-            // Precalculated for faster operation.
-            s_int32 xpl = x () + length (); 
-            s_int32 txw = temp.x() + temp.length();
-            s_int32 txwmrx = txw - ret.x();
-            s_int32 xplmrx = xpl - ret.x();  
-            s_int32 yph = y () + height (); 
-            s_int32 tyh = temp.y() + temp.height();
-            s_int32 tyhmry = tyh - ret.y();
-            s_int32 yphmry = yph - ret.y(); 
-            
-            
-            ret.resize(txw < xpl ? txwmrx > 0 ? txwmrx : 0 : xplmrx > 0 ? xplmrx : 0,
-                       tyh < yph ? tyhmry > 0 ? tyhmry : 0 : yphmry > 0 ? yphmry : 0);
-            
+            ret.move(x, y);
+            ret.resize(w > 0 ? w : 0, 
+                       h > 0 ? h : 0);
         }
-        else 
-        {
-            ret = *this;
-            ret.assign_drawing_area(NULL);
-        }
-        
         return ret;
-        
     }
     
     bool drawing_area::point_belong (s_int16 px, s_int16 py)
@@ -80,5 +64,4 @@ namespace gfx
         return (px >= x () && px <= x () + length () &&
                 py >= y () && py <= y () + height ()); 
     }
-    
 }
