@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.h,v 1.1 2004/07/03 05:55:38 ksterker Exp $
+   $Id: log_entry.h,v 1.2 2004/07/25 12:14:41 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -16,10 +16,10 @@
 
 
 /**
- * @file   log_entry.h
+ * @file   rpg/log_entry.h
  * @author Kai Sterker <kaisterker@linuxgames.com> 
  * 
- * @brief  Entry .
+ * @brief  Log book entry.
  */
 
 #ifndef RPG_LOGENTRY_H
@@ -31,12 +31,19 @@
 namespace rpg
 {
     /**
-     *
-     *
+     * The %log_entry class encapsulates a single entry into one of the log books. Each entry
+     * consists of a topic, the main text and a time stamp. It will also have a unique id to
+     * allow cross-references and an index.
      */
     class log_entry
     {
         public:
+            /**
+             * Creates a new log entry.
+             * @param topic 'Headline' of the entry.
+             * @param text content of entry.
+             * @param uid unique identifier for entry. Used by log index.
+             */
             log_entry (const std::string & topic, const std::string & text, const std::string & uid);
             
             /**

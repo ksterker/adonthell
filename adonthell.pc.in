@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datadir=@prefix@/share/adonthell
+
+Name: Adonthell
+Description: Role Playing Game Engine
+Version: @VERSION@
+Libs: -L${libdir} -ladonthell_base -ladonthell_python -ladonthell_gfx -ladonthell_input -ladonthell_event -ladonthell_rpg
+Cflags: -I${includedir}/adonthell/base -I${includedir}/adonthell/python -I${includedir}/adonthell/gfx -I${includedir}/adonthell/input -I${includedir}/adonthell/event -I${includedir}/adonthell/rpg
+

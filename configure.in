@@ -10,7 +10,7 @@ dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(adonthell, 0.4dev1)
+AM_INIT_AUTOMAKE(adonthell, 0.4.0)
 AM_CONFIG_HEADER(config.h)
 
 CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
@@ -68,6 +68,21 @@ AC_ARG_WITH(py-cflags,
 
 
 AC_CHECK_LIB(z, main,,echo "Adonthell requires Zlib. Exitting...";exit 1)
+
+
+dnl ***************
+dnl Find pkg-config
+dnl ***************
+AC_PATH_PROG(PKG_CONFIG, [pkg-config], [no])
+if test x$PKG_CONFIG = xno ; then
+    AC_MSG_ERROR([*** pkg-config not found. See http://www.freedesktop.org/software/pkgconfig/])
+fi
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.14 ; then
+    :
+else
+    AC_MSG_ERROR([*** pkg-config too old; version 0.14 or better required.])
+fi
 
 
 dnl *****************
@@ -226,6 +241,7 @@ SWIG_PROG($SWIG_VERSION)
 SWIG_ENABLE_CXX()
 
 AC_OUTPUT([
+adonthell.pc
 Makefile
 src/Makefile
 src/main/Makefile
