@@ -1,7 +1,7 @@
 /*
-   $Id: paths.h,v 1.2 2003/11/22 09:35:21 ksterker Exp $
+   $Id: paths.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -28,8 +28,8 @@
  * 
  */
 
-#ifndef BASE_PATHS_H_
-#define BASE_PATHS_H_
+#ifndef BASE_PATHS_H
+#define BASE_PATHS_H
 
 #include "ltdl.h"
 
@@ -37,7 +37,42 @@
 
 namespace base
 {
-    lt_dlhandle get_module(const std::string & modname);
+    /**
+     * Return handle to dynamic module specified by modname. First, the location
+     * specified by the environment variable ADONTHELL_MODULES_PATH is searched
+     * for the module. If that does not exist or does not contain the module, the
+     * hard coded module path is searched: $(libdir)/adonthell.
+     * @param modname name of the dynamic module to load.
+     * @return handle to the module or \b NULL if loading failed.
+     */
+    lt_dlhandle get_module (const std::string & modname);
+    
+    /**
+     * This class implements a way to open game data files without knowing the
+     * exact location. For that it searches a number of directories, if specified,
+     * in the following order:
+     * - a saved game directory
+     * - a user supplied data directory
+     * - the builtin data directory
+     */
+    class paths
+    {
+        public:
+            /**
+             * Before any method of this class can be used, it must be initialized.
+             * @param game name of the game the data files queried belong to.
+             * @param userdatadir optional, user supplied data directory.
+             */
+            void init (const std::string & game, const std::string & userdatadir = "");
+            
+        private:
+            /// directory of the saved game currently being loaded (if any)
+            std::string SaveDataDir;
+            /// user supplied game data directory (if any) 
+            std::string UserDataDir;
+            // builtin game data directory (mandatory)
+            std::string GameDataDir;
+    };
 }
 
-#endif
+#endif // BASE_PATHS

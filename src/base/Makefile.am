@@ -21,6 +21,7 @@ lib_LTLIBRARIES = libadonthell_base.la
 
 ## Rules to build libbase
 libadonthell_base_la_SOURCES = \
+    base.cc \
 	callback.cc \
     configuration.cc \
     configio.cc \

@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.2 2003/12/02 22:13:16 ksterker Exp $
+   $Id: adonthell.cc,v 1.3 2004/08/02 07:35:28 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,33 +25,36 @@
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
  * @brief  The main application class for programs using the Adonthell framework.
- * 
- * 
  */
- 
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <iostream>
 #include <unistd.h>
 
-#include "base/paths.h"
+#include "base/base.h"
 #include "main/adonthell.h"
 
 using namespace adonthell;
 using std::cerr;
 using std::endl;
 
-bool (*app::init_p)(app*) = NULL;
-lt_dlhandle app::dlhandle = 0;
-string app::backend = "sdl";
-
+// read command line arguments
 void app::parse_args (int & ac, char *av[])
 {
+    int c;
+    
     argc = ac;
     argv = av;
 
-    int c;
-    
+    backend = "";
+    userdatadir = "";
+    config = "adonthell";
+
     // Check for options
-    while ((c = getopt (argc, argv, "b:")) != -1)
+    while ((c = getopt (argc, argv, "b:c:g:hv")) != -1)
     {        
         switch (c)
         { 
@@ -59,9 +62,33 @@ void app::parse_args (int & ac, char *av[])
             case 'b':
                 backend = optarg;
                 break;
+            // configuration file:
+            case 'c':
+                config = optarg;
+                break;
+            // user supplied data directory:
+            case 'g':
+                userdatadir = optarg;
+                break;
+            // help message:
+            case 'h':
+                print_help ();
+                exit (0);
+                break;
+            // version number:
+            case 'v':
+                std::cout << VERSION << endl;
+                exit (0);
+                break;
             default:
                 break;
         }
+    }
+    
+    // check whether the GAME parameter is given
+    if (argc - optind == 1)
+    {
+        game = argv[argc-1];
     }
 }
 
@@ -74,6 +101,20 @@ bool app::init ()
         cerr << lt_dlerror() << endl;
         cerr << "Error initializing liblt!" << endl; 
         return false;
+    }
+    
+    // load configuration file
+    if (!cfg.read (config))
+    {
+        // print message if that fails, but don't panic yet ...
+        cerr << "Error reading configuration '" << config << ".xml'" << endl;
+    }
+    
+    // if we have been given no backend on the command line, 
+    // try to get it from config file; fallback to sdl if that fails
+    if (backend == "")
+    {
+        backend = cfg.get_string ("General", "Backend", "sdl");
     }
     
     // load backend init module
@@ -92,12 +133,32 @@ bool app::init ()
         return false;
     }
     
+    // init base module
+    base::init (userdatadir, game);
+    
+    // platform / backend specific initialization
     return init_p (this);
 }
 
 // shutdown the Adonthell framework
-void app::cleanup ()
+void app::cleanup () const
 {
+    // save configuration to disk
+    cfg.write (config);
+    
     if (dlhandle) lt_dlclose (dlhandle);
     lt_dlexit ();
+}
+
+// display a help message
+void app::print_help () const
+{
+    std::cout << "Usage: " << argv[0] << " [OPTIONS] GAME" << endl;
+    std::cout << endl;
+    std::cout << "Where [OPTIONS] can be:\n";
+    std::cout << "-b <backend>     specifiy the backend to use (default 'sdl')\n";
+    std::cout << "-c <config>      use given config file (default 'adonthell')\n";
+    std::cout << "-g <directory>   specify user game directory\n";
+    std::cout << "-h               print this message and exit\n";
+    std::cout << "-v               print engine version number and exit" << endl;
 }

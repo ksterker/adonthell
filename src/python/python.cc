@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.9 2004/06/27 11:20:57 ksterker Exp $
+   $Id: python.cc,v 1.10 2004/08/02 07:35:28 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,8 @@
 
 namespace python
 {
-    void show_traceback()
+    // print stacktrace if a python error occurred
+    void show_traceback ()
     {
         if (PyErr_Occurred ())
         {
@@ -42,40 +43,58 @@ namespace python
         }
     }
 
-    void init()
+    // start python interpreter
+    void init ()
     {
         Py_Initialize ();
         pool::init ();
     }
 
+    // shutdown python interpreter
     void cleanup ()
     {
         pool::cleanup ();
         Py_Finalize ();
     }
-    
-    bool add_search_path(const std::string & path)
+
+    // add path to python module search path    
+    bool add_search_path (const std::string & path)
     {
         std::string buf = "import sys; sys.path.insert(0, \"";
         buf += path;
         buf += "\")";
         
-        return run_string(buf);
+        return run_simple_string (buf);
     }
 
-    bool run_string(const std::string & statements)
+    // execute given python code
+    bool run_simple_string (const std::string & statements)
     {
-        bool ret = PyRun_SimpleString((char *)statements.c_str());
+        int ret = PyRun_SimpleString ((char *) statements.c_str ());
+        if (ret == -1)
+        {
+            show_traceback ();
+            return false;
+        }
         
-        show_traceback();
+        return true;
+    }
+
+    // execute given python code
+    PyObject *run_string (const std::string & statement)
+    {
+        PyObject *ret = PyRun_String ((char *) statement.c_str (), Py_eval_input, NULL, NULL);
+        if (ret == NULL) show_traceback ();
+
         return ret;
     }
 
-    PyObject * import_module(const std::string & name)
+    // import a python module
+    PyObject *import_module (const std::string & name)
     {
-        PyObject * ret = PyImport_ImportModule((char *)name.c_str());
-        
-        show_traceback();
+        PyObject *ret = PyImport_ImportModule ((char *) name.c_str ());
+        if (ret == NULL) show_traceback ();
+
         return ret;
     }
     

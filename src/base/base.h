@@ -1,7 +1,7 @@
 /*
-   $Id: base.h,v 1.2 2003/11/22 09:35:21 ksterker Exp $
+   $Id: base.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
 
-   Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 
 #include "base/paths.h"
 #include "base/callback.h"
+#include "base/timer.h"
 
 /**
  * This module provides the basic stuff needed by many other modules:
@@ -39,4 +40,14 @@
  */
 namespace base
 {
+    /**
+     * Init the base module.
+     */
+    void init (const std::string & userdatadir, const std::string & game);
+
+    /// class to open files from given search paths
+    static base::paths Paths;
+    
+    /// timer instance used by the engine
+    static base::timer Timer;
 }

@@ -1,7 +1,7 @@
 /*
-   $Id: paths.cc,v 1.3 2003/11/22 09:35:21 ksterker Exp $
+   $Id: paths.cc,v 1.4 2004/08/02 07:35:28 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -35,18 +35,20 @@
 
 #define MODULES_ENV "ADONTHELL_MODULES_PATH"
 
-using namespace std;
+using std::cerr;
+using std::endl;
+using base::paths;
 
 namespace base
 {
-    
-    lt_dlhandle get_module(const string & modname)
+    // return dynamic module
+    lt_dlhandle get_module (const std::string & modname)
     {
         lt_dlhandle ret;
         
         /* Try the MODULES_ENV variable first */
         const char * mod_env_str = getenv(MODULES_ENV);
-        string mod_env = (mod_env_str ? mod_env_str : "");
+        std::string mod_env = (mod_env_str ? mod_env_str : "");
         
         if (!mod_env.empty())
         {
@@ -64,4 +66,24 @@ namespace base
         
         return NULL;
     }   
+}
+
+// initialize data search paths
+void paths::init (const std::string & game, const std::string & userdatadir)
+{
+    // no save game directory unless we actually load a game
+    SaveDataDir = "";
+    
+    // user data dir might be optional
+    UserDataDir = userdatadir;
+    if (UserDataDir != "") 
+    {
+        if (UserDataDir[UserDataDir.size () - 1] != '/') UserDataDir += "/";
+        UserDataDir += game;
+    }
+    
+    // builtin data directory
+    GameDataDir = DATA_DIR;
+    GameDataDir += "/games/";
+    GameDataDir += game;
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: configuration.cc,v 1.1 2004/05/13 06:43:59 ksterker Exp $
+   $Id: configuration.cc,v 1.2 2004/08/02 07:35:28 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -164,6 +164,18 @@ void configuration::cfg_section::add (const string & label, cfg_option * option)
         (*o).second = option;
     }
     else Options[label] = option;
+}
+
+// remove option from section
+int configuration::cfg_section::remove (const string & label)
+{
+    map<string, cfg_option*>::iterator o = Options.find (label.c_str ());
+    if (o != Options.end ())
+    {
+        delete (*o).second;
+        Options.erase (o);
+    }
+    return Options.size ();
 }
 
 // return option with given name
@@ -343,6 +355,12 @@ cfg_option *configuration::option (const string & section, const string & option
 // add or replace a configuration option
 void configuration::add_option (const string & section, const string & option, cfg_option *value)
 {
+    if (value == NULL)
+    {
+        remove_option (section, option);
+        return;
+    }
+
     map<string, cfg_section*>::iterator s = Sections.find (section.c_str ());
     
     // if section does not exist yet, create it
@@ -357,6 +375,23 @@ void configuration::add_option (const string & section, const string & option, c
         (*s).second->add (option, value);
     }
 }
+
+// remove a configuration option
+void configuration::remove_option (const string & section, const string & option)
+{
+    map<string, cfg_section*>::iterator s = Sections.find (section.c_str ());
+    
+    if (s != Sections.end ())
+    {
+        // if section is empty after removal, remove it as well
+        if ((*s).second->remove (option) == 0)
+        {
+            delete (*s).second;
+            Sections.erase (s);
+        }
+    }
+}
+
 
 // calculate file name
 string configuration::create_filename (const string & name) const

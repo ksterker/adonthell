@@ -9,6 +9,7 @@
 #include "rpg/inventory.h"
 #include "rpg/log_entry.h"
 #include "rpg/log_index.h"
+#include "rpg/quest.h"
 
 using rpg::slot;
 %}
@@ -52,3 +53,4 @@ namespace rpg {
 %include "rpg/item_storage.h"
 %include "rpg/log_entry.h"
 %include "rpg/log_index.h"
+%include "rpg/quest.h"

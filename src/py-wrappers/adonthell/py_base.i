@@ -2,9 +2,9 @@
 %{
 
 #include <string>
+#include "base/base.h"
 #include "base/endian.h"
 #include "base/types.h"
-#include "base/timer.h"
 #include "base/diskio.h"
 #include "base/configuration.h"
 %}
@@ -97,6 +97,7 @@ namespace base {
         PyList_SET_ITEM ($result, index++, PyString_FromString (*i));
 }
 
+%include "base/base.h"
 %include "base/types.h"
 %include "base/timer.h"
 %include "base/file.h"

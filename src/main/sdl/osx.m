@@ -144,6 +144,7 @@ void CustomApplicationMain (const adonthell::app *theApp)
 - (void) applicationDidFinishLaunching: (NSNotification *) note
 {
     int status = Application->main ();
+    Application->cleanup ();
     exit (status);
 }
 @end

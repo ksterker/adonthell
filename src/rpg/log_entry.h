@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.h,v 1.2 2004/07/25 12:14:41 ksterker Exp $
+   $Id: log_entry.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,8 +25,7 @@
 #ifndef RPG_LOGENTRY_H
 #define RPG_LOGENTRY_H
 
-#include "base/types.h"
-#include <string>
+#include "base/flat.h"
 
 namespace rpg
 {
@@ -56,10 +55,25 @@ namespace rpg
              */
             std::string uid () const { return Uid; }
             
-            // void get_state (base::flat in);
-            
-            // bool put_state (base::flat out);
-            
+            /**
+             * @name Loading/Saving
+             */
+            //@{
+            /**
+             * Load %log entry from stream. 
+             * @param in stream to load entry from.
+             * @return \b true if loading successful, \b false otherwise.
+             */
+            bool get_state (base::flat & in);
+        
+            /**
+             * Save %log entry to a stream.
+             * @param out stream to save entry to.
+             * @return \b true if saving successful, \b false otherwise.
+             */
+            void put_state (base::flat & out) const;
+            //@}
+
         private:
             /// creation time of log entry
             u_int32 Timestamp;

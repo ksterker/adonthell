@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.9 2004/06/27 11:20:58 ksterker Exp $
+   $Id: python.h,v 1.10 2004/08/02 07:35:28 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -80,9 +80,27 @@ namespace python
      * 
      */
     //@{
-
+    /**
+     * Add given path to Python's list of module directories. 
+     * @param path the path to add.
+     * @return \b true on success, \b false otherwise.
+     */
     bool add_search_path(const std::string & path);
-    bool run_string(const std::string & statements);
+
+    /** 
+     * Execute a python statement and return resulting object.
+     * This is a new reference that needs to be Py_DECREF'd when done.
+     * @param statement Python code to execute.
+     * @return \b result on success, \b NULL otherwise.
+     */
+    PyObject* run_string (const std::string & statement);
+    
+    /** 
+     * Execute a python statement and return success.
+     * @param statement Python code to execute.
+     * @return \b true on success, \b false otherwise.
+     */
+    bool run_simple_string (const std::string & statement);
 
     PyObject * import_module(const std::string & name);
 

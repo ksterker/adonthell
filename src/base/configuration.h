@@ -1,5 +1,5 @@
 /*
-   $Id: configuration.h,v 1.1 2004/05/13 06:43:59 ksterker Exp $
+   $Id: configuration.h,v 1.2 2004/08/02 07:35:28 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -258,7 +258,14 @@ namespace base
                  * @param option actual value with meta information.
                  */
                 void add (const string & label, cfg_option *option);
-                
+
+                /**
+                 * Remove option with given label from this section.
+                 * @param label name of the option to remove.
+                 * @return number of options left in the section.
+                 */
+                int remove (const string & label);
+                 
                 /**
                  * Return option with the given label.
                  * @param label name of the option to retrieve.
@@ -355,7 +362,7 @@ namespace base
              * @param get_undef unless \c true, only list options with type != UNDEF 
              * @return list of labels for options in given section.
              */
-            vector<const char*> get_options (const string & section, const bool & get_undef = false) const;
+            vector<const char*> get_options (const string & section, const bool & get_undef = true) const;
             //@}
             
             /**
@@ -372,12 +379,21 @@ namespace base
             cfg_option *option (const string & section, const string & option, const u_int8 & type) const;
 
             /**
-             * Add or replace an option in the given section with the given value.
+             * Add or replace an option in the given section with the given value. If the 
+             * value is \c NULL, remove the option instead. 
              * @param section name of section.
              * @param option name of %configuration option.
              * @param value actual value and meta information of given option.
              */
             void add_option (const string & section, const string & option, cfg_option *value);
+
+            /**
+             * Remove an option in the given section. Removes the section too, if it is empty
+             * afterwards.
+             * @param section name of section.
+             * @param option name of %configuration option.
+             */
+            void remove_option (const string & section, const string & option);
             //@}
             
         private:
