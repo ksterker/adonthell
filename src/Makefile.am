@@ -1,4 +1,4 @@
-SUBDIRS = base gfx input python py-wrappers
+SUBDIRS = base gfx input gui python py-wrappers
 
 noinst_SCRIPTS = run.sh python.sh
 
