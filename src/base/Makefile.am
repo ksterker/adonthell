@@ -11,6 +11,7 @@ pkgincludebase_HEADERS = \
 	endian.h \
 	file.h \
 	flat.h \
+    hash_map.h \
 	paths.h \
 	timer.h \
 	types.h

@@ -1,8 +1,8 @@
 /*
-  $Id: script.cc,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+  $Id: script.cc,v 1.2 2004/05/31 11:44:50 ksterker Exp $
   
-  Copyright (C) 1999/2000/2001/2003   Kai Sterker
-  Copyright (C) 2001    Alexandre Courbot
+  Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
+  Copyright (C) 2001 Alexandre Courbot
   Part of the Adonthell Project http://adonthell.linuxgames.com
   
    Adonthell is free software; you can redistribute it and/or modify
@@ -135,7 +135,7 @@ PyObject* script::call_method_ret (const string &name, PyObject *args) const
 }
 
 // check for a certain attribute
-bool script::has_attribute (const std::string & name)
+bool script::has_attribute (const std::string & name) const
 {
     if (Instance)
         return PyObject_HasAttrString (Instance, (char *) name.c_str ());
@@ -144,7 +144,7 @@ bool script::has_attribute (const std::string & name)
 }
 
 // Get an attribute of the instance
-PyObject *script::get_attribute (const string &name)
+PyObject *script::get_attribute (const string &name) const
 {
     if (Instance)
         return PyObject_GetAttrString (Instance, (char *) name.c_str ());
@@ -153,7 +153,7 @@ PyObject *script::get_attribute (const string &name)
 }
 
 // Get an int attribute of the instance
-s_int32 script::get_attribute_int (const string &name)
+s_int32 script::get_attribute_int (const string &name) const
 {
     if (Instance)
     {
@@ -170,7 +170,7 @@ s_int32 script::get_attribute_int (const string &name)
 }
 
  // Get a string attribute of the instance
-string script::get_attribute_string (const string &name)
+string script::get_attribute_string (const string &name) const
 {
     if (Instance)
     {

@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.3 2004/05/13 06:44:01 ksterker Exp $
+   $Id: script.h,v 1.4 2004/05/31 11:44:50 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -59,7 +59,7 @@ namespace python
          * Destructor.
          * 
          */
-        ~script (); 
+        virtual ~script (); 
     
         /** 
          * Resets the script to it's post-constructor state.
@@ -132,7 +132,7 @@ namespace python
          * @param name Name of the attribute to test for
          * @return <b>true</b> if the attribute exists, <b>false</b> otherwise.
          */
-        bool has_attribute (const std::string & name);
+        bool has_attribute (const std::string & name) const;
     
         /**
          * Returns a new reference to an attribute of this object.
@@ -140,7 +140,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return New reference to the attribute or NULL on error
          */
-        PyObject* get_attribute (const std::string & name);
+        PyObject* get_attribute (const std::string & name) const;
     
         /**
          * Returns the given attribute as integer value.
@@ -148,7 +148,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return An integer.
          */
-        s_int32 get_attribute_int (const std::string & name);
+        s_int32 get_attribute_int (const std::string & name) const;
     
         /**
          * Returns the given attribute as string value.
@@ -156,7 +156,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return A string.
          */
-        std::string get_attribute_string (const std::string & name);
+        std::string get_attribute_string (const std::string & name) const;
     
         /**
          * Assign a new attribute to the module, overriding an existing
@@ -226,6 +226,10 @@ namespace python
             return Filename;
         }
         //@}
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(script);
+#endif // SWIG
     
     protected:
         /**

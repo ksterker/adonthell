@@ -74,7 +74,7 @@ dnl *****************
 dnl Check for libxml2
 dnl *****************
 XML_VERSION=2.5.0
-AM_PATH_XML($XML_VERSION,
+AM_PATH_XML2($XML_VERSION,
     :,
     AC_MSG_ERROR([*** libxml version >= $XML_VERSION not found!])
 )
@@ -235,6 +235,7 @@ src/gfx/Makefile
 src/input/Makefile
 src/gui/Makefile
 src/python/Makefile
+src/rpg/Makefile
 src/py-wrappers/Makefile
 src/py-wrappers/adonthell/Makefile
 doc/Makefile

@@ -2,11 +2,11 @@ CXXFLAGS += -I$(top_srcdir)/src/
 EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_gui.i py_main.i
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py gui.py main.py
-noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc gui.pyc main.pyc
+pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py gui.py main.py rpg.py
+noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc gui.pyc main.pyc rpg.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _gui.la _main.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _gui.la _main.la _rpg.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libswigruntime.la
@@ -53,6 +53,12 @@ _main_la_CXXFLAGS = $(PY_CFLAGS)
 _main_la_LDFLAGS = -avoid-version -module
 _main_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_main -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
 
+## Rules to build libpyrpg (librpg's Python wrapper)
+_rpg_la_SOURCES = py_rpg_wrap.cc
+_rpg_la_CXXFLAGS = $(PY_CFLAGS)
+_rpg_la_LDFLAGS = -avoid-version -module
+_rpg_la_LIBADD = -L$(top_builddir)/src/main -ladonthell_rpg -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) -lswigruntime
+
 
 ## Rules for SWIG runtime library generation
 swigruntime_wrap.cc:
@@ -95,6 +101,12 @@ main.pyc: main.py
 	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 main.py: py_main_wrap.cc
 py_main_wrap.cc: py_main.i swigruntime_wrap.cc $(top_srcdir)/src/main/*.h
+	$(SWIG) -noruntime -python -modern -I$(top_srcdir)/src -I$(top_srcdir)/src/py-wrappers/adonthell -o $(srcdir)/$@ $<
+
+rpg.pyc: rpg.py
+	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
+rpg.py: py_rpg_wrap.cc
+py_rpg_wrap.cc: py_rpg.i swigruntime_wrap.cc $(top_srcdir)/src/rpg/*.h
 	$(SWIG) -noruntime -python -modern -I$(top_srcdir)/src -I$(top_srcdir)/src/py-wrappers/adonthell -o $(srcdir)/$@ $<
 
 __init__.pyc: __init__.py

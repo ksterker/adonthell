@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.7 2004/04/30 13:47:25 ksterker Exp $
+   $Id: python.h,v 1.8 2004/05/31 11:44:50 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -218,12 +218,12 @@ namespace python
      * 
      * @return A borrowed pointer to the C++ instance of the object.
      */
-    template <class A> inline
+    template <class A, class B> inline
     A retrieve_instance(PyObject * pyinstance)
     {
-        A retvalue;
+        B *retvalue = NULL;
 
-        swig_type_info * tt = SWIG_Python_TypeQuery(arg->get_type_name ());
+        swig_type_info * tt = SWIG_Python_TypeQuery (B::get_type_name_s ());
         if (!tt) return NULL;
         if (SWIG_Python_ConvertPtr(pyinstance, (void **) &retvalue, tt, 0) == -1) return NULL;
         return retvalue;
@@ -237,7 +237,7 @@ namespace python
      * @return C++ value of pyinstance.
      */
     template <> inline
-    int retrieve_instance<int>(PyObject * pyinstance)
+    int retrieve_instance<int, int>(PyObject * pyinstance)
     { 
         return PyInt_AsLong(pyinstance);
         show_traceback();
@@ -251,7 +251,7 @@ namespace python
      * @return C++ value of pyinstance.
      */
     template <> inline
-    bool retrieve_instance<bool>(PyObject * pyinstance)
+    bool retrieve_instance<bool, bool>(PyObject * pyinstance)
     { 
         return (bool)PyInt_AsLong(pyinstance);
         show_traceback();
@@ -265,7 +265,7 @@ namespace python
      * @return char * string value of pyinstance.
      */
     template <> inline
-    const char * retrieve_instance<const char *>(PyObject * pyinstance)
+    const char * retrieve_instance<const char *, const char *>(PyObject * pyinstance)
     {
         return PyString_AsString(pyinstance);
         show_traceback();
@@ -279,7 +279,7 @@ namespace python
      * @return std::string value of pyinstance.
      */
     template <> inline
-    std::string retrieve_instance<std::string>(PyObject * pyinstance)
+    std::string retrieve_instance<std::string, std::string>(PyObject * pyinstance)
     { 
         return std::string(PyString_AsString(pyinstance));
         show_traceback();

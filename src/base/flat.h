@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.5 2004/04/30 13:47:25 ksterker Exp $
+   $Id: flat.h,v 1.6 2004/05/31 11:44:50 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #include "base/types.h"
 #include <string>
 #include "base/endian.h"
+#include "python/callback_support.h"
 
 using std::string;
 
@@ -87,7 +88,7 @@ namespace base
             /**
              * Destructor
              */
-            ~flat () {
+            virtual ~flat () {
                 delete[] Buffer;
                 delete Data;
             }
@@ -280,6 +281,9 @@ namespace base
             int next (void **value, int *size = NULL, char **name = NULL);
             //@}
 
+#ifndef SWIG
+            GET_TYPE_NAME_VIRTUAL(flat)
+#endif // SWIG
         protected:
             const char *getBuffer () const { return Buffer; }
             
