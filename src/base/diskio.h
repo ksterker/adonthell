@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
+   $Id: diskio.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 
 #include "base/flat.h"
 #include "base/file.h"
-#include "python/callback_support.h"
 
 namespace base {
     /**

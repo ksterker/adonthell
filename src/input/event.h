@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: event.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   event.h
+ * @file   input/event.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Declares the input_event base class.

@@ -1,5 +1,5 @@
 /*
-   $Id: control_event.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: control_event.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,9 +32,6 @@
 #ifndef CONTROL_EVENT_H
 #define CONTROL_EVENT_H
 
-#include <string>
-
-#include "input/event.h"
 #include "input/keyboard_event.h"
 #include "input/mouse_event.h"
 #include "input/joystick_event.h"

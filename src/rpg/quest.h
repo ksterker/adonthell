@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.3 2004/10/18 07:40:23 ksterker Exp $
+   $Id: quest.h,v 1.4 2004/10/25 06:50:09 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -182,7 +182,7 @@ namespace rpg
      * must be kmown. The position is determined by the objects name and that of
      * its predecessors. In general, an address has the form 
      *
-     * 		<quest>.<part>. ... .<part>.<step>
+     * 		<i>quest.part.</i> ... <i>.part.step</i>
      */
     class quest
     {

@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.4 2003/11/22 09:35:21 ksterker Exp $
+   $Id: gfx.cc,v 1.5 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,16 +29,7 @@
  * 
  */
 
-#include <iostream>
-
-#include "gfx/drawing_area.h"
-#include "gfx/drawable.h"
-#include "gfx/surface.h"
-#include "gfx/screen.h"
 #include "base/paths.h"
-
-#include "ltdl.h"
-
 #include "gfx/gfx.h"
 
 

@@ -1,5 +1,5 @@
 /*
-   $Id: pool.h,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+   $Id: pool.h,v 1.2 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,7 +36,9 @@
 namespace python
 {
     /**
-     *
+     * A cache for python scripts that allows multiple objects to access the
+     * same python instance. This avoids multiple instanciation of python
+     * objects that could easily be shared.
      */
     class pool
     {
@@ -52,21 +54,29 @@ namespace python
             static void cleanup ();
             
             /**
-             *
+             * Return a python method from the given script and class. If the
+             * class is not yet cached in the pool, it is instanciated.
+             * @param file name of the python script.
+             * @param classname name of the python class to access.
+             * @param callback name of the method to retrieve from that class.
+             * @return python method from cached object or \c NULL on error.
              */
             static python::method * connect (const std::string & file, 
                 const std::string & classname, const std::string & callback);
             
             /**
-             *
+             * Return a python object from the given script. If it is not
+             * yet cached, the script will be loaded and the given class
+             * will be instanciated.
+             * @param file name of the python script.
+             * @param classname name of the python class to access.
+             * @return python object from cache or \c NULL on error.
              */
             static python::script * reconnect (const std::string & file, 
                 const std::string & classname);
                 
         private:
-            /**
-             *
-             */
+            /// All python scripts currently kept in cache
             static std::map<const char*, python::script*> Pool;
     };
 }

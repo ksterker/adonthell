@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.7 2004/06/27 11:20:57 ksterker Exp $
+   $Id: flat.h,v 1.8 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,6 @@
 #define BASE_FLAT
 
 #include <stdio.h>
-#include "base/types.h"
 #include <string>
 #include "base/endian.h"
 #include "python/callback_support.h"
@@ -40,7 +39,10 @@ using std::string;
 namespace base
 {
     /**
-     *
+     * This class can store basic data types in a way that helps to easily make
+     * that data persistent or transfer it over a network for later retrieval.
+     * As it can only cope with basic data types, objects must take care of saving
+     * and restoring the data correctly. 
      */
     class flat
     {

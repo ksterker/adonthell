@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: listener.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,7 +45,12 @@ namespace event
     class factory;
 
     /**
-     *
+     * An %event %listener contains a callback to a %python %method that it
+     * will execute when the event occurs that the %listener is waiting
+     * for. A %listener is usually created by a certain %event %factory and will
+     * be destroyed if the %factory is destroyed. That way, it's not neccessary
+     * to keep track of every single %listener. Instead, a few factories can
+     * be used to create groups of listeners that can be disposed together.
      */
     class listener
     {
@@ -57,7 +62,7 @@ namespace event
         
         /**
          * Destroy the %listener. Automatically removes it from 
-         * the %event %manager and factory if required.
+         * the %event %manager and %factory if required.
          */
         ~listener ();
         

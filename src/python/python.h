@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.11 2004/08/23 06:33:47 ksterker Exp $
+   $Id: python.h,v 1.12 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,9 +33,6 @@
 #define PYTHON_PYTHON_H_
 
 #include <Python.h>
-#include <string>
-
-#include "python/callback_support.h"
 #include "base/flat.h"
 
 struct swig_type_info;

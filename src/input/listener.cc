@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.4 2003/11/22 09:37:13 ksterker Exp $
+   $Id: listener.cc,v 1.5 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   listener.cc
+ * @file   input/listener.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Defines the listener class.

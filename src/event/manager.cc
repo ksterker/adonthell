@@ -1,5 +1,5 @@
 /*
-   $Id: manager.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: manager.cc,v 1.2 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   event/handler.cc
+ * @file   event/manager.cc
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
  * @brief  Implements the %event %handler class.

@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.4 2004/10/18 07:40:23 ksterker Exp $
+   $Id: paths.h,v 1.5 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,6 @@
 
 #include "ltdl.h"
 
-#include <string>
 #include "base/file.h"
 
 namespace base

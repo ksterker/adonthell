@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: event.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,6 @@
 #ifndef EVENT_EVENT_H
 #define EVENT_EVENT_H
 
-#include "python/callback_support.h"
 #include "base/flat.h"
 
 namespace event 

@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.cc,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: inventory.cc,v 1.4 2004/10/25 06:50:09 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   inventory.cc
+ * @file   rpg/inventory.cc
  * @author Kai Sterker <kaisterker@linuxgames.com> 
  * 
  * @brief  Container for items.
@@ -64,13 +64,13 @@ void inventory::grow (const u_int16 & count)
 }
 
 // add named slot to inventory
-void inventory::add_slot (const std::string & id, const bool & equipment)
+void inventory::add_slot (const string & id, const bool & equipment)
 {
     Slots.push_back (new slot (this, id, equipment));
 }
 
 // retrieve named slot from inventory
-slot *inventory::get_slot (const std::string & id)
+slot *inventory::get_slot (const string & id)
 {
     std::vector<slot*>::iterator i;
     

@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.5 2004/06/01 07:26:29 ksterker Exp $
+   $Id: callback.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,6 @@
 #ifndef PYTHON_CALLBACK_H
 #define PYTHON_CALLBACK_H
 
-#include "base/types.h"
 #include "base/callback.h"
 #include "python/python.h"
 

@@ -1,5 +1,5 @@
 /*
-   $Id: method.h,v 1.5 2004/05/13 06:44:01 ksterker Exp $
+   $Id: method.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #define PYTHON_METHOD_H
 
 #include "python/script.h"
-#include "base/file.h"
 
 namespace python
 {

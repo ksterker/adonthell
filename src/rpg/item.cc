@@ -1,5 +1,5 @@
 /*
-   $Id: item.cc,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: item.cc,v 1.4 2004/10/25 06:50:09 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,7 +38,7 @@ using rpg::item;
 using rpg::character;
 
 // ctor
-item::item (const std::string & item) : python::script ()
+item::item (const string & item) : python::script ()
 {
     Slot = NULL;
 
@@ -162,7 +162,7 @@ item *item::combine (item *itm)
 }
 
 // save a single item to file
-bool item::put_state (const std::string & file) const
+bool item::put_state (const string & file) const
 {
     base::ogzstream out (file);
     
@@ -219,7 +219,7 @@ bool item::put_state (base::flat & file) const
 }
 
 // load a single item from file
-bool item::get_state (const std::string & file)
+bool item::get_state (const string & file)
 {
     base::igzstream in (file);
     // has file opened?

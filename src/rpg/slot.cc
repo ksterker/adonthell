@@ -1,5 +1,5 @@
 /*
-   $Id: slot.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: slot.cc,v 1.3 2004/10/25 06:50:09 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,7 @@ using rpg::item;
 using rpg::slot;
 
 // ctor
-slot::slot (inventory *owner, const std::string & id, const bool & equipment)
+slot::slot (inventory *owner, const string & id, const bool & equipment)
 {
     Owner = owner;
     Id = id;

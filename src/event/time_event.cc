@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.cc,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: time_event.cc,v 1.4 2004/10/25 06:50:08 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file time_event.cc
+ * @file event/time_event.cc
  *
  * @author Kai Sterker
  * @brief Implements the time_event class.
