@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.4 2003/07/28 12:55:34 gnurou Exp $
+   $Id: surface_sdl.cc,v 1.5 2003/07/28 15:02:18 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,8 +113,6 @@ namespace gfx
         int inc1,inc2;
         int offset;
 
-        std::cout << "ok\n";
-
         drawing_area da;
 
         if (da_opt) da = da_opt->setup_rects();
@@ -191,7 +189,6 @@ namespace gfx
                 y+=IncY;
             }
         }
-        std::cout << "fini\n";
     }
 
     u_int32 surface_sdl::map_color(u_int8 r, u_int8 g, u_int8 b) const

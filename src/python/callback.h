@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.2 2003/07/24 12:57:59 gnurou Exp $
+   $Id: callback.h,v 1.3 2003/07/28 15:02:19 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -73,7 +73,6 @@ namespace python
                                       python::functor_base(c)
         {
             *((base::functor_0ret<RT> *)this) = base::membertranslator_0ret<RT, functor_0ret<RT>, void (functor_0ret<RT>::*)()>(*this, &python::functor_0ret<RT>::run);
-            Py_INCREF(callable);
         }
 
     private:
@@ -108,7 +107,6 @@ namespace python
                                    python::functor_base(c)
         {
             *((base::functor_1<P1>*)this) = base::membertranslator_1<P1,functor_1<P1>,void (functor_1<P1>::*)(P1)>(*this, &python::functor_1<P1>::run);
-            Py_INCREF(callable);
         }
         
     private:
@@ -129,7 +127,7 @@ namespace python
             
             show_traceback();
             
-            Py_XDECREF(pyargs);
+            Py_DECREF(pyargs);
             Py_XDECREF(pyres);
         }
     };
@@ -147,7 +145,6 @@ namespace python
                                       python::functor_base(c)
         {
             *((base::functor_1ret<P1, RT>*)this) = base::membertranslator_1ret<P1,RT,functor_1ret<P1, RT>,RT (functor_1ret<P1, RT>::*)(P1)>(*this, &python::functor_1ret<P1, RT>::run);
-            Py_INCREF(callable);
         }
         
     private:
@@ -163,10 +160,10 @@ namespace python
             
             // The SetItem steals our reference to pyarg1
             PyTuple_SetItem(pyargs, 0, pyarg1);
-            
+
             // We can finally call our function
             pyres = PyObject_CallObject(callable, pyargs);
-            
+
             show_traceback();
             
             Py_XDECREF(pyargs);
@@ -174,6 +171,7 @@ namespace python
             if (pyres)
             {
                 retvalue = retrieve_instance<RT>(pyres);
+                show_traceback();
                 Py_XDECREF(pyres);
             }
 

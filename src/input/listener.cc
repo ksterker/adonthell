@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.2 2003/07/24 12:57:58 gnurou Exp $
+   $Id: listener.cc,v 1.3 2003/07/28 15:02:19 gnurou Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,25 +38,25 @@ namespace input
     }
 
 
-    void listener::connect_keyboard_function(base::functor_1ret<keyboard_event *, int> * f)
+    void listener::connect_keyboard_function(base::functor_1ret<keyboard_event *, bool> * f)
     {
         disconnect_keyboard_function();
         Keyboard_callback = f;
     }
 
-    void listener::connect_mouse_function(base::functor_1ret<mouse_event *, int> * f)
+    void listener::connect_mouse_function(base::functor_1ret<mouse_event *, bool> * f)
     {
         disconnect_mouse_function();
         Mouse_callback = f;
     }
 
-    void listener::connect_joystick_function(base::functor_1ret<joystick_event *, int> * f)
+    void listener::connect_joystick_function(base::functor_1ret<joystick_event *, bool> * f)
     {
         disconnect_joystick_function();
         Joystick_callback = f;
     }
 
-    void listener::connect_control_function(base::functor_1ret<control_event *, int> * f)
+    void listener::connect_control_function(base::functor_1ret<control_event *, bool> * f)
     {
         disconnect_control_function();
         Control_callback = f;

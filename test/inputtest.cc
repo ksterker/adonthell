@@ -14,7 +14,7 @@ public:
     // It will be passed a keyboard_event as a parameter
     // and is supposed to return nonzero if it took the
     // event.
-    int handle_keys(input::keyboard_event * ev)
+    bool handle_keys(input::keyboard_event * ev)
     {
         // If the key is released
         if (ev->type() == input::keyboard_event::KEY_RELEASED)
@@ -35,7 +35,7 @@ public:
                 std::cout << "Escape pressed, leaving..." << std::endl;
             }
         }
-        return 1;
+        return true;
     }
 };
 

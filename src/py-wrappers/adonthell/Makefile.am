@@ -35,19 +35,19 @@ _gui_la_LIBADD = -L$(top_builddir)/src/gui/ -ladonthell_gui -L$(top_builddir)/sr
 
 ## Rules for Python wrappers generation
 base.py: py_base_wrap.cc
-py_base_wrap.cc: py_base.i
+py_base_wrap.cc: py_base.i $(top_srcdir)/src/base/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 gfx.py: py_gfx_wrap.cc
-py_gfx_wrap.cc: py_gfx.i
+py_gfx_wrap.cc: py_gfx.i $(top_srcdir)/src/gfx/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 input.py: py_input_wrap.cc
-py_input_wrap.cc: py_input.i
+py_input_wrap.cc: py_input.i $(top_srcdir)/src/input/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 gui.py: py_gui_wrap.cc
-py_gui_wrap.cc: py_gui.i
+py_gui_wrap.cc: py_gui.i $(top_srcdir)/src/gui/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 __init__.py:

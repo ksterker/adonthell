@@ -5,12 +5,12 @@ import time
 if __name__ == '__main__':
     def key_callback(ev):
         global letsexit
-        print "In callback!"
         if ev.type() == input.keyboard_event.KEY_PUSHED:
             if ev.key() == input.keyboard_event.ESCAPE_KEY: letsexit = 1
+        return 1
 
     if not gfx.init("sdl"): raise "Can't load gfx backend!"
-    if not input.init("sdl"): raise " Can't load input backend!"
+    if not input.init("sdl"): raise "Can't load input backend!"
 
     gfx.screen.set_video_mode(640, 480)
 

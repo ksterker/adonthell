@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.2 2003/07/24 12:57:58 gnurou Exp $
+   $Id: listener.h,v 1.3 2003/07/28 15:02:19 gnurou Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -89,13 +89,13 @@ namespace input
          * @param t type of event to listen to
          * @param f callback function to call when an event of type \e t is raised
          */
-        void connect_keyboard_function(base::functor_1ret<keyboard_event *, int> * f);
+        void connect_keyboard_function(base::functor_1ret<keyboard_event *, bool> * f);
 
-        void connect_mouse_function(base::functor_1ret<mouse_event *, int> * f);
+        void connect_mouse_function(base::functor_1ret<mouse_event *, bool> * f);
 
-        void connect_joystick_function(base::functor_1ret<joystick_event *, int> * f);
+        void connect_joystick_function(base::functor_1ret<joystick_event *, bool> * f);
 
-        void connect_control_function(base::functor_1ret<control_event *, int> * f);
+        void connect_control_function(base::functor_1ret<control_event *, bool> * f);
 
         /**
          * Stops listening to events of type \e t.
@@ -127,10 +127,10 @@ namespace input
         int raise_event (event * ev);
 
     private:
-        base::functor_1ret<keyboard_event *, int> * Keyboard_callback;
-        base::functor_1ret<mouse_event *, int> * Mouse_callback;
-        base::functor_1ret<joystick_event *, int> * Joystick_callback;
-        base::functor_1ret<control_event *, int> * Control_callback;
+        base::functor_1ret<keyboard_event *, bool> * Keyboard_callback;
+        base::functor_1ret<mouse_event *, bool> * Mouse_callback;
+        base::functor_1ret<joystick_event *, bool> * Joystick_callback;
+        base::functor_1ret<control_event *, bool> * Control_callback;
     };
 }
 

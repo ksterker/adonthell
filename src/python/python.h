@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.1 2003/07/18 15:16:09 gnurou Exp $
+   $Id: python.h,v 1.2 2003/07/28 15:02:19 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -121,6 +121,23 @@ namespace python
     PyObject * pass_instance<int>(int arg, const ownership own)
     { 
         return PyInt_FromLong(arg);
+        show_traceback();
+    }
+
+    /** 
+     * Specialized version of pass_instance which makes a Python boolean
+     * from a C++ one.
+     * 
+     * @param arg the boolean to be passed to Python.
+     * @param own useless here.
+     * 
+     * @return a Python object representing \e arg.
+     */
+    template <> inline
+    PyObject * pass_instance<bool>(bool arg, const ownership own)
+    { 
+        return PyInt_FromLong((int)arg);
+        show_traceback();
     }
     
     /** 
@@ -136,6 +153,7 @@ namespace python
     PyObject * pass_instance<std::string &>(std::string & arg, const ownership own) 
     { 
         return PyString_FromString(arg.c_str());
+        show_traceback();
     }
 
     /** 
@@ -151,6 +169,7 @@ namespace python
     PyObject * pass_instance<const char *>(const char * arg, const ownership own) 
     { 
         return PyString_FromString((char *) arg);
+        show_traceback();
     }
 
     /** 
@@ -164,6 +183,7 @@ namespace python
 	PyObject * n = PyInt_FromLong(o);
 	PyObject_SetAttrString (obj, (char*)"thisown", n);
 	Py_DECREF(n);
+        show_traceback();
     }
     
     //@}
@@ -206,6 +226,21 @@ namespace python
     int retrieve_instance<int>(PyObject * pyinstance)
     { 
         return PyInt_AsLong(pyinstance);
+        show_traceback();
+    }
+
+    /** 
+     * Retrieves the C++ value of a Python boolean.
+     * 
+     * @param pyinstance The Python boolean to retrieve.
+     * 
+     * @return C++ value of pyinstance.
+     */
+    template <> inline
+    bool retrieve_instance<bool>(PyObject * pyinstance)
+    { 
+        return (bool)PyInt_AsLong(pyinstance);
+        show_traceback();
     }
 
     /** 
@@ -219,6 +254,7 @@ namespace python
     const char * retrieve_instance<const char *>(PyObject * pyinstance)
     {
         return PyString_AsString(pyinstance);
+        show_traceback();
     }
 
     /** 
@@ -232,6 +268,7 @@ namespace python
     std::string retrieve_instance<std::string>(PyObject * pyinstance)
     { 
         return std::string(PyString_AsString(pyinstance));
+        show_traceback();
     }
 
     //@}
