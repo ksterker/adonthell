@@ -1,5 +1,5 @@
 from adonthell import base, main, event
-import time, sys
+import sys
 
 # -- class containing a couple of test-callbacks
 class event_script (object):
@@ -7,12 +7,12 @@ class event_script (object):
         self.counter = 0
         
     def callback_1 (self, lst, evt, str, num):
-        print str, num, evt.time (), lst.get_event ().repeat ()
+        print str, num, evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
         lst.connect_callback ("eventtest", "event_script", "callback_1", (str, num+1))
         self.counter += 1
         
     def callback_2 (self, lst, evt):
-        print "#2", evt.time (), lst.get_event ().repeat ()
+        print "#2", evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
 
         # -- switch callback
         if self.counter == 4:
@@ -21,7 +21,7 @@ class event_script (object):
             lst.get_event ().set_repeat (4)
             
     def callback_3 (self, lst, evt, num):
-        print num, evt.time (), lst.get_event ().repeat ()
+        print num, evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
         if lst.get_event ().repeat () == 2:
             # -- destroy
             print "#2 Destroying"
@@ -30,8 +30,6 @@ class event_script (object):
 def eventtest ():
     # -- init
     event.manager.init ()
-
-    tmr = base.timer ()
     fty = event.factory ()
     svd = 0
     
@@ -62,8 +60,7 @@ def eventtest ():
             file.close ()
             svd = 1
             
-        time.sleep (0.01)
-        # tmr.update ()
+        base.Timer.update ()
         event.date.update ()
 
     # -- resume with saved state
@@ -80,8 +77,7 @@ def eventtest ():
     
     # -- run for another 1:40 gametime minutes
     while event.date.time () < 300:
-        time.sleep (0.01)
-        # tmr.update ()
+        base.Timer.update ()
         event.date.update ()
     
     # -- cleanup

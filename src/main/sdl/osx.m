@@ -54,37 +54,72 @@ extern "C" {
     Application = theApp;
 }
 
-void setupAppleMenu(void)
+static NSString *getApplicationName(void)
+{
+    NSDictionary *dict;
+    NSString *appName = 0;
+
+    /* Determine the application name */
+    dict = (NSDictionary *)CFBundleGetInfoDictionary(CFBundleGetMainBundle());
+    if (dict)
+        appName = [dict objectForKey: @"CFBundleName"];
+    
+    if (![appName length])
+        appName = [[NSProcessInfo processInfo] processName];
+
+    return appName;
+}
+
+static void setApplicationMenu(void)
 {
     /* warning: this code is very odd */
-    NSAppleMenuController *appleMenuController;
     NSMenu *appleMenu;
-    NSMenuItem *appleMenuItem;
-
-    appleMenuController = [[NSAppleMenuController alloc] init];
-    appleMenu = [[NSMenu alloc] initWithTitle:@""];
-    appleMenuItem = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
+    NSMenuItem *menuItem;
+    NSString *title;
+    NSString *appName;
     
-    [appleMenuItem setSubmenu:appleMenu];
+    appName = getApplicationName();
+    appleMenu = [[NSMenu alloc] initWithTitle:@""];
+    
+    /* Add menu items */
+    title = [@"About " stringByAppendingString:appName];
+    [appleMenu addItemWithTitle:title action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
 
-    /* yes, we do need to add it and then remove it --
-       if you don't add it, it doesn't get displayed
-       if you don't remove it, you have an extra, titleless item in the menubar
-       when you remove it, it appears to stick around
-       very, very odd */
-    [[NSApp mainMenu] addItem:appleMenuItem];
-    [appleMenuController controlMenu:appleMenu];
-    [[NSApp mainMenu] removeItem:appleMenuItem];
+    [appleMenu addItem:[NSMenuItem separatorItem]];
+
+    title = [@"Hide " stringByAppendingString:appName];
+    [appleMenu addItemWithTitle:title action:@selector(hide:) keyEquivalent:@"h"];
+
+    menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
+    [menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
+
+    [appleMenu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""];
+
+    [appleMenu addItem:[NSMenuItem separatorItem]];
+
+    title = [@"Quit " stringByAppendingString:appName];
+    [appleMenu addItemWithTitle:title action:@selector(terminate:) keyEquivalent:@"q"];
+
+    
+    /* Put menu into the menubar */
+    menuItem = [[NSMenuItem alloc] initWithTitle:@"" action:nil keyEquivalent:@""];
+    [menuItem setSubmenu:appleMenu];
+    [[NSApp mainMenu] addItem:menuItem];
+
+    /* Tell the application object that this is now the application menu */
+    [NSApp setAppleMenu:appleMenu];
+
+    /* Finally give up our references to the objects */
     [appleMenu release];
-    [appleMenuItem release];
+    [menuItem release];
 }
 
 /* Create a window menu */
-void setupWindowMenu(void)
+static void setupWindowMenu(void)
 {
-    NSMenu		*windowMenu;
-    NSMenuItem	*windowMenuItem;
-    NSMenuItem	*menuItem;
+    NSMenu      *windowMenu;
+    NSMenuItem  *windowMenuItem;
+    NSMenuItem  *menuItem;
 
     windowMenu = [[NSMenu alloc] initWithTitle:@"Window"];
     
@@ -126,7 +161,7 @@ void CustomApplicationMain (const adonthell::app *theApp)
 
     /* Set up the menubar */
     [NSApp setMainMenu:[[NSMenu alloc] init]];
-    setupAppleMenu();
+    setApplicationMenu();
     setupWindowMenu();
     
     /* Create SDLMain and make it the app delegate */
@@ -146,27 +181,6 @@ void CustomApplicationMain (const adonthell::app *theApp)
     int status = Application->main ();
     Application->cleanup ();
     exit (status);
-}
-
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
-{
-    printf ("applicationShouldTerminateAfterLastWindowClosed\n");
-    fflush (stdout);
-    return YES;
-}
-
-- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
-{
-    printf ("NSApplicationTerminateReply\n");
-    fflush (stdout);
-    return NSTerminateNow;
-}
-
-- (void)applicationWillTerminate:(NSNotification *)aNotification
-{
-    printf ("applicationWillTerminate\n");
-    fflush (stdout);
-    Application->cleanup ();
 }
 @end
 

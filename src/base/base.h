@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
+   $Id: base.h,v 1.4 2004/10/18 07:40:22 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,12 +42,13 @@ namespace base
 {
     /**
      * Init the base module.
+     * @return \c true if successful, \c false otherwise
      */
-    void init (const std::string & userdatadir, const std::string & game);
+    bool init (const std::string & userdatadir, const std::string & game);
 
     /// class to open files from given search paths
-    static base::paths Paths;
+    extern base::paths Paths;
     
     /// timer instance used by the engine
-    static base::timer Timer;
+    extern base::timer Timer;
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: configuration.cc,v 1.2 2004/08/02 07:35:28 ksterker Exp $
+   $Id: configuration.cc,v 1.3 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include "base/configuration.h"
 #include "base/configio.h"
+#include "base/base.h"
 
 using base::configuration;
 using base::cfg_choice;
@@ -396,17 +397,6 @@ void configuration::remove_option (const string & section, const string & option
 // calculate file name
 string configuration::create_filename (const string & name) const
 {
-#ifdef SINGLE_DIR_INST
-    // everything should reside in a single directory
-    string path = "";
-#else
-    // calculate path to configuration file ($HOME/.adonthell/<name>.xml)
-    string path = string (getenv ("HOME")) + "/.adonthell/";
-
-    // try to create that directory in case it dosn't exist
-    mkdir (path.c_str (), 0700);
-#endif
-
-    // add file name
-    return path + name + ".xml";
+    // add file name to configuration data directory
+    return base::Paths.cfg_data_dir () + name + ".xml";
 }    

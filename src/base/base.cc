@@ -1,5 +1,5 @@
 /*
-   $Id: base.cc,v 1.1 2004/08/02 07:37:29 ksterker Exp $
+   $Id: base.cc,v 1.2 2004/10/18 07:40:22 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,8 +29,15 @@
 
 #include "base/base.h"
 
-// init the base module
-void base::init (const std::string & userdatadir, const std::string & game)
+// global timer and path objects
+namespace base 
 {
-    base::Paths.init (userdatadir, game);
+    base::paths Paths;
+    base::timer Timer;
+}
+
+// init the base module
+bool base::init (const std::string & userdatadir, const std::string & game)
+{
+    return base::Paths.init (userdatadir, game);
 }

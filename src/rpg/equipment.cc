@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.cc,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: equipment.cc,v 1.4 2004/10/18 07:40:23 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,10 +36,16 @@ using rpg::slot;
 using rpg::item;
 
 /**
- * Mapping from itm categories to equipment slots.
+ * Mapping from %item categories to equipment slots.
  */
 std::hash_map<std::string, rpg::slot_list,
     std::hash<std::string> > equipment::SlotCategoryMap;
+
+/**
+ * Predefined %equipment for certain %character types
+ */
+std::hash_map<std::string, std::vector<std::string>, 
+    std::hash<std::string> > equipment::EquipmentDefs;
 
 // retrieve a list of slots the item would fit into    
 const rpg::slot_list equipment::fits (item *itm) const
@@ -172,4 +178,109 @@ void equipment::add_mapping (const std::string & slot, const std::string & categ
 
         SlotCategoryMap[category] = slots;
     }
+}
+
+// define equipment for certain type of characters
+void equipment::add_definition (const std::string & type, const std::vector<std::string> & slots)
+{
+    EquipmentDefs[type] = slots;
+}
+
+// create equipment storage for given type of characters
+rpg::inventory *equipment::create (const std::string & type)
+{
+    rpg::inventory *inv = new rpg::inventory ();
+    std::hash_map<std::string, std::vector<std::string>,
+        std::hash<std::string> >::iterator t = EquipmentDefs.find (type);
+    
+    // does given type exist?
+    if (t != EquipmentDefs.end ())
+    {
+        const std::vector<std::string> &slots = (*t).second;
+        for (std::vector<std::string>::const_iterator i = slots.begin(); i != slots.end (); i++)
+        {
+            // fill inventory with predefined slots
+            inv->add_slot (*i, true);
+        }
+    }
+    else
+    {
+        fprintf (stderr, "*** equipment::create: character type '%s' undefined!\n", type.c_str ());
+    }
+    
+    return inv;
+}
+
+// save to disk
+void equipment::put_state (base::flat & out)
+{
+    base::flat record, slots;
+    
+    // save mappings
+    std::hash_map<std::string, rpg::slot_list,
+        std::hash<std::string> >::const_iterator s = SlotCategoryMap.begin ();
+    for (; s != SlotCategoryMap.end (); s++)
+    {
+        slots.put_string ("emp", (*s).first);
+        for (rpg::slot_list::const_iterator i = (*s).second.begin (); i != (*s).second.end (); i++)
+        {
+            slots.put_string ("", *i);
+        }
+        record.put_flat ("", slots);
+        slots.clear ();
+    }
+    
+    // save equipment definitions
+    std::hash_map<std::string, std::vector<std::string>,
+        std::hash<std::string> >::const_iterator t = EquipmentDefs.begin ();
+    for (; t != EquipmentDefs.end (); t++)
+    {
+        slots.put_string ("edf", (*t).first);
+        for (std::vector<std::string>::const_iterator i = (*t).second.begin (); i != (*t).second.end (); i++)
+        {
+            slots.put_string ("", *i);
+        }
+        record.put_flat ("", slots);
+        slots.clear ();
+    }
+    
+    out.put_flat ("eqp", record);
+}
+
+// load from disk
+bool equipment::get_state (base::flat & in)
+{
+    base::flat list, record = in.get_flat ("eqp");
+    
+    while (in.next ((void **) &list) != -1)
+    {
+        char *val, *name;
+        if (list.next ((void **) &val, (int*) NULL, &name) != base::flat::T_STRING)
+            continue;
+        
+        // load mapping
+        if (strncmp (name, "emp", 3) == 0)
+        {   
+            std::string category = val;
+            while (list.next ((void **) &val) == base::flat::T_STRING)
+            {
+                add_mapping (val, category);
+            }
+            continue;
+        }
+
+        // load equipment def
+        if (strncmp (name, "edf", 3) == 0)
+        {
+            std::string type = val;
+            std::vector<std::string> slots;
+            while (list.next ((void **) &val) == base::flat::T_STRING)
+            {
+                slots.push_back (std::string (val));
+            }
+            add_definition (type, slots);
+        }
+    }
+    
+    return in.success ();
 }

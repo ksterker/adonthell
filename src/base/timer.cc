@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.5 2004/03/13 12:38:10 ksterker Exp $
+   $Id: timer.cc,v 1.6 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,29 +21,32 @@
 
 #include <errno.h>
 
-#include "base/types.h"
 #include "base/timer.h"
 
 namespace base
 {
-    timer::timer() : Slice(100), Lasttime(0), Frames_missed(0)
+    // ctor
+    timer::timer() : Slice(50), Lasttime(0), FramesMissed(0)
     {
-        gettimeofday(&initial_time, NULL);
+        gettimeofday (&InitialTime, NULL);
     }
 
-    void timer::set_slice(unsigned long int sl)
+    // set duration of one game cycle in ms
+    void timer::set_slice(u_int32 sl)
     {
         Slice = sl;
     }
 
-    unsigned long int timer::current_time() const
+    // return time passed since creation of timer 
+    u_int32 timer::current_time() const
     {
         struct timeval tv;
         gettimeofday(&tv, NULL);
         return convert_timeval(tv);
     }
 
-    void timer::sleep (unsigned long int msecs) const
+    // suspend application for given time
+    void timer::sleep (u_int32 msecs) const
     {
         unsigned char err;
         struct timespec req, rem;
@@ -57,6 +60,7 @@ namespace base
         } while (err && (errno == EINTR));
     }
 
+    // wait until current game cycle is over
     void timer::update ()
     {
         register u_int16 delay = current_time () - Lasttime;
@@ -65,10 +69,10 @@ namespace base
         if (Slice > delay) {
             sleep (Slice - delay);
             delay = current_time () - Lasttime;
-            Frames_missed = 0;
+            FramesMissed = 0;
         }
         // see whether calculating the current frame took too long
-        else Frames_missed = delay / Slice;
+        else FramesMissed = delay / Slice;
         
         Lasttime += delay;
     }

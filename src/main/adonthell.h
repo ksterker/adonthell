@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: adonthell.h,v 1.4 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

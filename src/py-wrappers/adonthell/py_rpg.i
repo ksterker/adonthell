@@ -33,7 +33,7 @@ namespace rpg {
     }
 }
 
-// typemap for returning a vector<std::string> as python list
+// typemap for returning a vector<const char*> as python list
 %typemap(out) std::vector<const char*> {
     unsigned int index = 0;
     $result = PyList_New (result.size ());
@@ -42,6 +42,22 @@ namespace rpg {
 }
 
 %include "std_string.i"
+
+// typemap for passing python list as vector<string>
+%typemap(in) const std::vector<std::string> & {
+    $1 = new std::vector<std::string>;
+    if (PyList_Check ($input)) {
+        int size = PyList_Size ($input);
+        for (int i = 0; i < size; i++) {
+            PyObject *o = PyList_GetItem ($input, i);
+            if (PyString_Check(o)) $1->push_back (PyString_AsString (o));
+            else fprintf (stderr, "*** $symname: expected list of strings!\n"); 
+        }
+    }
+    else fprintf (stderr, "*** $symname: expected list of strings!\n"); 
+}
+
+%typemap(freearg) const std::vector<std::string> & "delete $1;"
 
 %include "base/types.h"
 %include "python/script.h"

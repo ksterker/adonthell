@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.4 2004/08/23 06:33:47 ksterker Exp $
+   $Id: adonthell.cc,v 1.5 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -71,6 +71,7 @@ bool app::init_modules (const u_int16 & modules)
             python::init ();
             PySys_SetArgv (Argc, Argv);
         }
+        // avoid shutting down Python in that case
         else
         {
             Modules -= PYTHON;
@@ -161,7 +162,10 @@ bool app::init ()
         cerr << "Error initializing liblt!" << endl; 
         return false;
     }
-    
+
+    // init base module (required for reading config file)
+    base::init (Userdatadir, Game);
+        
     // load configuration file
     if (!Cfg.read (Config))
     {
@@ -193,9 +197,6 @@ bool app::init ()
         cerr << lt_dlerror() << endl;
         return false;
     }
-    
-    // init base module
-    base::init (Userdatadir, Game);
     
     // platform / backend specific initialization
     return init_p (this);

@@ -193,4 +193,9 @@ namespace base {
     void put_sint32 (const s_int32 &n)    { n >> *self; }
     void put_string (const string& s)     { s >> *self; }
     void put_float (const float &f)       { f >> *self; }
-}        
+}
+
+%pythoncode %{
+    Timer = cvar.Timer
+    Paths = cvar.Paths
+%}

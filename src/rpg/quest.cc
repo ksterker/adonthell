@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: quest.cc,v 1.3 2004/10/18 07:40:23 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,7 @@
  */
  
 #include "rpg/quest.h"
+#include "base/base.h"
 #include "base/diskio.h"
 #include "python/python.h"
 
@@ -268,10 +269,10 @@ void quest::set_completed (const std::string & id)
 }
 
 // save quests to file
-void quest::put_state ()
+void quest::put_state (const std::string & path)
 {
     // open file
-    base::ogzstream out (QUEST_DATA);
+    base::ogzstream out (path + QUEST_DATA);
     if (!out.is_open ())
     {
         fprintf (stderr, "*** quest::put_state: cannot open '" QUEST_DATA "' for writing!\n");
@@ -300,8 +301,8 @@ void quest::put_state (base::flat & out)
 bool quest::get_state ()
 {
     // open file
-    base::igzstream in (QUEST_DATA);
-    if (!in.is_open ())
+    base::igzstream in;
+    if (!base::Paths.open (in, QUEST_DATA));
     {
         fprintf (stderr, "*** quest::put_state: cannot open '" QUEST_DATA "' for reading!\n");
         return false; 

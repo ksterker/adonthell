@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.3 2004/08/02 07:35:28 ksterker Exp $
+   $Id: paths.h,v 1.4 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,6 +34,7 @@
 #include "ltdl.h"
 
 #include <string>
+#include "base/file.h"
 
 namespace base
 {
@@ -62,16 +63,55 @@ namespace base
              * Before any method of this class can be used, it must be initialized.
              * @param game name of the game the data files queried belong to.
              * @param userdatadir optional, user supplied data directory.
+             * @return \c true if successful, \c false otherwise
              */
-            void init (const std::string & game, const std::string & userdatadir = "");
+            bool init (const std::string & game, const std::string & userdatadir = "");
+            
+            /**
+             * While loading a saved game, the name of the saved game directory must
+             * be passed, so that it can be temporarily included into the Adonthell
+             * search path. To remove it after loading, pass an empty string ("")
+             * to this method.
+             * @param dir the saved game directory.
+             */
+            void set_save_dir (const std::string & dir);
+
+            /**
+             * Try to open the given file at the given location. Searches for the
+             * file in saved game dir (if set before with set_save_dir()), the
+             * user supplied data directory and finally the built in data directory.
+             * @param file a igzstream to be opened.
+             * @param location file to locate within the Adonthell search path.
+             * @return \c true on success, \c false if the file doesn't exist.
+             */
+            bool open (igzstream & file, const std::string & location);
+            
+            /**
+             * Return the configuration data directory.
+             * @return path to the Adonthell configuration directory.
+             */
+            std::string cfg_data_dir () const { return CfgDataDir; }
             
         private:
+            /**
+             * Check whether the given directory exists and is accessible.
+             * @param path an absolute path to check.
+             * @return \c true if directory can be opened, \c false otherwise.
+             */
+            bool exists (const std::string & path);
+            
             /// directory of the saved game currently being loaded (if any)
             std::string SaveDataDir;
             /// user supplied game data directory (if any) 
             std::string UserDataDir;
             // builtin game data directory (mandatory)
             std::string GameDataDir;
+            /// the (OS dependent) path to configuration and saved games
+            std::string CfgDataDir;
+            /// whether to include a saved game directory in Adonthell's search path
+            bool IncludeSaveDir;
+            /// whether to include user supplied data directory in search path
+            bool IncludeUserDir;
     };
 }
 

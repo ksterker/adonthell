@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.h,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: equipment.h,v 1.3 2004/10/18 07:40:23 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,7 +45,15 @@ namespace rpg
     typedef std::set<std::string, lstr> slot_list;
 
     /**
-     *
+     * The %equipment class can be used to define what items may go into
+     * a certain slot, representing a character's equipped items. This is
+     * done by specifiying a mapping between a slot name and item category.
+     * If, for example a mapping of slot 'Quiver' and item category 
+     * 'Projectile' exists, the equip() method will be able to put any 
+     * type projectile into the quiver but not into any other slot.
+     * 
+     * The methods provided here are used from the character class to
+     * handle the equipping / unequipping of items. 
      */
     class equipment
     {
@@ -95,9 +103,47 @@ namespace rpg
          */
         static void add_mapping (const std::string & slot, const std::string & category);
     
+        /**
+         * Define a %equipment set, i.e. a list of equipment slots available to a
+         * certain type of character. This list of slots is used to return an
+         * inventory to hold the equipped items.
+         * @param type of character
+         * @param slots list of slot names
+         */
+        static void add_definition (const std::string & type, const std::vector<std::string> & slots);
+        
+        /**
+         * A factory method to create a new, empty equipment storage for the given type
+         * of character (i.e. an inventory with the named slots for the given type).
+         * @param type of character
+         * @return new %inventory or \b NULL, if the type is unknown.
+         */
+        static inventory* create (const std::string & type);
+        
+        /**
+         * @name Loading/Saving
+         */
+        //@{
+        /**
+         * Save %equipment definitions to stream.
+         * @param out stream to save %equipment to.
+         */
+        static void put_state (base::flat & out);
+
+        /**
+         * Load %equipment definitions from stream. 
+         * @param in stream to load %equipment from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        static bool get_state (base::flat & in);
+        //@}
+        
     private:
         /// storage for item-category/equipment-slot mappings
         static std::hash_map<std::string, slot_list, std::hash<std::string> > SlotCategoryMap;
+
+        /// storage for item-category/equipment-slot mappings
+        static std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> > EquipmentDefs;
     };
 }
 #endif // RPG_EQUIPMENT_H

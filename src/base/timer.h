@@ -1,7 +1,7 @@
 /*
-   $Id: timer.h,v 1.3 2004/03/13 12:38:10 ksterker Exp $
+   $Id: timer.h,v 1.4 2004/10/18 07:40:23 ksterker Exp $
 
-   Copyright (C) 2003 Alexandre Courbot.
+   Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -23,29 +23,99 @@
 #include <sys/time.h>
 #include <time.h>
 
+#include "base/types.h"
+
 namespace base
 {
+    /**
+     * This class has two purposes. For one, it can be used to measure
+     * intervals of time. But it is also used to ensure a constant speed
+     * of the game, independent from CPU speed and CPU load, given a fast
+     * enough machine. It can detect slowdowns, that might be compensated
+     * by skipping frames or reducing details. 
+     *
+     * For that second purpose, a global timer instance exists that should
+     * be used: base::Timer. For simple time measuring, new objects should
+     * be instanciated.
+     */
     class timer
     {
     public:
-        timer();
-        unsigned long int slice() const { return Slice; }
-        unsigned long int current_time() const;
-        unsigned long int frames_missed() const { return Frames_missed; }
-        unsigned long int uptime () const { return Lasttime; }
-        void sleep(unsigned long int msecs) const;
+        /**
+         * Create a new timer with default values.
+         */
+        timer ();
+       
+        /**
+         * Return length of a game cycle in milliseconds.
+         * @return length of a game cycle.
+         */
+        u_int32 slice () const { return Slice; }
+        
+        /**
+         * Return real time passed since creation of this timer 
+         * in milli seconds. This will differ from uptime() if
+         * update() hasn't been called regularly.
+         * @return time passed since the timer was created.
+         */
+        u_int32 current_time () const;
+        
+        /**
+         * Return the number of cycles that have been skipped
+         * since the last call to timer::update(). On fast
+         * hardware, this will usually be zero.
+         * @return number of cycles skipped.
+         */
+        u_int32 frames_missed () const { return FramesMissed; }
+        
+        /**
+         * Return time elapsed since creation of the counter.
+         * This will differ from current_time() if update() 
+         * hasn't been called regularly.
+         * @return elapsed time in milliseconds.
+         */
+        u_int32 uptime () const { return Lasttime; }
 
-        void set_slice(unsigned long int sl);
+        /**
+         * Set the length of a single game cycle in ms. This is used
+         * to syncronize the speed of the game. If the cycle can be
+         * completed faster, the engine sleeps the time remaining.
+         * If it takes longer to complete a cycle, frames should be
+         * dropped to speed up the game.
+         */
+        void set_slice (u_int32 sl);
 
-        void update();
+        /**
+         * Call this after a cycle of the game has been completed.
+         * It will either delay until the slice is completely done
+         * or calculate the number of cycles that have been skipped
+         * since the last call.
+         */
+        void update ();
 
     private:
-        unsigned long int convert_timeval (const struct timeval & tv) const
-        { return ((tv.tv_sec - initial_time.tv_sec) * 1000 + (tv.tv_usec - initial_time.tv_usec) / 1000); }
-        struct timeval initial_time;
+        /**
+         * suspend program for a certain number of milliseconds.
+         * @param msecs amount of time to wait.
+         */
+        void sleep (u_int32 msecs) const;
 
-        unsigned long int Slice;
-        unsigned long int Lasttime;
-        unsigned long int Frames_missed;
+        /**
+         * Calculate difference between given time and creation
+         * time of the timer in milliseconds.
+         * @param tv a timestamp
+         * @return difference between timestamp and creation time.
+         */
+        u_int32 convert_timeval (const struct timeval & tv) const
+        { return ((tv.tv_sec - InitialTime.tv_sec) * 1000 + (tv.tv_usec - InitialTime.tv_usec) / 1000); }
+
+        /// creation time of the %timer
+        struct timeval InitialTime;
+        /// length of a game cycle in milliseconds
+        u_int32 Slice;
+        /// amount of time this timer is running (in milliseconds)
+        u_int32 Lasttime;
+        /// number of cycles that had to be skipped
+        u_int32 FramesMissed;
     };
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: date.cc,v 1.6 2004/10/18 07:40:23 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "base/timer.h"
+#include "base/base.h"
 #include "event/date.h"
 #include "event/manager.h"
 #include "event/time_event.h"
@@ -40,7 +40,7 @@ using event::date;
 u_int32 date::Time = 0;
 
 // how many game cycles make one second of game time
-float date::Scale = 10.0;
+float date::Scale = 5.0;
 
 // number of game time seconds before a time event will be raised
 u_int16 date::Resolution = 1;
@@ -52,9 +52,9 @@ double date::Ticks = 0.0;
 // Increase gametime 
 void date::update ()
 {
-    // fts contains the number of cycles that passed since the last
-    // call to date::update
-    Ticks += 1; // + timer::frames_missed ();
+    // frames_missed contains the number of cycles that have been
+    // skipped during the last call to date::update
+    Ticks += 1 + base::Timer.frames_missed ();
 
     // check whether to trigger time events
     while (Ticks >= Scale)

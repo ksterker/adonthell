@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: quest.h,v 1.3 2004/10/18 07:40:23 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@ namespace rpg
     /**
      * Location in which the quests are kept
      */
-    #define QUEST_DATA "data/quest.data"
+    #define QUEST_DATA "/data/quest.data"
     
     /**
      * An internal class to represent the structure of a quest. Depending on its
@@ -248,7 +248,8 @@ namespace rpg
              */
             static bool get_state (base::flat & in);
             /**
-             * Load all quests from %quest file.
+             * Load all quests from %quest file. The file to load is
+             * determined through the search path defined in base::Paths.
              * @return \b true if loading successful, \b false otherwise.
              */
             static bool get_state ();
@@ -258,9 +259,11 @@ namespace rpg
              */
             static void put_state (base::flat & out);
             /**
-             * Save all quests to %quest file. 
+             * Save all quests to %quest file in given directory. This
+             * will usually be a saved game directory.
+             * @param path directory to save quest to. 
              */
-            static void put_state ();
+            static void put_state (const std::string & path);
             //@}
 
 #ifndef SWIG
