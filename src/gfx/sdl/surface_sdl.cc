@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.3 2003/07/27 14:08:20 gnurou Exp $
+   $Id: surface_sdl.cc,v 1.4 2003/07/28 12:55:34 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,6 +113,12 @@ namespace gfx
         int inc1,inc2;
         int offset;
 
+        std::cout << "ok\n";
+
+        drawing_area da;
+
+        if (da_opt) da = da_opt->setup_rects();
+
         x=x1;
         y=y1;
 
@@ -138,7 +144,6 @@ namespace gfx
             Dy=y1-y2;
         }
    
-        lock ();
         if(Dy<Dx)
         {
             inc1=(Dy-Dx)<<1;
@@ -147,8 +152,8 @@ namespace gfx
        
             for(i=0;i<Dx;i++)
             {
-                if (!da_opt || (x >= da_opt->x() && x < da_opt->x() + da_opt->length() &&
-                                y >= da_opt->y() && y < da_opt->y() + da_opt->height()))
+                if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
+                                y >= da.y() && y < da.y() + da.height()))
                     put_pix (x, y, color);
            
                 if(Err>0)
@@ -171,8 +176,8 @@ namespace gfx
        
             for(i=0;i<Dy;i++)
             {
-                if (!da_opt || (x >= da_opt->x() && x < da_opt->x() + da_opt->length() &&
-                                y >= da_opt->y() && y < da_opt->y() + da_opt->height()))
+                if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
+                                y >= da.y() && y < da.y() + da.height()))
                     put_pix(x, y, color);
            
                 if(Err>0)
@@ -186,7 +191,7 @@ namespace gfx
                 y+=IncY;
             }
         }
-        unlock();
+        std::cout << "fini\n";
     }
 
     u_int32 surface_sdl::map_color(u_int8 r, u_int8 g, u_int8 b) const
