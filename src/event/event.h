@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: event.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,16 +30,17 @@
 #ifndef EVENT_EVENT_H
 #define EVENT_EVENT_H
 
+#include "python/callback_support.h"
 #include "base/flat.h"
-
-/**
- * Directory where %event scripts reside.
- */ 
-#define EVENTS_DIR "game_events."
 
 namespace event 
 {
 #ifndef SWIG
+    /**
+     * Directory where %event scripts reside.
+     */ 
+    #define EVENTS_DIR "game_events."
+
     /**
      * Available %event types.
      */ 
@@ -113,6 +114,18 @@ namespace event
             Repeat = count;
         }
         
+#ifndef SWIG
+        /**
+         * This is called by the %event %listener when the %event has been 
+         * triggered to decrease the event's repeat count. If the repeat-count 
+         * reaches 0, the %event needs to be destroyed.
+         */
+        virtual void do_repeat ()
+        {
+            if (Repeat > 0) Repeat--;
+        }
+#endif // SWIG
+
         /** 
          * Compare two events for equality.
          * 
@@ -142,19 +155,16 @@ namespace event
          * @return \e true if the %event could be loaded, \e false otherwise
          */
         virtual bool get_state (base::flat& in);
-    
         //@}
-        
-    protected:
+
+#ifndef SWIG
         /**
-         * Decrease the event's repeat count and return the number of repeats 
-         * left. If the repeat-count reaches 0, the %event will be destroyed.
-         *
-         * @return the number of times this event should be repeated or
-         *      -1 in case it should be repeated unlimited times.
+         * Allow %event to be passed as python argument
          */
-        s_int32 do_repeat ();
-    
+        GET_TYPE_NAME_VIRTUAL (event::event)
+#endif
+
+    protected:
         /**
          * @name Basic Event Data
          */
@@ -173,4 +183,5 @@ namespace event
         //@}
     };
 }
+
 #endif // EVENT_EVENT_H

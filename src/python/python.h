@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.5 2004/04/09 11:57:51 ksterker Exp $
+   $Id: python.h,v 1.6 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,9 +40,9 @@
 
 struct swig_type_info;
 extern "C" {
-    swig_type_info *SWIG_TypeQuery (const char*);
-    int SWIG_ConvertPtr (PyObject*, void**, swig_type_info*, int);
-    PyObject *SWIG_NewPointerObj (void*, swig_type_info*, int);
+    swig_type_info *SWIG_Python_TypeQuery (const char*);
+    int SWIG_Python_ConvertPtr (PyObject*, void**, swig_type_info*, int);
+    PyObject *SWIG_Python_NewPointerObj (void*, swig_type_info*, int);
 }
 
 /**
@@ -117,8 +117,8 @@ namespace python
     template <class A> inline
     PyObject * pass_instance(A arg, const ownership own = c_owns)
     { 
-        swig_type_info * tt = SWIG_TypeQuery(get_type_name<A>());
-        if (tt) return SWIG_NewPointerObj(arg, tt, own);
+        swig_type_info * tt = SWIG_Python_TypeQuery (arg->get_type_name ());
+        if (tt) return SWIG_Python_NewPointerObj(arg, tt, own);
         return NULL;
     }
     
@@ -223,9 +223,9 @@ namespace python
     {
         A retvalue;
 
-        swig_type_info * tt = SWIG_TypeQuery(get_type_name<A>());
+        swig_type_info * tt = SWIG_Python_TypeQuery(arg->get_type_name ());
         if (!tt) return NULL;
-        if (SWIG_ConvertPtr(pyinstance, (void **) &retvalue, tt, 0) == -1) return NULL;
+        if (SWIG_Python_ConvertPtr(pyinstance, (void **) &retvalue, tt, 0) == -1) return NULL;
         return retvalue;
     }
 

@@ -1,5 +1,5 @@
 /*
-   $Id: factory.h,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: factory.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -77,10 +77,10 @@ namespace event
          * automatically registered with the %event %manager. The factory
          * also keeps track of the %listener to take care of its deletion.
          * 
-         * @param ev pointer to the %event to add.
+         * @param ev_co pointer to the %event to add.
          * @return pointer to the newly created %listener. Do not free it!
          */
-        listener *add (event* ev);
+        listener *add (event* ev_co);
     
         /**
          * Removes a %listener from the %factory. This is usually called when a

@@ -1,7 +1,7 @@
 /*
-   $Id: callback_support.h,v 1.3 2003/12/01 22:42:21 ksterker Exp $
+   $Id: callback_support.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
    
-   Copyright (C) 2003 Alexandre Courbot.
+   Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -31,49 +31,21 @@
  */ 
 
 
-#ifndef PYTHON_CALLBACK_SUPPORT_H_
-#define PYTHON_CALLBACK_SUPPORT_H_
-
-#include <iostream>
-
-namespace python
-{
-
-    /** 
-     * Specialize this template function every time you declare a type that should
-     * be passable as an argument to Python callback functions.
-     * 
-     * This function should actually \e never be called. A warning message will be issued
-     * to ask the forgetful programmer to declare his class with PYTHON_AS_CALLBACK_ARGUMENT.
-     * 
-     * Don't use this directly - use PYTHON_AS_CALLBACK_ARGUMENT instead.
-     *
-     * @return an empty string. When this happens, it will surely not be good!
-     */
-    template<class A> inline
-    const char* get_type_name() 
-    { 
-        std::cerr << "Warning! Trying to pass an object to Python that has not been declared with PYTHON_AS_CALLBACK_ARGUMENT! Expect segfault!\n";
-        return "";
-    }   
-}
+#ifndef PYTHON_CALLBACK_SUPPORT_H
+#define PYTHON_CALLBACK_SUPPORT_H
 
 /**
- * This macro makes the class which name is given as argument available
- * for Python argument passing, which means objects of this class can
- * be passed as arguments to Python callbacks.
- * 
- * It makes successive specializations of get_type_name.
- *
+ * This set of macros makes the class which name is given as argument 
+ * available for Python argument passing, which means objects of this 
+ * class can be passed as arguments to Python callbacks.
  */
-#define PYTHON_AS_CALLBACK_ARGUMENT(CLASS) \
-template<> inline \
-const char* python::get_type_name<CLASS *>() { return #CLASS " *"; } \
-template<> inline \
-const char* python::get_type_name<const CLASS *>() { return #CLASS " *"; } \
-template<> inline \
-const char* python::get_type_name<CLASS &>() { return #CLASS " *"; } \
-template<> inline \
-const char* python::get_type_name<const CLASS &>() { return #CLASS " *"; }
+#define GET_TYPE_NAME_VIRTUAL(CLASS) \
+virtual const char* get_type_name () { return #CLASS " *"; }
+
+#define GET_TYPE_NAME_ABSTRACT(CLASS) \
+virtual const char* get_type_name () = 0;
+
+#define GET_TYPE_NAME(CLASS) \
+const char* get_type_name () { return #CLASS " *"; }
 
 #endif

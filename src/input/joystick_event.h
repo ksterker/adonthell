@@ -1,5 +1,5 @@
 /*
-   $Id: joystick_event.h,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: joystick_event.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,10 +31,7 @@
  * 
  */
 
-
 #include "input/event.h"
-
-#include "python/callback_support.h"
 
 namespace input
 {
@@ -130,6 +127,10 @@ namespace input
          */
         static const int max_nbr_joysticks = 5;
 
+#ifndef SWIG
+        GET_TYPE_NAME(input::joystick_event)
+#endif // SWIG
+
     private:
         static std::string Button_symbol[NBR_BUTTONS];
         u_int8 Joynbr;
@@ -138,7 +139,4 @@ namespace input
     };
 }
 
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(input::joystick_event)
-#endif // SWIG
 #endif

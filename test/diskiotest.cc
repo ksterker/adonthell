@@ -20,7 +20,7 @@ int main (int argc, char* argv[]) {
     test.put_sint8 ("s8", -127);
     test.put_uint16 ("u16", 65535);
     test.put_sint16 ("s16", -32767);
-    test.put_uint32 ("u32", 4294836225);
+    test.put_uint32 ("u32", 4294967295U);
     test.put_sint32 ("s32", -2147418112);
     test.put_string ("s", "abc ... xyz");
     test.put_float ("f", f_PI);

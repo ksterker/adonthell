@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.2 2004/04/26 07:11:13 gnurou Exp $
+   $Id: event.cc,v 1.3 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,12 +55,5 @@ bool event::get_state (base::flat & in)
     return in.success ();
 }
 
-// repeat an event
-s_int32 event::do_repeat ()
-{
-    if (Repeat > 0) Repeat--;
-    
-    return Repeat;
 }
 
-}

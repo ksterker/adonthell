@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+   $Id: script.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -229,7 +229,7 @@ namespace python
     
     protected:
         /**
-         * The python class instance wrapped by %py_object
+         * The python class instance wrapped by %script
          */    
         PyObject *Instance;
     

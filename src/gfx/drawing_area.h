@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.h,v 1.4 2003/11/22 09:35:21 ksterker Exp $
+   $Id: drawing_area.h,v 1.5 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -179,6 +179,10 @@ namespace gfx
          *
          */ 
         bool point_belong (s_int16 px, s_int16 py); 
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gfx::drawing_area)
+#endif // SWIG
     
     private:
         /// drawing_area location and size.
@@ -191,7 +195,4 @@ namespace gfx
     }; 
 }
 
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(gfx::drawing_area)
-#endif // SWIG
 #endif

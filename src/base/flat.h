@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.3 2004/04/26 07:11:13 gnurou Exp $
+   $Id: flat.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -274,9 +274,10 @@ namespace base
              * Retrieve the next value in stream.
              * @param value will contain a pointer to the value
              * @param size will contain the size of value
+             * @param name will contain the name of the field
              * @return type of value fetched.
              */
-            int next (void **value, int *size = NULL);
+            int next (void **value, int *size = NULL, char **name = NULL);
             //@}
 
         protected:

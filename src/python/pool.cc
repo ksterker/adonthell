@@ -1,5 +1,5 @@
 /*
-   $Id: pool.cc,v 1.1 2003/12/01 22:42:21 ksterker Exp $
+   $Id: pool.cc,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -68,7 +68,7 @@ python::script *pool::reconnect (const std::string & file, const std::string & c
         if (!scrpt->create_instance (file, classname, NULL))
         {
             fprintf (stderr, "*** pool::reconnect: failed instanciating class %s in file %s!\n", 
-                file.c_str (), classname.c_str ());
+                classname.c_str (), file.c_str ());
             
             delete scrpt;
             return NULL;

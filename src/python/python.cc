@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.6 2004/04/09 11:57:51 ksterker Exp $
+   $Id: python.cc,v 1.7 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -93,7 +93,7 @@ namespace python
                 case base::flat::T_STRING:
                 {
                     // Stolen reference
-                    PyTuple_SetItem (tuple, i, pass_instance ((*(string*) value).c_str ()));
+                    PyTuple_SetItem (tuple, i, pass_instance ((const char *) value));
                     break;
                 }   
                 case base::flat::T_SINT32:

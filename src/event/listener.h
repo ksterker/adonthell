@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: listener.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -62,11 +62,6 @@ namespace event
         ~listener ();
         
         /**
-         * Cleanup. Clears script and its arguments. 
-         */
-        void clear ();            
-
-        /**
          * @name Member access
          */
         //@{
@@ -113,7 +108,7 @@ namespace event
          */
         void destroy ()
         {
-            Destroyed = true;
+            Event->set_repeat (0);
         }
         
         /**
@@ -121,7 +116,7 @@ namespace event
          */
         bool is_destroyed () const 
         {
-            return Destroyed;
+            return Event->repeat () == 0;
         }
         
 // these are internal methods that shouldn't be exported by SWIG!
@@ -177,7 +172,7 @@ namespace event
          */
         bool equals (const event *e) const
         {
-            return Destroyed || Event->equals (e);
+            return Event->equals (e);
         }
         
         /**
@@ -240,7 +235,13 @@ namespace event
          * @sa get_state ()
          */
         static void register_event (u_int8 type, new_event e);
-    
+        
+        /**
+         * Allow %listener to be passed as python argument
+         */
+        GET_TYPE_NAME(event::listener)
+#endif // SWIG
+
     private:
         /**
          * (Optional) Id of the event
@@ -251,11 +252,6 @@ namespace event
          * Whether the %listener is registered with the %event %manager
          */
         bool Registered;
-        
-        /**
-         * Wether the %listener is marked for deletion
-         */
-        bool Destroyed;
         
         /**
          * Whether the %listener is temporarily disabled or not
@@ -287,7 +283,6 @@ namespace event
          * The event's type is the postion of the according callback in the array.
          */
         static new_event instanciate_event[MAX_EVENTS];
-#endif // SWIG
     };
 }
 
@@ -305,9 +300,5 @@ namespace event
 #define NEW_EVENT(evt)\
     event::event* new_ ## evt () { return (event::event*) new event::evt; }
 
-/**
- * Allow listeners to be passed to python
- */
-PYTHON_AS_CALLBACK_ARGUMENT(event::listener)
 #endif // SWIG
 #endif // EVENT_LISTENER_H

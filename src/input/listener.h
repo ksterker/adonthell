@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.4 2003/11/22 09:37:13 ksterker Exp $
+   $Id: listener.h,v 1.5 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,8 +37,6 @@
 #include "input/joystick_event.h"
 #include "input/control_event.h"
 #include "base/callback.h"
-
-#include "python/callback_support.h"
 
 namespace input
 {
@@ -133,6 +131,10 @@ namespace input
          */
         int raise_event (event * ev);
 
+#ifndef SWIG
+        GET_TYPE_NAME(input::listener)
+#endif // SWIG
+
     private:
         base::functor_1ret<keyboard_event *, bool> * Keyboard_callback;
         base::functor_1ret<mouse_event *, bool> * Mouse_callback;
@@ -141,7 +143,4 @@ namespace input
     };
 }
 
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(input::listener)
-#endif // SWIG
 #endif

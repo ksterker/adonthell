@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.3 2004/02/25 22:31:43 ksterker Exp $
+   $Id: date.cc,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,13 +29,12 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "event/date.h"
 #include "base/timer.h"
+#include "event/date.h"
+#include "event/manager.h"
+#include "event/time_event.h"
 
 using event::date;
-
-// #include "time_event.h"
-// #include "event_handler.h"
 
 // gametime minutes spent in the gameworld so far
 u_int32 date::Time = 0;
@@ -55,7 +54,7 @@ void date::update ()
 {
     // fts contains the number of cycles that passed since the last
     // call to date::update
-    // Ticks += 1 + timer::frames_missed ();
+    Ticks += 1; // + timer::frames_missed ();
 
     // check whether to trigger time events
     while (Ticks >= Scale)
@@ -66,8 +65,8 @@ void date::update ()
         // raise time event
         if (Time % Resolution == 0) 
         {
-            // time_event evt (Time);
-            // event_handler::raise_event (&evt);
+            time_event evt (Time);
+            manager::raise_event (&evt);
         }
     }
 }
@@ -141,25 +140,25 @@ u_int32 date::parse_time (const std::string & time)
                 // weeks
                 case 'w':
                 {
-                    secs += number * DAYS_PER_WEEK * HOURS_PER_DAY * 600;
+                    secs += number * DAYS_PER_WEEK * HOURS_PER_DAY * 3600;
                     break;
                 }
                 // days
                 case 'd':
                 {
-                    secs += number * HOURS_PER_DAY * 600;
+                    secs += number * HOURS_PER_DAY * 3600;
                     break;
                 }
                 // hours
                 case 'h':
                 {
-                    secs += number * 600;
+                    secs += number * 3600;
                     break;
                 }
                 // minutes
                 case 'm':
                 {
-                    secs += number * 10;
+                    secs += number * 60;
                     break;
                 }
                 // seconds
@@ -180,5 +179,8 @@ u_int32 date::parse_time (const std::string & time)
         }
     }
 
+    if (number != 0)
+        fprintf (stderr, "*** date::parse_time: Time specifier missing at end of '%s'\n", time.c_str ());
+        
     return secs;
 }

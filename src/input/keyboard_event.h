@@ -1,5 +1,5 @@
 /*
-   $Id: keyboard_event.h,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: keyboard_event.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -300,7 +300,7 @@ namespace input
          * 
          * @param t kind of keyboard event (KEY_PUSHED or KEY_RELEASED)
          * @param k key concerned bu this event.
-	 * @param u unicode character this event produced.
+         * @param u unicode character this event produced.
          *
          */
         keyboard_event (event_type t, key_type k, u_int16 u);
@@ -341,6 +341,10 @@ namespace input
 	    return Unikey;
 	}
     
+#ifndef SWIG
+        GET_TYPE_NAME(input::keyboard_event)
+#endif // SWIG
+
     private:
         static std::string Key_symbol[NBR_KEYS];
         const event_type Type;
@@ -349,7 +353,4 @@ namespace input
     }; 
 }
 
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(input::keyboard_event)
-#endif // SWIG
 #endif

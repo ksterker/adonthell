@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,14 +48,7 @@ void time_event_manager::raise_event (const event * e)
         // it needs to be reregistered, so remove it in any case
         Listeners.pop_back ();
 
-        // do we need to destroy the listener?
-        if (li->is_destroyed ())
-        {
-            delete li;
-            continue;
-        }
-        
-        // execute event if required
+        // execute event callback
         repeat = li->raise_event (e);
 
         // only re-register listener if time event is repeating
@@ -81,14 +74,14 @@ void time_event_manager::remove (listener *li)
 // register a listener with the manager
 void time_event_manager::add (listener *li)
 {
-    vector<listener*>::iterator i = Listeners.end ();
+    vector<listener*>::iterator i = Listeners.begin ();
 
     // search for the proper place to insert new listener
-    while (i != Listeners.begin ())
+    while (i != Listeners.end ())
     {
-        i--;
         // skip events that are raised earlier than e
-        if (((time_event *) li->get_event ())->time () <= ((time_event *) (*i)->get_event ())->time ()) break;
+        if (((time_event *) li->get_event ())->time () > ((time_event *) (*i)->get_event ())->time ()) break;
+        i++;
     }
 
     Listeners.insert (i, li);

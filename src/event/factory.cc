@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: factory.cc,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -41,6 +41,7 @@ using event::manager;
 // constructor
 factory::factory ()
 {
+    Paused = 0;
 }
 
 // destructor
@@ -49,20 +50,21 @@ factory::~factory ()
     clear (); 
 }
 
-// Unregisters and deletes all events.
+// Unregisters and deletes all listeners.
 void factory::clear () 
 {
-    listener *li;
+    Paused = 0;
     
+    listener *li;
     while (!Listeners.empty ())
     {
         // deleting the listener will remove it from our list too
         li = Listeners.front ();
         delete li;
-    }    
+    }
 }
 
-// Adds an event to the list and register it with the event manager.
+// Add an event to the factory and register it with the event manager.
 listener *factory::add (event* ev)
 {
     listener *li = new listener (this, ev);
@@ -78,19 +80,19 @@ listener *factory::add (event* ev)
     return li;
 }
 
-// Remove an event from the list
+// Remove a listener from the list
 void factory::remove (listener *li)
 {
     vector<listener*>::iterator i;
 
-    // Search for the event we want to remove
+    // Search for the listener we want to remove
     i = find (Listeners.begin (), Listeners.end (), li);
 
     // found? -> get rid of it :)
     if (i != Listeners.end ()) Listeners.erase (i);
 }
 
-// retrieve event by its id
+// retrieve listener by its id
 listener *factory::get_listener (const string & id)
 {
     vector<listener*>::iterator i;
@@ -138,7 +140,7 @@ void factory::put_state (base::ogzstream& file) const
     out.put_record (file);
 }
 
-// Loads an factory from file
+// Loads a factory from file
 bool factory::get_state (base::igzstream& file)
 {
     void *value;

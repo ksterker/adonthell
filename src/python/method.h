@@ -1,5 +1,5 @@
 /*
-   $Id: method.h,v 1.3 2004/04/09 11:57:51 ksterker Exp $
+   $Id: method.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,7 +50,7 @@ namespace python
 
         /**
          * Constructor.
-         * @param scrpt Python %script this 5method belongs to.
+         * @param scrpt Python %script this %method belongs to.
          * @param mtd name of the %method to connect to.
          */
         method (python::script *scrpt, const std::string & mtd);
@@ -92,17 +92,17 @@ namespace python
         
     private:
         /**
-         *
+         * 
          */
         void init (const std::string & mtd);
         
         /**
-         *
+         * Pointer to the %script containing the wrapped %method
          */
         python::script *Script;
 
         /**
-         *
+         * The %python %method wrapped by this class
          */
         PyObject *Method;
     };

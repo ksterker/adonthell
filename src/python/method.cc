@@ -1,5 +1,5 @@
 /*
-   $Id: method.cc,v 1.3 2004/04/09 11:57:51 ksterker Exp $
+   $Id: method.cc,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -81,7 +81,15 @@ void method::put_state (base::flat & out) const
     {
         out.put_string ("mfn", Script->file_name ());
         out.put_string ("mcn", Script->class_name ());
-        out.put_string ("mmn", PyModule_GetName (Method));
+        
+        PyObject *methodname = PyObject_GetAttrString (Method, "__name__");
+        if (methodname != NULL)
+        {
+            out.put_string ("mmn", PyString_AsString (methodname));
+            Py_DECREF (methodname);
+        }
+        else
+            fprintf (stderr, "*** method::put_state: cannot retrieve method name!\n");
     }
 }
 

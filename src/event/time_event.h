@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: time_event.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -108,6 +108,14 @@ namespace event
         {
             return Time <= ((time_event *) e)->time ();
         }
+
+#ifndef SWIG        
+        /**
+         * When time events repeat, their alarm time is increased by the
+         * amount specified with time_event::set_repeat ().
+         */
+        void do_repeat ();
+#endif // SWIG
         //@}
         
         /**
@@ -143,7 +151,14 @@ namespace event
         {
             return Time;
         }
-    
+
+#ifndef SWIG
+        /**
+         * Allow %event to be passed as python argument
+         */
+        GET_TYPE_NAME(event::time_event)
+#endif
+
     private:
         /// time when the event shall be triggered
         u_int32 Time;
@@ -155,4 +170,5 @@ namespace event
         bool Absolute;
     };
 }
+
 #endif // TIME_EVENT_H

@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.3 2003/11/22 09:35:21 ksterker Exp $
+   $Id: surface.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -353,6 +353,10 @@ namespace gfx
 
         //@}
 
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gfx::surface)
+#endif // SWIG
+
     protected:
         /// Mask
         bool is_masked_;
@@ -422,7 +426,4 @@ namespace gfx
     };
 }
 
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(gfx::surface)
-#endif // SWIG
 #endif

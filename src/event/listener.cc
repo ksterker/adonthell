@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.1 2004/04/09 11:59:19 ksterker Exp $
+   $Id: listener.cc,v 1.2 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -41,7 +41,6 @@ new_event listener::instanciate_event[MAX_EVENTS];
 listener::listener (factory *f, event *e)
 {
     Registered = false;
-    Destroyed = true;
     Method = NULL;
     Args = NULL;
     Factory = f;
@@ -55,19 +54,13 @@ listener::~listener ()
 {
     // automatically remove myself from the event manager
     if (Registered) manager::remove (this);
-    
     // ... and from the factory
     if (Factory) Factory->remove (this);
-        
-    clear ();
-}
-
-// cleanup
-void listener::clear ()
-{
+    
+    delete Event;
+    
     // we no longer use the callback
     delete Method;
-    
     // ... and the arguments neither
     Py_XDECREF (Args);
 }
@@ -78,10 +71,14 @@ bool listener::connect_callback (const string & file, const string & classname, 
     u_int16 size;
     
     // cleanup
-    clear ();
+    delete Method;
     
     // just disconnect the callback
-    if (file == "") return false;
+    if (file == "") 
+    {
+        Method = NULL;
+        return false;
+    }
     
     // create the callback
     Method = python::pool::connect (EVENTS_DIR + file, classname, callback);
@@ -92,18 +89,25 @@ bool listener::connect_callback (const string & file, const string & classname, 
     }
     
     // make sure the given arguments are a tuple
-    if (!PyTuple_Check (args))
+    if (!args || !PyTuple_Check (args))
     {
         if (args) fprintf (stderr, "*** warning: listener::connect_callback: argument must be a tuple!\n");
         size = 2;
     }
     else size = PyTuple_GET_SIZE (args) + 2;
     
-    // prepare callback arguments
-    Args = PyTuple_New (size);
+    // keep old argument tuple, if possible
+    if (!Args || PyTuple_GET_SIZE (Args) != size)
+    {
+        // free old args
+        Py_XDECREF (Args);
+
+        // prepare callback arguments
+        Args = PyTuple_New (size);
     
-    // first argument is the listener itself
-    PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
+        // first argument is the listener itself
+        PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
+    }
     
     // second argument will be the event that triggered the callback
     for (u_int16 i = 2; i < size; i++)
@@ -119,6 +123,33 @@ bool listener::connect_callback (const string & file, const string & classname, 
 // execute callback for given event
 s_int32 listener::raise_event (const event* evnt) 
 {
+    if (Method && Event->repeat ())
+    {
+        // make sure that arguments remain valid while the script executes
+        PyObject *args = Args;
+        Py_INCREF (args);
+        
+        // event that triggered the script is 2nd argument of callback
+        PyTuple_SET_ITEM (args, 1, python::pass_instance ((event*) evnt));
+        
+        // adjust repeat count
+        Event->do_repeat ();
+        
+        // execute callback
+        Method->execute (args);
+        
+        // clean up
+        Py_DECREF (PyTuple_GET_ITEM (args, 1));
+        Py_DECREF (args);
+    }
+    else
+    {
+        if (!Method) fprintf (stderr, "*** warning: listener::raise_event: no callback connected\n");
+        return 0;
+    }
+    
+    // return whether event needs be repeated or not
+    return Event->repeat ();
 }
 
 // disable the event temporarily

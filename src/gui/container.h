@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.7 2004/02/07 00:03:37 jol Exp $
+   $Id: container.h,v 1.8 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -114,6 +114,10 @@ namespace gui {
       static const u_int8 POLICY_EXPAND_CONTAINER = 2;
       static const u_int8 POLICY_STRETCH_CHILD = 3;
 
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gui::container)
+#endif // SWIG
+
     protected:
 
       layout * m_layout; // the layout used
@@ -127,9 +131,5 @@ namespace gui {
       u_int8 m_extend; // the policy used to extend the container
     };
 }
-
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(gui::container)
-#endif // SWIG
 
 #endif

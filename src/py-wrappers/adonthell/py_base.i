@@ -2,6 +2,7 @@
 %{
 
 #include <string>
+#include "base/endian.h"
 #include "base/types.h"
 #include "base/timer.h"
 #include "base/diskio.h"
@@ -9,12 +10,87 @@
 
 %include "std_string.i"
 
+/* typemaps for the flat::next (...) method */
+namespace base {
+    %typemap(in, numinputs = 0) (void **value, int *size, char **name) "
+        void *value;
+        char *name;
+        int size;
+        
+        $1 = &value;
+        $2 = &size;
+        $3 = &name;
+    "
+
+    %typemap(argout) (void **value, int *size, char **name) {
+        Py_XDECREF($result);
+        PyObject *py_value;
+        switch (result) {
+            case base::flat::T_BOOL:
+            case base::flat::T_UINT8:
+            {
+                py_value = PyInt_FromLong (*((u_int8*) *$1));
+                break;
+            }
+            case base::flat::T_SINT8:
+            {
+                py_value = PyInt_FromLong (*((s_int8*) *$1));
+                break;
+            }
+            case base::flat::T_SINT16:
+            {
+                py_value = PyInt_FromLong (*((s_int16*) *$1));
+                break;
+            }
+            case base::flat::T_UINT16:
+            {
+                py_value = PyInt_FromLong (*((u_int16*) *$1));
+                break;
+            }
+            case base::flat::T_SINT32:
+            {
+                py_value = PyLong_FromLong (*((s_int32*) *$1));
+                break;
+            }
+            case base::flat::T_UINT32:
+            {
+                py_value = PyLong_FromUnsignedLong (*((u_int32*) *$1));
+                break;
+            }
+            case base::flat::T_FLOAT:
+            case base::flat::T_DOUBLE:
+            {
+                py_value = PyFloat_FromDouble (atof ((char *) *$1));
+                break;
+            }
+            case base::flat::T_CHAR:
+            case base::flat::T_STRING:
+            case base::flat::T_BLOB:
+            {
+                py_value = PyString_FromStringAndSize ((char *) *$1, *$2);
+                break;
+            }
+            case base::flat::T_FLAT:
+            {
+                base::flat *flat = new base::flat ((const char *) *$1, *$2);
+                py_value = SWIG_NewPointerObj ((void *) flat, $descriptor(base::flat*), 1);
+                break;
+            }
+            default:
+            {
+                return Py_BuildValue ("(iOOO)", result, Py_None, Py_None, Py_None);
+            }
+        }
+        
+        $result = Py_BuildValue ("(iOis)", result, py_value, *$2, (char *) *$3);
+    }
+}
+
 %include "base/types.h"
 %include "base/timer.h"
 %include "base/file.h"
 %include "base/flat.h"
 %include "base/diskio.h"
-
 
 /* implement friend operators of igzstream */
 %extend base::igzstream {

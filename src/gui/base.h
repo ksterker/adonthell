@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.7 2004/02/07 00:03:37 jol Exp $
+   $Id: base.h,v 1.8 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -270,7 +270,11 @@ namespace gui {
       static const u_int8 MOUSE_DEVICE = 2;
       static const u_int8 JOYSTICK_DEVICE = 4;
       static const u_int8 CONTROL_DEVICE = 8;
-      
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gui::base)
+#endif // SWIG
+
     protected:
       
       s_int16 m_x; //virtual position
@@ -305,9 +309,5 @@ namespace gui {
       
     };
 }
-
-#ifndef SWIG
-PYTHON_AS_CALLBACK_ARGUMENT(gui::base)
-#endif // SWIG
 
 #endif

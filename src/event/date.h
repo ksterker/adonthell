@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.3 2004/02/25 22:31:43 ksterker Exp $
+   $Id: date.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
 
    Copyright (C) 2002 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -63,7 +63,7 @@ public:
 
     /**
      * Get the current %gametime.
-     * @return %gametime in 1/10 minutes since start of the game.
+     * @return %gametime in seconds since start of the game.
      */
     static u_int32 time ()
     { 
