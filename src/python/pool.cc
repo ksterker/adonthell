@@ -1,5 +1,5 @@
 /*
-   $Id: pool.cc,v 1.2 2004/04/29 08:07:49 ksterker Exp $
+   $Id: pool.cc,v 1.3 2004/05/13 06:44:01 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

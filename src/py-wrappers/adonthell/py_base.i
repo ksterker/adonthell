@@ -6,11 +6,12 @@
 #include "base/types.h"
 #include "base/timer.h"
 #include "base/diskio.h"
+#include "base/configuration.h"
 %}
 
 %include "std_string.i"
 
-/* typemaps for the flat::next (...) method */
+// typemaps for the flat::next (...) method
 namespace base {
     %typemap(in, numinputs = 0) (void **value, int *size, char **name) "
         void *value;
@@ -21,7 +22,6 @@ namespace base {
         $2 = &size;
         $3 = &name;
     "
-
     %typemap(argout) (void **value, int *size, char **name) {
         Py_XDECREF($result);
         PyObject *py_value;
@@ -84,6 +84,17 @@ namespace base {
         
         $result = Py_BuildValue ("(iOis)", result, py_value, *$2, (char *) *$3);
     }
+
+    // typemap to let C++ have ownership of cfg_option* given to configuration::add_option ()
+    %typemap(in) cfg_option *value "if ((SWIG_ConvertPtr ($input, (void **) &$1, $1_descriptor, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) SWIG_fail;"
+}
+
+// typemap for returning a vector<const char*> as python list
+%typemap(out) vector<const char*> {
+    unsigned int index = 0;
+    $result = PyList_New (result.size ());
+    for (vector<const char*>::iterator i = result.begin (); i != result.end (); i++)
+        PyList_SET_ITEM ($result, index++, PyString_FromString (*i));
 }
 
 %include "base/types.h"
@@ -91,6 +102,7 @@ namespace base {
 %include "base/file.h"
 %include "base/flat.h"
 %include "base/diskio.h"
+%include "base/configuration.h"
 
 /* implement friend operators of igzstream */
 %extend base::igzstream {

@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.7 2004/04/29 08:07:49 ksterker Exp $
+   $Id: python.cc,v 1.8 2004/05/13 06:44:01 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

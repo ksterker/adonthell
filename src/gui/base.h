@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.8 2004/04/29 08:07:49 ksterker Exp $
+   $Id: base.h,v 1.9 2004/05/13 06:44:00 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.4 2004/04/29 08:07:49 ksterker Exp $
+   $Id: date.cc,v 1.5 2004/05/13 06:44:00 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

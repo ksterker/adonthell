@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.2 2004/04/29 08:07:49 ksterker Exp $
+   $Id: script.h,v 1.3 2004/05/13 06:44:01 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>

@@ -1,5 +1,5 @@
 /*
-   $Id: keyboard_event.h,v 1.4 2004/04/29 08:07:49 ksterker Exp $
+   $Id: keyboard_event.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

@@ -70,6 +70,16 @@ AC_ARG_WITH(py-cflags,
 AC_CHECK_LIB(z, main,,echo "Adonthell requires Zlib. Exitting...";exit 1)
 
 
+dnl *****************
+dnl Check for libxml2
+dnl *****************
+XML_VERSION=2.5.0
+AM_PATH_XML($XML_VERSION,
+    :,
+    AC_MSG_ERROR([*** libxml version >= $XML_VERSION not found!])
+)
+
+
 dnl *************
 dnl Check for SDL
 dnl *************
