@@ -1,5 +1,5 @@
 /*
-   $Id: python.h,v 1.8 2004/05/31 11:44:50 ksterker Exp $
+   $Id: python.h,v 1.9 2004/06/27 11:20:58 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -119,6 +119,8 @@ namespace python
     { 
         swig_type_info * tt = SWIG_Python_TypeQuery (arg->get_type_name ());
         if (tt) return SWIG_Python_NewPointerObj(arg, tt, own);
+        
+        fprintf (stderr, "*** pass_instance: type '%s' unknown to SWIG\n", arg->get_type_name ());
         return NULL;
     }
     
@@ -132,7 +134,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<int>(int arg, const ownership own = c_owns)
+    PyObject * pass_instance<int>(int arg, const ownership own)
     { 
         return PyInt_FromLong(arg);
         show_traceback();
@@ -148,7 +150,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<bool>(bool arg, const ownership own = c_owns)
+    PyObject * pass_instance<bool>(bool arg, const ownership own)
     { 
         return PyInt_FromLong((int)arg);
         show_traceback();
@@ -164,7 +166,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<std::string &>(std::string & arg, const ownership own = c_owns) 
+    PyObject * pass_instance<std::string &>(std::string & arg, const ownership own) 
     { 
         return PyString_FromString(arg.c_str());
         show_traceback();
@@ -180,7 +182,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<const char *>(const char * arg, const ownership own = c_owns) 
+    PyObject * pass_instance<const char *>(const char * arg, const ownership own) 
     { 
         return PyString_FromString((char *) arg);
         show_traceback();

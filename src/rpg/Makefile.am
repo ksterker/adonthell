@@ -16,7 +16,7 @@ lib_LTLIBRARIES = libadonthell_rpg.la
 ## Rules to build librpg
 libadonthell_rpg_la_SOURCES = \
     character.cc \
-    equipment.h \
+    equipment.cc \
     inventory.cc \
     item_storage.cc \
     item.cc \

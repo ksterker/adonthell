@@ -56,7 +56,9 @@ def eventtest ():
             print "   Saving state"
             file = base.ogzstream ()
             file.open ("/tmp/eventtest.tmp")
-            fty.put_state (file)
+            record = base.diskio ()
+            fty.put_state (record)
+            record.put_record (file)
             file.close ()
             svd = 1
             
@@ -70,7 +72,9 @@ def eventtest ():
     file.open ("/tmp/eventtest.tmp")
     fty.clear ()
     
-    success = fty.get_state (file)
+    record = base.diskio ()
+    record.get_record (file)
+    success = fty.get_state (record)
     if success == 1: print "OK"
     file.close ()
     

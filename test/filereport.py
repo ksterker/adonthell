@@ -16,19 +16,23 @@ class file_report (object):
             result += " "
         return result
 
-    def print_record (self, flt):
+    def print_record (self, flt, efn):
+        efn = efn + 1
         type, value, length, field = flt.next ()
         while type != -1:
-            if type == base.flat.T_FLAT: value_str = "<Embedded flat>"
+            if type == base.flat.T_FLAT: 
+                value_str = "<Embedded flat '" + field + "'>"
+                field = "-----> %3i" % efn
             elif type == base.flat.T_BLOB: value_str = self.string_to_hex (value)
             else: value_str = str(value)
             
             if len (value_str) > 30: value_str = value_str[0:27] + "..."
             print "%-10s  %-8s  %-5i  %-30s" % (field, str_type[type], length, value_str)
     
-            if type == base.flat.T_FLAT: 
-                self.print_record (value)
-                print "----------  --------  -----  ------------------------------"
+            if type == base.flat.T_FLAT:
+                self.print_record (value, efn)
+                print "<----- %3i  --------  -----  ------------------------------" % efn
+                efn = efn + 1
             type, value, length, field = flt.next ()
         
     def run (self):
@@ -51,7 +55,7 @@ class file_report (object):
             else:
                 print "Field       Type      Len    Value"
                 print "----------  --------  -----  ------------------------------"
-                self.print_record (record)
+                self.print_record (record, 0)
                 record_num += 1
                 
         print "==========  ========  =====  =============================="

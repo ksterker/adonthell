@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.4 2004/05/31 11:44:50 ksterker Exp $
+   $Id: script.h,v 1.5 2004/06/27 11:20:58 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -228,7 +228,7 @@ namespace python
         //@}
 
 #ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(script);
+        GET_TYPE_NAME_VIRTUAL(python::script);
 #endif // SWIG
     
     protected:

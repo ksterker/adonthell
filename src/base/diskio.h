@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.1 2004/03/13 12:38:10 ksterker Exp $
+   $Id: diskio.h,v 1.2 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 
 #include "base/flat.h"
 #include "base/file.h"
+#include "python/callback_support.h"
 
 namespace base {
     /**
@@ -42,6 +43,9 @@ namespace base {
         
             bool get_record (igzstream & in);
             void put_record (ogzstream & out);
+#ifndef SWIG
+            GET_TYPE_NAME(base::diskio)
+#endif
     };
 }
 

@@ -1,5 +1,5 @@
 /*
-   $Id: factory.h,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: factory.h,v 1.4 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -121,24 +121,24 @@ namespace event
          */
         //@{
         /** 
-         * Save the %event %factory to a file.
+         * Save the %event %factory to a stream.
          * 
-         * @param out file where to save the %event %factory.
+         * @param out stream where to save the %event %factory.
          */ 
-        void put_state (base::ogzstream& out) const;
+        void put_state (base::flat& out) const;
         
         /** 
-         * Loads the %event %factory from a file and registers all loaded listeners.
-         * @warning Before the %event %factory can load an %event from file, it needs
+         * Loads the %event %factory from a stream and registers all loaded listeners.
+         * @warning Before the %event %factory can load an %event, it needs a
          *     a callback function that returns a new instance of that %event.
          * 
-         * @param in file to load the %event %factory from.
+         * @param in stream to load the %event %factory from.
          * 
          * @return \e true if the %event %factory was loaded successfully, \e false
          *     otherwise.
-         * @sa register_event ()
+         * @sa manager::register_event ()
          */
-        bool get_state (base::igzstream& in);
+        bool get_state (base::flat& in);
         //@}
     
 #ifndef SWIG

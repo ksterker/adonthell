@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.cc,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: equipment.cc,v 1.2 2004/06/27 11:20:58 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,21 +26,25 @@
 #include "rpg/equipment.h"
 #include "rpg/inventory.h"
 
+using rpg::equipment;
+using rpg::slot;
+using rpg::item;
+
 /**
  * Mapping from itm categories to equipment slots.
  */
-std::hash_map<std::string, std::vector<std::string>,
-    hash<std::string> > equipment::SlotCategoryMap;
+std::hash_map<std::string, rpg::slot_list,
+    std::hash<std::string> > equipment::SlotCategoryMap;
 
 // retrieve a list of slots the item would fit into    
-const std::vector<std::string> equipment::fits (item *itm) const
+const rpg::slot_list equipment::fits (item *itm) const
 {
     if (itm == NULL) return slot_list ();
     
     slot_list slots;
     std::vector<std::string>::iterator i;
     std::vector<std::string> categories = itm->categories ();
-    std::hash_map<std::string, slot_list, hash<std::string> >::iterator s;
+    std::hash_map<std::string, rpg::slot_list, std::hash<std::string> >::iterator s;
 
     // find all slots that accept the given category
     for (i = categories.begin (); i != categories.end (); i++)
@@ -145,20 +149,20 @@ item *equipment::unequip (slot *target, u_int32 *count)
 // tell equipment that given slot accepts given category
 void equipment::add_mapping (const std::string & slot, const std::string & category)
 {
-    std::hash_map<std::string, slot_list,
-        hash<std::string> >::iterator s = SlotCategoryMap.find (category);
+    std::hash_map<std::string, rpg::slot_list,
+        std::hash<std::string> >::iterator s = SlotCategoryMap.find (category);
     
     // does the given category already exist?
     if (s != SlotCategoryMap.end ())
     {
         // add key to existing category
-        slot_list *slots = &(*s).second;
-        slots->insert (slot);
+        slot_list &slots = (*s).second;
+        slots.insert (slot);
     }
     else
     {
         // create new category
-        slot_list slots ();
+        slot_list slots;
         slots.insert (slot);
 
         SlotCategoryMap[category] = slots;

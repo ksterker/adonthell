@@ -1,5 +1,5 @@
 /*
-  $Id: script.cc,v 1.2 2004/05/31 11:44:50 ksterker Exp $
+  $Id: script.cc,v 1.3 2004/06/27 11:20:58 ksterker Exp $
   
   Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
   Copyright (C) 2001 Alexandre Courbot
@@ -128,6 +128,10 @@ PyObject* script::call_method_ret (const string &name, PyObject *args) const
             result = PyObject_CallObject (tocall, args);
             if (!result) python::show_traceback ();
             Py_DECREF (tocall);
+        }
+        else
+        {
+            fprintf (stderr, "*** script::call_method_ret: '%s' is not callable!\n", name.c_str ());
         }
     }
 

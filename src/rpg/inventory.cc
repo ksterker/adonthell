@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.cc,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: inventory.cc,v 1.2 2004/06/27 11:20:58 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -87,7 +87,8 @@ slot *inventory::first ()
 // continue iteration
 slot *inventory::next ()
 {
-    if ((++I) == Slots.end ()) return NULL;
+    if (I == Slots.end () || ++I == Slots.end ()) 
+        return NULL;
     else return *I;
 }
 
@@ -263,12 +264,12 @@ bool inventory::put_state (base::flat & file)
         // in case of unlimited inventory, don't bother with saving empty slots
         if (!Limited && (*i)->count () == 0) continue;
         
-        record.put_bool ("", true);
+        record.put_bool ("slt", true);
         (*i)->put_state (record);
     }
 
     // no more slots
-    record.put_bool ("", false);
+    record.put_bool ("slt", false);
 
     // save inventory record
     file.put_flat ("inv", record);
@@ -279,29 +280,25 @@ bool inventory::put_state (base::flat & file)
 // load inventory
 bool inventory::get_state (base::flat & file)
 {
-    base::flat *record = file.get_flat ("inv");
+    base::flat record = file.get_flat ("inv");
     if (file.success () == false) return false;
     
-    void *value;
     slot *s;
     
     // load attributs
-    Limited = record->get_bool ("ltd");
+    Limited = record.get_bool ("ltd");
 
     // load contents
-    while (record->next (&value) == base::flat::T_BOOL && *((bool*) value) == true)
+    while (record.get_bool ("slt") == true)
     {
         // load slot
         s = new slot (this);
-        s->get_state (*record);
-     
+        s->get_state (record);
+             
         // add slot to inventory   
         Slots.push_back (s);
     }    
 
     // cleanup
-    bool success = record->success ();
-    delete record;
-    
-    return success;    
+    return record.success ();
 }

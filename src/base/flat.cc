@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.4 2004/04/29 08:07:49 ksterker Exp $
+   $Id: flat.cc,v 1.5 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,16 +43,26 @@ flat::flat (const u_int16 & size)
     Size = 0;
 }
 
-// 'copy' ctor
+// create a flat from internal buffer of another flat
 flat::flat (const char *buffer, const u_int32 & size) 
 {
     Data = NULL;
     Buffer = NULL;
-    Success = true;
     
     char *tmp = new char[size];
     memcpy (tmp, buffer, size);
     setBuffer (tmp, size);
+}
+
+// copy constructor
+flat::flat (const flat & f) 
+{
+    Data = NULL;
+    Buffer = NULL;
+    
+    char *tmp = new char[f.size ()];
+    memcpy (tmp, f.getBuffer (), f.size ());
+    setBuffer (tmp, f.size ());
 }
 
 // flatten the given data
@@ -147,7 +157,7 @@ int flat::next (void **value, int *size, char **name)
 // unflatten data
 void flat::parse ()
 {
-    if (Data != NULL) return;
+    if (Size == 0 || Data != NULL) return;
     
     data *first, *decoded;
     u_int32 pos = 0;

@@ -1,5 +1,5 @@
 /*
-   $Id: item.h,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: item.h,v 1.2 2004/06/27 11:20:58 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,7 +39,7 @@ namespace rpg {
      * The Python package containing %item templates.
      */
 #ifndef SWIG
-#   define ITEM_PACKAGE "item."
+#   define ITEM_PACKAGE "items."
 #endif
 
     /**
@@ -90,6 +90,18 @@ namespace rpg {
          * Destructor.
          */
         ~item ();
+        
+        /**
+         * Convenience method to instanciate an item template. Its usage is 
+         * preferred over script::create_instance ().
+         * @param templ name of the item template without .py extension
+         * @param args argument tuple to pass to the template's constructor
+         * @return \b true if instanciated successful, \b false otherwise. 
+         */
+        bool create_instance (const std::string & templ, PyObject * args = NULL)
+        {
+            return python::script::create_instance (ITEM_PACKAGE + templ, templ, args);
+        }
         
         /**
          * Removes an %item from its slot and deletes it if necessary. This

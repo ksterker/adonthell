@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: factory.cc,v 1.4 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -120,41 +120,32 @@ void factory::resume ()
 }
 
 // Save a factory to file
-void factory::put_state (base::ogzstream& file) const
+void factory::put_state (base::flat& out) const
 {
-    base::diskio out;
-    base::flat element;
+    base::flat listeners;
     std::vector <listener *>::iterator i;
 
     out.put_uint16 ("fps", Paused);
     
     for (i = Listeners.begin (); i != Listeners.end (); i++)
-    {
-        if ((*i)->is_destroyed ()) continue;
-        
-        (*i)->put_state (element);
-        out.put_flat ("", element);
-        element.clear ();
-    }
-    
-    out.put_record (file);
+        if (!(*i)->is_destroyed ())
+            (*i)->put_state (listeners);
+
+    out.put_flat ("fls", listeners);
 }
 
 // Loads a factory from file
-bool factory::get_state (base::igzstream& file)
+bool factory::get_state (base::flat& in)
 {
     void *value;
     int type, size;
-    base::diskio in;
     listener *li;
     
-    // try to read the factory state record from file
-    if (!in.get_record (file)) return false;
-
     Paused = in.get_uint16 ("fps");
+    base::flat listeners = in.get_flat ("fls");
 
     // get registered listeners
-    while ((type = in.next (&value, &size)) != -1) 
+    while ((type = listeners.next (&value, &size)) != -1) 
     {
         if (type != base::flat::T_FLAT)
         {
@@ -175,5 +166,6 @@ bool factory::get_state (base::igzstream& file)
             return false;
         }
     }
+    
     return true;
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.6 2004/05/31 11:44:50 ksterker Exp $
+   $Id: flat.h,v 1.7 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -79,10 +79,27 @@ namespace base
             /**
              * Create a new flattener. A copy of the given buffer
              * will be made.
-             * @param buffer a buffer with flattened date.
+             * @param buffer a buffer with flattened data.
              * @param size size of buffer in bytes
              */
             flat (const char *buffer, const u_int32 & size);
+
+            /**
+             * Copy constructor.
+             * @param f another %flat to copy into this object.
+             */
+            flat (const flat & f);
+            
+            /**
+             * assignment operator
+             * @param f another &flat to be assigned to this object.
+             */
+            void operator= (const flat & f)
+            {
+                char *tmp = new char[f.size ()];
+                memcpy (tmp, f.getBuffer (), f.size ());
+                setBuffer (tmp, f.size ());
+            }
 #endif // SWIG            
 
             /**
@@ -104,14 +121,26 @@ namespace base
                 Success = true;
             }
             
+            /**
+             * Return size of data stored in this object.
+             * @param length of flattened data in bytes.
+             */
             u_int32 size () const {
                 return Size;
             }
             
+            /**
+             * Check whether the last operation was successful.
+             * @return \b false if an error occured, \b true otherwise.
+             */
             bool success () const {
                 return Success;
             }
             
+            /**
+             * Calculate a checksum for the internal data.
+             * @return Adler32 checksum for this object.
+             */
             u_int32 checksum () const;
             
             /**
@@ -265,10 +294,10 @@ namespace base
                 return NULL;
             }
             
-            flat *get_flat (const string & name) {
+            flat get_flat (const string & name) {
                 data *d = get (name, T_FLAT);
-                if (d) return new flat (d->Content, d->Size);
-                else return new flat ();
+                if (d) return flat (d->Content, d->Size);
+                else return flat ();
             }
             
             /**
@@ -282,7 +311,7 @@ namespace base
             //@}
 
 #ifndef SWIG
-            GET_TYPE_NAME_VIRTUAL(flat)
+            GET_TYPE_NAME_VIRTUAL(base::flat)
 #endif // SWIG
         protected:
             const char *getBuffer () const { return Buffer; }

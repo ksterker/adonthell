@@ -10,9 +10,29 @@
 using rpg::slot;
 %}
 
+namespace rpg {
+    // make sure that C++ gets ownership of the item passed to item_storage::add,
+    // but only if it has been actually added
+    %feature("shadow") item_storage::add {
+        def add (self, item): 
+            if _rpg.item_storage_add (self, item) == 1:
+                item.thisown = 0
+                return 1
+            return 0
+    }
+    
+    %feature("shadow") inventory::add {
+        def add (self, item, count = 1): 
+            if _rpg.inventory_add (self, item, count) != count:
+                item.thisown = 0
+            return count
+    }
+}
+
 %include "std_string.i"
 
 %include "base/types.h"
+%include "python/script.h"
 %include "rpg/item.h"
 %include "rpg/slot.h"
 %include "rpg/character.h"

@@ -1,5 +1,5 @@
 /*
-   $Id: item.cc,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: item.cc,v 1.2 2004/06/27 11:20:58 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -199,15 +199,15 @@ bool item::put_state (base::flat & file) const
 
     // pass record
     PyObject *args = PyTuple_New (1);
-    PyTuple_SetItem (args, 0, python::pass_instance (&record));
+    PyTuple_SetItem (args, 0, python::pass_instance ((base::flat*) &record));
     
     // save the actual item data
     call_method ("put_state", args);
     Py_DECREF (args);
     
     // recursively save stack
-    record.put_bool ("inx", this->Next != NULL);
-    if (this->Next) Next->put_state (record);
+    record.put_bool ("inx", Next != NULL);
+    if (Next != NULL) Next->put_state (record);
     
     file.put_flat ("itm", record);
     return true;
@@ -235,25 +235,25 @@ bool item::get_state (const std::string & file)
 // load item from stream
 bool item::get_state (base::flat & file)
 {
-    base::flat *record = file.get_flat ("itm");
+    base::flat record = file.get_flat ("itm");
     if (!file.success ()) return false;
     
     // clean up, if neccessary
     if (Instance) clear ();
     
     // get attributes
-    Mutable = record->get_bool ("imt");
-    MaxStack = record->get_uint32 ("ims");
+    Mutable = record.get_bool ("ime");
+    MaxStack = record.get_uint32 ("ims");
     
     // get template to use for item
-    std::string tmpl = record->get_string ("icn");
+    std::string tmpl = record.get_string ("icn");
     
     // instanciate
-    if (!create_instance (ITEM_PACKAGE + tmpl, tmpl)) return false;
+    if (!create_instance (tmpl)) return false;
 
     // pass file
     PyObject *args = PyTuple_New (1);
-    PyTuple_SetItem (args, 0, python::pass_instance (record));
+    PyTuple_SetItem (args, 0, python::pass_instance (&record));
     
     // load actual item data
     call_method ("get_state", args);
@@ -263,17 +263,14 @@ bool item::get_state (base::flat & file)
     set_attribute ("this", python::pass_instance (this));
     
     // recursively get stack
-    if (record->get_bool ("inx") == true)
+    if (record.get_bool ("inx") == true)
     {
         Next = new item (true);
-        Next->get_state (*record);
+        Next->get_state (record);
     }
     else Next = NULL;
     
-    bool success = record->success ();
-    delete record;
-    
-    return success;
+    return record.success ();
 }
 
 // return list of categories this item belongs to

@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.3 2004/05/13 06:44:00 ksterker Exp $
+   $Id: listener.cc,v 1.4 2004/06/27 11:20:57 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -177,18 +177,22 @@ void listener::resume ()
 // save the state of the script associated with the event
 void listener::put_state (base::flat & out) const
 {
-    out.put_string ("lid", Id);
-    out.put_uint16 ("lps", Paused);
-    out.put_bool ("lmt", Method != NULL);
+    base::flat listener;
+    
+    listener.put_string ("lid", Id);
+    listener.put_uint16 ("lps", Paused);
+    listener.put_bool ("lmt", Method != NULL);
 
     if (Method != NULL)
     {
-        Method->put_state (out);
-        python::put_tuple (Args, out, 2);
+        Method->put_state (listener);
+        python::put_tuple (Args, listener, 2);
     }
     
-    out.put_bool ("lev", Event != NULL);
-    if (Event != NULL) Event->put_state (out);
+    listener.put_bool ("lev", Event != NULL);
+    if (Event != NULL) Event->put_state (listener);
+    
+    out.put_flat ("", listener);
 }
 
 // load the state of the script associated with the event 

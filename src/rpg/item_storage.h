@@ -1,5 +1,5 @@
 /*
-   $Id: item_storage.h,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: item_storage.h,v 1.2 2004/06/27 11:20:59 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,8 +59,9 @@ namespace rpg
          * Add an %item to the %storage. The %item needs to be immutable,
          * otherwise it won't be added. It should also have a unique name.
          * @param itm The %item to add to the storage
+         * @return \b true if it was added, \b false otherwise
          */
-        static void add (item *itm);
+        static bool add (item *itm);
         
         /**
          * Retrieve immutable %item with given name from the %storage. 

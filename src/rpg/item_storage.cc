@@ -1,5 +1,5 @@
 /*
-   $Id: item_storage.cc,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: item_storage.cc,v 1.2 2004/06/27 11:20:59 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,12 +45,13 @@ void item_storage::cleanup ()
 }
 
 // add an (immutable) item
-void item_storage::add (item *item)
+bool item_storage::add (item *item)
 {
-    if (!item || item->is_mutable ()) return;
+    if (!item || item->is_mutable ()) return false;
 
     // items are stored by name    
     Items[item->name ()] = item;
+    return true;
 }
 
 // get an item from storage
