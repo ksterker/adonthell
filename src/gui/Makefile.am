@@ -4,13 +4,15 @@ DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
 	base.h \
-	container.h
+	container.h \
+	layout.h listlayout.h
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
 	base.cc \
-	container.cc
+	container.cc \
+	layout.cc listlayout.cc
 
 libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\"
 

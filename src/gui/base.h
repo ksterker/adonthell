@@ -80,9 +80,21 @@ namespace gui {
 
       gfx::drawing_area * getParentDrawingArea ();
 	
+
+      void setVerticalAlign ( u_int8 align);
       
+      void setHorizontalAlign ( u_int8 align);
+
       virtual ~base ();
       
+      /* Constant value */
+      static const u_int8 ALIGN_NONE = 0;
+      static const u_int8 ALIGN_LEFT = 1;
+      static const u_int8 ALIGN_RIGHT = 2;
+      static const u_int8 ALIGN_CENTER = 3;
+      static const u_int8 ALIGN_TOP = 4;
+      static const u_int8 ALIGN_BOTTOM = 5;
+
     protected:
       
       s_int16 m_x; //virtual position
@@ -92,6 +104,10 @@ namespace gui {
       s_int16 m_padx; // x padding
       
       s_int16 m_pady; // y padding
+
+      u_int8 m_vertical_align; // vertical alignment
+      
+      u_int8 m_horizontal_align; // horizontal alignment
       
       bool m_visible; //if the object is visible
       

@@ -3,5 +3,7 @@
 
 #include "gui/base.h"
 #include "gui/container.h"
+#include "gui/layout.h"
+#include "gui/listlayout.h"
 
 #endif

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "gfx/screen.h"
 #include "gfx/surface.h"
 #include "gui/container.h"
@@ -12,6 +14,8 @@ base::base (): drawing_area ()
   m_parent = NULL;
 
   m_x = m_y = m_padx = m_pady = 0;
+
+  m_vertical_align = m_horizontal_align = base::ALIGN_NONE;
 
   m_visible = m_enable = true;
 }
@@ -94,7 +98,25 @@ gfx::drawing_area * base::getParentDrawingArea ()
   return getDrawingArea ();
 }
 
+void base::setVerticalAlign (u_int8 align)
+{
+  m_vertical_align = align;
+  // TODO
+  std::cout << "setVerticalAlign:: TODO\n";
+}
+
+void base::setHorizontalAlign (u_int8 align)
+{
+  m_horizontal_align = align;
+  // TODO
+  std::cout << "setHorizontalAlign:: TODO\n";
+}
+
+
 base::~base ()
 {
   if (m_parent) m_parent->removeChild (this);
 }
+
+
+

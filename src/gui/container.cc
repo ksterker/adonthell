@@ -2,6 +2,12 @@
 
 using namespace gui;
 
+
+container::container () : base ()
+{
+  m_layout = NULL;
+}
+
 void container::addChild (base * m)
 {
   m_childs.push_back (m);
@@ -40,6 +46,7 @@ void container::updateLayout ()
   // by default no layout ...
   // we can imagine a solution with a pluggable system
   // to set a specific manage
+  if (m_layout) m_layout->update ();
 }
 
 void container::destroyAll ()
@@ -65,8 +72,29 @@ bool container::drawContents ()
 }
 
 
+void container::setSpaceChild (s_int16 space)
+{
+  m_space_child = space;
+  updateLayout ();
+}
+
+void container::setSpaceBorder (s_int16 space)
+{
+  m_space_border = space;
+  updateLayout ();
+}
+
 container::~container ()
 {
   destroyAll ();
   if (m_parent) m_parent->removeChild (this);
+  if (m_layout) delete m_layout;
+}
+
+void container::setLayout (layout * l)
+{
+  if (m_layout) delete m_layout;
+  m_layout = l;
+  if (m_layout) m_layout->setContainer (this);
+  updateLayout ();
 }
