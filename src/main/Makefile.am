@@ -32,7 +32,7 @@ else
 sdl_la_SOURCES = sdl/linux.cc
 endif
 
-sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS)
 sdl_la_OBJCFLAGS = -g -ObjC++ $(SDL_CFLAGS)
 sdl_la_LDFLAGS = -module -avoid-version
 sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++

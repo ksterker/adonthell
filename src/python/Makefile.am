@@ -22,5 +22,5 @@ libadonthell_python_la_SOURCES = \
 	python.cc \
     script.cc
 
-libadonthell_python_la_CXXFLAGS = -Wno-long-double $(PY_CFLAGS)
+libadonthell_python_la_CXXFLAGS = $(PY_CFLAGS)
 libadonthell_python_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

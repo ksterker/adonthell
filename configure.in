@@ -27,12 +27,14 @@ AC_PROG_MAKE_SET
 dnl ************************************
 dnl set up Objective C compiler for OS X
 dnl ************************************
+_AM_DEPENDENCIES([OBJC])
+
+OBJC="gcc"
+AC_SUBST(OBJC)
+
 case "$target" in
     *-*-darwin*)
-        _AM_DEPENDENCIES([OBJC])
-
-        OBJC="gcc"
-        AC_SUBST(OBJC)
+		CXXFLAGS="$CXXFLAGS -Wno-long-double"
         osx="yes"
         ;;
 esac
@@ -216,6 +218,7 @@ libswigruntime/Makefile
 src/Makefile
 src/main/Makefile
 src/base/Makefile
+src/event/Makefile
 src/gfx/Makefile
 src/input/Makefile
 src/gui/Makefile

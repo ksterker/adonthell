@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.1 2003/11/22 09:37:39 ksterker Exp $
+   $Id: adonthell.cc,v 1.2 2003/12/02 22:13:16 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,7 @@
  */
  
 #include <iostream>
+#include <unistd.h>
 
 #include "base/paths.h"
 #include "main/adonthell.h"

@@ -1,17 +1,23 @@
 CXXFLAGS += -I$(top_srcdir)/src/
-EXTRA_DIST = py_base.i py_gfx.i py_input.i py_gui.i py_main.i
+EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_gui.i py_main.i
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py gfx.py input.py gui.py main.py
+pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py gui.py main.py
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _gfx.la _input.la _gui.la _main.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _gui.la _main.la
 
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
 _base_la_CXXFLAGS = $(PY_CFLAGS)
 _base_la_LDFLAGS = -avoid-version -module
 _base_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
+
+## Rules to build libpyevent (libevent's Python wrapper)
+_event_la_SOURCES = py_event_wrap.cc
+_event_la_CXXFLAGS = $(PY_CFLAGS)
+_event_la_LDFLAGS = -avoid-version -module
+_event_la_LIBADD = -L$(top_builddir)/src/event/ -ladonthell_event -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(SWIGRUNTIME_LIBS)
 
 ## Rules to build libpygfx (libgfx's Python wrapper)
 _gfx_la_SOURCES = py_gfx_wrap.cc
@@ -41,6 +47,10 @@ _main_la_LIBADD = -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS) $(S
 ## Rules for Python wrappers generation
 base.py: py_base_wrap.cc
 py_base_wrap.cc: py_base.i $(top_srcdir)/src/base/*.h
+	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
+
+event.py: py_event_wrap.cc
+py_event_wrap.cc: py_event.i $(top_srcdir)/src/event/*.h
 	$(SWIG) -c -python -shadow -I$(top_srcdir)/src -o $(srcdir)/$@ $<
 
 gfx.py: py_gfx_wrap.cc
