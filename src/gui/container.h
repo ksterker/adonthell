@@ -1,5 +1,5 @@
 /*
-   $Id: container.h,v 1.4 2003/11/22 09:37:13 ksterker Exp $
+   $Id: container.h,v 1.5 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,16 +36,34 @@ namespace gui {
     public:
       container ();
 
+      /**
+       * Add an element in this container
+       */
       virtual void addChild (base * m);
-      
+
+      /**
+       * Remove an element
+       */
       virtual void removeChild (base * m);
       
+      /**
+       * Update the position of this object an all object inside its
+       */
       virtual void updatePosition ();
       
+      /**
+       * Make an layout update
+       */
       void updateLayout ();
 
+      /**
+       * Draw the contents of this object
+       */
       virtual bool drawContents ();
 
+      /**
+       * Define the space between 2 childs
+       */
       void setSpaceChild (s_int16 space);
       
       s_int16 getSpaceChild ()
@@ -54,25 +72,56 @@ namespace gui {
       s_int16 getSpaceBorder ()
 	{ return m_space_border; }
 
+      /**
+       * Define the space between a child and the border
+       */
       void setSpaceBorder (s_int16 space);
 
+      /**
+       * Define the layout used by this container
+       */
       void setLayout (layout * l);
 
+      /**
+       * Delete from memory all child
+       */
       void destroyAll ();
 
+      /**
+       * Get all childs
+       */
       ListChild & getChilds ()
 	{ return m_childs; }
 
+      /**
+       * Define the policy used to extend the container
+       */
+      void setExtendPolicy (u_int8 extend);
+
+      /**
+       * Destructor: free all memory
+       */ 
       virtual ~container ();
+
+      /**
+       * DEFINE POLICY
+       */
+      static const u_int8 POLICY_NORMAL = 0;
+      static const u_int8 POLICY_EXPAND_CHILD = 1;
+      static const u_int8 POLICY_EXPAND_CONTAINER = 2;
+      static const u_int8 POLICY_STRETCH_CHILD = 3;
+
     protected:
 
-      layout * m_layout;
+      layout * m_layout; // the layout used
       
-      ListChild m_childs;
+      ListChild m_childs; // the list of child
       
       s_int16 m_space_child; // space between each object
 
       s_int16 m_space_border; // space between child and order of the container
+    
+      u_int8 m_extend; // the policy used to extend the container
     };
 }
 

@@ -1,5 +1,5 @@
 /*
-   $Id: base.h,v 1.4 2003/11/22 09:37:13 ksterker Exp $
+   $Id: base.h,v 1.5 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,22 +59,47 @@ namespace gui {
       u_int16 getLength () const
 	{ return gfx::drawing_area::length (); }
       
+      /**
+       * Define the location of the window
+       */
       virtual void setLocation (s_int16 nx, s_int16 ny);
 
+      /**
+       * Some times we must make an update (by example: for animation)
+       */
       virtual bool update ();
 
+      /**
+       * Draw this object
+       */
       bool draw (); //gfx::drawing_area * da);
       
+
+      /**
+       * Draw the contents of this object
+       */
       virtual bool drawContents ();
 
+      /**
+       * Assign a drawing area for this object
+       */
       void assignArea (gfx::drawing_area * da)
 	{ this->assign_drawing_area (da); }
       
+      /**
+       * Detach the drawing area
+       */
       void detachArea ()
 	{ this->detach_drawing_area (); }
 
+      /**
+       * Update the position
+       */
       virtual void updatePosition ();
       
+      /**
+       * Update the Size
+       */
       virtual void updateSize ();
 
       void setSize (u_int16 nl, u_int16 nh);
@@ -85,6 +110,9 @@ namespace gui {
       bool isVisible () const
 	{ return m_visible;}
 
+      /**
+       * Enable this object. An enabled object can be editable
+       */
       void setEnable (const bool b)
 	{ m_enable = b; }
 
@@ -93,17 +121,28 @@ namespace gui {
 
       void setParent (container * parent);
 
+      /**
+       * Get the parent of this object
+       */
       container * getParent ()
 	{ return m_parent; }
 
+      /**
+       * Return the drawing area of this object
+       */
       gfx::drawing_area * getDrawingArea ()
 	{ return (gfx::drawing_area*) this; }
 
       gfx::drawing_area * getParentDrawingArea ();
 	
-
+      /**
+       * Align this object in vertical
+       */
       void setVerticalAlign ( u_int8 align);
-      
+
+      /**
+       * Align this object in horizontal
+       */
       void setHorizontalAlign ( u_int8 align);
 
       virtual ~base ();

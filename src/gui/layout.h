@@ -1,5 +1,5 @@
 /*
-   $Id: layout.h,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: layout.h,v 1.3 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,20 @@ namespace gui
       
       void setContainer (container * ct);
 
+      u_int16 getMaxLength () const 
+	{ return m_length; }
+
+      u_int16 getMaxHeight () const 
+	{return m_height; }
+      
     protected:
+      
+      // define the space needed for this layout
+      // the space contains spaceborder and spacechild information
+      // from the container. m_length is the max size, m_height 
+      // the max height.
+      u_int16 m_length; 
+      u_int16 m_height;
 
       container * m_container;
     };

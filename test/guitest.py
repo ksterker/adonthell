@@ -30,7 +30,7 @@ def guitest ():
 
     ## gui stuff
     cont = gui.container ()
-    cont.setSize (50, 50)
+    cont.setSize (150, 150)
     cont.setLocation (20, 30)
 
     #for i in range (2):
@@ -38,17 +38,23 @@ def guitest ():
     a.setSize (40,20)
     a.setLocation (30, 10)
     cont.addChild (a)
+
     b = gui.base ()
     b.setSize (40,20)
     b.setLocation (30, 10)
     cont.addChild (b)
 
-    
+    c = gui.base ()
+    c.setSize (40,20)
+    c.setLocation (30, 10)
+    cont.addChild (c)
 
+    
     # set the layout
+    cont.setExtendPolicy (2)
     z = gui.listlayout ()
     cont.setLayout (z)
-    
+
     
     ## Run this loop until letsexit is set to 1 by the
     ## callback function. Every time a key event is raised,

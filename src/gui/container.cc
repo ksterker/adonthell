@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.4 2003/11/22 09:37:13 ksterker Exp $
+   $Id: container.cc,v 1.5 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@ container::container () : base ()
 {
   m_layout = NULL;
   m_space_child = m_space_border = 5;
-  
+  setExtendPolicy (POLICY_NORMAL);
 }
 
 void container::addChild (base * m)
@@ -69,7 +69,24 @@ void container::updateLayout ()
   // by default no layout ...
   // we can imagine a solution with a pluggable system
   // to set a specific manage
-  if (m_layout) m_layout->update ();
+  if (m_layout) {
+    m_layout->update ();
+    
+    // check the policy used
+    u_int16 l = getLength (), h = getHeight ();
+    switch (m_extend) {
+    case POLICY_EXPAND_CONTAINER:
+      if (m_layout->getMaxLength () > l) l = m_layout->getMaxLength ();
+      if (m_layout->getMaxHeight () > h) h = m_layout->getMaxHeight ();
+      setSize (l, h);
+      break;
+    
+    case POLICY_EXPAND_CHILD:
+    case POLICY_STRETCH_CHILD:
+      std::cerr << "Not implemented : " << (u_int8) m_extend << " " << __FILE__ << " " << __LINE__ << std::endl;
+      assert (false);
+    }
+  }
 }
 
 void container::destroyAll ()
@@ -119,4 +136,15 @@ void container::setLayout (layout * l)
   m_layout = l;
   if (m_layout) m_layout->setContainer (this);
   updateLayout ();
+}
+
+void container::setExtendPolicy (u_int8 extend) {
+  m_extend = extend;
+  updateLayout ();
+  switch (m_extend) {
+  case POLICY_EXPAND_CHILD:
+  case POLICY_STRETCH_CHILD:
+    std::cerr << "Not implemented : " << (u_int8) m_extend << " " << __FILE__ << " " << __LINE__ << std::endl;
+    assert (false);
+  }
 }

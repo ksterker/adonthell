@@ -1,5 +1,5 @@
 /*
-   $Id: layout.cc,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: layout.cc,v 1.3 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,8 @@ using namespace gui;
 layout::layout ()
 {
   m_container = NULL;
+  m_length = 0;
+  m_height = 0;
 }
 
 bool layout::update ()
@@ -40,3 +42,4 @@ void layout::setContainer (container * ct)
   m_container = ct;
   if (ct) update ();
 }
+

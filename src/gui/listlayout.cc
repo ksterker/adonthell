@@ -1,5 +1,5 @@
 /*
-   $Id: listlayout.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: listlayout.cc,v 1.4 2004/01/06 22:39:56 jol Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,24 +26,32 @@
 using namespace gui;
 
 
-
 listlayout::listlayout (): layout ()
 {
-
+  
 }
 
 bool listlayout::update ()
 {
-  if (m_container)
+  assert (m_container != NULL);
+
+  if (m_container) // be sure that there is a container
     {
+      // define the initial value for x
       s_int16 nx = m_container->getPadX () + m_container->getSpaceBorder (), 
 	ny =  m_container->getPadY () + m_container->getSpaceBorder ();
+      
+      m_height = m_length = 0;
+
       for (ListChild::iterator i = m_container->getChilds ().begin (); 
 	   i != m_container->getChilds ().end (); ++i)
 	{
 	  (*i)->setLocation (nx, ny);
 	  ny += (*i)->getHeight () + m_container->getSpaceChild ();
+	  if ((*i)->getLength () > m_length) m_length = (*i)->getLength ();
 	}
+      m_height = ny - m_container->getSpaceChild () + m_container->getSpaceBorder ();
+      m_length += m_container->getPadX () + (m_container->getSpaceBorder () << 1);
       return true;
     }
   return false;
