@@ -1,5 +1,5 @@
 /*
-   $Id: py_main.h,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: py_main.h,v 1.3 2004/11/01 17:41:30 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,28 +40,25 @@
  * following way:
  *
  * \code
- * from adonthell import main
+ *   from adonthell import main
  *
- * class myApp:
- *    # -- ctor
- *    def __init__ (self, app):
- *        self.App = app ()
- *        
- *    # -- your application entry point
- *    def main (self):
- *        self.App.init_modules (self.App.GFX | ...)
- *        ...
+ *   class App (main.AdonthellApp):
+ *       def __init__ (self):
+ *           main.AdonthellApp.__init__ (self)
  *
- * if __name__ == 'main':
- *      adonthellApp = main.AdonthellApp ()
- *      app = myApp (adonthellApp)
- *      adonthellApp.init (app.main)
- * \endcode
+ *       # -- your application entry point
+ *       def main (self):
+ *           self.init_modules (self.GFX | ...)
+ *           ...
+ *
+ *   if __name__ == '__main__':
+ *       theApp = App ()
+ *       theApp.init (theApp.main) * \endcode
  *
  * This will ensure that your python scripts run on any platform supported by the
  * Adonthell framework.
  * 
- * \note code after \tt myApp.init will not be executed.
+ * \note code after \tt theApp.init(...) will not be executed.
  */
 class AdonthellApp : public adonthell::app 
 {

@@ -1,10 +1,10 @@
 from adonthell import gfx, input, main
 import sys, time
 
-class InputtestApp:
-    def __init__ (self, app):
+class InputtestApp (main.AdonthellApp):
+    def __init__ (self):
+        main.AdonthellApp.__init__(self)
         self.Letsexit = 0
-        self.App = app
         
     ## Callback fonction to handle keyboard events.
     ## It will be passed a keyboard_event as a parameter
@@ -31,7 +31,7 @@ class InputtestApp:
 
     def main (self):
         ## Initialize the gfx and input systems
-        self.App.init_modules (main.app.GFX | main.app.INPUT)
+        self.init_modules (main.app.GFX | main.app.INPUT)
 
         ## Set us a nice window
         gfx.screen.set_video_mode(640, 480)
@@ -55,7 +55,6 @@ class InputtestApp:
         return 0
 
 if __name__ == '__main__':
-    myApp = main.AdonthellApp ()
-    inputtest = InputtestApp (myApp)
-    myApp.init (inputtest.main)
+    app = InputtestApp ()
+    app.init (app.main)
 

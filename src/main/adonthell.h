@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.4 2004/10/18 07:40:23 ksterker Exp $
+   $Id: adonthell.h,v 1.5 2004/11/01 17:41:29 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -68,7 +68,9 @@ namespace adonthell {
         
             /**
              * Call this to initialize selected subystems of the engine. These
-             * will be shutdown automatically once the engine quits.
+             * will be shutdown automatically once the engine quits. 
+             * This method can be safely called multiple times; it will take 
+             * care to not initialize any module more than once.
              * @param modules combination of GFX, INPUT, EVENT, PYTHON, RPG, GUI
              * @return true on success \b false otherwise.
              */

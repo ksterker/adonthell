@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.5 2004/10/18 07:40:23 ksterker Exp $
+   $Id: adonthell.cc,v 1.6 2004/11/01 17:41:29 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,7 +60,9 @@ app::~app ()
 // initialize engine subsystems 
 bool app::init_modules (const u_int16 & modules)
 {
-    Modules = modules;
+    // don't initialize previously loaded modules
+    modules ^= Modules;
+    Modules |= modules;
     
     // startup python
     if (modules & PYTHON)
@@ -153,6 +155,7 @@ void app::parse_args (int & argc, char *argv[])
 // initialize the Adonthell framework
 bool app::init ()
 {
+    Modules = 0;
     dlhandle = NULL;
     
     // init libltdl
