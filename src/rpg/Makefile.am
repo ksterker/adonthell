@@ -8,6 +8,8 @@ pkgincluderpg_HEADERS = \
     inventory.h \
     item_storage.h \
     item.h \
+    log_entry.h \
+    log_index.h \
     slot.h
     
 ## Rpg library
@@ -20,6 +22,8 @@ libadonthell_rpg_la_SOURCES = \
     inventory.cc \
     item_storage.cc \
     item.cc \
+    log_entry.cc \
+    log_index.cc \
     slot.cc
 
 libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS)

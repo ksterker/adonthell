@@ -2,10 +2,13 @@
 %{
 
 #include <string>
+
 #include "rpg/character.h"
 #include "rpg/equipment.h"
 #include "rpg/item_storage.h"
 #include "rpg/inventory.h"
+#include "rpg/log_entry.h"
+#include "rpg/log_index.h"
 
 using rpg::slot;
 %}
@@ -29,6 +32,14 @@ namespace rpg {
     }
 }
 
+// typemap for returning a vector<std::string> as python list
+%typemap(out) std::vector<const char*> {
+    unsigned int index = 0;
+    $result = PyList_New (result.size ());
+    for (std::vector<const char*>::iterator i = result.begin (); i != result.end (); i++)
+        PyList_SET_ITEM ($result, index++, PyString_FromString (*i));
+}
+
 %include "std_string.i"
 
 %include "base/types.h"
@@ -39,3 +50,5 @@ namespace rpg {
 %include "rpg/inventory.h"
 %include "rpg/equipment.h"
 %include "rpg/item_storage.h"
+%include "rpg/log_entry.h"
+%include "rpg/log_index.h"

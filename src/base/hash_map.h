@@ -1,5 +1,5 @@
 /*
-   $Id: hash_map.h,v 1.1 2004/05/31 11:44:50 ksterker Exp $
+   $Id: hash_map.h,v 1.2 2004/07/03 05:55:38 ksterker Exp $
 
    (C) Copyright 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    (C) Copyright 2004 Kai Sterker <kaisterker@linuxgames.com>
@@ -29,8 +29,10 @@
  
 #if __GNUG__ > 2
 #include <ext/hash_map>
+#include <ext/hash_set>
 #else
 #include <hash_map>
+#include <hash_set>
 #endif
 #include <string>
 
