@@ -211,19 +211,12 @@ AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x)
 dnl **************
 dnl Check for SWIG
 dnl **************
-SWIG_VERSION=1.3.19
+SWIG_VERSION=1.3.20
 SWIG_PROG($SWIG_VERSION)
 SWIG_ENABLE_CXX()
 
-dnl *****************************
-dnl SWIG runtime library settings
-dnl *****************************
-SWIGRUNTIME_LIBS='-L${top_builddir}/libswigruntime -lswigruntime'
-AC_SUBST(SWIGRUNTIME_LIBS)
-
 AC_OUTPUT([
 Makefile
-libswigruntime/Makefile
 src/Makefile
 src/main/Makefile
 src/base/Makefile
