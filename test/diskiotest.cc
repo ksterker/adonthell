@@ -67,14 +67,14 @@ int main (int argc, char* argv[]) {
     delete[] (char *) test.get_block ("block");
 
     // get included flat using get_flat; will have to delete it later
-    base::flat *f = test.get_flat ("flat");
-    cout << f->get_string ("string") << endl;
+    base::flat f = test.get_flat ("flat");
+    cout << f.get_string ("string") << endl;
     
     void *value;
     int type, size;
     
     // the next() method is another way to extract included flats
-    if (f->next (&value, &size) == base::flat::T_FLAT) {
+    if (f.next (&value, &size) == base::flat::T_FLAT) {
         base::flat f2 ((const char *) value, size);
         
         // next fetches values in the order they where added, 
@@ -85,6 +85,5 @@ int main (int argc, char* argv[]) {
     }
     cout << "\nEverything unpacked" << endl;
     
-    delete f;
     return 0;
 }
