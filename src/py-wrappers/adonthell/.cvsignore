@@ -1,0 +1,9 @@
+.deps
+.libs
+Makefile
+Makefile.in
+*.la
+*.lo
+*_wrap.cc
+*.py
+*.pyc
