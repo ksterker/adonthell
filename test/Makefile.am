@@ -21,6 +21,7 @@ guitest_LDADD = \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)
 
 inputtest_SOURCES = inputtest.cc
+
 inputtest_LDADD = \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
 	-L$(top_builddir)/src/input/ -ladonthell_input              \
@@ -29,3 +30,4 @@ inputtest_LDADD = \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)
+

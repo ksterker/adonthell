@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.5 2004/06/27 11:20:58 ksterker Exp $
+   $Id: script.h,v 1.6 2005/01/18 12:05:05 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -79,7 +79,7 @@ namespace python
          * @param args Python tuple containing the arguments to pass to the
          *             Python class constructor.
          */
-        bool create_instance (const std::string & file, const std::string & classname, PyObject * args = NULL);
+        bool create_instance (const string & file, const string & classname, PyObject * args = NULL);
     
         /**
          * Similar to create_instance, except that it will reload the module
@@ -91,7 +91,7 @@ namespace python
          * @param args Python tuple containing the arguments to pass to the
          *             Python class constructor.
          */
-        bool reload_instance (const std::string & file, const std::string & classname, PyObject * args = NULL);
+        bool reload_instance (const string & file, const string & classname, PyObject * args = NULL);
         //@}
     
         /**
@@ -106,7 +106,7 @@ namespace python
          * @return the return value of the method as PyObject. Needs to be 
          *     Py_DECREF'd when no longer needed.
          */
-        PyObject *call_method_ret (const std::string &name, PyObject *args = NULL) const;
+        PyObject *call_method_ret (const string &name, PyObject *args = NULL) const;
         
         /** 
          * Call a method of this object.
@@ -114,7 +114,7 @@ namespace python
          * @param name name of the method to call.
          * @param args Python tuple containing the arguments to pass to the method.
          */
-        void call_method (const std::string & name, PyObject * args = NULL) const
+        void call_method (const string & name, PyObject * args = NULL) const
         {
             PyObject *result = call_method_ret (name, args);
             Py_XDECREF (result);
@@ -132,7 +132,7 @@ namespace python
          * @param name Name of the attribute to test for
          * @return <b>true</b> if the attribute exists, <b>false</b> otherwise.
          */
-        bool has_attribute (const std::string & name) const;
+        bool has_attribute (const string & name) const;
     
         /**
          * Returns a new reference to an attribute of this object.
@@ -140,7 +140,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return New reference to the attribute or NULL on error
          */
-        PyObject* get_attribute (const std::string & name) const;
+        PyObject* get_attribute (const string & name) const;
     
         /**
          * Returns the given attribute as integer value.
@@ -148,7 +148,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return An integer.
          */
-        s_int32 get_attribute_int (const std::string & name) const;
+        s_int32 get_attribute_int (const string & name) const;
     
         /**
          * Returns the given attribute as string value.
@@ -156,7 +156,7 @@ namespace python
          * @param name Name of the attribute to access
          * @return A string.
          */
-        std::string get_attribute_string (const std::string & name) const;
+        std::string get_attribute_string (const string & name) const;
     
         /**
          * Assign a new attribute to the module, overriding an existing
@@ -165,7 +165,7 @@ namespace python
          * @param name The attribute's name
          * @param value The attribute's value
          */
-        void set_attribute (const std::string & name, PyObject *value);
+        void set_attribute (const string & name, PyObject *value);
     
         /**
          * Assign a new integer attribute to the module, overriding an
@@ -174,7 +174,7 @@ namespace python
          * @param name The attribute's name
          * @param value The attribute's value
          */
-        void set_attribute_int (const std::string & name, s_int32 value);
+        void set_attribute_int (const string & name, s_int32 value);
     
         /**
          * Assign a new string attribute to the module, overriding an
@@ -183,7 +183,7 @@ namespace python
          * @param name The attribute's name
          * @param value The attribute's value
          */
-        void set_attribute_string (const std::string & name, const std::string & value);
+        void set_attribute_string (const string & name, const string & value);
         //@}
         
         /**

@@ -1,9 +1,9 @@
 /*
-  $Id: script.cc,v 1.3 2004/06/27 11:20:58 ksterker Exp $
+   $Id: script.cc,v 1.4 2005/01/18 12:05:05 ksterker Exp $
   
-  Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
-  Copyright (C) 2001 Alexandre Courbot
-  Part of the Adonthell Project http://adonthell.linuxgames.com
+   Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
+   Copyright (C) 2001 Alexandre Courbot
+   Part of the Adonthell Project http://adonthell.linuxgames.com
   
    Adonthell is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ PyObject* script::call_method_ret (const string &name, PyObject *args) const
 }
 
 // check for a certain attribute
-bool script::has_attribute (const std::string & name) const
+bool script::has_attribute (const string & name) const
 {
     if (Instance)
         return PyObject_HasAttrString (Instance, (char *) name.c_str ());
