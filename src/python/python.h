@@ -1,6 +1,4 @@
 /*
-   $Id: python.h,v 1.13 2005/03/08 09:41:48 ksterker Exp $
-
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -35,11 +33,9 @@
 #include <Python.h>
 #include "base/flat.h"
 
-struct swig_type_info;
 extern "C" {
-    swig_type_info *SWIG_Python_TypeQuery (const char*);
-    int SWIG_Python_ConvertPtr (PyObject*, void**, swig_type_info*, int);
-    PyObject *SWIG_Python_NewPointerObj (void*, swig_type_info*, int);
+	PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership);
+	void py_to_cxx (PyObject *instance, const char *name, void **retval);
 }
 
 /**
@@ -50,17 +46,6 @@ extern "C" {
  */
 namespace python
 {
-    /**
-     * Dump any error information to stderr.
-     *
-     * This function should be called after every operation
-     * involving Python from C++, so the user can get informed if
-     * something went wrong. By default, all the methods of this
-     * module call it when appropriate.
-     *
-     */
-    void show_traceback();
-
     /**
      * @name Initialization and cleanup.
      * 
@@ -76,6 +61,23 @@ namespace python
      */
     void cleanup();
     //@}
+
+    /**
+     * @name Debugging.
+	 *
+     */
+    //@{
+    /**
+     * Dump any error information to stderr.
+     *
+     * This function should be called after every operation
+     * involving Python from C++, so the user can get informed if
+     * something went wrong. By default, all the methods of this
+     * module call it when appropriate.
+     *
+     */
+    void show_traceback();
+	//@}
 
     /**
      * @name High-level functions.
@@ -143,11 +145,11 @@ namespace python
     template <class A> inline
     PyObject * pass_instance(A arg, const ownership own = c_owns)
     { 
-        swig_type_info * tt = SWIG_Python_TypeQuery (arg->get_type_name ());
-        if (tt) return SWIG_Python_NewPointerObj(arg, tt, own);
+        // swig_type_info * tt = SWIG_Python_TypeQuery (arg->get_type_name ());
+        // if (tt) return SWIG_Python_NewPointerObj(arg, tt, own);
         
-        fprintf (stderr, "*** pass_instance: type '%s' unknown to SWIG\n", arg->get_type_name ());
-        return NULL;
+        // fprintf (stderr, "*** pass_instance: type '%s' unknown to SWIG\n", arg->get_type_name ());
+        return cxx_to_py ((void *) arg, arg->get_type_name(), own);
     }
     
     /** 
@@ -250,11 +252,9 @@ namespace python
     A retrieve_instance(PyObject * pyinstance)
     {
         B *retvalue = NULL;
-
-        swig_type_info * tt = SWIG_Python_TypeQuery (B::get_type_name_s ());
-        if (!tt) return NULL;
-        if (SWIG_Python_ConvertPtr(pyinstance, (void **) &retvalue, tt, 0) == -1) return NULL;
-        return retvalue;
+		py_to_cxx (pyinstance, B::get_type_name_s(), (void **) &retvalue);
+		
+		return retvalue;
     }
 
     /** 

@@ -1,5 +1,5 @@
 /*
-   $Id: pool.cc,v 1.3 2004/05/13 06:44:01 ksterker Exp $
+   $Id: pool.cc,v 1.4 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,7 @@
 using python::method;
 using python::pool;
 
-std::map<const char*, python::script*> pool::Pool;
+std::map<std::string, python::script*> pool::Pool;
 
 void pool::init () 
 {
@@ -40,10 +40,12 @@ void pool::init ()
 
 void pool::cleanup () 
 {
-    std::map<const char*, python::script*>::iterator i;
+    std::map<std::string, python::script*>::iterator i;
 
     for (i = Pool.begin (); i != Pool.end (); i++)
         delete (*i).second;
+	
+	Pool.clear ();
 }
 
 method *pool::connect (const std::string & file, const std::string & classname, const std::string & callback)
@@ -56,11 +58,11 @@ method *pool::connect (const std::string & file, const std::string & classname, 
 
 python::script *pool::reconnect (const std::string & file, const std::string & classname)
 {
-    std::map<const char*, python::script*>::iterator i;
+    std::map<std::string, python::script*>::const_iterator i;
     std::string name = file + classname;
     
     // script not in pool yet
-    if ((i = Pool.find (name.c_str ())) == Pool.end ()) 
+    if ((i = Pool.find (name)) == Pool.end ())
     {
         python::script *scrpt = new python::script ();
         
@@ -75,7 +77,7 @@ python::script *pool::reconnect (const std::string & file, const std::string & c
         }
         
         // add script to pool
-        Pool[name.c_str ()] = scrpt;
+        Pool[name] = scrpt;
         return scrpt;
     }
     // script already in pool

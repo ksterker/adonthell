@@ -1,7 +1,8 @@
 /*
-   $Id: paths.cc,v 1.6 2004/12/07 16:46:26 ksterker Exp $
+   $Id: paths.cc,v 1.7 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -22,6 +23,7 @@
 /**
  * @file   base/paths.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @author Kai Sterker <kaisterker@linuxgames.com>
  *
  * @brief  Defines some primitives to get essential game paths.
  *
@@ -111,7 +113,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     return exists (GameDataDir);
 }
 
-// set path to saved game
+// set path to saved game (before loading the game from that directory)
 void paths::set_save_dir (const std::string & dir)
 {
     if (dir != "" && exists (CfgDataDir + dir))

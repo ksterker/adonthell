@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.h,v 1.3 2005/03/08 09:41:48 ksterker Exp $
+   $Id: inventory.h,v 1.4 2005/06/03 17:29:13 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

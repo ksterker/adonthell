@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.10 2005/03/08 09:41:48 ksterker Exp $
+   $Id: adonthell.cc,v 1.11 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -171,13 +171,26 @@ bool app::init ()
     // init base module (required for reading config file)
     base::init (Userdatadir, Game);
 
-    // load configuration file
+    // load engine configuration file
     if (!Cfg.read (Config))
     {
         // print message if that fails, but don't panic yet ...
-        cerr << "Error reading configuration '" << Config << ".xml'" << endl;
+        cerr << "Error reading engine configuration '" << Config << ".xml'" << endl;
     }
 
+	/*
+	 * FIXME: This requires some more thoughts ... how can the individual options
+	 * be saved to correct file again? How can config options added to the proper
+	 * file at runtime? etc ...
+	 *
+	// merge with game specific config file
+	if (Game != "" && !Cfg.read (Game))
+	{
+        // no big deal if that fails; being verbose just in case ...
+        cerr << "Cannot read application specific configuration '" << Game << ".xml'" << endl;
+	}
+	 */
+	
     // if we have been given no backend on the command line,
     // try to get it from config file; fallback to sdl if that fails
     if (Backend == "")

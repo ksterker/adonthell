@@ -21,11 +21,11 @@ class cfgtest (object):
         # -- low level access to the underlying data structure
         opt = self.cfg.option ("Video", "Fullscreen", base.cfg_option.CHOICE)
         # -- each option can have a comment attached to it
-        opt.set_comment (" 0 - Window mode, 1 - Fullscreen mode ")
+        opt.set_comment (" 0 for Window mode, 1 for Fullscreen mode ")
         
         self.cfg.get_int ("Video", "Resolution", 1)
         opt = self.cfg.option ("Video", "Resolution", base.cfg_option.CHOICE)
-        opt.set_comment (" 0 - 320x240, 1 - 640x480 ")
+        opt.set_comment (" 0 for 320x240, 1 for 640x480 ")
 
     def audio (self):
         print "Generating section 'Audio'"
@@ -53,14 +53,14 @@ class cfgtest (object):
         self.cfg.add_option ("Audio", "Resolution", opt)
 
     def write (self):
-        print "Writing configuration to ~/.adonthell/adonthell.xml"
+        print "Writing configuration to %sadonthell.xml" % base.Paths.cfg_data_dir ()
         # -- save configuration to disk
         self.cfg.write ("adonthell")
         
     def read (self):
         print "Clearing configuration"
         self.cfg = base.configuration ()
-        print "Loading configuration from  ~/.adonthell/adonthell.xml"
+        print "Loading configuration from %sadonthell.xml" % base.Paths.cfg_data_dir ()
         # -- load configuration from disk
         self.cfg.read ("adonthell")
     
@@ -74,6 +74,9 @@ class cfgtest (object):
         return s;
         
 if __name__ == "__main__":
+    # -- engine initialization
+    base.Paths.init ("", "")
+
     ct = cfgtest ()
     ct.write ()
     # -- print only valid options (those with type != UNDEF)

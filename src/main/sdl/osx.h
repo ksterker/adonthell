@@ -10,8 +10,8 @@
 
 @interface SDLMain : NSObject 
 {
-    const adonthell::app *Application;
+    adonthell::app *Application;
 }
     
-- (void)init:(const adonthell::app *)theApp;
+- init:(adonthell::app *)theApp;
 @end

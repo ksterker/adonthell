@@ -1,6 +1,5 @@
 %module base
 %{
-
 #include <string>
 #include "base/base.h"
 #include "base/endians.h"
@@ -104,6 +103,7 @@ namespace base {
 %include "base/flat.h"
 %include "base/diskio.h"
 %include "base/configuration.h"
+%include "base/paths.h"
 
 /* implement friend operators of igzstream */
 %extend base::igzstream {

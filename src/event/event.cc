@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.7 2005/03/08 09:43:36 ksterker Exp $
+   $Id: event.cc,v 1.8 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

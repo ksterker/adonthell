@@ -12,7 +12,7 @@ class event_script (object):
         self.counter += 1
         
     def callback_2 (self, lst, evt):
-        print "#2", evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
+        print "#2", self.counter, evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
 
         # -- switch callback
         if self.counter == 4:
@@ -24,7 +24,7 @@ class event_script (object):
         print num, evt.time (), base.Timer.uptime (), lst.get_event ().repeat ()
         if lst.get_event ().repeat () == 2:
             # -- destroy
-            print "#2 Destroying"
+            print "#2 Destroying at repeat count '2'"
             lst.destroy ()
 
 class App (main.AdonthellApp):

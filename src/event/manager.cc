@@ -1,5 +1,5 @@
 /*
-   $Id: manager.cc,v 1.4 2004/12/13 08:50:31 ksterker Exp $
+   $Id: manager.cc,v 1.5 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,9 +37,6 @@
 using events::manager;
 using events::time_event_manager;
 
-// Array with registered event handlers
-events::manager_base* manager::Manager[MAX_EVENTS];
-
 // functions that return newly instanciated events
 // of a certain type
 NEW_EVENT (time_event)
@@ -66,6 +63,4 @@ void manager::init ()
 // Clear the registered handlers
 void manager::cleanup ()
 {
-    for (int i = 0; i < MAX_EVENTS; i++)
-        delete Manager[i];
 }

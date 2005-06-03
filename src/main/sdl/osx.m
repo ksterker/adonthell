@@ -49,7 +49,7 @@ extern "C" {
 /* The main class of the application, the application's delegate */
 @implementation SDLMain
 
-- (void) init: (const adonthell::app*) theApp
+- init: (adonthell::app*) theApp
 {
     Application = theApp;
 }
@@ -142,7 +142,7 @@ static void setupWindowMenu(void)
 }
 
 /* Replacement for NSApplicationMain */
-void CustomApplicationMain (const adonthell::app *theApp)
+void CustomApplicationMain (adonthell::app *theApp)
 {
     NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
     SDLMain				*sdlMain;
@@ -187,7 +187,7 @@ void CustomApplicationMain (const adonthell::app *theApp)
 extern "C" {
 
 /* Init */
-int main_init (const adonthell::app *theApp)
+int main_init (adonthell::app *theApp)
 {
     CustomApplicationMain (theApp);
     return 0;

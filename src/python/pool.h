@@ -1,5 +1,5 @@
 /*
-   $Id: pool.h,v 1.3 2004/11/15 08:54:33 ksterker Exp $
+   $Id: pool.h,v 1.4 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -77,7 +77,7 @@ namespace python
                 
         private:
             /// All python scripts currently kept in cache
-            static std::map<const char*, python::script*> Pool;
+            static std::map<std::string, python::script*> Pool;
     };
 }
 

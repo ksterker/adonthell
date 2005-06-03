@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.7 2005/03/08 09:41:47 ksterker Exp $
+   $Id: event.h,v 1.8 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004/2005 Kai Sterker 
    Part of the Adonthell Project http://adonthell.linuxgames.com

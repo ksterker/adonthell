@@ -1,5 +1,5 @@
 /*
-   $Id: script.cc,v 1.5 2005/03/08 09:41:48 ksterker Exp $
+   $Id: script.cc,v 1.6 2005/06/03 17:29:13 ksterker Exp $
   
    Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
    Copyright (C) 2001 Alexandre Courbot

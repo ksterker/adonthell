@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.5 2005/03/08 09:41:47 ksterker Exp $
+   $Id: time_event.h,v 1.6 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com

@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.11 2005/03/08 09:41:47 ksterker Exp $
+   $Id: flat.h,v 1.12 2005/06/03 17:29:13 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
