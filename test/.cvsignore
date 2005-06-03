@@ -1,3 +1,4 @@
+.DS_Store
 .deps
 .libs
 Makefile
@@ -6,3 +7,4 @@ Makefile.in
 *.lo
 inputtest
 callbacktest
+*.pyc

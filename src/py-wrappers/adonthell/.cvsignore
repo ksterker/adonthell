@@ -1,3 +1,4 @@
+.DS_Store
 .deps
 .libs
 Makefile
@@ -5,5 +6,6 @@ Makefile.in
 *.la
 *.lo
 *_wrap.cc
+py_runtime.cc
 *.py
 *.pyc
