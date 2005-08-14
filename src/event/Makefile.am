@@ -23,10 +23,9 @@ libadonthell_event_la_SOURCES = \
 	event.cc \
 	factory.cc \
 	listener.cc \
+    types.cc \
 	time_event.cc \
-	time_event_manager.cc \
-    types.cc
+	time_event_manager.cc
 
-    
 libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS)
 libadonthell_event_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

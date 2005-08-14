@@ -10,6 +10,7 @@
 #include "rpg/log_entry.h"
 #include "rpg/log_index.h"
 #include "rpg/quest.h"
+#include "rpg/quest_event.h"
 
 using rpg::slot;
 %}
@@ -70,3 +71,4 @@ namespace rpg {
 %include "rpg/log_entry.h"
 %include "rpg/log_index.h"
 %include "rpg/quest.h"
+%include "rpg/quest_event.h"

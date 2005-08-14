@@ -1,5 +1,5 @@
 /*
-   $Id: types.h,v 1.1 2005/03/08 09:41:47 ksterker Exp $
+   $Id: types.h,v 1.2 2005/08/14 16:51:20 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,10 +30,12 @@
 #ifndef EVENT_TYPES_H
 #define EVENT_TYPES_H
 
-#include <event/manager_base.h>
+#include "event/event.h"	
 #include <base/hash_map.h>
 
 namespace events {
+
+class manager_base;
 
 #ifndef SWIG
 /**
@@ -54,13 +56,6 @@ typedef events::event* (*new_event)();
 class event_type
 {
 public:
-    /**
-     * Destructor
-     */
-    ~event_type ()
-    {
-        delete Manager;
-    }
 
     /**
      * Register a certain type of %event with the %event subsystem.
@@ -154,8 +149,8 @@ private:
 /**
  * A function that returns a new instance of an %event.
  */
-#define NEW_EVENT(evt)\
-    events::event* new_ ## evt () { return (events::event*) new events::evt; }
+#define NEW_EVENT(nsp, evt)\
+    events::event* new_ ## evt () { return (events::event*) new nsp::evt; }
 #endif // SWIG
 
 }

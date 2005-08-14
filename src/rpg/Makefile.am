@@ -11,6 +11,8 @@ pkgincluderpg_HEADERS = \
     log_entry.h \
     log_index.h \
     quest.h \
+	quest_event.h \
+	quest_event_manager.h \
     slot.h
     
 ## Rpg library
@@ -26,6 +28,8 @@ libadonthell_rpg_la_SOURCES = \
     log_entry.cc \
     log_index.cc \
     quest.cc \
+	quest_event.cc \
+	quest_event_manager.cc \
     slot.cc
 
 libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS)

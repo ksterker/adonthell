@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.4 2004/11/15 08:54:33 ksterker Exp $
+   $Id: quest.cc,v 1.5 2005/08/14 16:51:21 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -372,7 +372,7 @@ std::vector<std::string> quest::split (const std::string & path)
     while ((idx = path.find (".", pos)) != path.npos)
     {
         result.push_back (path.substr (pos, idx - pos));
-        pos = idx;
+        pos = idx + 1;
     }
     
     // add last part

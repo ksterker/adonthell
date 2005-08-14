@@ -1,5 +1,5 @@
 /*
-   $Id: types.cc,v 1.1 2005/03/08 09:41:47 ksterker Exp $
+   $Id: types.cc,v 1.2 2005/08/14 16:51:20 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,7 @@
  */
 
 #include "event/types.h"
+#include <event/manager_base.h>
 
 using events::event;
 using events::event_type;

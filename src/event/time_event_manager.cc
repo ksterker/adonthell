@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.6 2005/06/03 17:29:13 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.7 2005/08/14 16:51:20 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,19 +36,16 @@ using std::vector;
 using events::time_event_manager;
 using events::event_type;
 
+// time_event manager instance that is initialized when the event package is loaded 
+static time_event_manager TimeEventManager;
+
 // function returning a new time event
-NEW_EVENT (time_event)
+NEW_EVENT (events, time_event)
 
 // register time events with event subsystem 
-void time_event_manager::init ()
+time_event_manager::time_event_manager () : manager_base (&new_time_event)
 {
-    event_type::register_type ("time_event", new time_event_manager (), &new_time_event);
-}
-
-// remove time events from event subsystem
-void time_event_manager::cleanup ()
-{
-    event_type::remove_type ("time_event");
+	// nothing to do here
 }
 
 // See whether a matching event is registered and execute the

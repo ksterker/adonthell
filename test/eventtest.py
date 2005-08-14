@@ -32,9 +32,6 @@ class App (main.AdonthellApp):
         main.AdonthellApp.__init__ (self)
 
     def eventtest (self):
-        # -- init
-        self.init_modules (self.EVENT)
-
         fty = event.factory ()
         svd = 0
         

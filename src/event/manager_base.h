@@ -1,5 +1,5 @@
 /*
-   $Id: manager_base.h,v 1.3 2004/12/07 16:46:27 ksterker Exp $
+   $Id: manager_base.h,v 1.4 2005/08/14 16:51:20 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,7 @@
 #define EVENT_MANAGER_BASE_H
 
 #include "event/listener.h"
+#include "event/types.h"
 
 namespace events
 {
@@ -43,11 +44,21 @@ namespace events
     class manager_base
     {
     public:
+		manager_base (new_event create_event)
+		{
+			event *evt = create_event ();
+
+			Name = evt->name();
+			event_type::register_type (Name, this, create_event);
+		}
 
         /**
          * Destructor
          */
-        virtual ~manager_base () {}
+        virtual ~manager_base () 
+		{
+		    event_type::remove_type (Name);
+		}
     
         /** 
          * Registers a %listener.
@@ -69,6 +80,10 @@ namespace events
          * @param ev %event to raise.
          */
         virtual void raise_event (const event* ev) = 0;
+		
+	private:
+		/** Type name of events handled by this manager */
+		std::string Name;
     };
 }
 #endif // EVENT_MANAGER_BASE_H

@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.h,v 1.4 2005/06/03 17:29:13 ksterker Exp $
+   $Id: time_event_manager.h,v 1.5 2005/08/14 16:51:20 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,6 +43,12 @@ namespace events
     class time_event_manager : public manager_base
     {
     public:
+		/**
+		 * Create a new time_event_manager and register with the event handling
+		 * system.
+		 */
+		time_event_manager ();
+	
         /**
          * Register a time %listener with the %event manager. It is inserted
          * into the vector of registered listeners depending on its "alarm"
