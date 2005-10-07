@@ -267,8 +267,9 @@ namespace python
     template <> inline
     int retrieve_instance<int, int>(PyObject * pyinstance)
     { 
-        return PyInt_AsLong(pyinstance);
+        int retval =  PyInt_AsLong(pyinstance);
         show_traceback();
+        return retval;
     }
 
     /** 
@@ -281,8 +282,9 @@ namespace python
     template <> inline
     bool retrieve_instance<bool, bool>(PyObject * pyinstance)
     { 
-        return (bool)PyInt_AsLong(pyinstance);
+        bool retval = (bool)PyInt_AsLong(pyinstance);
         show_traceback();
+        return retval;
     }
 
     /** 
@@ -295,8 +297,9 @@ namespace python
     template <> inline
     const char * retrieve_instance<const char *, const char *>(PyObject * pyinstance)
     {
-        return PyString_AsString(pyinstance);
+        const char * retval = PyString_AsString(pyinstance);
         show_traceback();
+        return retval;
     }
 
     /** 
@@ -309,8 +312,9 @@ namespace python
     template <> inline
     std::string retrieve_instance<std::string, std::string>(PyObject * pyinstance)
     { 
-        return std::string(PyString_AsString(pyinstance));
+        const std::string &retval = std::string(PyString_AsString(pyinstance));
         show_traceback();
+        return retval;
     }
     //@}
 
