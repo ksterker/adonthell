@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.12 2005/08/14 16:51:21 ksterker Exp $
+   $Id: adonthell.cc,v 1.13 2005/10/08 07:38:18 Mithander Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,6 +37,7 @@
 #include "gfx/gfx.h"
 #include "base/base.h"
 #include "input/input.h"
+#include "audio/audio.h"
 #include "python/python.h"
 #include "main/adonthell.h"
 
@@ -90,6 +91,12 @@ bool app::init_modules (const u_int16 & modules)
     if (m & INPUT)
     {
         if (!input::init (Backend)) return false;
+    }
+
+    // startup audio
+    if (m & AUDIO)
+    {
+        if (!audio::init (Backend)) return false;
     }
 
     return true;
@@ -220,7 +227,8 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
-	if (Modules & INPUT) input::cleanup ();
+    if (Modules & AUDIO) audio::cleanup ();
+    if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();
 }

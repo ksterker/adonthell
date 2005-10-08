@@ -1,12 +1,12 @@
 CXXFLAGS += -I$(top_srcdir)/src/
-EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_gui.i py_main.i py_runtime.i py_debug.i
+EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_gui.i py_main.i py_runtime.i py_debug.i
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py gui.py main.py rpg.py debug.py
-noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc gui.pyc main.pyc rpg.pyc debug.pyc
+pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py gui.py main.py rpg.py debug.py
+noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc gui.pyc main.pyc rpg.pyc debug.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _gui.la _main.la _rpg.la _debug.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la _gui.la _main.la _rpg.la _debug.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la libadonthell_py_runtime.la
@@ -51,6 +51,12 @@ _input_la_CXXFLAGS = $(PY_CFLAGS)
 _input_la_LDFLAGS = -avoid-version -module
 _input_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/input/ -ladonthell_input -ladonthell_py_runtime
 
+## Rules to build libpyaudio (libaudio's Python wrapper)
+_audio_la_SOURCES = py_audio_wrap.cc
+_audio_la_CXXFLAGS = $(PY_CFLAGS)
+_audio_la_LDFLAGS = -avoid-version -module
+_audio_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/audio/ -ladonthell_audio -ladonthell_py_runtime
+
 ## Rules to build libpygui (libgui's Python wrapper)
 _gui_la_SOURCES = py_gui_wrap.cc
 _gui_la_CXXFLAGS = $(PY_CFLAGS)
@@ -65,6 +71,7 @@ _main_la_LIBADD = $(PY_LIBADD) -ladonthell_py_main	\
 	-L$(top_builddir)/src/main -ladonthell_main		\
 	-L$(top_builddir)/src/gfx -ladonthell_gfx		\
 	-L$(top_builddir)/src/input -ladonthell_input	\
+	-L$(top_builddir)/src/audio -ladonthell_audio	\
 	-L$(top_builddir)/src/event -ladonthell_event	\
 	-ladonthell_py_runtime
 
@@ -112,6 +119,12 @@ input.pyc: input.py
 	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 input.py: py_input_wrap.cc
 py_input_wrap.cc: py_input.i $(top_srcdir)/src/input/*.h
+	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
+
+audio.pyc: audio.py
+	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
+audio.py: py_audio_wrap.cc
+py_audio_wrap.cc: py_audio.i $(top_srcdir)/src/audio/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
 gui.pyc: gui.py

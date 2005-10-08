@@ -292,6 +292,7 @@ src/base/Makefile
 src/event/Makefile
 src/gfx/Makefile
 src/input/Makefile
+src/audio/Makefile
 src/gui/Makefile
 src/python/Makefile
 src/rpg/Makefile

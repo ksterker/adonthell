@@ -1,4 +1,4 @@
-SUBDIRS = main base event gfx input gui python rpg py-wrappers
+SUBDIRS = main base event gfx input audio gui python rpg py-wrappers
 
 noinst_SCRIPTS = $(top_builddir)/src/run.sh $(top_builddir)/src/python.sh
 
