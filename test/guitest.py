@@ -30,20 +30,20 @@ def guitest ():
 
     ## gui stuff
     cont = gui.container ()
-    cont.setSize (150, 150)
-    cont.setLocation (20, 30)
+    cont.set_size (150, 150)
+    cont.set_location (20, 30)
 
     a = dict ()
     for i in range (0,7):
     	a[i] = gui.base ()
-	a[i].setSize (40,20)
-	a[i].setLocation (30, 10)
-	cont.addChild (a[i])
+	a[i].set_size (40,20)
+	a[i].set_location (30, 10)
+	cont.add_child (a[i])
   
     # set the layout
-    cont.setExtendPolicy (2)
+    cont.set_extend_policy (2)
     z = gui.listlayout ()
-    cont.setLayout (z)
+    cont.set_layout (z)
 
     
     ## Run this loop until letsexit is set to 1 by the

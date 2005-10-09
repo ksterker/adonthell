@@ -1,7 +1,7 @@
 /*
-   $Id: quest.cc,v 1.5 2005/08/14 16:51:21 ksterker Exp $
+   $Id: quest.cc,v 1.6 2005/10/09 07:38:40 ksterker Exp $
    
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -31,19 +31,26 @@
 #include "base/base.h"
 #include "base/diskio.h"
 #include "python/python.h"
+#include "event/manager.h"
+#include "rpg/quest_event.h"
 
 using rpg::quest;
 using rpg::quest_part;
+using rpg::quest_event;
 
 // ctor
-quest_part::quest_part (const std::string & id)
+quest_part::quest_part (const std::string & id, quest_part *parent)
 {
     Id = id;
     Code = "";
-    Entry = NULL;
-    Parent = NULL;
+    Parent = parent;
     Started = false;
     Completed = false;
+    EntryOnStart = NULL;
+	EntryOnCompl = NULL;
+	
+	if (Parent != NULL)
+		Parent->add_child (this);
 }
 
 // dtor
@@ -52,6 +59,9 @@ quest_part::~quest_part ()
     std::map<std::string, quest_part*>::iterator q;
     for (q = Children.begin (); q != Children.end (); q++)
         delete (*q).second;
+		
+	delete EntryOnStart;
+	delete EntryOnCompl;
 }
 
 // set a step to completed
@@ -60,11 +70,8 @@ bool quest_part::set_completed ()
     // only steps can be completed that way
     if (!Children.empty ()) return false;
     
-    Completed = true;
-    Started = true;
-
-    // update parent, if it has one 
-    if (Parent != NULL) Parent->update ();
+	// set state to started and completed
+    update ();
     
     return true;
 }
@@ -81,6 +88,19 @@ const quest_part *quest_part::child (const std::string &id) const
 
     return NULL;
 }
+
+// add a quest to list of quests
+void quest_part::add_child (quest_part *part)
+{
+    std::map<std::string, quest_part*>::iterator q;
+    if ((q = Children.find (part->id ())) != Children.end ())
+    {
+        delete (*q).second;
+        (*q).second = part;
+    }
+    else Children[part->id ()] = part;
+}
+
 
 // update state of a quest part from state of its children
 void quest_part::update ()
@@ -119,28 +139,35 @@ void quest_part::update ()
         if (Completed == true) changed = true;
     }
     
-    // if state changed, update parent too
-    if (Parent != NULL && changed) Parent->update ();
+	if (changed)
+	{
+		// fire quest event
+		quest_event evt (full_name(), this);
+		events::manager::raise_event (&evt);
+		
+		// if state changed, update parent too
+		if (Parent != NULL) Parent->update ();
+	}
 }
 
 // calculate the state of completion with given code
 bool quest_part::evaluate ()
 {
-    std::string code = "", token = 0;
+    std::string code = "", token = "";
     std::map<std::string, quest_part*>::iterator child;
 
     // prepare code for evaluation, replacing all references to quest parts with
     // their state of completion
-    for (std::string::const_iterator i = Code.begin (); i != Code.end (); i++)
+    for (const char *cptr = Code.c_str(); *cptr != '\0'; cptr++)
     {
-        if (!isalnum (*i)) 
+        if (!isalnum (*cptr) && *cptr != '_')
         {
             // check if we have just read a new token
             if (token != "")
             {
                 // check if the token we read is a quest_part
                 if ((child = Children.find (token)) != Children.end ())
-                    // if so, add it's state of completion to the code
+                    // if so, add its state of completion to the code
                     code += (*child).second->is_completed () ? '1' : '0';
                 else
                     // otherwise assume the token is part of the code
@@ -149,9 +176,9 @@ bool quest_part::evaluate ()
                 // reset token
                 token = "";
             }
-            code += *i;            
+            code += *cptr;
         }
-        else token += *i;
+        else token += *cptr;
     }
     
     // now try to evaluate our code snippet
@@ -169,27 +196,42 @@ bool quest_part::evaluate ()
     return completed; 
 }
 
+
+// get full name of this quest part
+std::string quest_part::full_name () const
+{
+	if (Parent != NULL) return Parent->full_name() + std::string(".") + Id;
+	return Id;
+}
+
 // save quest_part
 void quest_part::put_state (base::flat & out) const
 {
     base::flat record;
     
+	// id needs be saved here only for quest root
+	if (Parent == NULL) record.put_string ("qid", Id);
+
     // save attributes
-    record.put_string ("qid", Id);
     record.put_bool ("qst", Started);
     record.put_bool ("qcp", Completed);
     record.put_string ("qcd", Code);
     
-    // save associated log entry
-    record.put_bool ("qhe", Entry != NULL);
-    if (Entry) Entry->put_state (record);
+    // save associated log entries
+    record.put_bool ("qse", EntryOnStart != NULL);
+    if (EntryOnStart) EntryOnStart->put_state (record);
+    record.put_bool ("qce", EntryOnCompl != NULL);
+    if (EntryOnCompl) EntryOnCompl->put_state (record);
 
     // save child quest parts
     std::map<std::string, quest_part*>::const_iterator i;
     record.put_uint16 ("qnc", Children.size ());
     for (i = Children.begin (); i != Children.end (); i++)
+	{
+	    record.put_string ("qid", (*i).second->id ());
         (*i).second->put_state (record);
-        
+	}
+	
     // save this quest part to stream
     out.put_flat ("q", record);
 }
@@ -200,27 +242,36 @@ bool quest_part::get_state (base::flat & in)
     base::flat record = in.get_flat ("q");
     if (!in.success ()) return false;
 
+	// id needs to be loaded only for quest root 
+	if (Parent == NULL) Id = record.get_string ("qid");
+
     // get attributes
-    Id = record.get_string ("qid");
     Started = record.get_bool ("qst");
     Completed = record.get_bool ("qcp");
     Code = record.get_string ("qcd");
 
-    // get log entry, if any
-    if (record.get_bool ("qhe") == true)
+    // get log entry for quest start, if any
+    if (record.get_bool ("qse") == true)
     {
-        Entry = new rpg::log_entry ("", "", "");
-        Entry->get_state (record);
+        EntryOnStart = new rpg::log_entry ("", "", "");
+        EntryOnStart->get_state (record);
+    }
+
+    // get log entries for quest completion, if any
+    if (record.get_bool ("qce") == true)
+    {
+        EntryOnCompl = new rpg::log_entry ("", "", "");
+        EntryOnCompl->get_state (record);
     }
 
     // get children, if any
     quest_part *part;
-    for (u_int16 i = record.get_uint16 ("qhc"); i > 0; i--)
+    for (u_int16 i = record.get_uint16 ("qnc"); i > 0; i--)
     {
-        part = new quest_part ("");
+		string id = record.get_string ("qid");
+
+        part = new quest_part (id, this);
         part->get_state (record);
-        part->Parent = this;
-        Children[part->Id] = part;
     }
     
     return record.success ();
@@ -237,7 +288,7 @@ void quest::cleanup ()
         delete (*q).second;
 }
 
-// check wether a given quest (step) has been started
+// check whether a given quest (step) has been started
 bool quest::is_started (const std::string & id)
 {
     const quest_part *part = get_part (id);
@@ -245,7 +296,7 @@ bool quest::is_started (const std::string & id)
     return false;
 }
 
-// check wether a given quest (step) has been completed
+// check whether a given quest (step) has been completed
 bool quest::is_completed (const std::string & id)
 {
     const quest_part *part = get_part (id);
@@ -253,7 +304,7 @@ bool quest::is_completed (const std::string & id)
     return false;
 }
 
-// check wether a given quest (step) is in progress
+// check whether a given quest (step) is in progress
 bool quest::in_progress (const std::string & id)
 {
     const quest_part *part = get_part (id);
@@ -302,9 +353,9 @@ bool quest::get_state ()
 {
     // open file
     base::igzstream in;
-    if (!base::Paths.open (in, QUEST_DATA));
+    if (!base::Paths.open (in, QUEST_DATA))
     {
-        fprintf (stderr, "*** quest::put_state: cannot open '" QUEST_DATA "' for reading!\n");
+        fprintf (stderr, "*** quest::get_state: cannot open '" QUEST_DATA "' for reading!\n");
         return false; 
     }
     
@@ -324,7 +375,7 @@ bool quest::get_state (base::flat & in)
     
     for (int i = 0; i < size; i++)
     {
-        part = new quest_part ("");
+        part = new quest_part ("", NULL);
         if (part->get_state (in)) add (part);
     }
     
@@ -354,9 +405,9 @@ const quest_part* quest::get_part (const std::string & path)
     if ((q = Quests.find (*i)) != Quests.end ())
         part = (*q).second;
     else
-        fprintf (stderr, "*** quest::get_part: quest '%s' no found!\n", (*i).c_str ());
+        fprintf (stderr, "*** quest::get_part: quest '%s' not found!\n", (*i).c_str ());
     
-    for (i = i++; i != result.end () && part != NULL; i++)
+    for (i++; i != result.end () && part != NULL; i++)
         part = part->child (*i);
 
     return part;

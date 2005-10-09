@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.13 2005/10/08 07:38:18 Mithander Exp $
+   $Id: adonthell.cc,v 1.14 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -169,7 +169,7 @@ bool app::init ()
     }
 
     // init base module (required for reading config file)
-    base::init (Userdatadir, Game);
+    base::init (Game, Userdatadir);
 
     // load engine configuration file
     if (!Cfg.read (Config))

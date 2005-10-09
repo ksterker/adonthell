@@ -1,5 +1,5 @@
 /*
-   $Id: manager_base.h,v 1.4 2005/08/14 16:51:20 ksterker Exp $
+   $Id: manager_base.h,v 1.5 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,6 +44,11 @@ namespace events
     class manager_base
     {
     public:
+		/** 
+		 * Register this %event %manager with the %event dispatching system.
+		 * @param create_event function returning a new event of the type
+		 *	this event manager takes care of.
+		 */
 		manager_base (new_event create_event)
 		{
 			event *evt = create_event ();

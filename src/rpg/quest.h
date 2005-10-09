@@ -1,7 +1,7 @@
 /*
-   $Id: quest.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
+   $Id: quest.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
    
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -44,7 +44,8 @@ namespace rpg
      * Location in which the quests are kept
      */
     #define QUEST_DATA "/data/quest.data"
-    
+#endif // SWIG
+
     /**
      * An internal class to represent the structure of a quest. Depending on its
      * content, it can represent a whole quest, a single step or a part (a group
@@ -65,7 +66,7 @@ namespace rpg
              * different quests. The same is true for steps.
              * @param id name of the quest part.
              */
-            quest_part (const std::string & id);
+            quest_part (const std::string & id, quest_part *parent);
             
             /**
              * Delete quest part.
@@ -73,7 +74,7 @@ namespace rpg
             virtual ~quest_part ();
             
             /**
-             * @name Query methods
+             * @name Quest State methods
              */
             //@{
             /**
@@ -91,14 +92,17 @@ namespace rpg
              * @return \b true if has been started but not completed, \b false otherwise.
              */
             bool in_progress () const { return is_started () && !is_completed (); }
-            //@}
-            
             /**
              * Set this quest parts to completed. This is only possible for parts that
              * do not have any children. The state of parent parts is updated accordingly. 
              */
             bool set_completed ();
-            
+            //@}
+                        
+            /**
+             * @name Member access
+             */
+            //@{
             /**
              * Retrieve a %quest part with the given id.
              * @param id identifier of the part to return.
@@ -112,6 +116,34 @@ namespace rpg
              */
             std::string id () const { return Id; }
             
+			/**
+			 * Return full name of this %quest part.
+			 * @return full name of this %quest part.
+			 */
+			std::string full_name () const;
+			
+			/**
+			 * Set the Python code used to calculate quest completion.
+			 * If no code is set, the default completion rule applies.
+			 * @param code python code snippet
+			 */
+			void set_code (const std::string & code) { Code = code; }
+			
+			/**
+			 * Set the log entry to be inserted into a log book on start
+			 * of this %quest.
+			 * @param entry the log book entry for start of the %quest.
+			 */
+			void set_start_entry (log_entry *entry) { EntryOnStart = entry; }
+			
+			/**
+			 * Set the log entry to be inserted into a log book on completion
+			 * of this %quest.
+			 * @param entry the log book entry for completion of the %quest.
+			 */
+			void set_completion_entry (log_entry *entry) { EntryOnCompl = entry; }
+            //@}
+			
             /**
              * @name Loading/Saving
              */
@@ -132,6 +164,7 @@ namespace rpg
             //@}
                 
         protected:
+#ifndef SWIG
             /**
              * Recalculate the state of completion. This method is called, when
              * the state of a child has changed, in order to check whether this
@@ -146,10 +179,19 @@ namespace rpg
              */
             bool evaluate ();
         
+			/**
+			 * Add given %quest part as child of this %quest. If a child with
+			 * same id exists already, it will be replaced.
+			 * @param part %quest part being added as child.
+			 */
+			void add_child (quest_part *part);
+
             /// Child quests
             std::map<std::string, quest_part*> Children;
+			/// log entry if the quest is started
+			log_entry *EntryOnStart;
             /// log entry if the quest is completed
-            log_entry *Entry;
+            log_entry *EntryOnCompl;
             /// Code to calculate completion
             std::string Code;
             /// Parent of that quest part
@@ -162,8 +204,8 @@ namespace rpg
             bool Started;
             /// Whether the quest has been finished
             bool Completed;
-    };
 #endif // SWIG
+    };
 
     /**
      * The quest class is used to keep track of the player's progress in the game.
@@ -269,13 +311,13 @@ namespace rpg
             static void put_state (const std::string & path);
             //@}
 
-#ifndef SWIG
             /**
              * Add a %quest to list of quests.
              * @param part %quest to be added. 
              */
             static void add (quest_part *part);
 
+#ifndef SWIG
         private:
             /**
              * Return the %quest part identified by the given path

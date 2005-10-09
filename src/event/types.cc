@@ -1,5 +1,5 @@
 /*
-   $Id: types.cc,v 1.2 2005/08/14 16:51:20 ksterker Exp $
+   $Id: types.cc,v 1.3 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,36 +34,30 @@ using events::event;
 using events::event_type;
 using events::manager_base;
 
-// Types of events registered with the event subsystem by name
-std::hash_map<std::string, event_type*> event_type::NamedTypes;
-
-// Types of events by id
-std::vector<event_type*> event_type::Types;
-
 // register a new type of event
 void event_type::register_type (const std::string & name, manager_base *manager, new_event creator)
 {
-    std::hash_map<std::string, event_type*>::iterator i = NamedTypes.find (name);   
-    if (i == NamedTypes.end())
+    std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
+    if (i == NamedTypes().end())
     {
-        NamedTypes[name] = new event_type ((u_int8) Types.size(), manager, creator);
-        Types.push_back (NamedTypes[name]);
+		NamedTypes()[name] = new event_type ((u_int8) Types().size(), manager, creator);
+        Types().push_back (NamedTypes()[name]);
     }
     
     else if ((*i).second == NULL) 
     {
-        (*i).second = new event_type ((u_int8) Types.size(), manager, creator);
-        Types.push_back ((*i).second);
+        (*i).second = new event_type ((u_int8) Types().size(), manager, creator);
+        Types().push_back ((*i).second);
     }
 }
 
 // remove event type from list of registered event types
 void event_type::remove_type (const std::string & name)
 {
-    std::hash_map<std::string, event_type*>::iterator i = NamedTypes.find (name);   
-    if (i != NamedTypes.end())
+    std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
+    if (i != NamedTypes().end())
     {
-        Types[(*i).second->id()] = NULL;
+        Types()[(*i).second->id()] = NULL;
         delete (*i).second;
         (*i).second = NULL;
     }
@@ -72,30 +66,44 @@ void event_type::remove_type (const std::string & name)
 // get id of given event type
 u_int8 event_type::get_id (const std::string & name)
 {
-    std::hash_map<std::string, event_type*>::iterator i = NamedTypes.find (name);   
-    if (i != NamedTypes.end() && (*i).second != NULL) return (*i).second->id ();
+    std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
+    if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->id ();
     
-    fprintf (stderr, "event_type::get_id: event type '%s' not registered!\n", name.c_str());
+    fprintf (stderr, "*** event_type::get_id: event type '%s' not registered!\n", name.c_str());
     return 255;
 }
 
 // instanciate new event of given type
 event *event_type::instanciate_event (const std::string & name)
 {
-    std::hash_map<std::string, event_type*>::iterator i = NamedTypes.find (name);   
-    if (i != NamedTypes.end() && (*i).second != NULL) return (*i).second->instanciate ();
+    std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
+    if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->instanciate ();
 
-    fprintf (stderr, "event_type::instanciate_event: event type '%s' not registered!\n", name.c_str());
+    fprintf (stderr, "*** event_type::instanciate_event: event type '%s' not registered!\n", name.c_str());
     return NULL;
 }
 
 // get manager for given event id
 manager_base *event_type::get_manager (const u_int8 & id)
 {
-    if (id < Types.size() && Types[id] != NULL) return Types[id]->manager ();
+    if (id < Types().size() && Types()[id] != NULL) return Types()[id]->manager ();
 
-    fprintf (stderr, "event_type::get_manager: event id '%i' not registered!\n", id);
+    fprintf (stderr, "*** event_type::get_manager: event id '%i' not registered!\n", id);
     return NULL;    
+}
+
+// Types of events registered with the event subsystem by name
+std::hash_map<std::string, event_type*>& event_type::NamedTypes ()
+{
+    static std::hash_map<std::string, event_type*> *NamedTypes = new std::hash_map<std::string, event_type*>();
+    return *NamedTypes;
+}
+
+// Types of events by id
+std::vector<event_type*>& event_type::Types ()
+{
+    static std::vector<event_type*> *Types = new std::vector<event_type*>();
+    return *Types;
 }
 
 event_type::event_type (const u_int8 & id, manager_base *manager, new_event creator)

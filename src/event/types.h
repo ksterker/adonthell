@@ -1,5 +1,5 @@
 /*
-   $Id: types.h,v 1.2 2005/08/14 16:51:20 ksterker Exp $
+   $Id: types.h,v 1.3 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -139,15 +139,17 @@ private:
     new_event InstanciateEvent;
     
     /// Types of events registered with the event subsystem by name
-    static std::hash_map<std::string, event_type*> NamedTypes;
+    static std::hash_map<std::string, event_type*>& NamedTypes ();
     
     /// Types of events by id
-    static std::vector<event_type*> Types;
+    static std::vector<event_type*>& Types ();
 };
 
 #ifndef SWIG
 /**
- * A function that returns a new instance of an %event.
+ * Macro for functions that return a new instance of an %event.
+ * @param nsp namespace the event class lives in
+ * @param evt the event class to instanciate
  */
 #define NEW_EVENT(nsp, evt)\
     events::event* new_ ## evt () { return (events::event*) new nsp::evt; }

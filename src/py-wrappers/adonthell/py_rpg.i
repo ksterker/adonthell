@@ -9,10 +9,11 @@
 #include "rpg/inventory.h"
 #include "rpg/log_entry.h"
 #include "rpg/log_index.h"
-#include "rpg/quest.h"
 #include "rpg/quest_event.h"
+#include "rpg/quest.h"
 
 using rpg::slot;
+using rpg::quest_part;
 %}
 
 namespace rpg {
@@ -61,6 +62,7 @@ namespace rpg {
 %typemap(freearg) const std::vector<std::string> & "delete $1;"
 
 %include "base/types.h"
+%include "event/event.h"
 %include "python/script.h"
 %include "rpg/item.h"
 %include "rpg/slot.h"

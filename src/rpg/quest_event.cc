@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.cc,v 1.1 2005/08/14 16:52:55 ksterker Exp $
+   $Id: quest_event.cc,v 1.2 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,20 +31,11 @@
 using rpg::quest_event;
 
 // constructor
-quest_event::quest_event (const std::string & pattern)
+quest_event::quest_event (const std::string & pattern, quest_part *part)
 {
-	u_int32 idx, pos = 0;
-	
-    // split pattern into its levels
-    while ((idx = pattern.find (".", pos)) != pattern.npos)
-    {
-        Pattern.push_back (pattern.substr (pos, idx - pos));
-        pos = idx + 1;
-    }
-    
-    // add last part
-    Pattern.push_back (pattern.substr (pos));
- }
+	set_pattern (pattern);
+	Part = part;
+}
 
 // test two quest events for equality
 bool quest_event::equals (const events::event * e)
@@ -55,8 +46,6 @@ bool quest_event::equals (const events::event * e)
 	
 	for (; j != Pattern.end() && i != qevt->end(); i++, j++)
 	{
-		fprintf (stdout, "%s == %s\n", (*i).c_str(), (*j).c_str());
-	
 		// '>' matches rest of pattern
 		if ((*i)[0] == '>' || (*j)[0] == '>')
 		{
@@ -76,7 +65,7 @@ bool quest_event::equals (const events::event * e)
 		}
 	}
 	
-	// both pattern matched, but we must still make sure that
+	// the patterns matched, but we must still make sure that
 	// they have the same size
 	return Pattern.size () == qevt->size ();
 }
@@ -84,11 +73,46 @@ bool quest_event::equals (const events::event * e)
 // save quest event
 void quest_event::put_state (base::flat& out) const
 {
+    // save basic event data first
+    event::put_state (out);
+
+	string pattern = "";
+	for (std::vector<std::string>::const_iterator i = Pattern.begin(); i != Pattern.end(); /* nothing */)
+	{
+		pattern += (*i); 
+		if (++i != Pattern.end()) pattern += ".";
+	}
+	
+    // save quest event data
+    out.put_string ("qpt", pattern);
 }
 
 // load quest event
 bool quest_event::get_state (base::flat& in)
 {
-	return true;
+    // get basic event data
+    if (event::get_state (in))
+    {   
+        // get quest event data
+        string pattern = in.get_string ("qpt");
+		set_pattern (pattern);
+    }
+    return in.success ();
+}
+
+// split given path into its parts
+void quest_event::set_pattern (const std::string & pattern)
+{
+	u_int32 idx, pos = 0;
+
+    // split pattern into its levels
+    while ((idx = pattern.find (".", pos)) != pattern.npos)
+    {
+        Pattern.push_back (pattern.substr (pos, idx - pos));
+        pos = idx + 1;
+    }
+    
+    // add last part
+    Pattern.push_back (pattern.substr (pos));
 }
 

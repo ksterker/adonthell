@@ -1,5 +1,5 @@
 /*
-   $$
+   $Id: file.h,v 1.2 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2001/2003 Alexandre Courbot
    Part of the Adonthell Project http://adonthell.linuxgames.com

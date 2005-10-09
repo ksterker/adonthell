@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.h,v 1.1 2005/08/14 16:52:55 ksterker Exp $
+   $Id: quest_event.h,v 1.2 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 
 #include <vector>
 #include "event/event.h"
+#include "rpg/quest.h"
 
 namespace rpg
 {
@@ -74,8 +75,9 @@ namespace rpg
 		 *
 		 *	'*' will match one level in the path to the quest node, while '>' 
 		 *	will match all nodes with a common prefix.
+		 * @param part @quest part that just changed its state.
 		 */
-        quest_event (const string & pattern);
+        quest_event (const string & pattern, quest_part * part = NULL);
 		
 #ifndef SWIG
 		/**
@@ -90,13 +92,22 @@ namespace rpg
          */
         //@{
         /**
-         * Compare two time events for equality.
+         * Compare two %quest events for equality.
          *
-         * @param e The time event to compare this to.
+         * @param e The %quest %event to compare this to.
          * @return <b>True</b> if the two events equal, <b>false</b> otherwise.
          */
         bool equals (const events::event * e);
 
+		/**
+		 * Return %quest part that triggered this event.
+		 * @return %quest part that triggered this event.
+		 */
+		quest_part *part ()
+		{
+			return Part;
+		}
+		
 #ifndef SWIG
         /**
          * Get name of %event.
@@ -168,8 +179,17 @@ namespace rpg
 #endif
 
     private:
+		/**
+		 * Set the pattern for the triggering events.
+		 * @param pattern path of quest that will trigger events. It may
+		 *  contain the wildcards '*' and '>'. 
+		 */
+		void quest_event::set_pattern (const std::string & pattern);
+	
         /// pattern that will trigger event
         std::vector<std::string> Pattern;
+		/// %quest part that triggered the event
+		quest_part *Part; 
     };
 }
 

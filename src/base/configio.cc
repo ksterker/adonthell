@@ -1,5 +1,5 @@
 /*
-   $Id: configio.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: configio.cc,v 1.3 2005/10/09 07:38:39 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,7 @@ struct cfg_sax_context
 {
     /**
      * create a new parser context
-     * @param config 
+     * @param config the configuration to be loaded
      */
     cfg_sax_context (configuration *config)
     {
@@ -187,7 +187,7 @@ static void cfg_read_characters (void *ctx, const xmlChar *content, int len)
 }
 
 /**
- * Display and format a error messages, gives file, line, position and
+ * Display and format error messages, gives file, line, position and
  * extra parameters.
  * @param ctx the parser context
  * @param msg error message to display

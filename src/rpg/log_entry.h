@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
+   $Id: log_entry.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,6 +54,12 @@ namespace rpg
              * @name Member Access
              */
             //@{
+			/**
+             * Return the topic of this log entry.
+             * @return topic of the log entry.
+             */
+            std::string topic () const { return Topic; }
+			
             /**
              * Return the text of this log entry.
              * @return text of the log entry.

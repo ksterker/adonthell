@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event_manager.h,v 1.1 2005/08/14 16:52:55 ksterker Exp $
+   $Id: quest_event_manager.h,v 1.2 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,9 @@
 #ifndef QUEST_EVENT_MANAGER_H
 #define QUEST_EVENT_MANAGER_H
 
+#include <vector>
+#include <map>
+
 #include "event/manager_base.h"
 
 using events::manager_base;
@@ -38,7 +41,7 @@ using events::event;
 namespace rpg
 {
 	/**
-	 *
+	 * Manager keeping track of quest_events.
 	 */
 	class quest_event_manager : public manager_base
 	{
@@ -49,7 +52,12 @@ namespace rpg
 		 */
 		quest_event_manager ();
 		
-        /** 
+		/**
+		 * Cleanup.
+		 */
+		~quest_event_manager ();
+
+        /**
          * Registers a %listener.
          * 
          * @param li pointer to the %event to register.
@@ -71,6 +79,15 @@ namespace rpg
         void raise_event (const event* ev);
 
 	protected:
+		/**
+		 * Execute all scripts of given listeners matching the given %event.
+		 * @param e the triggering event.
+		 * @param listeners listeners to test whether they fit to the %event.
+		 */
+		void raise_event (const event * e, std::vector<listener*> *listeners);
+	
+		/// registered quest events
+		std::map<std::string, std::vector<listener*> > Events;
 	};
 	
 }

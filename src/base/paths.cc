@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.7 2005/06/03 17:29:13 ksterker Exp $
+   $Id: paths.cc,v 1.8 2005/10/09 07:38:40 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -89,7 +89,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 #endif
 
 #ifndef WIN32
-    // make sure configuration directory exists, otherwise create is
+    // make sure configuration directory exists, otherwise create it
     if (!exists (CfgDataDir)) mkdir (CfgDataDir.c_str (), 0700);
 #endif
 
@@ -98,7 +98,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     if (UserDataDir != "")
     {
         if (UserDataDir[UserDataDir.size () - 1] != '/') UserDataDir += "/";
-        UserDataDir += game + "/";
+        if (game != "") UserDataDir += game + "/";
 
         // make sure the given user data dir is actually accessible
         if (exists (UserDataDir)) IncludeUserDir = true;
@@ -146,7 +146,7 @@ bool paths::open (igzstream & file, const std::string & path)
 }
 
 // check whether given path exists at all
-bool paths::exists (const std::string & path)
+bool paths::exists (const std::string & path) const
 {
     DIR *dir = opendir (path.c_str ());
     if (dir != NULL)

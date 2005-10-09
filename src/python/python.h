@@ -96,9 +96,10 @@ namespace python
      * This is a new reference that needs to be Py_DECREF'd when done.
      * @param statement Python code to execute.
      * @param start one of Py_eval_input, Py_file_input or Py_single_input
+	 * @param globals the global dictionary for the Python interpreter.
      * @return \b result on success, \b NULL otherwise.
      */
-    PyObject* run_string (const std::string & statement, const int & start = Py_eval_input);
+    PyObject* run_string (const std::string & statement, const int & start = Py_eval_input, PyObject *globals = NULL);
     
     /** 
      * Execute a python statement and return success.
