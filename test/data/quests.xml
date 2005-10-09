@@ -1,0 +1,29 @@
+<quests>
+	<quest name="Quest_1">
+		<code>Part_1 and (Step_1 or Step_2)</code>
+		<log>
+			<on_start>
+				<topic>Quest 1</topic>
+				<text>Quest 1 Started</text>
+				<id>logbook.quest_1a</id>
+			</on_start>
+			<on_completion>
+				<topic>Quest 1</topic>
+				<text>Quest 1 Completed</text>
+				<id>logbook.quest_1b</id>
+			</on_completion>
+		</log>
+		<parts>
+			<quest name="Part_1">
+				<code>(Step_3 and Step_4) or (Step_4 and Step_5)</code>
+				<parts>
+					<quest name="Step_3"/>
+					<quest name="Step_4"/>
+					<quest name="Step_5"/>
+				</parts>
+			</quest>
+			<quest name="Step_1"/>
+			<quest name="Step_2"/>
+		</parts>
+	</quest>
+</quests>
