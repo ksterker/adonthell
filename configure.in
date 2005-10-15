@@ -145,6 +145,14 @@ AM_PATH_SDL($SDL_VERSION,
 	AC_MSG_ERROR([*** SDL version $SDL_VERSION not found!])
 )
 
+dnl *******************
+dnl Check for SDL-mixer
+dnl *******************
+AC_CHECK_HEADER(SDL/SDL_mixer.h,,
+	AC_MSG_ERROR(*** Cannot find the SDL/SDL_mixer.h header
+	goto http://www.libsdl.org to download or
+	check with your distibution.
+	); exit)
 
 dnl ****************
 dnl Check for Python
