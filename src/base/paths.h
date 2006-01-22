@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
+   $Id: paths.h,v 1.7 2006/01/22 21:32:39 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -90,6 +90,18 @@ namespace base
              * @return path to the Adonthell configuration directory.
              */
             std::string cfg_data_dir () const { return CfgDataDir; }
+
+            /**
+             * Return the built in game data directory.
+             * @return path to the data directory of current game.
+             */
+            std::string game_data_dir () const { return GameDataDir; }
+            
+            /**
+             * Return name of the game currently running.
+             * @return name of current game.
+             */
+            std::string game () const { return Game; }
             
         private:
             /**
@@ -99,6 +111,8 @@ namespace base
              */
             bool exists (const std::string & path) const;
             
+            /// current game
+            std::string Game;
             /// directory of the saved game currently being loaded (if any)
             std::string SaveDataDir;
             /// user supplied game data directory (if any) 

@@ -1,7 +1,7 @@
 /*
-   $Id: audio_event.cc,v 1.1 2005/10/08 07:38:17 Mithander Exp $
+   $Id: audio_event.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
 
-   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file event/audio_event.cc
+ * @file audio/audio_event.cc
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
  *
  * @brief Implements the audio_event class.

@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.8 2005/10/09 07:38:40 ksterker Exp $
+   $Id: paths.cc,v 1.9 2006/01/22 21:32:39 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -75,6 +75,8 @@ namespace base
 // initialize data search paths
 bool paths::init (const std::string & game, const std::string & userdatadir)
 {
+    Game = game;
+    
     // no save game directory unless we actually load a game
     IncludeSaveDir = false;
     IncludeUserDir = false;

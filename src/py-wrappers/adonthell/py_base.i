@@ -1,6 +1,7 @@
 %module base
 %{
 #include <string>
+#include "base/nls.h"
 #include "base/base.h"
 #include "base/endians.h"
 #include "base/types.h"

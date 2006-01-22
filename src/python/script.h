@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.8 2005/06/03 17:29:13 ksterker Exp $
+   $Id: script.h,v 1.9 2006/01/22 21:32:39 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -62,7 +62,7 @@ namespace python
         virtual ~script (); 
     
         /** 
-         * Resets the script to it's post-constructor state.
+         * Resets the script to its post-constructor state.
          * 
          */
         void clear (); 

@@ -1,7 +1,7 @@
 /*
-   $Id: date.h,v 1.6 2004/12/07 16:46:27 ksterker Exp $
+   $Id: date.h,v 1.7 2006/01/22 21:32:39 ksterker Exp $
 
-   Copyright (C) 2002 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2002/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -74,27 +74,27 @@ public:
      * Get the current weekday.
      * @return weekday as a number between 0 and DAYS_PER_WEEK - 1
      */
-    static u_int16 weekday ();
+    static u_int16 weekday (const u_int32 & time = Time);
     /**
      * Returns the current day in the gameworld.
      * @return number of days spent in the gameworld, beginning with day 0.
      */
-    static u_int16 day ();
+    static u_int16 day (const u_int32 & time = Time);
     /**
      * Return the hour of the current day.
      * @return hour of the current day between 0 and HOURS_PER_DAY - 1
      */
-    static u_int16 hour ();
+    static u_int16 hour (const u_int32 & time = Time);
     /**
      * Return the minute of the current hour.
      * @return minute of the current hour between 0 and 59.
      */
-    static u_int16 minute ();
+    static u_int16 minute (const u_int32 & time = Time);
 
     /**
      * convert the time string to gametime minutes. The time string
      * has the format "<number>X", where X may be (w)eek, (d)ay,
-     * (h)our, (m)inute or (t)enth minute. Several such pairs can be
+     * (h)our, (m)inute or (s)econds. Several such pairs can be
      * concatenated.
      * Valid examples are "1w1d1h", "30m1h" but also "1h1h".
      *
@@ -102,6 +102,21 @@ public:
      * @return The time represented by the string in minutes.
      */
     static u_int32 parse_time (const std::string & time);
+
+	/**
+	 * convert the given time into string format. The following
+	 * format codes are recognized and will be replaced accordingly:
+	 * - \b %w weekday between 0 and DAYS_PER_WEEK - 1
+	 * - \b %d days counted from start of the game
+	 * - \b %h hour of the current day between 0 and HOURS_PER_DAY - 1
+	 * - \b %m minute of the current hour between 0 and 59
+	 * All other letters of the format string remain unchanged.
+	 * 
+	 * @param format format string like "Day %d - %h:%m"
+	 * @param time timestamp in seconds of gametime.
+	 * @return the given format string with format codes replaced
+	 */
+	static std::string format_time (const std::string & format, const u_int32 & time = Time); 
 
     /**
      * Load the state of the %gamedate class from disk

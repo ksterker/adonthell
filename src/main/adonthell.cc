@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.14 2005/10/09 07:38:40 ksterker Exp $
+   $Id: adonthell.cc,v 1.15 2006/01/22 21:32:39 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,7 @@
 #include <unistd.h>
 
 #include "gfx/gfx.h"
+#include "base/nls.h"
 #include "base/base.h"
 #include "input/input.h"
 #include "audio/audio.h"
@@ -215,6 +216,9 @@ bool app::init ()
         cerr << lt_dlerror() << endl;
         return false;
     }
+    
+    // init national language support
+    base::nls::init (Cfg);
 
     // platform / backend specific initialization
     return init_p (this);

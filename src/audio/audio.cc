@@ -1,7 +1,7 @@
 /*
-   $Id: audio.cc,v 1.1 2005/10/08 07:38:17 Mithander Exp $
+   $Id: audio.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify

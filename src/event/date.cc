@@ -1,7 +1,7 @@
 /*
-   $Id: date.cc,v 1.7 2004/12/07 16:46:27 ksterker Exp $
+   $Id: date.cc,v 1.8 2006/01/22 21:32:39 ksterker Exp $
 
-   Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -92,30 +92,30 @@ void date::put_state (base::ogzstream &out)
 }
 
 // calculate the current weekday
-u_int16 date::weekday ()
+u_int16 date::weekday (const u_int32 & time)
 {
-    return day () % DAYS_PER_WEEK;
+    return day (time) % DAYS_PER_WEEK;
 }
 
 // calculate the current day
-u_int16 date::day ()
+u_int16 date::day (const u_int32 & time)
 {
     // how many minutes make one day
     static u_int16 day_in_minutes = 600 * HOURS_PER_DAY;
 
-    return Time / day_in_minutes;
+    return time / day_in_minutes;
 }
 
 // calculate the hour of the current day
-u_int16 date::hour ()
+u_int16 date::hour (const u_int32 & time)
 {
-    return (Time / 600) % HOURS_PER_DAY;
+    return (time / 600) % HOURS_PER_DAY;
 }
 
 // calculate minute of the hour
-u_int16 date::minute ()
+u_int16 date::minute (const u_int32 & time)
 {
-    return (Time / 10) % 60; 
+    return (time / 10) % 60; 
 }
 
 // convert the time string to gametime minutes
@@ -183,4 +183,70 @@ u_int32 date::parse_time (const std::string & time)
         fprintf (stderr, "*** date::parse_time: Time specifier missing at end of '%s'\n", time.c_str ());
         
     return secs;
+}
+
+// format timestamp according to given format string
+std::string date::format_time (const std::string & format, const u_int32 & time)
+{
+	bool is_code = false;
+	std::string result = "";
+	
+    for (u_int32 i = 0; i < format.length (); i++)
+	{
+		// last letter was '%'
+		if (is_code)
+		{
+			char str[16];
+				
+			switch (format[i])
+			{
+				// day of week
+				case 'w':
+				{
+					snprintf (str, 15, "%i", weekday (time));
+					break;
+				}
+				// days since start of game
+				case 'd':
+				{
+					snprintf (str, 15, "%i", day (time));
+					break;
+				}
+				// hours of gametime
+				case 'h':
+				{
+					snprintf (str, 15, "%i", hour (time));
+					break;
+				}
+				// minutes of gametime
+				case 'm':
+				{
+					snprintf (str, 15, "%i", minute (time));
+					break;
+				}
+				// no valid format code
+				default:
+				{
+					snprintf (str, 15, "%%%c", format[i]);
+					break;
+				}
+			}
+
+			if (format[i] != '%') is_code = false;
+			result += str;
+			continue;
+		}
+		
+		// found format code indicator
+		if (format[i] == '%')
+		{
+			is_code = true;
+			continue;
+		}
+		
+		// append all other characters of format string to result
+		result += format[i];
+	}
+	
+	return result;
 }

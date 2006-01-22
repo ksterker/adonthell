@@ -11,7 +11,9 @@ pkgincludebase_HEADERS = \
 	endians.h \
 	file.h \
 	flat.h \
+	gettext.h \
     hash_map.h \
+    nls.h \
 	paths.h \
 	timer.h \
 	types.h
@@ -28,6 +30,7 @@ libadonthell_base_la_SOURCES = \
     diskio.cc \
 	file.cc \
 	flat.cc \
+    nls.cc \
 	paths.cc \
 	timer.cc
 

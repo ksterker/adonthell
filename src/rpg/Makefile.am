@@ -4,6 +4,8 @@ CXXFLAGS += -I$(top_srcdir)/src/
 pkgincluderpgdir = $(pkgincludedir)/rpg
 pkgincluderpg_HEADERS = \
     character.h \
+    dialog.h \
+    dialog_line.h \
     equipment.h \
     inventory.h \
     item_storage.h \
@@ -21,6 +23,8 @@ lib_LTLIBRARIES = libadonthell_rpg.la
 ## Rules to build librpg
 libadonthell_rpg_la_SOURCES = \
     character.cc \
+    dialog.cc \
+    dialog_line.cc \
     equipment.cc \
     inventory.cc \
     item_storage.cc \

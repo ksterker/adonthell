@@ -1,7 +1,7 @@
 /*
-   $Id: audio_event_manager.cc,v 1.1 2005/10/08 07:38:17 Mithander Exp $
+   $Id: audio_event_manager.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
 
-   Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file    event/audio_event_manager.cc
+ * @file    audio/audio_event_manager.cc
  * @author  Tyler Nielsen <tyler.nielsen@gmail.com>
  *
  * @brief   Implements the audio_event_manager class.
@@ -37,10 +37,10 @@ using events::event_type;
 // time_event manager instance that is initialized when the audio package is loaded
 static audio_event_manager AudioEventManager;
 
-// function returning a new time event
+// function returning a new audio event
 NEW_EVENT (audio, audio_event)
 
-// register time events with event subsystem
+// register audio events with event subsystem
 audio_event_manager::audio_event_manager () : manager_base (&new_audio_event)
 {
     // nothing to do here
@@ -53,7 +53,6 @@ void audio_event_manager::raise_event (const event * e)
     vector<listener*>::iterator idx;
 
     // As long as matching events are in the list
-
     for(idx = Listeners.begin(); idx != Listeners.end(); idx++)
     {
         if((*idx)->equals (e))
