@@ -1,5 +1,5 @@
 /*
- $Id: dialog.h,v 1.1 2006/01/22 21:32:39 ksterker Exp $
+ $Id: dialog.h,v 1.2 2006/02/15 21:30:42 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -70,13 +70,13 @@ namespace rpg
         /**
          * Execute the next step of the dialogue.
          */
-        const dialog_line *run (const s_int32 & answer);
+        const rpg::dialog_line *run (const s_int32 & answer);
         
         /**
          * Return history of this dialogue, i.e. all lines in the order they
          * have occured in the dialogue so far.
          */
-        const dialog_line *history () const
+        const rpg::dialog_line *history () const
         {
             if (Current != NULL) return Current->first();
             return NULL;
@@ -114,7 +114,7 @@ namespace rpg
         /// arguments passed to the python dialogue script constructor
         PyObject *Args;
         /// history of this dialogue (i.e. its first line)
-        dialog_line* Current;
+        rpg::dialog_line* Current;
         /// this dialogues lines of text
         char** Lines;
         /// the lines of text that are allowed to loop

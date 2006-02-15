@@ -4,6 +4,8 @@
 #include <string>
 
 #include "rpg/character.h"
+#include "rpg/dialog.h"
+#include "rpg/dialog_line.h"
 #include "rpg/equipment.h"
 #include "rpg/item_storage.h"
 #include "rpg/inventory.h"
@@ -67,6 +69,8 @@ namespace rpg {
 %include "rpg/item.h"
 %include "rpg/slot.h"
 %include "rpg/character.h"
+%include "rpg/dialog.h"
+%include "rpg/dialog_line.h"
 %include "rpg/inventory.h"
 %include "rpg/equipment.h"
 %include "rpg/item_storage.h"

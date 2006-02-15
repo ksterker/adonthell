@@ -1,5 +1,5 @@
 /*
- $Id: dialog.cc,v 1.1 2006/01/22 21:32:39 ksterker Exp $
+ $Id: dialog.cc,v 1.2 2006/02/15 21:30:42 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -156,7 +156,7 @@ bool dialog::init ()
 }
 
 // run one iteration of the dialogue
-const dialog_line *dialog::run (const s_int32 & answer)
+const rpg::dialog_line *dialog::run (const s_int32 & answer)
 {
     // make sure the dialogue is properly initialized
     if (Instance != NULL)

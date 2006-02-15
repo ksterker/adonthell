@@ -1,5 +1,5 @@
 /*
-   $Id: character.h,v 1.3 2006/01/22 21:32:39 ksterker Exp $
+   $Id: character.h,v 1.4 2006/02/15 21:30:42 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,14 @@
 
 namespace rpg
 {
+    /** types of characters */
+    enum char_type 
+    { 
+        PLAYER   = 0,
+        NPC      = 1,
+        CREATURE = 2
+    };
+    
 #define MALE    0
 #define FEMALE  1
     
@@ -45,14 +53,17 @@ namespace rpg
     {
         public:
             /**
-             * Create a new character and add it to the global character storage.
+             * Create a new character and add it to the global %character storage.
+             * @param name the characters name
+             * @param id unique id under which the character will be available in global %character storage.
+             * @param type the characters type (PLAYER, NPC or CREATURE)
              */
-            character ();
+            character (const std::string & name, const std::string & id, const rpg::char_type & type);
             
             /**
              * Delete character and remove it from the global character storage.
              */
-            ~character ();
+            virtual ~character ();
         
             /**
              * @name Member access
@@ -75,6 +86,15 @@ namespace rpg
             {
                 return Dialogue;
             }
+            
+            /**
+             * Assign a new dialogue script to this character
+             * @param dialogue the new dialogue.
+             */
+            void set_dialogue (const std::string & dialogue)
+            {
+                Dialogue = dialogue;
+            }
             //@}
             
             /**
@@ -92,7 +112,10 @@ namespace rpg
              * Return the main character, usually controlled by the player.
              * @return the player character.
              */
-            static character *get_player ();
+            static character *get_player ()
+            {
+                return get_character (PlayerCharacterId);
+            }
             //@}
         
             /**
@@ -112,7 +135,7 @@ namespace rpg
             //@}
             
 #ifndef SWIG
-            GET_TYPE_NAME(character);
+            GET_TYPE_NAME(rpg::character);
 #endif // SWIG
         private:
             /// Name of the character, not neccessarily unique
@@ -126,6 +149,9 @@ namespace rpg
             
             /// list of all characters currently instanciated
             static std::hash_map<std::string, character*> Characters;
+            
+            /// id of the character currently controlled by the player
+            static std::string PlayerCharacterId;
     };
 }
 
