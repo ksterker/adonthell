@@ -1,5 +1,5 @@
 /*
- $Id: dialog.h,v 1.2 2006/02/15 21:30:42 ksterker Exp $
+ $Id: dialog.h,v 1.3 2006/02/25 18:21:03 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -68,9 +68,14 @@ namespace rpg
         bool reload ();
         
         /**
-         * Execute the next step of the dialogue.
+         * Execute the next step of the dialogue. The first time this method is called 
+         * (i.e. at the dialogue's beginning), -1 needs to be passed. 
+         * @param answer index of answer selected by the player or -1 if there are no 
+         *     player choices.
+         * @return the next line of the dialogue, containing NPC speech and possible
+         *     player responses.
          */
-        const rpg::dialog_line *run (const s_int32 & answer);
+        const rpg::dialog_line *run (const s_int32 & answer = -1);
         
         /**
          * Return history of this dialogue, i.e. all lines in the order they

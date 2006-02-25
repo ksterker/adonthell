@@ -1,5 +1,5 @@
 /*
-   $Id: types.cc,v 1.3 2005/10/09 07:38:40 ksterker Exp $
+   $Id: types.cc,v 1.4 2006/02/25 18:21:03 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,7 +59,7 @@ void event_type::remove_type (const std::string & name)
     {
         Types()[(*i).second->id()] = NULL;
         delete (*i).second;
-        (*i).second = NULL;
+        NamedTypes().erase (i);
     }
 }
 

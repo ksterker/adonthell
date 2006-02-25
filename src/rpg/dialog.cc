@@ -1,5 +1,5 @@
 /*
- $Id: dialog.cc,v 1.2 2006/02/15 21:30:42 ksterker Exp $
+ $Id: dialog.cc,v 1.3 2006/02/25 18:21:03 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -169,7 +169,7 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
         // sanity check
         if (answer < -1 || answer + 1 >= (int) Successors.size())
         {
-            fprintf (stderr, "dialog::run: answer %i out of bounds (-1, %i)\n", answer, (int)Successors.size()-1);
+            fprintf (stderr, "dialog::run: answer %i out of bounds (-1, %i)\n", answer, (int) Successors.size()-1);
             return NULL;
         }
         
