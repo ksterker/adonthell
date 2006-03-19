@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
+   $Id: quest.h,v 1.7 2006/03/19 20:25:14 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -318,14 +318,14 @@ namespace rpg
             static void add (quest_part *part);
 
 #ifndef SWIG
-        private:
             /**
              * Return the %quest part identified by the given path
              * @param path address of the %quest or part.
              * @return %quest_part if found, \b NULL otherwise
              */
             static const quest_part* get_part (const std::string & path);
-
+            
+private:
             /**
              * Split the given path into its parts and return them as a list.
              * @param path path to a quest part or step

@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.6 2005/10/09 07:38:40 ksterker Exp $
+   $Id: quest.cc,v 1.7 2006/03/19 20:25:14 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -284,8 +284,13 @@ std::map<std::string, quest_part*> quest::Quests;
 void quest::cleanup ()
 {
     std::map<std::string, quest_part*>::iterator q;
+    
+    // delete quest parts
     for (q = Quests.begin (); q != Quests.end (); q++)
         delete (*q).second;
+    
+    // empty quest array
+    Quests.clear();
 }
 
 // check whether a given quest (step) has been started

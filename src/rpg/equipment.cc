@@ -1,7 +1,7 @@
 /*
-   $Id: equipment.cc,v 1.4 2004/10/18 07:40:23 ksterker Exp $
+   $Id: equipment.cc,v 1.5 2006/03/19 20:25:14 ksterker Exp $
    
-   Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -32,39 +32,107 @@
 #include "rpg/inventory.h"
 
 using rpg::equipment;
+using rpg::slot_definition;
 using rpg::slot;
 using rpg::item;
 
 /**
  * Mapping from %item categories to equipment slots.
  */
-std::hash_map<std::string, rpg::slot_list,
-    std::hash<std::string> > equipment::SlotCategoryMap;
+std::hash_map<std::string, rpg::slot_definition*,
+    std::hash<std::string> > equipment::DefinedSlots;
 
 /**
  * Predefined %equipment for certain %character types
  */
 std::hash_map<std::string, std::vector<std::string>, 
-    std::hash<std::string> > equipment::EquipmentDefs;
+    std::hash<std::string> > equipment::EquipmentSets;
+
+// ctor
+slot_definition::slot_definition (const std::string & name, const std::vector<std::string> & categories, const double & modifier)
+{
+    Name = name;
+    Categories.insert (Categories.begin(), categories.begin(), categories.end());
+    Modifier = modifier;
+}
+
+// see whether item fits into this slot
+bool slot_definition::fits (item *itm) const
+{
+    std::vector<std::string>::iterator i;
+    std::vector<std::string> categories = itm->categories ();
+    
+    for (i = categories.begin (); i != categories.end (); i++)
+    {
+        if (find (Categories.begin(), Categories.end(), *i) != Categories.end())
+            return true;
+    }
+    
+    return false;
+}
+
+// save slot definition to disk
+void slot_definition::put_state (base::flat & out) const
+{
+    // collect categories
+    base::flat categories;
+    for (std::vector<std::string>::const_iterator i = Categories.begin(); i != Categories.end(); i++)
+    {
+        categories.put_string ("", *i);
+    }
+    
+    // save all data
+    out.put_string ("sdn", Name);    
+    out.put_flat ("sdc", categories);
+    out.put_double ("sdm", Modifier);
+}
+
+// read slot definition from disk
+bool slot_definition::get_state (base::flat & in)
+{
+    char *cat;
+    base::flat categories;
+    
+    // read variables
+    Name = in.get_string ("sdn");
+    categories = in.get_flat ("sdc");
+    Modifier = in.get_double ("sdm");
+    
+    // read categories
+    while (categories.next ((void **) &cat) != -1)
+    {
+        Categories.push_back (std::string (cat));
+    }
+    
+    return in.success();
+}
+
+// dtor
+void equipment::cleanup ()
+{
+    // delete all slot definitions
+    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::iterator s;
+    for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
+    {
+        delete (*s).second;
+    }
+    
+    DefinedSlots.clear ();
+    EquipmentSets.clear ();
+}
 
 // retrieve a list of slots the item would fit into    
-const rpg::slot_list equipment::fits (item *itm) const
+const rpg::slot_list equipment::available_slots (item *itm) const
 {
     if (itm == NULL) return slot_list ();
     
     slot_list slots;
-    std::vector<std::string>::iterator i;
-    std::vector<std::string> categories = itm->categories ();
-    std::hash_map<std::string, rpg::slot_list, std::hash<std::string> >::iterator s;
+    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::iterator s;
 
     // find all slots that accept the given category
-    for (i = categories.begin (); i != categories.end (); i++)
+    for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
     {
-        s = SlotCategoryMap.find (*i);
-        if (s == SlotCategoryMap.end ()) continue;
-        
-        // append some slots
-        slots.insert ((*s).second.begin (), (*s).second.end ());
+        if ((*s).second->fits (itm)) slots.insert ((*s).first);
     }
     
     return slots;
@@ -78,7 +146,7 @@ bool equipment::accepts (slot* target, item* itm) const
          target->is_negated ()) return false;
     
     // get slots suitable for this item
-    const slot_list slots = fits (itm);
+    const slot_list slots = available_slots (itm);
     
     // is our slot among them?
     if (slots.find (target->id ()) == slots.end ())
@@ -158,84 +226,131 @@ item *equipment::unequip (slot *target, u_int32 *count)
 }
 
 // tell equipment that given slot accepts given category
-void equipment::add_mapping (const std::string & slot, const std::string & category)
+void equipment::define_slot (const std::string & name, const std::vector<std::string> & categories, const double & modifier)
 {
-    std::hash_map<std::string, rpg::slot_list,
-        std::hash<std::string> >::iterator s = SlotCategoryMap.find (category);
+    std::hash_map<std::string, rpg::slot_definition*,
+        std::hash<std::string> >::iterator s = DefinedSlots.find (name);
     
-    // does the given category already exist?
-    if (s != SlotCategoryMap.end ())
+    // does the given slot definition already exist?
+    if (s != DefinedSlots.end ())
     {
-        // add key to existing category
-        slot_list &slots = (*s).second;
-        slots.insert (slot);
+        fprintf (stderr, "*** equipment::define_slot: slot '%s' is already defined!\n", name.c_str ());
     }
     else
     {
-        // create new category
-        slot_list slots;
-        slots.insert (slot);
-
-        SlotCategoryMap[category] = slots;
+        // create new slot definition
+        DefinedSlots[name] = new slot_definition (name, categories, modifier);
     }
 }
 
 // define equipment for certain type of characters
-void equipment::add_definition (const std::string & type, const std::vector<std::string> & slots)
+void equipment::define_set (const std::string & type, const std::vector<std::string> & slots)
 {
-    EquipmentDefs[type] = slots;
+    std::hash_map<std::string, std::vector<std::string>,
+        std::hash<std::string> >::iterator s = EquipmentSets.find (type);
+    
+    // does the given equipment set already exist?
+    if (s != EquipmentSets.end ())
+    {
+        fprintf (stderr, "*** equipment::define_set: equipment set '%s' already defined!\n", type.c_str ());
+    }
+    else
+    {
+        // create new equipment set        
+        EquipmentSets[type] = slots;
+    }
+}
+
+// get modifier for given slot
+double equipment::get_modifier (const std::string & name)
+{
+    std::hash_map<std::string, rpg::slot_definition*,
+    std::hash<std::string> >::iterator s = DefinedSlots.find (name);
+    
+    // does the given slot definition exist?
+    if (s == DefinedSlots.end ())
+    {
+        fprintf (stderr, "*** equipment::get_modifier: slot '%s' is not defined!\n", name.c_str ());
+        return 0.0;
+    }
+    else
+    {
+        // create new slot definition
+        return (*s).second->modifier ();
+    }    
+}
+
+// get total modifier for given equipent set
+double equipment::get_set_modifier (const std::string & name)
+{
+    double modifier = 0.0;
+    std::hash_map<std::string, std::vector<std::string>,
+    std::hash<std::string> >::iterator s = EquipmentSets.find (name);
+    
+    // does the given equipment set exist?
+    if (s == EquipmentSets.end ())
+    {
+        fprintf (stderr, "*** equipment::get_set_modifier: equipment set '%s' not defined!\n", name.c_str ());
+    }
+    else
+    {
+        // collect all slot modifiers of equipment set
+        const std::vector<std::string> &set = (*s).second;
+        for (std::vector<std::string>::const_iterator i = set.begin(); i != set.end (); i++)
+        {
+            modifier += get_modifier (*i);
+        }
+    }
+    
+    return modifier;
 }
 
 // create equipment storage for given type of characters
-rpg::inventory *equipment::create (const std::string & type)
+rpg::inventory *equipment::create_inventory (const std::string & type)
 {
     rpg::inventory *inv = new rpg::inventory ();
     std::hash_map<std::string, std::vector<std::string>,
-        std::hash<std::string> >::iterator t = EquipmentDefs.find (type);
+        std::hash<std::string> >::iterator t = EquipmentSets.find (type);
     
     // does given type exist?
-    if (t != EquipmentDefs.end ())
+    if (t != EquipmentSets.end ())
     {
         const std::vector<std::string> &slots = (*t).second;
         for (std::vector<std::string>::const_iterator i = slots.begin(); i != slots.end (); i++)
         {
-            // fill inventory with predefined slots
+            // fill inventory with copies predefined slots
             inv->add_slot (*i, true);
         }
     }
     else
     {
-        fprintf (stderr, "*** equipment::create: character type '%s' undefined!\n", type.c_str ());
+        fprintf (stderr, "*** equipment::create_inventory: equipment set '%s' undefined!\n", type.c_str ());
     }
     
     return inv;
 }
 
-// save to disk
+// save equipment setup to disk
 void equipment::put_state (base::flat & out)
 {
     base::flat record, slots;
     
-    // save mappings
-    std::hash_map<std::string, rpg::slot_list,
-        std::hash<std::string> >::const_iterator s = SlotCategoryMap.begin ();
-    for (; s != SlotCategoryMap.end (); s++)
+    // save defined slots
+    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::const_iterator s;
+    record.put_uint8 ("esl", (u_int8) DefinedSlots.size ());
+    for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
     {
-        slots.put_string ("emp", (*s).first);
-        for (rpg::slot_list::const_iterator i = (*s).second.begin (); i != (*s).second.end (); i++)
-        {
-            slots.put_string ("", *i);
-        }
+        (*s).second->put_state (slots);
         record.put_flat ("", slots);
         slots.clear ();
     }
     
-    // save equipment definitions
-    std::hash_map<std::string, std::vector<std::string>,
-        std::hash<std::string> >::const_iterator t = EquipmentDefs.begin ();
-    for (; t != EquipmentDefs.end (); t++)
+    // save equipment sets
+    std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> >::const_iterator t;
+    record.put_uint8 ("est", (u_int8) EquipmentSets.size ());
+    for (t = EquipmentSets.begin (); t != EquipmentSets.end (); t++)
     {
-        slots.put_string ("edf", (*t).first);
+        slots.put_string ("etn", (*t).first);
         for (std::vector<std::string>::const_iterator i = (*t).second.begin (); i != (*t).second.end (); i++)
         {
             slots.put_string ("", *i);
@@ -250,36 +365,35 @@ void equipment::put_state (base::flat & out)
 // load from disk
 bool equipment::get_state (base::flat & in)
 {
+    // remove current equipment setup
+    cleanup ();
+    
+    char *val;
     base::flat list, record = in.get_flat ("eqp");
     
-    while (in.next ((void **) &list) != -1)
+    // load slot definitions
+    u_int32 size = record.get_uint8 ("esl");
+    while (size > 0)
     {
-        char *val, *name;
-        if (list.next ((void **) &val, (int*) NULL, &name) != base::flat::T_STRING)
-            continue;
-        
-        // load mapping
-        if (strncmp (name, "emp", 3) == 0)
-        {   
-            std::string category = val;
-            while (list.next ((void **) &val) == base::flat::T_STRING)
-            {
-                add_mapping (val, category);
-            }
-            continue;
-        }
-
-        // load equipment def
-        if (strncmp (name, "edf", 3) == 0)
+        list = record.get_flat ("");
+        slot_definition *slot = new slot_definition ("", std::vector<std::string>(), 0.0);
+        slot->get_state (list);
+        size--;
+    }
+    
+    // load equipment sets
+    size = record.get_uint8 ("est");
+    while (size > 0)
+    {
+        list = record.get_flat ("");
+        std::string name = list.get_string ("etn");
+        std::vector<std::string> slots;
+        while (list.next ((void **) &val) == base::flat::T_STRING)
         {
-            std::string type = val;
-            std::vector<std::string> slots;
-            while (list.next ((void **) &val) == base::flat::T_STRING)
-            {
-                slots.push_back (std::string (val));
-            }
-            add_definition (type, slots);
+            slots.push_back (std::string (val));
         }
+        define_set (name, slots);
+        size--;
     }
     
     return in.success ();

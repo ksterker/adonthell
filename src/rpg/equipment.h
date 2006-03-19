@@ -1,7 +1,7 @@
 /*
-   $Id: equipment.h,v 1.5 2005/06/03 17:29:13 ksterker Exp $
+   $Id: equipment.h,v 1.6 2006/03/19 20:25:14 ksterker Exp $
    
-   Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -53,6 +53,70 @@ namespace rpg
     typedef std::set<std::string, lstr> slot_list;
 
     /**
+     * Equipment slot properties.
+     */
+    class slot_definition
+    {
+    public:
+        /**
+         * @param name unique name for the %slot
+         * @param categories %item categories that may go into this %slot.
+         * @param modifier stat modifier for the %item contained in this %slot
+         */
+        slot_definition (const std::string & name, const std::vector<std::string> & categories, const double & modifier);
+
+        /**
+         * Check whether the given item fits into this slot.
+         * @param
+         * @return 
+         */
+        bool fits (rpg::item *itm) const;
+        
+        /**
+         * @name member access
+         */
+        //@{
+        /**
+         * Get %slot name.
+         * @return %slot name. 
+         */
+        std::string name () const { return Name; }
+        
+        /**
+         * Get %slot modifier.
+         * @return %slot modifier.
+         */
+        double modifier () const { return Modifier; }
+        //@}
+        
+        /**
+         * @name loading/saving
+         */
+        //@{
+        /**
+         * Save equipment %slot definition to stream.
+         * @param out stream to save %equipment %slot to.
+         */
+        void put_state (base::flat & out) const;
+        
+        /**
+         * Load equipment %slot definition from stream. 
+         * @param in stream to load %equipment %slot from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & in);
+        //@}
+        
+    private:
+        /// slot name
+        std::string Name;
+        /// %item categories that fit into slots with this name
+        std::vector<std::string> Categories;
+        /// modifier
+        double Modifier;
+    };
+    
+    /**
      * The %equipment class can be used to define what items may go into
      * a certain slot, representing a character's equipped items. This is
      * done by specifiying a mapping between a slot name and item category.
@@ -67,11 +131,15 @@ namespace rpg
     {
     public:
         /**
+        * @name Equipment handling methods
+         */
+        //@{
+        /**
          * Return list of %equipment slots this %item fits into.
          * @param %itm The %item whose slots to retrieve.
          * @returns List of slot ids.
          */
-        const slot_list fits (item *itm) const;
+        const slot_list available_slots (item *itm) const;
         
         /**
          * Check whether a given %item can be equipped in the given %slot.
@@ -99,26 +167,53 @@ namespace rpg
          * Remove the %item from the given %slot.
          * @param target An equipment %slot.
          * @param count Number of items to remove from the %slot.
-         * @return The %item from the %slot or \c NULL if the %slot was empty.
+         * @return The %item from the %slot or \c NULL if the %slot empty.
          *     \c count will contain the number of items actually removed.
          */
         item* unequip (slot *target, u_int32 *count);
-    
-        /** 
-         * Tell %equipment that the given %item category may go in the given %slot.
-         * @param slot The %slot id.
-         * @param category An %item category.
+        //@}
+        
+        /**
+         * @name Equipment management methods
          */
-        static void add_mapping (const std::string & slot, const std::string & category);
-    
+        //@{
+        /**
+         * Remove equipment setup previously created with define_slot and define_set.
+         * @see define_slot
+         * @see define_set
+         */
+        static void cleanup ();
+        
+        /**
+         * Define a %equipment %slot with name, a list of item typest that may go  
+         * into that slot and an optional armour modifier.
+         * @param name unique name for the %slot
+         * @param categories %item categories that may go into this %slot.
+         * @param modifier stat modifier for the %item contained in this %slot
+         */
+        static void define_slot (const std::string & name, const std::vector<std::string> & categories, const double & modifier);
+        
         /**
          * Define a %equipment set, i.e. a list of equipment slots available to a
-         * certain type of character. This list of slots is used to return an
+         * certain type of character or faction. This list of slots is used to return an
          * inventory to hold the equipped items.
-         * @param type of character
-         * @param slots list of slot names
+         * @param character type or faction
+         * @param slots list of slot names, that should have been defined with the define_slot method
+         * @see define_slot
          */
-        static void add_definition (const std::string & type, const std::vector<std::string> & slots);
+        static void define_set (const std::string & name, const std::vector<std::string> & slots);
+
+        /**
+         * Get stat modifier for the given slot set.
+         * @name slot name
+         */
+        static double get_modifier (const std::string & name);
+        
+        /**
+         * Get accumulated stat modifier for a given %equipment set.
+         * @name set name
+         */
+        static double get_set_modifier (const std::string & name);
         
         /**
          * A factory method to create a new, empty equipment storage for the given type
@@ -126,7 +221,8 @@ namespace rpg
          * @param type of character
          * @return new %inventory or \b NULL, if the type is unknown.
          */
-        static inventory* create (const std::string & type);
+        static inventory* create_inventory (const std::string & type);
+        //@}
         
         /**
          * @name Loading/Saving
@@ -148,10 +244,10 @@ namespace rpg
         
     private:
         /// storage for item-category/equipment-slot mappings
-        static std::hash_map<std::string, slot_list, std::hash<std::string> > SlotCategoryMap;
+        static std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> > DefinedSlots;
 
-        /// storage for item-category/equipment-slot mappings
-        static std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> > EquipmentDefs;
+        /// storage for character-based equipment sets
+        static std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> > EquipmentSets;
     };
 }
 #endif // RPG_EQUIPMENT_H
