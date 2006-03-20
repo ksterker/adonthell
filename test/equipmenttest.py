@@ -34,11 +34,11 @@ class equipmenttest (object):
         eqp.get_state (io)
         file.close ()
         
-        print "Humanoid Inventory:"
+        print "Humanoid Inventory:", eqp.get_set_modifier ("Humanoid")
         inv = eqp.create_inventory ("Humanoid")
         slt = inv.first ()
         while slt != None:
-            print "*", slt.id ()
+            print "*", slt.id (), ":", eqp.get_modifier (slt.id())
             slt = inv.next()
         
 def equipmenttest_func ():

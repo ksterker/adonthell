@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.cc,v 1.5 2006/03/19 20:25:14 ksterker Exp $
+   $Id: equipment.cc,v 1.6 2006/03/20 21:45:25 ksterker Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -378,6 +378,7 @@ bool equipment::get_state (base::flat & in)
         list = record.get_flat ("");
         slot_definition *slot = new slot_definition ("", std::vector<std::string>(), 0.0);
         slot->get_state (list);
+        DefinedSlots[slot->name()] = slot;
         size--;
     }
     
