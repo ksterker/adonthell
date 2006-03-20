@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.h,v 1.6 2006/03/19 20:25:14 ksterker Exp $
+   $Id: equipment.h,v 1.7 2006/03/20 22:05:36 ksterker Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,6 +59,7 @@ namespace rpg
     {
     public:
         /**
+         * Create new equipment slot definition.
          * @param name unique name for the %slot
          * @param categories %item categories that may go into this %slot.
          * @param modifier stat modifier for the %item contained in this %slot
@@ -67,8 +68,8 @@ namespace rpg
 
         /**
          * Check whether the given item fits into this slot.
-         * @param
-         * @return 
+         * @param itm item that should go into this slot.
+         * @return true if item fits, false otherwise
          */
         bool fits (rpg::item *itm) const;
         
@@ -131,7 +132,7 @@ namespace rpg
     {
     public:
         /**
-        * @name Equipment handling methods
+         * @name Equipment handling methods
          */
         //@{
         /**
@@ -205,13 +206,15 @@ namespace rpg
 
         /**
          * Get stat modifier for the given slot set.
-         * @name slot name
+         * @param name slot name
+         * @return modifier of given slot, or 0.0 on error
          */
         static double get_modifier (const std::string & name);
         
         /**
          * Get accumulated stat modifier for a given %equipment set.
-         * @name set name
+         * @param name set name
+         * @return accumulated modifier for %equipment set, or 0.0 on error
          */
         static double get_set_modifier (const std::string & name);
         
