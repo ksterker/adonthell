@@ -280,7 +280,7 @@ else
    PY_VERSION="Manually specified"   
 fi
 
-AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x)
+AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x$PYPREFIX)
 
 dnl **************
 dnl Check for SWIG
