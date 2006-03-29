@@ -1,5 +1,5 @@
 /*
-   $Id: log_index.h,v 1.3 2004/08/23 06:33:47 ksterker Exp $
+   $Id: log_index.h,v 1.4 2006/03/29 19:09:02 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
