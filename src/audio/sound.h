@@ -1,5 +1,5 @@
 /*
-   $Id: sound.h,v 1.1 2005/10/08 07:38:17 Mithander Exp $
+   $Id: sound.h,v 1.2 2006/04/01 22:45:54 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -105,6 +105,7 @@ namespace audio {
         std::string m_filename; // the name of the file we loaded
         void * m_sample; // the sound data
         int m_channel; // the channel the sound it playing on
+        bool m_forcedhalt; //Was this sound stoped by the user
 
         //Functions from the audio backend
         static void *(*m_open)(const char *);

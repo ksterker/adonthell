@@ -1,5 +1,5 @@
 /*
-   $Id: sound.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: sound.cc,v 1.3 2006/04/01 22:45:54 Mithander Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,6 +47,7 @@ sound::sound (const std::string &filename)
     m_filename = SOUND_DIR + filename;
     m_sample = m_open (m_filename.c_str());
     m_channel = -1;
+    m_forcedhalt = false;
 }
 
 bool sound::play (int loops)
@@ -76,14 +77,18 @@ bool sound::setposition (int angle, double distance)
 
 void sound::fadeout (double sec)
 {
-    if(m_channel != -1)
+    if(m_channel != -1) {
+        m_forcedhalt = true;
         m_fadeout (m_channel, sec);
+    }
 }
 
 void sound::halt (void)
 {
-    if(m_channel != -1)
+    if(m_channel != -1) {
+        m_forcedhalt = true;
         m_halt (m_channel);
+    }
 }
 
 void sound::handle_channel_stop (int channel)
@@ -95,7 +100,10 @@ void sound::handle_channel_stop (int channel)
     }
 
     m_channels[channel]->m_channel = -1;
-    complete(m_channels[channel]);
+    //Only issue callbacks for sounds that end on their own.
+    if(!m_channels[channel]->m_forcedhalt)
+        complete(m_channels[channel]);
+    m_channels[channel]->m_forcedhalt = false;
     m_channels[channel] = NULL;
 }
 
