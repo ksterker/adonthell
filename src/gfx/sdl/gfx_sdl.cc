@@ -1,5 +1,5 @@
 /*
-   $Id: gfx_sdl.cc,v 1.3 2003/11/22 09:37:12 ksterker Exp $
+   $Id: gfx_sdl.cc,v 1.4 2006/04/07 16:12:59 Mithander Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,6 +54,7 @@ bool gfx_init()
 void gfx_cleanup()
 {
     delete display;
+    //BUG  this function may cause problems because it will call destructors before python does.
     SDL_QuitSubSystem (SDL_INIT_VIDEO);
 }
 

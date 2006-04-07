@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: surface.h,v 1.6 2006/04/07 16:12:59 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -317,39 +317,39 @@ namespace gfx
          */ 
         //@{
 
-        /** Loads an image from an opened file, in PNM format, without
+        /** Loads an image from an opened file, in PNG format, without
          *  alpha and mask values.
          *  @param file the opened file from which to read.
          *  @return \e true in case of success, false otherwise.
-         *  @sa load_pnm () 
+         *  @sa load_png ()
          */
-        bool get_pnm (std::ifstream & file);
+        bool get_png (std::ifstream & file);
     
-        /** Loads an image from a file name, in PNM format, without
+        /** Loads an image from a file name, in PNG format, without
          *  alpha and mask values.
          *  @param fname the name of the file to load.
          *  @return \e true in case of success, false otherwise.
-         *  @sa get_pnm ()
+         *  @sa get_png ()
          */ 
-        bool load_pnm (const std::string & fname); 
+        bool load_png (const std::string & fname);
         
-        /** Saves an image into an opened file, in PNM format, without
+        /** Saves an image into an opened file, in PNG format, without
          *  alpha and mask values.
          *
          *  @param file opened file where to save into.
          *  @return \e true in case of success, false otherwise.
-         *  @sa save_pnm ()
+         *  @sa save_png ()
          */
-        bool put_pnm (std::ofstream & file) const;
+        bool put_png (std::ofstream & file) const;
 
-        /** Saves an image into an file, in PNM format, without
+        /** Saves an image into an file, in PNG format, without
          *  alpha and mask values.
          *
          *  @param fname file name where to save into.
          *  @return \e true in case of success, false otherwise.
-         *  @sa put_pnm ()
+         *  @sa put_png ()
          */
-        bool save_pnm (const std::string & fname) const;
+        bool save_png (const std::string & fname) const;
 
         //@}
 

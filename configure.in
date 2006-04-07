@@ -148,9 +148,20 @@ AM_PATH_SDL($SDL_VERSION,
 dnl *******************
 dnl Check for SDL-mixer
 dnl *******************
+dnl TODO Need to check for library also
 AC_CHECK_HEADER(SDL/SDL_mixer.h,,
 	AC_MSG_ERROR(*** Cannot find the SDL/SDL_mixer.h header
 	goto http://www.libsdl.org to download or
+	check with your distibution.
+	); exit)
+
+dnl *******************
+dnl Check for libpng
+dnl *******************
+dnl TODO Need to check for library also
+AC_CHECK_HEADER(png.h,,
+	AC_MSG_ERROR(*** Cannot find the png.h header
+	goto http://www.libpng.org/ to download or
 	check with your distibution.
 	); exit)
 

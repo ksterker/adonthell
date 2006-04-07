@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.3 2003/11/22 09:35:21 ksterker Exp $
+   $Id: surface.cc,v 1.4 2006/04/07 16:12:59 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
  */ 
 
 #include "surface.h"
-#include "gfx/pnm.h"
+#include "gfx/png_wrapper.h"
 
 using namespace std;
 
@@ -44,12 +44,12 @@ namespace gfx
     {
     }
     
-    bool surface::get_pnm (ifstream & file)
+    bool surface::get_png (ifstream & file)
     {
         void *rawdata;
         u_int16 l, h; 
         
-        rawdata = pnm::get (file, l, h);
+        rawdata = png::get (file, l, h);
         
         if (!rawdata) return false;
         
@@ -65,19 +65,21 @@ namespace gfx
         return true;
     }
     
-    bool surface::load_pnm (const string & fname)
+    bool surface::load_png (const string & fname)
     {
         ifstream file(fname.c_str());
         bool ret = true;
         
-        if (!file.is_open())
+        if (!file.is_open()) {
+            cout << "Unable to open: '" << fname << "'" << endl;
             return false;
-        ret = get_pnm (file);
+        }
+        ret = get_png (file);
         file.close();
         return ret;
     }
     
-    bool surface::put_pnm (ofstream & file) const
+    bool surface::put_png (ofstream & file) const
     {
         /**
          * @bug We don't take care of endianness here!
@@ -88,21 +90,21 @@ namespace gfx
         
         if (!rawdata) return false;
         
-        pnm::put (file, (const char *)rawdata, length (), height ()); 
+        png::put (file, (const char *)rawdata, length (), height ());
         
         free(rawdata);
         
         return true;
     }
     
-    bool surface::save_pnm (const string & fname) const
+    bool surface::save_png (const string & fname) const
     {
         ofstream file(fname.c_str());
         bool ret = true;
         
         if (!file.is_open())
             return false;
-        ret = put_pnm (file);
+        ret = put_png (file);
         file.close();
         return true;
     }   
