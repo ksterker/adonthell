@@ -1,7 +1,9 @@
 /*
-   $Id: surface.cc,v 1.4 2006/04/07 16:12:59 Mithander Exp $
+   $Id: surface.cc,v 1.5 2006/04/08 11:16:37 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2006 Tyler Nielsen
+
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -31,6 +33,18 @@
 #include "surface.h"
 #include "gfx/png_wrapper.h"
 
+#ifdef BIG_ENDIAN
+#   define R_MASK 0x00ff0000
+#   define G_MASK 0x0000ff00
+#   define B_MASK 0x000000ff
+#   define A_MASK 0xff000000
+#else
+#   define R_MASK 0x000000ff
+#   define G_MASK 0x0000ff00
+#   define B_MASK 0x00ff0000
+#   define A_MASK 0xff000000
+#endif
+
 using namespace std;
 
 namespace gfx
@@ -54,11 +68,8 @@ namespace gfx
         if (!rawdata) return false;
         
         clear (); 
-        /**
-         * @bug We don't take care of endianness here! Colors
-         * won't be rendered correctly on big-endian machines.
-         */
-        set_data(rawdata, l, h, 3, 0x0000ff, 0x00ff00, 0xff0000);
+
+        set_data(rawdata, l, h, 3, R_MASK, G_MASK, B_MASK);
         
         free (rawdata);
         
@@ -81,12 +92,7 @@ namespace gfx
     
     bool surface::put_png (ofstream & file) const
     {
-        /**
-         * @bug We don't take care of endianness here!
-         * 
-         */
-        void * rawdata = get_data(3, 0x0000ff, 0x00ff00,
-                                  0xff0000);
+        void * rawdata = get_data(3, R_MASK, G_MASK, B_MASK);
         
         if (!rawdata) return false;
         
