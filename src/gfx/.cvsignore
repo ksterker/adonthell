@@ -1,3 +1,5 @@
+.DS_Store
+.gdb_history
 .deps
 .libs
 Makefile
