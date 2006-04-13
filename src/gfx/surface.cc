@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.5 2006/04/08 11:16:37 ksterker Exp $
+   $Id: surface.cc,v 1.6 2006/04/13 00:33:30 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -33,7 +33,7 @@
 #include "surface.h"
 #include "gfx/png_wrapper.h"
 
-#ifdef BIG_ENDIAN
+#ifdef __BIG_ENDIAN__
 #   define R_MASK 0x00ff0000
 #   define G_MASK 0x0000ff00
 #   define B_MASK 0x000000ff

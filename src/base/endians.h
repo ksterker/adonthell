@@ -96,7 +96,7 @@ static __inline__ u_int32 Swap32(u_int32 x) {
 #endif
 
 /* Byteswap item from the specified endianness to the native endianness */
-#ifdef BIG_ENDIAN
+#ifdef __BIG_ENDIAN__
 #define SwapLE16(X)	(X)
 #define SwapLE32(X)	(X)
 #define SwapBE16(X)	Swap16(X)

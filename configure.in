@@ -28,7 +28,7 @@ dnl *********
 dnl Endianess
 dnl *********
 
-AC_C_BIGENDIAN(CXXFLAGS="$CXXFLAGS -DBIG_ENDIAN", :, :)
+AC_C_BIGENDIAN(CXXFLAGS="$CXXFLAGS -D__BIG_ENDIAN__", :, :)
 dnl AC_CHECK_HEADERS([asm/byteorder.h])
 
 dnl ************************************
