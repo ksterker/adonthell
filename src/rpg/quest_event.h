@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.h,v 1.2 2005/10/09 07:38:40 ksterker Exp $
+   $Id: quest_event.h,v 1.3 2006/04/19 05:27:12 Mithander Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -184,7 +184,7 @@ namespace rpg
 		 * @param pattern path of quest that will trigger events. It may
 		 *  contain the wildcards '*' and '>'. 
 		 */
-		void quest_event::set_pattern (const std::string & pattern);
+		void set_pattern (const std::string & pattern);
 	
         /// pattern that will trigger event
         std::vector<std::string> Pattern;
