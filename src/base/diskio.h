@@ -1,7 +1,7 @@
 /*
-   $Id: diskio.h,v 1.4 2004/10/25 06:50:08 ksterker Exp $
+   $Id: diskio.h,v 1.5 2006/04/23 17:12:06 ksterker Exp $
 
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -46,6 +46,10 @@ namespace base {
             diskio ();
 
             /**
+             * @name Binary file IO
+             */
+            //@{
+            /**
              * Load this record from the given file. After loading, it will
              * compare the checksum read from file with the one computed from
              * the data read. It thus can detect data corruption.
@@ -62,10 +66,30 @@ namespace base {
              * @param out file stream to save record to.
              */
             void put_record (ogzstream & out);
+            //@}
             
+            /**
+             * @name ASCII file IO
+             */
+            //@{
+            /**
+             *
+             */
+            bool get_ascii (FILE * in);
+            
+            /**
+             *
+             */
+            void put_ascii (FILE * out);
+            //@}
 #ifndef SWIG
             /// make this class available to python::pass_instance
             GET_TYPE_NAME(base::diskio)
+    private:
+            void write_record (base::flat & record, FILE * out, const u_int16 & indent = 0);
+                
+            /// Table storing hex characters
+            static char *Bin2Hex;
 #endif
     };
 }

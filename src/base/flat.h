@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.12 2005/06/03 17:29:13 ksterker Exp $
+   $Id: flat.h,v 1.13 2006/04/23 17:12:06 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -446,6 +446,17 @@ namespace base
                 data *d = get (name, T_FLAT);
                 if (d) return flat (d->Content, d->Size);
                 else return flat ();
+            }
+            
+            /**
+             * @name Iteration
+             */
+            /**
+             * Reset iterator to start of record
+             */
+            void first ()
+            {
+                Decoded = Data;
             }
             
             /**
