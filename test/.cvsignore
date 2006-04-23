@@ -8,3 +8,5 @@ Makefile.in
 inputtest
 callbacktest
 *.pyc
+adonthell.xml
+.gdb_history
