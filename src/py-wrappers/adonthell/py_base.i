@@ -89,6 +89,16 @@ namespace base {
     %typemap(in) cfg_option *value "if ((SWIG_ConvertPtr ($input, (void **) &$1, $1_descriptor, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) SWIG_fail;"
 }
 
+// typemap for passing a FILE* from Python
+%typemap(in) FILE * { 
+    if (!PyFile_Check ($input)) { 
+        PyErr_SetString(PyExc_TypeError, "Need a file!"); 
+        goto fail;
+    } 
+    $1 = PyFile_AsFile($input); 
+} 
+
+
 // typemap for returning a vector<const char*> as python list
 %typemap(out) vector<const char*> {
     unsigned int index = 0;
