@@ -9,7 +9,8 @@ pkgincludegfx_HEADERS = \
 	drawable.h \
 	png_wrapper.h \
 	surface.h \
-	screen.h
+	screen.h \
+	animation.h
 
 ## Main library
 lib_LTLIBRARIES = libadonthell_gfx.la
@@ -21,7 +22,9 @@ libadonthell_gfx_la_SOURCES = \
 	drawable.cc \
 	png_wrapper.cc \
 	surface.cc \
-	screen.cc
+	screen.cc \
+	animation.cc
+
 libadonthell_gfx_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
 
 

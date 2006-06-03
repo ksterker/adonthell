@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.h,v 1.4 2004/10/25 06:50:09 ksterker Exp $
+   $Id: gfx.h,v 1.5 2006/06/03 04:20:27 Mithander Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -15,17 +15,17 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   gfx/gfx.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * 
+ *
  * @brief  The gfx module main include file.
- * 
- * 
+ *
+ *
  */
 
 #ifndef GFX_H_
@@ -36,18 +36,19 @@
 
 /**
  * All the low-level graphical tasks are handled by this module.
- * 
+ *
  */
 namespace gfx
 {
     class surface;
-    
-    /** 
+    class drawable;
+
+    /**
      * Initialize the gfx module. This function \e must be called
      * before doing anything gfx-related.
-     * 
+     *
      * @param backend_name Name of the graphical backend to use.
-     * 
+     *
      * @return \e true in case of success, \e false otherwise.
      */
     bool init(const std::string & backend_name);
@@ -55,7 +56,7 @@ namespace gfx
     /**
      * Cleanup the gfx module - call this function once you've
      * finished using it.
-     * 
+     *
      */
     void cleanup();
 
@@ -75,6 +76,15 @@ namespace gfx
      * the current backend.
      */
     surface * create_surface();
+
+    /**
+     * Return a cached surface object, or load one if not already cached
+     *
+     * @param file which file to return a cached version of
+     *
+     * @return a pointer to an existing drawable object.  Do not delete it.
+     */
+    const surface * surface_cache(const std::string & file, bool set_mask = true, bool invert_x = false);
 }
 
 

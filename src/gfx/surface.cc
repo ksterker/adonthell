@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.6 2006/04/13 00:33:30 Mithander Exp $
+   $Id: surface.cc,v 1.7 2006/06/03 04:20:27 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -17,7 +17,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
@@ -26,9 +26,9 @@
  * @file gfx/surface.cc
  *
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * 
+ *
  * @brief  Defines the surface global interface.
- */ 
+ */
 
 #include "surface.h"
 #include "gfx/png_wrapper.h"
@@ -53,34 +53,66 @@ namespace gfx
         : is_masked_(false), alpha_(255)
     {
     }
-    
+
     surface::~surface()
     {
     }
-    
+
+    // This should probably be somewhere else... like a utils in base or something...
+    template <class type>
+    void reverseArray (type *orig, size_t len)
+    {
+        size_t start=0;
+        type swap;
+
+        for(;start<--len;start++) //increment a and decrement b until they meet eachother
+        {
+            swap=orig[start];       //put what's in a into swap space
+            orig[start]=orig[len];    //put what's in b into a
+            orig[len]=swap;       //put what's in the swap (a) into b
+        }
+    }
+
+    void surface::mirror (bool x, bool y)
+    {
+        if (x)
+        {
+            u_int8 *rawdata = (u_int8 *)get_data(3, R_MASK, G_MASK, B_MASK);
+            for(int idx = 0; idx < height(); idx++)
+                reverseArray(&rawdata[idx*length()*3], length()*3);
+            //This is swaped (BGR) because we swaped at a byte level, not at a pixel level
+            set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK);
+        }
+
+        if (y)
+        {
+            cout << "Mirroring in y is not supported yet." << endl;
+        }
+    }
+
     bool surface::get_png (ifstream & file)
     {
         void *rawdata;
-        u_int16 l, h; 
-        
+        u_int16 l, h;
+
         rawdata = png::get (file, l, h);
-        
+
         if (!rawdata) return false;
-        
-        clear (); 
+
+        clear ();
 
         set_data(rawdata, l, h, 3, R_MASK, G_MASK, B_MASK);
-        
+
         free (rawdata);
-        
+
         return true;
     }
-    
+
     bool surface::load_png (const string & fname)
     {
         ifstream file(fname.c_str());
         bool ret = true;
-        
+
         if (!file.is_open()) {
             cout << "Unable to open: '" << fname << "'" << endl;
             return false;
@@ -89,29 +121,29 @@ namespace gfx
         file.close();
         return ret;
     }
-    
+
     bool surface::put_png (ofstream & file) const
     {
         void * rawdata = get_data(3, R_MASK, G_MASK, B_MASK);
-        
+
         if (!rawdata) return false;
-        
+
         png::put (file, (const char *)rawdata, length (), height ());
-        
+
         free(rawdata);
-        
+
         return true;
     }
-    
+
     bool surface::save_png (const string & fname) const
     {
         ofstream file(fname.c_str());
         bool ret = true;
-        
+
         if (!file.is_open())
             return false;
         ret = put_png (file);
         file.close();
         return true;
-    }   
+    }
 }

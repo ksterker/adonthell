@@ -2,28 +2,27 @@ from adonthell import gfx, input, main
 import time
 
 letsexit = 0
-xmove = 0
-ymove = 0
+walkdir = None
 screenshot = False
 
 def gfxtest ():
-    global screenshot
+    global screenshot, walkdir
     
     #setup key handler
     def key_callback(ev):
-        global letsexit, xmove, ymove, screenshot
+        global letsexit, walkdir, screenshot
         if ev.type() == input.keyboard_event.KEY_PUSHED:
             if ev.key() == input.keyboard_event.ESCAPE_KEY: letsexit = 1
-            elif ev.key() == input.keyboard_event.LEFT_KEY: xmove = -1
-            elif ev.key() == input.keyboard_event.RIGHT_KEY: xmove = 1
-            elif ev.key() == input.keyboard_event.UP_KEY: ymove = -1
-            elif ev.key() == input.keyboard_event.DOWN_KEY: ymove = 1
+            elif ev.key() == input.keyboard_event.LEFT_KEY: walkdir = 'walk_west'
+            elif ev.key() == input.keyboard_event.RIGHT_KEY: walkdir = 'walk_east'
+            elif ev.key() == input.keyboard_event.UP_KEY: walkdir = 'walk_north'
+            elif ev.key() == input.keyboard_event.DOWN_KEY: walkdir = 'walk_south'
             elif ev.key() == input.keyboard_event.F8_KEY: screenshot = True
         elif ev.type() == input.keyboard_event.KEY_RELEASED:
-            if ev.key() == input.keyboard_event.LEFT_KEY and xmove == -1: xmove = 0
-            elif ev.key() == input.keyboard_event.RIGHT_KEY and xmove == 1: xmove = 0
-            elif ev.key() == input.keyboard_event.UP_KEY and ymove == -1: ymove = 0
-            elif ev.key() == input.keyboard_event.DOWN_KEY and ymove == 1: ymove = 0
+            if ev.key() == input.keyboard_event.LEFT_KEY and walkdir == 'walk_west': walkdir = "stand" + walkdir[4:]
+            elif ev.key() == input.keyboard_event.RIGHT_KEY and walkdir == 'walk_east': walkdir = "stand" + walkdir[4:]
+            elif ev.key() == input.keyboard_event.UP_KEY and walkdir == 'walk_north': walkdir = "stand" + walkdir[4:]
+            elif ev.key() == input.keyboard_event.DOWN_KEY and walkdir == 'walk_south': walkdir = "stand" + walkdir[4:]
         return 1
 
     if not gfx.init("sdl"): raise "Can't load gfx backend!"
@@ -51,14 +50,19 @@ def gfxtest ():
             backgroundcolor = backgroundcolor[1:]
             
     #load an image... gfx must be checked out and linked
-    image = gfx.create_surface()
-    image.load_png("gfx/item/treasure/catseye.png")
-    image.set_mask(True)
+    image = gfx.animation()
+    image.load_animation("foo")
+    count = 0
+    oldwalkdir = None
     while not letsexit:
+        count += 1
         input.manager.update()
-        xloc += xmove; yloc += ymove
+        if(walkdir != oldwalkdir):
+            oldwalkdir = walkdir
+            image.change_animation(walkdir)
         background.draw(0,0)
         image.draw(xloc,yloc)
+        if count == 10: image.update(); count = 0
         
         if screenshot:
             print "saving screenshot to 'screenshot.png'"
