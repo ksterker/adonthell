@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.8 2005/06/03 17:29:13 ksterker Exp $
+   $Id: listener.h,v 1.9 2006/06/18 19:25:53 ksterker Exp $
 
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -23,24 +23,30 @@
  * @file   event/listener.h
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
- * @brief  Declares the %listener class.
+ * @brief  Declares the %listener base class.
  * 
  */
 
 #ifndef EVENT_LISTENER_H
 #define EVENT_LISTENER_H
 
-#include "python/method.h"
 #include "event/event.h"
+#include "base/callback.h"
+#include <Python.h>
 
 namespace events
 {
+    /** Types of listeners */
+    enum
+    {
+        LISTENER_CXX    = 0,
+        LISTENER_PYTHON = 1
+    };
+
     class factory;
 
     /**
-     * An %event %listener contains a callback to a %python %method that it
-     * will execute when the event occurs that the %listener is waiting
-     * for. A %listener is usually created by a certain %event %factory and will
+     * %Listeners are usually created by a certain %event %factory and will
      * be destroyed if the %factory is destroyed. That way, it's not neccessary
      * to keep track of every single %listener. Instead, a few factories can
      * be used to create groups of listeners that can be disposed together.
@@ -50,14 +56,16 @@ namespace events
     public:
         /**
          * Create a new listener, which listens to the given event.
+         * @param f the factory that created the listener or NULL
+         * @param e the event that will trigger the attached callback
          */
-        listener (factory *f, event *e); 
+        listener (factory *f, event *e);
         
         /**
          * Destroy the %listener. Automatically removes it from 
          * the %event %manager and %factory if required.
          */
-        ~listener ();
+        virtual ~listener ();
         
         /**
          * @name Member access
@@ -82,8 +90,8 @@ namespace events
         }
         
         /**
-         * Get the event's id.
-         * @return id of the %event.
+         * Get the listener's id.
+         * @return id of the %listener.
          */
         const string & id () const
         {
@@ -91,8 +99,8 @@ namespace events
         }
         
         /**
-         * Assign an id to the %event, so it may be retrieved from an
-         * event_list later on, without having a pointer to it.
+         * Assign an id to the %listener, so it may be retrieved from
+         * a %factory later on, without having a pointer to it.
          *
          * @param id a string to identify the %event.
          */
@@ -144,7 +152,11 @@ namespace events
         }
 #endif // SWIG
         //@}
-        
+
+        /**
+         * @name Event handling
+         */
+        //@{  
         /**
          * Sets a python method to be executed whenever an
          * %event occurs that this listener listens to.
@@ -155,16 +167,26 @@ namespace events
          * @param args Additional arguments to pass to the callback.
          * @return \b false if connecting the callback failed, \b true otherwise.
          */
-        bool connect_callback (const string & file, const string & classname, 
-            const string & callback, PyObject *args = NULL);
-    
+        virtual bool connect_callback (const string & file, const string & classname, 
+            const string & callback, PyObject *args = NULL) = 0;
+
+#ifndef SWIG
+        /**
+         * Sets a C++ method to be executed whenever an
+         * %event occurs that this listener listens to.
+         *
+         * @param callback The method to call.
+         */
+        virtual void connect_callback (base::functor_0 * callback) = 0;
+#endif // SWIG
+
         /**
          * Execute the associated python script or callback.
          * 
          * @param evnt The %event that triggered the execution.
          * @return The number of times the %event needs to be repeated.
          */ 
-        s_int32 raise_event (const event* evnt);
+        virtual s_int32 raise_event (const event* evnt) = 0;
 
         /** 
          * Check whether the given %event matches the %event attached to
@@ -176,6 +198,7 @@ namespace events
         {
             return Event->equals (e);
         }
+        //@}
         
         /**
          * @name Pausing / Resuming execution
@@ -214,23 +237,29 @@ namespace events
          * 
          * @param out stream where to add the %event %listener.
          */ 
-        void put_state (base::flat& out) const;
+        virtual void put_state (base::flat& out) const;
         
         /** 
          * Loads the %event %listener from given stream.
          *
          * @param in stream to load the %event %listener from.
          */
-        bool get_state (base::flat& in);
+        virtual bool get_state (base::flat& in);
         //@}
 
 #ifndef SWIG
         /**
          * Allow %listener to be passed as python argument
          */
-        GET_TYPE_NAME(events::listener)
+        GET_TYPE_NAME_VIRTUAL (events::listener)
 #endif // SWIG
 
+    protected:
+        /**
+         * The %event this %listener will react to.
+         */
+        event *Event;
+        
     private:
         /**
          * (Optional) Id of the event
@@ -246,21 +275,6 @@ namespace events
          * Whether the %listener is temporarily disabled or not
          */
         u_int16 Paused;
-        
-        /**
-         * The callback connected to this %listener
-         */
-        python::method *Method;
-        
-        /**
-         * Arguments to pass to the method
-         */
-        PyObject *Args;
-        
-        /**
-         * The %event this %listener will react to.
-         */
-        event *Event;
         
         /**
          * The %event %factory that created this listener.

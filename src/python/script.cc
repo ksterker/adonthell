@@ -1,7 +1,7 @@
 /*
-   $Id: script.cc,v 1.6 2005/06/03 17:29:13 ksterker Exp $
+   $Id: script.cc,v 1.7 2006/06/18 19:25:53 ksterker Exp $
   
-   Copyright (C) 1999/2000/2001/2003/2004 Kai Sterker
+   Copyright (C) 1999/2000/2001/2003/2004/2006 Kai Sterker
    Copyright (C) 2001 Alexandre Courbot
    Part of the Adonthell Project http://adonthell.linuxgames.com
   
@@ -41,6 +41,7 @@ script::script ()
     Instance = NULL;
     Filename = "";
     Classname = "";
+    Args = NULL;
 }
 
 script::~script ()
@@ -53,8 +54,10 @@ void script::clear ()
 {
     // Delete our Instance
     Py_XDECREF (Instance);
+    Py_XDECREF (Args);
     Instance = NULL;
-
+    Args = NULL;
+    
     Filename = "";
     Classname = "";
 }
@@ -108,6 +111,9 @@ bool script::instanciate (PyObject *module, const string & file, const string & 
         return false;
     }
 
+    Args = args;
+    Py_XDECREF (Args);
+    
     Filename = file;
     Classname = classname;
 
@@ -227,4 +233,27 @@ void script::set_attribute_string (const string &name, const string & value)
         Py_DECREF (val);
     }
     else return;
+}
+
+// save script to disk
+void script::put_state (base::flat & out) const
+{
+    out.put_string ("scf", Filename);
+    out.put_string ("scn", Classname);
+    python::put_tuple (Args, out);
+}
+
+// load callback connection from disk and reconnect
+bool script::get_state (base::flat & in)
+{
+    std::string filename = in.get_string ("scf");
+    std::string classname = in.get_string ("scn");
+    PyObject *args = python::get_tuple (in);
+    
+    if (in.success ())
+    {
+        return create_instance (filename, classname, args);
+    }
+    
+    return false;
 }

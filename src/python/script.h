@@ -1,7 +1,7 @@
 /*
-   $Id: script.h,v 1.9 2006/01/22 21:32:39 ksterker Exp $
+   $Id: script.h,v 1.10 2006/06/18 19:25:53 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2003 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2003/2006 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -226,7 +226,25 @@ namespace python
             return Filename;
         }
         //@}
-
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /** 
+         * Save the %script to a stream.
+         * @param out stream where to save the %script.
+         */ 
+        void put_state (base::flat& out) const;
+        
+        /** 
+         * Loads the %script from a stream.
+         * @param in stream to load the %script from.
+         * @return \e true if the %script was loaded successfully, \e false otherwise.
+         */
+        bool get_state (base::flat& in);
+        //@}
+                
 #ifndef SWIG
         /// allow script to be passed through SWIG
         GET_TYPE_NAME_VIRTUAL(python::script);
@@ -245,6 +263,9 @@ namespace python
     
         /// The file name of the current script
         std::string Filename;
+        
+        /// The arguments passed to script ctor
+        PyObject *Args;
     };
 }
 #endif // PYTHON_SCRIPT_H

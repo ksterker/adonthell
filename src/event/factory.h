@@ -1,7 +1,7 @@
 /*
-   $Id: factory.h,v 1.5 2004/12/07 16:46:27 ksterker Exp $
+   $Id: factory.h,v 1.6 2006/06/18 19:25:52 ksterker Exp $
 
-   Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2000/2001/2002/2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -78,9 +78,11 @@ namespace events
          * also keeps track of the %listener to take care of its deletion.
          * 
          * @param ev_co pointer to the %event to add.
+         * @param type type of listener to create. Default is a listener with
+         *  a python callback attached.
          * @return pointer to the newly created %listener. Do not free it!
          */
-        listener *add (event* ev_co);
+        listener *add (event* ev_co, int type = LISTENER_PYTHON);
     
         /**
          * Removes a %listener from the %factory. This is usually called when a

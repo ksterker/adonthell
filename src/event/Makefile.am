@@ -8,6 +8,8 @@ pkgincludeevent_HEADERS = \
 	event.h \
 	factory.h \
 	listener.h \
+	listener_cxx.h \
+	listener_python.h \
 	manager.h \
 	manager_base.h \
 	time_event.h \
@@ -23,6 +25,8 @@ libadonthell_event_la_SOURCES = \
 	event.cc \
 	factory.cc \
 	listener.cc \
+	listener_cxx.cc \
+	listener_python.cc \
     types.cc \
 	time_event.cc \
 	time_event_manager.cc

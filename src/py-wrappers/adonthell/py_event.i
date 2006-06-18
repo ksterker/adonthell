@@ -6,6 +6,7 @@
 #include "event/factory.h"
 #include "event/manager.h" 
 #include "event/time_event.h"
+#include "event/listener_python.h"
 %}
 
 %include "std_string.i"
@@ -24,5 +25,6 @@ namespace events {
 %include "event/event.h"
 %include "event/time_event.h"
 %include "event/listener.h"
+%include "event/listener_python.h"
 %include "event/factory.h"
 %include "event/manager.h"

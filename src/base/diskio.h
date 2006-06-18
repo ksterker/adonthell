@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.5 2006/04/23 17:12:06 ksterker Exp $
+   $Id: diskio.h,v 1.6 2006/06/18 19:25:52 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -73,12 +73,21 @@ namespace base {
              */
             //@{
             /**
-             *
+             * Load this record from the given ASCII file. Compared to get_record(),
+             * no checksum is kept in the ASCII file, so file corruption cannot be
+             * detected prior to loading.
+             * @param in file to read data from.
+             * @return \b true on successful loading, \b false otherwise.
+             * @sa get_record()
              */
             bool get_ascii (FILE * in);
             
             /**
-             *
+             * Save this record to an ASCII file. Compared to put_record(), no
+             * checksum will be saved with the record. Multiple records can be
+             * saved in the same file.
+             * @param out file to save record to.
+             * @sa put_record()
              */
             void put_ascii (FILE * out);
             //@}

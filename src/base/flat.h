@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.13 2006/04/23 17:12:06 ksterker Exp $
+   $Id: flat.h,v 1.14 2006/06/18 19:25:52 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -192,7 +192,7 @@ namespace base
              * @param i value to store.
              */
             void put_uint16 (const string & name, const u_int16 & i) {
-	        SwapLE16 (i);
+                SwapLE16 (i);
                 put (name, T_UINT16, 2, (void*) &i);
             }
 
@@ -202,7 +202,7 @@ namespace base
              * @param i value to store.
              */
             void put_sint16 (const string & name, const s_int16 & i) {
-	        SwapLE16 (i);
+                SwapLE16 (i);
                 put (name, T_SINT16, 2, (void*) &i);
             }
 
@@ -212,7 +212,7 @@ namespace base
              * @param i value to store.
              */
             void put_uint32 (const string & name, const u_int32 & i) {
-	        SwapLE32 (i);
+                SwapLE32 (i);
                 put (name, T_UINT32, 4, (void*) &i);
             }
 
@@ -222,7 +222,7 @@ namespace base
              * @param i value to store.
              */
             void put_sint32 (const string & name, const s_int32 & i) {
-	        SwapLE32 (i);
+                SwapLE32 (i);
                 put (name, T_SINT32, 4, (void*) &i);
             }
 

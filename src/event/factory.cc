@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.5 2004/12/07 16:46:27 ksterker Exp $
+   $Id: factory.cc,v 1.6 2006/06/18 19:25:52 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,8 @@
 #include "base/diskio.h"
 #include "event/factory.h"
 #include "event/manager.h"
+#include "event/listener_cxx.h"
+#include "event/listener_python.h"
 
 using std::vector;
 using events::factory;
@@ -65,9 +67,14 @@ void factory::clear ()
 }
 
 // Add an event to the factory and register it with the event manager.
-listener *factory::add (event* ev)
+listener *factory::add (event* ev, int type)
 {
-    listener *li = new listener (this, ev);
+    listener *li = NULL;
+    
+    // create listener according to desired type
+    if (type == LISTENER_CXX) li = new events::listener_cxx (this, ev);
+    else li = new events::listener_python (this, ev);
+        
     Listeners.push_back (li);
 
     // if the factory is paused, also pause new events
@@ -147,6 +154,7 @@ bool factory::get_state (base::flat& in)
     // get registered listeners
     while ((type = listeners.next (&value, &size)) != -1) 
     {
+        // get listener container
         if (type != base::flat::T_FLAT)
         {
             fprintf (stderr, "*** error: factory::get_state: expected type T_FLAT but got %i!\n", type);
@@ -154,7 +162,14 @@ bool factory::get_state (base::flat& in)
         }
         base::flat state ((const char*) value, size);
         
-        li = new listener (this, NULL);
+        // get type of listener
+        type = state.get_uint8 ("ltp");
+
+        // create listener according to desired type
+        if (type == LISTENER_CXX) li = new events::listener_cxx (this, NULL);
+        else li = new events::listener_python (this, NULL);
+        
+        // get listener data
         if (li->get_state (state))
         {
             Listeners.push_back (li);

@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.cc,v 1.3 2006/04/23 17:12:06 ksterker Exp $
+   $Id: diskio.cc,v 1.4 2006/06/18 19:25:52 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,7 @@ using base::flat;
 using base::diskio;
 
 char *diskio::Bin2Hex = "0123456789ABCDEF";
+#define READ_BUFFER_SIZE 16384
 
 // ctor
 diskio::diskio () : flat (256)
@@ -60,7 +61,7 @@ bool diskio::get_record (igzstream & in)
     
     checksum << in;
     if (checksum != this->checksum ()) {
-        fprintf (stderr, "*** diskio::get_record: checksum error. Data might be corrupted.\n");
+        fprintf (stderr, "*** diskio::get_record: checksum error. Data might be corrupt.\n");
         return false;
     }
     
@@ -81,6 +82,119 @@ void diskio::put_record (ogzstream & out)
 // read record from ASCII file
 bool diskio::get_ascii (FILE * in)
 {
+    char *ptr, *val, *name;
+    char type[1];
+    char buffer[READ_BUFFER_SIZE];
+    char *end = &buffer[READ_BUFFER_SIZE];
+    u_int32 read = fread (buffer, 1, READ_BUFFER_SIZE, in);
+    u_int32 size;
+ 
+    // check that first byte is the beginning of a new record
+    if (read > 0 && buffer[0] == '{')
+    {
+        ptr = buffer;
+        while (ptr < end)
+        {
+            ptr++;
+
+            // skip whitespace
+            while (ptr < end && isspace (*ptr))
+            {
+                ptr++;
+                continue;
+            }
+                   
+            // read variable name --> everything before the '/'
+            val = ptr;
+            while (ptr < end && *ptr != '/')
+            {
+                ptr++;
+                continue;
+            }
+            
+            u_int32 len = ptr-val;
+            name = new char[len];
+            memcpy (name, val, len);
+            name[len] = '\0';
+            
+            // read variable type
+            type[0] = *(++ptr);
+            
+            // read variable size
+            val = ptr++;
+            while (ptr < end && isdigit (*ptr))
+            {
+                ptr++;
+                continue;
+            }
+            
+            // convert size
+            if (val == ptr)
+            {
+                size = 1;
+            }
+            else
+            {
+                size = (u_int32) strtol (val, NULL, 10);
+            }
+
+            // read value
+            switch (type[0])
+            {
+                // string
+                case 'A':
+                {
+                    break;
+                }
+                // bool
+                case 'B':
+                {
+                    break;
+                }
+                // char
+                case 'C':
+                {
+                    break;
+                }
+                // double
+                case 'F':
+                {
+                    break;
+                }
+                // signed int
+                case 'S':
+                {
+                    break;
+                }
+                // unsigned int
+                case 'U':
+                {
+                    break;
+                }
+                // record
+                case 'R':
+                {
+                    break;
+                }
+                // binary
+                case 'X':
+                {
+                    break;
+                }
+                default:
+                {
+                    fprintf (stderr, "*** diskio::get_ascii: unknown type '%c'!\n", type[0]);
+                    return false;
+                }
+            }
+        }
+    }
+    else
+    {
+        fprintf (stderr, "*** diskio::get_ascii: file does not point to start of new record\n!");
+        return false;
+    }
+    
     return true;
 }
 
@@ -90,6 +204,7 @@ void diskio::put_ascii (FILE * out)
     write_record (*this, out);
 }
 
+// recursively saves records to file
 void diskio::write_record (base::flat &record, FILE * out, const u_int16 & indent)
 {
     const char *in2 = std::string (indent+1, '\t').c_str ();

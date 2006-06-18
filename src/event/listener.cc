@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.7 2005/06/03 17:29:13 ksterker Exp $
+   $Id: listener.cc,v 1.8 2006/06/18 19:25:53 ksterker Exp $
 
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,7 +27,6 @@
  * 
  */
 
-#include "python/pool.h"
 #include "event/manager.h"
 #include "event/listener.h"
 
@@ -38,8 +37,6 @@ using events::listener;
 listener::listener (factory *f, event *e)
 {
     Registered = false;
-    Method = NULL;
-    Args = NULL;
     Factory = f;
     Event = e;
     Paused = 0;
@@ -55,98 +52,6 @@ listener::~listener ()
     if (Factory) Factory->remove (this);
     
     delete Event;
-    
-    // we no longer use the callback
-    delete Method;
-    // ... and the arguments neither
-    Py_XDECREF (Args);
-}
-
-// set python method to be called when the event occurs
-bool listener::connect_callback (const string & file, const string & classname, const string & callback, PyObject *args)
-{
-    u_int16 size;
-    
-    // cleanup
-    delete Method;
-    
-    // just disconnect the callback
-    if (file == "") 
-    {
-        Method = NULL;
-        return false;
-    }
-    
-    // create the callback
-    Method = python::pool::connect (EVENTS_DIR + file, classname, callback);
-    if (!Method)
-    {
-        fprintf (stderr, "*** listener::connect_callback: connecting callback failed!\n");
-        return false;
-    }
-    
-    // make sure the given arguments are a tuple
-    if (!args || !PyTuple_Check (args))
-    {
-        if (args) fprintf (stderr, "*** warning: listener::connect_callback: argument must be a tuple!\n");
-        size = 2;
-    }
-    else size = PyTuple_GET_SIZE (args) + 2;
-    
-    // keep old argument tuple, if possible
-    if (!Args || PyTuple_GET_SIZE (Args) != size)
-    {
-        // free old args
-        Py_XDECREF (Args);
-
-        // prepare callback arguments
-        Args = PyTuple_New (size);
-    
-        // first argument is the listener itself
-        PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
-    }
-    
-    // second argument will be the event that triggered the callback
-    for (u_int16 i = 2; i < size; i++)
-    {
-        // copy remaining arguments, if any
-        PyObject *arg =  PyTuple_GET_ITEM (args, i-2);
-        Py_INCREF (arg);
-        PyTuple_SET_ITEM (Args, i, arg);
-    }
-    return true;
-}
-
-// execute callback for given event
-s_int32 listener::raise_event (const event* evnt) 
-{
-    if (Method && Event->repeat ())
-    {
-        // make sure that arguments remain valid while the script executes
-        PyObject *args = Args;
-        Py_INCREF (args);
-        
-        // event that triggered the script is 2nd argument of callback
-        PyTuple_SET_ITEM (args, 1, python::pass_instance ((event*) evnt));
-        
-        // adjust repeat count
-        Event->do_repeat ();
-        
-        // execute callback
-        Method->execute (args);
-        
-        // clean up
-        Py_DECREF (PyTuple_GET_ITEM (args, 1));
-        Py_DECREF (args);
-    }
-    else
-    {
-        if (!Method) fprintf (stderr, "*** warning: listener::raise_event: no callback connected\n");
-        return 0;
-    }
-    
-    // return whether event needs be repeated or not
-    return Event->repeat ();
 }
 
 // disable the event temporarily
@@ -174,22 +79,13 @@ void listener::resume ()
 // save the state of the script associated with the event
 void listener::put_state (base::flat & out) const
 {
-    base::flat listener;
-    
-    listener.put_string ("lid", Id);
-    listener.put_uint16 ("lps", Paused);
-    listener.put_bool ("lmt", Method != NULL);
+    // save id and paused state
+    out.put_string ("lid", Id);
+    out.put_uint16 ("lps", Paused);
 
-    if (Method != NULL)
-    {
-        Method->put_state (listener);
-        python::put_tuple (Args, listener, 2);
-    }
-    
-    listener.put_bool ("lev", Event != NULL);
-    if (Event != NULL) Event->put_state (listener);
-    
-    out.put_flat ("", listener);
+    // save attached event
+    out.put_bool ("lev", Event != NULL);
+    if (Event != NULL) Event->put_state (out);
 }
 
 // load the state of the script associated with the event 
@@ -198,20 +94,6 @@ bool listener::get_state (base::flat & in)
     Id = in.get_string ("lid");
     Paused = in.get_uint16 ("lps");
     
-    // load callback
-    if (in.get_bool ("lmt") == true)
-    {
-        Method = new python::method ();
-        if (Method->get_state (in) == false)
-        {
-            fprintf (stderr, "*** listener::get_state: restoring callback failed!\n");
-            return false;
-        }
-        
-        Args = python::get_tuple (in, 2);
-        PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
-    }
-
     // load event structure
     if (in.get_bool ("lev") == true)
     {
