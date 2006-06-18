@@ -81,7 +81,9 @@ class App (main.AdonthellApp):
         while event.date.time () < 300:
             base.Timer.update ()
             event.date.update ()
-    
+
+        return 0
+
 if __name__ == '__main__':
     theApp = App ()
     theApp.init (theApp.eventtest)
