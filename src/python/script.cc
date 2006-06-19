@@ -1,5 +1,5 @@
 /*
-   $Id: script.cc,v 1.7 2006/06/18 19:25:53 ksterker Exp $
+   $Id: script.cc,v 1.8 2006/06/19 18:37:46 ksterker Exp $
   
    Copyright (C) 1999/2000/2001/2003/2004/2006 Kai Sterker
    Copyright (C) 2001 Alexandre Courbot
@@ -112,7 +112,7 @@ bool script::instanciate (PyObject *module, const string & file, const string & 
     }
 
     Args = args;
-    Py_XDECREF (Args);
+    Py_XINCREF (Args);
     
     Filename = file;
     Classname = classname;
