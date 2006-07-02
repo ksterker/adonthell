@@ -39,6 +39,7 @@ def gfxtest ():
     
     #setup a 'fake' background
     background = gfx.create_surface()
+    background.thisown = 0
     background.resize(640,480)
     backgroundcolor = [
     0x000000,0xFF0000,0x00FF00,0x0000FF,
@@ -73,9 +74,7 @@ def gfxtest ():
         gfx.screen.update()
 
     input.cleanup()
-    #if this is called it causes a segfault... This will free the c++ pointer in image, 
-    #when image goes out of scope it will be called again
-    #gfx.cleanup()
+    gfx.cleanup()
     return 0
 
 if __name__ == '__main__':
