@@ -1,5 +1,5 @@
 /*
-   $Id: audio_sdl.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio_sdl.cc,v 1.3 2006/07/02 11:33:37 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,8 +28,12 @@
 
 #include <iostream>
 #include <map>
-#include "manager_sdl.h"
+
+#include "SDL.h"
+#include "SDL_mixer.h"
+
 #include "audio/sound.h"
+#include "audio/audio.h"
 
 //TODO These values should be gotten from a config file or something
 int audio_rate = 44100;
