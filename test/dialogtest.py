@@ -1,7 +1,6 @@
 from adonthell import base, main, rpg
 import sys
 
-
 # -- test class
 class App (main.AdonthellApp):
     # -- call super ctor
@@ -14,7 +13,7 @@ class App (main.AdonthellApp):
     
     # -- test method (callback)
     def dialogtest (self):
-        index = -1
+        answer = -1
         
         # -- character whose dialog is to be tested
         npc = rpg.character ("NPC", "Id", rpg.NPC)
@@ -28,7 +27,8 @@ class App (main.AdonthellApp):
         
         # -- loop through dialogue
         while 1:
-            line = dlg.run (index)
+            # -- continue dialogue with answer at given index
+            line = dlg.run (answer)
             if line == None: break
             
             # -- print NPC text
@@ -38,8 +38,11 @@ class App (main.AdonthellApp):
             for i in range (0, line.num_answers()):
                 print i+1, ")", line.answer (i)
             
-            index = line.num_answers() - 1
+            # -- always chose last answer
+            answer = line.num_answers() - 1
 
+        return 0
+        
 # -- entry point to the script
 if __name__ == '__main__':
     theApp = App ()
