@@ -30,13 +30,10 @@ pkglibaudio_LTLIBRARIES = sdl.la
 ### SDL backend
 ## Our header files
 pkgincludeaudiosdldir = $(pkgincludedir)/audio/sdl
-pkgincludeaudiosdl_HEADERS = \
-	sdl/manager_sdl.h
 
 ## Rules to build libaudio_sdl
 sdl_la_SOURCES = \
 	sdl/audio_sdl.cc
-	sdl/manager_sdl.cc
 
 sdl_la_CXXFLAGS = $(SDL_CFLAGS)
 sdl_la_LDFLAGS = -avoid-version -module
