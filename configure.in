@@ -1,4 +1,4 @@
-nl **************************************************************
+dnl **************************************************************
 dnl Process this file with autoconf to produce a configure script.
 dnl **************************************************************
 
@@ -13,7 +13,7 @@ AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(adonthell, 0.4.0)
 AM_CONFIG_HEADER(config.h)
 
-CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
+dnl CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
 
 dnl ********************
 dnl Checks for programs.
@@ -38,6 +38,10 @@ _AM_DEPENDENCIES([OBJC])
 
 OBJC="gcc"
 AC_SUBST(OBJC)
+
+if test x$ac_cv_cxx_compiler_gnu = xyes; then
+   CXXFLAGS="$CXXFLAGS -fno-exceptions -fno-rtti"
+fi
 
 case "$target" in
     *-apple-darwin*)

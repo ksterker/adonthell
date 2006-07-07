@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.8 2006/06/18 19:25:53 ksterker Exp $
+   $Id: surface.cc,v 1.9 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -93,17 +93,17 @@ namespace gfx
     bool surface::get_png (ifstream & file)
     {
         void *rawdata;
-        u_int16 l, h;
+        u_int16 l, h; 
+        bool alpha = false;
 
-        rawdata = png::get (file, l, h);
+        rawdata = png::get (file, l, h, &alpha);
 
         if (!rawdata) return false;
 
         clear ();
 
-        set_data(rawdata, l, h, 3, R_MASK, G_MASK, B_MASK);
-
-        free (rawdata);
+        set_data(rawdata, l, h, alpha ? 4 : 3,
+                 R_MASK, G_MASK, B_MASK, alpha ? A_MASK : 0);
 
         return true;
     }
@@ -128,7 +128,7 @@ namespace gfx
 
         if (!rawdata) return false;
 
-        png::put (file, (const char *)rawdata, length (), height ());
+        png::put (file, (const char *)rawdata, length (), height (), false);
 
         free(rawdata);
 

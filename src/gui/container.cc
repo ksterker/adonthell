@@ -1,5 +1,5 @@
 /*
-   $Id: container.cc,v 1.10 2004/12/21 22:03:17 jol Exp $
+   $Id: container.cc,v 1.11 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,7 @@ void container::add_child (base * m)
 
 #ifdef DEBUG
   std::cout << "Nd childs: " << (int) m_childs.size () << std::endl; 
-#endif DEBUG
+#endif /* DEBUG */
 }
 
 void container::remove_child (base * m)

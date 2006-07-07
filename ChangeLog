@@ -1,3 +1,13 @@
+2006-06-01  Christoph Reichenbach  <reichenb@colorado.edu>
+
+	* src/gfx/png_wrapper.cc (gfx): Added support for alpha channel,
+	used memcpy() to copy data rather than iterated copying
+
+	* src/gfx/sdl/surface_sdl.cc (gfx): Added support for alpha channel
+
+	* src/gfx/surface.h (gfx): Changed interface of set_data() to
+	acquire MM ownership of data
+
 2004-12-28(jol):
 	- add callback support with two parameters,
 	- update callbacktest example.

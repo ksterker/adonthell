@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.7 2006/06/03 04:20:27 Mithander Exp $
+   $Id: surface.h,v 1.8 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -390,7 +390,8 @@ namespace gfx
          * - Red: red_mask
          * - Green: green_mask
          * - Blue: blue_mask
-         *
+         * - Alpha: alpha_mask option (0 => none)
+         * 
          * @param data Pointer to the new pixel data.
          * @param l length of the image (in pixels)
          * @param h height of the image (in pixels)
@@ -398,11 +399,15 @@ namespace gfx
          * @param red_mask Red color mask.
          * @param green_mask Green color mask.
          * @param blue_mask Blue color mask.
+         * @param alpha_mask Alpha channel mask, or zero if disabled (default).
+         *
+         * set_data takes responsibility of memory management for 'data', which is
+         * expected to have been allocated with malloc() and/or calloc().
          */
         virtual void set_data (void * data, u_int16 l, u_int16 h,
                                u_int8 bytes_per_pixel = RAW_BYTES_PER_PIXEL,
                                u_int32 red_mask = RAW_RED_MASK, u_int32 green_mask = RAW_GREEN_MASK,
-                               u_int32 blue_mask = RAW_BLUE_MASK) = 0;
+                               u_int32 blue_mask = RAW_BLUE_MASK, u_int32 alpha_mask = 0) = 0;
 
         /**
          * Returns the surface pixel data in the chosen format.

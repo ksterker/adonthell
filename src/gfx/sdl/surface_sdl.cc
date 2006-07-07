@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.6 2003/11/22 09:37:12 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.7 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@ namespace gfx
     surface_sdl::surface_sdl() : surface () 
     { 
         vis = NULL;
+        vis_data = NULL;
         mask_changed = false; 
     }
 
@@ -40,6 +41,9 @@ namespace gfx
     {
         if (vis) SDL_FreeSurface (vis);
         vis = NULL;
+
+        if (this->vis_data) free(this->vis_data);
+        this->vis_data = NULL;
     }
 
     void surface_sdl::set_mask (bool m)
@@ -69,10 +73,10 @@ namespace gfx
         else display_target = ((surface_sdl *)target)->vis;
 
         setup_rects (x, y, sx, sy, sl, sh, da_opt); 
-    
+
         if (!dstrect.w || !dstrect.h)
             return;
-    
+
         if (mask_changed)
         {
             mask_changed = false;
@@ -84,7 +88,7 @@ namespace gfx
 
         if (alpha () != 255)
             SDL_SetAlpha (vis, SDL_SRCALPHA, alpha_);
-    
+
         SDL_BlitSurface (vis, &srcrect, display_target, &dstrect); 
     }
 
@@ -106,7 +110,7 @@ namespace gfx
             dstrect.w = l;
             dstrect.h = h;
         }
-    
+
         SDL_FillRect (vis, &dstrect, col);
     }
 
@@ -138,7 +142,7 @@ namespace gfx
             IncX=-1;
             Dx=x1-x2;
         }
-   
+
         if(y1<=y2)
         {
             IncY=1;
@@ -149,19 +153,19 @@ namespace gfx
             IncY=-1;
             Dy=y1-y2;
         }
-   
+
         if(Dy<Dx)
         {
             inc1=(Dy-Dx)<<1;
             inc2=Dy<<1;
             Err=inc2-Dx;
-       
+
             for(i=0;i<Dx;i++)
             {
                 if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
                                 y >= da.y() && y < da.y() + da.height()))
                     put_pix (x, y, color);
-           
+
                 if(Err>0)
                 {
                     y+=IncY;
@@ -169,7 +173,7 @@ namespace gfx
                 }
                 else
                     Err+=inc2;
-           
+
                 x+=IncX;
                 offset+=IncX;
             }
@@ -179,13 +183,13 @@ namespace gfx
             inc1=(Dx-Dy)<<1;
             inc2=Dx<<1;
             Err=inc2-Dy;
-       
+
             for(i=0;i<Dy;i++)
             {
                 if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
                                 y >= da.y() && y < da.y() + da.height()))
                     put_pix(x, y, color);
-           
+
                 if(Err>0)
                 {
                     x+=IncX;
@@ -193,7 +197,7 @@ namespace gfx
                 }
                 else
                     Err+=inc2;
-           
+
                 y+=IncY;
             }
         }
@@ -227,7 +231,7 @@ namespace gfx
     {
         u_int8 * offset = ((Uint8 *) vis->pixels) + y * vis->pitch
             + x*vis->format->BytesPerPixel;
-     
+
         switch (vis->format->BytesPerPixel) 
         {
             case 1:
@@ -239,7 +243,7 @@ namespace gfx
             case 3:
             {
                 u_int8 r, g, b;
-            
+
                 r = (col >> vis->format->Rshift);
                 g = (col >> vis->format->Gshift);
                 b = (col >> vis->format->Bshift);
@@ -251,7 +255,7 @@ namespace gfx
             case 4:
                 *((Uint32 *) (offset)) = (Uint32) col;
                 break;
-        }     
+        }
     }
 
     u_int32 surface_sdl::get_pix (u_int16 x, u_int16 y) const
@@ -260,7 +264,7 @@ namespace gfx
 
         u_int8 * offset = ((Uint8 *) vis->pixels) + y * vis->pitch
             + x * vis->format->BytesPerPixel;
-    
+
         switch (vis->format->BytesPerPixel) 
         {
             case 1:
@@ -274,7 +278,7 @@ namespace gfx
                 u_int8 r, g, b;
                 col = 0;
                 u_int32 t;
-            
+
                 r = *((offset) + (vis->format->Rshift >> 3)); 
                 g = *((offset) + (vis->format->Gshift >> 3));
                 b = *((offset) + (vis->format->Bshift >> 3));
@@ -285,7 +289,7 @@ namespace gfx
                 col |= t; 
                 t = b << vis->format->Bshift;
                 col |= t; 
-            
+
                 break;
             }
             case 4:
@@ -294,7 +298,7 @@ namespace gfx
         }
         return col;
     }
- 
+
     surface & surface_sdl::operator = (const surface& src)
     {
         const surface_sdl & src_sdl = (const surface_sdl &) src;
@@ -309,13 +313,13 @@ namespace gfx
             vis = SDL_DisplayFormat (src_sdl.vis);
         return *this; 
     }
- 
+
 
 
     void surface_sdl::resize (u_int16 l, u_int16 h)
     {
         if (l == length () && h == height ()) return;
-    
+
         if (vis) SDL_FreeSurface (vis); 
 
         set_length (l);
@@ -344,20 +348,25 @@ namespace gfx
     }
 
     void surface_sdl::set_data(void * data, u_int16 l, u_int16 h, u_int8 bytes_per_pixel, u_int32 red_mask, 
-                               u_int32 green_mask, u_int32 blue_mask)
+                               u_int32 green_mask, u_int32 blue_mask, u_int32 alpha_mask)
     {
         if (vis) SDL_FreeSurface(vis);
+        if (this->vis_data) free(this->vis_data);
+        this->vis_data = data;
 
         set_length(l);
         set_height(h);
 
-        SDL_Surface * tmp = SDL_CreateRGBSurfaceFrom(data, length(),
+        SDL_Surface * tmp = SDL_CreateRGBSurfaceFrom(this->vis_data, length(),
                                                      height(), bytes_per_pixel * 8,
                                                      length() * bytes_per_pixel,
                                                      red_mask, green_mask,
-                                                     blue_mask, 0);
+                                                     blue_mask, alpha_mask);
 
-        vis = SDL_DisplayFormat(tmp);
+        if (alpha_mask)
+            vis = SDL_DisplayFormatAlpha(tmp);
+        else
+            vis = SDL_DisplayFormat(tmp);
 
         SDL_FreeSurface(tmp);
     }
@@ -409,7 +418,7 @@ namespace gfx
             srcrect.h = sh;
 
             dstrect = srcrect;
-        
+
             dstrect.x = x;
             dstrect.y = y;
         } 

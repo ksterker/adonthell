@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.h,v 1.1 2006/04/07 16:12:59 Mithander Exp $
+   $Id: png_wrapper.h,v 1.2 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 2006 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,10 +55,12 @@ namespace gfx
          * @param file opened file from which to read.
          * @param length pointer to the integer which will contain the %image's length.
          * @param height pointer to the integer which will contain the %image's height.
+         * @param alpha A refvalue set to true iff  the returned data contains 4 bytes per pixel, of which
+         *              the final is alpha information (otherwise: 3 bytes, RGB).
          *
          * @return allocated pointer containing the PNG %image.
          */
-        static void *get (std::ifstream & file, u_int16 & length, u_int16 & height);
+        static void *get (std::ifstream & file, u_int16 & length, u_int16 & height, bool * alpha);
 
         /**
          * Saves a PNG %image into an opened file.
@@ -67,8 +69,9 @@ namespace gfx
          * @param image the PNG %image data.
          * @param length the length of the %image to write.
          * @param height the height of the %image to write.
+         * @param alpha Whether a fourth byte per pixel row, containing alpha, should be epxected
          */
-        static void put (std::ofstream & file, const char *image, const u_int16 length, const u_int16 height);
+        static void put (std::ofstream & file, const char *image, const u_int16 length, const u_int16 height, bool alpha);
     };
 }
 

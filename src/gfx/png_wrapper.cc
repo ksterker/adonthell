@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.1 2006/04/07 16:12:59 Mithander Exp $
+   $Id: png_wrapper.cc,v 1.2 2006/07/07 17:34:46 Mithander Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,7 +60,7 @@ namespace gfx
         file.flush();
     }
 
-    void * png::get (ifstream & file, u_int16 & length, u_int16 & height)
+    void * png::get (ifstream & file, u_int16 & length, u_int16 & height, bool * alpha)
     {
         const int headerbytes = 8;  //This is used to read the file and make sure its a png... can be 1-8
         png_byte header[headerbytes];
@@ -126,31 +126,28 @@ namespace gfx
 
         png_read_image(png_ptr, row_pointers);
 
-        char *image = image = (char *)calloc (length * height, 3);
+        *alpha = (info_ptr->color_type == PNG_COLOR_TYPE_RGBA);
+        const int bytes_per_pixel = (*alpha) ? 4 : 3;
+        char *image = image = (char *)calloc (length * height, bytes_per_pixel);
         int idx = 0;
 
         switch (info_ptr->color_type)
         {
         case PNG_COLOR_TYPE_RGBA:
-        case PNG_COLOR_TYPE_RGB:
+        case PNG_COLOR_TYPE_RGB: {
+            const int line_buf_length = bytes_per_pixel * length;
+
             for (int y=0; y<height; y++)
             {
-                png_byte* row = row_pointers[y];
-                for (int x=0; x<length; x++)
-                {
-                    image[idx++] = *row++;
-                    image[idx++] = *row++;
-                    image[idx++] = *row++;
-                    if (info_ptr->color_type == PNG_COLOR_TYPE_RGBA)
-                    {
-                        //TODO Use alpha channel also
-                        row++;
-                    }
-                }
+                const png_byte* row = row_pointers[y];
+
+                memcpy(image + idx, row, line_buf_length);
+                idx += line_buf_length;
+
                 free(row_pointers[y]);
             }
             free(row_pointers);
-            break;
+            break; }
         default:
             cout << "[read_png_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (is " << info_ptr->color_type << ")" << endl;
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
@@ -161,7 +158,7 @@ namespace gfx
         return image;
     }
 
-    void png::put (ofstream & file, const char *image, u_int16 length, u_int16 height)
+    void png::put (ofstream & file, const char *image, u_int16 length, u_int16 height, bool alpha)
     {
         png_structp png_ptr;
         png_infop info_ptr;
@@ -175,7 +172,7 @@ namespace gfx
             return;
         }
 
-    	info_ptr = png_create_info_struct(png_ptr);
+        info_ptr = png_create_info_struct(png_ptr);
         if (!info_ptr)
         {
             cout << "[write_png_file] png_create_info_struct failed" << endl;
@@ -192,7 +189,7 @@ namespace gfx
 
         png_set_write_fn(png_ptr, &file, user_write_data, user_flush_data);
 
-    	/* write header */
+        /* write header */
         if (setjmp(png_jmpbuf(png_ptr)))
         {
             cout << "[write_png_file] Error during writing header" << endl;
@@ -225,6 +222,8 @@ namespace gfx
                 *row++ = image[idx++];
                 *row++ = image[idx++];
                 *row++ = image[idx++];
+                if (alpha)
+                    *row++ = image[idx++];
             }
         }
 
