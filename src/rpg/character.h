@@ -1,5 +1,5 @@
 /*
-   $Id: character.h,v 1.4 2006/02/15 21:30:42 ksterker Exp $
+   $Id: character.h,v 1.5 2006/07/08 17:04:03 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,7 @@
 
 #include "base/hash_map.h"
 #include "python/script.h"
+#include "rpg/schedule.h"
 
 namespace rpg
 {
@@ -95,6 +96,17 @@ namespace rpg
             {
                 Dialogue = dialogue;
             }
+
+            /**
+             * Return schedule of this character. All changes to
+             * the characters behaviour can be done via the schedule
+             * object returned.
+             * @return the character's schedule.
+             */
+            rpg::schedule schedule () const
+            {
+                return Schedule;
+            }
             //@}
             
             /**
@@ -123,13 +135,15 @@ namespace rpg
              */
             //@{
             /**
-             * 
+             * Loads the %character from a stream.
+             * @param in stream to load the %character from.
              * @return \b true if loading successful, \b false otherwise.
              */
             bool get_state (base::flat & file);
             
             /**
-             *
+             * Save the %character to a stream.
+             * @param out stream where to save the %character.
              */
             void put_state (base::flat & file) const;
             //@}
@@ -146,6 +160,9 @@ namespace rpg
             
             /// Dialogue script assigned to this character
             std::string Dialogue;
+            
+            // Schedule assigned to this character
+            rpg::schedule Schedule;
             
             /// list of all characters currently instanciated
             static std::hash_map<std::string, character*> Characters;

@@ -1,5 +1,5 @@
 /*
-   $Id: keyboard_event.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: keyboard_event.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,7 @@ namespace input
             "space",
             "!",
             "\"",
-            "hash", // FIXME: Find correct symbol
+            "#",
             "$",
             "&",
             "'",
@@ -76,7 +76,7 @@ namespace input
             "[",
             "\\",
             "]",
-            "#", // FIXME
+            "^",
             "_",
             "`",
             "a",

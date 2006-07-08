@@ -1,7 +1,7 @@
 /*
-   $Id: gfx.h,v 1.5 2006/06/03 04:20:27 Mithander Exp $
+   $Id: gfx.h,v 1.6 2006/07/08 17:04:03 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@
 #define GFX_H_
 
 #include <string>
+#include "base/configuration.h"
 #include "gfx/screen.h"
 
 /**
@@ -54,6 +55,15 @@ namespace gfx
     bool init(const std::string & backend_name);
 
     /**
+     * Load graphics settings from configuration file. This will
+     * initialize options like screen size and color depth.
+     * 
+     * @param cfg the game configuration
+     *
+     */
+    void setup (base::configuration & cfg);
+        
+    /**
      * Cleanup the gfx module - call this function once you've
      * finished using it.
      *
@@ -65,7 +75,7 @@ namespace gfx
       SWIG directive - create_surface returns a new
       surface, not a pointer to an existing one.
     */
-    %newobject create_surface;
+    // %newobject create_surface;
 #endif
     /**
      * Return a new surface. Surfaces can \e only be created

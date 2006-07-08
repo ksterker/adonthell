@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.3 2006/02/15 21:30:42 ksterker Exp $
+   $Id: character.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -90,12 +90,12 @@ character *character::get_character (const std::string & id)
     return NULL;
 }
 
-//
+// save character
 void character::put_state (base::flat & file) const
 {
 }
 
-// 
+// load character
 bool character::get_state (base::flat & file)
 {
     return file.success ();

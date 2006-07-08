@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.h,v 1.6 2004/05/13 06:44:00 ksterker Exp $
+   $Id: drawing_area.h,v 1.7 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -78,7 +78,12 @@ namespace gfx
          */  
         drawing_area (s_int16 px, s_int16 py, u_int16 pw, u_int16 ph); 
 #endif
-    
+        
+        /**
+         * Destructor.
+         */
+        virtual ~drawing_area () { }
+        
         /** Returns the horizontal position of the drawing_area.
          *  @return horizontal position of the drawing_area.
          */  

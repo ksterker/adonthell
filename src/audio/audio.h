@@ -1,7 +1,7 @@
 /*
-   $Id: audio.h,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio.h,v 1.3 2006/07/08 17:04:03 ksterker Exp $
 
-   Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
+   Copyright (C) 2005/2006 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -32,6 +32,7 @@
 #define AUDIO_H_
 
 #include <string>
+#include "base/configuration.h"
 #include "audio/sound.h"
 
 /**
@@ -59,6 +60,16 @@ namespace audio
      */
     bool init(const std::string & backend_name);
 
+    /**
+     * Load audio settings from configuration file. This will
+     * initialize settings like the volume, number of channels
+     * and similar things.
+     *
+     * @param cfg the game configuration
+     *
+     */
+    void setup (base::configuration & cfg);
+        
     /**
      * Cleanup method. Call this function when you don't need
      * the audio module anymore.

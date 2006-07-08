@@ -1,7 +1,7 @@
 /*
-   $Id: input.h,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: input.h,v 1.3 2006/07/08 17:04:03 ksterker Exp $
 
-   Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   input.h
+ * @file   input/input.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  The input module main include file.
@@ -32,6 +32,7 @@
 #define INPUT_H_
 
 #include <string>
+#include "base/configuration.h"
 #include "input/event.h"
 #include "input/control_event.h"
 #include "input/keyboard_event.h"
@@ -58,7 +59,17 @@ namespace input
      *         \e false otherwise.
      *
      */
-    bool init(const std::string & backend_name);
+    bool init (const std::string & backend_name);
+    
+    /**
+     * Load input settings from configuration file. This will
+     * initialize the mapping of the virtual controls to the
+     * actual input devices.
+     * 
+     * @param cfg the game configuration
+     *
+     */
+    void setup (base::configuration & cfg);
     
     /**
      * Cleanup method. Call this function when you don't need
@@ -66,7 +77,6 @@ namespace input
      * 
      */
     void cleanup();
-
 }
 
 #endif

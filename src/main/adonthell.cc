@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.15 2006/01/22 21:32:39 ksterker Exp $
+   $Id: adonthell.cc,v 1.16 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -85,18 +85,21 @@ bool app::init_modules (const u_int16 & modules)
     // startup graphics
     if (m & GFX)
     {
+        gfx::setup (Cfg);
         if (!gfx::init (Backend)) return false;
     }
 
     // startup input
     if (m & INPUT)
     {
+        input::setup (Cfg);
         if (!input::init (Backend)) return false;
     }
 
     // startup audio
     if (m & AUDIO)
     {
+        audio::setup (Cfg);
         if (!audio::init (Backend)) return false;
     }
 

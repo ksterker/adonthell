@@ -1,5 +1,5 @@
 /*
-   $Id: audio.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio.cc,v 1.3 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -63,6 +63,7 @@ namespace audio
      */
     static std::deque<sound *> completed_sounds;
 
+    // initialize audio module
     bool init(const std::string & backend_name)
     {
         if (lt_dlinit())
@@ -150,7 +151,14 @@ namespace audio
         return audioinit();
     }
 
-    void cleanup()
+    // setup from configuration
+    void setup (base::configuration & cfg)
+    {
+        // TODO: read options from configuration and use during initialization
+    }
+    
+    // shutdown audio
+    void cleanup ()
     {
         if (audiocleanup) audiocleanup();
         audiocleanup = NULL;

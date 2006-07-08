@@ -1,5 +1,5 @@
 /*
-   $Id: mouse_event.h,v 1.5 2004/05/13 06:44:01 ksterker Exp $
+   $Id: mouse_event.h,v 1.6 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   mouse_event.h
+ * @file   input/mouse_event.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Declares the mouse_event class.
@@ -77,6 +77,10 @@ namespace input
          */
         mouse_event (event_type t, button_type b, u_int16 xpos, u_int16 ypos);
 
+        /**
+         * @name Member access
+         */
+        //@{
         /** 
          * Returns the type of this event.
          * 
@@ -129,15 +133,47 @@ namespace input
          * @return symbol of the button concerned by this event.
          */
         const std::string & button_symbol() const;
-
+        //@}
+        
+        /**
+            * @name Key/Name - mapping
+         */
+        //@{
+        /**
+         * Get the name of a button when giving the button code.
+         * @return name of a given button.
+         */
+        static const std::string & name_for_button (button_type btn)
+        {
+            return Button_symbol[btn];
+        }
+        
+        /**
+         * Get the button code when giving a certain key name.
+         * @return key code or NO_BUTTON if no match found.
+         */
+        static const button_type button_for_name (const std::string & name)
+        {
+            for (int i = 0; i < NBR_BUTTONS; i++)
+                if (Button_symbol[i] == name)
+                    return (button_type) i;
+            
+            return NO_BUTTON;
+        }        
+        //@}
+        
 #ifndef SWIG
         GET_TYPE_NAME(input::mouse_event)
 #endif // SWIG
 
     private:
+        /// button/name mapping
         static std::string Button_symbol[NBR_BUTTONS];
+        /// type of event
         event_type Type;
+        /// mouse coordinates
         u_int16 X, Y;
+        /// mouse button
         button_type Button;
     };
 }

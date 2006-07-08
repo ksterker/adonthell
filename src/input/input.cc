@@ -1,5 +1,5 @@
 /*
-   $Id: input.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: input.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,6 +101,12 @@ namespace input
         return inputinit();
     }
 
+    // setup from configuration
+    void setup (base::configuration & cfg)
+    {
+    }
+
+    // shutdown input
     void cleanup()
     {
         if (inputcleanup) inputcleanup();

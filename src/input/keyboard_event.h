@@ -1,5 +1,5 @@
 /*
-   $Id: keyboard_event.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: keyboard_event.h,v 1.6 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   keyboard_event.h
+ * @file   input/keyboard_event.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Declares the keyboard_event class.
@@ -299,12 +299,16 @@ namespace input
          * Constructor.
          * 
          * @param t kind of keyboard event (KEY_PUSHED or KEY_RELEASED)
-         * @param k key concerned bu this event.
+         * @param k key concerned by this event.
          * @param u unicode character this event produced.
          *
          */
         keyboard_event (event_type t, key_type k, u_int16 u);
 
+        /**
+         * @name Member access
+         */
+        //@{
         /** 
          * Returns the type of this event.
          * 
@@ -336,19 +340,55 @@ namespace input
          */
         const std::string & key_symbol () const;
 
+        /**
+         * Return the unicode value of the key concerned by this event.
+         * @return unicode key code.
+         */
         u_int16 unikey () const
         {
-	    return Unikey;
-	}
+            return Unikey;
+        }
+        //@}
     
+        /**
+         * @name Key/Name - mapping
+         */
+        //@{
+        /**
+         * Get the name of a key when giving the ASCII code.
+         * @return name of a given key.
+         */
+        static const std::string & name_for_key (key_type key)
+        {
+            return Key_symbol[key];
+        }
+        
+        /**
+         * Get the ASCII code when giving a certain key name.
+         * @return key code or UNKNOWN_KEY if no match found.
+         */
+        static const key_type key_for_name (const std::string & name)
+        {
+            for (int i = 0; i < NBR_KEYS; i++)
+                if (Key_symbol[i] == name)
+                    return (key_type) i;
+            
+            return UNKNOWN_KEY;
+        }        
+        //@}
+
 #ifndef SWIG
         GET_TYPE_NAME(input::keyboard_event)
 #endif // SWIG
 
     private:
+        /// mapping of key types to strings
         static std::string Key_symbol[NBR_KEYS];
+        /// type of event
         const event_type Type;
+        /// key code (ASCII)
         const key_type Key; 
+        /// key code (Unicode)
         const u_int16 Unikey;
     }; 
 }

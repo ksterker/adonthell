@@ -1,5 +1,5 @@
 /*
-   $Id: joystick_event.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: joystick_event.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   joystick_event.cc
+ * @file   input/joystick_event.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Defines the joystick_event class.

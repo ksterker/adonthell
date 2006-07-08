@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.6 2006/06/03 04:20:27 Mithander Exp $
+   $Id: gfx.cc,v 1.7 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -142,6 +142,13 @@ namespace gfx
         return gfxinit();
     }
 
+    // setup from configuration
+    void setup (base::configuration & cfg)
+    {
+        // TODO: read options from configuration and use during initialization
+    }
+
+    // shutdown gfx
     void cleanup()
     {
         if (gfxcleanup) gfxcleanup();

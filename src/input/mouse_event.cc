@@ -1,5 +1,5 @@
 /*
-   $Id: mouse_event.cc,v 1.3 2003/11/22 09:37:13 ksterker Exp $
+   $Id: mouse_event.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file   mouse_event.cc
+ * @file   input/mouse_event.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Defines the mouse_event class.
@@ -37,11 +37,11 @@ namespace input
     std::string mouse_event::Button_symbol[mouse_event::NBR_BUTTONS] =
         {
             "no button",
-            "left button",
-            "middle button",
-            "right_button",
-            "wheel up",
-            "wheel down"
+            "left mouse button",
+            "middle mouse button",
+            "right mouse button",
+            "mouse wheel up",
+            "mouse wheel down"
         };
 
     mouse_event::mouse_event (event_type t, button_type b, u_int16 xpos, u_int16 ypos)
