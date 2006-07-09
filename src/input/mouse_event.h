@@ -1,5 +1,5 @@
 /*
-   $Id: mouse_event.h,v 1.6 2006/07/08 17:04:03 ksterker Exp $
+   $Id: mouse_event.h,v 1.7 2006/07/09 15:57:34 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -136,7 +136,7 @@ namespace input
         //@}
         
         /**
-            * @name Key/Name - mapping
+         * @name Key/Name - mapping
          */
         //@{
         /**

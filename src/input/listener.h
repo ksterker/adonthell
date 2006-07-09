@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.7 2004/10/25 06:50:09 ksterker Exp $
+   $Id: listener.h,v 1.8 2006/07/09 15:57:34 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -88,31 +88,51 @@ namespace input
         }
 
         /** 
-         * Connect a callback function to a type of event for this listener.
-         * The listener will automatically listen to this kind of events.
+         * Connect a callback function to keyboard events for this listener.
          * 
-         * @param t type of event to listen to
-         * @param f callback function to call when an event of type \e t is raised
+         * @param f callback function to call when a keyboard event is raised
          */
         void connect_keyboard_function(base::functor_1ret<keyboard_event *, bool> * f);
 
+        /** 
+         * Connect a callback function to mouse events for this listener.
+         * 
+         * @param f callback function to call when a mouse event is raised
+         */
         void connect_mouse_function(base::functor_1ret<mouse_event *, bool> * f);
 
+        /** 
+         * Connect a callback function to joystick events for this listener.
+         * 
+         * @param f callback function to call when a joystick event is raised
+         */
         void connect_joystick_function(base::functor_1ret<joystick_event *, bool> * f);
 
+        /** 
+         * Connect a callback function to control events for this listener.
+         * 
+         * @param f callback function to call when a control event is raised
+         */
         void connect_control_function(base::functor_1ret<control_event *, bool> * f);
 
         /**
-         * Stops listening to events of type \e t.
-         *
-         * @param t type of events to stop listening to.
+         * Stops listening to keyboard events.
          */
         void disconnect_keyboard_function();
 
+        /**
+         * Stops listening to mouse events.
+         */
         void disconnect_mouse_function();
 
+        /**
+         * Stops listening to joystick events.
+         */
         void disconnect_joystick_function();
 
+        /**
+         * Stops listening to virtual control events.
+         */
         void disconnect_control_function();
 
 

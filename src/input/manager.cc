@@ -1,7 +1,7 @@
 /*
-   $Id: manager.cc,v 1.4 2004/10/25 06:50:09 ksterker Exp $
+   $Id: manager.cc,v 1.5 2006/07/09 15:57:34 ksterker Exp $
 
-   Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ namespace input
         }
 
         // Check if the event is mapped to a virtual controller event
-        switch (ev.type())
+        switch (ev.event_type())
         {
             case event::KEYBOARD_EVENT:
             {

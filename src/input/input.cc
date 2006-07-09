@@ -1,5 +1,5 @@
 /*
-   $Id: input.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
+   $Id: input.cc,v 1.5 2006/07/09 15:57:34 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -104,6 +104,7 @@ namespace input
     // setup from configuration
     void setup (base::configuration & cfg)
     {
+        control_event::map_controls (cfg);
     }
 
     // shutdown input

@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.5 2004/10/25 06:50:09 ksterker Exp $
+   $Id: listener.cc,v 1.6 2006/07/09 15:57:34 ksterker Exp $
 
    Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -109,18 +109,29 @@ namespace input
 
     int listener::raise_event (event * ev)
     {
-        switch(ev->type())
+        switch(ev->event_type())
         {
             case event::CONTROL_EVENT:
+            {
                 if (Control_callback) return (*Control_callback)((control_event *)ev);
-            case event::KEYBOARD_EVENT:
-                if (Keyboard_callback) return (*Keyboard_callback)((keyboard_event *)ev);
-            case event::JOYSTICK_EVENT:
-                if (Joystick_callback) return (*Joystick_callback)((joystick_event *)ev);
-            case event::MOUSE_EVENT:
-                if (Mouse_callback) return (*Mouse_callback)((mouse_event *)ev);
-            default:
                 break;
+            }
+            case event::KEYBOARD_EVENT:
+            {
+                if (Keyboard_callback) return (*Keyboard_callback)((keyboard_event *)ev);
+                break;
+            }
+            case event::JOYSTICK_EVENT:
+            {
+                if (Joystick_callback) return (*Joystick_callback)((joystick_event *)ev);
+                break;
+            }
+            case event::MOUSE_EVENT:
+            {
+                if (Mouse_callback) return (*Mouse_callback)((mouse_event *)ev);
+                break;
+            }
+            default: break;
         }
         return 0;
     }

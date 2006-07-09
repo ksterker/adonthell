@@ -1,7 +1,7 @@
 /*
-   $Id: joystick_event.cc,v 1.4 2006/07/08 17:04:03 ksterker Exp $
+   $Id: joystick_event.cc,v 1.5 2006/07/09 15:57:34 ksterker Exp $
 
-   Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify

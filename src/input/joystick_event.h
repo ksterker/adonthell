@@ -1,7 +1,7 @@
 /*
-   $Id: joystick_event.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: joystick_event.h,v 1.6 2006/07/09 15:57:34 ksterker Exp $
 
-   Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 #define JOYSTICK_EVENT_H
 
 /**
- * @file   joystick_event.h
+ * @file   input/joystick_event.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * 
  * @brief  Declares the joystick_event class.
@@ -79,6 +79,10 @@ namespace input
          */
         joystick_event(u_int8 joynbr, event_type t, button_type b);
 
+        /**
+         * @name Member access
+         */
+        //@{        
         /** 
          * Returns the number of the joystick concerned by this event.
          * 
@@ -120,7 +124,35 @@ namespace input
          * @return symbol of the button concerned by this event.
          */
         const std::string & button_symbol() const;
-
+        //@}
+        
+        /**
+         * @name Key/Name - mapping
+         */
+        //@{
+        /**
+         * Get the name of a button when giving the button code.
+         * @return name of a given button.
+         */
+        static const std::string & name_for_button (button_type btn)
+        {
+            return Button_symbol[btn];
+        }
+        
+        /**
+         * Get the button code when giving a certain key name.
+         * @return key code or NO_BUTTON if no match found.
+         */
+        static const button_type button_for_name (const std::string & name)
+        {
+            for (int i = 0; i < NBR_BUTTONS; i++)
+                if (Button_symbol[i] == name)
+                    return (button_type) i;
+            
+            return NO_BUTTON;
+        }        
+        //@}
+        
         /**
          * Maximum number of joysticks we support.
          * 

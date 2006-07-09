@@ -1,7 +1,7 @@
 /*
-   $Id: event.h,v 1.6 2004/10/25 06:50:09 ksterker Exp $
+   $Id: event.h,v 1.7 2006/07/09 15:57:34 ksterker Exp $
 
-   Copyright (C) 2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -82,9 +82,9 @@ namespace input
          * 
          * @return type of this event.
          */
-        input_type type () 
+        input_type event_type () 
         {
-            return Type; 
+            return EventType; 
         }
 
 #ifndef SWIG
@@ -92,7 +92,7 @@ namespace input
 #endif // SWIG
 
     private:
-        input_type Type;
+        input_type EventType;
     
     }; 
 }
