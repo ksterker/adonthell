@@ -23,7 +23,7 @@ libadonthell_py_main_la_LIBADD = $(PY_LIBS)
 
 ## Rules to build libadonthell_py_runtime
 libadonthell_py_runtime_la_SOURCES = py_runtime.cc
-libadonthell_py_runtime_la_CXXFLAGS = $(PY_CFLAGS) -DSWIGRUNTIME= -DSWIGINLINE= 
+libadonthell_py_runtime_la_CXXFLAGS = $(PY_CFLAGS) -DSWIGRUNTIME= -DSWIGINLINE=
 libadonthell_py_runtime_la_LIBADD = $(PY_LIBS)
 
 PY_LIBADD = -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS)
@@ -96,63 +96,47 @@ _debug_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/python -ladonthell_python 
 SWIG_ARGS = -python -modern -noexcept -I$(top_srcdir)/src
 
 ## Rules for Python wrappers generation
-## The .pyc are generated so the Python modules are accessible even if
-## we are using a separate builddir.
-base.pyc: base.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 base.py: py_base_wrap.cc
 py_base_wrap.cc: py_base.i  $(top_srcdir)/src/base/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-event.pyc: event.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 event.py: py_event_wrap.cc
 py_event_wrap.cc: py_event.i  $(top_srcdir)/src/event/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-gfx.pyc: gfx.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 gfx.py: py_gfx_wrap.cc
 py_gfx_wrap.cc: py_gfx.i  $(top_srcdir)/src/gfx/*.h
 	$(SWIG)  $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-input.pyc: input.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 input.py: py_input_wrap.cc
 py_input_wrap.cc: py_input.i $(top_srcdir)/src/input/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-audio.pyc: audio.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 audio.py: py_audio_wrap.cc
 py_audio_wrap.cc: py_audio.i $(top_srcdir)/src/audio/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-gui.pyc: gui.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 gui.py: py_gui_wrap.cc
 py_gui_wrap.cc: py_gui.i  $(top_srcdir)/src/gui/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-main.pyc: main.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 main.py: py_main_wrap.cc
 py_main_wrap.cc: py_main.i  $(top_srcdir)/src/main/*.h
 	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
 
-rpg.pyc: rpg.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 rpg.py: py_rpg_wrap.cc
 py_rpg_wrap.cc: py_rpg.i  $(top_srcdir)/src/rpg/*.h
 	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
 
-debug.pyc: debug.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
 debug.py: py_debug_wrap.cc
 py_debug_wrap.cc: py_debug.i py_runtime.i
 	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
 
-__init__.pyc: __init__.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$(srcdir)/$<\", \"./$@\");"
 __init__.py:
 	touch $(srcdir)/$@
+
+## The .pyc are generated so the Python modules are accessible even if
+## we are using a separate builddir.
+%.pyc: %.py
+	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
+

@@ -66,16 +66,16 @@ dnl ********************
 dnl Additional arguments
 dnl ********************
 AC_ARG_ENABLE(unix-install,
-[  --disable-unix-install Disable a Unix-like install (enabled by default)],
+[  --disable-unix-install  Disable a Unix-like install (enabled by default)],
             unixinst=$enableval, unixinst=yes)
 AC_ARG_WITH(data-dir,
-[  --with-data-dir=DIR    Directory where game data will be installed],
+[  --with-data-dir=DIR     Directory where game data will be installed],
             gamedatadir="$withval", gamedatadir=none)
 AC_ARG_WITH(py-libs,
-[  --with-py-libs=DIR     Override Python libraries auto-detection],
+[  --with-py-libs=DIR      Override Python libraries auto-detection],
             pylibs="$withval", pylibs=none)
 AC_ARG_WITH(py-cflags,
-[  --with-py-cflags=DIR   Override Python cflags auto-detection],
+[  --with-py-cflags=DIR    Override Python cflags auto-detection],
             pycflags="$withval", pycflags=none)
 
 
@@ -93,12 +93,12 @@ if test x$gamedatadir = xnone; then
       *-*-darwin*)
         makebundle="yes"
       ;;
-    esac        
+    esac
   else
     case "$target" in
       *-*-cygwin* | *-*-mingw32*)
         gamedatadir=""
-        CXXFLAGS="$CXXFLAGS -DSINGLE_DIR_INST"
+        CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\".\\\"\""
       ;;
       *-*-beos*)
         gamedatadir="/boot/home/config/share/adonthell"
@@ -173,8 +173,17 @@ dnl ****************
 dnl Check for Python
 dnl ****************
 AM_PATH_PYTHON()
+
+dnl convert windows paths to cygwin paths
+case "$target" in
+	*-*-cygwin* | *-*-mingw32*)
+		pyexecdir=`cd $pyexecdir && pwd`
+		pythondir=`cd $pythondir && pwd`
+	;;
+esac
+
 if test x$pylibs = xnone; then
-   
+
    dnl Find Python executable
    AC_PATH_PROGS(PYPACKAGE, python)
 
@@ -227,9 +236,9 @@ if test x$pylibs = xnone; then
    else
        py_paths="$PYPREFIX/lib/python$PYLIBVER/config $PYPREFIX/lib"
        py_suffix="$PYLIBVER.so $PYLIBVER.a .so .a"
-        
+
        dnl Try for specific version first, then the generic version, then panic
-        
+
        for ppath in $py_paths ; do
            if test -r "$ppath/libpython$PYLIBVER.so" -o \
                -r "$ppath/libpython$PYLIBVER.a"; then
@@ -242,7 +251,7 @@ if test x$pylibs = xnone; then
                break
            fi
        done
-        
+
        if test "x$PYLIB" != x ; then
            PY_LIBS="$PYLIB $PY_LIBS"
            AC_MSG_RESULT(found)
@@ -292,7 +301,6 @@ else
    AC_MSG_CHECKING(for Python library flags)
    AC_MSG_RESULT($PY_LIBS)
    AC_SUBST(PY_LIBS)
-   PY_VERSION="Manually specified"   
 fi
 
 AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x$PYPREFIX)

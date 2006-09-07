@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.5 2004/06/27 11:20:57 ksterker Exp $
+   $Id: flat.cc,v 1.6 2006/09/07 22:39:34 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -192,7 +192,7 @@ void flat::parse ()
 // calculate checksum of internal buffer
 u_int32 flat::checksum () const
 {
-    u_int a32 = adler32 (0, NULL, 0);
+    u_int32 a32 = adler32 (0, NULL, 0);
     return adler32 (a32, (Bytef*) Buffer, Size);
 }
 
