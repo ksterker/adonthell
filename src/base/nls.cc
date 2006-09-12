@@ -1,5 +1,5 @@
 /*
- $Id: nls.cc,v 1.1 2006/01/22 21:32:39 ksterker Exp $
+ $Id: nls.cc,v 1.2 2006/09/12 06:49:27 ksterker Exp $
  
  Copyright (C) 2002/2003/2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -62,16 +62,19 @@ void nls::init (base::configuration & config)
 void nls::set_language (const std::string &language)
 {    
 #if ENABLE_NLS
-#if !defined (WIN32) && !defined (__BEOS__)
+#ifndef __BEOS__
     std::string lang = "LANGUAGE=" + language;
     putenv ((char *) lang.c_str ());
+#else
+	// FIXME: no putenv on BEOS, but there should be setenv	
 #endif
     {
         // tell gettext that the language has changed
         extern int _nl_msg_cat_cntr;
         ++_nl_msg_cat_cntr;
     }
-    setlocale (LC_MESSAGES, language.c_str ());
+    
+    setlocale (LC_MESSAGES, language.c_str ());	
 #endif
 }
 

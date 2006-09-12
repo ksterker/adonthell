@@ -1,5 +1,5 @@
 /*
- $Id: nls.h,v 1.1 2006/01/22 21:32:39 ksterker Exp $
+ $Id: nls.h,v 1.2 2006/09/12 06:49:27 ksterker Exp $
  
  Copyright (C) 2002/2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,6 +50,7 @@ namespace base
          * in <gamedir>/po/<country code>LC_MESSAGES/ named <gamename>.mo
          * the desired language will be actually used.
          * @param language The country code of the desired language.
+         * @todo add support for BeOS
          */
         static void set_language (const std::string &language);
         
