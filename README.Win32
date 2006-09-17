@@ -121,8 +121,8 @@ on each other.
 
 
 2) Install Python for MingW
-
    (http://jove.prohosting.com/iwave/ipython/pyMinGW.html)
+
     * Download pyMinGW-bin-core-2.4.3.1.zip
 
     * Extract this over your Python installation to replace
@@ -152,8 +152,6 @@ on each other.
         $ ./configure --prefix=/usr/local
         $ make
         $ make install
-#**     $ cp /usr/local/share/aclocal/sdl.m4 /usr/share/aclocal
-#**     $ ln -s /usr/local/include/SDL /usr/local/include/SDL/SDL
 
 
 4) Install zlib (http://www.zlib.net/)
@@ -161,7 +159,9 @@ on each other.
     * Download zlib-1.2.3.tar.gz, extract and compile by following
       these steps:
         $ make -f win32/Makefile.gcc
-        $ make install -f win32/Makefile.gcc INCLUDE_PATH=/usr/local/include LIBRARY_PATH=/usr/local/lib
+        $ make install -f win32/Makefile.gcc \
+            INCLUDE_PATH=/usr/local/include \
+            LIBRARY_PATH=/usr/local/lib
         $ cp zlib1.dll /usr/local/bin/
 
 
@@ -169,7 +169,8 @@ on each other.
 
     * Download freetype 2.2.1 source code, extract and compile by
       following the steps lined out below:
-        $ ./configure LDFLAGS="'-no-undefined -L/usr/local/lib'" --prefix=/usr/local
+        $ ./configure LDFLAGS="'-no-undefined -L/usr/local/lib'" \
+            --prefix=/usr/local
         $ mingw32-make
         $ make install
 
@@ -242,7 +243,7 @@ on each other.
 
 
 11) Install pkg-config
-	(http://www.gimp.org/~tml/gimp/win32/downloads.html)
+    (http://www.gimp.org/~tml/gimp/win32/downloads.html)
 
     * Get pkg-config-0.20.zip and extract it into /usr/local.
       There is no way to compile pkg-config yourself, as it requires
@@ -258,8 +259,8 @@ ready to compile Adonthell.
 
     $ ./autogen.sh
     $ ./configure --prefix=/usr/local \
-    	--with-py-libs="/bin/python24.dll" \
-    	--with-py-cflags="-I/usr/include/python2.4"
+        --with-py-libs="/bin/python24.dll" \
+        --with-py-cflags="-I/usr/include/python2.4"
 
 From then on, you should be able to go to your Eclipse IDE and build
 Adonthell from there  (see below),  or just type 'make' to start the
