@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src/
+CXXFLAGS += -I$(top_srcdir)/src
 
 EXTRA_DIST =  configtest.py eventtest.py filereport.py gfxtest.py guitest.py inputtest.py
 noinst_PROGRAMS = callbacktest diskiotest guitest inputtest

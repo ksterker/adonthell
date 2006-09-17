@@ -1,0 +1,286 @@
+
+                       Adonthell on Win32
+
+This file  contains  additional information for compiling  Adonthell
+under Windows for x86. For general compilation instructions refer to
+the INSTALL file.
+
+
+Setup Build Environment (MSys/MinGW):
+=====================================
+
+The instruction below assumes  that you are using the mingw compiler
+on top of the msys shell, which will produce native windows binaries
+that  don't  depend on  any posix  compatibility libraries,  such as
+cygwin.dll.
+
+We will further assume that all the packages below will be installed
+to  /usr/local,  since it is  not recomended  to  pollute  msys with
+'foreign' files.   If you'd rather  install things  into a different
+directory  (e.g  /mingw),  make sure to replace  all  occurences  of
+/usr/local with your chosen directory instead.
+
+Also note that  many of  the issues with the packages below  and the
+workarounds to get them compiling and installed might be specific to
+the version used.   If you resort to using different versions,  your
+mileage may vary,  although  it can be  expected that a  more recent
+version will give better results.
+
+
+1) Install MinGW/MSys (http://www.mingw.org/)
+
+    * Download the following files from the MinGW website:
+        - MinGW-5.0.3.exe
+        - MSYS-1.0.10.exe
+        - msysDTK-1.0.1.exe
+
+    * Follow the instructions here to install MinGW and MSys:
+        http://www.mingw.org/MinGWiki/index.php/SmartQuickStart
+
+    * Create/Edit $HOME/.profile and add the following lines:
+        export CFLAGS=-I/usr/local/include
+        export CPPFLAGS=-I/usr/local/include
+        export CXXFLAGS=-I/usr/local/include
+        export LDFLAGS=-L/usr/local/lib
+
+    * Run MSys and create the following symlink:
+        $ ln -s /usr/bin/less.exe /usr/bin/more
+
+
+Prepare to build Adonthell CVS version:
+=======================================
+
+If  you intend  to build  Adonthell from CVS,  there are a  few more
+steps to follow,  as msys comes with fairly outdated versions of the
+GNU autotools.
+
+
+1) Install autoconf (http://www.gnu.org/software/autoconf/)
+
+    * Download autoconf 2.60 and compile/install in msys:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+2) Install automake (http://www.gnu.org/software/automake/)
+
+    * Download autoconf 1.9.6 and compile/install in msys:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+2) Install libtool (http://www.gnu.org/software/libtool/)
+
+    * Download libtool 1.5.22 and compile/install in msys:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+Enable National Language Support (NLS):
+=======================================
+
+If you don't mind  compiling a version  of Adonthell  that will only
+support the English language, you can safely skip these steps.
+
+Otherwise,  you'll have to install the following libraries and tools
+before compiling Adonthell:
+
+
+1) Install libiconv (http://www.gnu.org/software/libiconv/)
+
+    * Download libiconv 1.11 and compile(install in msys:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+2) Install GNU gettext (http://www.gnu.org/software/gettext/)
+
+    * Download gettext 1.15 and compile/install in msys:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+Install Adonthell prerequisites:
+================================
+
+The following  tools and libraries are required by Adonthell.   Make
+sure to install them in the listed order,  as they might also depend
+on each other.
+
+
+1) Install Python for Windows (http://www.python.org)
+
+    * Download python-2.4.3.msi and execute the installer.   Chose a
+      installation directory without whitepace in the pathname,  e.g
+      C:\Python2.4
+
+
+2) Install Python for MingW
+
+   (http://jove.prohosting.com/iwave/ipython/pyMinGW.html)
+    * Download pyMinGW-bin-core-2.4.3.1.zip
+
+    * Extract this over your Python installation to replace
+      corresponding files.
+
+    * Copy contents of the MinGW folder to the toplevel Python2.4
+      folder to replace the executables and dll file
+
+    * Create links to Python library and header files in msys:
+        $ ln -s /c/Python2.4/python24.dll /usr/local/bin/python24.dll
+        $ ln -s /c/Python2.4/libs/libpython24.a /usr/local/lib/libpython24.a
+        $ ln -s /c/Python2.4/python.exe /usr/local/bin/python.exe
+        $ ln -s /c/Python2.4/include /usr/local/include/python2.4
+
+    * Note:  in order to start  Python  in interactive mode from the
+      msys shell, you need to run 'start python'.
+
+
+3) Install SDL (http://www.libsdl.org/)
+
+    * To compile with DirectX support, get the following file and
+      extract into /usr/local
+      http://www.libsdl.org/extras/win32/common/directx-devel.tar.gz
+
+    * Get SDL-1.2.11.tar.gz, extract and compile/install by following
+      these steps:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+#**     $ cp /usr/local/share/aclocal/sdl.m4 /usr/share/aclocal
+#**     $ ln -s /usr/local/include/SDL /usr/local/include/SDL/SDL
+
+
+4) Install zlib (http://www.zlib.net/)
+
+    * Download zlib-1.2.3.tar.gz, extract and compile by following
+      these steps:
+        $ make -f win32/Makefile.gcc
+        $ make install -f win32/Makefile.gcc INCLUDE_PATH=/usr/local/include LIBRARY_PATH=/usr/local/lib
+        $ cp zlib1.dll /usr/local/bin/
+
+
+5) Install Freetype2 (http://www.freetype.org/)
+
+    * Download freetype 2.2.1 source code, extract and compile by
+      following the steps lined out below:
+        $ ./configure LDFLAGS="'-no-undefined -L/usr/local/lib'" --prefix=/usr/local
+        $ mingw32-make
+        $ make install
+
+
+6) Install Libxml2 (http://xmlsoft.org/)
+
+    * Download libxml-sources-2.6.26, extract and compile in cygwin by
+      following the steps below:
+
+        $ ./configure --without-python --prefix=/usr/local
+        $ make
+        $ make install
+
+    * Note: the resulting DLL will be named cyglibxml2-2.dll. It does
+      not depend on cygwin however.
+
+
+7) Install OggVorbis (http://www.xiph.org/downloads/)
+
+    * Download libogg 1.1.3, extract and compile within cygwin:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+    * Download libvorbis 1.1.2, extract and compile within cygwin:
+        $ ./configure --prefix=/usr/local
+
+        Edit lib/Makefile and replace line
+            libvorbisfile_la_LIBADD = libvorbis.la
+        with
+            libvorbisfile_la_LIBADD = -logg libvorbis.la
+
+        $ make
+        $ make install
+
+
+8) Install SDL_Mixer (http://www.libsdl.org/projects/SDL_mixer/)
+
+    * Get source code, extract and compile/install in cygwin:
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+9) Install libpng (http://www.libpng.org/pub/png/libpng.html)
+
+    * Get source code, extract and compile/install in cygwin:
+        $ ./configure
+
+        Edit Makefile and change line
+            for ext in a la so; do\
+        to
+            for ext in a la; do\
+
+        $ make
+        $ make install
+
+
+10) Install SWIG (http://www.swig.org/)
+
+    * Download swig-1.3.29.tar.gz and compile/install
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+     * Update $HOME/.profile with the following line, otherwise SWIG
+       will not be able to find its library files:
+
+        export SWIG_LIB=/usr/local/share/swig/1.3.29
+
+
+11) Install pkg-config
+	(http://www.gimp.org/~tml/gimp/win32/downloads.html)
+
+    * Get pkg-config-0.20.zip and extract it into /usr/local.
+      There is no way to compile pkg-config yourself, as it requires
+      glib 2.0, which in turn requires pkg-config.  It's okay to use
+      the binary version though.
+
+
+Compiling Adonthell:
+====================
+
+After installing all the libraries and tools  above,  we are finally
+ready to compile Adonthell.
+
+    $ ./autogen.sh
+    $ ./configure --prefix=/usr/local \
+    	--with-py-libs="/bin/python24.dll" \
+    	--with-py-cflags="-I/usr/include/python2.4"
+
+From then on, you should be able to go to your Eclipse IDE and build
+Adonthell from there  (see below),  or just type 'make' to start the
+build from cygwin.
+
+
+Using Eclipse IDE for Adonthell development:
+============================================
+
+If you plan to do  programming work  on Adonthell  and want to use a
+modern IDE,  Eclipse is a good choice as it works transparently with
+the toolchain we set up in preparation to compile Adonthell.
+
+To use Eclipse to develop C/C++, download and install the following:
+
+    * Eclipse SDK 3.2
+      http://www.eclipse.org/downloads/
+
+    * CTD Runtime 3.1
+      http://download.eclipse.org/tools/cdt/releases/callisto/dist/3.1.0/
+
+Then follow the tutorial at [1] to import the Adonthell source code.
+
+[1] http://download.eclipse.org/tools/cdt/docs/tutorials/import_standard_tutorial/cdt_w_std_import.htm
