@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src/
+CXXFLAGS += -I$(top_srcdir)/src
 
 ## Our header files
 pkgincluderpgdir = $(pkgincludedir)/rpg

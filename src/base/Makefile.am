@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src/
+CXXFLAGS += -I$(top_srcdir)/src
 
 ## Our header files
 pkgincludebasedir = $(pkgincludedir)/base

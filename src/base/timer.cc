@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.7 2004/11/15 08:54:33 ksterker Exp $
+   $Id: timer.cc,v 1.8 2006/09/17 03:46:10 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,10 +25,32 @@
  * @brief A timer implementation.
  */ 
 
-
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#ifdef _WIN32
+#include <windows.h>
+#endif
 #include <errno.h>
 
 #include "base/timer.h"
+
+#ifndef HAVE_NANOSLEEP
+
+struct timespec 
+{
+	time_t tv_sec;
+	long tv_nsec;
+};
+
+int nanosleep (const struct timespec *req, struct timespec *rem) 
+{
+	Sleep (req->tv_sec * 1000 + req->tv_nsec / 1000);
+    rem->tv_nsec = 0;
+    rem->tv_sec = 0;
+    return 0;
+}
+#endif
 
 namespace base
 {

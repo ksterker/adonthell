@@ -312,6 +312,12 @@ SWIG_VERSION=1.3.24
 SWIG_PROG($SWIG_VERSION)
 SWIG_ENABLE_CXX()
 
+dnl ************
+dnl other checks
+dnl ************
+
+AC_CHECK_FUNCS(nanosleep,,)
+
 AC_SUBST(CXXFLAGS)
 
 AC_OUTPUT([

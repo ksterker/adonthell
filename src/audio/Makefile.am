@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src/
+CXXFLAGS += -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 
 ## Our header files
