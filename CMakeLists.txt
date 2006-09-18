@@ -102,7 +102,7 @@ endif(LIBXML2_FOUND)
 ######################
 # Build the config.h file !
 ######################
-include (CheckFunctionExists)
+include (CheckIncludeFiles)
 check_include_files (dlfcn.h HAVE_DLFCN_H)
 check_include_files (inttypes.h HAVE_INTTYPES_H)
 # FIXME: missing check on the z library.
