@@ -17,3 +17,7 @@ include_directories(${LIBXML2_INCLUDE_PATH})
 
 # Create a shared library
 add_library(adonthell_base SHARED ${adonthell_base_SRCS})
+
+
+target_link_libraries(adonthell_base
+	${LIBXML2_LIBRARIES})

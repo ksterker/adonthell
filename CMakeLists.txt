@@ -3,7 +3,7 @@ project(adonthell)
 
 cmake_minimum_required(VERSION 2.4.0)
 
-add_definitions(-DVERSION="\\"0.4.0\\"")
+add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
 
 
 ##########################
@@ -74,6 +74,21 @@ else(PYTHON_INCLUDE_PATH)
 endif(PYTHON_INCLUDE_PATH)
 
 
+#######################
+# PNG
+#######################
+find_package(PNG REQUIRED)
+if(PNG_FOUND)
+	MESSAGE(STATUS
+		"PNG_mixer has been found:")
+	MESSAGE(STATUS
+		"\tInclude Directory: ${PNG_INCLUDE_DIR}")
+	MESSAGE(STATUS
+		"\tLibraries: ${PNG_LIBRARY}")
+else(PNG_FOUND)
+	MESSAGE(FATAL_ERROR
+		"PNG is required")
+endif(PNG_FOUND)
 
 #######################
 # SWIG
@@ -116,6 +131,17 @@ check_include_files (sys/types.h HAVE_SYS_TYPES_H)
 check_include_files (unistd.h HAVE_UNISTD_H)
 check_include_files ("stdlib.h;stdarg.h;string.h" STDC_HEADERS)
 
+include (CheckFunctionExists)
+check_function_exists(nanosleep HAVE_NANOSLEEP)
+
+include (CheckLibraryExists) 
+check_library_exists(ltdl lt_dlerror "" HAVE_LIBLTDL)
+
+if(NOT HAVE_LIBLTDL)
+       message(FATAL_ERROR
+		"Libltdl is required.")
+endif(NOT HAVE_LIBLTDL)
+
 # Now generate the configure file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
@@ -123,5 +149,5 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 # Add the root of the binary distribution to the include directories !
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-
 add_subdirectory(src)
+add_subdirectory(test)

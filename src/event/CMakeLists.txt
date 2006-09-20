@@ -16,3 +16,7 @@ include_directories(${PYTHON_INCLUDE_PATH})
 
 # Create a shared library
 add_library(adonthell_event SHARED ${adonthell_event_SRCS})
+target_link_libraries(adonthell_event
+	${PYTHON_LIBRARIES}
+	adonthell_base
+	)
