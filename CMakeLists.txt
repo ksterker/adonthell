@@ -73,6 +73,18 @@ else(PYTHON_INCLUDE_PATH)
 		"A Python installation is required")
 endif(PYTHON_INCLUDE_PATH)
 
+find_package(PythonInterp)
+if(PYTHONINTERP_FOUND)
+	EXEC_PROGRAM(${PYTHON_EXECUTABLE}
+		ARGS "-c 'import sys;vi = sys.version_info; print \"python%s.%s\" %(vi[0],vi[1])'"
+		OUTPUT_VARIABLE PYTHON_VERSION_DIR	
+	)
+else(PYTHONINTERP_FOUND)
+	message(FATAL_ERROR
+		"Impossible to find the Python Interpreter")
+endif(PYTHONINTERP_FOUND)
+
+
 
 #######################
 # PNG

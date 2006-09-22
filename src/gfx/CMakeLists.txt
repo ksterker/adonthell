@@ -1,5 +1,5 @@
 # Define the adonthell_gfx_SRCS variable containing all required files.
-SET(adonthell_gfx_SRCS
+set(adonthell_gfx_SRCS
 	gfx.cc
 	drawing_area.cc
 	drawable.cc
@@ -7,6 +7,16 @@ SET(adonthell_gfx_SRCS
 	surface.cc
 	screen.cc
 	animation.cc
+)
+
+set(adonthell_gfx_HEADERS
+	animation.h
+	drawing_area.h
+	png_wrapper.h
+	surface.h
+	drawable.h
+	gfx.h
+	screen.h
 )
 
 add_definitions(${PNG_DEFINITIONS}) 
@@ -37,3 +47,11 @@ target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_gfx
 	)
+
+
+
+#############################################
+# Install Stuff
+adonthell_install_lib(adonthell_gfx)
+adonthell_install_include(gfx "${adonthell_gfx_HEADERS}") 
+adonthell_install_backend(gfx sdl)

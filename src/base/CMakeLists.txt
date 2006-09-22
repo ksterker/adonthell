@@ -1,5 +1,5 @@
 # Define the adonthell_base_SRCS variable containing all required files.
-SET(adonthell_base_SRCS
+set(adonthell_base_SRCS
 	base.cc
         callback.cc
 	configuration.cc
@@ -14,6 +14,28 @@ SET(adonthell_base_SRCS
         timer.cc
 )
 
+
+set(adonthell_base_HEADERS
+	base.h
+	diskio.h
+	endians.h  
+	hash_map.h  
+	types.h
+	callback.h   
+	diskwriter_base.h
+	file.h
+	nls.h
+	configio.h
+	diskwriter_gz.h
+	flat.h
+	paths.h
+	configuration.h
+	diskwriter_xml.h
+	gettext.h
+	timer.h
+)
+
+
 # Add specific include directory for this library.
 include_directories(${LIBXML2_INCLUDE_PATH})
 
@@ -23,3 +45,10 @@ add_library(adonthell_base SHARED ${adonthell_base_SRCS})
 
 target_link_libraries(adonthell_base
 	${LIBXML2_LIBRARIES})
+
+
+
+#############################################
+# Install Stuff
+adonthell_install_lib(adonthell_base)
+adonthell_install_include(base "${adonthell_base_HEADERS}") 

@@ -5,6 +5,10 @@ set(adonthell_main_SRCS
         main.cc
 )
 
+set(adonthell_main_HEADERS
+	adonthell.h
+)
+
 # Add specific include directory for this library.
 include_directories(${PYTHON_INCLUDE_PATH})
 
@@ -33,3 +37,10 @@ target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_main
 )
+
+
+#############################################
+# Install Stuff
+adonthell_install_lib(adonthell_main)
+adonthell_install_include(main "${adonthell_main_HEADERS}") 
+adonthell_install_backend(main sdl)

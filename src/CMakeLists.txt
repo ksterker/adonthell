@@ -5,7 +5,7 @@ include_directories(
 
 
 # Define the Adonthell libraries
-set(ADONTHELL_LIBS
+set(ADONTHELL_MODULES
 	main
 	base
 	event
@@ -16,9 +16,30 @@ set(ADONTHELL_LIBS
 	rpg
 )
 
+
+#############################
+# Define some macro helpers
+macro(adonthell_install_lib libname)
+   install(TARGETS ${libname} DESTINATION "lib")
+endmacro(adonthell_install_lib)
+
+macro(adonthell_install_include name headers)
+   install(FILES ${headers} DESTINATION "include/adonthell/${name}")
+endmacro(adonthell_install_include)
+
+macro(adonthell_install_backend name lib)
+   install(TARGETS ${lib} DESTINATION "lib/adonthell/${name}")
+endmacro(adonthell_install_backend)
+
+
+macro(adonthell_install_py libs files)
+   install(TARGETS ${libs} DESTINATION "lib/${PYTHON_VERSION_DIR}/site-packages/adonthell")
+endmacro(adonthell_install_py)
+
+
 add_subdirectory(python)
 
-foreach(lib ${ADONTHELL_LIBS})
+foreach(lib ${ADONTHELL_MODULES})
   add_subdirectory(${lib})
 endforeach(lib)
 

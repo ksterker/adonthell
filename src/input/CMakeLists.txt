@@ -1,5 +1,5 @@
 # Define the adonthell_input_SRCS variable containing all required files.
-SET(adonthell_input_SRCS
+set(adonthell_input_SRCS
 	input.cc
 	event.cc
 	joystick_event.cc
@@ -9,6 +9,19 @@ SET(adonthell_input_SRCS
 	listener.cc
 	manager.cc
 )
+
+
+set(adonthell_input_HEADERS
+	control_event.h
+	input.h
+	keyboard_event.h
+	manager.h
+	event.h
+	joystick_event.h
+	listener.h
+	mouse_event.h
+)
+
 
 # Create a shared library
 add_library(adonthell_input SHARED ${adonthell_input_SRCS})
@@ -33,3 +46,10 @@ target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_input
 	)
+
+
+#############################################
+# Install Stuff
+adonthell_install_lib(adonthell_input)
+adonthell_install_include(input "${adonthell_input_HEADERS}") 
+adonthell_install_backend(input sdl)

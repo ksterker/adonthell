@@ -1,9 +1,16 @@
 # Define the adonthell_audio_SRCS variable containing all required files.
-SET(adonthell_audio_SRCS
+set(adonthell_audio_SRCS
 	audio.cc
 	sound.cc
 	audio_event.cc
 	audio_event_manager.cc
+)
+
+set(adonthell_audio_HEADERS
+	audio_event.h  
+	audio_event_manager.h  
+	audio.h  
+	sound.h
 )
 
 # Add specific include directory for this library.
@@ -34,3 +41,10 @@ target_link_libraries(sdl
 	${SDLMIXER_LIBRARY}
 	adonthell_audio
 	)
+
+
+#############################################
+# Install Stuff
+adonthell_install_lib(adonthell_audio)
+adonthell_install_include(audio "${adonthell_audio_HEADERS}") 
+adonthell_install_backend(audio sdl)
