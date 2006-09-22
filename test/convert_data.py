@@ -1,7 +1,7 @@
 #
-#  $Id: convert_data.py,v 1.1 2006/04/23 17:14:29 ksterker Exp $
+#  $Id: convert_data.py,v 1.2 2006/09/22 06:29:15 ksterker Exp $
 #
-#  (C) Copyright 2005 Kai Sterker <kaisterker@linuxgames.com>
+#  (C) Copyright 2005/2006 Kai Sterker <kaisterker@linuxgames.com>
 #  Part of the Adonthell Project http://adonthell.linuxgames.com
 #
 #  Adonthell is free software; you can redistribute it and/or modify
@@ -23,22 +23,24 @@ from adonthell import base
 import sys
 
 class ConvertApp (object):
-    UNKNOWN = 0
-    BINARY = 1
-    ASCII = 2
-        
+    GzWriter = None
+    XmlWriter = None
+    
+    def __init__ (self):
+        self.GzWriter = base.diskio (base.diskio.GZ_WRITER)
+        self.XmlWriter = base.diskio (base.diskio.XML_WRITER)
+    
     # -- check type of file being converted
     def file_type (self, filename):
-        filetype = self.UNKNOWN
         try:
             data = file (filename, "rb")
             line = data.readline ()
-            if line[0] == '{': 
-                print "Data file in ASCII format found"
-                filetype =  self.ASCII
+            if line[0] == '<': 
+                print "Data file in XML format found"
+                filetype =  base.diskio.XML_WRITER
             else: 
                 print "Data file in Binary format found"
-                filetype = self.BINARY
+                filetype = base.diskio.GZ_WRITER
         except IOError:
             print "Error reading file", filename
             sys.exit(1)
@@ -46,19 +48,14 @@ class ConvertApp (object):
         return filetype
 
     def run (self):
-        dkio = base.diskio ()
         ft = self.file_type (sys.argv[1])
-        if ft == self.BINARY:
-            inf = base.igzstream ()
-            inf.open (sys.argv[1])
-            outf = file (sys.argv[1] + ".txt", "wb")
+        if ft == base.diskio.GZ_WRITER:
+            outf = sys.argv[1] + ".xml"
             
-            while not inf.eof ():
-                if dkio.get_record (inf) == 1:
-                    dkio.put_ascii (outf)
-                    
-            outf.close ()
-            inf.close ()
+            if self.GzWriter.get_record (sys.argv[1]) == 1:
+                self.XmlWriter.setBuffer (self.GzWriter.getBuffer(), self.GzWriter.size())
+                self.XmlWriter.put_record (outf)
+
     
 # -- the 'main program'
 if __name__ == '__main__':
