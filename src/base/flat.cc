@@ -1,7 +1,7 @@
 /*
-   $Id: flat.cc,v 1.6 2006/09/07 22:39:34 ksterker Exp $
+   $Id: flat.cc,v 1.7 2006/09/22 01:15:22 ksterker Exp $
 
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -30,7 +30,13 @@
 #include <zlib.h>
 
 using base::flat;
- 
+
+// names for supported data types
+char* flat::TypeName[flat::NBR_TYPES] =  {
+        "bool", "char", "u_int8", "s_int8", "u_int16", "s_int16",
+        "u_int32", "s_int32", "string", "float", "double", "blob",
+        "list" };
+
 // ctor
 flat::flat (const u_int16 & size)
 {
@@ -66,8 +72,9 @@ flat::flat (const flat & f)
 }
 
 // flatten the given data
-void flat::put (const string & name, const u_int8 & type, const u_int32 & size, const void *data) 
+void flat::put (const string & name, const data_type & type, const u_int32 & size, const void *data) 
 {
+	u_int8 t = type;
     u_int32 tmp = SwapLE32(size);
     u_int32 nl = name.length () + 1;
     u_int32 need = size + nl + 5;
@@ -76,7 +83,7 @@ void flat::put (const string & name, const u_int8 & type, const u_int32 & size, 
     memcpy (Ptr, name.c_str (), nl);
     Ptr += nl;
     
-    memcpy (Ptr, &type, 1);
+    memcpy (Ptr, &t, 1);
     memcpy (Ptr + 1, &tmp, 4);
     memcpy (Ptr + 5, data, size);
     
@@ -85,7 +92,7 @@ void flat::put (const string & name, const u_int8 & type, const u_int32 & size, 
 }
 
 // retrieve given data
-flat::data* flat::get (const string & name, const u_int8 & type)
+flat::data* flat::get (const string & name, const data_type & type)
 {
     if (Data == NULL) 
     {
@@ -119,7 +126,8 @@ flat::data* flat::get (const string & name, const u_int8 & type)
         if (result->Type == type) {
             return result;
         } else {
-            fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type\n", Decoded->Name);
+            fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type:\n", result->Name);
+            fprintf (stderr, "    Expected type was '%s', got '%s' instead!\n", TypeName[type], TypeName[result->Type]);
             return result;
         }
     }
@@ -131,7 +139,7 @@ flat::data* flat::get (const string & name, const u_int8 & type)
 }
 
 // iterate over data
-int flat::next (void **value, int *size, char **name)
+flat::data_type flat::next (void **value, int *size, char **name)
 {
     if (Data == NULL)
     {
@@ -144,14 +152,14 @@ int flat::next (void **value, int *size, char **name)
         *value = Decoded->Content;
         if (size != NULL) *size = Decoded->Size;
         if (name != NULL) *name = Decoded->Name;
-        int type = Decoded->Type;
+        data_type type = Decoded->Type;
     
         Decoded = Decoded->Next;
         return type;
     }
     
     // error respectively EOF
-    return -1;
+    return flat::T_UNKNOWN;
 }
 
 // unflatten data
@@ -172,7 +180,7 @@ void flat::parse ()
         decoded->Name = (char *) Ptr;
         Ptr += (strlen ((char*) Ptr) + 1);
         
-        decoded->Type = *((u_int8*) Ptr);
+        decoded->Type = (data_type) *((u_int8*) Ptr);
         Ptr += 1;
         
         decoded->Size = SwapLE32(*((u_int32*) Ptr));

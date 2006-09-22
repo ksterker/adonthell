@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.6 2006/06/18 19:25:52 ksterker Exp $
+   $Id: diskio.h,v 1.7 2006/09/22 01:15:22 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,8 @@
 
 #ifndef BASE_DISKIO
 #define BASE_DISKIO
+
+#include <libxml/tree.h>
 
 #include "base/flat.h"
 #include "base/file.h"
@@ -69,34 +71,54 @@ namespace base {
             //@}
             
             /**
-             * @name ASCII file IO
+             * @name XML file IO
              */
             //@{
             /**
-             * Load this record from the given ASCII file. Compared to get_record(),
-             * no checksum is kept in the ASCII file, so file corruption cannot be
+             * Parser states.
+             */
+            enum { UNDEF, DATA, LIST, PARAM };
+            
+            /**
+             * Load this record from the given XML file. Compared to get_record(),
+             * no checksum is kept in the XML file, so file corruption cannot be
              * detected prior to loading.
-             * @param in file to read data from.
+             * @param filename file to read data from.
              * @return \b true on successful loading, \b false otherwise.
              * @sa get_record()
              */
-            bool get_ascii (FILE * in);
+            bool get_xml (const std::string & filename);
             
             /**
-             * Save this record to an ASCII file. Compared to put_record(), no
+             * Save this record to an XML file. Compared to put_record(), no
              * checksum will be saved with the record. Multiple records can be
              * saved in the same file.
-             * @param out file to save record to.
+             * @param filename file to save record to.
+             * @return true on success, false otherwise.
              * @sa put_record()
              */
-            void put_ascii (FILE * out);
+            bool put_xml (const std::string & filename);
             //@}
 #ifndef SWIG
             /// make this class available to python::pass_instance
             GET_TYPE_NAME(base::diskio)
     private:
-            void write_record (base::flat & record, FILE * out, const u_int16 & indent = 0);
-                
+    		/**
+    		 * Add the given record as child to the given xml element.
+    		 * @param record record to serialize to XML structure.
+    		 * @param parent node to which record should be added.
+    		 */
+            void record_to_xml (base::flat &record, xmlNodePtr parent) const;
+            
+            /**
+             * Convert the given value to an xml character string.
+             * @param type data type of given value.
+             * @param value data to convert.
+             * @param size length of data.
+             * @return string representation of given value.
+             */ 
+            xmlChar *value_to_xmlChar (const flat::data_type & type, void *value, const u_int32 & size) const;
+            
             /// Table storing hex characters
             static char *Bin2Hex;
 #endif

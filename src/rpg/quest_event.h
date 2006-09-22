@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.h,v 1.3 2006/04/19 05:27:12 Mithander Exp $
+   $Id: quest_event.h,v 1.4 2006/09/22 01:15:23 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@ namespace rpg
 	 * matching pattern changes its state.
 	 *
 	 * This can for example be used to switch NPC behaviour based on the
-	 * player's progress in the game and is preferred over changing made from
+	 * player's progress in the game and is preferred over changes made from
 	 * within dialogues for instance. When there might be multiple places where
 	 * a change of quest state can be triggered, the %quest %event will ensure
 	 * that the required action is executed in any case.
@@ -193,4 +193,4 @@ namespace rpg
     };
 }
 
-#endif // TIME_EVENT_H
+#endif // QUEST_EVENT_H

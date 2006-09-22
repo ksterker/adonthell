@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.6 2005/06/03 17:29:13 ksterker Exp $
+   $Id: time_event.h,v 1.7 2006/09/22 01:15:22 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,9 +52,9 @@ namespace events
          * Create a new time %event.
          *
          * @param time The time when the %event should be raised. The string
-         *      specifies week, day, hour, minute and 1/10 minute in the format
-         *      "<number>w<number>d<number>h<number>m<number>s". If a number is 
-         *      0, it can be omitted.
+         *      specifies [w]eek, [d]ay, [h]our, [m]inute and [s]econds in the 
+         * 		formatv"<number>w<number>d<number>h<number>m<number>s". If a 
+         *      number is 0, it can be omitted.
          * @param absolute Decides whether the given time is relative from now
          *      on, or an absolute time
          */

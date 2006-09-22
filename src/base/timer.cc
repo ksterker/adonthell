@@ -1,7 +1,7 @@
 /*
-   $Id: timer.cc,v 1.8 2006/09/17 03:46:10 ksterker Exp $
+   $Id: timer.cc,v 1.9 2006/09/22 01:15:22 ksterker Exp $
 
-   Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003/2004/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -28,14 +28,16 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#ifdef _WIN32
-#include <windows.h>
-#endif
 #include <errno.h>
 
 #include "base/timer.h"
 
+// some OS don't have nanosleep
 #ifndef HAVE_NANOSLEEP
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 struct timespec 
 {
@@ -50,7 +52,7 @@ int nanosleep (const struct timespec *req, struct timespec *rem)
     rem->tv_sec = 0;
     return 0;
 }
-#endif
+#endif // HAVE_NANOSLEEP
 
 namespace base
 {

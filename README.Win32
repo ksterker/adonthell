@@ -259,8 +259,8 @@ ready to compile Adonthell.
 
     $ ./autogen.sh
     $ ./configure --prefix=/usr/local \
-        --with-py-libs="/bin/python24.dll" \
-        --with-py-cflags="-I/usr/include/python2.4"
+        --with-py-libs="/usr/local/bin/python24.dll" \
+        --with-py-cflags="-I/usr/local/include/python2.4"
 
 From then on, you should be able to go to your Eclipse IDE and build
 Adonthell from there  (see below),  or just type 'make' to start the

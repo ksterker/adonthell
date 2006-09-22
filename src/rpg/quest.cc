@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.7 2006/03/19 20:25:14 ksterker Exp $
+   $Id: quest.cc,v 1.8 2006/09/22 01:15:22 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -187,6 +187,7 @@ bool quest_part::evaluate ()
     {
         fprintf (stderr, "*** quest_part::evaluate: Error in quest completion calculation rule:\n'%s'\n", 
             code.c_str ());
+        Py_XDECREF (result);
         return false;
     }
     

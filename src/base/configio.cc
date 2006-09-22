@@ -1,5 +1,5 @@
 /*
-   $Id: configio.cc,v 1.3 2005/10/09 07:38:39 ksterker Exp $
+   $Id: configio.cc,v 1.4 2006/09/22 01:15:22 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -233,7 +233,11 @@ xmlSAXHandler cfg_sax_handler = {
     NULL, /* getParameterEntity */
     NULL, /* cdataBlock; */
     NULL, /* externalSubset; */
-    1
+    XML_SAX2_MAGIC,
+    NULL,
+    NULL, /* startElementNsDebug */
+    NULL, /* endElementNsDebug */
+    NULL
 };
 
 

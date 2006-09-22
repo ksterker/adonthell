@@ -1,7 +1,7 @@
 /*
-   $Id: flat.h,v 1.14 2006/06/18 19:25:52 ksterker Exp $
+   $Id: flat.h,v 1.15 2006/09/22 01:15:22 ksterker Exp $
 
-   Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -46,30 +46,42 @@ namespace base
      */
     class flat
     {
-        /**
-         * Internal structure to store unflattened data
-         */
-        class data {
-            public:
-                char* Name;
-                u_int8 Type;
-                u_int32 Size;
-                char* Content;
-                    
-                data *Next;
-                    
-                ~data () { delete Next; }
-        };
-
         public:
         /**
          * Data types that can be flattened.
          */
-            enum {
-                T_BOOL, T_CHAR, T_UINT8, T_SINT8, T_UINT16,
-                T_SINT16, T_UINT32, T_SINT32, T_STRING,
-                T_FLOAT, T_DOUBLE, T_BLOB, T_FLAT
-            };
+            typedef enum {
+                T_UNKNOWN = -1, 
+                T_BOOL = 0, 
+                T_CHAR = 1, 
+                T_UINT8 = 2, 
+                T_SINT8 = 3, 
+                T_UINT16 = 4,
+                T_SINT16 = 5, 
+                T_UINT32 = 6, 
+                T_SINT32 = 7, 
+                T_STRING = 8,
+                T_FLOAT = 9, 
+                T_DOUBLE = 10, 
+                T_BLOB = 11, 
+                T_FLAT = 12, 
+                NBR_TYPES = 13
+            } data_type;
+        
+		    /**
+		     * Internal structure to store unflattened data
+		     */
+		    class data {
+		        public:
+		            char* Name;
+		            data_type Type;
+		            u_int32 Size;
+		            char* Content;
+		                
+		            data *Next;
+		                
+		            ~data () { delete Next; }
+		    };
         
             /**
              * Create a new flattener.
@@ -464,10 +476,38 @@ namespace base
              * @param value will contain a pointer to the value
              * @param size will contain the size of value
              * @param name will contain the name of the field
-             * @return type of value fetched.
+             * @return type of value or T_UNKNOWN on end of stream.
              */
-            int next (void **value, int *size = NULL, char **name = NULL);
+            data_type next (void **value, int *size = NULL, char **name = NULL);
             //@}
+
+	        /**
+	         * @name Type/Name - mapping
+	         */
+	        //@{
+	        /**
+	         * Get the name of a type when giving the type code.
+	         * @return name of a given type.
+	         */
+	        static const char* name_for_type (data_type t)
+	        {
+	            return TypeName[t];
+	        }
+	        
+	        /**
+	         * Get the data type code when giving a certain type name.
+	         * @return key code or T_STRING if no match found.
+	         */
+	        static const data_type type_for_name (const std::string & name)
+	        {
+	            for (int i = 0; i < NBR_TYPES; i++)
+	                if (TypeName[i] == name)
+	                    return (data_type) i;
+	            
+	            fprintf (stderr, "*** flat::type_for_name: unknown type '%s' encountered!\n", name.c_str());
+	            return T_UNKNOWN;
+	        }        
+	        //@}
 
 #ifndef SWIG
             GET_TYPE_NAME_VIRTUAL(base::flat)
@@ -510,7 +550,7 @@ namespace base
              * @param size Size of the data
              * @param data the data to add to the buffer.
              */
-            void put (const string & name, const u_int8 & type, const u_int32 & size, const void *data);
+            void put (const string & name, const data_type & type, const u_int32 & size, const void *data);
             
             /**
              * Reads data from the buffer.
@@ -518,7 +558,7 @@ namespace base
              * @param type Type of data to retrieve
              * @return data structure filled with desired data, or NULL if data does not exist.
              */
-            data* get (const string & name, const u_int8 & type);
+            data* get (const string & name, const data_type & type);
             
             /**
              * Unflatten the internal buffer for easier data retrieval. 
@@ -544,6 +584,9 @@ namespace base
             
             /// Indicates an error during get
             bool Success;
+            
+            /// names for datatypes
+            static char* TypeName[NBR_TYPES];
     };
 }
 #endif // BASE_FLAT

@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event_manager.cc,v 1.2 2005/10/09 07:38:40 ksterker Exp $
+   $Id: quest_event_manager.cc,v 1.3 2006/09/22 01:15:23 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,10 +35,10 @@ using rpg::quest_event;
 // quest_event manager instance that is initialized when the rpg package is loaded 
 static quest_event_manager QuestEventManager;
 
-// function returning a new time event
+// function returning a new quest event
 NEW_EVENT (rpg, quest_event)
 
-// register time events with event subsystem 
+// register quest events with event subsystem 
 quest_event_manager::quest_event_manager () : manager_base (&new_quest_event)
 {
 	// nothing to do here
