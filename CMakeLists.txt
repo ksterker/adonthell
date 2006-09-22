@@ -20,7 +20,7 @@ endif(NOT ADONTHELL_DATADIR)
 
 
 # FIXME: We need to manage the package lib directory !
- add_definitions(-DPKGLIBDIR="\\"\\"")
+add_definitions(-DPKGLIBDIR="\\"\\"")
 
 
 ##########################
@@ -94,7 +94,14 @@ endif(PNG_FOUND)
 # SWIG
 #######################
 #find_package(SWIG REQUIRED)
-
+include(config/FindSWIG.cmake)
+if(SWIG_FOUND)
+	MESSAGE(STATUS
+		"SWIG is present on the system.")
+else(SWIG_FOUND)
+	MESSAGE(FATAL_ERROR
+		"Impossible to locate SWIG.")
+endif(SWIG_FOUND)
 
 #######################
 # LibXML2
@@ -147,6 +154,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 
 
 # Add the root of the binary distribution to the include directories !
+# Do it in order to fetch config.h, however, we may generate config.h in the
+# src directory.
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(src)
