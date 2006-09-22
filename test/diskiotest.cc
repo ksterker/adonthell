@@ -9,7 +9,7 @@ double d_PI = 3.14159265358979323846;
 
 int main (int argc, char* argv[]) {
 
-    base::diskio test;
+    base::diskio test (base::diskio::GZ_WRITER);
     base::flat fl;
     
     // adding all different kind of data
@@ -38,15 +38,11 @@ int main (int argc, char* argv[]) {
     
     // write record to disk
     cout << "Writing data to disk ..." << endl;
-    base::ogzstream out ("/tmp/diskio.test");
-    test.put_record (out);
-    out.close ();
+    test.put_record ("/tmp/diskio.test");
     
     // read record from disk
     cout << "Reading data from disk" << endl;
-    base::igzstream in ("/tmp/diskio.test");
-    bool b = test.get_record (in);
-    in.close ();
+    bool b = test.get_record ("/tmp/diskio.test");
     if (b == true) cout << "Reading successful" << endl;
     
     // unpack all kind of data using get_*

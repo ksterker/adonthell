@@ -8,6 +8,9 @@ pkgincludebase_HEADERS = \
     configuration.h \
     configio.h \
     diskio.h \
+    diskwriter_base.h \
+    diskwriter_gz.h \
+    diskwriter_xml.h \
 	endians.h \
 	file.h \
 	flat.h \
@@ -28,6 +31,8 @@ libadonthell_base_la_SOURCES = \
     configuration.cc \
     configio.cc \
     diskio.cc \
+    diskwriter_gz.cc \
+    diskwriter_xml.cc \
 	file.cc \
 	flat.cc \
     nls.cc \

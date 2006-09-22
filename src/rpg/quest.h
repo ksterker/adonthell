@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.7 2006/03/19 20:25:14 ksterker Exp $
+   $Id: quest.h,v 1.8 2006/09/22 05:13:16 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -308,7 +308,7 @@ namespace rpg
              * will usually be a saved game directory.
              * @param path directory to save quest to. 
              */
-            static void put_state (const std::string & path);
+            static bool put_state (const std::string & path);
             //@}
 
             /**

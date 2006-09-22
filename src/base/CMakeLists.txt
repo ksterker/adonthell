@@ -5,6 +5,8 @@ SET(adonthell_base_SRCS
 	configuration.cc
 	configio.cc
 	diskio.cc
+	diskwriter_gz.cc
+	diskwriter_xml.cc
 	file.cc
         flat.cc
 	nls.cc

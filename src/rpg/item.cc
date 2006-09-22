@@ -1,5 +1,5 @@
 /*
-   $Id: item.cc,v 1.4 2004/10/25 06:50:09 ksterker Exp $
+   $Id: item.cc,v 1.5 2006/09/22 05:13:16 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -164,17 +164,8 @@ item *item::combine (item *itm)
 // save a single item to file
 bool item::put_state (const string & file) const
 {
-    base::ogzstream out (file);
-    
-    // has file been opened?
-    if (!out.is_open ())
-    {
-        fprintf (stderr, "*** item::put_state: cannot write '%s'\n", file.c_str ());
-        return false;
-    }
-    
     // try to save item
-    base::diskio record;
+    base::diskio record (base::diskio::GZ_WRITER);
     if (!put_state (record))
     {
         fprintf (stderr, "*** item::put_state: saving '%s' failed!\n", file.c_str ());        
@@ -182,9 +173,7 @@ bool item::put_state (const string & file) const
     }
     
     // write item to disk
-    record.put_record (out);
-    
-    return true;
+    return record.put_record (file);
 }
 
 // save item to stream
@@ -221,17 +210,10 @@ bool item::put_state (base::flat & file) const
 // load a single item from file
 bool item::get_state (const string & file)
 {
-    base::igzstream in (file);
-    // has file opened?
-    if (!in.is_open ()) 
-    {
-        fprintf (stderr, "*** item::get_state: cannot read '%s'\n", file.c_str ());
-        return false;
-    }
-
     // try to load item
-    base::diskio record;
-    if (record.get_record (in)) 
+    base::diskio record (base::diskio::GZ_WRITER);
+    
+    if (record.get_record (file)) 
         return get_state (record);
     
     return false;

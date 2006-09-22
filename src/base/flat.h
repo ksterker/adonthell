@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.15 2006/09/22 01:15:22 ksterker Exp $
+   $Id: flat.h,v 1.16 2006/09/22 05:13:16 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -512,7 +512,7 @@ namespace base
 #ifndef SWIG
             GET_TYPE_NAME_VIRTUAL(base::flat)
 #endif // SWIG
-        protected:
+
             /**
              * Return internal buffer of this flattener.
              * @return byte array containing the flattened data.

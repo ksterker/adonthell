@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.8 2006/09/22 01:15:22 ksterker Exp $
+   $Id: quest.cc,v 1.9 2006/09/22 05:13:16 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -326,22 +326,14 @@ void quest::set_completed (const std::string & id)
 }
 
 // save quests to file
-void quest::put_state (const std::string & path)
+bool quest::put_state (const std::string & path)
 {
-    // open file
-    base::ogzstream out (path + QUEST_DATA);
-    if (!out.is_open ())
-    {
-        fprintf (stderr, "*** quest::put_state: cannot open '" QUEST_DATA "' for writing!\n");
-        return; 
-    }
-    
     // save quests
-    base::diskio record;
+    base::diskio record (base::diskio::GZ_WRITER);
     put_state (record);
     
     // save to file
-    record.put_record (out);
+    return record.put_record (path + QUEST_DATA);
 }
 
 // save quests to record
@@ -357,17 +349,10 @@ void quest::put_state (base::flat & out)
 // load quests from file
 bool quest::get_state ()
 {
-    // open file
-    base::igzstream in;
-    if (!base::Paths.open (in, QUEST_DATA))
-    {
-        fprintf (stderr, "*** quest::get_state: cannot open '" QUEST_DATA "' for reading!\n");
-        return false; 
-    }
-    
     // load quests
-    base::diskio record;
-    if (record.get_record (in))
+    base::diskio record (base::diskio::GZ_WRITER);
+    
+    if (record.get_record (QUEST_DATA))
     	return get_state (record);
         
     return false;

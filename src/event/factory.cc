@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.6 2006/06/18 19:25:52 ksterker Exp $
+   $Id: factory.cc,v 1.7 2006/09/22 05:13:16 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
  */
 
 #include <algorithm>
-#include "base/diskio.h"
+#include "base/flat.h"
 #include "event/factory.h"
 #include "event/manager.h"
 #include "event/listener_cxx.h"
