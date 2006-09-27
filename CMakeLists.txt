@@ -9,6 +9,11 @@ add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
 ##########################
 # Manage option
 ##########################
+
+if(WIN32 AND NOT ADONTHELL_DATADIR)
+		set(ADONTHELL_DATADIR ".")
+endif(WIN32 AND NOT ADONTHELL_DATADIR)
+
 if(NOT ADONTHELL_DATADIR)
        MESSAGE(FATAL_ERROR
 		"The ADONTHELL_DATADIR has not been defined, you can do it using -DADONTHELL_DATADIR on the cmake command line.")
@@ -22,35 +27,44 @@ endif(NOT ADONTHELL_DATADIR)
 # FIXME: We need to manage the package lib directory !
 add_definitions(-DPKGLIBDIR="\\"\\"")
 
+include(config/UsePkgConfig.cmake)
 
 ##########################
 # SDL
 ##########################
-find_package(SDL REQUIRED)
-if(SDL_FOUND)
+
+PKGCONFIG_FOUND(sdl SDL_FOUND)
+IF(SDL_FOUND)
+	PKGCONFIG(sdl SDL_INCLUDE_DIR SDL_LIBADD SDL_LIBRARY SDL_CFLAGS)
+ELSE(SDL_FOUND)
+	find_package(SDL REQUIRED)
+ENDIF(SDL_FOUND)
+
+IF(SDL_FOUND)
 	MESSAGE(STATUS
 		"SDL has been found:")
 	MESSAGE(STATUS
-		"\tInclude Directory: ${SDL_INCLUDE_DIR}")
+		"\tCFLAGS : ${SDL_INCLUDE_DIR}")
 	MESSAGE(STATUS
-		"\tLibraries: ${SDL_LIBRARY}")
-else(SDL_FOUND)
+		"\tLDFLAGS: ${SDL_LIBRARY}")
+ELSE(SDL_FOUND)
 	MESSAGE(FATAL_ERROR
-		SDL is required)
-endif(SDL_FOUND)
+		"SDL is required")
+ENDIF(SDL_FOUND)
 
 
 ##########################
 # SDL_mixer
 ##########################
+
 find_package(SDL_mixer REQUIRED)
 if(SDLMIXER_FOUND)
 	MESSAGE(STATUS
 		"SDL_mixer has been found:")
 	MESSAGE(STATUS
-		"\tInclude Directory: ${SDLMIXER_INCLUDE_DIR}")
+		"\tCFLAGS : ${SDLMIXER_INCLUDE_DIR}")
 	MESSAGE(STATUS
-		"\tLibraries: ${SDLMIXER_LIBRARY}")
+		"\tLDFLAGS: ${SDLMIXER_LIBRARY}")
 else(SDLMIXER_FOUND)
 	MESSAGE(FATAL_ERROR
 		"SDL_mixer is required")
@@ -65,9 +79,9 @@ if(PYTHON_INCLUDE_PATH)
 	message(STATUS
 		"Python has been found:")
 	message(STATUS
-		"\tInclude directory: ${PYTHON_INCLUDE_PATH}")
+		"\tCFLAGS : ${PYTHON_INCLUDE_PATH}")
 	message(STATUS
-		"\tLibraries: ${PYTHON_LIBRARIES}")
+		"\tLDFLAGS: ${PYTHON_LIBRARIES}")
 else(PYTHON_INCLUDE_PATH)
 	message(FATAL_ERROR
 		"A Python installation is required")
@@ -85,57 +99,81 @@ else(PYTHONINTERP_FOUND)
 endif(PYTHONINTERP_FOUND)
 
 
-
 #######################
 # PNG
 #######################
-find_package(PNG REQUIRED)
+
+PKGCONFIG_FOUND(libpng PNG_FOUND)
+IF(PNG_FOUND)
+	PKGCONFIG(libpng PNG_INCLUDE_DIR PNG_LIBADD PNG_LIBRARY PNG_CFLAGS)
+ELSE(PNG_FOUND)
+	find_package(PNG REQUIRED)
+ENDIF(PNG_FOUND)
+
 if(PNG_FOUND)
 	MESSAGE(STATUS
-		"PNG_mixer has been found:")
+		"PNG has been found:")
 	MESSAGE(STATUS
-		"\tInclude Directory: ${PNG_INCLUDE_DIR}")
+		"\tCFLAGS : ${PNG_INCLUDE_DIR}")
 	MESSAGE(STATUS
-		"\tLibraries: ${PNG_LIBRARY}")
+		"\tLDFLAGS: ${PNG_LIBRARY}")
 else(PNG_FOUND)
 	MESSAGE(FATAL_ERROR
 		"PNG is required")
 endif(PNG_FOUND)
 
+
 #######################
 # SWIG
 #######################
+
 #find_package(SWIG REQUIRED)
 include(config/FindSWIG.cmake)
 if(SWIG_FOUND)
 	MESSAGE(STATUS
 		"SWIG is present on the system.")
 else(SWIG_FOUND)
-	MESSAGE(FATAL_ERROR
-		"Impossible to locate SWIG.")
+	# try to see if we have the swig programm and assume for now that this is sufficient
+	FIND_PROGRAM(SWIG_EXECUTABLE NAMES swig PATHS /usr/local/bin )
+	if(SWIG_EXECUTABLE)
+		MESSAGE(STATUS "SWIG appears to be present on the system.")
+		set(SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake)
+		set(SWIG_FOUND YES)
+	else(SWIG_EXECUTABLE)
+		MESSAGE(FATAL_ERROR "Impossible to locate SWIG.")
+	endif(SWIG_EXECUTABLE)
 endif(SWIG_FOUND)
+
 
 #######################
 # LibXML2
 #######################
-include(config/FindLibxml2.cmake)
+
+PKGCONFIG_FOUND(libxml-2.0 LIBXML2_FOUND)
+IF(LIBXML2_FOUND)
+	PKGCONFIG(libxml-2.0 LIBXML2_INCLUDE_PATH LIBXML2_LIBADD LIBXML2_LIBRARIES LIBXML2_CFLAGS)
+	SET(LIBXML2_INCLUDE_PATH "${LIBXML2_INCLUDE_PATH}/libxml2")
+ELSE(LIBXML2_FOUND)
+	include(config/FindLibxml2.cmake)
+ENDIF(LIBXML2_FOUND)
+
 if(LIBXML2_FOUND)
 	message(STATUS
 		"LibXml2 has been found:")
 	message(STATUS
-		"\tInclude directory: ${LIBXML2_INCLUDE_PATH}")
+		"\tCFLAGS : ${LIBXML2_INCLUDE_PATH}")
 	message(STATUS
-		"\tLibraries: ${LIBXML2_LIBRARIES}")	
+		"\tLDFLAGS: ${LIBXML2_LIBRARIES}")	
 else(LIBXML2_FOUND)
 	message(FATAL_ERROR
 		"LibXml2 is required.")
 endif(LIBXML2_FOUND)
 
 
-
 ######################
 # Build the config.h file !
 ######################
+
 include (CheckIncludeFiles)
 check_include_files (dlfcn.h HAVE_DLFCN_H)
 check_include_files (inttypes.h HAVE_INTTYPES_H)

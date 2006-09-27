@@ -1,17 +1,17 @@
 # Define the adonthell_base_SRCS variable containing all required files.
 set(adonthell_base_SRCS
 	base.cc
-        callback.cc
+    callback.cc
 	configuration.cc
 	configio.cc
 	diskio.cc
 	diskwriter_gz.cc
 	diskwriter_xml.cc
 	file.cc
-        flat.cc
+    flat.cc
 	nls.cc
-        paths.cc
-        timer.cc
+    paths.cc
+    timer.cc
 )
 
 
@@ -44,7 +44,7 @@ add_library(adonthell_base SHARED ${adonthell_base_SRCS})
 
 
 target_link_libraries(adonthell_base
-	${LIBXML2_LIBRARIES})
+	${LIBXML2_LIBRARIES} -lltdl)
 
 
 

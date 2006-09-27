@@ -11,6 +11,7 @@ FIND_PATH(SWIG_DIR
   /usr/lib/swig1.3
   /usr/local/share/swig1.3
   /usr/share/swig/1.3.29
+  /usr/local/share/swig/1.3.29
 )
 FIND_PATH(SWIG_DIR
   swig.swg
@@ -18,6 +19,7 @@ FIND_PATH(SWIG_DIR
   /usr/lib/swig1.3
   /usr/local/share/swig1.3
   /usr/share/swig/1.3.29/
+  /usr/local/share/swig/1.3.29
 )
 IF(EXISTS ${SWIG_DIR})
   IF("x${SWIG_DIR}x" STREQUAL "x${CMAKE_ROOT}/Modulesx")
