@@ -57,8 +57,13 @@ ENDIF(SDL_FOUND)
 # SDL_mixer
 ##########################
 
-find_package(SDL_mixer REQUIRED)
+find_package(SDL_mixer REQUIRED PATH_SUFFIXES SDL)
 if(SDLMIXER_FOUND)
+	# take a lucky guess
+	if(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
+		set(SDLMIXER_INCLUDE_DIR ${SDL_INCLUDE_DIR})
+	endif(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
+	
 	MESSAGE(STATUS
 		"SDL_mixer has been found:")
 	MESSAGE(STATUS

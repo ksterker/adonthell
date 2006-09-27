@@ -31,7 +31,7 @@ version will give better results.
 
     * Download the following files from the MinGW website:
         - MinGW-5.0.3.exe
-        - MSYS-1.0.10.exe
+        - MSys-1.0.10.exe
         - msysDTK-1.0.1.exe
 
     * Follow the instructions here to install MinGW and MSys:
@@ -71,7 +71,7 @@ GNU autotools.
         $ make install
 
 
-2) Install libtool (http://www.gnu.org/software/libtool/)
+3) Install libtool (http://www.gnu.org/software/libtool/)
 
     * Download libtool 1.5.22 and compile/install in msys:
         $ ./configure --prefix=/usr/local
@@ -220,7 +220,7 @@ on each other.
     * Get source code, extract and compile/install in cygwin:
         $ ./configure
 
-        Edit Makefile and change line
+        Edit Makefile and change the line
             for ext in a la so; do\
         to
             for ext in a la; do\
@@ -236,9 +236,8 @@ on each other.
         $ make
         $ make install
 
-     * Update $HOME/.profile with the following line, otherwise SWIG
-       will not be able to find its library files:
-
+    * Update $HOME/.profile with the following line,  otherwise SWIG
+      will not be able to find its library files:
         export SWIG_LIB=/usr/local/share/swig/1.3.29
 
 
@@ -248,23 +247,38 @@ on each other.
     * Get pkg-config-0.20.zip and extract it into /usr/local.
       There is no way to compile pkg-config yourself, as it requires
       glib 2.0, which in turn requires pkg-config.  It's okay to use
-      the binary version though.
+      the binary version though :-).
+      
+    * Edit $HOME/.profile and add the following line:
+		export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+
+12) Install cmake (http://http://www.cmake.org)
+
+	* Get cmake-2.4.3-win32-x86.zip and  put the 'bin', 'doc', 'man' 
+	  and 'share' directories into /usr/local.
+
+    * Edit $HOME/.profile and add the following lines:
+        export CMAKE_INCLUDE_PATH=/usr/local/include
+        export CMAKE_LIBRARY_PATH=/usr/local/lib
 
 
 Compiling Adonthell:
 ====================
 
 After installing all the libraries and tools  above,  we are finally
-ready to compile Adonthell.
+ready to compile Adonthell. Inside the adonthell directory, do:
 
-    $ ./autogen.sh
-    $ ./configure --prefix=/usr/local \
-        --with-py-libs="/usr/local/bin/python24.dll" \
-        --with-py-cflags="-I/usr/local/include/python2.4"
+    $ mkdir ../adonthell-build && cd ../adonthell-build
+    $ cmake -G "MSys Makefiles" ../adonthell
+
+Note that this will put all compilation products  into a folder next
+to your source code,  as to not clutter it  with intermediate object 
+files,  DLLs and all the other junk created when building Adonthell.
 
 From then on, you should be able to go to your Eclipse IDE and build
 Adonthell from there  (see below),  or just type 'make' to start the
-build from cygwin.
+build from MSys.
 
 
 Using Eclipse IDE for Adonthell development:
@@ -282,6 +296,21 @@ To use Eclipse to develop C/C++, download and install the following:
     * CTD Runtime 3.1
       http://download.eclipse.org/tools/cdt/releases/callisto/dist/3.1.0/
 
-Then follow the tutorial at [1] to import the Adonthell source code.
+Then follow the tutorial at [1]  to import the Adonthell source code
+as a Standard Make C++ Project. 
+
+You should also create a second project that points to your seperate
+build directory,  as you will have to run make inside there, instead
+of inside the source directory.  Just make sure to go to the 'build'
+project Properties / Project References  where you should select the
+'source' project as a dependency.
+
+Before you can finally run 'make' from within Eclipse, you will have
+to add C:\msys\1.0\bin (or wherever you  have installed MSys) to the 
+Windows system path, so that make.exe can be found.
+
+
+References:
+===========
 
 [1] http://download.eclipse.org/tools/cdt/docs/tutorials/import_standard_tutorial/cdt_w_std_import.htm
