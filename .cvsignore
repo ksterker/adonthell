@@ -3,6 +3,7 @@ Makefile.in
 aclocal.m4
 adonthell.pc
 autom4te.cache
+build
 compile
 config.guess
 config.h
@@ -21,3 +22,6 @@ mkinstalldirs
 py-compile
 stamp-h1
 .project
+.cdtproject
+.settings
+
