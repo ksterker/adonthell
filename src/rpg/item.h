@@ -1,5 +1,5 @@
 /*
-   $Id: item.h,v 1.4 2004/11/15 08:54:33 ksterker Exp $
+   $Id: item.h,v 1.5 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,9 +31,9 @@
 #ifndef RPG_ITEM_H
 #define RPG_ITEM_H
 
-#include <vector>
 #include "python/script.h"
 #include "rpg/slot.h"
+#include <vector>
 
 using std::string;
 

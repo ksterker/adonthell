@@ -1,5 +1,5 @@
 /*
-   $Id: slot.cc,v 1.3 2004/10/25 06:50:09 ksterker Exp $
+   $Id: slot.cc,v 1.4 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,8 @@
  * @brief  One unit of the inventory.
  */
 
-#include "rpg/slot.h"
 #include "rpg/item_storage.h"
+#include "rpg/slot.h"
 
 using rpg::inventory;
 using rpg::item;

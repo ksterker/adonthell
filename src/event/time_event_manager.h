@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
+   $Id: time_event_manager.h,v 1.7 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,8 +29,8 @@
 #ifndef EVENT_TIME_EVENT_MANAGER_H
 #define EVENT_TIME_EVENT_MANAGER_H
 
-#include <vector>
 #include "event/manager_base.h"
+#include <vector>
 
 namespace events
 {

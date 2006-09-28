@@ -1,5 +1,5 @@
 /*
-   $Id: factory.h,v 1.6 2006/06/18 19:25:52 ksterker Exp $
+   $Id: factory.h,v 1.7 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,8 +32,8 @@
 #ifndef EVENT_FACTORY_H
 #define EVENT_FACTORY_H
 
-#include <vector>
 #include "event/listener.h"
+#include <vector>
 
 using std::string;
 

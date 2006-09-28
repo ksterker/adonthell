@@ -1,5 +1,5 @@
 /*
-   $Id: item.cc,v 1.5 2006/09/22 05:13:16 ksterker Exp $
+   $Id: item.cc,v 1.6 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,12 +27,12 @@
  * @brief  Superclass for all items.
  */
 
-#include <stdio.h>
-#include <iostream>
-#include <algorithm>
+//#include <stdio.h>
 #include "rpg/item.h"
 #include "rpg/character.h"
 #include "base/diskio.h"
+#include <iostream>
+#include <algorithm>
 
 using rpg::item;
 using rpg::character;

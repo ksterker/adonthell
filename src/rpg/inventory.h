@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.h,v 1.4 2005/06/03 17:29:13 ksterker Exp $
+   $Id: inventory.h,v 1.5 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,8 +30,8 @@
 #ifndef RPG_INVENTORY_H
 #define RPG_INVENTORY_H
 
-#include <vector>
 #include "rpg/slot.h"
+#include <vector>
 
 namespace rpg
 {

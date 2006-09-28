@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.16 2006/09/22 05:13:16 ksterker Exp $
+   $Id: flat.h,v 1.17 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
 #ifndef BASE_FLAT
 #define BASE_FLAT
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string>
 #include "base/endians.h"
 #include "python/callback_support.h"

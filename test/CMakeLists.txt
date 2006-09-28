@@ -23,3 +23,15 @@ TARGET_LINK_LIBRARIES(diskiotest
 	ltdl
 	adonthell_base
 	)
+
+###############################
+# Try to build the gfxtest
+ADD_EXECUTABLE(gfxtest
+			gfxtest.cc)
+
+TARGET_LINK_LIBRARIES(gfxtest
+	ltdl
+	adonthell_base
+	adonthell_gfx
+	)
+	

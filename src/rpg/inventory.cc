@@ -1,5 +1,5 @@
 /*
-   $Id: inventory.cc,v 1.4 2004/10/25 06:50:09 ksterker Exp $
+   $Id: inventory.cc,v 1.5 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,8 @@
  * @brief  Container for items.
  */
 
-#include "rpg/inventory.h"
 #include "rpg/item.h"
+#include "rpg/inventory.h"
 
 using rpg::inventory;
 using rpg::item;

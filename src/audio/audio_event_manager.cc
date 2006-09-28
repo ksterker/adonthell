@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event_manager.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio_event_manager.cc,v 1.3 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,9 +26,9 @@
  * @brief   Implements the audio_event_manager class.
  */
 
-#include <algorithm>
-#include "audio/audio_event.h"
 #include "audio/audio_event_manager.h"
+#include "audio/audio_event.h"
+#include <algorithm>
 
 using std::vector;
 using audio::audio_event_manager;

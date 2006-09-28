@@ -1,7 +1,7 @@
 CXXFLAGS += -I$(top_srcdir)/src
 
 EXTRA_DIST =  configtest.py eventtest.py filereport.py gfxtest.py guitest.py inputtest.py
-noinst_PROGRAMS = callbacktest diskiotest guitest inputtest
+noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest
 
 callbacktest_SOURCES = callbacktest.cc
 callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
@@ -33,3 +33,6 @@ inputtest_LDADD = \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L$(top_builddir)/src/py-wrappers/adonthell -ladonthell_py_runtime
 
+gfxtest_SOURCES = gfxtest.cc
+gfxtest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base \
+	-L$(top_builddir)/src/gfx/ -ladonthell_gfx

@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event_manager.h,v 1.2 2005/10/09 07:38:40 ksterker Exp $
+   $Id: quest_event_manager.h,v 1.3 2006/09/28 19:13:27 gnurou Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,10 +29,10 @@
 #ifndef QUEST_EVENT_MANAGER_H
 #define QUEST_EVENT_MANAGER_H
 
+#include "event/manager_base.h"
+
 #include <vector>
 #include <map>
-
-#include "event/manager_base.h"
 
 using events::manager_base;
 using events::listener;

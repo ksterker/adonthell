@@ -1,5 +1,5 @@
 /*
- $Id: dialog.cc,v 1.4 2006/03/19 20:25:14 ksterker Exp $
+ $Id: dialog.cc,v 1.5 2006/09/28 19:13:27 gnurou Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,8 +26,8 @@
  * @brief  Core of the dialogue system.
  */
 
-#include "base/nls.h"
 #include "rpg/dialog.h"
+#include "base/nls.h"
 
 using rpg::dialog_line;
 using rpg::dialog;

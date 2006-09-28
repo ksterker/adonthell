@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.h,v 1.7 2006/03/20 22:05:36 ksterker Exp $
+   $Id: equipment.h,v 1.8 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,9 +30,9 @@
 #ifndef RPG_EQUIPMENT_H
 #define RPG_EQUIPMENT_H
 
-#include <set>
-#include "base/hash_map.h"
 #include "rpg/item.h"
+#include "base/hash_map.h"
+#include <set>
 
 namespace rpg
 {

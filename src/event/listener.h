@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.9 2006/06/18 19:25:53 ksterker Exp $
+   $Id: listener.h,v 1.10 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,9 +30,9 @@
 #ifndef EVENT_LISTENER_H
 #define EVENT_LISTENER_H
 
+#include <Python.h>
 #include "event/event.h"
 #include "base/callback.h"
-#include <Python.h>
 
 namespace events
 {

@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.cc,v 1.6 2006/03/20 21:45:25 ksterker Exp $
+   $Id: equipment.cc,v 1.7 2006/09/28 19:13:27 gnurou Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,9 +27,9 @@
  * @brief  Takes care of equipping/unequipping items.
  */
 
-#include <algorithm>
 #include "rpg/equipment.h"
 #include "rpg/inventory.h"
+#include <algorithm>
 
 using rpg::equipment;
 using rpg::slot_definition;

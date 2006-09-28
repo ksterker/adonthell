@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.16 2006/07/08 17:04:03 ksterker Exp $
+   $Id: adonthell.cc,v 1.17 2006/09/28 19:13:27 gnurou Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,15 +31,15 @@
 #include <config.h>
 #endif
 
+#include "python/python.h"
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 
 #include "gfx/gfx.h"
 #include "base/nls.h"
 #include "base/base.h"
 #include "input/input.h"
 #include "audio/audio.h"
-#include "python/python.h"
 #include "main/adonthell.h"
 
 using namespace adonthell;

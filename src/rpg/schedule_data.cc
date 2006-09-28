@@ -1,5 +1,5 @@
 /*
- $Id: schedule_data.cc,v 1.1 2006/06/18 19:25:53 ksterker Exp $
+ $Id: schedule_data.cc,v 1.2 2006/09/28 19:13:27 gnurou Exp $
  
  Copyright (C) 2004/2005/2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com

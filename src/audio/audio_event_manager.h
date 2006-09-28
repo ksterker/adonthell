@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event_manager.h,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio_event_manager.h,v 1.3 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,8 +29,8 @@
 #ifndef EVENT_AUDIO_EVENT_MANAGER_H
 #define EVENT_AUDIO_EVENT_MANAGER_H
 
-#include <vector>
 #include "event/manager_base.h"
+#include <vector>
 
 using events::manager_base;
 using events::listener;

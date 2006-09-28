@@ -1,5 +1,5 @@
 /*
-   $Id: pool.h,v 1.4 2005/06/03 17:29:13 ksterker Exp $
+   $Id: pool.h,v 1.5 2006/09/28 19:13:27 gnurou Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,8 +30,8 @@
 #ifndef PYTHON_POOL_H
 #define PYTHON_POOL_H
 
-#include <map>
 #include "python/method.h"
+#include <map>
 
 namespace python
 {

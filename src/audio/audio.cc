@@ -1,5 +1,5 @@
 /*
-   $Id: audio.cc,v 1.3 2006/07/08 17:04:03 ksterker Exp $
+   $Id: audio.cc,v 1.4 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,10 +28,10 @@
  *
  */
 
+#include "event/manager.h"
 #include "audio/audio.h"
 #include "audio/sound.h"
 #include "audio/audio_event.h"
-#include "event/manager.h"
 #include "base/paths.h"
 
 #include "ltdl.h"

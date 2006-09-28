@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.7 2005/08/14 16:51:20 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.8 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,11 +26,11 @@
  * @brief 	Implements the time_event_manager class.
  */
 
-#include <algorithm>
+#include "event/time_event_manager.h"
 #include "event/date.h"
 #include "event/types.h"
 #include "event/time_event.h"
-#include "event/time_event_manager.h"
+#include <algorithm>
 
 using std::vector;
 using events::time_event_manager;

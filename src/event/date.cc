@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.8 2006/01/22 21:32:39 ksterker Exp $
+   $Id: date.cc,v 1.9 2006/09/28 19:13:26 gnurou Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,13 +26,13 @@
  * @brief Implements the date class.
  */
 
-#include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "base/base.h"
-#include "event/date.h"
+//#include <ctype.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include "event/manager.h"
+#include "event/date.h"
 #include "event/time_event.h"
+#include "base/base.h"
 
 using events::date;
 
