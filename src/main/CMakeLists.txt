@@ -17,6 +17,11 @@ include_directories(${PYTHON_INCLUDE_PATH})
 add_library(adonthell_main SHARED ${adonthell_main_SRCS})
 target_link_libraries(adonthell_main
 	${PYTHON_LIBRARIES}
+	adonthell_base
+	adonthell_gfx
+	adonthell_audio
+	adonthell_input
+	adonthell_python
 	)
 
 
@@ -27,10 +32,14 @@ target_link_libraries(adonthell_main
 if(APPLE)
 	set(sdl_SRCS
 		sdl/osx.m)
+	set_source_files_properties (sdl/osx.m
+		PROPERTIES COMPILE_FLAGS -ObjC++)
 else(APPLE)
 	set(sdl_SRCS
 		sdl/linux.cc)
 endif(APPLE)
+
+include_directories(${SDL_INCLUDE_DIR})
 
 add_library(sdl SHARED ${sdl_SRCS})
 target_link_libraries(sdl

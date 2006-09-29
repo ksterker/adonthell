@@ -6,7 +6,7 @@
 */
 
 #import <Cocoa/Cocoa.h>
-#include "adonthell.h"
+#include "main/adonthell.h"
 
 @interface SDLMain : NSObject 
 {

@@ -36,6 +36,7 @@ include(config/UsePkgConfig.cmake)
 PKGCONFIG_FOUND(sdl SDL_FOUND)
 IF(SDL_FOUND)
 	PKGCONFIG(sdl SDL_INCLUDE_DIR SDL_LIBADD SDL_LIBRARY SDL_CFLAGS)
+	SET(SDL_INCLUDE_DIR ${SDL_INCLUDE_DIR}/SDL)
 ELSE(SDL_FOUND)
 	find_package(SDL REQUIRED)
 ENDIF(SDL_FOUND)
@@ -173,6 +174,15 @@ else(LIBXML2_FOUND)
 	message(FATAL_ERROR
 		"LibXml2 is required.")
 endif(LIBXML2_FOUND)
+
+
+######################
+# OS X specific
+######################
+if(APPLE)
+	set(CMAKE_SHARED_LINKER_FLAGS "-flat_namespace -undefined suppress")
+	set(CMAKE_MODULE_LINKER_FLAGS "-flat_namespace -undefined suppress")
+endif(APPLE)
 
 
 ######################

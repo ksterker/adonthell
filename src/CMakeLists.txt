@@ -6,7 +6,6 @@ include_directories(
 
 # Define the Adonthell libraries
 set(ADONTHELL_MODULES
-	main
 	base
 	event
 	gfx
@@ -14,6 +13,7 @@ set(ADONTHELL_MODULES
 	audio
 	gui
 	rpg
+	main
 )
 
 
