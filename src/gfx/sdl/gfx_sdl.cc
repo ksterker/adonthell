@@ -1,5 +1,5 @@
 /*
-   $Id: gfx_sdl.cc,v 1.4 2006/04/07 16:12:59 Mithander Exp $
+   $Id: gfx_sdl.cc,v 1.5 2006/09/30 21:05:08 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,10 +19,12 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define gfx_init sdl_LTX_gfx_init
 #define gfx_cleanup sdl_LTX_gfx_cleanup
 #define gfx_create_surface sdl_LTX_gfx_create_surface
+#endif
 
 #include <iostream>
 #include "surface_sdl.h"

@@ -82,6 +82,11 @@ AC_ARG_WITH(py-cflags,
 
 AC_CHECK_LIB(z, main,,echo "Adonthell requires Zlib. Exitting...";exit 1)
 
+dnl ******************************
+dnl Tell that we are using libtool
+dnl ******************************
+CXXFLAGS="$CXXFLAGS -DUSE_LIBTOOL"
+
 dnl **********************
 dnl Set the data directory
 dnl **********************

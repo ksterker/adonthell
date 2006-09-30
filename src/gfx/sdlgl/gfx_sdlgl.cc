@@ -1,5 +1,5 @@
 /*
-   $Id: gfx_sdlgl.cc,v 1.1 2006/09/28 19:13:26 gnurou Exp $
+   $Id: gfx_sdlgl.cc,v 1.2 2006/09/30 21:05:08 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,10 +19,12 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define gfx_init sdlgl_LTX_gfx_init
 #define gfx_cleanup sdlgl_LTX_gfx_cleanup
 #define gfx_create_surface sdlgl_LTX_gfx_create_surface
+#endif
 
 #include <iostream>
 #include <GL/gl.h>
@@ -38,8 +40,6 @@ extern "C"
 
     gfx::surface * gfx_create_surface();
 }
-
-gfx::screen_surface_sdlgl *display = NULL;
 
 bool gfx_init()
 {

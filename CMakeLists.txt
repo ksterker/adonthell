@@ -10,18 +10,16 @@ add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
 # Manage option
 ##########################
 
-if(WIN32 AND NOT ADONTHELL_DATADIR)
-		set(ADONTHELL_DATADIR ".")
-endif(WIN32 AND NOT ADONTHELL_DATADIR)
-
 if(NOT ADONTHELL_DATADIR)
-       MESSAGE(FATAL_ERROR
-		"The ADONTHELL_DATADIR has not been defined, you can do it using -DADONTHELL_DATADIR on the cmake command line.")
-else(NOT ADONTHELL_DATADIR)
-       message(STATUS
-		"Adonthell data directory: ${ADONTHELL_DATADIR}")
-       add_definitions(-DDATA_DIR="\\"${ADONTHELL_DATADIR}\\"")
+       if(WIN32)
+		set(ADONTHELL_DATADIR ".")
+       else(WIN32)
+              SET(ADONTHELL_DATADIR "${CMAKE_INSTALL_PREFIX}/share/games/adonthell")
+       endif(WIN32)
 endif(NOT ADONTHELL_DATADIR)
+message(STATUS
+	"Adonthell data directory: ${ADONTHELL_DATADIR}")
+add_definitions(-DDATA_DIR="\\"${ADONTHELL_DATADIR}\\"")
 
 
 # FIXME: We need to manage the package lib directory !
@@ -127,6 +125,22 @@ else(PNG_FOUND)
 	MESSAGE(FATAL_ERROR
 		"PNG is required")
 endif(PNG_FOUND)
+
+#######################
+# OpenGL
+#######################
+FIND_PACKAGE(OpenGL)
+IF(OPENGL_FOUND)
+	MESSAGE(STATUS
+		"OpenGL has been found:")
+	MESSAGE(STATUS
+		"\tCFLAGS : ${OPENGL_INCLUDE_DIR}")
+	MESSAGE(STATUS
+		"\tLDFLAGS: ${OPENGL_LIBRARY}")
+ELSE(OPENGL_FOUND)
+	MESSAGE(STATUS
+		"OpenGL renderer will not be built")
+ENDIF(OPENGL_FOUND)
 
 
 #######################

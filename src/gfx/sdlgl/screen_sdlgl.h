@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.h,v 1.1 2006/09/28 19:13:26 gnurou Exp $
+   $Id: screen_sdlgl.h,v 1.2 2006/09/30 21:05:08 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,7 +38,6 @@ namespace gfx
     {
     public:
         ~screen_surface_sdlgl() { }
-        SDL_Surface * get_vis() { return vis; }
         void resize (u_int16 l, u_int16 h) { std::cerr << "Invalid operation: Can't resize the screen surface!\n"; }
         void clear () { std::cerr << "Invalid operation: Can't clear the screen surface!\n"; }
         bool set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth, u_int32 flags)
@@ -69,6 +68,9 @@ namespace gfx
             
             return true;
         }
+
+        virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
+                               u_int32 col, drawing_area * da_opt = NULL);
     };
 }
 

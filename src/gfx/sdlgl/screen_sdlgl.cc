@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.1 2006/09/28 19:13:26 gnurou Exp $
+   $Id: screen_sdlgl.cc,v 1.2 2006/09/30 21:05:08 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,14 +19,18 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define gfx_screen_set_video_mode sdlgl_LTX_gfx_screen_set_video_mode
 #define gfx_screen_update sdlgl_LTX_gfx_screen_update
 #define gfx_screen_trans_color sdlgl_LTX_gfx_screen_trans_color
 #define gfx_screen_clear sdlgl_LTX_gfx_screen_clear
 #define gfx_screen_get_surface sdlgl_LTX_gfx_screen_get_surface
+#endif
 
 #include "gfx/sdlgl/screen_sdlgl.h"
+
+#include <GL/gl.h>
 
 u_int32 trans_color = 0;
 
@@ -39,6 +43,8 @@ extern "C"
     gfx::surface * gfx_screen_get_surface();
 }
 
+gfx::screen_surface_sdlgl *display = NULL;
+
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
     u_int32 SDL_flags = SDL_OPENGL;
@@ -48,28 +54,41 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
     // Setting up the window title
     SDL_WM_SetCaption ("Adonthell", NULL);
 
-    trans_color = SDL_MapRGB(display->get_vis()->format, gfx::screen::TRANS_RED, gfx::screen::TRANS_GREEN, 
-                             gfx::screen::TRANS_BLUE);
+//    trans_color = SDL_MapRGB(display->get_vis()->format, gfx::screen::TRANS_RED, gfx::screen::TRANS_GREEN, 
+//                             gfx::screen::TRANS_BLUE);
 
     return true;
 }
 
 void gfx_screen_update()
 {
-    SDL_Flip (display->get_vis());
+    SDL_GL_SwapBuffers();
 }
 
 u_int32 gfx_screen_trans_color()
 {
-    return trans_color;
+// TODO
 }
 
 void gfx_screen_clear()
 {
-    SDL_FillRect(display->get_vis(), NULL, 0);
+// TODO
 }
 
 gfx::surface * gfx_screen_get_surface()
 {
     return display;
 }
+
+void gfx::screen_surface_sdlgl::fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
+               u_int32 col, drawing_area * da_opt)
+{
+	glBegin(GL_QUADS);
+	glColor3ub((col & 0xff0000) >> 16, (col & 0x00ff00) >> 8, col & 0x0000ff);
+	glVertex3i(x, y, 0);
+	glVertex3i(x + l, y, 0);
+	glVertex3i(x + l, y + l, 0);
+	glVertex3i(x, y + l, 0);
+	glEnd();
+}
+
