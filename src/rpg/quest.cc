@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.10 2006/09/28 19:13:27 gnurou Exp $
+   $Id: quest.cc,v 1.11 2006/09/30 23:04:59 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -329,7 +329,7 @@ void quest::set_completed (const std::string & id)
 bool quest::put_state (const std::string & path)
 {
     // save quests
-    base::diskio record (base::diskio::GZ_WRITER);
+    base::diskio record (base::diskio::GZ_FILE);
     put_state (record);
     
     // save to file
@@ -350,7 +350,7 @@ void quest::put_state (base::flat & out)
 bool quest::get_state ()
 {
     // load quests
-    base::diskio record (base::diskio::GZ_WRITER);
+    base::diskio record (base::diskio::GZ_FILE);
     
     if (record.get_record (QUEST_DATA))
     	return get_state (record);

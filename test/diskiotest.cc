@@ -9,7 +9,7 @@ double d_PI = 3.14159265358979323846;
 
 int main (int argc, char* argv[]) {
 
-    base::diskio test (base::diskio::GZ_WRITER);
+    base::diskio test (base::diskio::XML_FILE);
     base::flat fl;
     
     // adding all different kind of data
@@ -38,11 +38,11 @@ int main (int argc, char* argv[]) {
     
     // write record to disk
     cout << "Writing data to disk ..." << endl;
-    test.put_record ("/tmp/diskio.test");
+    test.put_record ("diskio.test");
     
     // read record from disk
     cout << "Reading data from disk" << endl;
-    bool b = test.get_record ("/tmp/diskio.test");
+    bool b = test.get_record ("diskio.test");
     if (b == true) cout << "Reading successful" << endl;
     
     // unpack all kind of data using get_*
@@ -66,8 +66,9 @@ int main (int argc, char* argv[]) {
     base::flat f = test.get_flat ("flat");
     cout << f.get_string ("string") << endl;
     
+    int size;
     void *value;
-    int type, size;
+    base::flat::data_type type;
     
     // the next() method is another way to extract included flats
     if (f.next (&value, &size) == base::flat::T_FLAT) {
@@ -76,8 +77,8 @@ int main (int argc, char* argv[]) {
         // next fetches values in the order they where added, 
         // until it reaches the end; you'll have to cast them
         // manually to the type it returns
-        while ((type = f2.next (&value)) != -1)
-            cout << type << " ";
+        while ((type = f2.next (&value)) != base::flat::T_UNKNOWN)
+            cout << base::flat::name_for_type (type) << " ";
     }
     cout << "\nEverything unpacked" << endl;
     

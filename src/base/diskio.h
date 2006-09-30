@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.8 2006/09/22 05:13:16 ksterker Exp $
+   $Id: diskio.h,v 1.9 2006/09/30 23:04:59 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,15 +45,15 @@ namespace base {
              */
             typedef enum
             {
-                GZ_WRITER,
-                XML_WRITER,
-            } disk_writer;
+                GZ_FILE,
+                XML_FILE,
+            } file_format;
         
             /**
              * Constructor.
-             * @param writer File writer to use for disk i/o.
+             * @param format File format to use for disk i/o.
              */
-            diskio (const diskio::disk_writer & writer);
+            diskio (const diskio::file_format & format);
 
             /**
              * Destructor.
@@ -65,18 +65,19 @@ namespace base {
              */
             //@{
             /**
-             * Load this record from the given XML file. Compared to get_record(),
-             * no checksum is kept in the XML file, so file corruption cannot be
-             * detected prior to loading.
+             * Load this record from the given file, using the specified file
+             * type. After reading the file, a checksum comparison takes place,
+             * resulting in an error if the checksum did not match.
+             * 
              * @param filename file to read data from.
              * @return \b true on successful loading, \b false otherwise.
              */
             bool get_record (const std::string & filename);
             
             /**
-             * Save this record to an XML file. Compared to put_record(), no
-             * checksum will be saved with the record. Multiple records can be
-             * saved in the same file.
+             * Save this record to given file, using the specified file type. 
+			 * A checksum will be saved together with file.
+			 * 
              * @param filename file to save record to.
              * @return \b true on success, \b false otherwise.
              */

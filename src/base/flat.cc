@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.7 2006/09/22 01:15:22 ksterker Exp $
+   $Id: flat.cc,v 1.8 2006/09/30 23:04:59 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -103,6 +103,7 @@ flat::data* flat::get (const string & name, const data_type & type)
     data *result = NULL;
     data *current = Decoded;
     
+    // search from current position
     for (; Decoded != NULL; Decoded = Decoded->Next)
         if (strcmp (Decoded->Name, name.c_str ()) == 0) {
             result = Decoded;
@@ -149,10 +150,44 @@ flat::data_type flat::next (void **value, int *size, char **name)
     
     if (Decoded != NULL)
     {
+        data_type type = Decoded->Type;
+
+#ifdef __BIG_ENDIAN__
+		// endianess conversion
+		switch (type)
+		{
+			case T_UINT16:
+			{
+                *value = SwapLE16 (*((u_int16*) Decoded->Content));				
+				break;
+			}
+			case T_UINT32:
+			{
+                *value = SwapLE32 (*((u_int32*) Decoded->Content));				
+				break;
+			}
+			case T_SINT16:
+			{
+                *value = SwapLE16 (*((s_int16*) Decoded->Content));				
+				break;
+			}
+			case T_SINT32:
+			{
+                *value = SwapLE32 (*((s_int32*) Decoded->Content));				
+				break;
+			}
+			default:
+			{
+                *value = Decoded->Content);				
+				break;
+			}
+		}
+#else
         *value = Decoded->Content;
+#endif
+
         if (size != NULL) *size = Decoded->Size;
         if (name != NULL) *name = Decoded->Name;
-        data_type type = Decoded->Type;
     
         Decoded = Decoded->Next;
         return type;

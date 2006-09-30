@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.9 2006/09/22 01:15:22 ksterker Exp $
+   $Id: timer.cc,v 1.10 2006/09/30 23:04:59 ksterker Exp $
 
    Copyright (C) 2003/2004/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -77,7 +77,7 @@ namespace base
     }
 
     // suspend application for given time
-    void timer::sleep (u_int32 msecs) const
+    void timer::sleep (u_int32 msecs)
     {
         unsigned char err;
         struct timespec req, rem;

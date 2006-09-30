@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.1 2006/09/22 05:13:16 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.2 2006/09/30 23:04:59 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -95,6 +95,19 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
             if (strcmp ((char*) name, XML_ROOT_NODE) == 0)
             {
                 context->State = disk_writer_xml::DATA;
+                
+       	       	// get attribute "cs", if present
+		    	if (atts != NULL) 
+		    	{
+		    		for (u_int32 i = 0; atts[i] != NULL; i += 2) 
+		    		{
+						if (atts[i][0] == 'c' && atts[i][1] == 's')
+						{
+							context->Id = (char*) atts[i+1];
+							break;
+						}		
+					}
+		    	}
             }
             else
             {
@@ -121,10 +134,13 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
         		case flat::T_FLAT:
         		{
         			base::flat record(16);
+        			
+        			// create child context for sublist
         			context = new data_sax_context (record, context);
 	            	context->State = disk_writer_xml::LIST;
 	            	
-	            	ctx = context;
+	            	// make child current context
+	            	ctx = &context;
 	            	break;
         		}
         		// primitive type
@@ -135,19 +151,21 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
         		}
         	}
         	
-        	// get attribute "id", if present
+        	// get attribute "cs", if present
         	if (atts != NULL) 
         	{
         		for (u_int32 i = 0; atts[i] != NULL; i += 2) 
         		{
 					if (atts[i][0] == 'i' && atts[i][1] == 'd')
 					{
+						// store checksum in the Id field
 						context->Id = (char*) atts[i+1];
+						break;
 					}		
 				}
         	}
 
-			// set type of character
+			// set type of parameter
           	context->Type = type;
 			
             break;
@@ -175,15 +193,24 @@ static void data_end_element (void *ctx, const xmlChar *name)
         // finished reading parameter
         case disk_writer_xml::PARAM:
         {
+        	// nothing to do here, parameter has already been added 
+        	// to enclosing list in data_read_characters
             context->State = disk_writer_xml::LIST;
             break;
         }
         // finished reading list
         case disk_writer_xml::LIST:
         {
-        	// TODO: add flat
-        	
-            ctx = context->pop ();
+        	// get parent context
+            data_sax_context *parent = context->pop ();
+            
+            // add completed list to parent list
+            parent->Record->put_flat (context->Id, *context->Record);
+            
+            // make parent the new context
+            ctx = &parent;
+            
+            // cleanup
             delete context;
             break;
         }
@@ -215,9 +242,28 @@ static void data_read_characters (void *ctx, const xmlChar *content, int len)
     // only read characters if we're inside a primitive type
     if (context->State == disk_writer_xml::PARAM)
     {
-        string value ((char*) content, len);
+        std::string value ((char*) content, len);
         
-		// TODO: add parameter
+		switch (context->Type)
+		{
+			case flat::T_BLOB:
+			case flat::T_BOOL:
+			case flat::T_CHAR:
+			case flat::T_DOUBLE:
+			case flat::T_FLOAT:
+			case flat::T_SINT8:
+			case flat::T_SINT16:
+			case flat::T_SINT32:
+			case flat::T_STRING:
+			case flat::T_UINT8:
+			case flat::T_UINT16:
+			case flat::T_UINT32:
+			default:
+			{
+            	fprintf (stderr, "*** data_read_characters: invalid type!\n");				
+				break;
+			}
+		}
     }
 }
 
@@ -288,8 +334,9 @@ bool disk_writer_xml::put_state (const std::string & name, base::flat & data) co
     record_to_xml (data, document->children);
 
     // add checksum as attribute of root node
-    u_int32 checksum = data.checksum ();
-    xmlSetProp (document->children, (const xmlChar *) "checksum", value_to_xmlChar (flat::T_UINT32, &checksum, 4));
+    std::ostringstream checksum;
+    checksum << (std::hex) << data.checksum ();
+    xmlSetProp (document->children, (const xmlChar *) "cs", (xmlChar*) checksum.str().c_str());
     
     // write document to file
     int retval = xmlSaveFormatFile (name.c_str (), document, 1);
@@ -304,11 +351,22 @@ bool disk_writer_xml::put_state (const std::string & name, base::flat & data) co
 // read record from XML file
 bool disk_writer_xml::get_state (const std::string & name, base::flat & data) const
 {
+	// prepare context
     data_sax_context ctx (data);
     
+    // read data
 	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, name.c_str ()) != 0)
     {
         fprintf (stderr, "*** disk_writer_xml::get_state: errors while parsing '%s'!\n", name.c_str ());
+        return false;
+    }
+    
+    // compare checksum
+    std::ostringstream checksum;
+    checksum << (std::hex) << data.checksum ();
+    if (checksum.str () != ctx.Id)
+    {
+        fprintf (stderr, "*** disk_writer_xml::get_state: checksum mismatch in file '%s'.\n    Data might be corrupt.\n", name.c_str());
         return false;
     }
     

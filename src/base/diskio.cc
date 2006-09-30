@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.cc,v 1.6 2006/09/22 05:13:16 ksterker Exp $
+   $Id: diskio.cc,v 1.7 2006/09/30 23:04:59 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,16 +34,16 @@ using base::flat;
 using base::diskio;
 
 // ctor
-diskio::diskio (const diskio::disk_writer & writer) : flat (256)
+diskio::diskio (const diskio::file_format & format) : flat (256)
 {
-    switch (writer)
+    switch (format)
     {
-        case GZ_WRITER:
+        case GZ_FILE:
         {
             Writer = new base::disk_writer_gz ();
             break;
         }
-        case XML_WRITER:
+        case XML_FILE:
         {
             Writer = new base::disk_writer_xml ();
             break;
@@ -51,7 +51,7 @@ diskio::diskio (const diskio::disk_writer & writer) : flat (256)
         default:
         {
             Writer = NULL;
-            fprintf (stderr, "*** diskio: unknown writer specified!\n");
+            fprintf (stderr, "*** diskio: unknown format specified!\n");
             break;
         }
     }

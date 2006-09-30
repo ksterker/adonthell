@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_gz.cc,v 1.1 2006/09/22 05:13:16 ksterker Exp $
+ $Id: diskwriter_gz.cc,v 1.2 2006/09/30 23:04:59 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,7 +39,7 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
     base::ogzstream out (name);
     if (!out.is_open ())
     {
-        fprintf (stderr, "***  disk_writer_gz::put_state: cannot open '%s' for writing!\n", name.c_str());
+        fprintf (stderr, "*** disk_writer_gz::put_state: cannot open '%s' for writing!\n", name.c_str());
         return false; 
     }
     

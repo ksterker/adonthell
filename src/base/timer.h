@@ -1,5 +1,5 @@
 /*
-   $Id: timer.h,v 1.5 2004/11/15 08:54:33 ksterker Exp $
+   $Id: timer.h,v 1.6 2006/09/30 23:04:59 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -99,13 +99,13 @@ namespace base
          */
         void update ();
 
-    private:
         /**
          * suspend program for a certain number of milliseconds.
          * @param msecs amount of time to wait.
          */
-        void sleep (u_int32 msecs) const;
+        static void sleep (u_int32 msecs);
 
+    private:
         /**
          * Calculate difference between given time and creation
          * time of the timer in milliseconds.

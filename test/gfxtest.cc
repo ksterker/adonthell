@@ -1,5 +1,6 @@
 #include <iostream>
 #include "gfx/gfx.h"
+#include "base/timer.h"
 
 int main(int argc, char * argv[])
 {
@@ -11,6 +12,6 @@ int main(int argc, char * argv[])
 	std::cout << "3\n";
 	gfx::screen::update();
 	std::cout << "4\n";
-	sleep(1);
+	base::timer::sleep(1000);
 	return 0;
 }
