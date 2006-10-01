@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.1 2006/06/03 04:20:27 Mithander Exp $
+   $Id: animation.cc,v 1.2 2006/10/01 17:09:35 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,9 +48,6 @@ namespace gfx
         m_animation = anim;
         m_surface = m_animation->second.begin();
 
-        m_x_offset += (*m_surface)->x_offset;
-        m_y_offset += (*m_surface)->y_offset;
-
         return true;
     }
 
@@ -61,9 +58,6 @@ namespace gfx
         m_surface++;
         if(m_surface == m_animation->second.end())
             m_surface = m_animation->second.begin();
-
-        m_x_offset += (*m_surface)->x_offset;
-        m_y_offset += (*m_surface)->y_offset;
 
         return true;
     }
@@ -83,7 +77,6 @@ namespace gfx
 
 
         // TODO Load xml file here. 
-        const int movedist = 8;
         char Buffer[100];
         anim.clear();
         cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/east_mov1.png"));
@@ -92,7 +85,7 @@ namespace gfx
         anim.clear();
         for(idx = 0; idx < 6; idx ++) {
             sprintf(Buffer, "gfx/character/npc/naked_guy/east_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0, movedist, 0);
+            cur = new animation_frame(surface_cache(Buffer), 0);
             anim.push_back(cur);
         }
         sprite["walk_east"] = anim;
@@ -104,7 +97,7 @@ namespace gfx
         anim.clear();
         for(idx = 0; idx < 6; idx ++) {
             sprintf(Buffer, "gfx/character/npc/naked_guy/east_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer, true, true), 0, -movedist, 0);
+            cur = new animation_frame(surface_cache(Buffer, true, true), 0);
             anim.push_back(cur);
         }
         sprite["walk_west"] = anim;
@@ -116,7 +109,7 @@ namespace gfx
         anim.clear();
         for(idx = 0; idx < 6; idx ++) {
             sprintf(Buffer, "gfx/character/npc/naked_guy/south_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0, 0, movedist);
+            cur = new animation_frame(surface_cache(Buffer), 0);
             anim.push_back(cur);
         }
         sprite["walk_south"] = anim;
@@ -128,7 +121,7 @@ namespace gfx
         anim.clear();
         for(idx = 0; idx < 6; idx ++) {
             sprintf(Buffer, "gfx/character/npc/naked_guy/north_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0, 0, -movedist);
+            cur = new animation_frame(surface_cache(Buffer), 0);
             anim.push_back(cur);
         }
         sprite["walk_north"] = anim;

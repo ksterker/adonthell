@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.1 2006/06/03 04:20:27 Mithander Exp $
+   $Id: animation.h,v 1.2 2006/10/01 17:09:35 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,7 +52,7 @@ namespace gfx
          * Default constructor.
          *
          */
-        animation () : m_valid(false), m_x_offset(0), m_y_offset(0) { }
+        animation () : m_valid(false) { }
 
         /**
          * Destructor.
@@ -128,7 +128,7 @@ namespace gfx
                            u_int16 sh, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const
         {
-            if (m_valid) (*m_surface)->image->draw(x + m_x_offset, y + m_y_offset, sx, sy, sl, sh, da_opt, target);
+            if (m_valid) (*m_surface)->image->draw(x, y, sx, sy, sl, sh, da_opt, target);
         }
 
         //@}
@@ -152,14 +152,12 @@ namespace gfx
         {
             const surface *image;       //what image to draw for this frame
             u_int16 delay;              //how long before we switch to the next frame
-            s_int16 x_offset;           //what is the x_offset for this frame
-            s_int16 y_offset;           //what is the y_offset for this frame
 
             /**
              * Constructor to set the values
              */
-            animation_frame(const surface *img, u_int16 dly = 0, s_int16 xOffset = 0, s_int16 yOffset = 0):
-                image(img), delay(dly), x_offset(xOffset), y_offset(yOffset) { }
+            animation_frame(const surface *img, u_int16 dly = 0):
+                image(img), delay(dly) { }
         };
 
         /**
@@ -183,9 +181,6 @@ namespace gfx
 
         u_int16 m_delay;
         bool m_valid;
-
-        s_int16 m_x_offset;           //what is the x offset that we must still keep track of
-        s_int16 m_y_offset;           //what is the y offset that we must still keep track of
 
     private:
         /**
