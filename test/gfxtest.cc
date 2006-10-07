@@ -10,8 +10,11 @@ int main(int argc, char * argv[])
 	std::cout << "2\n";
 	gfx::screen::get_surface()->fillrect(0,0,100,100,0xffffff);
 	std::cout << "3\n";
-	gfx::screen::update();
+	gfx::surface * s = gfx::create_surface();
+	s->load_png(argv[2]);
+	s->draw(300,50);
 	std::cout << "4\n";
+	gfx::screen::update();
 	base::timer::sleep(1000);
 	return 0;
 }

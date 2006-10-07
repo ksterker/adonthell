@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.8 2006/07/07 17:34:46 Mithander Exp $
+   $Id: surface.h,v 1.9 2006/10/07 17:00:54 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -183,7 +183,7 @@ namespace gfx
          *
          */
         virtual void draw_line (const s_int16 sx, const s_int16 sy, const s_int16 ex, const s_int16 ey,
-                                const u_int32 col, const drawing_area * da_opt = NULL) = 0;
+                                const u_int32 col, const drawing_area * da_opt = NULL);
 
         //@}
 

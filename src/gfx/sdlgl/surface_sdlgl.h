@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.h,v 1.1 2006/09/28 19:13:26 gnurou Exp $
+   $Id: surface_sdlgl.h,v 1.2 2006/10/07 17:00:55 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,6 +25,8 @@
 
 #include "gfx/surface.h"
 #include "SDL.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 namespace gfx
 {
@@ -72,17 +74,13 @@ namespace gfx
                          u_int32 red_mask, u_int32 green_mask,
                          u_int32 blue_mask) const;
 
-        SDL_Surface *vis;
-
-        void *vis_data; /* Data stored within 'vis', or NULL */
+	GLuint texture;
+        void *texture_data; /* Raw data stored within 'texture', or NULL */
 
     private: 
 
         /// Has the mask setting changed?
         mutable bool mask_changed; 
-
-        /// SDL_Rects used in every blitting function.
-        static SDL_Rect srcrect, dstrect; 
 
         /// Used internally for blitting operations with drawing_areas.
         void setup_rects (u_int16 x, u_int16 y, const drawing_area * draw_to) const

@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.h,v 1.5 2006/07/07 17:34:46 Mithander Exp $
+   $Id: surface_sdl.h,v 1.6 2006/10/07 17:00:55 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,9 +45,6 @@ namespace gfx
 
         virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
                                u_int32 col, drawing_area * da_opt = NULL);
-
-        virtual void draw_line (const s_int16 sx, const s_int16 sy, const s_int16 ex, const s_int16 ey, 
-                                const u_int32 col, const drawing_area * da_opt = NULL); 
 
         virtual u_int32 map_color(u_int8 r, u_int8 g, u_int8 b) const;
         virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b) const;

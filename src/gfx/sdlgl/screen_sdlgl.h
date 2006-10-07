@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.h,v 1.2 2006/09/30 21:05:08 gnurou Exp $
+   $Id: screen_sdlgl.h,v 1.3 2006/10/07 17:00:55 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,9 +26,6 @@
 #include "SDL.h"
 #include "gfx/screen.h"
 #include "gfx/sdlgl/surface_sdlgl.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-
 
 extern u_int32 trans_color;
 
@@ -42,7 +39,7 @@ namespace gfx
         void clear () { std::cerr << "Invalid operation: Can't clear the screen surface!\n"; }
         bool set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth, u_int32 flags)
         {
-            vis = SDL_SetVideoMode (nl, nh, depth, flags);
+            SDL_Surface * vis = SDL_SetVideoMode (nl, nh, depth, flags);
             if (!vis) return false;
             set_length(nl);
             set_height(nh);

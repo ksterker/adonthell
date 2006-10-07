@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.9 2006/07/07 17:34:46 Mithander Exp $
+   $Id: surface.cc,v 1.10 2006/10/07 17:00:54 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -87,6 +87,95 @@ namespace gfx
         if (y)
         {
             cout << "Mirroring in y is not supported yet." << endl;
+        }
+    }
+
+    void surface::draw_line(const s_int16 x1, const s_int16 y1, const s_int16 x2, const s_int16 y2, 
+                            const u_int32 color, const drawing_area * da_opt)
+    {
+        int i;
+        int x,y;
+        int IncX,IncY;
+        int Dx,Dy;
+        int Err;
+        int inc1,inc2;
+        int offset;
+
+        drawing_area da;
+
+        if (da_opt) da = da_opt->setup_rects();
+
+        x=x1;
+        y=y1;
+
+        if(x1<=x2)
+        {
+            IncX=1;
+            Dx=x2-x1;
+        }
+        else
+        {
+            IncX=-1;
+            Dx=x1-x2;
+        }
+
+        if(y1<=y2)
+        {
+            IncY=1;
+            Dy=y2-y1;
+        }
+        else
+        {
+            IncY=-1;
+            Dy=y1-y2;
+        }
+
+        if(Dy<Dx)
+        {
+            inc1=(Dy-Dx)<<1;
+            inc2=Dy<<1;
+            Err=inc2-Dx;
+
+            for(i=0;i<Dx;i++)
+            {
+                if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
+                                y >= da.y() && y < da.y() + da.height()))
+                    put_pix (x, y, color);
+
+                if(Err>0)
+                {
+                    y+=IncY;
+                    Err+=inc1;
+                }
+                else
+                    Err+=inc2;
+
+                x+=IncX;
+                offset+=IncX;
+            }
+        }
+        else
+        {
+            inc1=(Dx-Dy)<<1;
+            inc2=Dx<<1;
+            Err=inc2-Dy;
+
+            for(i=0;i<Dy;i++)
+            {
+                if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
+                                y >= da.y() && y < da.y() + da.height()))
+                    put_pix(x, y, color);
+
+                if(Err>0)
+                {
+                    x+=IncX;
+                    Err+=inc1;
+                }
+                else
+                    Err+=inc2;
+
+                y+=IncY;
+            }
         }
     }
 
