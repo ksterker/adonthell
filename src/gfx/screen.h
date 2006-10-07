@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.4 2004/12/21 19:31:46 jol Exp $
+   $Id: screen.h,v 1.5 2006/10/07 21:16:21 gnurou Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -145,7 +145,7 @@ namespace gfx
         /// Red componant
         static const u_int8 TRANS_RED = 0xff;
         /// Green componant
-        static const u_int8 TRANS_GREEN = 0x00;        
+        static const u_int8 TRANS_GREEN = 0x00;
         /// Blue componant
         static const u_int8 TRANS_BLUE = 0xff;
         

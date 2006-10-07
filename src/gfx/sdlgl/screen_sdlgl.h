@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.h,v 1.3 2006/10/07 17:00:55 gnurou Exp $
+   $Id: screen_sdlgl.h,v 1.4 2006/10/07 21:16:21 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,8 +51,8 @@ namespace gfx
 			// Non-power-of-two textures
 			glEnable(GL_TEXTURE_RECTANGLE_ARB);
 
-			glEnable(GL_BLEND);
-			glDisable(GL_DEPTH_TEST);
+//			glEnable(GL_BLEND);
+//			glDisable(GL_DEPTH_TEST);
 
 			// TODO: glViewport and gluOrtho2D may not always be the same
 			// resolution.

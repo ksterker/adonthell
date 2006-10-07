@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.2 2006/09/30 21:05:08 gnurou Exp $
+   $Id: screen_sdlgl.cc,v 1.3 2006/10/07 21:16:21 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -90,5 +90,6 @@ void gfx::screen_surface_sdlgl::fillrect (s_int16 x, s_int16 y, u_int16 l, u_int
 	glVertex3i(x + l, y + l, 0);
 	glVertex3i(x, y + l, 0);
 	glEnd();
+	glColor3ub(0xff,0xff,0xff);
 }
 

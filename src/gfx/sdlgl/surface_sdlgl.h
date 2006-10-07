@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.h,v 1.2 2006/10/07 17:00:55 gnurou Exp $
+   $Id: surface_sdlgl.h,v 1.3 2006/10/07 21:16:21 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -74,6 +74,7 @@ namespace gfx
                          u_int32 red_mask, u_int32 green_mask,
                          u_int32 blue_mask) const;
 
+	// Image texture
 	GLuint texture;
         void *texture_data; /* Raw data stored within 'texture', or NULL */
 

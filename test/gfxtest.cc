@@ -5,16 +5,17 @@
 int main(int argc, char * argv[])
 {
 	gfx::init(argv[1]);
-	std::cout << "1\n";
 	gfx::screen::set_video_mode(640, 480, 24);
-	std::cout << "2\n";
-	gfx::screen::get_surface()->fillrect(0,0,100,100,0xffffff);
-	std::cout << "3\n";
+	gfx::screen::get_surface()->fillrect(0,0,100,100,0x0000ff);
 	gfx::surface * s = gfx::create_surface();
 	s->load_png(argv[2]);
-	s->draw(300,50);
-	std::cout << "4\n";
-	gfx::screen::update();
-	base::timer::sleep(1000);
+	s->set_mask(true);
+	s->set_alpha(128);
+	for (int i = 0; i < 100; i ++)
+	{
+		for (int j = 0; j < 1000; j++)
+			s->draw(rand() % 640,rand() % 480);
+		gfx::screen::update();
+	}
 	return 0;
 }
