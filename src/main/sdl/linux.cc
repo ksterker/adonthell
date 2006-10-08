@@ -1,5 +1,5 @@
 /*
-   $Id: linux.cc,v 1.2 2004/11/02 16:46:20 ksterker Exp $
+   $Id: linux.cc,v 1.3 2006/10/08 12:38:08 gnurou Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,8 +31,10 @@
 
 #include "main/adonthell.h"
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define main_init sdl_LTX_main_init
+#endif
 
 extern "C" {
 

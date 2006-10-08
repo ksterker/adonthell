@@ -41,11 +41,12 @@ set(input_sdl_SRCS
 include_directories(${SDL_INCLUDE_DIR})
 
 
-add_library(sdl SHARED ${input_sdl_SRCS})
+add_library(sdl MODULE ${input_sdl_SRCS})
 target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_input
 	)
+set_target_properties(sdl PROPERTIES PREFIX "")
 
 
 #############################################

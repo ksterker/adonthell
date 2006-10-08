@@ -10,8 +10,10 @@
 #import <sys/param.h> /* for MAXPATHLEN */
 #import <unistd.h>
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define main_init sdl_LTX_main_init
+#endif
 
 /* Portions of CPS.h */
 typedef struct CPSProcessSerNum

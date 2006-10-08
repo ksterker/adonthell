@@ -41,11 +41,12 @@ endif(APPLE)
 
 include_directories(${SDL_INCLUDE_DIR})
 
-add_library(sdl SHARED ${sdl_SRCS})
+add_library(sdl MODULE ${sdl_SRCS})
 target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_main
 )
+set_target_properties(sdl PROPERTIES PREFIX "")
 
 
 #############################################

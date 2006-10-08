@@ -1,5 +1,5 @@
 /*
-   $Id: input_sdl.cc,v 1.3 2003/11/22 09:37:28 ksterker Exp $
+   $Id: input_sdl.cc,v 1.4 2006/10/08 12:38:08 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,9 +19,11 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define input_init sdl_LTX_input_init
 #define input_cleanup sdl_LTX_input_cleanup
+#endif
 
 #include <iostream>
 #include "manager_sdl.h"

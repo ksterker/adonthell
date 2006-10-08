@@ -35,12 +35,13 @@ set(audio_sdl_SRCS
 include_directories(${SDL_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR})
 
 
-add_library(sdl SHARED ${audio_sdl_SRCS})
+add_library(sdl MODULE ${audio_sdl_SRCS})
 target_link_libraries(sdl
 	${SDL_LIBRARY}
 	${SDLMIXER_LIBRARY}
 	adonthell_audio
 	)
+set_target_properties(sdl PROPERTIES PREFIX "")
 
 
 #############################################

@@ -1,5 +1,5 @@
 /*
-   $Id: manager_sdl.cc,v 1.3 2003/11/22 09:37:28 ksterker Exp $
+   $Id: manager_sdl.cc,v 1.4 2006/10/08 12:38:08 gnurou Exp $
 
    Copyright (C) 2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,8 +31,10 @@
 
 #include "manager_sdl.h"
 
+#ifdef USE_LIBTOOL
 /* exported names for libltdl */
 #define input_manager_update sdl_LTX_input_manager_update
+#endif
 
 extern "C"
 {
