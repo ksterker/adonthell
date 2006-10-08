@@ -33,5 +33,21 @@ TARGET_LINK_LIBRARIES(gfxtest
 	ltdl
 	adonthell_base
 	adonthell_gfx
+#	adonthell_main
+#	adonthell_python
+#	adonthell_py_runtime
 	)
-	
+
+###############################
+# Try to build the inputtest
+#ADD_EXECUTABLE(inputtest
+#			inputtest.cc)
+
+#TARGET_LINK_LIBRARIES(inputtest
+#	ltdl
+#	adonthell_base
+#	adonthell_gfx
+#	adonthell_main
+#	adonthell_python
+#	adonthell_py_runtime
+#	)

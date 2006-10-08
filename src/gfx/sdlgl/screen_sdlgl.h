@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.h,v 1.4 2006/10/07 21:16:21 gnurou Exp $
+   $Id: screen_sdlgl.h,v 1.5 2006/10/08 10:39:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,40 +31,13 @@ extern u_int32 trans_color;
 
 namespace gfx
 {
-    class screen_surface_sdlgl : public surface_sdlgl
+    class screen_surface_sdlgl : public surface_sdlgl /* TODO: not really... */
     {
     public:
         ~screen_surface_sdlgl() { }
         void resize (u_int16 l, u_int16 h) { std::cerr << "Invalid operation: Can't resize the screen surface!\n"; }
         void clear () { std::cerr << "Invalid operation: Can't clear the screen surface!\n"; }
-        bool set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth, u_int32 flags)
-        {
-            SDL_Surface * vis = SDL_SetVideoMode (nl, nh, depth, flags);
-            if (!vis) return false;
-            set_length(nl);
-            set_height(nh);
-            
-            // GL Initialization
-			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-			glClearDepth(1.0);
-			glShadeModel(GL_SMOOTH);
-			// Non-power-of-two textures
-			glEnable(GL_TEXTURE_RECTANGLE_ARB);
-
-//			glEnable(GL_BLEND);
-//			glDisable(GL_DEPTH_TEST);
-
-			// TODO: glViewport and gluOrtho2D may not always be the same
-			// resolution.
-			glViewport(0,0,nl,nh);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluOrtho2D(0, nl, nh, 0);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-            
-            return true;
-        }
+        bool set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth = 0);
 
         virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
                                u_int32 col, drawing_area * da_opt = NULL);

@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.3 2006/10/07 21:16:21 gnurou Exp $
+   $Id: screen_sdlgl.cc,v 1.4 2006/10/08 10:39:58 gnurou Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,9 +47,7 @@ gfx::screen_surface_sdlgl *display = NULL;
 
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
-    u_int32 SDL_flags = SDL_OPENGL;
-
-    if (!display->set_video_mode(nl, nh, depth, SDL_flags)) return false;
+    if (!display->set_video_mode(nl, nh, depth)) return false;
 
     // Setting up the window title
     SDL_WM_SetCaption ("Adonthell", NULL);
@@ -59,6 +57,38 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 
     return true;
 }
+
+bool gfx::screen_surface_sdlgl::set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
+{
+	u_int32 SDL_flags = SDL_OPENGL;
+	// Can be changed
+	SDL_Surface * vis = SDL_SetVideoMode (nl, nh, depth, SDL_flags);
+	if (!vis) return false;
+	set_length(nl);
+	set_height(nh);
+
+	// GL Initialization
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0);
+	glShadeModel(GL_SMOOTH);
+	// Non-power-of-two textures
+	glEnable(GL_TEXTURE_RECTANGLE_ARB);
+
+//	glEnable(GL_BLEND);
+//	glDisable(GL_DEPTH_TEST);
+
+	// TODO: glViewport and gluOrtho2D may not always be the same
+	// resolution.
+	// Can be changed
+	glViewport(0,0,nl,nh);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0, nl, nh, 0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity(); 
+	return true;
+}
+
 
 void gfx_screen_update()
 {
