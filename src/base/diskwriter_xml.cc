@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.3 2006/10/09 04:08:12 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.4 2006/10/09 05:59:22 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,7 @@ char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
 // definitions for error checking when parsing ints and uints
 #define INT8_MAX      127
 #define INT16_MAX     32767
-#define INT32_MA      2147483647
+#define INT32_MAX     2147483647
 
 #define INT8_MIN      (-INT8_MAX-1)
 #define INT16_MIN     (-INT16_MAX-1)
@@ -52,7 +52,7 @@ char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
 
 #define UINT8_MAX      0xFF
 #define UINT16_MAX     0xFFFF
-#define UINT32_MA      0xFFFFFFFFU
+#define UINT32_MAX     0xFFFFFFFFU
 
 /**
  * Context for the sax parser
