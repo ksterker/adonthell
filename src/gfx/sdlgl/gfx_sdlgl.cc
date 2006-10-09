@@ -1,5 +1,5 @@
 /*
-   $Id: gfx_sdlgl.cc,v 1.2 2006/09/30 21:05:08 gnurou Exp $
+   $Id: gfx_sdlgl.cc,v 1.3 2006/10/09 04:07:17 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,13 @@
 #endif
 
 #include <iostream>
+#ifdef __APPLE__
+#import <OpenGL/gl.h>
+#import <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
+#endif
 #include "surface_sdlgl.h"
 #include "screen_sdlgl.h"
 #include "SDL.h"

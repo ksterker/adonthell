@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.4 2006/10/08 10:39:58 gnurou Exp $
+   $Id: screen_sdlgl.cc,v 1.5 2006/10/09 04:07:17 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,8 +29,6 @@
 #endif
 
 #include "gfx/sdlgl/screen_sdlgl.h"
-
-#include <GL/gl.h>
 
 u_int32 trans_color = 0;
 
