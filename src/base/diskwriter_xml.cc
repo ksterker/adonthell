@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.2 2006/09/30 23:04:59 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.3 2006/10/09 04:08:12 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,6 +27,7 @@
  */
 
 #include <sstream>
+#include <vector>
 #include <libxml/parser.h>
 
 #include "base/diskwriter_xml.h"
@@ -34,11 +35,24 @@
 using base::disk_writer_xml;
 using base::flat;
 
-// for converting binary to ascii
+/// for converting binary to ascii
 char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
 
-// Name of xml data file root node
+/// Name of xml data file root node
 #define XML_ROOT_NODE "Data"
+
+// definitions for error checking when parsing ints and uints
+#define INT8_MAX      127
+#define INT16_MAX     32767
+#define INT32_MA      2147483647
+
+#define INT8_MIN      (-INT8_MAX-1)
+#define INT16_MIN     (-INT16_MAX-1)
+#define INT32_MIN     (-INT32_MAX-1)
+
+#define UINT8_MAX      0xFF
+#define UINT16_MAX     0xFFFF
+#define UINT32_MA      0xFFFFFFFFU
 
 /**
  * Context for the sax parser
@@ -47,34 +61,164 @@ struct data_sax_context
 {
     /**
      * create a new parser context
-     * @param config the configuration to be loaded
+     * @param record the record to be loaded
      */
-    data_sax_context (base::flat &record, data_sax_context* parent = NULL)
+    data_sax_context (base::flat *record)
     {
-        Record = &record;
+        Record = record;
         State = disk_writer_xml::UNDEF;
-        ParentCtx = parent;
-    }
-    
-    /**
-     * Return parent context.
-     */
-    data_sax_context *pop ()
-    {
-    	return ParentCtx;
+        Stack.push_back (this);
     }
     
     /// Storage for parameters
     base::flat *Record;
     /// id attribute of current element
     std::string Id;
+    /// value of primitive element
+    std::string Value;
     /// type of current element
     flat::data_type Type;
     /// current state of sax parser
     u_int8 State;
     /// parent of this context
-    data_sax_context *ParentCtx;
+    static std::vector<data_sax_context*> Stack;
 };
+
+// context stack
+std::vector<data_sax_context*> data_sax_context::Stack;
+
+// safely convert string to unsigned integer
+static u_int32 string_to_uint (const char* value, const u_int32 & max)
+{
+    char *end = NULL;
+    u_int32 intval = (u_int32) strtoul (value, &end, 10);
+    
+    // parsing okay?
+    if (*end == '\0') 
+    {
+        // in range?
+        if (intval > max)
+        {
+            fprintf(stderr, "*** string_to_uint: integer overflow: value '%i' > max '%i'!\n", intval, max);
+            return max;
+        }
+    }
+    else 
+    {
+        // value is not an integer
+        fprintf (stderr, "*** string_to_uint: Can't convert '%s' to unsigned integer!\n", value);
+        return 0;
+    }    
+    
+    return intval;
+}
+
+// safely convert string to signed integer
+static s_int32 string_to_sint (const char* value, const s_int32 & min, const s_int32 & max)
+{
+    char *end = NULL;
+    s_int32 intval = (s_int32) strtol (value, &end, 10);
+    
+    // parsing okay?
+    if (*end == '\0') 
+    {
+        // in range?
+        if (intval < min)
+        {
+            fprintf(stderr, "*** string_to_sint: integer underflow: value '%i' < min '%i'!\n", intval, min);
+            return min;
+        }
+        
+        if (intval > max)
+        {
+            fprintf(stderr, "*** string_to_sint: integer overflow: value '%i' > max '%i'!\n", intval, max);
+            return max;
+        }
+    }
+    else 
+    {
+        // value is not an integer
+        fprintf (stderr, "*** string_to_sint: Can't convert '%s' to signed integer!\n", value);
+        return -1;
+    }    
+    
+    return intval;
+}
+
+// convert primitive params
+static void param_to_value (const data_sax_context *context)
+{
+    const char *value = context->Value.c_str();
+    
+    switch (context->Type)
+    {
+        case flat::T_BLOB:
+        {
+            // TODO
+            break;
+        }
+        case flat::T_BOOL:
+        {
+            context->Record->put_bool (context->Id, string_to_sint (value, 0, 1) == 1);
+            break;
+        }
+        case flat::T_CHAR:
+        {
+            context->Record->put_char (context->Id, value[0]);
+            break;
+        }
+        case flat::T_DOUBLE:
+        {
+            context->Record->put_double (context->Id, strtod (value, NULL));
+            break;
+        }
+        case flat::T_FLOAT:
+        {
+            context->Record->put_float (context->Id, strtod (value, NULL));
+            break;
+        }
+        case flat::T_SINT8:
+        {
+            context->Record->put_sint8 (context->Id, (s_int8) string_to_sint (value, INT8_MIN, INT8_MAX));
+            break;
+        }
+        case flat::T_SINT16:
+        {
+            context->Record->put_sint16 (context->Id, (s_int16) string_to_sint (value, INT16_MIN, INT16_MAX));
+            break;
+        }
+        case flat::T_SINT32:
+        {
+            context->Record->put_sint32 (context->Id, (s_int32) string_to_sint (value, INT32_MIN, INT32_MAX));
+            break;
+        }
+        case flat::T_STRING:
+        {
+            context->Record->put_string (context->Id, value);
+            break;
+        }
+        case flat::T_UINT8:
+        {
+            context->Record->put_uint8 (context->Id, (u_int8) string_to_uint (value, UINT8_MAX));
+            break;
+        }
+        case flat::T_UINT16:
+        {
+            context->Record->put_uint16 (context->Id, (u_int16) string_to_uint (value, UINT16_MAX));
+            break;
+        }
+        case flat::T_UINT32:
+        {
+            context->Record->put_uint32 (context->Id, (u_int32) string_to_uint (value, UINT32_MAX));
+            break;
+        }
+        default:
+        {
+            fprintf (stderr, "*** param_to_value: invalid type for value '%s'!\n", value);				
+            break;
+        }
+    }
+}
 
 /**
  * Called when an opening tag has been processed.
@@ -84,7 +228,7 @@ struct data_sax_context
  */
 static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **atts)
 {
-    data_sax_context *context = (data_sax_context*) ctx;
+    data_sax_context *context = data_sax_context::Stack.back ();
 
     switch (context->State)
     {
@@ -121,37 +265,8 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
         {
         	// get type of element
         	flat::data_type type = flat::type_for_name ((char*) name);
-        	
-        	// check whether we got list
-        	switch (type)
-        	{
-        		// error
-        		case flat::T_UNKNOWN:
-        		{
-        			return;
-        		}
-        		// list type
-        		case flat::T_FLAT:
-        		{
-        			base::flat record(16);
-        			
-        			// create child context for sublist
-        			context = new data_sax_context (record, context);
-	            	context->State = disk_writer_xml::LIST;
-	            	
-	            	// make child current context
-	            	ctx = &context;
-	            	break;
-        		}
-        		// primitive type
-        		default:
-        		{
-	            	context->State = disk_writer_xml::PARAM;
-        			break;
-        		}
-        	}
-        	
-        	// get attribute "cs", if present
+
+        	// get attribute "id", if present
         	if (atts != NULL) 
         	{
         		for (u_int32 i = 0; atts[i] != NULL; i += 2) 
@@ -164,16 +279,44 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
 					}		
 				}
         	}
-
+        	
 			// set type of parameter
           	context->Type = type;
+            
+        	// check whether we got list
+        	switch (type)
+        	{
+        		// error
+        		case flat::T_UNKNOWN:
+        		{
+        			return;
+        		}
+        		// list type
+        		case flat::T_FLAT:
+        		{
+        			base::flat *record = new base::flat(16);
+        			
+        			// create child context for sublist
+        			context = new data_sax_context (record);
+	            	context->State = disk_writer_xml::LIST;
+                    
+                    break;
+        		}
+        		// primitive type
+        		default:
+        		{
+                    context->Value = "";
+	            	context->State = disk_writer_xml::PARAM;
+        			break;
+        		}
+        	}
 			
             break;
         }
         // error
         default:
         {
-            fprintf (stderr, "*** data_start_element: invalid state when reading '%s'!\n", (char*) name);
+            fprintf (stderr, "*** data_start_element: entering <%s> with invalid state!\n", (char*) name);
             break;
         }
     }
@@ -186,32 +329,35 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
  */
 static void data_end_element (void *ctx, const xmlChar *name)
 {
-    data_sax_context *context = (data_sax_context*) ctx;
+    data_sax_context *context = data_sax_context::Stack.back ();
     
     switch (context->State)
     {
         // finished reading parameter
         case disk_writer_xml::PARAM:
         {
-        	// nothing to do here, parameter has already been added 
-        	// to enclosing list in data_read_characters
+        	// convert and add value of param just read 
+            param_to_value (context);
             context->State = disk_writer_xml::LIST;
             break;
         }
         // finished reading list
         case disk_writer_xml::LIST:
         {
-        	// get parent context
-            data_sax_context *parent = context->pop ();
-            
-            // add completed list to parent list
-            parent->Record->put_flat (context->Id, *context->Record);
-            
-            // make parent the new context
-            ctx = &parent;
-            
-            // cleanup
-            delete context;
+            // this could also be </Data>, in which case we do nothing
+            if (data_sax_context::Stack.size() > 1)
+            {
+                // get parent context
+                data_sax_context::Stack.pop_back();
+                data_sax_context *parent = data_sax_context::Stack.back ();
+                
+                // add completed list to parent list
+                parent->Record->put_flat (parent->Id, *(context->Record));
+                
+                // cleanup
+                delete context->Record;
+                delete context;
+            }
             break;
         }
         // finished reading configuration
@@ -223,7 +369,7 @@ static void data_end_element (void *ctx, const xmlChar *name)
         // error
         default:
         {
-            fprintf (stderr, "*** data_end_element: invalid state!\n");
+            fprintf (stderr, "*** data_end_element: leaving </%s> with invalid state!\n", (char*) name);
             break;
         }
     }
@@ -237,33 +383,14 @@ static void data_end_element (void *ctx, const xmlChar *name)
  */
 static void data_read_characters (void *ctx, const xmlChar *content, int len)
 {
-    data_sax_context *context = (data_sax_context*) ctx;
+    data_sax_context *context = data_sax_context::Stack.back ();
 
     // only read characters if we're inside a primitive type
     if (context->State == disk_writer_xml::PARAM)
     {
-        std::string value ((char*) content, len);
-        
-		switch (context->Type)
-		{
-			case flat::T_BLOB:
-			case flat::T_BOOL:
-			case flat::T_CHAR:
-			case flat::T_DOUBLE:
-			case flat::T_FLOAT:
-			case flat::T_SINT8:
-			case flat::T_SINT16:
-			case flat::T_SINT32:
-			case flat::T_STRING:
-			case flat::T_UINT8:
-			case flat::T_UINT16:
-			case flat::T_UINT32:
-			default:
-			{
-            	fprintf (stderr, "*** data_read_characters: invalid type!\n");				
-				break;
-			}
-		}
+        // store value first and assign when closing element, as
+        // 'data_read_characters' is not called for empty elements.
+        context->Value = std::string ((char*) content, len);
     }
 }
 
@@ -351,8 +478,11 @@ bool disk_writer_xml::put_state (const std::string & name, base::flat & data) co
 // read record from XML file
 bool disk_writer_xml::get_state (const std::string & name, base::flat & data) const
 {
+    // clear contents of data
+    data.clear ();
+    
 	// prepare context
-    data_sax_context ctx (data);
+    data_sax_context ctx (&data);
     
     // read data
 	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, name.c_str ()) != 0)
@@ -364,7 +494,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     // compare checksum
     std::ostringstream checksum;
     checksum << (std::hex) << data.checksum ();
-    if (checksum.str () != ctx.Id)
+    if (strcmp (checksum.str ().c_str(), ctx.Id.c_str()) != 0)
     {
         fprintf (stderr, "*** disk_writer_xml::get_state: checksum mismatch in file '%s'.\n    Data might be corrupt.\n", name.c_str());
         return false;
@@ -423,13 +553,14 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         // write boolean type
         case flat::T_BOOL:
         {
-            tmp << *((bool*) value);
+            tmp << (s_int32) *((u_int8*) value);
             break;
         }
         // write signed integer types
         case flat::T_SINT8:
         {
-            tmp <<  *((s_int8*) value);
+            // need extra cast, as we want to write number, not character
+            tmp << (s_int32) *((s_int8*) value);
             break;
         }
         case flat::T_SINT16:
@@ -445,7 +576,8 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         // write unsigned integer types
         case flat::T_UINT8:
         {
-            tmp << *((u_int8*) value);
+            // need extra cast, as we want to write number, not character
+            tmp << (u_int32) *((u_int8*) value);
             break;
         }
         case flat::T_UINT16:
@@ -466,6 +598,7 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         }
         case flat::T_DOUBLE:
         {
+            // FIXME
             tmp << (char *) value;
             break;
         }

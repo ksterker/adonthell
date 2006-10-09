@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.8 2006/09/30 23:04:59 ksterker Exp $
+   $Id: flat.cc,v 1.9 2006/10/09 04:08:12 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -158,27 +158,27 @@ flat::data_type flat::next (void **value, int *size, char **name)
 		{
 			case T_UINT16:
 			{
-                *value = SwapLE16 (*((u_int16*) Decoded->Content));				
+                *value = &SwapLE16 (*((u_int16*) Decoded->Content));				
 				break;
 			}
 			case T_UINT32:
 			{
-                *value = SwapLE32 (*((u_int32*) Decoded->Content));				
+                *value = &SwapLE32 (*((u_int32*) Decoded->Content));				
 				break;
 			}
 			case T_SINT16:
 			{
-                *value = SwapLE16 (*((s_int16*) Decoded->Content));				
+                *value = &SwapLE16 (*((s_int16*) Decoded->Content));				
 				break;
 			}
 			case T_SINT32:
 			{
-                *value = SwapLE32 (*((s_int32*) Decoded->Content));				
+                *value = &SwapLE32 (*((s_int32*) Decoded->Content));				
 				break;
 			}
 			default:
 			{
-                *value = Decoded->Content);				
+                *value = Decoded->Content;				
 				break;
 			}
 		}
