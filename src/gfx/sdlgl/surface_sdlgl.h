@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.h,v 1.4 2006/10/09 04:07:17 ksterker Exp $
+   $Id: surface_sdlgl.h,v 1.5 2006/10/09 05:58:11 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,8 @@
 #include "SDL.h"
 
 #ifdef __APPLE__
-#import <OpenGL/gl.h>
-#import <OpenGL/glu.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
