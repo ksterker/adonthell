@@ -12,6 +12,11 @@ int main (int argc, char* argv[]) {
     base::diskio test (base::diskio::XML_FILE);
     base::flat fl;
     
+    char *block = new char[256];
+    for (int i = 0; i < 256; i++)
+        block[i] = (i % 'Z') + 'A';
+    block[255] = 0;
+    
     // adding all different kind of data
     cout << "Packing ..." << endl;
     test.put_bool ("b", false);
@@ -25,7 +30,7 @@ int main (int argc, char* argv[]) {
     test.put_string ("s", "abc ... xyz");
     test.put_float ("f", f_PI);
     test.put_double ("d", d_PI);
-    test.put_block ("block", new char[256], 256);
+    test.put_block ("block", block, 256);
     
     // a flat can contain other flats too
     fl.put_string ("string", "Another flat");
@@ -44,6 +49,9 @@ int main (int argc, char* argv[]) {
     cout << "Reading data from disk" << endl;
     bool b = test.get_record ("diskio.test");
     if (b == true) cout << "Reading successful" << endl;
+
+    // print checksum of data read
+    cout << "Checksum: " << (std::hex) << test.checksum () << (std::dec) << endl;
     
     // unpack all kind of data using get_*
     // this may happen in any order, although using the original
@@ -60,8 +68,10 @@ int main (int argc, char* argv[]) {
     cout << test.get_sint16 ("s16") << endl;
     printf ("%.24f\n", test.get_float ("f"));
     printf ("%.48f\n", test.get_double ("d"));
-    delete[] (char *) test.get_block ("block");
-
+    block = (char *) test.get_block ("block");
+    cout << block << endl;
+    delete[] block;
+    
     // get included flat using get_flat; will have to delete it later
     base::flat f = test.get_flat ("flat");
     cout << f.get_string ("string") << endl;
