@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.17 2006/09/28 19:13:26 gnurou Exp $
+   $Id: flat.h,v 1.18 2006/10/19 05:58:00 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -254,8 +254,8 @@ namespace base
              */
             void put_float (const string & name, const float & f) {
                 // store floats in a format that is compatible across platforms
-                char buffer[32];
-                snprintf (buffer, 31, "%.24g", f);
+                char buffer[16];
+                snprintf (buffer, 15, "%.12f", f);
                 put (name, T_FLOAT, strlen (buffer) + 1, buffer);
             }
             
@@ -266,8 +266,8 @@ namespace base
              */
             void put_double (const string & name, const double & d) {
                 // store doubles in a format that is compatible across platforms
-                char buffer[64];
-                snprintf (buffer, 63, "%.48g", d);
+                char buffer[32];
+                snprintf (buffer, 31, "%.24f", d);
                 put (name, T_DOUBLE, strlen (buffer) + 1, buffer);
             }
 
@@ -432,6 +432,8 @@ namespace base
             /**
              * Retrieve binary data previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
+             * Don't forget to delete the returned value once you're done 
+             * with it.
              * @param name id used to retrieve the value later on.
              * @param size will contain number of bytes returned.
              * @return value stored or \b NULL on error.
@@ -440,7 +442,7 @@ namespace base
                 data *d = get (name, T_BLOB);
                 if (d) {
                     if (size != NULL) *size = d->Size;
-                    char *ret = new char[d->Size];
+                    u_int8 *ret = new u_int8[d->Size];
                     return memcpy (ret, d->Content, d->Size);
                 }
                 

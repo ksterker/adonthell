@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.4 2006/10/09 05:59:22 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.5 2006/10/19 05:58:00 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -82,10 +82,13 @@ struct data_sax_context
     u_int8 State;
     /// parent of this context
     static std::vector<data_sax_context*> Stack;
+    /// checksum of file
+    static std::string Checksum;
 };
 
 // context stack
 std::vector<data_sax_context*> data_sax_context::Stack;
+std::string data_sax_context::Checksum;
 
 // safely convert string to unsigned integer
 static u_int32 string_to_uint (const char* value, const u_int32 & max)
@@ -154,7 +157,21 @@ static void param_to_value (const data_sax_context *context)
     {
         case flat::T_BLOB:
         {
-            // TODO
+            u_int32 j = 0;
+            u_int32 size = context->Value.size()/2;
+            u_int8 *bin = new u_int8[size];
+            
+            while (*value != '\0')
+            {
+                bin[j] = (strchr(disk_writer_xml::Bin2Hex, *value) - disk_writer_xml::Bin2Hex) << 4;
+                bin[j] |= strchr(disk_writer_xml::Bin2Hex, *(value+1)) - disk_writer_xml::Bin2Hex;
+
+                value += 2;
+                j++;
+            }
+
+            context->Record->put_block (context->Id, bin, size);
+            delete[] bin;
             break;
         }
         case flat::T_BOOL:
@@ -247,7 +264,7 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
 		    		{
 						if (atts[i][0] == 'c' && atts[i][1] == 's')
 						{
-							context->Id = (char*) atts[i+1];
+							context->Checksum = (char*) atts[i+1];
 							break;
 						}		
 					}
@@ -494,7 +511,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     // compare checksum
     std::ostringstream checksum;
     checksum << (std::hex) << data.checksum ();
-    if (strcmp (checksum.str ().c_str(), ctx.Id.c_str()) != 0)
+    if (checksum.str () != ctx.Checksum)
     {
         fprintf (stderr, "*** disk_writer_xml::get_state: checksum mismatch in file '%s'.\n    Data might be corrupt.\n", name.c_str());
         return false;
@@ -598,7 +615,6 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         }
         case flat::T_DOUBLE:
         {
-            // FIXME
             tmp << (char *) value;
             break;
         }
@@ -618,7 +634,7 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         case flat::T_BLOB:
         {
             u_int32 j = 0;
-            char *bin = (char *) value;
+            u_int8 *bin = (u_int8 *) value;
             char *hex = new char[(size * 2) + 1];
             hex[size * 2] = 0;
             

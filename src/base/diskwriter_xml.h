@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.h,v 1.1 2006/09/22 05:13:16 ksterker Exp $
+ $Id: diskwriter_xml.h,v 1.2 2006/10/19 05:58:00 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -58,6 +58,9 @@ namespace base {
         bool get_state (const std::string & name, base::flat & data) const;
         
 #ifndef SWIG
+        /// Table storing hex characters
+        static char *Bin2Hex;
+
         /// make this class available to python::pass_instance
         GET_TYPE_NAME(base::disk_writer_xml)
     private:
@@ -76,9 +79,6 @@ namespace base {
          * @return string representation of given value.
          */ 
         xmlChar *value_to_xmlChar (const flat::data_type & type, void *value, const u_int32 & size) const;
-        
-        /// Table storing hex characters
-        static char *Bin2Hex;
 #endif
     };
 }
