@@ -1,5 +1,5 @@
 #
-#  $Id: convert_data.py,v 1.3 2006/10/19 05:58:38 ksterker Exp $
+#  $Id: convert_data.py,v 1.4 2006/10/25 03:58:14 ksterker Exp $
 #
 #  (C) Copyright 2005/2006 Kai Sterker <kaisterker@linuxgames.com>
 #  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,7 +37,7 @@ class ConvertApp (object):
             line = data.readline ()
             if line[0] == '<': 
                 print "Data file in XML format found"
-                filetype =  base.diskio.XML_FILE
+                filetype = base.diskio.XML_FILE
             else: 
                 print "Data file in Binary format found"
                 filetype = base.diskio.GZ_FILE
@@ -47,22 +47,25 @@ class ConvertApp (object):
             
         return filetype
 
+    # -- do the conversion
     def run (self):
         ft = self.file_type (sys.argv[1])
         if ft == base.diskio.GZ_FILE:
             outf = sys.argv[1] + ".xml"
             
             if self.GzWriter.get_record (sys.argv[1]) == 1:
-                self.XmlWriter.setBuffer (self.GzWriter.getBuffer(), self.GzWriter.size())
+                self.XmlWriter.copy (self.GzWriter)
                 self.XmlWriter.put_record (outf)
                 
         if ft == base.diskio.XML_FILE:
             outf = sys.argv[1] + ".gz"
             
             if self.XmlWriter.get_record (sys.argv[1]) == 1:
-                self.GzWriter.setBuffer (self.XmlWriter.getBuffer(), self.XmlWriter.size())
+                self.GzWriter.copy (self.XmlWriter)
                 self.GzWriter.put_record (outf)
-    
+        
+        print "done"
+ 
 # -- the 'main program'
 if __name__ == '__main__':
     if len (sys.argv) != 2:

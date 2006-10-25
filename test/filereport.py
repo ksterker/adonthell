@@ -16,6 +16,23 @@ class file_report (object):
             result += " "
         return result
 
+    # -- check type of file being converted
+    def file_type (self, filename):
+        try:
+            data = file (filename, "rb")
+            line = data.readline ()
+            if line[0] == '<': 
+                print "Data file in XML format found"
+                filetype = base.diskio.XML_FILE
+            else: 
+                print "Data file in Binary format found"
+                filetype = base.diskio.GZ_FILE
+        except IOError:
+            print "Error reading file", filename
+            sys.exit(1)
+            
+        return filetype
+
     def print_record (self, flt, efn):
         efn = efn + 1
         type, value, length, field = flt.next ()
@@ -36,27 +53,25 @@ class file_report (object):
             type, value, length, field = flt.next ()
         
     def run (self):
+        # -- check that we've got a file to report on
         if len (sys.argv) != 2:
             print "usage: python filereport.py <filename>"
             return
-            
-        filename = sys.argv[1]
-        file = base.igzstream ()
-        if not file.open (filename):
-            print "Error opening file '%s'" % filename
-            return
         
-        record_num = 1
-        record = base.diskio ()
-    
-        while not file.eof ():
-            if not record.get_record (file):
-                print "Error opening record #%i" % record_num
-            else:
-                print "Field       Type      Len    Value"
-                print "----------  --------  -----  ------------------------------"
-                self.print_record (record, 0)
-                record_num += 1
+        # -- get filename
+        filename = sys.argv[1]
+        
+        # -- open file of detected type
+        record = base.diskio (self.file_type (filename))
+        
+        # -- load contents of file
+        record.get_record (filename)
+        
+        print "Field       Type      Len    Value"
+        print "----------  --------  -----  ------------------------------"
+        
+        # -- print contents recursively to stdout
+        self.print_record (record, 0)
                 
         print "==========  ========  =====  =============================="
 
