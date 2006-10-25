@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.h,v 1.2 2006/10/19 05:58:00 ksterker Exp $
+ $Id: diskwriter_xml.h,v 1.3 2006/10/25 04:08:46 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,24 +36,32 @@ namespace base {
     
     /**
      * This class provides a file writing/loading interface to the data flattener.
-     * It allows to write a flat object to a gz compressed file, including a checksum 
+     * It allows to write a flat object to an xml formatted file, including a checksum 
      * for detecting data corruption when loading again later.
      */
     class disk_writer_xml : public disk_writer_base
     {
     public:
         /**
-         * Parser states.
+         * SAX2 XML parser states.
          */
         enum { UNDEF, DATA, LIST, PARAM };
         
         /**
-         *
+         * Save given record to XML file. This also saves a checksum of the record.
+         * @param name file to save record to.
+         * @param data record to save to file.
+         * @return \b true on success, \b false otherwise.
          */
         bool put_state (const std::string & name, base::flat & data) const;
     
         /**
-         *
+         * Initialize record from an xml file. After loading, it will
+         * compare the checksum read from file with the one computed from
+         * the data read. It thus can detect data corruption.
+         * @param name file to read data from.
+         * @param data empty record to fill from file.
+         * @return \b true on successful loading, \b false otherwise.
          */
         bool get_state (const std::string & name, base::flat & data) const;
         

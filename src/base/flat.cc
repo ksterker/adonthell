@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.9 2006/10/09 04:08:12 ksterker Exp $
+   $Id: flat.cc,v 1.10 2006/10/25 04:08:46 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -65,10 +65,16 @@ flat::flat (const flat & f)
 {
     Data = NULL;
     Buffer = NULL;
-    
-    char *tmp = new char[f.size ()];
-    memcpy (tmp, f.getBuffer (), f.size ());
-    setBuffer (tmp, f.size ());
+
+    copy (f);
+}
+
+// copy one flat into another
+void flat::copy (const flat & source)
+{
+    char *tmp = new char[source.size ()];
+    memcpy (tmp, source.getBuffer (), source.size ());
+    setBuffer (tmp, source.size ());    
 }
 
 // flatten the given data

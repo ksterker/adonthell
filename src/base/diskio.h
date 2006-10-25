@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.9 2006/09/30 23:04:59 ksterker Exp $
+   $Id: diskio.h,v 1.10 2006/10/25 04:08:46 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,7 +67,9 @@ namespace base {
             /**
              * Load this record from the given file, using the specified file
              * type. After reading the file, a checksum comparison takes place,
-             * resulting in an error if the checksum did not match.
+             * resulting in an error if the checksum did not match. Data will
+             * be read regardless of checksum errors, and it lies in the application's
+             * responsibility whether it continues working with possibly corrupt data.
              * 
              * @param filename file to read data from.
              * @return \b true on successful loading, \b false otherwise.

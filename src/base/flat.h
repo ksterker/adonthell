@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.18 2006/10/19 05:58:00 ksterker Exp $
+   $Id: flat.h,v 1.19 2006/10/25 04:08:46 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -513,8 +513,10 @@ namespace base
 
 #ifndef SWIG
             GET_TYPE_NAME_VIRTUAL(base::flat)
-#endif // SWIG
-
+            /**
+             * @name Copying Flats
+             */
+            //@{
             /**
              * Return internal buffer of this flattener.
              * @return byte array containing the flattened data.
@@ -537,6 +539,14 @@ namespace base
                 Size = size;
                 Data = NULL;
             }
+#endif // SWIG
+            
+            /**
+             * Copy the contents of given flat into this flat.
+             * @param source flat whose contents to copy.
+             */
+            void copy (const flat & source);
+	        //@}
             
         private:
             /// Pointer to unflattened data. Valid after first call to parse().
