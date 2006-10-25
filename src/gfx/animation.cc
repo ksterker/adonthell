@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.2 2006/10/01 17:09:35 Mithander Exp $
+   $Id: animation.cc,v 1.3 2006/10/25 04:49:55 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
  */
 
 #include "animation.h"
+#include "base/diskio.h"
 
 using namespace std;
 
@@ -39,12 +40,15 @@ namespace gfx
 
     bool animation::change_animation (const std::string & new_animation)
     {
+        //Check if the animation is valid yet
         if(!m_valid) return false;
 
+        //Look for an animation with ne name passed in
         animation_map::iterator anim = m_sprite->second.find(new_animation);
         if(anim == m_sprite->second.end())
             return false;
 
+        //we found it so update our pointers
         m_animation = anim;
         m_surface = m_animation->second.begin();
 
@@ -53,8 +57,12 @@ namespace gfx
 
     bool animation::update ()
     {
+        //Check if the animation is valid yet
         if(!m_valid) return false;
 
+        //TODO deal with delay here.
+
+        //Update to the next surface.  If it wraps, then reset it to the beginning
         m_surface++;
         if(m_surface == m_animation->second.end())
             m_surface = m_animation->second.begin();
@@ -69,6 +77,7 @@ namespace gfx
         animation_frame *cur;
         int idx;
 
+        //Check if we have already loaded the file
         m_sprite = m_allAnimations.find(filename);
         if (m_sprite != m_allAnimations.end()) {
             m_valid = true;
@@ -77,6 +86,8 @@ namespace gfx
 
 
         // TODO Load xml file here. 
+
+        //For now we hard code an animation until save/load is complete
         char Buffer[100];
         anim.clear();
         cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/east_mov1.png"));
@@ -139,4 +150,34 @@ namespace gfx
         return m_valid;
     }
 
+    bool animation::save_animation (const std::string & filename)
+    {
+        base::diskio animation (base::diskio::XML_FILE);
+        animation_map::iterator ii;
+
+        //Loop through all available animations
+        for(ii = m_sprite->second.begin(); ii != m_sprite->second.end(); ii++) {
+            base::flat anim;
+            animation_list::iterator jj;
+
+            //Loop through all frames in current animation
+            for(jj = ii->second.begin(); jj != ii->second.end(); jj++) {
+                base::flat frame;
+
+                //Add information about the frame.
+                frame.put_bool("mask", (*jj)->image->is_masked());
+                frame.put_bool("mirrored_x", (*jj)->image->is_mirrored_x());
+                frame.put_uint32("delay", (*jj)->delay);
+
+                //Add the frame to the animation
+                anim.put_flat((*jj)->image->filename(), frame);
+            }
+
+            //Add the current animation to the diskio
+            animation.put_flat(ii->first, anim);
+        }
+
+        //Dump it out to a file
+        animation.put_record(filename);
+    }
 }

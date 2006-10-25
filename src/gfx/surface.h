@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.9 2006/10/07 17:00:54 gnurou Exp $
+   $Id: surface.h,v 1.10 2006/10/25 04:49:56 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,6 +113,39 @@ namespace gfx
          * @param a The new alpha value for this surface.
          */
         virtual void set_alpha (u_int8 a) = 0;
+
+        /**
+         *
+         * Returns whether a surface is mirrored in x or not.
+         *
+         * @return true if the surface is mirred, false if it isn't.
+         */
+        bool is_mirrored_x(void) const
+        {
+            return is_mirrored_x_;
+        }
+
+        /**
+         *
+         * Returns whether a surface is mirrored in x or not.
+         *
+         * @return true if the surface is mirred, false if it isn't.
+         */
+        bool is_mirrored_y(void) const
+        {
+            return is_mirrored_y_;
+        }
+
+        /**
+         *
+         * Return the filename associated with this surface
+         *
+         * @return filename if known otherwise "".
+         */
+        const std::string &filename(void) const
+        {
+            return filename_;
+        }
 
         //@}
 
@@ -381,6 +414,16 @@ namespace gfx
 
         /// Alpha value
         u_int8 alpha_;
+
+        /// Mirrored in x
+        bool is_mirrored_x_;
+
+        /// Mirrored in y
+        bool is_mirrored_y_;
+
+        /// Filename
+        std::string filename_;
+
 
         /**
          * Sets the surface pixel data from a given memory zone.

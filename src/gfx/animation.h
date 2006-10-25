@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.2 2006/10/01 17:09:35 Mithander Exp $
+   $Id: animation.h,v 1.3 2006/10/25 04:49:56 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -75,6 +75,14 @@ namespace gfx
          * @return true if successful
          */
         bool load_animation (const std::string & filename);
+
+        /**
+         * Save the available animtions from a xml file
+         * 
+         * @param filename xml file to save
+         * @return true if successful
+         */
+        bool save_animation (const std::string & filename);
 
         /**
          * Change the current animation we are using

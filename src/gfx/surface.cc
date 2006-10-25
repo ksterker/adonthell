@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.10 2006/10/07 17:00:54 gnurou Exp $
+   $Id: surface.cc,v 1.11 2006/10/25 04:49:56 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -50,7 +50,7 @@ using namespace std;
 namespace gfx
 {
     surface::surface()
-        : is_masked_(false), alpha_(255)
+        : is_masked_(false), alpha_(255), is_mirrored_x_(false), is_mirrored_y_(false)
     {
     }
 
@@ -82,11 +82,13 @@ namespace gfx
                 reverseArray(&rawdata[idx*length()*3], length()*3);
             //This is swaped (BGR) because we swaped at a byte level, not at a pixel level
             set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK);
+            is_mirrored_x_ = !is_mirrored_x_;
         }
 
         if (y)
         {
             cout << "Mirroring in y is not supported yet." << endl;
+            is_mirrored_y_ = !is_mirrored_y_;
         }
     }
 
@@ -208,6 +210,7 @@ namespace gfx
         }
         ret = get_png (file);
         file.close();
+        filename_ = fname;
         return ret;
     }
 
