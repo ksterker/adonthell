@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.8 2006/09/22 01:15:22 ksterker Exp $
+   $Id: paths.h,v 1.9 2006/10/30 05:55:11 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,6 +60,11 @@ namespace base
     {
         public:
             /**
+             * Default constructor.
+             */
+            paths ();
+        
+            /**
              * Before any method of this class can be used, it must be initialized.
              * @param game name of the game the data files queried belong to.
              * @param userdatadir optional, user supplied data directory.
@@ -84,8 +89,18 @@ namespace base
              * @param location file to locate within the Adonthell search path.
              * @return \c true on success, \c false if the file doesn't exist.
              */
-            bool open (igzstream & file, const std::string & location);
+            bool open (igzstream & file, const std::string & location) const;
             
+            /**
+             * Try to find a file at the given location. Searches for the
+             * file in saved game dir (if set before with set_save_dir()), the
+             * user supplied data directory and finally the built in data directory.
+             * If found, the path to the location will be prepended to location.
+             * @param location file to locate within the Adonthell search path.
+             * @return \c true on success, \c false if the file doesn't exist.
+             */
+            bool find_in_path (std::string & location) const;
+                
             /**
              * Return the configuration data directory.
              * @return path to the Adonthell configuration directory.

@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.5 2006/10/19 05:58:00 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.6 2006/10/30 05:55:11 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,7 @@
 #include <vector>
 #include <libxml/parser.h>
 
+#include "base/base.h"
 #include "base/diskwriter_xml.h"
 
 using base::disk_writer_xml;
@@ -495,6 +496,14 @@ bool disk_writer_xml::put_state (const std::string & name, base::flat & data) co
 // read record from XML file
 bool disk_writer_xml::get_state (const std::string & name, base::flat & data) const
 {
+    // find file
+    std::string file = name;
+    if (!base::Paths.find_in_path (file))
+    {
+        fprintf (stderr, "*** disk_writer_xml::get_state: cannot open '%s' for reading!\n", name.c_str());
+        return false; 
+    }
+    
     // clear contents of data
     data.clear ();
     
@@ -502,7 +511,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     data_sax_context ctx (&data);
     
     // read data
-	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, name.c_str ()) != 0)
+	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, file.c_str ()) != 0)
     {
         fprintf (stderr, "*** disk_writer_xml::get_state: errors while parsing '%s'!\n", name.c_str ());
         return false;
@@ -564,7 +573,9 @@ void disk_writer_xml::record_to_xml (base::flat &record, xmlNodePtr parent) cons
 // convert value to xml character
 xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *value, const u_int32 & size) const
 {
+    static std::string retval;
 	std::ostringstream tmp;
+    
     switch (type)
     {
         // write boolean type
@@ -651,5 +662,6 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
         }
     }
     
-    return (xmlChar*) tmp.str().c_str();
+    retval = tmp.str();
+    return (xmlChar*) retval.c_str();
 }

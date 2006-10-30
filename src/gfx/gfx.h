@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.h,v 1.6 2006/07/08 17:04:03 ksterker Exp $
+   $Id: gfx.h,v 1.7 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2003/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #ifndef GFX_H_
 #define GFX_H_
 
-#include <string>
 #include "base/configuration.h"
 #include "gfx/screen.h"
 

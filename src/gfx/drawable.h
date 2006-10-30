@@ -1,5 +1,5 @@
 /*
-   $Id: drawable.h,v 1.5 2004/05/13 06:44:00 ksterker Exp $
+   $Id: drawable.h,v 1.6 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,8 +33,6 @@
 #define DRAWABLE_H_
 
 #include "gfx/drawing_area.h"
-
-#include "python/callback_support.h"
 
 namespace gfx
 {

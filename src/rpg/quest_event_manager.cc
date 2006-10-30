@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event_manager.cc,v 1.3 2006/09/22 01:15:23 ksterker Exp $
+   $Id: quest_event_manager.cc,v 1.4 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,7 +20,7 @@
 */
 
 /**
- * @file 	rpg/quest_event_manager.h
+ * @file 	rpg/quest_event_manager.cc
  *
  * @author 	Kai Sterker
  * @brief 	Handle execution of quest events class.

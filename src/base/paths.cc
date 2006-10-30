@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.9 2006/01/22 21:32:39 ksterker Exp $
+   $Id: paths.cc,v 1.10 2006/10/30 05:55:11 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -72,6 +72,12 @@ namespace base
     }
 }
 
+// ctor
+paths::paths ()
+{
+    init ("", ".");
+}
+
 // initialize data search paths
 bool paths::init (const std::string & game, const std::string & userdatadir)
 {
@@ -131,19 +137,76 @@ void paths::set_save_dir (const std::string & dir)
 }
 
 // open the specified file
-bool paths::open (igzstream & file, const std::string & path)
+bool paths::open (igzstream & file, const std::string & path) const
 {
-    if (file.is_open ()) file.close ();
+    // check whether path is absolute in which case we just open the file
+    if (path.length() > 1 && (path[0] == '~' || path[0] == '/' || path[1] == ':'))
+    {
+        if (!file.is_open ()) file.open (path);
+        return file.is_open ();
+    }
 
+    // close file if it is already open
+    if (file.is_open ()) file.close ();
+    
+    // otherwise try to prepend any of the build-in search paths
     if (IncludeSaveDir && file.open (SaveDataDir + path)) return true;
     if (IncludeUserDir && file.open (UserDataDir + path)) return true;
     if (file.open (GameDataDir + path)) return true;
 
+    // print search paths on failure
     fprintf (stderr, "*** paths::open: file '%s' does not exist in search path:\n", path.c_str ());
     if (IncludeSaveDir) fprintf (stderr, "  - %s\n", SaveDataDir.c_str ());
     if (IncludeUserDir) fprintf (stderr, "  - %s\n", UserDataDir.c_str ());
     fprintf (stderr, "  - %s\n", GameDataDir.c_str ());
 
+    return false;
+}
+
+// find the given path in Adonthell's search paths
+bool paths::find_in_path (std::string & path) const
+{
+    struct stat statbuf;
+    
+    // check whether path is absolute in which case we return it as is
+    if (path.length() > 1 && (path[0] == '~' || path[0] == '/' || path[1] == ':'))
+    {
+        return true;
+    }
+
+    // try whether path exists in the search path
+    if (IncludeSaveDir && stat ((SaveDataDir + path).c_str (), &statbuf) != -1)
+    {
+        path.insert (0, SaveDataDir + "/");
+        return true;
+    }
+    if (IncludeUserDir && stat ((UserDataDir + path).c_str (), &statbuf) != -1)
+    {
+        path.insert (0, UserDataDir + "/");
+        return true;
+    }
+    if (stat ((GameDataDir + path).c_str (), &statbuf) != -1)
+    {
+        path.insert (0, GameDataDir + "/");
+        return true;
+    }
+    
+    // try whether file exists at given path
+    if (stat (path.c_str (), &statbuf) != -1)
+    {
+        return true;
+    }
+    
+    // print search paths on failure
+    fprintf (stderr, "*** paths::find_in_path: file '%s' does not exist in search path:\n", path.c_str ());
+    if (IncludeSaveDir) fprintf (stderr, "  - %s\n", SaveDataDir.c_str ());
+    if (IncludeUserDir) fprintf (stderr, "  - %s\n", UserDataDir.c_str ());
+    fprintf (stderr, "  - %s\n", GameDataDir.c_str ());
+
+    char *cwd = getcwd (NULL, 0); 
+    fprintf (stderr, "  - %s\n", cwd);
+    free (cwd);
+              
     return false;
 }
 

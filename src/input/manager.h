@@ -1,5 +1,5 @@
 /*
-   $Id: manager.h,v 1.3 2004/04/09 11:57:51 ksterker Exp $
+   $Id: manager.h,v 1.4 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,10 +36,6 @@
 #include <list> 
 
 #include "input/listener.h"
-#include "input/keyboard_event.h"
-#include "input/mouse_event.h"
-#include "input/joystick_event.h"
-#include "input/control_event.h"
 
 namespace input
 {

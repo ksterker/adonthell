@@ -1,5 +1,5 @@
 /*
-   $Id: character.h,v 1.6 2006/09/28 19:13:27 gnurou Exp $
+   $Id: character.h,v 1.7 2006/10/30 05:55:12 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,6 @@
 #ifndef RPG_CHARACTER_H
 #define RPG_CHARACTER_H
 
-#include "python/script.h"
 #include "rpg/schedule.h"
 #include "base/hash_map.h"
 

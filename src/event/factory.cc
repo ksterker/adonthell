@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.8 2006/09/28 19:13:26 gnurou Exp $
+   $Id: factory.cc,v 1.9 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,6 @@
 #include "event/manager.h"
 #include "event/listener_cxx.h"
 #include "event/listener_python.h"
-#include "base/flat.h"
 #include <algorithm>
 
 using std::vector;

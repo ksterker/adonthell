@@ -1,5 +1,5 @@
 /*
-   $Id: manager.h,v 1.5 2006/09/28 19:13:26 gnurou Exp $
+   $Id: manager.h,v 1.6 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,6 @@
 #define EVENT_MANAGER_H
 
 #include "event/factory.h"
-#include "event/types.h"
 #include "event/manager_base.h"
 
 namespace events

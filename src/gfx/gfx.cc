@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.7 2006/07/08 17:04:03 ksterker Exp $
+   $Id: gfx.cc,v 1.8 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,6 @@
  *
  */
 
-#include <map>
 #include "base/paths.h"
 #include "gfx/gfx.h"
 

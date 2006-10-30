@@ -1,5 +1,5 @@
 /*
-   $Id: log_index.h,v 1.4 2006/03/29 19:09:02 ksterker Exp $
+   $Id: log_index.h,v 1.5 2006/10/30 05:55:12 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,10 +31,8 @@
 #define RPG_LOGINDEX_H
 
 #include <vector>
-#include <string>
 #include <map>
 
-#include "base/types.h"
 #include "base/hash_map.h"
 #include "rpg/log_entry.h"
 

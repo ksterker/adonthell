@@ -1,5 +1,5 @@
 /*
- $Id: dialog.h,v 1.3 2006/02/25 18:21:03 ksterker Exp $
+ $Id: dialog.h,v 1.4 2006/10/30 05:55:12 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,6 @@
 #ifndef RPG_DIALOG_H
 #define RPG_DIALOG_H
 
-#include "python/script.h"
 #include "rpg/character.h"
 #include "rpg/dialog_line.h"
 

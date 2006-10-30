@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.h,v 1.2 2006/07/07 17:34:46 Mithander Exp $
+   $Id: png_wrapper.h,v 1.3 2006/10/30 05:55:12 ksterker Exp $
 
    Copyright (C) 2006 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   png.h
+ * @file   gfx/png_wrapper.h
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
  *
  * @brief  Declares the png static class.

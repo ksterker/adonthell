@@ -1,5 +1,5 @@
 /*
-   $Id: audio.h,v 1.3 2006/07/08 17:04:03 ksterker Exp $
+   $Id: audio.h,v 1.4 2006/10/30 05:55:11 ksterker Exp $
 
    Copyright (C) 2005/2006 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
-#include <string>
 #include "base/configuration.h"
 #include "audio/sound.h"
 
