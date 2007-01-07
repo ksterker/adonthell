@@ -1,6 +1,16 @@
 %{
 extern "C" {
 
+#ifndef SWIGVERSION
+#  ifndef SWIG_Python_GetTypeListHandle
+#    define SWIGVERSION 0x010325
+#    ifndef SWIG_Python_TypeQuery 
+#      define SWIG_Python_TypeQuery SWIG_TypeQuery
+#    endif // SWIG_Python_TypeQuery
+#  endif // SWIG_Python_GetTypeListHandle
+#endif // SWIGVERSION 
+
+    
 // code below is compatible with SWIG 1.3.24
 #if (SWIGVERSION <= 0x010324)
     
