@@ -1,5 +1,5 @@
 /*
-   $Id: main.cc,v 1.2 2004/08/23 06:33:47 ksterker Exp $
+   $Id: main.cc,v 1.3 2007/01/08 07:51:23 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,24 +31,37 @@
 
 #include "adonthell.h"
 
-class AdonthellApp;
-extern "C" AdonthellApp theApp;
+// class AdonthellApp;
+// extern "C" AdonthellApp theApp;
 
 // initialize the engine and call the user's main method
 int main (int argc, char *argv[]) 
 {
-    adonthell::app *application = (adonthell::app *) & theApp;
+	int retval = 1;
+	
+	// does a main class exist?
+	if (adonthell::app::theApp != NULL)
+	{
+		// pointer to our main class
+    	adonthell::app *application = adonthell::app::theApp;
     
-    // parse command line arguments for framework related arguments
-    application->parse_args (argc, argv);
+	    // parse command line arguments for framework related arguments
+    	application->parse_args (argc, argv);
     
-    // initialize and start the application
-    // NOTE: some backends, like SDL/OSX, never return from that call
-    int retval = application->init ();
+	    // initialize and start the application
+    	// NOTE: some backends, like SDL/OSX, never return from that call
+    	retval = application->init ();
     
-    // do cleanup, if required
-    application->cleanup ();
+    	// do cleanup, if required
+    	application->cleanup ();
     
-    // thanks for using Adonthell ...
-    return retval;
+    	// thanks for using Adonthell ...
+    	return retval;
+	}
+	else
+	{
+		fprintf (stderr, "*** main: no application class found! Exitting ...");
+	}
+	
+	return retval;
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.6 2004/11/15 08:54:33 ksterker Exp $
+   $Id: adonthell.h,v 1.7 2007/01/08 07:51:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,7 +57,13 @@ namespace adonthell {
              * seperately.
              */
             enum { GFX = 1, INPUT = 2, EVENT = 4, PYTHON = 8, RPG = 16, GUI = 32, AUDIO = 64 };
-        
+
+			/**
+             * Constructor. Used to initialize the reference to the
+             * applications main class
+             */        
+        	app ();
+        	
             /**
              * Destructor.
              */
@@ -116,6 +122,9 @@ namespace adonthell {
              * any resources aquired by init(). Don't call it manually. 
              */
             void cleanup () const;
+            
+            /// pointer to the adonthell main class
+            static app *theApp;
 #endif // SWIG
             
         protected:

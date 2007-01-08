@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.17 2006/09/28 19:13:27 gnurou Exp $
+   $Id: adonthell.cc,v 1.18 2007/01/08 07:51:23 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,7 +42,7 @@
 #include "audio/audio.h"
 #include "main/adonthell.h"
 
-using namespace adonthell;
+using adonthell::app;
 using std::cerr;
 using std::endl;
 
@@ -52,9 +52,19 @@ static lt_dlhandle dlhandle = 0;
 /// pointer to method with backend/platform specific intialization code.
 static bool (*init_p)(adonthell::app* application) = 0;
 
+/// pointer to main application class
+app* app::theApp = NULL;
+
+// ctor
+app::app ()
+{
+	theApp = this;
+}
+
 // dtor
 app::~app ()
 {
+	theApp = NULL;
     if (dlhandle) lt_dlclose (dlhandle);
     lt_dlexit ();
 }
