@@ -25,7 +25,19 @@ add_definitions(-DDATA_DIR="\\"${ADONTHELL_DATADIR}\\"")
 # FIXME: We need to manage the package lib directory !
 add_definitions(-DPKGLIBDIR="\\"\\"")
 
+
+##########################
+# Endianness
+##########################
+
+include(TestBigEndian)
+TEST_BIG_ENDIAN(WORDS_BIGENDIAN)
+if (WORDS_BIGENDIAN)
+       ADD_DEFINITIONS("-D__BIG_ENDIAN__")
+endif (WORDS_BIGENDIAN)
+
 include(config/UsePkgConfig.cmake)
+
 
 ##########################
 # SDL
@@ -130,17 +142,18 @@ endif(PNG_FOUND)
 # OpenGL
 #######################
 FIND_PACKAGE(OpenGL)
-IF(OPENGL_FOUND)
+IF(OPENGL_INCLUDE_DIR)
 	MESSAGE(STATUS
 		"OpenGL has been found:")
 	MESSAGE(STATUS
 		"\tCFLAGS : ${OPENGL_INCLUDE_DIR}")
 	MESSAGE(STATUS
 		"\tLDFLAGS: ${OPENGL_LIBRARY}")
-ELSE(OPENGL_FOUND)
+ELSE(OPENGL_INCLUDE_DIR)
+	SET( OPENGL_FOUND "NO" )
 	MESSAGE(STATUS
 		"OpenGL renderer will not be built")
-ENDIF(OPENGL_FOUND)
+ENDIF(OPENGL_INCLUDE_DIR)
 
 
 #######################

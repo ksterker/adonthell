@@ -34,6 +34,7 @@ target_link_libraries(adonthell_event
 	${PYTHON_LIBRARIES}
 	adonthell_base
 	adonthell_python
+	adonthell_py_runtime
 	)
 
 

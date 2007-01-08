@@ -75,4 +75,7 @@ ENDIF(OPENGL_FOUND)
 adonthell_install_lib(adonthell_gfx)
 adonthell_install_include(gfx "${adonthell_gfx_HEADERS}") 
 adonthell_install_backend(gfx sdl)
+
+IF(OPENGL_FOUND)
 adonthell_install_backend(gfx sdlgl)
+ENDIF(OPENGL_FOUND)

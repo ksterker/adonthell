@@ -3,39 +3,22 @@ include(${SWIG_USE_FILE})
 # Add specific include directory for this library.
 include_directories(${PYTHON_INCLUDE_PATH})
 
-set(PY_MODULES
-#   runtime
-   base
-   debug
-   event
-   gfx
-   gui
-   input
-   rpg
-)
-
-
-   
-
-# Runtime library
-# This library should be created with add_library - still, SWIG should be invoked to create the .cc file.
-set_source_files_properties("py_runtime.i" PROPERTIES CPLUSPLUS ON)
-set_source_files_properties("py_runtime.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;py_runtime")
-swig_add_module(runtime python "py_runtime.i")
-#add_library(adonthell_py_runtime SHARED "py_runtimePYTHON_wrap.cxx")
-#target_link_libraries(adonthell_py_runtime
-#	${PYTHON_LIBRARIES}
-#	)
-
-set_target_properties(${SWIG_MODULE_runtime_REAL_NAME} PROPERTIES PREFIX "libadonthell_py")
-swig_link_libraries(runtime ${PYTHON_LIBRARIES})
-adonthell_install_lib(${SWIG_MODULE_runtime_REAL_NAME})
-
-# Wrappers modules
-foreach(name base event gfx input audio gui)
+# Wrapper modules
+foreach(name audio base event gfx gui input main rpg)
   set_source_files_properties("py_${name}.i" PROPERTIES CPLUSPLUS ON)
   set_source_files_properties("py_${name}.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;py_${name}")
-  swig_add_module(${name} python "py_${name}.i")
-  # Need to fix and improve swig macro ...
-  #  swig_link_libraries(${name} ${PYTHON_LIBRARIES} "_runtime.so")
+  
+  if(${name} STREQUAL main)
+    swig_add_module(${name} python "py_${name}.i" "py_main.h" "py_main.cc")
+  else(${name} STREQUAL main)
+    swig_add_module(${name} python "py_${name}.i")
+  endif(${name} STREQUAL main)
+  
+  swig_link_libraries(${name} ${PYTHON_LIBRARIES} adonthell_${name})
 endforeach(name)
+
+# input wrapper needs additional libraries
+swig_link_libraries(input adonthell_python adonthell_py_runtime)
+
+# main module needs py_main.h to compile in out-of-source build
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/py_mainPYTHON_wrap.cxx" PROPERTIES COMPILE_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}")

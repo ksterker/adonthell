@@ -44,6 +44,7 @@ add_library(adonthell_rpg SHARED ${adonthell_rpg_SRCS})
 target_link_libraries(adonthell_rpg
 	${PYTHON_LIBRARIES}
 	adonthell_base
+	adonthell_event
 )
 
 #############################################
