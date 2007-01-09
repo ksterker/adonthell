@@ -66,7 +66,9 @@ class file_report (object):
         
         # -- load contents of file
         record.get_record (filename)
-        
+        print "Checksum =", hex (record.checksum())
+        print "Buffer =", record.to_string ()
+ 
         print "Field       Type      Len    Value"
         print "----------  --------  -----  ------------------------------"
         

@@ -9,7 +9,7 @@ double d_PI = 3.14159265358979323846;
 
 int main (int argc, char* argv[]) {
 
-    base::diskio test (base::diskio::XML_FILE);
+    base::diskio test (base::diskio::GZ_FILE);
     base::flat fl;
     
     char *block = new char[256];

@@ -32,6 +32,7 @@ class App (main.AdonthellApp):
         main.AdonthellApp.__init__ (self)
 
     def eventtest (self):
+	filename = sys.path[0] + "/data/eventtest.data"
         fty = event.factory ()
         svd = 0
         
@@ -54,12 +55,9 @@ class App (main.AdonthellApp):
             # -- save factory to disk
             if event.date.time () == 100 and svd == 0:
                 print "   Saving state"
-                file = base.ogzstream ()
-                file.open ("/tmp/eventtest.tmp")
-                record = base.diskio ()
+                record = base.diskio (base.diskio.GZ_FILE)
                 fty.put_state (record)
-                record.put_record (file)
-                file.close ()
+                record.put_record (filename)
                 svd = 1
                 
             base.Timer.update ()
@@ -67,15 +65,17 @@ class App (main.AdonthellApp):
     
         # -- resume with saved state
         print "   Returning to previously saved state"
-        file = base.igzstream ()
-        file.open ("/tmp/eventtest.tmp")
         fty.clear ()
-        
-        record = base.diskio ()
-        record.get_record (file)
+       
+        # -- need absolute filename for loading or file has to sit in
+        #    Adonthell's search path 
+        record = base.diskio (base.diskio.GZ_FILE)
+        record.get_record (filename)
         success = fty.get_state (record)
         if success == 1: print "OK"
-        file.close ()
+        else:
+            print "Error"
+            sys.exit(1)
         
         # -- run for another 1:40 gametime minutes
         while event.date.time () < 300:
