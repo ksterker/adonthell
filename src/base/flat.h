@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.19 2006/10/25 04:08:46 ksterker Exp $
+   $Id: flat.h,v 1.20 2007/01/09 08:06:35 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -91,10 +91,9 @@ namespace base
 
 #ifndef SWIG
             /**
-             * Create a new flattener. A copy of the given buffer
-             * will be made.
-             * @param buffer a buffer with flattened data.
-             * @param size size of buffer in bytes
+             * Create a new flattener from contents of another one.
+             * @param buffer buffer to copy into this object.
+             * @param size length of the buffer.
              */
             flat (const char *buffer, const u_int32 & size);
 
@@ -110,9 +109,7 @@ namespace base
              */
             void operator= (const flat & f)
             {
-                char *tmp = new char[f.size ()];
-                memcpy (tmp, f.getBuffer (), f.size ());
-                setBuffer (tmp, f.size ());
+                copy (f);
             }
 #endif // SWIG            
 
@@ -167,7 +164,7 @@ namespace base
              * @param b value to store.
              */
             void put_bool (const string & name, const bool & b) {
-                char sb = (u_int8) b;
+                u_int8 sb = (u_int8) b;
                 put (name, T_BOOL, 1, (void *) &sb);  
             }
             
@@ -267,7 +264,7 @@ namespace base
             void put_double (const string & name, const double & d) {
                 // store doubles in a format that is compatible across platforms
                 char buffer[32];
-                snprintf (buffer, 31, "%.24f", d);
+                snprintf (buffer, 31, "%.24g", d);
                 put (name, T_DOUBLE, strlen (buffer) + 1, buffer);
             }
 
@@ -511,12 +508,29 @@ namespace base
 	        }        
 	        //@}
 
+            std::string to_string () const
+            {
+                u_int32 j = 0;
+                static char *Bin2Hex = "0123456789ABCDEF";
+                char *hex = new char[(Size * 2) + 1];
+                
+                hex[Size * 2] = 0;
+                
+                for (s_int32 i = 0; i < Size; i++) 
+                {
+                    hex[j++] = Bin2Hex[(Buffer[i] >> 4) & 0x0f];
+                    hex[j++] = Bin2Hex[Buffer[i] & 0x0f];
+                }
+                
+                return std::string (hex);
+            }
+            
 #ifndef SWIG
             GET_TYPE_NAME_VIRTUAL(base::flat)
             /**
              * @name Copying Flats
              */
-            //@{
+            //@{            
             /**
              * Return internal buffer of this flattener.
              * @return byte array containing the flattened data.

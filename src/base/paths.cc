@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.10 2006/10/30 05:55:11 ksterker Exp $
+   $Id: paths.cc,v 1.11 2007/01/09 08:06:35 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -224,4 +224,3 @@ bool paths::exists (const std::string & path) const
     fprintf (stderr, "*** warning: directory '%s' cannot be accessed!\n", path.c_str ());
     return false;
 }
-

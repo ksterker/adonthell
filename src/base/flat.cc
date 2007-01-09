@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.10 2006/10/25 04:08:46 ksterker Exp $
+   $Id: flat.cc,v 1.11 2007/01/09 08:06:35 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -242,7 +242,7 @@ void flat::parse ()
 u_int32 flat::checksum () const
 {
     u_int32 a32 = adler32 (0, NULL, 0);
-    return adler32 (a32, (Bytef*) Buffer, Size);
+    return SwapLE32 (adler32 (a32, (Bytef*) Buffer, Size));
 }
 
 // grow internal buffer

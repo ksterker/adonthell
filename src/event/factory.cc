@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.9 2006/10/30 05:55:12 ksterker Exp $
+   $Id: factory.cc,v 1.10 2007/01/09 08:06:35 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -144,19 +144,21 @@ void factory::put_state (base::flat& out) const
 bool factory::get_state (base::flat& in)
 {
     void *value;
-    int type, size;
     listener *li;
+    int size, type;
+    base::flat::data_type data_type;
     
     Paused = in.get_uint16 ("fps");
     base::flat listeners = in.get_flat ("fls");
 
     // get registered listeners
-    while ((type = listeners.next (&value, &size)) != -1) 
+    while ((data_type = listeners.next (&value, &size)) != -1) 
     {
         // get listener container
-        if (type != base::flat::T_FLAT)
+        if (data_type != base::flat::T_FLAT)
         {
-            fprintf (stderr, "*** error: factory::get_state: expected type T_FLAT but got %i!\n", type);
+            fprintf (stderr, "*** error: factory::get_state: expected list but got %s!\n", 
+                     base::flat::name_for_type (data_type));
             return false;
         }
         base::flat state ((const char*) value, size);
