@@ -204,15 +204,6 @@ endif(LIBXML2_FOUND)
 
 
 ######################
-# OS X specific
-######################
-if(APPLE)
-	set(CMAKE_SHARED_LINKER_FLAGS "-flat_namespace -undefined suppress")
-	set(CMAKE_MODULE_LINKER_FLAGS "-flat_namespace -undefined suppress")
-endif(APPLE)
-
-
-######################
 # Build the config.h file !
 ######################
 
