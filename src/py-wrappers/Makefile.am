@@ -1,4 +1,4 @@
-SUBDIRS = adonthell
+SUBDIRS = runtime adonthell
 
 if PY_FRAMEWORK
 install-data-hook:

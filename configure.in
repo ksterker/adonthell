@@ -341,6 +341,7 @@ src/python/Makefile
 src/rpg/Makefile
 src/py-wrappers/Makefile
 src/py-wrappers/adonthell/Makefile
+src/py-wrappers/runtime/Makefile
 doc/Makefile
 test/Makefile
 ])
