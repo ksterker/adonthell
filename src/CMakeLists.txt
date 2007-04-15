@@ -16,9 +16,9 @@ set(ADONTHELL_MODULES
 	main
 )
 
-
-#############################
+#
 # Define some macro helpers
+#
 macro(adonthell_install_lib libname)
    install(TARGETS ${libname} DESTINATION "lib")
 endmacro(adonthell_install_lib)
@@ -31,12 +31,14 @@ macro(adonthell_install_backend name lib)
    install(TARGETS ${lib} DESTINATION "lib/adonthell/${name}")
 endmacro(adonthell_install_backend)
 
-
-macro(adonthell_install_py libs files)
+macro(adonthell_install_py libs scripts)
    install(TARGETS ${libs} DESTINATION "lib/${PYTHON_VERSION_DIR}/site-packages/adonthell")
+   install(FILES ${scripts} DESTINATION "lib/${PYTHON_VERSION_DIR}/site-packages/adonthell")
 endmacro(adonthell_install_py)
 
-
+#
+# Build subdirectories
+#
 add_subdirectory(python)
 
 foreach(lib ${ADONTHELL_MODULES})

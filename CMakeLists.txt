@@ -1,7 +1,7 @@
 # Define the project name.
 project(adonthell)
 
-cmake_minimum_required(VERSION 2.4.0)
+cmake_minimum_required(VERSION 2.4.3)
 
 add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
 
@@ -22,8 +22,8 @@ message(STATUS
 add_definitions(-DDATA_DIR="\\"${ADONTHELL_DATADIR}\\"")
 
 
-# FIXME: We need to manage the package lib directory !
-add_definitions(-DPKGLIBDIR="\\"\\"")
+# FIXME: We need to manage the package lib directory for different plattforms!
+add_definitions(-DPKGLIBDIR="\\"${CMAKE_INSTALL_PREFIX}/lib/adonthell\\"")
 
 
 ##########################

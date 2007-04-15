@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.11 2007/01/09 08:06:35 ksterker Exp $
+   $Id: paths.cc,v 1.12 2007/04/15 21:58:46 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -66,7 +66,7 @@ namespace base
         ret = lt_dlopenext(mod_env.c_str());
         if (ret) return ret;
 
-        cerr << "Failed to load module " << modname << ": " << lt_dlerror() << endl;
+        cerr << "Failed to load module " << mod_env << ": " << lt_dlerror() << endl;
 
         return NULL;
     }

@@ -15,3 +15,6 @@ add_library(adonthell_python SHARED ${adonthell_python_SRCS})
 target_link_libraries(adonthell_python
     ${PYTHON_LIBRARIES}
     adonthell_base)
+
+# install
+adonthell_install_lib (adonthell_python)
