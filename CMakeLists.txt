@@ -5,6 +5,9 @@ cmake_minimum_required(VERSION 2.4.3)
 
 add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
 
+if(APPLE)
+   set(CMAKE_SHARED_LINKER_FLAGS "-single_module" CACHE INTERNAL "")
+endif(APPLE)
 
 ##########################
 # Manage option

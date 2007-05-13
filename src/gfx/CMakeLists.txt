@@ -47,7 +47,7 @@ target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_gfx
 	)
-set_target_properties(sdl PROPERTIES PREFIX "")
+set_target_properties(sdl PROPERTIES PREFIX "" SUFFIX ".so")
 
 ###########################################################
 # Create the OpenGL Backend if OpenGL and SDL are available
@@ -67,7 +67,7 @@ target_link_libraries(sdlgl
 	${OPENGL_LIBRARY}
 	adonthell_gfx
 	)
-set_target_properties(sdlgl PROPERTIES PREFIX "")
+set_target_properties(sdlgl PROPERTIES PREFIX "" SUFFIX ".so")
 ENDIF(OPENGL_FOUND)
 
 #############################################

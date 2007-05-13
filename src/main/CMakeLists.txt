@@ -42,11 +42,11 @@ endif(APPLE)
 include_directories(${SDL_INCLUDE_DIR})
 
 add_library(sdl MODULE ${sdl_SRCS})
+set_target_properties(sdl PROPERTIES PREFIX "" SUFFIX ".so")
 target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_main
 )
-set_target_properties(sdl PROPERTIES PREFIX "")
 
 
 #############################################
