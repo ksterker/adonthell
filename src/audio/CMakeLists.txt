@@ -41,7 +41,7 @@ target_link_libraries(sdl
 	${SDLMIXER_LIBRARY}
 	adonthell_audio
 	)
-set_target_properties(sdl PROPERTIES PREFIX "" SUFFIX ".so")
+set_target_properties(sdl PROPERTIES PREFIX "_")
 
 
 #############################################

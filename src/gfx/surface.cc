@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.11 2006/10/25 04:49:56 Mithander Exp $
+   $Id: surface.cc,v 1.12 2007/05/14 02:00:05 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -201,7 +201,7 @@ namespace gfx
 
     bool surface::load_png (const string & fname)
     {
-        ifstream file(fname.c_str());
+        ifstream file(fname.c_str(), ifstream::binary);
         bool ret = true;
 
         if (!file.is_open()) {

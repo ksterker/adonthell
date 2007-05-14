@@ -1,5 +1,5 @@
 /*
-   $Id: py_main.cc,v 1.1 2004/08/23 06:35:21 ksterker Exp $
+   $Id: py_main.cc,v 1.2 2007/05/14 02:00:06 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,11 +29,8 @@
 
 #include "py_main.h"
 
-// Global entry point
-AdonthellApp theApp;
-
 // ctor
-AdonthellApp::AdonthellApp ()
+AdonthellApp::AdonthellApp () : adonthell::app ()
 {
     MainFunc = NULL;
 }

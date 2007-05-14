@@ -25,16 +25,16 @@ libadonthell_audio_la_LIBADD = $(PY_LIBS) -lstdc++ \
 
 ###### Following definitions are for the backends
 pkglibaudiodir = $(pkglibdir)/audio
-pkglibaudio_LTLIBRARIES = sdl.la
+pkglibaudio_LTLIBRARIES = _sdl.la
 
 ### SDL backend
 ## Our header files
 pkgincludeaudiosdldir = $(pkgincludedir)/audio/sdl
 
 ## Rules to build libaudio_sdl
-sdl_la_SOURCES = \
+_sdl_la_SOURCES = \
 	sdl/audio_sdl.cc
 
-sdl_la_CXXFLAGS = $(SDL_CFLAGS)
-sdl_la_LDFLAGS = -avoid-version -module
-sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_LDFLAGS = -avoid-version -module
+_sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++

@@ -35,14 +35,19 @@ if(APPLE)
 	set_source_files_properties (sdl/osx.m
 		PROPERTIES COMPILE_FLAGS -ObjC++)
 else(APPLE)
-	set(sdl_SRCS
-		sdl/linux.cc)
+	if(WIN32)
+		set(sdl_SRCS
+			sdl/winnt.cc)
+	else(WIN32)
+		set(sdl_SRCS
+			sdl/linux.cc)
+	endif(WIN32)
 endif(APPLE)
 
 include_directories(${SDL_INCLUDE_DIR})
 
 add_library(sdl MODULE ${sdl_SRCS})
-set_target_properties(sdl PROPERTIES PREFIX "" SUFFIX ".so")
+set_target_properties(sdl PROPERTIES PREFIX "_")
 target_link_libraries(sdl
 	${SDL_LIBRARY}
 	adonthell_main

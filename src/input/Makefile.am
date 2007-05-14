@@ -33,7 +33,7 @@ libadonthell_input_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lst
 
 ###### Following definitions are for the backends
 pkglibinputdir = $(pkglibdir)/input
-pkglibinput_LTLIBRARIES = sdl.la
+pkglibinput_LTLIBRARIES = _sdl.la
 
 ### SDL backend
 ## Our header files
@@ -42,10 +42,10 @@ pkgincludeinputsdl_HEADERS = \
 	sdl/manager_sdl.h
 
 ## Rules to build libinput_sdl
-sdl_la_SOURCES = \
+_sdl_la_SOURCES = \
 	sdl/input_sdl.cc \
 	sdl/manager_sdl.cc
 
-sdl_la_CXXFLAGS = $(SDL_CFLAGS)
-sdl_la_LDFLAGS = -avoid-version -module
-sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_input -lstdc++
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_LDFLAGS = -avoid-version -module
+_sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_input -lstdc++

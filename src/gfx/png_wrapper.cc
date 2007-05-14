@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.3 2006/10/30 05:55:12 ksterker Exp $
+   $Id: png_wrapper.cc,v 1.4 2007/05/14 02:00:05 ksterker Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -74,7 +74,7 @@ namespace gfx
         file.read((char *)header, headerbytes);
         if (png_sig_cmp(header, 0, headerbytes))
         {
-            cout << "[read_png_file] File %s is not recognized as a PNG file" << endl;
+            cout << "[read_png_file] File is not recognized as a PNG file" << endl;
             return NULL;
         }
 

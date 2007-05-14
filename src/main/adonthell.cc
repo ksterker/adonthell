@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.18 2007/01/08 07:51:23 ksterker Exp $
+   $Id: adonthell.cc,v 1.19 2007/05/14 02:00:05 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -215,7 +215,7 @@ bool app::init ()
     }
 
     // load backend init module
-    dlhandle = base::get_module (string ("/main/") + Backend);
+    dlhandle = base::get_module (string ("/main/_") + Backend);
     if (!dlhandle)
     {
         cerr << lt_dlerror() << endl;

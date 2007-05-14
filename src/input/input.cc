@@ -1,5 +1,5 @@
 /*
-   $Id: input.cc,v 1.5 2006/07/09 15:57:34 ksterker Exp $
+   $Id: input.cc,v 1.6 2007/05/14 02:00:05 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -64,7 +64,7 @@ namespace input
             return false;
         }
 
-        dlhandle = base::get_module(std::string("/input/") + backend_name);
+        dlhandle = base::get_module(std::string("/input/_") + backend_name);
     
         if (!dlhandle) goto bigerror;
 

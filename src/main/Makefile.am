@@ -19,22 +19,22 @@ libadonthell_main_la_LIBADD = $(PY_LIBS)
 
 ###### Following definitions are for the backends
 pkglibmaindir = $(pkglibdir)/main
-pkglibmain_LTLIBRARIES = sdl.la
+pkglibmain_LTLIBRARIES = _sdl.la
 
 
 ### SDL backend
 
 ## MacOS X specific files
 if OSX_COMPILE
-sdl_hdrs = sdl/osx.h
-sdl_la_SOURCES = sdl/osx.m $(sdl_hdrs)
+_sdl_hdrs = sdl/osx.h
+_sdl_la_SOURCES = sdl/osx.m $(sdl_hdrs)
 
 ## Files specific to Linux (and others)
 else
-sdl_la_SOURCES = sdl/linux.cc
+_sdl_la_SOURCES = sdl/linux.cc
 endif
 
-sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS)
+_sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS)
 OBJCFLAGS = -g -ObjC++ $(SDL_CFLAGS) -I$(top_srcdir)/src/
-sdl_la_LDFLAGS = -module -avoid-version
-sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++
+_sdl_la_LDFLAGS = -module -avoid-version
+_sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++

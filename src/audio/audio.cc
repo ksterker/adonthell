@@ -1,5 +1,5 @@
 /*
-   $Id: audio.cc,v 1.5 2006/10/30 05:55:11 ksterker Exp $
+   $Id: audio.cc,v 1.6 2007/05/14 02:00:04 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,7 +72,7 @@ namespace audio
             return false;
         }
 
-        dlhandle = base::get_module(std::string("/audio/") + backend_name);
+        dlhandle = base::get_module(std::string("/audio/_") + backend_name);
 
         if (!dlhandle) goto bigerror;
 

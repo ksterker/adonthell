@@ -20,7 +20,10 @@ set(ADONTHELL_MODULES
 # Define some macro helpers
 #
 macro(adonthell_install_lib libname)
-   install(TARGETS ${libname} DESTINATION "lib")
+    install(TARGETS ${libname} 
+    	RUNTIME DESTINATION "bin"
+   		LIBRARY DESTINATION "lib"
+   		ARCHIVE DESTINATION "lib")
 endmacro(adonthell_install_lib)
 
 macro(adonthell_install_include name headers)

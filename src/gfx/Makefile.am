@@ -31,7 +31,7 @@ libadonthell_gfx_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lstdc
 
 ###### Following definitions are for the backends
 pkglibgfxdir = $(pkglibdir)/gfx
-pkglibgfx_LTLIBRARIES = sdl.la 
+pkglibgfx_LTLIBRARIES = _sdl.la 
 #sdlgl.la
 
 
@@ -44,14 +44,14 @@ pkgincludegfxsdl_HEADERS = \
 	sdl/surface_sdl.h
 
 ## Rules to build libgfx_sdl
-sdl_la_SOURCES = \
+_sdl_la_SOURCES = \
 	sdl/gfx_sdl.cc \
 	sdl/screen_sdl.cc \
 	sdl/surface_sdl.cc
 
-sdl_la_CXXFLAGS = $(SDL_CFLAGS)
-sdl_la_LDFLAGS = -module -avoid-version
-sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_LDFLAGS = -module -avoid-version
+_sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
 
 ### SDLGL backend
 

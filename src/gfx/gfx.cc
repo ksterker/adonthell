@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.8 2006/10/30 05:55:12 ksterker Exp $
+   $Id: gfx.cc,v 1.9 2007/05/14 02:00:05 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,8 +69,7 @@ namespace gfx
             return false;
         }
 
-        //     dlhandle = lt_dlopenext(libname.c_str());
-        dlhandle = base::get_module(string("/gfx/") + backend_name);
+        dlhandle = base::get_module(string("/gfx/_") + backend_name);
 
         if (!dlhandle) goto bigerror;
 
