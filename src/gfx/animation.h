@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.3 2006/10/25 04:49:56 Mithander Exp $
+   $Id: animation.h,v 1.4 2007/05/19 07:42:07 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,7 +101,6 @@ namespace gfx
          *
          */
         //@{
-
         /**
          * Draw the surface.
          *
@@ -109,13 +108,17 @@ namespace gfx
          * @param y Y position where to draw.
          * @param da_opt optional drawing_area to use during the drawing operation.
          * @param target pointer to the surface where to draw the drawable. If NULL, draw on the screen.
+         *
+         * @attention Not accessible from Python. Use draw_part () from Python instead.
+         * @sa draw_part ()
+         *
          */
-        void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
-                   surface * target = NULL) const
+        virtual void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
+                           surface * target = NULL) const
         {
-            draw (x, y, 0, 0, length (), height (), da_opt, target);
+            draw (x, y, 0, 0, length(), height(), da_opt, target);
         }
-
+        
         /**
          * Draw a part of the surface.
          *
@@ -146,6 +149,12 @@ namespace gfx
          *
          */
         virtual bool update ();
+        
+        virtual void play ();
+        
+        virtual void stop ();
+        
+        virtual void rewind ();
 
 #ifndef SWIG
         GET_TYPE_NAME_VIRTUAL(gfx::animation)
@@ -189,7 +198,7 @@ namespace gfx
 
         u_int16 m_delay;
         bool m_valid;
-
+        bool m_playing;
     private:
         /**
          * Forbid copy construction.

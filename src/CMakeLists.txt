@@ -14,6 +14,7 @@ set(ADONTHELL_MODULES
 	gui
 	rpg
 	main
+    world
 )
 
 #

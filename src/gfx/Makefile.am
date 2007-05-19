@@ -4,26 +4,28 @@ DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 ## Our header files
 pkgincludegfxdir = $(pkgincludedir)/gfx
 pkgincludegfx_HEADERS = \
-	gfx.h \
-	drawing_area.h \
+	animation.h \
 	drawable.h \
+	drawing_area.h \
+	gfx.h \
+    image.h \
 	png_wrapper.h \
-	surface.h \
 	screen.h \
-	animation.h
+	surface.h
 
 ## Main library
 lib_LTLIBRARIES = libadonthell_gfx.la
 
 ## Rules to build libgfx
 libadonthell_gfx_la_SOURCES = \
-	gfx.cc \
-	drawing_area.cc \
+	animation.cc \
 	drawable.cc \
+	drawing_area.cc \
+	gfx.cc \
+    image.cc \
 	png_wrapper.cc \
-	surface.cc \
 	screen.cc \
-	animation.cc
+	surface.cc
 
 libadonthell_gfx_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
 

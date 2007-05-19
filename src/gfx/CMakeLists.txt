@@ -1,22 +1,24 @@
 # Define the adonthell_gfx_SRCS variable containing all required files.
 set(adonthell_gfx_SRCS
-	gfx.cc
-	drawing_area.cc
-	drawable.cc
-	png_wrapper.cc
-	surface.cc
-	screen.cc
 	animation.cc
+	drawable.cc
+	drawing_area.cc
+	png_wrapper.cc
+	gfx.cc
+    image.cc
+	screen.cc
+	surface.cc
 )
 
 set(adonthell_gfx_HEADERS
 	animation.h
-	drawing_area.h
-	png_wrapper.h
-	surface.h
 	drawable.h
+	drawing_area.h
 	gfx.h
+    image.h
+	png_wrapper.h
 	screen.h
+	surface.h
 )
 
 add_definitions(${PNG_DEFINITIONS}) 

@@ -339,6 +339,7 @@ src/audio/Makefile
 src/gui/Makefile
 src/python/Makefile
 src/rpg/Makefile
+src/world/Makefile
 src/py-wrappers/Makefile
 src/py-wrappers/adonthell/Makefile
 src/py-wrappers/runtime/Makefile

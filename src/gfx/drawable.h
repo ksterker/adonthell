@@ -1,7 +1,7 @@
 /*
-   $Id: drawable.h,v 1.6 2006/10/30 05:55:12 ksterker Exp $
+   $Id: drawable.h,v 1.7 2007/05/19 07:42:07 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -85,7 +85,7 @@ namespace gfx
          */
         u_int16 length () const
         {
-            return length_; 
+            return Length; 
         }
 
         /** 
@@ -96,7 +96,7 @@ namespace gfx
          */
         u_int16 height () const
         {
-            return height_; 
+            return Height; 
         }
 
         /** 
@@ -125,9 +125,9 @@ namespace gfx
          * 
          * @param l new length.
          */
-        void set_length (u_int16 l)
+        void set_length (const u_int16 & l)
         {
-            length_ = l; 
+            Length = l; 
         }
 
         /**
@@ -135,9 +135,9 @@ namespace gfx
          *
          * @param h new height.
          */ 
-        void set_height (u_int16 h)
+        void set_height (const u_int16 & h)
         {
-            height_ = h; 
+            Height = h; 
         }
 
 #ifndef SWIG
@@ -145,8 +145,10 @@ namespace gfx
 #endif // SWIG
     
     private:
-        u_int16 length_; 
-        u_int16 height_; 
+        /// width of the image
+        u_int16 Length; 
+        /// height of the image
+        u_int16 Height; 
     };
 
 }

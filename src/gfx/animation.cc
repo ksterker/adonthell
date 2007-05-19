@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.3 2006/10/25 04:49:55 Mithander Exp $
+   $Id: animation.cc,v 1.4 2007/05/19 07:42:07 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,16 +60,34 @@ namespace gfx
         //Check if the animation is valid yet
         if(!m_valid) return false;
 
-        //TODO deal with delay here.
+        if (m_playing)
+        {
+            //TODO deal with delay here.
 
-        //Update to the next surface.  If it wraps, then reset it to the beginning
-        m_surface++;
-        if(m_surface == m_animation->second.end())
-            m_surface = m_animation->second.begin();
-
+            //Update to the next surface.  If it wraps, then reset it to the beginning
+            m_surface++;
+            if(m_surface == m_animation->second.end())
+                m_surface = m_animation->second.begin();
+        }
+        
         return true;
     }
 
+    void animation::play ()
+    {
+        m_playing = true;
+    }
+    
+    void animation::stop ()
+    {
+        m_playing = false;
+    }
+    
+    void animation::rewind ()
+    {
+        m_surface = m_animation->second.begin();
+    }
+    
     bool animation::load_animation (const std::string & filename)
     {
         animation_map sprite;
