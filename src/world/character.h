@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: character.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -169,11 +169,33 @@ namespace world
          * Loading / Saving
          */
         //@{
-        void put(base::ogzstream & file) const;
-        void get(base::igzstream & file);
+        /**
+         * Save %character state to stream. 
+         * @param file stream to save %character to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load %character state from stream. 
+         * @param file stream to load %character from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
 
-        s_int8 save(const std::string fname) const;
-        s_int8 load(const std::string fname);
+        /**
+         * Save character state to file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool save (const std::string & fname) const;
+        
+        /**
+         * Load character state from file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool load (const std::string & fname);
         //@}
         
     protected:

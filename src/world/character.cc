@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+   $Id: character.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,11 +30,13 @@
 
 #include <math.h>
 
+#include "base/diskio.h"
 #include "world/character.h"
 
 using world::character;
 using world::area;
 
+// ctor
 character::character (area & mymap) : moving (mymap)
 {
     Type = CHARACTER;
@@ -44,11 +46,13 @@ character::character (area & mymap) : moving (mymap)
     Current_dir = NONE;
 }
 
+// jump
 void character::jump()
 {
     VSpeed = 4.5;
 }
 
+// process character movement
 void character::update()
 {
     set_vertical_velocity(VSpeed);
@@ -145,37 +149,48 @@ void character::update_state()
 
 }
 
-void character::put(base::ogzstream & file) const
+// save to stream
+bool character::put_state (base::flat & file) const
 {
-    placeable_model::put(file);
-}
-
-void character::get(base::igzstream & file)
-{
-    placeable_model::get(file);
-    set_state ("s_stand"); 
-}
-
-s_int8 character::save(const std::string fname) const
-{
-    base::ogzstream file (fname);
-    s_int8 ret = 0; 
+    // FIXME: save movement and direction ...
     
-    if (!file.is_open ())
-        return 1;
-    put (file);
-    file.close (); 
-    return ret;
+    return placeable_model::put_state (file);
 }
 
-s_int8 character::load(const std::string fname)
+// load from stream
+bool character::get_state (base::flat & file)
 {
-    base::igzstream file (fname);
-    s_int8 ret = 0; 
+    // FIXME: load movement and direction ...
+
+    placeable_model::get_state (file);
+    set_state ("s_stand");
     
-    if (!file.is_open ())
-        return 1;
-    get (file);
-    file.close (); 
-    return ret;
+    return file.success ();
+}
+
+// save to XML file
+bool character::save (const std::string & fname) const
+{
+    // try to save item
+    base::diskio record (base::diskio::XML_FILE);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** character::save: saving '%s' failed!\n", fname.c_str ());        
+        return false;
+    }
+    
+    // write item to disk
+    return record.put_record (fname);
+}
+
+// load from XML file
+bool character::load(const std::string & fname)
+{
+    // try to load character
+    base::diskio record (base::diskio::XML_FILE);
+    
+    if (record.get_record (fname)) 
+        return get_state (record);
+    
+    return false;
 }

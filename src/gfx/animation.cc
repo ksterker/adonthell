@@ -1,7 +1,8 @@
 /*
-   $Id: animation.cc,v 1.4 2007/05/19 07:42:07 ksterker Exp $
+   $Id: animation.cc,v 1.5 2007/05/21 04:44:10 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -35,9 +36,10 @@ using namespace std;
 
 namespace gfx
 {
-    //Static storage
+    // static storage
     animation::animation_cache animation::m_allAnimations;
 
+    // change animation being played
     bool animation::change_animation (const std::string & new_animation)
     {
         //Check if the animation is valid yet
@@ -55,6 +57,7 @@ namespace gfx
         return true;
     }
 
+    // update state of animation
     bool animation::update ()
     {
         //Check if the animation is valid yet
@@ -73,21 +76,34 @@ namespace gfx
         return true;
     }
 
+    // start playing animation
     void animation::play ()
     {
         m_playing = true;
     }
     
+    // pause playing animation
     void animation::stop ()
     {
         m_playing = false;
     }
     
+    // reset to first frame
     void animation::rewind ()
     {
+        m_delay = 0;
         m_surface = m_animation->second.begin();
     }
     
+    // load from stream
+    bool animation::get_state (base::flat & file)
+    {
+        // TODO: load animation
+        
+        return file.success();
+    }
+    
+    // load from XML file
     bool animation::load_animation (const std::string & filename)
     {
         animation_map sprite;
@@ -168,34 +184,46 @@ namespace gfx
         return m_valid;
     }
 
-    bool animation::save_animation (const std::string & filename)
+    // save to stream
+    bool animation::put_state (base::flat & file) const
     {
-        base::diskio animation (base::diskio::XML_FILE);
         animation_map::iterator ii;
-
+        
         //Loop through all available animations
         for(ii = m_sprite->second.begin(); ii != m_sprite->second.end(); ii++) {
             base::flat anim;
             animation_list::iterator jj;
-
+            
             //Loop through all frames in current animation
             for(jj = ii->second.begin(); jj != ii->second.end(); jj++) {
                 base::flat frame;
-
+                
                 //Add information about the frame.
                 frame.put_bool("mask", (*jj)->image->is_masked());
                 frame.put_bool("mirrored_x", (*jj)->image->is_mirrored_x());
                 frame.put_uint32("delay", (*jj)->delay);
-
+                
                 //Add the frame to the animation
                 anim.put_flat((*jj)->image->filename(), frame);
             }
-
+            
             //Add the current animation to the diskio
-            animation.put_flat(ii->first, anim);
+            file.put_flat(ii->first, anim);
         }
+        
+        return true;
+    }
+    
+    // save to XML file
+    bool animation::save_animation (const std::string & filename)
+    {
+        // create container
+        base::diskio animation (base::diskio::XML_FILE);
 
-        //Dump it out to a file
-        animation.put_record(filename);
+        // dump to container
+        put_state (animation);
+        
+        // dump it out to a file
+        return animation.put_record (filename);
     }
 }

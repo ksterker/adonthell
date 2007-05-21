@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.10 2006/10/25 04:49:56 Mithander Exp $
+   $Id: surface.h,v 1.11 2007/05/21 04:44:11 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,8 +36,6 @@
 #include "gfx/drawable.h"
 #include <string>
 #include <fstream>
-
-#include "python/callback_support.h"
 
 namespace gfx
 {

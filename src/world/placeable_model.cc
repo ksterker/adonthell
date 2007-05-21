@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_model.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
  */
 
 
-#include "placeable_model.h"
+#include "world/placeable_model.h"
 
 using namespace world;
 
@@ -45,7 +45,7 @@ placeable_area * placeable_model::current_state()
     else return NULL; 
 }
 
-placeable_area * placeable_model::get_state (const std::string & name) 
+placeable_area * placeable_model::get_model_state (const std::string & name) 
 {
     std::map <std::string, placeable_area>::iterator State;
     State = States.find (name); 
@@ -84,33 +84,34 @@ void placeable_model::set_state (const std::string & name)
     else State_changed = true;
 }
 
-void placeable_model::put(base::ogzstream & file) const
+// save state to stream
+bool placeable_model::put_state (base::flat & file) const
 {
-    u_int32 s = States.size();
-
-    s >> file;
-        
+    base::flat record;
+    
     for (std::map <std::string, placeable_area>::iterator i = States.begin();
          i != States.end(); i++)
     {
-        i->first >> file;
-        i->second.put(file);
-    }        
+        record.put_string ("name", i->first);
+        i->second.put_state (record);
+    }
+    
+    file.put_flat ("model", record);
+    return true;
 }
 
-void placeable_model::get(base::igzstream & file)
+// load state from stream
+bool placeable_model::get_state (base::flat & file)
 {
-    u_int32 size;
-        
-    size << file;
-        
-    for (u_int32 i = 0; i < size; i++)
-    {
-        std::string s;
-        s << file;
+    base::flat record = file.get_flat ("model");
+    if (!file.success ()) return false;
 
-        placeable_area * mpa = add_state(s);
-        mpa->get(file);
-            
+    void *value;
+    while (record.next (&value) == base::flat::T_STRING) 
+    {
+        placeable_area * mpa = add_state (*((std::string*) &value));
+        mpa->get_state (record);
     }
+    
+    return record.success ();
 }

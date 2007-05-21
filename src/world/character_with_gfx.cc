@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,7 @@
  * 
  */
 
+#include "base/diskio.h"
 #include "world/character_with_gfx.h"
 
 using world::character;
@@ -203,55 +204,68 @@ character_with_gfx::character_with_gfx (area & mymap) : character (mymap),
 //     save("adontest/nakedguy.mdl");
 }
 
-void character_with_gfx::put(base::ogzstream & file) const
+// save character to screen
+bool character_with_gfx::put_state (base::flat & file) const
 {
-    character::put(file);
-    placeable_model_gfx::put(file);
+    character::put_state (file);
+    placeable_model_gfx::put_state (file);
+    return true;
 }
 
-void character_with_gfx::get(base::igzstream & file)
+// load character from stream 
+bool character_with_gfx::get_state (base::flat & file)
 {
-    character::get(file);
-    placeable_model_gfx::get(file);
-    set_gfx(current_state_name());
-}
-
-s_int8 character_with_gfx::save(const std::string fname) const
-{
-    base::ogzstream file (fname);
-    s_int8 ret = 0; 
+    character::get_state (file);
+    placeable_model_gfx::get_state (file);
+    set_gfx (current_state_name ());
     
-    if (!file.is_open ())
-        return 1;
-    put (file);
-    file.close (); 
-    Filename = fname;
-    return ret;
+    return file.success ();
 }
 
-s_int8 character_with_gfx::load(const std::string fname)
+bool character_with_gfx::save (const std::string & fname) const
 {
-    base::igzstream file (fname);
-    s_int8 ret = 0; 
-    
-    if (!file.is_open ())
-        return 1;
-    get (file);
-    file.close (); 
+    // try to save character
+    base::diskio record (base::diskio::XML_FILE);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** character_with_gfx::save: saving '%s' failed!\n", fname.c_str ());        
+        return false;
+    }
+
+    // remember filename
     Filename = fname;
-    return ret;
+    
+    // write character to disk
+    return record.put_record (fname);
 }
 
+// load from XML file
+bool character_with_gfx::load (const std::string & fname)
+{
+    // try to load character
+    base::diskio record (base::diskio::XML_FILE);
+    
+    // remember file name
+    Filename = fname;
+    
+    if (record.get_record (fname)) 
+        return get_state (record);
+    
+    return false;
+}
+
+// render character on screen
 void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                gfx::surface * target)
 {
-    draw_shadow(x, y, da_opt, target);
-    y -= z();
-    placeable_model_gfx::draw(x, y, da_opt, target);
+    draw_shadow (x, y, da_opt, target);
+    y -= z ();
+    placeable_model_gfx::draw (x, y, da_opt, target);
 }
 
+// render character shadow on screen
 void character_with_gfx::draw_shadow (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                       gfx::surface * target)
 {
-    shadow.draw(x, y + 25 - zground, da_opt, target);
+    shadow.draw (x, y + 25 - zground, da_opt, target);
 }

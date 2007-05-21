@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: placeable.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,20 +31,21 @@
 #ifndef WORLD_PLACEABLE_H
 #define WORLD_PLACEABLE_H
 
-#include <string>
-#include <map>
-
 #include "world/placeable_model.h"
 
 namespace world
 {
     class area;
 
+    /// allowed types of objects on the map
     typedef enum 
         {
             UNKNOWN = 0, 
+            /// scenery object
             OBJECT,
+            /// creature
             CHARACTER, 
+            /// something that can be picked up
             ITEM
         } placeable_type; 
 
@@ -61,10 +62,16 @@ namespace world
     class placeable : public placeable_model
     {
     public:
-        //     coordinates base; 
-    
+        /**
+         * Create a thing on the map.
+         * @param mymap map this thing belongs to.
+         */
         placeable(area & mymap);
     
+        /**
+         * Get type of this placeable.
+         * @return one of OBJECT, CHARACTER or ITEM
+         */
         placeable_type type () const
         {
             return Type; 

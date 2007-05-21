@@ -1,5 +1,5 @@
 /*
- $Id: image.cc,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: image.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -21,7 +21,7 @@
  */
 
 /**
- * @file   gfx/image.h 
+ * @file   gfx/image.cc 
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
@@ -38,8 +38,16 @@ using gfx::drawing_area;
 // ctor
 image::image (const u_int16 & length, const u_int16 & height) : drawable ()
 {
+    Image = gfx::create_surface();
+    Image->resize (length, height);
+    
     set_length (length);
     set_height (height);
+}
+
+image::~image ()
+{
+    delete Image;
 }
 
 // draw image

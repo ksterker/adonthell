@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.h,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_model_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,8 +32,6 @@
 #ifndef WORLD_PLACEABLE_MODEL_GFX_H
 #define WORLD_PLACEABLE_MODEL_GFX_H
 
-#include <map>
-
 #include "world/placeable_area_gfx.h"
 #include "world/placeable_model.h"
 #include "base/file.h"
@@ -49,12 +47,6 @@ namespace world
      */
     class placeable_model_gfx : public gfx::drawable
     {
-    protected:
-        mutable std::map <const std::string, placeable_area_gfx *> Gfxs;
-        std::map <const std::string, placeable_area_gfx *>::iterator Current_gfx;
-
-        placeable_model & Target;
-
     public:
         placeable_model_gfx (placeable_model & target);
 
@@ -71,6 +63,10 @@ namespace world
     
         bool update ();
     
+        /**
+         * @name Rendering
+         */
+        //@{
         /** 
          * Draws the placeable representation.
          *
@@ -90,16 +86,43 @@ namespace world
 
         void draw_border(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                          gfx::surface * target = NULL) const;
-
-        void put(base::ogzstream & file) const;
-
-        void get(base::igzstream & file);
-
+        //@}
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /**
+         * Save model state to stream. 
+         * @param file stream to save model to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load model state from stream. 
+         * @param file stream to load model from.
+         * @return \b true if loading successful, \b false otherwise.
+         */        
+        bool get_state (base::flat & file);
+        //@}
+        
 #ifndef SWIG
         GET_TYPE_NAME_VIRTUAL(world::placeable_model_gfx)
 #endif // SWIG
             
+    protected:
+        /// list of graphics
+        mutable std::map <const std::string, placeable_area_gfx *> Gfxs;
+        /// current graphics
+        std::map <const std::string, placeable_area_gfx *>::iterator Current_gfx;
+        /// model this graphics belong to
+        placeable_model & Target;
+        
     private:
+        /**
+         * Forbid copy construction
+         */
         placeable_model_gfx(placeable_model_gfx &);
     };
 }

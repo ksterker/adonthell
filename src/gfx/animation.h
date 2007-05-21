@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.4 2007/05/19 07:42:07 ksterker Exp $
+   $Id: animation.h,v 1.5 2007/05/21 04:44:11 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,17 +30,15 @@
  */
 
 
-#ifndef ANIMATION_H_
-#define ANIMATION_H_
+#ifndef GFX_ANIMATION_H
+#define GFX_ANIMATION_H
 
-#include "gfx/drawable.h"
+#include "base/flat.h"
 #include "gfx/gfx.h"
-#include <map>
 #include <queue>
 
 namespace gfx
 {
-
     /**
      * Class to handle storing several surfaces in an animation sequence.
      *
@@ -61,40 +59,38 @@ namespace gfx
         virtual ~animation () { }
 
         /**
-         * @name Settings
-         * These methods sets the parameters of the surface.
-         *
+        * @name Animation Control
          */
         //@{
-
         /**
-         * Load the available animtions from a xml file
-         * 
-         * @todo Implement xml loading...
-         * @param filename xml file to load
-         * @return true if successful
-         */
-        bool load_animation (const std::string & filename);
-
-        /**
-         * Save the available animtions from a xml file
-         * 
-         * @param filename xml file to save
-         * @return true if successful
-         */
-        bool save_animation (const std::string & filename);
-
-        /**
-         * Change the current animation we are using
+        * Change the current animation we are using
          *
          * @param new_animation string that represents the new animation we want to switch to
          * @return true if new_animation was found.
          */
         bool change_animation (const std::string & new_animation);
-
-
+        
+        /**
+         * Update animation. Called once per game cycle to advance the
+         * current frame of the current sprite, if neccessary.
+         */
+        virtual bool update ();
+        
+        /**
+         * Start playing animation
+         */
+        virtual void play ();
+        
+        /**
+         * Stop playing animation.
+         */
+        virtual void stop ();
+        
+        /**
+         * Set sprite back to first frame.
+         */
+        virtual void rewind ();
         //@}
-
 
         /**
          * @name Drawing Methods
@@ -141,21 +137,44 @@ namespace gfx
         {
             if (m_valid) (*m_surface)->image->draw(x, y, sx, sy, sl, sh, da_opt, target);
         }
-
         //@}
-
+        
         /**
-         * Update function, lets target know it is time to update animation
-         *
+         * @name Loading / Saving
          */
-        virtual bool update ();
+        //@{
+        /**
+         * Save %animation state to stream. 
+         * @param file stream to save %animation to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
         
-        virtual void play ();
+        /**
+         * Load %animation state from stream. 
+         * @param file stream to load %animation from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);        
         
-        virtual void stop ();
+        /**
+         * Load the available animtions from a xml file
+         * 
+         * @todo Implement xml loading...
+         * @param filename xml file to load
+         * @return true if successful
+         */
+        bool load_animation (const std::string & filename);
         
-        virtual void rewind ();
-
+        /**
+         * Save the available animtions from a xml file
+         * 
+         * @param filename xml file to save
+         * @return true if successful
+         */
+        bool save_animation (const std::string & filename);
+        //@}
+        
 #ifndef SWIG
         GET_TYPE_NAME_VIRTUAL(gfx::animation)
 #endif // SWIG
@@ -167,38 +186,53 @@ namespace gfx
          */
         struct animation_frame
         {
-            const surface *image;       //what image to draw for this frame
-            u_int16 delay;              //how long before we switch to the next frame
-
             /**
-             * Constructor to set the values
+            * Create a new frame
+             * @param img the image data
+             * @param dly the delay before switching to the next frame
              */
             animation_frame(const surface *img, u_int16 dly = 0):
-                image(img), delay(dly) { }
+            image(img), delay(dly) { }
+            
+            /// what image to draw for this frame
+            const surface *image;
+            /// how long before we switch to the next frame
+            u_int16 delay;              
         };
 
         /**
-         * typedefs for the animation storage
+         * @name Animation Storage
+         * Typedefs for the animation storage
          *
          */
-
+        //@{
+        /// The different frames in an animation
         typedef std::deque<const animation_frame *> animation_list;
+        /// A named animation sequence
         typedef std::map<std::string, animation_list> animation_map;
+        /// The different animation sequences in a sprite
         typedef std::map<std::string, animation_map> animation_cache;
-
+        //@}
+        
         /**
          * All data is stored here.  One huge map allowing for access to different parts through iterators.
          *
          */
         static animation_cache m_allAnimations;
 
+        /// a sprite
         animation_cache::iterator m_sprite;
+        /// an animation
         animation_map::iterator m_animation;
+        /// a frame
         animation_list::iterator m_surface;
 
         u_int16 m_delay;
+        /// all images are loaded
         bool m_valid;
+        /// animation is playing
         bool m_playing;
+        
     private:
         /**
          * Forbid copy construction.

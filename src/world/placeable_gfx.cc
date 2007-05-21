@@ -1,5 +1,5 @@
 /*
- $Id: placeable_gfx.cc,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_gfx.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,9 +29,10 @@
  * 
  */
 
-#include "placeable_gfx.h"
+#include "world/placeable_gfx.h"
 
-using namespace world;
+using world::placeable_model_gfx;
+using world::placeable_gfx;
 
 placeable_gfx::placeable_gfx(placeable & target) : placeable_model_gfx(target), Target(target)
 {

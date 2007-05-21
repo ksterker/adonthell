@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_model.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,10 +33,8 @@
 #define WORLD_PLACEABLE_MODEL_H
 
 #include <map>
-#include <string>
 
 #include "world/placeable_area.h"
-#include "base/file.h"
 
 namespace world
 {
@@ -46,24 +44,28 @@ namespace world
      *
      * This class is separated from placeable to allow easy editing
      * without depending on the whole map stuff. While it is suitable
-     * for edition, it can't be actually placed on a map. Use placeable
+     * for editing, it can't be actually placed on a map. Use placeable
      * for that instead.
      * 
+     * FIXME: seems a lot in here actually duplicates stuff now located
+     * in the animation class. Need to update this accordingly.
      */
     class placeable_model
     {
-    protected:
-        mutable std::string Filename;
-
-        mutable std::map <std::string, placeable_area> States;
-        std::map <std::string, placeable_area>::iterator Current_state;
-
-        bool State_changed;
-    
     public:
         typedef std::map <std::string, placeable_area>::iterator iterator;
 
-        iterator begin () 
+        /**
+         * Constructor.
+         */
+        placeable_model();
+        
+        /**
+         * @name Map object states
+         * A state is usually represented by an %animation
+         */
+        //@{
+        iterator begin ()
         {
             return States.begin (); 
         }
@@ -73,11 +75,9 @@ namespace world
             return States.end (); 
         }
 
-        placeable_model();
+        placeable_area * current_state ();
 
-        placeable_area * current_state();
-
-        placeable_area * get_state(const std::string & name);
+        placeable_area * get_model_state (const std::string & name);
     
         const std::string current_state_name();
     
@@ -86,22 +86,51 @@ namespace world
         bool del_state (const std::string & name);
     
         void set_state (const std::string & name);
-
-        void put(base::ogzstream & file) const;
-
-        void get(base::igzstream & file);
-
+        //@}
+        
+        /**
+         * Get file from which this model was loaded.
+         * @return file name of this model.
+         */
         const std::string & filename()
         {
             return Filename;
         }
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /**
+         * Save %model state to stream. 
+         * @param file stream to save model to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load model state from stream. 
+         * @param file stream to load model from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
+        //@}
 
         /**
          * This friendship is needed so placeable_model_gfx
          * can modify the Has_changed member.
-         * 
          */
         friend class placeable_model_gfx;
+        
+    protected:
+        /// filename of this object
+        mutable std::string Filename;
+        /// possible states of this object
+        mutable std::map <std::string, placeable_area> States;
+        /// current state of this object
+        std::map <std::string, placeable_area>::iterator Current_state;
+        /// whether state of object has changed recently
+        bool State_changed;
     }; 
 }
 

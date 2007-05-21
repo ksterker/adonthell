@@ -1,5 +1,5 @@
 /*
- $Id: image.h,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: image.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -33,10 +33,14 @@
 #ifndef GFX_IMAGE_H
 #define GFX_IMAGE_H
 
-#include "gfx/drawable.h"
+#include "gfx/gfx.h"
 
 namespace gfx
 {
+    /**
+     * Wrapper around the surface class. Probably not required but provided
+     * for convenience.
+     */
     class image : public drawable
     {
     public:
@@ -47,15 +51,20 @@ namespace gfx
          */
         image (const u_int16 & length, const u_int16 & height);
         
-       /** 
-        * Draw the object on the %screen.
-        * 
-        * @param x X position where to draw.
-        * @param y Y position where to draw.
-        * @param da_opt optional drawing_area to use during the drawing operation.
-        * @param target pointer to the surface where to draw the drawable. If NULL,
-        *               draw on the screen.
-        */
+        /**
+         * Destructor.
+         */
+        virtual ~image ();
+        
+        /** 
+         * Draw the object on the %screen.
+         * 
+         * @param x X position where to draw.
+         * @param y Y position where to draw.
+         * @param da_opt optional drawing_area to use during the drawing operation.
+         * @param target pointer to the surface where to draw the drawable. If NULL,
+         *               draw on the screen.
+         */
         virtual void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const;
 
@@ -81,8 +90,7 @@ namespace gfx
         void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h, u_int8 r,
                        u_int8 g, u_int8 b, drawing_area * da_opt = NULL)
         {
-            // TODO: handle color conversion with map_color
-            // fillrect (x, y, l, h, SDL_MapRGB (vis->format, r, g, b), da_opt);
+            fillrect (x, y, l, h, Image->map_color (r, g, b), da_opt);
         }
         
         /**
@@ -99,19 +107,22 @@ namespace gfx
         virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
                                u_int32 col, drawing_area * da_opt = NULL)        
         {
-            // TODO: pass on to surface
+            Image->fillrect (x, y, l, h, col, da_opt);
         }
         
         void set_alpha (const u_int8 & alpha)
         {
-            // TODO: pass on to surface
+            Image->set_alpha (alpha);
         }
         
 #ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(gfx::animation)
+        GET_TYPE_NAME_VIRTUAL(gfx::image)
 #endif // SWIG
         
     private:
+        /// the actual image
+        surface *Image;
+        
         /**
          * Forbid value passing.
          */

@@ -1,5 +1,5 @@
 /*
- $Id: object.cc,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: object.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,46 +29,56 @@
  * 
  */
 
-#include "object.h"
+#include "base/diskio.h"
+#include "world/object.h"
 
 using world::object;
 
+// create a new scenery object
 object::object(world::area & mymap) : placeable(mymap) 
 {
     Type = OBJECT; 
 }
 
-void object::put(base::ogzstream & file) const
+// save object to stream
+bool object::put_state (base::flat & file) const
 {
-    placeable_model::put(file);
+    placeable_model::put_state (file);
+    return true;
 }
 
-void object::get(base::igzstream & file)
+// load object from stream
+bool object::get_state (base::flat & file)
 {
-    placeable_model::get(file);
-    set_state("default");
-}
-
-s_int8 object::save(const std::string fname) const
-{
-    base::ogzstream file (fname);
-    s_int8 ret = 0; 
+    placeable_model::get_state (file);
+    set_state ("default");
     
-    if (!file.is_open ())
-        return 1;
-    put (file);
-    file.close (); 
-    return ret;
+    return file.success ();
 }
 
-s_int8 object::load(const std::string fname)
+// save object to XML file
+bool object::save (const std::string & fname) const
 {
-    base::igzstream file (fname);
-    s_int8 ret = 0; 
+    // try to save object
+    base::diskio record (base::diskio::XML_FILE);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** object::save: saving '%s' failed!\n", fname.c_str ());        
+        return false;
+    }
     
-    if (!file.is_open ())
-        return 1;
-    get (file);
-    file.close (); 
-    return ret;
+    // write object to disk
+    return record.put_record (fname);
+}
+
+// load object from XML file
+bool object::load (const std::string & fname)
+{
+    // try to load character
+    base::diskio record (base::diskio::XML_FILE);
+    
+    if (record.get_record (fname)) 
+        return get_state (record);
+    
+    return false;
 }

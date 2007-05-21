@@ -1,5 +1,5 @@
 /*
- $Id: coordinates.cc,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: coordinates.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,7 +28,6 @@
  * 
  */
 
-#include <iostream>
 #include "coordinates.h"
 
 using world::coordinates;
@@ -111,16 +110,16 @@ coordinates & coordinates::operator + (const coordinates & mc)
     Ox += mc.Ox;
     Oy += mc.Oy;
 
-    while (Ox >= 40)
+    while (Ox >= SQUARE_SIZE)
     {
         X++;
-        Ox -= 40;
+        Ox -= SQUARE_SIZE;
     }
 
-    while (Oy >= 40)
+    while (Oy >= SQUARE_SIZE)
     {
         Y++;
-        Oy -= 40;
+        Oy -= SQUARE_SIZE;
     }
 
     return *this;
@@ -134,17 +133,27 @@ coordinates & coordinates::operator - (const coordinates & mc)
     if (Y < mc.Y) Y -= mc.Y;
     else Y = 0;
 
-    while (Ox >= 40)
+    if (Ox < mc.Ox)
     {
-        if (X) X--;
-        Ox -= 40;
+        s_int16 o;
+        for (o = Ox - mc.Ox; o < 0; o += SQUARE_SIZE)
+        {
+            if (X) X--;
+        }
+        Ox = (u_int16) o;
     }
-
-    while (Oy >= 40)
+    else Ox -= mc.Ox;
+    
+    if (Oy < mc.Oy)
     {
-        if (Y) Y--;
-        Oy -= 40;
+        s_int16 o;
+        for (o = Oy - mc.Oy; o < 0; o += SQUARE_SIZE)
+        {
+            if (Y) Y--;
+        }
+        Oy = (u_int16) o;
     }
+    else Oy -= mc.oy();
     
     return *this;
 }

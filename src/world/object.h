@@ -1,5 +1,5 @@
 /*
- $Id: object.h,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: object.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,25 +42,59 @@ namespace world
      * An object is a placeable that has some update abilities and can be
      * placed several times on the same map. Note, however, that all instances of
      * the same map object will have the same state and will always look the same.
-     * While this is most often ok, some special object (like doors) will require
+     * While this is most often ok, some special objects (like doors) will require
      * you to load one object per instance.
      * 
      */
     class object : public placeable
     {
     public:
-        object(area & mymap); 
+        /**
+         * Create a new object on the given map.
+         * @param mymap map the object belongs to.
+         */
+        object (area & mymap); 
 
-        bool update()
+        /**
+         * Update %object state. Called every game cycle.
+         */
+        virtual bool update ()
         {
             return true;
         }
 
-        void put(base::ogzstream & file) const;
-        void get(base::igzstream & file);
-
-        s_int8 save(const std::string fname) const;
-        s_int8 load(const std::string fname);
+        /**
+         * Loading / Saving
+         */
+        //@{
+        /**
+         * Save %object state to stream. 
+         * @param file stream to save %object to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load %object state from stream. 
+         * @param file stream to load %object from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
+        
+        /**
+         * Save %object state to file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool save (const std::string & fname) const;
+        
+        /**
+         * Load %object state from file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool load (const std::string & fname);
+        //@}
     };
 }
 

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -114,9 +114,9 @@ void placeable_model_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * 
         {
             const placeable_area & t = Target.Current_state->second;
             Current_gfx->second->draw (x - (t.base.x()) * 
-                                       square_size - t.base.ox(), 
+                                       SQUARE_SIZE - t.base.ox(), 
                                        y - (t.base.y()) * 
-                                       square_size - t.base.oy(), 
+                                       SQUARE_SIZE - t.base.oy(), 
                                        da_opt, target); 
         }
         else
@@ -128,7 +128,7 @@ void placeable_model_gfx::draw_walkable(s_int16 x, s_int16 y,
                                         const gfx::drawing_area * da_opt,
                                         gfx::surface * target) const
 {
-    gfx::image im(square_size, square_size);
+    gfx::image im(SQUARE_SIZE, SQUARE_SIZE);
     im.fillrect(0, 0, im.length(), im.height(), 0xFF, 0, 0);
     im.set_alpha(128);
     
@@ -141,9 +141,9 @@ void placeable_model_gfx::draw_walkable(s_int16 x, s_int16 y,
             if (!st->get(i, j).is_walkable())
             {
             im.draw(x - (st->base.x() - i) * 
-                    square_size - st->base.ox(), 
+                    SQUARE_SIZE - st->base.ox(), 
                     y - (st->base.y() - j) * 
-                    square_size - st->base.oy(), 
+                    SQUARE_SIZE - st->base.oy(), 
                     da_opt, target); 
             }
         }
@@ -155,46 +155,49 @@ void placeable_model_gfx::draw_border(s_int16 x, s_int16 y,
 {
     placeable_area * st = Target.current_state();
 
-    x -= st->base.x() * square_size + st->base.ox();
-    y -= st->base.y() * square_size + st->base.oy();
+    x -= st->base.x() * SQUARE_SIZE + st->base.ox();
+    y -= st->base.y() * SQUARE_SIZE + st->base.oy();
 
     gfx::surface *display = gfx::screen::get_surface();
-    display->fillrect(x, y, st->area_length() * square_size, 1, 0xFFFFFF);
-    display->fillrect(x, y, 1, st->area_height() * square_size, 0xFFFFFF);
-    display->fillrect(x + st->area_length() * square_size - 1, y, 1, st->area_height() * square_size, 0xFFFFFF);
-    display->fillrect(x, y + st->area_height() * square_size - 1, st->area_length() * square_size, 1, 0xFFFFFF);
+    display->fillrect(x, y, st->area_length() * SQUARE_SIZE, 1, 0xFFFFFF);
+    display->fillrect(x, y, 1, st->area_height() * SQUARE_SIZE, 0xFFFFFF);
+    display->fillrect(x + st->area_length() * SQUARE_SIZE - 1, y, 1, st->area_height() * SQUARE_SIZE, 0xFFFFFF);
+    display->fillrect(x, y + st->area_height() * SQUARE_SIZE - 1, st->area_length() * SQUARE_SIZE, 1, 0xFFFFFF);
 }
 
-void placeable_model_gfx::put(base::ogzstream & file) const
+// save to stream
+bool placeable_model_gfx::put_state (base::flat & file) const
 {
-    u_int32 s = Gfxs.size();
-    s >> file;
+    base::flat record;
     
     for (std::map <const std::string, placeable_area_gfx *>::iterator i = Gfxs.begin();
          i != Gfxs.end(); i++)
     {
-        i->first >> file;
-        i->second->put(file);
+        record.put_string ("", i->first);
+        i->second->put_state (record);
     }   
+    
+    file.put_flat ("model", record);
+    return true;
 }
 
-void placeable_model_gfx::get(base::igzstream & file)
+// load from stream
+bool placeable_model_gfx::get_state (base::flat & file)
 {
-    u_int32 size;
+    base::flat record = file.get_flat ("model");
+    if (!file.success ()) return false;
     
-    size << file;
-    
-    for (u_int32 i = 0; i < size; i++)
+    void *value;
+    while (record.next (&value) == base::flat::T_STRING) 
     {
-        std::string s;
-        s << file;
-        
-        placeable_area_gfx * mpa = add_gfx(s);
-        mpa->get(file);
-        
+        placeable_area_gfx * mpa = add_gfx (*(std::string *) &value);
+        mpa->get_state (record);
     }
+    
+    return record.success ();
 }
 
+// get current graphics
 placeable_area_gfx * placeable_model_gfx::current_gfx()
 {
     if (Current_gfx != Gfxs.end ())

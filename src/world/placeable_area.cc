@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.cc,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_area.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,13 +26,13 @@
  * 
  * @brief  Defines the placeable_area class.
  * 
- * 
  */
 
-#include "placeable_area.h"
+#include "world/placeable_area.h"
 
-using namespace world;
+using world::placeable_area;
 
+// change area size
 void placeable_area::set_area_size(u_int16 nx, u_int16 ny)
 {
     area.resize (nx);
@@ -41,48 +41,67 @@ void placeable_area::set_area_size(u_int16 nx, u_int16 ny)
         i->resize (ny);
 }
 
+// get y size of area
 u_int16 placeable_area::area_height() const
 {
     if (area.size ()) return area[0].size ();
     else return 0; 
 }
 
-void placeable_area::put(base::ogzstream & file)
+// save to stream
+bool placeable_area::put_state (base::flat & file) const
 {
-    u_int32 i, j;
-    area_height() >> file;
-    area_length() >> file;
-    for (j = 0; j < area_height(); j++)
-        for (i = 0; i < area_length(); i++)
-            area[i][j].put(file);
+    u_int16 len = area_length();
+    u_int16 hgt = area_height();
+    base::flat record;
     
-    base.x() >> file;
-    base.y() >> file;
-    base.ox() >> file;
-    base.oy() >> file;
+    // save area size
+    record.put_uint16 ("height", hgt);
+    record.put_uint16 ("length", len);
+    record.put_uint16 ("size", zsize);
 
-    zsize >> file;
+    for (u_int16 j = 0; j < hgt; j++)
+        for (u_int16 i = 0; i < len; i++)
+            area[i][j].put_state (record);
+
+    // save position
+    record.put_uint16 ("x", base.x());
+    record.put_uint16 ("y", base.y());
+        
+    // save offset
+    record.put_uint16 ("x_off", base.ox());
+    record.put_uint16 ("y_off", base.oy());
+
+    file.put_flat ("area", record);
+    
+    return true;
 }
 
-void placeable_area::get(base::igzstream & file)
+// load from stream
+bool placeable_area::get_state (base::flat & file)
 {
-    u_int16 l, h;
-    u_int32 i, j;
-    h << file;
-    l << file;
+    base::flat record = file.get_flat ("area");
+    if (!file.success ()) return false;
     
-    set_area_size(l, h);
-    for (j = 0; j < area_height(); j++)
-        for (i = 0; i < area_length(); i++)
-            area[i][j].get(file);
+    // get area size
+    u_int16 var1 = record.get_uint16 ("height");
+    u_int16 var2 = record.get_uint16 ("length");
+    zsize = record.get_uint16 ("size");
+    set_area_size (var1, var2);
     
-    u_int16 x, y, ox, oy;
-    x << file;
-    y << file;
-    ox << file;
-    oy << file;
-    base.set_position(x, y);
-    base.set_offset(ox, oy);
+    for (u_int16 j = 0; j < var1; j++)
+        for (u_int16 i = 0; i < var2; i++)
+            area[i][j].get_state (record);
+    
+    // get position
+    var1 = record.get_uint16 ("x");
+    var2 = record.get_uint16 ("y");
+    base.set_position (var1, var2);
 
-    zsize << file;
+    // get offset
+    var1 = record.get_uint16 ("x_off");
+    var2 = record.get_uint16 ("y_off");
+    base.set_offset (var1, var2);
+
+    return record.success ();
 }

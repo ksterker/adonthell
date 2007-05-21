@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area_gfx.h,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_area_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,66 +31,59 @@
 #ifndef WORLD_PLACEABLE_AREA_GFX
 #define WORLD_PLACEABLE_AREA_GFX
 
-#include "base/file.h"
 #include "gfx/animation.h"
 #include "world/placeable_area.h"
 
 namespace world
 {
     /**
-     * Graphics representing a state of a placeable_model.
-     * 
+     * Graphics representing the state of a placeable_model. Each placeable is
+     * backed by a sprite consisting of one or more animations.
      */
-    class placeable_area_gfx : public gfx::drawable
+    class placeable_area_gfx : public gfx::animation
     {
-    private:
-        gfx::animation * anim;
-
     public:
-        placeable_area_gfx();
+        /**
+         * Create an empty placeable.
+         */
+        placeable_area_gfx ();
 
-        ~placeable_area_gfx();
-
-        gfx::animation * get_animation()
+        /**
+         * Destructor.
+         */
+        virtual ~placeable_area_gfx ();
+        
+        /**
+         * Set size of area occupied by the placeable in number of squares.
+         * @param nx nubmer of squares in x dimension
+         * @param ny number of squares in y dimension
+         */
+        void set_area_size (u_int16 nx, u_int16 ny);
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /**
+         * Save %animation state to stream. 
+         * @param file stream to save %animation to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const
         {
-            return anim;
+            return gfx::animation::put_state (file);
         }
 
-        void play()
+        /**
+         * Load %animation state from stream. 
+         * @param file stream to load %animation from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file)
         {
-            anim->play();
+            return gfx::animation::get_state (file);
         }
-
-        void stop()
-        {
-            anim->stop();
-        }
-
-        void rewind()
-        {
-            anim->rewind();
-        }
-
-        bool update() 
-        {
-            anim->update ();
-            return true; 
-        }
-
-        void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
-                  gfx::surface * target = NULL) const;
-    
-        void set_area_size(u_int16 nx, u_int16 ny);
-
-        void put(base::ogzstream & file) const
-        {
-            // anim->put(file);
-        }
-
-        void get(base::igzstream & file)
-        {
-            // anim->get(file);
-        }
+        //@}
         
 #ifndef SWIG
         GET_TYPE_NAME_VIRTUAL(world::placeable_area_gfx)

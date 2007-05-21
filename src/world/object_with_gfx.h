@@ -1,5 +1,5 @@
 /*
- $Id: object_with_gfx.h,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: object_with_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,16 +44,59 @@ namespace world
     class object_with_gfx : public object, public placeable_gfx
     {
     public:
+        /**
+         * Create %object with graphical representation on given map
+         * @param mymap the area this %object belongs to.
+         */
         object_with_gfx (area & mymap); 
 
-        void put(base::ogzstream & file) const;
-        void get(base::igzstream & file);
+        /**
+         * Loading / Saving
+         */
+        //@{
+        /**
+         * Save %object state to stream. 
+         * @param file stream to save %object to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load %object state from stream. 
+         * @param file stream to load %object from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
+        
+        /**
+         * Save %object state to file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool save (const std::string & fname) const;
+        
+        /**
+         * Load %object state from file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool load (const std::string & fname);
+        //@}
 
-        s_int8 save(const std::string fname) const;
-        s_int8 load(const std::string fname);
-
+        /**
+         * @name Rendering
+         */
+        //@{
+        /**
+         * Draw object graphics at given location.
+         * @param x x offset
+         * @param y y offset
+         * @param da_opt clipping rectangel
+         * @param target surface to draw on, NULL to draw on screen surface 
+         */
         void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                   gfx::surface * target = NULL) const;
+        //@}
     }; 
 }
 

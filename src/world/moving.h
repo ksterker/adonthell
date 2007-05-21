@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: moving.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,55 +40,103 @@ namespace world
      * Implements a map moving object.
      *
      * While placeable can occupy space on a map, it has not the ability to move.
-     * Objects inheriting from this class can be placed on a map and be given a certain
-     * velocity, that they will follow each time they are updated.
-     * 
+     * Objects inheriting from this class can be placed on a map and have a certain
+     * velocity, resulting in a path that they will follow each time they are updated.
      */
     class moving : public placeable, public coordinates
     {
     public:
-        s_int32 zground;
 
+        /**
+         * Create a new movable object on the given map.
+         * @param area the map this object belongs to.
+         */
         moving (area & mymap); 
 
-        float vx () 
+        /**
+         * @name Member Access
+         */
+        //@{
+        /**
+         * Return x velocity.
+         * @return x velocity
+         */
+        float vx () const
         {
             return Vx; 
         }
 
-        float vy () 
+        /**
+         * Return y velocity.
+         * @return y velocity
+         */
+        float vy () const
         {
             return Vy; 
         }
 
-        float vz()
+        /**
+         * Return z velocity.
+         * @return z velocity
+         */        
+        float vz() const
         {
             return Vz;
         }
 
-        u_int16 climb_capability()
+        /**
+         * Return altitude difference that can be overcome
+         * without jumping.
+         * @return climb capability
+         */        
+        u_int16 climb_capability() const
         {
             return Climb_capability;
         }
 
-        u_int16 lx () 
+        u_int16 lx () const
         {
             return Lx;
         }
 
-        u_int16 ly () 
+        u_int16 ly () const
         {
             return Ly; 
         }
-    
+        //@}
+        
+        /**
+         * @name Member Manipulation
+         */
+        //@{
+        /**
+         * Set offset.
+         * @param ox new x offset
+         * @param oy new y offset
+         */
         void set_offset (u_int16 ox, u_int16 oy); 
     
+        /**
+         * Set limit.
+         * @param mx new maximum x limit
+         * @param my new maximum y limit
+         */
         void set_limits (u_int16 mx, u_int16 my); 
 
+        /**
+         * Set valocity on x/y plane.
+         * @param vx new x velocity
+         * @param vy new y velocity
+         */
         void set_velocity (float vx, float vy); 
 
+        /**
+         * Set valocity along z axis.
+         * @param vz new z velocity
+         */
         void set_vertical_velocity(float vz);
-
+        //@}
+        
         /** 
          * 
          * 
@@ -100,6 +148,9 @@ namespace world
         void update_pos2();
 
         bool update(); 
+
+        /// ???
+        s_int32 zground;
 
     protected:
         /// ???

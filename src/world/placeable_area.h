@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.h,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_area.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,15 +35,12 @@
 #include <vector>
 
 #include "world/coordinates.h"
-#include "base/file.h"
+#include "base/flat.h"
 
 namespace world
 {
-    const int square_size = 40;
-
     /**
      * Walkability info class.
-     * 
      */
     class square_walkable_info
     {
@@ -66,17 +63,17 @@ namespace world
             Walkable = b; 
         }
 
-        void put(base::ogzstream & file) const
+        void put_state (base::flat & file) const
         {
-            Walkable >> file;
+            file.put_bool ("", Walkable);
         }
 
-        void get(base::igzstream & file)
+        void get_state (base::flat & file)
         {
-            Walkable << file;
+            Walkable = file.get_bool ("");
         }
 
-        bool does_intersect(const square_walkable_info & mwi, const u_int16 x, const u_int16 oy) const
+        bool does_intersect(const square_walkable_info & mwi, const u_int16 ox, const u_int16 oy) const
         {
             return (is_walkable() && mwi.is_walkable());
         }
@@ -84,48 +81,88 @@ namespace world
 
     /**
      * Area of squares that represents the occupation of a placeable
-     * on the map.
+     * on the map. Used for collision detection.
      * 
+     * FIXME: is that per pixel or per grid square?
      */
     class placeable_area
     {
-    private:
-        std::vector <std::vector <square_walkable_info> > area;
-    
     public:
-        u_int16 zsize;
-    
-        coordinates base; 
-
+        /**
+         * Create new collision information for a placeable.
+         */
         placeable_area()
         {
             zsize = 0;
         }
 
+        /**
+         * Get extension of area in x direction
+         * @return extension in x direction.
+         */
         u_int16 area_length() const
         {
             return area.size ();
         }
     
+        /**
+         * Get extension of area in y direction
+         * @return extension in y direction.
+         */
         u_int16 area_height() const;
 
+        /**
+         * Set extension of area
+         * @param nx extension in x direction.
+         * @param ny extension in y direction.
+         */
         void set_area_size(u_int16 nx, u_int16 ny);
 
-        square_walkable_info & get(u_int16 x, u_int16 y) 
+        /**
+         * Get collision information for a particular location of the area.
+         * @param x x coordinate
+         * @param y y coordinate
+         */
+        square_walkable_info & get(u_int16 x, u_int16 y)
         {
             return area[x][y]; 
         }
 
-        bool update() 
+        /**
+         * Called once per game cycle by the engine to update state. 
+         */
+        bool update ()
         {
             return true; 
         }
 
-        void put(base::ogzstream & file);
-
-        void get(base::igzstream & file);
+        /**
+         * Loading / Saving
+         */
+        //@{
+        /**
+         * Save %area state to stream. 
+         * @param file stream to save %area to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        /**
+         * Load %area state from stream. 
+         * @param file stream to load %area from.
+         * @return \b true if loading successful, \b false otherwise.
+         */        
+        bool get_state (base::flat & file);
+        //@}
+        
+        /// object height
+        u_int16 zsize;
+        /// object length and width
+        coordinates base;
+        
+    private:
+        /// collision information  
+        std::vector <std::vector <square_walkable_info> > area;
     }; 
 }
 
 #endif
-

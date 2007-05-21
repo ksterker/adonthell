@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: area.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -25,11 +25,9 @@
  * 
  * @brief  Defines the area class.
  * 
- * 
  */
 
 #include <algorithm>
-#include <iostream>
 
 #include "world/area.h"
 

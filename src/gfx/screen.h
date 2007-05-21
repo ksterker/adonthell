@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.5 2006/10/07 21:16:21 gnurou Exp $
+   $Id: screen.h,v 1.6 2007/05/21 04:44:11 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,10 +30,6 @@
  
 #ifndef SCREEN_H_
 #define SCREEN_H_
-
-#include "base/types.h"
-
-#include <string>
 
 #include "gfx/surface.h"
 

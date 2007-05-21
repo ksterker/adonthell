@@ -1,7 +1,8 @@
 /*
- $Id: area.h,v 1.1 2007/05/19 07:42:08 ksterker Exp $
+ $Id: area.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -22,6 +23,7 @@
 /**
  * @file   world/area.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
  * @brief  Declares the area class.
  * 
@@ -29,11 +31,8 @@
  */
 
 
-
 #ifndef WORLD_MAP_H
 #define WORLD_MAP_H
-
-#include <vector>
 
 #include "world/character_with_gfx.h"
 #include "world/object_with_gfx.h"
@@ -41,19 +40,36 @@
 namespace world
 {
     /**
-     * A cell in the world grid.
+     * Information about an object on the world grid.
      */
     class square_info : public coordinates
     {
     public:
+        /// objects vertical position
         s_int32 zground;
-        
+        /// object the information belongs to
         placeable * obj;
         
+        /**
+         * Create new object information.
+         * @param pos the position of the object.
+         */
         square_info (coordinates & pos);
         
+        /**
+         * Check two square_info instances for the order they appear on
+         * a square. Z and Y coordinates are used to determine order.
+         * @param mi object to compare to
+         * @return true if this is smaller than mi, false otherwise.
+         */
         bool operator < (const square_info & mi) const;
         
+        /**
+         * Check two square_info instances for equality. They are 
+         * equal if their position and object are the same.
+         * @param mi object to compare to
+         * @return true if this and mi are equal, false otherwise. 
+         */
         bool operator == (const square_info & mi) const
         {
             // We call coordinates::operator == here
@@ -62,12 +78,18 @@ namespace world
         }
     }; 
     
+    /**
+     * A cell in the world grid. It contains a list of objects that
+     * are located at this location.
+     */
     class square
     {
     private:
+        /// objects at this location.
         std::vector <square_info> objects; 
         
     public:
+        /// an object vector iterator
         typedef std::vector <square_info>::iterator iterator;
         
         iterator begin ()
@@ -80,12 +102,39 @@ namespace world
             return objects.end (); 
         }
         
+        /**
+         * Add a static object to this square.
+         * @param obj the object to add.
+         * @param pos the location of this object
+         */
         bool add (placeable * obj, coordinates & pos); 
+        
+        /**
+         * Add a moving object to this square.
+         * @param obj the object to add.
+         */
         bool add (moving * obj);
-        bool remove (placeable * obj, coordinates & pos); 
+        
+        /**
+         * Remove a static object from this square.
+         * @param obj the object to removes.
+         * @param pos the object's location.
+         */
+        bool remove (placeable * obj, coordinates & pos);
+        
+        /**
+         * Check whether given object exists in this square.
+         * @param obj the object.
+         * @param pos its location.
+         */
         bool exist (placeable * obj, coordinates & pos); 
         
-        square_info * project_moving(moving & obj)
+        /**
+         *
+         * @param obj
+         * @return
+         */
+        square_info * project_moving (moving & obj)
         {
             //        placeable_area * movstat = obj.current_state();
             
@@ -98,6 +147,7 @@ namespace world
             }
             
             if (it == end()) return NULL;
+            // FIXME: that doesn't look right
             return NULL;
         }
     };

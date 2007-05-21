@@ -1,5 +1,5 @@
 /*
- $Id: placeable_gfx.h,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,8 +32,6 @@
 #ifndef WORLD_PLACEABLE_GFX_H
 #define WORLD_PLACEABLE_GFX_H
 
-#include <map>
-
 #include "world/placeable_model_gfx.h"
 #include "world/placeable.h"
 
@@ -50,10 +48,15 @@ namespace world
     class placeable_gfx : public placeable_model_gfx
     {
     private:
+        /// the placeable these graphics belong to.
         placeable & Target;
 
     public:
-        placeable_gfx(placeable & target);
+        /**
+         * Constructor
+         * @param target the placeable these graphics belong to.
+         */
+        placeable_gfx (placeable & target);
     }; 
 }
 

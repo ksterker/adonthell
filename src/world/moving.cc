@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: moving.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,17 +101,17 @@ void moving::update_pos2()
             if (nX > 0)
             {
                 nX--;
-                nfox += square_size;
+                nfox += SQUARE_SIZE;
             }
             else nfox = 0.0; 
         }
 
-        while (nfox >= square_size) 
+        while (nfox >= SQUARE_SIZE) 
         {
             if (nX < Lx) 
             {
                 nX++; 
-                nfox -= square_size;
+                nfox -= SQUARE_SIZE;
             }
             else
             {
@@ -135,17 +135,17 @@ void moving::update_pos2()
         {
             if (nY > 0)
             {
-                nfoy += square_size;
+                nfoy += SQUARE_SIZE;
                 nY--;
             }
             else nfoy = 0.0; 
         }
         
-        while (nfoy >= square_size) 
+        while (nfoy >= SQUARE_SIZE) 
         {
             if (nY < Ly) 
             {
-                nfoy -= square_size;
+                nfoy -= SQUARE_SIZE;
                 nY++;
             }
             else 
@@ -294,17 +294,17 @@ void moving::update_pos()
             if (nX > 0)
             {
                 nX--;
-                nfox += square_size;
+                nfox += SQUARE_SIZE;
             }
             else nfox = 0.0; 
         }
 
-        while (nfox >= square_size) 
+        while (nfox >= SQUARE_SIZE) 
         {
             if (nX < Lx) 
             {
                 nX++; 
-                nfox -= square_size;
+                nfox -= SQUARE_SIZE;
             }
             else
             {
@@ -368,17 +368,17 @@ void moving::update_pos()
         {
             if (nY > 0)
             {
-                nfoy += square_size;
+                nfoy += SQUARE_SIZE;
                 nY--;
             }
             else nfoy = 0.0; 
         }
         
-        while (nfoy >= square_size) 
+        while (nfoy >= SQUARE_SIZE) 
         {
             if (nY < Ly) 
             {
-                nfoy -= square_size;
+                nfoy -= SQUARE_SIZE;
                 nY++;
             }
             else 

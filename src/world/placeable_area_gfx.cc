@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area_gfx.cc,v 1.1 2007/05/19 07:42:10 ksterker Exp $
+ $Id: placeable_area_gfx.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,29 +29,21 @@
  */
 
 
-#include "placeable_area_gfx.h"
+#include "world/placeable_area_gfx.h"
 
-using namespace world;
+using world::placeable_area_gfx;
 
-placeable_area_gfx::placeable_area_gfx() : drawable()
+placeable_area_gfx::placeable_area_gfx() : animation ()
 {
-    anim = new gfx::animation(); 
 }
 
 placeable_area_gfx::~placeable_area_gfx()
 {
-    delete anim;
 }
 
-void placeable_area_gfx::draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
-                                   gfx::surface * target) const
-{
-    if(anim)
-        anim->draw (x, y, da_opt, target); 
-}
-
+// set size
 void placeable_area_gfx::set_area_size(u_int16 nx, u_int16 ny)
 {
-    drawable::set_length (nx * square_size); 
-    drawable::set_height (ny * square_size); 
+    drawable::set_length (nx * SQUARE_SIZE); 
+    drawable::set_height (ny * SQUARE_SIZE); 
 }

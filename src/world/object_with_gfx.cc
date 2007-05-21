@@ -1,5 +1,5 @@
 /*
- $Id: object_with_gfx.cc,v 1.1 2007/05/19 07:42:09 ksterker Exp $
+ $Id: object_with_gfx.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,10 +29,12 @@
  * 
  */
 
+#include "base/diskio.h"
 #include "world/object_with_gfx.h"
 
 using world::object_with_gfx;
 
+// ctor
 object_with_gfx::object_with_gfx (world::area & mymap) : object (mymap), placeable_gfx ((placeable &) *this) 
 {
     //     placeable_area * moa;
@@ -47,50 +49,63 @@ object_with_gfx::object_with_gfx (world::area & mymap) : object (mymap), placeab
     //     moag->get_animation()->load("adontest/house.anim");
     
     //     load("adontest/house.mdl");
-    set_state("default"); 
+    set_state ("default"); 
 }
 
-void object_with_gfx::put(base::ogzstream & file) const
+// save to stream
+bool object_with_gfx::put_state (base::flat & file) const
 {
-    object::put(file);
-    placeable_model_gfx::put(file);
-}
-
-void object_with_gfx::get(base::igzstream & file)
-{
-    object::get(file);
-    placeable_model_gfx::get(file);
-    set_gfx(current_state_name());
-}
-
-s_int8 object_with_gfx::save(const std::string fname) const
-{
-    base::ogzstream file (fname);
-    s_int8 ret = 0; 
+    object::put_state (file);
+    placeable_model_gfx::put_state (file);
     
-    if (!file.is_open ())
-        return 1;
-    put (file);
-    file.close (); 
-    Filename = fname;
-    return ret;
+    return true;
 }
 
-s_int8 object_with_gfx::load(const std::string fname)
+// load from stream
+bool object_with_gfx::get_state (base::flat & file)
 {
-    base::igzstream file (fname);
-    s_int8 ret = 0; 
+    object::get_state (file);
+    placeable_model_gfx::get_state (file);
+    set_gfx (current_state_name());
     
-    if (!file.is_open ())
-        return 1;
-    get (file);
-    file.close (); 
-    Filename = fname;
-    return ret;
+    return file.success ();
 }
 
+bool object_with_gfx::save (const std::string & fname) const
+{
+    // try to save character
+    base::diskio record (base::diskio::XML_FILE);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** object_with_gfx::save: saving '%s' failed!\n", fname.c_str ());        
+        return false;
+    }
+    
+    // remember filename
+    Filename = fname;
+    
+    // write character to disk
+    return record.put_record (fname);
+}
+
+// load from XML file
+bool object_with_gfx::load (const std::string & fname)
+{
+    // try to load character
+    base::diskio record (base::diskio::XML_FILE);
+    
+    // remember file name
+    Filename = fname;
+    
+    if (record.get_record (fname)) 
+        return get_state (record);
+    
+    return false;
+}
+
+// render object
 void object_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                             gfx::surface * target) const
 {
-    placeable_model_gfx::draw(x, y, da_opt, target);
+    placeable_model_gfx::draw (x, y, da_opt, target);
 }
