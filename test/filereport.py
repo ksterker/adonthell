@@ -1,9 +1,6 @@
 from adonthell import base
 import sys
 
-str_type = ["bool", "char", "u_int8", "s_int8", "u_int16", "s_int16", "u_int32", \
-            "s_int32", "string", "float", "double", "blob", "flat"]
-
 hex_vals = "0123456789ABCDEF"
 
 class file_report (object):
@@ -44,7 +41,7 @@ class file_report (object):
             else: value_str = str(value)
             
             if len (value_str) > 30: value_str = value_str[0:27] + "..."
-            print "%-10s  %-8s  %-5i  %-30s" % (field, str_type[type], length, value_str)
+            print "%-10s  %-8s  %-5i  %-30s" % (field, base.flat.name_for_type(type), length, value_str)
     
             if type == base.flat.T_FLAT:
                 self.print_record (value, efn)
@@ -67,8 +64,8 @@ class file_report (object):
         # -- load contents of file
         record.get_record (filename)
         print "Checksum =", hex (record.checksum())
-        print "Buffer =", record.to_string ()
- 
+        print "Contents:"
+        print "" 
         print "Field       Type      Len    Value"
         print "----------  --------  -----  ------------------------------"
         
