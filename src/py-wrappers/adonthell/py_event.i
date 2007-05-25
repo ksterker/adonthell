@@ -20,7 +20,7 @@ namespace events {
     }
 }
 
-%include "base/types.h"
+%import "base/types.h"
 %include "event/date.h"
 %include "event/event.h"
 %include "event/time_event.h"

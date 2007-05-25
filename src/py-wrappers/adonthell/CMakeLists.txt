@@ -4,7 +4,7 @@ include(${SWIG_USE_FILE})
 include_directories(${PYTHON_INCLUDE_PATH})
 
 # Wrapper modules
-foreach(name audio base event gfx gui input main rpg)
+foreach(name audio base event gfx gui input main rpg world)
   set_source_files_properties("py_${name}.i" PROPERTIES CPLUSPLUS ON)
   set_source_files_properties("py_${name}.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;${name}")
   
@@ -16,7 +16,7 @@ foreach(name audio base event gfx gui input main rpg)
   
   swig_link_libraries(${name} ${PYTHON_LIBRARIES} adonthell_${name})
   set_target_properties (_${name} PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
-  adonthell_install_py (_${name} "${name}.py")
+  adonthell_install_py (_${name} "${CMAKE_CURRENT_BINARY_DIR}/${name}.py")
 endforeach(name)
 
 # input wrapper needs additional libraries

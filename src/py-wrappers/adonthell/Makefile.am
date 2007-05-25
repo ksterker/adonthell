@@ -1,13 +1,13 @@
 CXXFLAGS += -I$(top_srcdir)/src
-EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_gui.i py_main.i 
+EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_gui.i py_main.i py_rpg.i py_world.i
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py gui.py main.py rpg.py
-noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc gui.pyc main.pyc rpg.pyc 
+pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py gui.py main.py rpg.py world.py
+noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc gui.pyc main.pyc rpg.pyc world.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la _gui.la _main.la _rpg.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la _gui.la _main.la _rpg.la _world.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la
@@ -77,6 +77,14 @@ _rpg_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/event -ladonthell_event	\
 	$(PY_RUNTIME)
 
+## Rules to build libpyworld (libworlds's Python wrapper)
+_world_la_SOURCES = py_world_wrap.cc
+_world_la_CXXFLAGS = $(PY_CFLAGS)
+_world_la_LDFLAGS = -avoid-version -module
+_world_la_LIBADD = $(PY_LIBADD)						\
+	-L$(top_builddir)/src/world -ladonthell_world	\
+	-L$(top_builddir)/src/gfx -ladonthell_gfx		\
+	$(PY_RUNTIME)
 
 ## Swig arguments
 SWIG_ARGS = -python -modern -noexcept -I$(top_srcdir)/src
@@ -112,6 +120,10 @@ py_main_wrap.cc: py_main.i  $(top_srcdir)/src/main/*.h
 
 rpg.py: py_rpg_wrap.cc
 py_rpg_wrap.cc: py_rpg.i  $(top_srcdir)/src/rpg/*.h
+	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
+
+world.py: py_world_wrap.cc
+py_world_wrap.cc: py_world.i  $(top_srcdir)/src/world/*.h
 	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
 
 __init__.py:

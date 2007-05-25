@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: area.cc,v 1.3 2007/05/25 03:16:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,100 +27,12 @@
  * 
  */
 
-#include <algorithm>
-
 #include "world/area.h"
 
 using world::coordinates;
-using world::square_info;
-using world::square;
 using world::area;
 using world::object;
 using world::character;
-
-square_info::square_info (coordinates & pos)
- : coordinates (pos) 
-{
-    zground = pos.z();
-}
-
-bool square_info::operator < (const square_info & mi) const
-{
-//     if (y() == mi.y() || (y() == mi.y() + 1 && mi.oy()) &&
-//         z() + obj->current_state()->zsize <= mi.z()) return true;
-
-//     if (mi.y() == y() || (mi.y() == y() + 1 && oy()) &&
-//         z() >= mi.z() + mi.obj->current_state()->zsize) return false;
-
-    if (z() + obj->current_state()->zsize <= mi.zground) return true;
-    if (zground >= mi.z() + mi.obj->current_state()->zsize) return false;
-    if (y() < mi.y()) return true;
-    if (y() > mi.y()) return false;
-    if (oy() < mi.oy()) return true;
-    if (oy() > mi.oy()) return false;
-
-//     if (obj->type() == OBJECT) return true;
-//     if (obj->type() == CHARACTER) return false;
-//     if (z() + obj->current_state()->zsize < mi.z() + mi.obj->current_state()->zsize) return true;
-//     if (z() + obj->current_state()->zsize > mi.z() + mi.obj->current_state()->zsize) return false;
-
-//     if ((y() * square_size) + oy() + square_size <=
-//         (mi.y() - (mi.obj->current_state()->area_height() - 1)) * square_size + mi.oy()) return true;
-
-//     if ((y() - (obj->current_state()->area_height() - 1)) * square_size + oy() >=
-//         square_size + mi.y() * square_size + mi.oy()) return false;
-
-    // If the objects are at the same y position, we better
-    // make an arbitrary test to make sure a moving object
-    // won't go from behind to before another object when
-    // their y coordinates are the same and the x coordinate
-    // of the moving object become greater than the other object.
-    return false;
-}
-
-bool square::add (placeable * obj, coordinates & pos)
-{
-    square_info mi (pos);
-    mi.obj = obj; 
-    std::vector<square_info>::iterator it = objects.begin();
-    while(it != objects.end() && mi.z() + mi.obj->current_state()->zsize < 
-          it->z() + it->obj->current_state()->zsize) ++it;
-    objects.insert(it, mi);
-    return true; 
-}
-
-bool square::add (moving * obj)
-{
-    square_info mi (*obj);
-    mi.obj = obj; 
-    mi.zground = obj->zground;
-    std::vector<square_info>::iterator it = objects.begin();
-    while(it != objects.end() && mi.z() + mi.obj->current_state()->zsize < 
-          it->z() + it->obj->current_state()->zsize) ++it;
-    objects.insert(it, mi);
-    return true; 
-}
-
-bool square::remove (placeable * obj, coordinates & pos)
-{
-    square_info mi (pos);
-    mi.obj = obj; 
-    std::vector <square_info>::iterator er;
-    er = std::find (objects.begin (), objects.end (), mi);
-    if (er == objects.end ()) return false;
-    objects.erase (er);
-    return true; 
-}
-
-bool square::exist (placeable * obj, coordinates & pos)
-{
-    square_info mi (pos);
-    mi.obj = obj; 
-    std::vector <square_info>::iterator er;
-    er = std::find (objects.begin (), objects.end (), mi); 
-    if (er == objects.end ()) return false;
-    return true; 
-}
 
 area::~area()
 {
@@ -141,7 +53,7 @@ void area::resize (const u_int16 nx, const u_int16 ny)
         i->resize (ny); 
 }
 
-square * area::get (const u_int16 x, const u_int16 y) 
+world::square * area::get (const u_int16 x, const u_int16 y) 
 {
     return (&Grid[x][y]); 
 }

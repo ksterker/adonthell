@@ -64,9 +64,9 @@ namespace rpg {
 
 %typemap(freearg) const std::vector<std::string> & "delete $1;"
 
-%include "base/types.h"
-%include "event/event.h"
-%include "python/script.h"
+%import "base/types.h"
+%import "event/event.h"
+%import "python/script.h"
 %include "rpg/item.h"
 %include "rpg/slot.h"
 %include "rpg/character.h"
