@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.10 2006/09/30 23:04:59 ksterker Exp $
+   $Id: timer.cc,v 1.11 2007/05/25 03:13:55 ksterker Exp $
 
    Copyright (C) 2003/2004/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,7 +47,7 @@ struct timespec
 
 int nanosleep (const struct timespec *req, struct timespec *rem) 
 {
-	Sleep (req->tv_sec * 1000 + req->tv_nsec / 1000);
+	Sleep (req->tv_sec * 1000 + req->tv_nsec / 1000000);
     rem->tv_nsec = 0;
     rem->tv_sec = 0;
     return 0;
@@ -57,7 +57,7 @@ int nanosleep (const struct timespec *req, struct timespec *rem)
 namespace base
 {
     // ctor
-    timer::timer() : Slice(50), Lasttime(0), FramesMissed(0)
+    timer::timer() : Slice(25), Lasttime(0), FramesMissed(0)
     {
         gettimeofday (&InitialTime, NULL);
     }
