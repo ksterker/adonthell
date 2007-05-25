@@ -16,7 +16,7 @@ pkgincludeworld_HEADERS = \
     placeable_gfx.h \
     placeable_model.h \
 	placeable_model_gfx.h \
-	sqaure.h
+	square.h
 
 ## World library
 lib_LTLIBRARIES = libadonthell_world.la
@@ -36,7 +36,7 @@ libadonthell_world_la_SOURCES = \
     placeable_gfx.cc \
     placeable_model.cc \
 	placeable_model_gfx.cc \
-	sqaure.cc
+	square.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS)
 libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \
