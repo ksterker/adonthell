@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.5 2007/05/21 04:44:10 ksterker Exp $
+   $Id: animation.cc,v 1.6 2007/05/27 05:22:21 Mithander Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -98,19 +98,33 @@ namespace gfx
     // load from stream
     bool animation::get_state (base::flat & file)
     {
-        // TODO: load animation
-        
-        return file.success();
+        void *value;
+        char *id;
+        // TODO:  Remove call to get_flat (should have data from next)
+        while (file.next (&value, NULL, &id) == base::flat::T_FLAT)
+        {
+            string animation_name = id;
+            base::flat anim = file.get_flat(id);
+            animation_list cur_animation;
+
+            while (anim.next (&value, NULL, &id) == base::flat::T_FLAT) 
+            {
+                base::flat frame = anim.get_flat(id);
+
+                cur_animation.push_back(new animation_frame(surface_cache(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
+            }
+
+            m_sprite->second[animation_name] = cur_animation;
+
+        }
+
+        return file.success ();
+
     }
     
     // load from XML file
     bool animation::load_animation (const std::string & filename)
     {
-        animation_map sprite;
-        animation_list anim;
-        animation_frame *cur;
-        int idx;
-
         //Check if we have already loaded the file
         m_sprite = m_allAnimations.find(filename);
         if (m_sprite != m_allAnimations.end()) {
@@ -118,102 +132,63 @@ namespace gfx
             return m_valid;
         }
 
+        //We have not loaded it before so load it from the file
+        base::diskio animation (base::diskio::XML_FILE);
 
-        // TODO Load xml file here. 
+        if (! animation.get_record (filename))
+            //Error loading the file (file not found?)
+            return false;
 
-        //For now we hard code an animation until save/load is complete
-        char Buffer[100];
-        anim.clear();
-        cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/east_mov1.png"));
-        anim.push_back(cur);
-        sprite["stand_east"] = anim;
-        anim.clear();
-        for(idx = 0; idx < 6; idx ++) {
-            sprintf(Buffer, "gfx/character/npc/naked_guy/east_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0);
-            anim.push_back(cur);
-        }
-        sprite["walk_east"] = anim;
-
-        anim.clear();
-        cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/east_mov1.png", true, true));
-        anim.push_back(cur);
-        sprite["stand_west"] = anim;
-        anim.clear();
-        for(idx = 0; idx < 6; idx ++) {
-            sprintf(Buffer, "gfx/character/npc/naked_guy/east_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer, true, true), 0);
-            anim.push_back(cur);
-        }
-        sprite["walk_west"] = anim;
-
-        anim.clear();
-        cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/south_mov1.png"));
-        anim.push_back(cur);
-        sprite["stand_south"] = anim;
-        anim.clear();
-        for(idx = 0; idx < 6; idx ++) {
-            sprintf(Buffer, "gfx/character/npc/naked_guy/south_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0);
-            anim.push_back(cur);
-        }
-        sprite["walk_south"] = anim;
-
-        anim.clear();
-        cur = new animation_frame(surface_cache("gfx/character/npc/naked_guy/north_mov1.png"));
-        anim.push_back(cur);
-        sprite["stand_north"] = anim;
-        anim.clear();
-        for(idx = 0; idx < 6; idx ++) {
-            sprintf(Buffer, "gfx/character/npc/naked_guy/north_mov%d.png", idx+1);
-            cur = new animation_frame(surface_cache(Buffer), 0);
-            anim.push_back(cur);
-        }
-        sprite["walk_north"] = anim;
-
+        //Sprite doesn't exist so create a blank one
+        animation_map sprite;
         m_allAnimations[filename] = sprite;
         m_sprite = m_allAnimations.find(filename);
-        m_animation = m_sprite->second.find("stand_east");
+
+        //This will populate the sprite that we just created
+        bool retval = get_state (animation);
+
+        m_animation = m_sprite->second.find("stand_east");  //TODO This should be part of the XML File, not hardcoded here
         m_surface = m_animation->second.begin();
 
-        set_length((*m_surface)->image->length());
-        set_height((*m_surface)->image->height());
+        set_length((*m_surface)->image->length());          //TODO This should be part of the XML File, not hardcoded here
+        set_height((*m_surface)->image->height());          //TODO This should be part of the XML File, not hardcoded here
 
         m_valid = true;
+        m_playing = true;                                   //TODO This should be part of the XML File, not hardcoded here
 
-        return m_valid;
+        return retval;
     }
 
     // save to stream
     bool animation::put_state (base::flat & file) const
     {
         animation_map::iterator ii;
-        
+
         //Loop through all available animations
         for(ii = m_sprite->second.begin(); ii != m_sprite->second.end(); ii++) {
             base::flat anim;
             animation_list::iterator jj;
-            
+
             //Loop through all frames in current animation
             for(jj = ii->second.begin(); jj != ii->second.end(); jj++) {
                 base::flat frame;
-                
+
                 //Add information about the frame.
                 frame.put_bool("mask", (*jj)->image->is_masked());
                 frame.put_bool("mirrored_x", (*jj)->image->is_mirrored_x());
                 frame.put_uint32("delay", (*jj)->delay);
-                
+
                 //Add the frame to the animation
                 anim.put_flat((*jj)->image->filename(), frame);
             }
-            
+
             //Add the current animation to the diskio
             file.put_flat(ii->first, anim);
         }
-        
+
         return true;
     }
-    
+
     // save to XML file
     bool animation::save_animation (const std::string & filename)
     {

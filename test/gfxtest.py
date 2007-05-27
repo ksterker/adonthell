@@ -52,7 +52,7 @@ def gfxtest ():
             
     #load an image... gfx must be checked out and linked
     image = gfx.animation()
-    image.load_animation("foo")
+    image.load_animation("gfx/character/npc/naked_guy/naked_guy.xml")
     count = 0
     oldwalkdir = None
     while not letsexit:
