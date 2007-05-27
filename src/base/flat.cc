@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.12 2007/05/27 01:44:48 ksterker Exp $
+   $Id: flat.cc,v 1.13 2007/05/27 23:04:24 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -215,10 +215,10 @@ void flat::parse ()
             // get size in correct endianess
             u_int32 tmp = Swap32 (*((u_int32*) Ptr));
             decoded->Size = tmp;
-            Ptr += 4;
             
             // update buffer
             memcpy (Ptr, &tmp, 4);
+            Ptr += 4;
             
             // check whether we need to change buffer
             switch (decoded->Type)
@@ -266,7 +266,7 @@ void flat::parse ()
 u_int32 flat::checksum () const
 {
     u_int32 a32 = adler32 (0, NULL, 0);
-    return SwapLE32 (adler32 (a32, (Bytef*) Buffer, Size));
+    return adler32 (a32, (Bytef*) Buffer, Size);
 }
 
 // grow internal buffer

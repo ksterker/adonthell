@@ -1,6 +1,7 @@
 %module gui
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
+%{
 #include "base/types.h"
 #include "gui/gui.h"
 

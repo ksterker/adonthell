@@ -1,6 +1,7 @@
 %module event
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
+%{
 #include <string>
 #include "event/date.h"
 #include "event/factory.h"

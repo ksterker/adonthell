@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.21 2007/05/27 01:44:48 ksterker Exp $
+   $Id: flat.h,v 1.22 2007/05/27 23:04:25 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -540,7 +540,7 @@ namespace base
                 
                 hex[Size * 2] = 0;
                 
-                for (s_int32 i = 1; i <= Size; i++) 
+                for (s_int32 i = 0; i < Size; i++) 
                 {
                     hex[j++] = Bin2Hex[(Buffer[i] >> 4) & 0x0f];
                     hex[j++] = Bin2Hex[Buffer[i] & 0x0f];

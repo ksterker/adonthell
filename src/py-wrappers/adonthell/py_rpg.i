@@ -1,8 +1,7 @@
 %module rpg
+%feature("autodoc", "1");   // enable docstrings for python wrappers
+
 %{
-
-#include <string>
-
 #include "rpg/character.h"
 #include "rpg/dialog.h"
 #include "rpg/dialog_line.h"

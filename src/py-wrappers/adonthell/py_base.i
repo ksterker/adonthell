@@ -1,4 +1,6 @@
 %module base
+%feature("autodoc", "1");   // enable docstrings for python wrappers
+
 %{
 #include <string>
 #include "base/nls.h"

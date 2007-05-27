@@ -1,6 +1,7 @@
 %module gfx
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
+%{
 #include <string>
 #include "base/types.h"
 #include "gfx/gfx.h"

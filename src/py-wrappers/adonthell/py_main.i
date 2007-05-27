@@ -1,6 +1,7 @@
 %module main
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
+%{
 #include <string>
 #include "py_main.h"
 %}

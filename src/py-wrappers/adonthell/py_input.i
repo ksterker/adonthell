@@ -1,6 +1,7 @@
 %module input
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
+%{
 #include <string>
 #include "base/types.h"
 #include "input/input.h"

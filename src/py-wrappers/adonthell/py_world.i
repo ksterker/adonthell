@@ -1,7 +1,7 @@
 %module world
-%{
+%feature("autodoc", "1");   // enable docstrings for python wrappers
 
-#include <string>
+%{
 #include "base/types.h"
 #include "world/area.h"
 
@@ -12,8 +12,8 @@ using namespace world;
 %include "std_string.i"
 
 %import "base/types.h"
-%import "gfx/drawable.h"
-%import "gfx/animation.h"
+%import "py_gfx.i"
+
 %include "world/placeable_model.h"
 %include "world/placeable.h"
 %include "world/placeable_model_gfx.h"
