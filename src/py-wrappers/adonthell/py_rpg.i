@@ -66,7 +66,7 @@ namespace rpg {
 
 %import "base/types.h"
 %import "event/event.h"
-%import "python/script.h"
+%include "python/script.h"
 %include "rpg/item.h"
 %include "rpg/slot.h"
 %include "rpg/character.h"

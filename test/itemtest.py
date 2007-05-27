@@ -276,13 +276,10 @@ class itemtest (object):
         self.print_inventories (Inventories)
         
         print "Saving ..."
-        file = base.ogzstream ()
-        file.open ("/tmp/itemtest.tmp")
-        io = base.diskio ()
+        out = base.diskio (base.diskio.GZ_FILE)
         for i in Inventories: 
-            i.put_state (io)
-            io.put_record (file)
-        file.close ()
+            i.put_state (out)
+        out.put_record ("/tmp/itemtest.tmp")
         
         print "Cleaning up ..."
         Inventories = []
@@ -292,12 +289,10 @@ class itemtest (object):
         Inventories.append (rpg.inventory ())
         
         print "Loading ..."
-        file = base.igzstream ()
-        file.open ("/tmp/itemtest.tmp")
+        rin = base.diskio (base.diskio.GZ_FILE)
+        rin.get_record ("/tmp/itemtest.tmp")
         for i in Inventories:
-            io.get_record (file)
-            i.get_state (io)
-        file.close ()
+            i.get_state (rin)
         
         self.print_inventories (Inventories)
         
@@ -309,13 +304,10 @@ class itemtest (object):
         self.print_inventories([Inventories[0], Inventories[2]])
         
         print "Saving ..."
-        file = base.ogzstream ()
-        file.open ("/tmp/itemtest.tmp")
-        io = base.diskio ()
+        out = base.diskio (base.diskio.GZ_FILE)
         for i in Inventories: 
-            i.put_state (io)
-            io.put_record (file)
-        file.close ()
+            i.put_state (out)
+        out.put_record ("/tmp/itemtest.tmp")
         
         print "Cleaning up ..."
         Inventories = []
@@ -325,12 +317,10 @@ class itemtest (object):
         Inventories.append (rpg.inventory ())
         
         print "Loading ..."
-        file = base.igzstream ()
-        file.open ("/tmp/itemtest.tmp")
+        rin = base.diskio (base.diskio.GZ_FILE)
+        rin.get_record ("/tmp/itemtest.tmp")
         for i in Inventories:
-            io.get_record (file)
-            i.get_state (io)
-        file.close ()
+            i.get_state (rin)
         
         self.print_inventories (Inventories)
         
@@ -351,6 +341,8 @@ def itemtest_func ():
     it.create_items ()
     it.slot_test ()
     it.inventory_test ()
+
+    return 0
     
 if __name__ == '__main__':
     myApp = main.AdonthellApp ()
