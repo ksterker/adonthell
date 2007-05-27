@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_gz.cc,v 1.2 2006/09/30 23:04:59 ksterker Exp $
+ $Id: diskwriter_gz.cc,v 1.3 2007/05/27 01:44:48 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,6 +43,9 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
         return false; 
     }
     
+    // write byte order
+    data.byte_order () >> out;
+    
     // write header
     data.size () >> out;
     
@@ -59,6 +62,7 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
 // read from gz-compressed binary file
 bool disk_writer_gz::get_state (const std::string & name, base::flat & data) const
 {
+    u_int8 byte_order;
     u_int32 length, checksum;
     base::igzstream in;
     
@@ -72,6 +76,16 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // does file contain data
     if (in.eof ()) {
         fprintf (stderr, "*** disk_writer_gz::get_state: file '%s' is empty!\n", name.c_str());
+        return false;
+    }
+    
+    // get byte order
+    byte_order << in;
+    
+    // check for correct format
+    if (byte_order != 'L' && byte_order != 'B')
+    {
+        fprintf (stderr, "*** disk_writer_gz::get_state: unknown byte order '%c'!\n", byte_order);
         return false;
     }
     

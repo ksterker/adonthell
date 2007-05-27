@@ -35,7 +35,7 @@ class file_report (object):
         type, value, length, field = flt.next ()
         while type != -1:
             if type == base.flat.T_FLAT: 
-                value_str = "<Embedded flat '" + field + "'>"
+                value_str = "<name '" + field + "', byteorder '" + chr(value.byte_order()) + "'>"
                 field = "-----> %3i" % efn
             elif type == base.flat.T_BLOB: value_str = self.string_to_hex (value)
             else: value_str = str(value)
@@ -64,6 +64,7 @@ class file_report (object):
         # -- load contents of file
         record.get_record (filename)
         print "Checksum =", hex (record.checksum())
+        print "Byteorder =", chr (record.byte_order())
         print "Contents:"
         print "" 
         print "Field       Type      Len    Value"

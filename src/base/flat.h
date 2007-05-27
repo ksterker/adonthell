@@ -1,7 +1,7 @@
 /*
-   $Id: flat.h,v 1.20 2007/01/09 08:06:35 ksterker Exp $
+   $Id: flat.h,v 1.21 2007/05/27 01:44:48 ksterker Exp $
 
-   Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -29,9 +29,8 @@
 #ifndef BASE_FLAT
 #define BASE_FLAT
 
-//#include <stdio.h>
 #include <string>
-#include "base/endians.h"
+#include "base/types.h"
 #include "python/callback_support.h"
 
 using std::string;
@@ -42,14 +41,33 @@ namespace base
      * This class can store basic data types in a way that helps to easily make
      * that data persistent or transfer it over a network for later retrieval.
      * As it can only cope with basic data types, objects must take care of saving
-     * and restoring the data correctly. 
+     * and restoring the data correctly.
+     *
+     * Internally, all data is stored in the byte order native to the CPU it runs on.
+     * If external data with different byte order is encountered, it will be converted
+     * to native byte order as neccessary.
+     *
+     * The data format is the following. First byte is the byte order, where 'L' 
+     * represents "Little Endian" and 'B' represents "Big Endian". Then a list of 
+     * blocks with the following structure follows:
+     *
+     * <pre>
+     *
+     * 0    n    n+1      n+2        n+6     n+size+6    total block length
+     * +----+-----+--------+----------+----------+  
+     * | id | \0  |  type  |   size   |   data   |
+     * +----+-----+--------+----------+----------+
+     *    n    1       1         4        size           field size
+     *
+     * </pre>
+     *
      */
     class flat
     {
         public:
-        /**
-         * Data types that can be flattened.
-         */
+            /**
+             * Data types that can be flattened.
+             */
             typedef enum {
                 T_UNKNOWN = -1, 
                 T_BOOL = 0, 
@@ -77,7 +95,7 @@ namespace base
 		            data_type Type;
 		            u_int32 Size;
 		            char* Content;
-		                
+                    
 		            data *Next;
 		                
 		            ~data () { delete Next; }
@@ -122,16 +140,21 @@ namespace base
             }
 
             /**
-             * Reset flattener.
+             * Reset flattener. This does not delete the current buffer, only the
+             * decoded data.
              */
             void clear () {
-                Size = 0;
+                Size = 1;
                 delete Data;
                 Data = NULL;
-                Ptr = Buffer;
+                Ptr = Buffer + 1;
                 Success = true;
             }
             
+            /**
+             * @name Member Access
+             */
+            //@{            
             /**
              * Return size of data stored in this object.
              * @return length of flattened data in bytes.
@@ -147,6 +170,7 @@ namespace base
             bool success () const {
                 return Success;
             }
+            //@}
             
             /**
              * Calculate a checksum for the internal data.
@@ -201,7 +225,6 @@ namespace base
              * @param i value to store.
              */
             void put_uint16 (const string & name, const u_int16 & i) {
-                SwapLE16 (i);
                 put (name, T_UINT16, 2, (void*) &i);
             }
 
@@ -211,7 +234,6 @@ namespace base
              * @param i value to store.
              */
             void put_sint16 (const string & name, const s_int16 & i) {
-                SwapLE16 (i);
                 put (name, T_SINT16, 2, (void*) &i);
             }
 
@@ -221,7 +243,6 @@ namespace base
              * @param i value to store.
              */
             void put_uint32 (const string & name, const u_int32 & i) {
-                SwapLE32 (i);
                 put (name, T_UINT32, 4, (void*) &i);
             }
 
@@ -231,7 +252,6 @@ namespace base
              * @param i value to store.
              */
             void put_sint32 (const string & name, const s_int32 & i) {
-                SwapLE32 (i);
                 put (name, T_SINT32, 4, (void*) &i);
             }
 
@@ -349,7 +369,7 @@ namespace base
              */
             u_int16 get_uint16 (const string & name) {
                 data *d = get (name, T_UINT16);
-                if (d) return SwapLE16 (*((u_int16*) d->Content));
+                if (d) return *((u_int16*) d->Content);
                 else return 0;
             }
 
@@ -361,7 +381,7 @@ namespace base
              */
             s_int16 get_sint16 (const string & name) {
                 data *d = get (name, T_SINT16);
-                if (d) return SwapLE16 (*((s_int16*) d->Content));
+                if (d) return *((s_int16*) d->Content);
                 else return -1;
             }
 
@@ -373,7 +393,7 @@ namespace base
              */
             u_int32 get_uint32 (const string & name) {
                 data *d = get (name, T_UINT32);
-                if (d) return SwapLE32 (*((u_int32*) d->Content));
+                if (d) return *((u_int32*) d->Content);
                 else return 0;
                 
             }
@@ -386,7 +406,7 @@ namespace base
              */
             s_int32 get_sint32 (const string & name) {
                 data *d = get (name, T_SINT32);
-                if (d) return SwapLE32 (*((s_int32*) d->Content));
+                if (d) return *((s_int32*) d->Content);
                 else return -1;
             }
 
@@ -508,6 +528,10 @@ namespace base
 	        }        
 	        //@}
 
+            /**
+             * Convert contents of this object into a string. For debugging purposes.
+             * @return string of buffer contents.
+             */
             std::string to_string () const
             {
                 u_int32 j = 0;
@@ -516,7 +540,7 @@ namespace base
                 
                 hex[Size * 2] = 0;
                 
-                for (s_int32 i = 0; i < Size; i++) 
+                for (s_int32 i = 1; i <= Size; i++) 
                 {
                     hex[j++] = Bin2Hex[(Buffer[i] >> 4) & 0x0f];
                     hex[j++] = Bin2Hex[Buffer[i] & 0x0f];
@@ -524,6 +548,20 @@ namespace base
                 
                 return std::string (hex);
             }
+
+            /**
+             * @name Endianness
+             */
+            //@{
+            /**
+             * Return endianness of data in the buffer.
+             * @return 'L' for little endian data, 'B' for big endian data.
+             */
+            u_int8 byte_order () const
+            {
+                return Buffer[0];
+            }
+            //@}
             
 #ifndef SWIG
             GET_TYPE_NAME_VIRTUAL(base::flat)
@@ -549,7 +587,7 @@ namespace base
                 Buffer = buffer;
                 Capacity = size;
                 Success = true;
-                Ptr = Buffer;
+                Ptr = Buffer + 1;
                 Size = size;
                 Data = NULL;
             }

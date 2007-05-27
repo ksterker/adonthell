@@ -1,7 +1,7 @@
 /*
-   $Id: flat.cc,v 1.11 2007/01/09 08:06:35 ksterker Exp $
+   $Id: flat.cc,v 1.12 2007/05/27 01:44:48 ksterker Exp $
 
-   Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -27,7 +27,15 @@
  */
 
 #include "base/flat.h"
+#include "base/endians.h"
+
 #include <zlib.h>
+
+#ifdef __BIG_ENDIAN__
+#define DATA_BYTE_ORDER 'B'
+#else
+#define DATA_BYTE_ORDER 'L'
+#endif
 
 using base::flat;
 
@@ -40,17 +48,25 @@ char* flat::TypeName[flat::NBR_TYPES] =  {
 // ctor
 flat::flat (const u_int16 & size)
 {
-    Buffer = new char[size];
-    memset (Buffer, '\0', size);
-    Capacity = size;
+    // this is the maximum capacity of the buffer
+    Capacity = (size != 0 ? size : 1);
+    
+    Buffer = new char[Capacity];
+    memset (Buffer, '\0', Capacity);
+    
+    // first byte in the buffer contains the byte order
+    Buffer[0] = DATA_BYTE_ORDER;
+    
+    // this is the current size of content in the buffer
+    Size = 1;
+    
     Success = true;
-    Ptr = Buffer;
+    Ptr = Buffer + 1;
     Data = NULL;
-    Size = 0;
 }
 
 // create a flat from internal buffer of another flat
-flat::flat (const char *buffer, const u_int32 & size) 
+flat::flat (const char *buffer, const u_int32 & size)
 {
     Data = NULL;
     Buffer = NULL;
@@ -74,14 +90,13 @@ void flat::copy (const flat & source)
 {
     char *tmp = new char[source.size ()];
     memcpy (tmp, source.getBuffer (), source.size ());
-    setBuffer (tmp, source.size ());    
+    setBuffer (tmp, source.size ());
 }
 
 // flatten the given data
 void flat::put (const string & name, const data_type & type, const u_int32 & size, const void *data) 
 {
 	u_int8 t = type;
-    u_int32 tmp = SwapLE32(size);
     u_int32 nl = name.length () + 1;
     u_int32 need = size + nl + 5;
     while (Size + need > Capacity) grow ();
@@ -90,7 +105,7 @@ void flat::put (const string & name, const data_type & type, const u_int32 & siz
     Ptr += nl;
     
     memcpy (Ptr, &t, 1);
-    memcpy (Ptr + 1, &tmp, 4);
+    memcpy (Ptr + 1, &size, 4);
     memcpy (Ptr + 5, data, size);
     
     Ptr += size + 5;
@@ -157,40 +172,7 @@ flat::data_type flat::next (void **value, int *size, char **name)
     if (Decoded != NULL)
     {
         data_type type = Decoded->Type;
-
-#ifdef __BIG_ENDIAN__
-		// endianess conversion
-		switch (type)
-		{
-			case T_UINT16:
-			{
-                *value = &SwapLE16 (*((u_int16*) Decoded->Content));				
-				break;
-			}
-			case T_UINT32:
-			{
-                *value = &SwapLE32 (*((u_int32*) Decoded->Content));				
-				break;
-			}
-			case T_SINT16:
-			{
-                *value = &SwapLE16 (*((s_int16*) Decoded->Content));				
-				break;
-			}
-			case T_SINT32:
-			{
-                *value = &SwapLE32 (*((s_int32*) Decoded->Content));				
-				break;
-			}
-			default:
-			{
-                *value = Decoded->Content;				
-				break;
-			}
-		}
-#else
         *value = Decoded->Content;
-#endif
 
         if (size != NULL) *size = Decoded->Size;
         if (name != NULL) *name = Decoded->Name;
@@ -206,11 +188,15 @@ flat::data_type flat::next (void **value, int *size, char **name)
 // unflatten data
 void flat::parse ()
 {
-    if (Size == 0 || Data != NULL) return;
+    if (Size == 1 || Data != NULL) return;
+    
+    // whether we need to swap byte order or not
+    bool swap = (Buffer[0] != DATA_BYTE_ORDER);
+    Buffer[0] = DATA_BYTE_ORDER;
     
     data *first, *decoded;
-    u_int32 pos = 0;
-    Ptr = Buffer;
+    u_int32 pos = 1;
+    Ptr = Buffer + 1;
     
     while (pos < Size) 
     {
@@ -224,8 +210,46 @@ void flat::parse ()
         decoded->Type = (data_type) *((u_int8*) Ptr);
         Ptr += 1;
         
-        decoded->Size = SwapLE32(*((u_int32*) Ptr));
-        Ptr += 4;
+        if (swap)
+        {
+            // get size in correct endianess
+            u_int32 tmp = Swap32 (*((u_int32*) Ptr));
+            decoded->Size = tmp;
+            Ptr += 4;
+            
+            // update buffer
+            memcpy (Ptr, &tmp, 4);
+            
+            // check whether we need to change buffer
+            switch (decoded->Type)
+            {
+                case T_UINT16:
+                case T_SINT16:
+                {
+                    // update buffer
+                    u_int16 t = Swap16 (*((u_int16*) Ptr));
+                    memcpy (Ptr, &t, 2);
+                    break;
+                }
+                case T_UINT32:
+                case T_SINT32:
+                {
+                    // update buffer
+                    tmp = Swap32 (*((u_int32*) Ptr));
+                    memcpy (Ptr, &tmp, 4);
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            decoded->Size = *((u_int32*) Ptr);
+            Ptr += 4;
+        }
         
         decoded->Content = Ptr;
         Ptr = Ptr + decoded->Size;

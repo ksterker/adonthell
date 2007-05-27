@@ -39,6 +39,7 @@ int main (int argc, char* argv[]) {
     
     // get size and checksum
     cout << "Everything packed ... " << test.size () << " bytes used" << endl;
+    cout << "Byteorder: " << test.byte_order () << endl;
     cout << "Checksum: " << (std::hex) << test.checksum () << (std::dec) << endl;
     
     // write record to disk

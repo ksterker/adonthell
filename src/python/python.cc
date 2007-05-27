@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.12 2005/10/09 07:38:40 ksterker Exp $
+   $Id: python.cc,v 1.13 2007/05/27 01:44:48 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -105,7 +105,7 @@ namespace python
     // unflatten the contents of a tuple
     PyObject *get_tuple (base::flat & in, u_int16 start)
     {
-        u_int16 len = in.get_uint16 ("pln");
+        u_int16 len = in.get_uint16 ("pln") + start;
         PyObject *tuple = PyTuple_New (len);
         void *value;
         
@@ -127,7 +127,8 @@ namespace python
                 }
                 default:
                 {
-                    fprintf (stderr, "*** python::get_tuple: unsupported type: %i!\n", type);
+                    fprintf (stderr, "*** python::get_tuple: unsupported type: %s!\n", 
+                             base::flat::name_for_type ((base::flat::data_type) type));
                     break;
                 }
             }
@@ -139,7 +140,7 @@ namespace python
     // flatten the contents of a tuple
     void put_tuple (PyObject * tuple, base::flat & out, u_int16 start)
     {
-        u_int16 len = PyTuple_Size (tuple);
+        u_int16 len = PyTuple_Size (tuple) - start;
         out.put_uint16 ("pln", len);
         
         for (u_int16 i = start; i < len; i++) 
