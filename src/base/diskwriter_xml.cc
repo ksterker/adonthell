@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.6 2006/10/30 05:55:11 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.7 2007/05/28 22:24:04 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -284,6 +284,9 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
         	// get type of element
         	flat::data_type type = flat::type_for_name ((char*) name);
 
+            // reset id
+            context->Id = "";
+            
         	// get attribute "id", if present
         	if (atts != NULL) 
         	{
