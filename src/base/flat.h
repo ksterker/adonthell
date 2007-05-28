@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.22 2007/05/27 23:04:25 ksterker Exp $
+   $Id: flat.h,v 1.23 2007/05/28 22:24:55 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -510,6 +510,7 @@ namespace base
 	         */
 	        static const char* name_for_type (data_type t)
 	        {
+	        	if (t == T_UNKNOWN) return "eof"; 
 	            return TypeName[t];
 	        }
 	        
