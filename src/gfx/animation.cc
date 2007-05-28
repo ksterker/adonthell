@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.6 2007/05/27 05:22:21 Mithander Exp $
+   $Id: animation.cc,v 1.7 2007/05/28 22:49:09 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -98,28 +98,27 @@ namespace gfx
     // load from stream
     bool animation::get_state (base::flat & file)
     {
+        s_int32 size;
         void *value;
         char *id;
-        // TODO:  Remove call to get_flat (should have data from next)
-        while (file.next (&value, NULL, &id) == base::flat::T_FLAT)
+
+        while (file.next (&value, &size, &id) == base::flat::T_FLAT)
         {
+            base::flat anim = base::flat ((const char*) value, size);
             string animation_name = id;
-            base::flat anim = file.get_flat(id);
             animation_list cur_animation;
 
-            while (anim.next (&value, NULL, &id) == base::flat::T_FLAT) 
+            while (anim.next (&value, &size, &id) == base::flat::T_FLAT) 
             {
-                base::flat frame = anim.get_flat(id);
+                base::flat frame = base::flat((const char*) value, size);
 
                 cur_animation.push_back(new animation_frame(surface_cache(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
             }
 
             m_sprite->second[animation_name] = cur_animation;
-
         }
 
         return file.success ();
-
     }
     
     // load from XML file
