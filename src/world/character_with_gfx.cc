@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.3 2007/05/28 22:26:13 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -222,6 +222,7 @@ bool character_with_gfx::get_state (base::flat & file)
     return file.success ();
 }
 
+// save character to XML file
 bool character_with_gfx::save (const std::string & fname) const
 {
     // try to save character

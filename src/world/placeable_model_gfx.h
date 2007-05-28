@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable_model_gfx.h,v 1.3 2007/05/28 22:26:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,9 +56,10 @@ namespace world
 
         void set_gfx (const std::string & name);
 
-        placeable_area_gfx * get_gfx(const std::string & name);
+        world::placeable_area_gfx * get_gfx(const std::string & name);
 
-        placeable_area_gfx * add_gfx(const std::string & name);
+        world::placeable_area_gfx * add_gfx(const std::string & name);
+        
         bool del_gfx(const std::string & name);
     
         bool update ();

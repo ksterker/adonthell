@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable_model.h,v 1.3 2007/05/28 22:26:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -75,13 +75,13 @@ namespace world
             return States.end (); 
         }
 
-        placeable_area * current_state ();
+        world::placeable_area * current_state ();
 
-        placeable_area * get_model_state (const std::string & name);
+        world::placeable_area * get_model_state (const std::string & name);
     
         const std::string current_state_name();
     
-        placeable_area * add_state (const std::string & name);
+        world::placeable_area * add_state (const std::string & name);
 
         bool del_state (const std::string & name);
     
