@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
 	}*/
 	s->draw(10, 10);
 	gfx::screen::update();
-	sleep(2);
+	base::timer::sleep(2);
 	return 0;
 }
 //} theApp;
