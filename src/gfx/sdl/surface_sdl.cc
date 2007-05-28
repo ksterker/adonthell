@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.8 2006/10/07 17:00:55 gnurou Exp $
+   $Id: surface_sdl.cc,v 1.9 2007/05/28 22:28:37 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -234,13 +234,26 @@ namespace gfx
         set_length (l);
         set_height (h); 
 
-        vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+        if (display->vis)
+        {
+             vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
                                     length (), height (),
                                     display->vis->format->BitsPerPixel,
                                     display->vis->format->Rmask,
                                     display->vis->format->Gmask,
                                     display->vis->format->Bmask,
-                                    display->vis->format->Amask); 
+                                    display->vis->format->Amask);
+        }
+        else
+        {
+             vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+                                    length (), height (),
+                                    RAW_BYTES_PER_PIXEL,
+                                    RAW_RED_MASK,
+                                    RAW_GREEN_MASK,
+                                    RAW_BLUE_MASK,
+                                    0);
+        }
     }
 
     void surface_sdl::clear () 

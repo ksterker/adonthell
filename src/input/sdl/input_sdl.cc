@@ -1,5 +1,5 @@
 /*
-   $Id: input_sdl.cc,v 1.4 2006/10/08 12:38:08 gnurou Exp $
+   $Id: input_sdl.cc,v 1.5 2007/05/28 22:28:37 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,8 +21,8 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define input_init sdl_LTX_input_init
-#define input_cleanup sdl_LTX_input_cleanup
+#define input_init _sdl_LTX_input_init
+#define input_cleanup _sdl_LTX_input_cleanup
 #endif
 
 #include <iostream>

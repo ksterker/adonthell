@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.5 2006/10/09 04:07:17 ksterker Exp $
+   $Id: screen_sdlgl.cc,v 1.6 2007/05/28 22:28:37 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,11 +21,11 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define gfx_screen_set_video_mode sdlgl_LTX_gfx_screen_set_video_mode
-#define gfx_screen_update sdlgl_LTX_gfx_screen_update
-#define gfx_screen_trans_color sdlgl_LTX_gfx_screen_trans_color
-#define gfx_screen_clear sdlgl_LTX_gfx_screen_clear
-#define gfx_screen_get_surface sdlgl_LTX_gfx_screen_get_surface
+#define gfx_screen_set_video_mode _sdlgl_LTX_gfx_screen_set_video_mode
+#define gfx_screen_update _sdlgl_LTX_gfx_screen_update
+#define gfx_screen_trans_color _sdlgl_LTX_gfx_screen_trans_color
+#define gfx_screen_clear _sdlgl_LTX_gfx_screen_clear
+#define gfx_screen_get_surface _sdlgl_LTX_gfx_screen_get_surface
 #endif
 
 #include "gfx/sdlgl/screen_sdlgl.h"

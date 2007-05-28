@@ -1,5 +1,5 @@
 /*
-   $Id: linux.cc,v 1.3 2006/10/08 12:38:08 gnurou Exp $
+   $Id: linux.cc,v 1.4 2007/05/28 22:28:37 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,7 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define main_init sdl_LTX_main_init
+#define main_init _sdl_LTX_main_init
 #endif
 
 extern "C" {

@@ -12,7 +12,7 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define main_init sdl_LTX_main_init
+#define main_init _sdl_LTX_main_init
 #endif
 
 /* Portions of CPS.h */

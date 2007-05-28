@@ -1,5 +1,5 @@
 /*
-   $Id: audio_sdl.cc,v 1.4 2006/10/08 12:38:08 gnurou Exp $
+   $Id: audio_sdl.cc,v 1.5 2007/05/28 22:28:36 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,11 +21,11 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define audio_init sdl_LTX_audio_init
-#define audio_cleanup sdl_LTX_audio_cleanup
-#define audio_open sdl_LTX_audio_open
-#define audio_close sdl_LTX_audio_close
-#define audio_play sdl_LTX_audio_play
+#define audio_init _sdl_LTX_audio_init
+#define audio_cleanup _sdl_LTX_audio_cleanup
+#define audio_open _sdl_LTX_audio_open
+#define audio_close _sdl_LTX_audio_close
+#define audio_play _sdl_LTX_audio_play
 #endif
 
 #include <iostream>

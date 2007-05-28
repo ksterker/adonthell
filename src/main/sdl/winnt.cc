@@ -1,5 +1,5 @@
 /*
-   $Id: winnt.cc,v 1.1 2007/05/15 02:41:23 ksterker Exp $
+   $Id: winnt.cc,v 1.2 2007/05/28 22:28:37 ksterker Exp $
 
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,7 +39,7 @@
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */
-#define main_init sdl_LTX_main_init
+#define main_init _sdl_LTX_main_init
 #endif
 
 extern "C" {
