@@ -12,7 +12,6 @@ pkgincludeworld_HEADERS = \
     object_with_gfx.h \
     placeable.h \
     placeable_area.h \
-	placeable_area_gfx.h \
     placeable_gfx.h \
     placeable_model.h \
 	placeable_model_gfx.h \
@@ -32,7 +31,6 @@ libadonthell_world_la_SOURCES = \
     object_with_gfx.cc \
     placeable.cc \
     placeable_area.cc \
-	placeable_area_gfx.cc \
     placeable_gfx.cc \
     placeable_model.cc \
 	placeable_model_gfx.cc \

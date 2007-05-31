@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.h,v 1.3 2007/05/28 22:26:14 ksterker Exp $
+ $Id: placeable_model_gfx.h,v 1.4 2007/05/31 05:54:33 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,20 +48,37 @@ namespace world
     class placeable_model_gfx : public gfx::drawable
     {
     public:
+    	/**
+    	 * Create a new graphical representation of a map object.
+    	 * @param target the map object associated with these graphics.
+    	 */
         placeable_model_gfx (placeable_model & target);
 
+		/**
+		 * Destroy graphical representation and free related resources.
+		 */
         ~placeable_model_gfx();
     
-        placeable_area_gfx * current_gfx();
-
-        void set_gfx (const std::string & name);
-
-        world::placeable_area_gfx * get_gfx(const std::string & name);
-
-        world::placeable_area_gfx * add_gfx(const std::string & name);
+    	/**
+    	 * Set sprite used to represent this object. Will try
+    	 * to load sprite from given file.
+    	 * @param file name of sprite file
+    	 * @return true if successful, false otherwise.
+    	 */
+        bool set_sprite (const std::string & file);
         
-        bool del_gfx(const std::string & name);
-    
+        /**
+         * Set the sprite's current animation.
+         * @param name name of animation in sprite.
+         * @return true if successful, false otherwise. 
+         */
+        bool set_gfx (const std::string & name);
+
+		/**
+		 * Call once per game cycle to make sure that state of graphics
+		 * match the physical state of the object.
+		 * @return true if update is successful, false otherwise.
+		 */ 
         bool update ();
     
         /**
@@ -82,9 +99,27 @@ namespace world
         void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                   gfx::surface * target = NULL) const;
     
+    	/**
+    	 * Draw the zone this object occupies on the map. Renders semi-transparent
+    	 * shape where this object blocks movement on the map.
+    	 * 
+         * @param x X position where to draw
+         * @param y Y position where to draw
+         * @param da_opt Optionnal drawing area to use during the blit operation
+         * @param target Optionnal surface to draw to (defaults to the screen)
+    	 */
         void draw_walkable(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                            gfx::surface * target = NULL) const;
 
+    	/**
+    	 * Draw the zone this object occupies on the map. Renders a box where 
+    	 * the object's borders are.
+    	 * 
+         * @param x X position where to draw
+         * @param y Y position where to draw
+         * @param da_opt Optionnal drawing area to use during the blit operation
+         * @param target Optionnal surface to draw to (defaults to the screen)
+    	 */
         void draw_border(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                          gfx::surface * target = NULL) const;
         //@}
@@ -113,12 +148,10 @@ namespace world
 #endif // SWIG
             
     protected:
-        /// list of graphics
-        mutable std::map <const std::string, placeable_area_gfx *> Gfxs;
-        /// current graphics
-        std::map <const std::string, placeable_area_gfx *>::iterator Current_gfx;
         /// model this graphics belong to
         placeable_model & Target;
+        /// sprite for this model
+        gfx::animation Sprite;
         
     private:
         /**

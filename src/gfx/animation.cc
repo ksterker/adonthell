@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.7 2007/05/28 22:49:09 ksterker Exp $
+   $Id: animation.cc,v 1.8 2007/05/31 05:54:33 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -134,7 +134,7 @@ namespace gfx
         //We have not loaded it before so load it from the file
         base::diskio animation (base::diskio::XML_FILE);
 
-        if (! animation.get_record (filename))
+        if (!animation.get_record (filename))
             //Error loading the file (file not found?)
             return false;
 
@@ -189,7 +189,7 @@ namespace gfx
     }
 
     // save to XML file
-    bool animation::save_animation (const std::string & filename)
+    bool animation::save_animation (const std::string & filename) const
     {
         // create container
         base::diskio animation (base::diskio::XML_FILE);
@@ -199,5 +199,15 @@ namespace gfx
         
         // dump it out to a file
         return animation.put_record (filename);
+    }
+    
+    // get filename of sprite
+    std::string animation::filename() const
+    {
+    	if (m_valid)
+    	{
+    		return m_sprite->first;
+    	}
+    	return "";
     }
 }

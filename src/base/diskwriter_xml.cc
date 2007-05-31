@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.7 2007/05/28 22:24:04 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.8 2007/05/31 05:54:33 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -520,6 +520,9 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
         return false;
     }
     
+    /* Ignore checksum in XML files, since (a) we may edit them and (b) checksum will differ for 
+       Big Endian and Little Endian systems.
+       
     // compare checksum
     std::ostringstream checksum;
     checksum << (std::hex) << data.checksum ();
@@ -528,6 +531,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
         fprintf (stderr, "*** disk_writer_xml::get_state: checksum mismatch in file '%s'.\n    Data might be corrupt.\n", name.c_str());
         return false;
     }
+    */
     
     return true;    
 }

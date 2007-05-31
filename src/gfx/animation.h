@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.5 2007/05/21 04:44:11 ksterker Exp $
+   $Id: animation.h,v 1.6 2007/05/31 05:54:33 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,7 +50,7 @@ namespace gfx
          * Default constructor.
          *
          */
-        animation () : m_valid(false) { }
+        animation () : m_valid(false), m_playing(false) { }
 
         /**
          * Destructor.
@@ -59,11 +59,11 @@ namespace gfx
         virtual ~animation () { }
 
         /**
-        * @name Animation Control
+         * @name Animation Control
          */
         //@{
         /**
-        * Change the current animation we are using
+         * Change the current animation we are using
          *
          * @param new_animation string that represents the new animation we want to switch to
          * @return true if new_animation was found.
@@ -144,6 +144,12 @@ namespace gfx
          */
         //@{
         /**
+         * Get file name the sprite was loaded from, if any.
+         * @return file name or empty string, if sprite was loaded elsewhere.
+         */
+        std::string filename () const; 
+        
+        /**
          * Save %animation state to stream. 
          * @param file stream to save %animation to.
          * @return \b true if saving successful, \b false otherwise.
@@ -172,7 +178,7 @@ namespace gfx
          * @param filename xml file to save
          * @return true if successful
          */
-        bool save_animation (const std::string & filename);
+        bool save_animation (const std::string & filename) const;
         //@}
         
 #ifndef SWIG

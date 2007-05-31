@@ -109,9 +109,11 @@ endif(PYTHON_INCLUDE_PATH)
 find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
 	EXEC_PROGRAM(${PYTHON_EXECUTABLE}
-		ARGS "-c 'import sys;vi = sys.version_info; print \"python%s.%s\" %(vi[0],vi[1])'"
+		ARGS "-c \"import sys;vi = sys.version_info; print \\\"python%s.%s\\\" %(vi[0],vi[1])\""
 		OUTPUT_VARIABLE PYTHON_VERSION_DIR	
 	)
+	message(STATUS
+		"\tVERSION: ${PYTHON_VERSION_DIR}")
 else(PYTHONINTERP_FOUND)
 	message(FATAL_ERROR
 		"Impossible to find the Python Interpreter")
