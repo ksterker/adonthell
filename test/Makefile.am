@@ -1,6 +1,11 @@
 CXXFLAGS += -I$(top_srcdir)/src
 
-EXTRA_DIST =  configtest.py eventtest.py filereport.py gfxtest.py guitest.py inputtest.py
+EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
+    worldtest.py configtest.py equipmenttest.py  gfxtest.py logtest.py \
+    convert_data.py eventtest.py guitest.py questtest.py \
+    convert_quests.py filereport.py inputtest.py searchtest.py \
+    convert_graphics.py
+
 noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest
 
 callbacktest_SOURCES = callbacktest.cc

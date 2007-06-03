@@ -17,6 +17,12 @@ Utility Scripts:
   Converts data files in compressed binary format to XML and back.
   Run with 'python convert_data.py <filename>'
 
+* convert_graphics.py
+
+  Extracts images from v0.3 media files (.anim, .img, .mobj) and
+  converts them into PNG format. 
+  Run with 'python convert_graphics.py <filename>'
+
 * filereport.py
 
   Lists the contents of binary (and XML) data files in human
