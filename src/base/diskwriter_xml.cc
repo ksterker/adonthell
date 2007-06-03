@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.8 2007/05/31 05:54:33 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.9 2007/06/03 02:28:37 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -66,9 +66,18 @@ struct data_sax_context
      */
     data_sax_context (base::flat *record)
     {
+        Id = "Root";
         Record = record;
         State = disk_writer_xml::UNDEF;
         Stack.push_back (this);
+    }
+    
+    /**
+     * delete parser context.
+     */
+    ~data_sax_context ()
+    {
+        Stack.pop_back ();
     }
     
     /// Storage for parameters
@@ -81,7 +90,7 @@ struct data_sax_context
     flat::data_type Type;
     /// current state of sax parser
     u_int8 State;
-    /// parent of this context
+    /// stack of all contexts
     static std::vector<data_sax_context*> Stack;
     /// checksum of file
     static std::string Checksum;
@@ -366,11 +375,11 @@ static void data_end_element (void *ctx, const xmlChar *name)
         case disk_writer_xml::LIST:
         {
             // this could also be </Data>, in which case we do nothing
-            if (data_sax_context::Stack.size() > 1)
+            if (strcmp ((char*) name, XML_ROOT_NODE) != 0)
             {
                 // get parent context
-                data_sax_context::Stack.pop_back();
-                data_sax_context *parent = data_sax_context::Stack.back ();
+                std::vector<data_sax_context*>::reverse_iterator end = data_sax_context::Stack.rbegin();
+                data_sax_context *parent = *(++end);
                 
                 // add completed list to parent list
                 parent->Record->put_flat (parent->Id, *(context->Record));

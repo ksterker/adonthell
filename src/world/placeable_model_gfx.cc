@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.3 2007/05/31 05:54:33 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.4 2007/06/03 02:28:38 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,7 @@ using world::placeable_area_gfx;
 using world::placeable_model_gfx;
 
 // ctor
-placeable_model_gfx::placeable_model_gfx (placeable_model & target) : Target(target)
+placeable_model_gfx::placeable_model_gfx (placeable_model & target) : Target (target)
 {
 }
 
@@ -47,9 +47,7 @@ placeable_model_gfx::~placeable_model_gfx()
 // set sprite
 bool placeable_model_gfx::set_sprite(const std::string & file)
 {
-    printf ("Before %i\n", sizeof (Sprite));
     Sprite.load_animation (file);	
-    printf ("After %i\n", sizeof (Sprite));
     return true;
 }
 
@@ -62,8 +60,10 @@ bool placeable_model_gfx::set_gfx (const std::string & name)
     	return true;
     }
    
-   	fprintf (stderr, "*** placeable_model_gfx::set_gfx: '%s' not contained in sprite for '%s'\n", 
-	   		name.c_str(), Target.filename().c_str());
+   	fprintf (stderr, "*** placeable_model_gfx::set_gfx: state '%s' not contained in\n" \
+             "    sprite '%s' of\n" \
+             "    object '%s'\n", 
+	   		name.c_str(), Sprite.filename().c_str(), Target.filename().c_str());
 	 return false;
 }
 

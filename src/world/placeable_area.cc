@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable_area.cc,v 1.3 2007/06/03 02:28:38 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,8 +56,8 @@ bool placeable_area::put_state (base::flat & file) const
     base::flat record;
     
     // save area size
-    record.put_uint16 ("height", hgt);
     record.put_uint16 ("length", len);
+    record.put_uint16 ("height", hgt);
     record.put_uint16 ("size", zsize);
 
     for (u_int16 j = 0; j < hgt; j++)
@@ -84,8 +84,8 @@ bool placeable_area::get_state (base::flat & file)
     if (!file.success ()) return false;
     
     // get area size
-    u_int16 var1 = record.get_uint16 ("height");
-    u_int16 var2 = record.get_uint16 ("length");
+    u_int16 var1 = record.get_uint16 ("length");
+    u_int16 var2 = record.get_uint16 ("height");
     zsize = record.get_uint16 ("size");
     set_area_size (var1, var2);
     

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable_model.cc,v 1.3 2007/06/03 02:28:38 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,7 +54,7 @@ placeable_area * placeable_model::get_model_state (const std::string & name)
     else return &(State->second);
 }
 
-const std::string placeable_model::current_state_name()
+const std::string placeable_model::current_state_name() const
 {
     if (Current_state != States.end ())
         return Current_state->first;
@@ -89,6 +89,7 @@ bool placeable_model::put_state (base::flat & file) const
 {
     base::flat record;
     
+    record.put_string ("state", current_state_name ());
     for (std::map <std::string, placeable_area>::iterator i = States.begin();
          i != States.end(); i++)
     {
@@ -106,12 +107,16 @@ bool placeable_model::get_state (base::flat & file)
     base::flat record = file.get_flat ("model");
     if (!file.success ()) return false;
 
+    std::string state = record.get_string ("state");
+
     void *value;
     while (record.next (&value) == base::flat::T_STRING) 
     {
-        placeable_area * mpa = add_state (*((std::string*) &value));
+        placeable_area * mpa = add_state (std::string ((const char*) value));
         mpa->get_state (record);
     }
+    
+    set_state (state);
     
     return record.success ();
 }

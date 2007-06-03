@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: character_with_gfx.h,v 1.3 2007/06/03 02:28:38 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -86,9 +86,25 @@ namespace world
         /**
          * @name Rendering
          */
-        //@{        
+        //@{
+        /**
+         * Draw the current frame of the character's sprite. 
+         * @param x x location
+         * @param y y location
+         * @param da_opt clipping rectangle
+         * @param target surface or NULL for screen
+         */
         void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                   gfx::surface * target = NULL);
+        
+        /**
+         * Draw the character's shadow. It will be drawn on the ground
+         * beneath the character, regardless of its current z position.
+         * @param x x location
+         * @param y y location
+         * @param da_opt clipping rectangle
+         * @param target surface or NULL for screen
+         */
         void draw_shadow(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                          gfx::surface * target = NULL);
         //@}

@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.8 2007/05/31 05:54:33 ksterker Exp $
+   $Id: animation.cc,v 1.9 2007/06/03 02:28:38 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -45,7 +45,7 @@ namespace gfx
         //Check if the animation is valid yet
         if(!m_valid) return false;
 
-        //Look for an animation with ne name passed in
+        //Look for an animation with the name passed in
         animation_map::iterator anim = m_sprite->second.find(new_animation);
         if(anim == m_sprite->second.end())
             return false;
@@ -53,6 +53,10 @@ namespace gfx
         //we found it so update our pointers
         m_animation = anim;
         m_surface = m_animation->second.begin();
+
+        // update length and height of drawable
+        set_length((*m_surface)->image->length());
+        set_height((*m_surface)->image->height());
 
         return true;
     }
