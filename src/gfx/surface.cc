@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.12 2007/05/14 02:00:05 ksterker Exp $
+   $Id: surface.cc,v 1.13 2007/06/03 23:55:06 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -229,7 +229,7 @@ namespace gfx
 
     bool surface::save_png (const string & fname) const
     {
-        ofstream file(fname.c_str());
+        ofstream file(fname.c_str(), ios::binary);
         bool ret = true;
 
         if (!file.is_open())
