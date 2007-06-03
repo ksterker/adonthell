@@ -1,5 +1,5 @@
 #
-#  $Id: convert_quests.py,v 1.1 2005/10/09 07:41:07 ksterker Exp $
+#  $Id: convert_quests.py,v 1.2 2007/06/03 21:09:16 ksterker Exp $
 #
 #  (C) Copyright 2005 Kai Sterker <kaisterker@linuxgames.com>
 #  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -179,10 +179,10 @@ class quest_parser (object):
 	""" parse given xml file """
 	def parse (self, filename):
 		print " > Parsing '%s' ..." % filename
-		self.Parser.ParseFile (file (filename, "r"))
+		self.Parser.ParseFile (file (filename, "rb"))
 
 		print " > Finished parsing, now saving to '%s/data/quest.data' ... " % sys.path[0]
-		adonthell.rpg.quest.put_state (sys.path[0])
+		adonthell.rpg.quest.put_state (sys.path[0] + "/")
 		
 # -- the 'main program'
 if __name__ == '__main__':

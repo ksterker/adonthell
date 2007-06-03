@@ -1,0 +1,102 @@
+This folder contains an increasing number of scripts and programs.
+
+Most of them are either tests for various engine functionality that
+can be used to determine the impact of code changes. Others are
+there to help programmers and designers to examine or convert data
+files.
+
+In order to run those scripts, you'll have to compile Adonthell and
+install it.
+
+
+Utility Scripts:
+================
+
+* convert_data.py
+  
+  Converts data files in compressed binary format to XML and back.
+  Run with 'python convert_data.py <filename>'
+
+* filereport.py
+
+  Lists the contents of binary (and XML) data files in human
+  readable form. Run with 'python filereport.py <filename>'
+
+
+Test Scripts:
+=============
+
+* audiotest.py
+
+  Tests background music. Requires the .ogg files from the
+  wastesedge CVS module in a directory called 'game_sounds'.
+  Run with 'python audiotest.py'
+
+* configtest.py
+
+  Test engine configuration loading/saving. Creates a sample
+  configuration file adonthell.xml. Run with 'python configtest.py'
+
+* dialogtest.py
+
+  Test dialogue system by automatically running through a demo
+  dialogue. Run with 'python dialogtest.py'
+
+* equipmenttest.py
+
+  Creates an equipment inventory, saves it to data/eqp.data and 
+  reloads it. Run with 'python equipmenttest.py'
+
+* eventtest.py
+
+  Tests the event system and time events. Creates the file 
+  data/eventtest.data. Run with 'python eventtest.py'
+
+* gfxsave.py
+
+  Tests loading/saving of sprites. Requires a sprite 'foo' in
+  this directory and saves it as 'naked_guy.xml'
+  Run with 'python gfxsave.py'
+
+* gfxtest.py
+
+  Tests basic drawing functions and sprites. Requires the gfx
+  module checked out from CVS.
+  Run with 'python gfxtest.py -g <path to gfx module>'
+
+* guitest.py
+
+  Tests the GUI code. Run with 'python guitest.py'
+
+* inputtest.py
+
+  Tests keyboard input. Run with 'python inputtest.py'
+
+* itemtest.py
+
+  Tests item and inventory code. Will create a bunch of items
+  in data/items/ and move them around some inventories.
+  Run with 'python itemtest.py'
+
+* logtest.py
+
+  Tests the quest log implementation by adding and indexing some text
+  files from the Adonthell library. Run with 'python logtest.py'
+
+* questtest.py
+
+  Tests the quest implementation: saving, loading, completing quest
+  steps and triggering associated events. 
+  Run with 'python questtest.py'    
+
+* searchtest.py
+
+  Sample implementation of searching in the quest log. Prompts to
+  enter a list of search terms and prints which texts in the library
+  contain these terms. Run with 'python -i searchtest.py'
+
+* worldtest.py
+
+  Tests the world module. Requires the gfx module checked out from
+  CVS. Run with 'python gfxtest.py -g <path to gfx module>'
+

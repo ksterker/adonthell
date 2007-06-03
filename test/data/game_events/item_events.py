@@ -1,5 +1,5 @@
 #
-# $Id: item_events.py,v 1.1 2004/07/03 05:59:00 ksterker Exp $
+# $Id: item_events.py,v 1.2 2007/06/03 21:09:16 ksterker Exp $
 #   
 # Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,6 +43,6 @@ class item_events:
             #    deleted when their charge is used up
             try:
                 if item.IsRechargable == 0: del item 
-            catch:
+            except:
                 del item
         
