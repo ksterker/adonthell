@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.4 2007/06/03 02:28:38 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.5 2007/06/03 02:36:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #include "gfx/image.h"
 #include "placeable_model_gfx.h"
 
-using world::placeable_area_gfx;
 using world::placeable_model_gfx;
 
 // ctor
