@@ -93,7 +93,7 @@ Test Scripts:
 
   Tests the quest implementation: saving, loading, completing quest
   steps and triggering associated events. 
-  Run with 'python questtest.py'    
+  Run with 'python questtest.py -g .'    
 
 * searchtest.py
 
