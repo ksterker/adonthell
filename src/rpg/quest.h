@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.8 2006/09/22 05:13:16 ksterker Exp $
+   $Id: quest.h,v 1.9 2007/06/04 01:42:26 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,7 +43,7 @@ namespace rpg
     /**
      * Location in which the quests are kept
      */
-    #define QUEST_DATA "/data/quest.data"
+    #define QUEST_DATA "data/quest.data"
 #endif // SWIG
 
     /**
