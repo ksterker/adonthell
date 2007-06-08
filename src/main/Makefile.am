@@ -35,6 +35,6 @@ _sdl_la_SOURCES = sdl/linux.cc
 endif
 
 _sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS)
-OBJCFLAGS = -g -ObjC++ $(SDL_CFLAGS) -I$(top_srcdir)/src/
+OBJCFLAGS = -ObjC++ $(CXXFLAGS) $(SDL_CFLAGS) 
 _sdl_la_LDFLAGS = -module -avoid-version
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++
