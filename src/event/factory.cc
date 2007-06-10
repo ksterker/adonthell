@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.10 2007/01/09 08:06:35 ksterker Exp $
+   $Id: factory.cc,v 1.11 2007/06/10 03:58:21 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -145,7 +145,7 @@ bool factory::get_state (base::flat& in)
 {
     void *value;
     listener *li;
-    int size, type;
+    u_int32 size, type;
     base::flat::data_type data_type;
     
     Paused = in.get_uint16 ("fps");

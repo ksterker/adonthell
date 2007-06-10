@@ -15,7 +15,7 @@
 
 // typemaps for the flat::next (...) method
 namespace base {
-    %typemap(in, numinputs = 0) (void **value, int *size, char **name) "
+    %typemap(in, numinputs = 0) (void **value, u_int32 *size, char **name) "
         void *value;
         char *name;
         int size;
@@ -24,7 +24,7 @@ namespace base {
         $2 = &size;
         $3 = &name;
     "
-    %typemap(argout) (void **value, int *size, char **name) {
+    %typemap(argout) (void **value, u_int32 *size, char **name) {
         Py_XDECREF($result);
         PyObject *py_value;
         switch (result) {

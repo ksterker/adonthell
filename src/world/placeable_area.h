@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable_area.h,v 1.3 2007/06/10 03:58:22 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,50 +35,10 @@
 #include <vector>
 
 #include "world/coordinates.h"
-#include "base/flat.h"
+#include "world/square_walkable_info.h"
 
 namespace world
 {
-    /**
-     * Walkability info class.
-     */
-    class square_walkable_info
-    {
-    private:
-        bool Walkable;
-
-    public:
-        square_walkable_info () 
-        {
-            Walkable = true;  
-        }
-
-        bool is_walkable () const
-        {
-            return Walkable; 
-        }
-
-        void set_walkable (bool b) 
-        {
-            Walkable = b; 
-        }
-
-        void put_state (base::flat & file) const
-        {
-            file.put_bool ("", Walkable);
-        }
-
-        void get_state (base::flat & file)
-        {
-            Walkable = file.get_bool ("");
-        }
-
-        bool does_intersect(const square_walkable_info & mwi, const u_int16 ox, const u_int16 oy) const
-        {
-            return (is_walkable() && mwi.is_walkable());
-        }
-    }; 
-
     /**
      * Area of squares that represents the occupation of a placeable
      * on the map. Used for collision detection.

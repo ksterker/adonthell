@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.13 2007/06/03 23:55:06 ksterker Exp $
+   $Id: surface.cc,v 1.14 2007/06/10 03:58:21 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -30,6 +30,7 @@
  * @brief  Defines the surface global interface.
  */
 
+#include "base/base.h"
 #include "gfx/surface.h"
 #include "gfx/png_wrapper.h"
 
@@ -201,16 +202,25 @@ namespace gfx
 
     bool surface::load_png (const string & fname)
     {
-        ifstream file(fname.c_str(), ifstream::binary);
-        bool ret = true;
-
-        if (!file.is_open()) {
-            cout << "Unable to open: '" << fname << "'" << endl;
+        // find file in adonthell's search path
+        std::string path = fname;
+        if (!base::Paths.find_in_path (path))
+        {
+            fprintf (stderr, "*** surface::load_png: unable to open '%s'!\n", fname.c_str());
+            return false; 
+        }
+        
+        // try to open file
+        ifstream file (path.c_str(), ifstream::binary);
+        if (!file.is_open()) 
+        {
+            cout << "*** surface::load_png: unable to open '" << path << "'" << endl;
             return false;
         }
-        ret = get_png (file);
-        file.close();
-        filename_ = fname;
+        
+        bool ret = get_png (file);
+        file.close ();
+        filename_ = path;
         return ret;
     }
 

@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.13 2007/05/27 23:04:24 ksterker Exp $
+   $Id: flat.cc,v 1.14 2007/06/10 03:58:21 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -161,7 +161,7 @@ flat::data* flat::get (const string & name, const data_type & type)
 }
 
 // iterate over data
-flat::data_type flat::next (void **value, int *size, char **name)
+flat::data_type flat::next (void **value, u_int32 *size, char **name)
 {
     if (Data == NULL)
     {

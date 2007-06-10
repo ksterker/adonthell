@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.3 2007/06/03 02:28:38 ksterker Exp $
+ $Id: placeable_model.cc,v 1.4 2007/06/10 03:58:22 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -93,8 +93,11 @@ bool placeable_model::put_state (base::flat & file) const
     for (std::map <std::string, placeable_area>::iterator i = States.begin();
          i != States.end(); i++)
     {
-        record.put_string ("name", i->first);
-        i->second.put_state (record);
+        base::flat area;
+        
+        // save each area with its own name
+        i->second.put_state (area);
+        record.put_flat (i->first, area);
     }
     
     file.put_flat ("model", record);
@@ -107,13 +110,19 @@ bool placeable_model::get_state (base::flat & file)
     base::flat record = file.get_flat ("model");
     if (!file.success ()) return false;
 
-    std::string state = record.get_string ("state");
-
+    char *name;
     void *value;
-    while (record.next (&value) == base::flat::T_STRING) 
+    u_int32 size;
+    
+    std::string state = record.get_string ("state");
+    while (record.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
-        placeable_area * mpa = add_state (std::string ((const char*) value));
-        mpa->get_state (record);
+        printf ("*** loading placeable_area %s ...", name);
+        base::flat area ((const char*) value, size);
+        placeable_area * mpa = add_state (std::string (name));
+        mpa->get_state (area);
+        printf (" done\n");
+        fflush (stdout);
     }
     
     set_state (state);

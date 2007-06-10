@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.9 2007/06/03 02:28:38 ksterker Exp $
+   $Id: animation.cc,v 1.10 2007/06/10 03:58:21 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -102,7 +102,7 @@ namespace gfx
     // load from stream
     bool animation::get_state (base::flat & file)
     {
-        s_int32 size;
+        u_int32 size;
         void *value;
         char *id;
 
@@ -114,7 +114,7 @@ namespace gfx
 
             while (anim.next (&value, &size, &id) == base::flat::T_FLAT) 
             {
-                base::flat frame = base::flat((const char*) value, size);
+                base::flat frame ((const char*) value, size);
 
                 cur_animation.push_back(new animation_frame(surface_cache(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
             }
@@ -149,16 +149,17 @@ namespace gfx
 
         //This will populate the sprite that we just created
         bool retval = get_state (animation);
+        if (retval)
+        {
+            m_animation = m_sprite->second.begin();  //TODO This should be part of the XML File, not hardcoded here
+            m_surface = m_animation->second.begin();
 
-        m_animation = m_sprite->second.find("stand_east");  //TODO This should be part of the XML File, not hardcoded here
-        m_surface = m_animation->second.begin();
+            set_length((*m_surface)->image->length());          //TODO This should be part of the XML File, not hardcoded here
+            set_height((*m_surface)->image->height());          //TODO This should be part of the XML File, not hardcoded here
 
-        set_length((*m_surface)->image->length());          //TODO This should be part of the XML File, not hardcoded here
-        set_height((*m_surface)->image->height());          //TODO This should be part of the XML File, not hardcoded here
-
-        m_valid = true;
-        m_playing = true;                                   //TODO This should be part of the XML File, not hardcoded here
-
+            m_valid = true;
+            m_playing = true;                                   //TODO This should be part of the XML File, not hardcoded here
+        }
         return retval;
     }
 

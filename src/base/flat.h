@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.23 2007/05/28 22:24:55 ksterker Exp $
+   $Id: flat.h,v 1.24 2007/06/10 03:58:21 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -497,7 +497,7 @@ namespace base
              * @param name will contain the name of the field
              * @return type of value or T_UNKNOWN on end of stream.
              */
-            data_type next (void **value, int *size = NULL, char **name = NULL);
+            data_type next (void **value, u_int32 *size = NULL, char **name = NULL);
             //@}
 
 	        /**

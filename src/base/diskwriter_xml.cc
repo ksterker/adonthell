@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.9 2007/06/03 02:28:37 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.10 2007/06/10 03:58:21 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -550,7 +550,7 @@ void disk_writer_xml::record_to_xml (base::flat &record, xmlNodePtr parent) cons
 {
 	char *name;
     void *value;
-    s_int32 size;
+    u_int32 size;
     xmlNodePtr node;
     flat::data_type type;
     const char *str_type;

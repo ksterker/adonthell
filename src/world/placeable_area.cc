@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.cc,v 1.3 2007/06/03 02:28:38 ksterker Exp $
+ $Id: placeable_area.cc,v 1.4 2007/06/10 03:58:22 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,55 +53,56 @@ bool placeable_area::put_state (base::flat & file) const
 {
     u_int16 len = area_length();
     u_int16 hgt = area_height();
-    base::flat record;
     
     // save area size
-    record.put_uint16 ("length", len);
-    record.put_uint16 ("height", hgt);
-    record.put_uint16 ("size", zsize);
+    file.put_uint16 ("length", len);
+    file.put_uint16 ("height", hgt);
+    file.put_uint16 ("size", zsize);
 
     for (u_int16 j = 0; j < hgt; j++)
         for (u_int16 i = 0; i < len; i++)
-            area[i][j].put_state (record);
+            area[i][j].put_state (file);
 
     // save position
-    record.put_uint16 ("x", base.x());
-    record.put_uint16 ("y", base.y());
+    file.put_uint16 ("x", base.x());
+    file.put_uint16 ("y", base.y());
         
     // save offset
-    record.put_uint16 ("x_off", base.ox());
-    record.put_uint16 ("y_off", base.oy());
+    file.put_uint16 ("x_off", base.ox());
+    file.put_uint16 ("y_off", base.oy());
 
-    file.put_flat ("area", record);
-    
     return true;
 }
 
 // load from stream
 bool placeable_area::get_state (base::flat & file)
 {
-    base::flat record = file.get_flat ("area");
-    if (!file.success ()) return false;
-    
     // get area size
-    u_int16 var1 = record.get_uint16 ("length");
-    u_int16 var2 = record.get_uint16 ("height");
-    zsize = record.get_uint16 ("size");
+    u_int16 var1 = file.get_uint16 ("length");
+    u_int16 var2 = file.get_uint16 ("height");
+    zsize = file.get_uint16 ("size");
     set_area_size (var1, var2);
+
+    printf (" %i %i", var1, var2);
+    fflush (stdout);
     
-    for (u_int16 j = 0; j < var1; j++)
-        for (u_int16 i = 0; i < var2; i++)
-            area[i][j].get_state (record);
+    for (u_int16 i = 0; i < var1; i++)
+        for (u_int16 j = 0; j < var2; j++)
+            area[i][j].get_state (file);
     
     // get position
-    var1 = record.get_uint16 ("x");
-    var2 = record.get_uint16 ("y");
+    var1 = file.get_uint16 ("x");
+    var2 = file.get_uint16 ("y");
     base.set_position (var1, var2);
 
+    printf (" %i %i", var1, var2);
+
     // get offset
-    var1 = record.get_uint16 ("x_off");
-    var2 = record.get_uint16 ("y_off");
+    var1 = file.get_uint16 ("x_off");
+    var2 = file.get_uint16 ("y_off");
     base.set_offset (var1, var2);
 
-    return record.success ();
+    printf (" %i %i", var1, var2);
+
+    return file.success ();
 }
