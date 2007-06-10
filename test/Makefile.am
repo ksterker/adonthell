@@ -6,7 +6,7 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     convert_quests.py filereport.py inputtest.py searchtest.py \
     convert_graphics.py
 
-noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest
+noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest
 
 callbacktest_SOURCES = callbacktest.cc
 callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
@@ -24,7 +24,7 @@ guitest_LDADD = \
 	-L$(top_builddir)/src/event/ -ladonthell_event             \
 	-L$(top_builddir)/src/base/ -ladonthell_base               \
 	-L$(top_builddir)/src/main -ladonthell_main                \
-	-L$(top_builddir)/src/py-wrappers/adonthell -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
 
 inputtest_SOURCES = inputtest.cc
 
@@ -36,8 +36,18 @@ inputtest_LDADD = \
 	-L$(top_builddir)/src/event/ -ladonthell_event              \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
-	-L$(top_builddir)/src/py-wrappers/adonthell -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
 
 gfxtest_SOURCES = gfxtest.cc
 gfxtest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx
+
+worldtest_SOURCES = worldtest.cc
+worldtest_LDADD = \
+	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
+	-L$(top_builddir)/src/input/ -ladonthell_input              \
+	-L$(top_builddir)/src/event/ -ladonthell_event              \
+	-L$(top_builddir)/src/base/ -ladonthell_base                \
+	-L$(top_builddir)/src/main -ladonthell_main                 \
+	-L${top_builddir}/src/world/ -ladonthell_world
+

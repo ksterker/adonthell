@@ -26,9 +26,9 @@ def convert_raw_image (img, name):
     png.unlock ()
     
     # -- for debugging
-    # png.draw (320 - length/2, 240 - height/2)
-    # gfx.screen.update()
-    # base.Timer.sleep (5000)
+    png.draw (320 - length/2, 240 - height/2)
+    gfx.screen.update()
+    base.Timer.sleep (5000)
     
     # -- save image
     png.save_png (name + ".png")

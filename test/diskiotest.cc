@@ -77,7 +77,7 @@ int main (int argc, char* argv[]) {
     base::flat f = test.get_flat ("flat");
     cout << f.get_string ("string") << endl;
     
-    int size;
+    u_int32 size;
     void *value;
     base::flat::data_type type;
     
