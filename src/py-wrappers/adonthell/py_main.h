@@ -1,5 +1,5 @@
 /*
-   $Id: py_main.h,v 1.4 2004/11/15 08:54:33 ksterker Exp $
+   $Id: py_main.h,v 1.5 2007/06/10 23:02:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,14 +43,12 @@
  *   from adonthell import main
  *
  *   class App (main.AdonthellApp):
- *       def __init__ (self):
- *           main.AdonthellApp.__init__ (self)
- *
  *       # -- your application entry point
  *       def main (self):
  *           self.init_modules (self.GFX | ...)
  *           ...
- *
+ *           return 0
+ * 
  *   if __name__ == '__main__':
  *       theApp = App ()
  *       theApp.init (theApp.main) 

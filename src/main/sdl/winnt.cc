@@ -1,5 +1,5 @@
 /*
-   $Id: winnt.cc,v 1.2 2007/05/28 22:28:37 ksterker Exp $
+   $Id: winnt.cc,v 1.3 2007/06/10 23:02:48 ksterker Exp $
 
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -70,6 +70,9 @@ int main_init (const adonthell::app *theApp)
 	
     // no need to initialize anything, so just start the application ...
     int retval = ((adonthell::app *) theApp)->main ();
+    
+    // cleanup engine
+    theApp->cleanup ();
     
     // Exit cleanly, calling atexit() functions
     exit (retval);

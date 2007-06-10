@@ -30,7 +30,7 @@ set(adonthell_world_HEADERS
     placeable_model.h
     placeable_model_gfx.h
     square.h
-    square_walkable_info
+    square_walkable_info.h
 )
 
 
