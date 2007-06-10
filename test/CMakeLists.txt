@@ -51,3 +51,20 @@ TARGET_LINK_LIBRARIES(gfxtest
 #	adonthell_python
 #	adonthell_py_runtime
 #	)
+
+###############################
+# Try to build the worldtest
+ADD_EXECUTABLE(worldtest
+			worldtest.cc)
+
+TARGET_LINK_LIBRARIES(worldtest
+	ltdl
+	adonthell_base
+	adonthell_gfx
+	adonthell_input
+	adonthell_main
+	adonthell_world
+	
+#	adonthell_python
+#	adonthell_py_runtime
+	)
