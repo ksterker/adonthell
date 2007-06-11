@@ -1,5 +1,5 @@
 /*
-   $Id: worldtest.cc,v 1.1 2007/06/10 03:56:14 ksterker Exp $
+   $Id: worldtest.cc,v 1.2 2007/06/11 06:45:01 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -149,7 +149,7 @@ public:
         mchar->set_speed (1.0);
         mchar->set_position (4, 4);
         mchar->set_limits (16, 12);
-
+        
         // Adding map objects
         world::object_with_gfx * mobj;
         
@@ -274,11 +274,11 @@ public:
         	u_int16 i, j;
         
         	// FIXME frames_missed is probably not what we want here 
-	        for (int i = 0; i < base::Timer.frames_missed (); i++) 
-	        {
-	            input::manager::update();
-	            gc.world.update();
-	        }
+	        // for (int i = 0; i < base::Timer.frames_missed (); i++) 
+	        // {
+            input::manager::update();
+            gc.world.update();
+	        //}
 	
 	        std::list <world::square_info> drawqueue; 
 	
