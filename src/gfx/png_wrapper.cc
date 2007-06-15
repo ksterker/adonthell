@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.4 2007/05/14 02:00:05 ksterker Exp $
+   $Id: png_wrapper.cc,v 1.5 2007/06/15 05:29:35 ksterker Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -120,12 +120,6 @@ namespace gfx
             return NULL;
         }
 
-        row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
-        for (int y=0; y<height; y++)
-            row_pointers[y] = (png_byte*) malloc(info_ptr->rowbytes);
-
-        png_read_image(png_ptr, row_pointers);
-
         *alpha = (info_ptr->color_type == PNG_COLOR_TYPE_RGBA);
         const int bytes_per_pixel = (*alpha) ? 4 : 3;
         char *image = image = (char *)calloc (length * height, bytes_per_pixel);
@@ -134,7 +128,19 @@ namespace gfx
         switch (info_ptr->color_type)
         {
         case PNG_COLOR_TYPE_RGBA:
-        case PNG_COLOR_TYPE_RGB: {
+        {
+            // read pixels in ARGB format instead of RGBA
+            png_set_swap_alpha(png_ptr);
+            // fall through
+        }
+        case PNG_COLOR_TYPE_RGB: 
+        {
+            row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
+            for (int y=0; y<height; y++)
+                row_pointers[y] = (png_byte*) malloc(info_ptr->rowbytes);
+            
+            png_read_image(png_ptr, row_pointers);
+                        
             const int line_buf_length = bytes_per_pixel * length;
 
             for (int y=0; y<height; y++)
@@ -147,7 +153,8 @@ namespace gfx
                 free(row_pointers[y]);
             }
             free(row_pointers);
-            break; }
+            break; 
+        }
         default:
             cout << "[read_png_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (is " << info_ptr->color_type << ")" << endl;
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);

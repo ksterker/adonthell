@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.9 2007/05/28 22:28:37 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.10 2007/06/15 05:29:35 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -80,7 +80,7 @@ namespace gfx
         if (mask_changed)
         {
             mask_changed = false;
-            if (is_masked ()) 
+            if (is_masked ())
                 SDL_SetColorKey (vis, SDL_SRCCOLORKEY | SDL_RLEACCEL, trans_color);
             else
                 SDL_SetColorKey (vis, 0, 0); 

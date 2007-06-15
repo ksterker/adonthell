@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdl.cc,v 1.5 2007/05/28 22:28:37 ksterker Exp $
+   $Id: screen_sdl.cc,v 1.6 2007/06/15 05:29:35 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,6 +50,7 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
     // Setting up the window title
     SDL_WM_SetCaption ("Adonthell", NULL);
 
+    // Setting up transparency color
     trans_color = SDL_MapRGB(display->get_vis()->format, gfx::screen::TRANS_RED, gfx::screen::TRANS_GREEN, 
                              gfx::screen::TRANS_BLUE);
 
