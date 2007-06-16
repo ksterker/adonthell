@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.3 2007/05/25 03:16:10 ksterker Exp $
+ $Id: area.cc,v 1.4 2007/06/16 23:19:01 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -58,6 +58,7 @@ world::square * area::get (const u_int16 x, const u_int16 y)
     return (&Grid[x][y]); 
 }
 
+// place object at given position on the grid
 bool area::put (placeable * obj, coordinates & pos)
 {
     u_int16 i, j;
@@ -65,26 +66,25 @@ bool area::put (placeable * obj, coordinates & pos)
 
     if (!state) return false;
 
-    u_int16 sx = pos.x () < state->base.x () ? 0 :
-        pos.x () - state->base.x (); 
-    u_int16 sy = pos.y () < state->base.y () ? 0 :
-        pos.y () - state->base.y (); 
+    u_int16 start_x = pos.x () < state->base.x () ? 0 : pos.x () - state->base.x (); 
+    u_int16 start_y = pos.y () < state->base.y () ? 0 : pos.y () - state->base.y (); 
     
-    u_int16 fx = pos.x () + state->area_length () - state->base.x ();
-    u_int16 fy = pos.y () + state->area_height () - state->base.y (); 
+    u_int16 end_x = pos.x () + state->area_length () - state->base.x ();
+    u_int16 end_y = pos.y () + state->area_height () - state->base.y (); 
 
-    if (pos.ox ()) fx++;
-    if (pos.oy ()) fy++; 
+    if (pos.ox ()) end_x++;
+    if (pos.oy ()) end_y++; 
     
-    if (fx > length()) fx = length() - 1;
-    if (fy > height()) fy = height() - 1;
+    if (end_x > length()) end_x = length() - 1;
+    if (end_y > height()) end_y = height() - 1;
 
     square * msqr; 
     
-    for (j = sy; j < fy; j++) 
-        for (i = sx; i < fx; i++) 
+    for (j = start_y; j < end_y; j++) 
+        for (i = start_x; i < end_x; i++) 
         {
             msqr = get (i, j);
+            // coordinates new_pos(pos.x() + i - start_x, pos.y() + j - start_y, pos.z(), 0, 0);
             msqr->add (obj, pos); 
         }
 
