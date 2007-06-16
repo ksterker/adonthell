@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.5 2007/06/15 05:29:35 ksterker Exp $
+   $Id: png_wrapper.cc,v 1.6 2007/06/16 20:28:17 ksterker Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -129,8 +129,10 @@ namespace gfx
         {
         case PNG_COLOR_TYPE_RGBA:
         {
+#ifdef __BIG_ENDIAN__
             // read pixels in ARGB format instead of RGBA
             png_set_swap_alpha(png_ptr);
+#endif
             // fall through
         }
         case PNG_COLOR_TYPE_RGB: 
