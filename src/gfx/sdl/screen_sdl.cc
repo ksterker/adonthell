@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdl.cc,v 1.6 2007/06/15 05:29:35 ksterker Exp $
+   $Id: screen_sdl.cc,v 1.7 2007/06/16 22:54:44 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,6 +44,7 @@ extern "C"
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
     u_int32 SDL_flags = SDL_HWSURFACE | SDL_DOUBLEBUF;
+	if (gfx::screen::is_fullscreen()) SDL_flags |= SDL_FULLSCREEN;
 
     if (!display->set_video_mode(nl, nh, depth, SDL_flags)) return false;
 

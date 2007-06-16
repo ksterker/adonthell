@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.9 2007/05/14 02:00:05 ksterker Exp $
+   $Id: gfx.cc,v 1.10 2007/06/16 22:54:43 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -143,7 +143,9 @@ namespace gfx
     // setup from configuration
     void setup (base::configuration & cfg)
     {
-        // TODO: read options from configuration and use during initialization
+    	// option to toggle fullscreen on/off
+        screen::set_fullscreen (cfg.get_int ("Video", "Fullscreen", 1) == 1);
+        cfg.option ("Video", "Fullscreen", base::cfg_option::BOOL);
     }
 
     // shutdown gfx

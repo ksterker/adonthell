@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.6 2007/05/28 22:28:37 ksterker Exp $
+   $Id: screen_sdlgl.cc,v 1.7 2007/06/16 22:54:44 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,6 +59,8 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 bool gfx::screen_surface_sdlgl::set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
 	u_int32 SDL_flags = SDL_OPENGL;
+	if (gfx::screen::is_fullscreen()) SDL_flags |= SDL_FULLSCREEN;
+
 	// Can be changed
 	SDL_Surface * vis = SDL_SetVideoMode (nl, nh, depth, SDL_flags);
 	if (!vis) return false;
