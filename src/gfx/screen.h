@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.7 2007/06/16 22:54:43 ksterker Exp $
+   $Id: screen.h,v 1.8 2007/06/16 22:57:24 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,16 +113,13 @@ namespace gfx
         static void clear() { clear_p(); }
         
         /** 
-         * Toggles between fullscreen/windowed mode.
+         * Toggles between fullscreen/windowed mode. Needs to be called
+         * before set_video_mode to be effective.
          *  @param mode
          *     - true: fullscreen mode.
          *     - false: windowed mode.
-         *  @return
-         *    @li true if the operation succeed.
-         *    @li false if the mode is already set, or the system doesn't support
-         *        this mode.
          */ 
-        static bool set_fullscreen (bool m)
+        static void set_fullscreen (bool m)
         {
         	fullscreen_ = m;
         }
