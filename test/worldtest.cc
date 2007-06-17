@@ -1,5 +1,5 @@
 /*
-   $Id: worldtest.cc,v 1.2 2007/06/11 06:45:01 ksterker Exp $
+   $Id: worldtest.cc,v 1.3 2007/06/17 00:09:58 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -33,11 +33,17 @@ public:
     world::character_with_gfx * mchar;
     bool letsexit;
     bool draw_grid;
-
+	bool draw_walkable;
+	bool draw_border;
+	bool screenshot;
+	
     game_client()
     {
         letsexit = false;
         draw_grid = false;
+        draw_walkable = false;
+        draw_border = false;
+        screenshot = false;
     }
 
 	// callback for control event listener
@@ -121,18 +127,36 @@ public:
     {
         if (kev->type() == input::keyboard_event::KEY_PUSHED)
         {
+        	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
                 letsexit = true;
-            }            
+            }
+            // toggle grid on|off
             if (kev->key() == input::keyboard_event::G_KEY)
             {
                 draw_grid = !draw_grid;
-            }            
+            }
+            // toggle object borders on|off
+            if (kev->key() == input::keyboard_event::B_KEY)
+            {
+                draw_border = !draw_border;
+            }
+            // toggle collision area on|off
+            if (kev->key() == input::keyboard_event::W_KEY)
+            {
+                draw_walkable = !draw_walkable;
+            }
+            // print number of objects on each map square
             if (kev->key() == input::keyboard_event::O_KEY)
             {
                 world.output_occupation();
-            }            
+            }
+            // save snapshot
+            if (kev->key() == input::keyboard_event::S_KEY)
+            {
+            	screenshot = true;
+            }
         }
 
         return true;
@@ -152,7 +176,12 @@ public:
         
         // Adding map objects
         world::object_with_gfx * mobj;
+
+		// short grass, 1x1 at index 0
+        mobj = (world::object_with_gfx *) world.add_object();
+        mobj->load("data/models/map/ground/outside/short-grass-tile.xml");
         
+        // long grass, 1.5x1.5 at index 1
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/long-grass-tile.xml");
         
@@ -174,18 +203,27 @@ public:
         */
         
         world::coordinates mc;
+
+        // create ground (grass tiles are 40x40)
+        for (u_int16 i = 0; i < world.length(); i++)
+            for (u_int16 j = 0; j < world.height(); j++)
+            {
+                world::coordinates mc (i, j, 0, 0, 0);
+                world.put_object (0, mc); 
+            }
         
-        // create ground (grass tiles are 60x60, but grid is 40x40)
+        /* create ground (grass tiles are 60x60, but grid is 40x40)
         for (float i = 0; i < world.length(); i += 1.5)
             for (float j = 0; j < world.height(); j += 1.5)
             {
                 int x = world::SQUARE_SIZE * i;
                 int y = world::SQUARE_SIZE * j;
                 
-                world::coordinates mc (x / world::SQUARE_SIZE, y / world::SQUARE_SIZE, 0, 
-                                       x % world::SQUARE_SIZE, y % world::SQUARE_SIZE);
+                world::coordinates mc (x / world::SQUARE_SIZE, y / world::SQUARE_SIZE, 0, 0, 0);
+//                                       x % world::SQUARE_SIZE, y % world::SQUARE_SIZE);
                 world.put_object (0, mc); 
             }
+        */
         
         /*
         mc.set_position(10, 5);
@@ -313,17 +351,34 @@ public:
 		            switch ((*it).obj->type ()) 
 		            {
 		                case world::CHARACTER:
+		                {
 		                    ((world::character_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy ());
 		                    break; 
-		                    
+		                }   
 		                case world::OBJECT:
+		                {
 		                    ((world::object_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
-		                    break;
 		                    
+		                    if (gc.draw_border)
+		                    {
+			                    ((world::object_with_gfx *)
+			                     (*it).obj)->draw_border (
+			                     			   (*it).x () * world::SQUARE_SIZE + (*it).ox (),
+		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
+		                    }
+		                    if (gc.draw_walkable)
+		                    {
+			                    ((world::object_with_gfx *)
+			                     (*it).obj)->draw_walkable (
+			                     				(*it).x () * world::SQUARE_SIZE + (*it).ox (),
+		                                        (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
+		                    }
+		                    break;
+		                }   
 		                default:
 		                    break; 
 		            }
@@ -339,7 +394,13 @@ public:
 	            for (i = 0; i < gfx::screen::height (); i += world::SQUARE_SIZE) 
 	                gfx::screen::get_surface()->fillrect (0, i, gfx::screen::length (), 1, 0xFFFF00); 
 	        }
-	
+			
+			if (gc.screenshot)
+			{
+				gfx::surface *screen = gfx::screen::get_surface();
+                screen->save_png("screenshot.png");
+			}
+				
 	        base::Timer.update (); 
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 
