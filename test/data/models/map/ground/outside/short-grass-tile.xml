@@ -13,5 +13,5 @@
       <u_int16 id="y_off">0</u_int16>
     </list>
   </list>
-  <string id="sprite">data/gfx/map/ground/outside/grass/long-grass-tile.xml</string>
+  <string id="sprite">data/gfx/map/ground/outside/grass/short-grass-tile.xml</string>
 </Data>
