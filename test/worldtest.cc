@@ -1,5 +1,5 @@
 /*
-   $Id: worldtest.cc,v 1.4 2007/07/15 03:20:09 ksterker Exp $
+   $Id: worldtest.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -36,6 +36,7 @@ public:
 	bool draw_walkable;
 	bool draw_border;
 	bool screenshot;
+	bool always_run;
 	
     game_client()
     {
@@ -44,6 +45,7 @@ public:
         draw_walkable = false;
         draw_border = false;
         screenshot = false;
+        always_run = false;
     }
 
 	// callback for control event listener
@@ -55,12 +57,13 @@ public:
         	{       		
 	            case input::control_event::A_BUTTON:
 	            {
-	                mchar->run();
+	            	if (!always_run) mchar->run ();
+	            	else mchar->walk ();
 	                break;
 	            }            
 	            case input::control_event::B_BUTTON:
 	            {
-	                mchar->jump();
+	            	mchar->jump();
 	                break;
 	            }            
 	            case input::control_event::LEFT_BUTTON:
@@ -92,7 +95,8 @@ public:
         	{       		
 	            case input::control_event::A_BUTTON:
 	            {
-                	mchar->walk();
+	            	if (!always_run) mchar->walk();
+	            	else mchar->run ();
 	                break;
 	            }            
 	            case input::control_event::LEFT_BUTTON:
@@ -127,6 +131,11 @@ public:
     {
         if (kev->type() == input::keyboard_event::KEY_PUSHED)
         {
+        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
+        	{
+        		always_run = true;
+				mchar->run ();
+        	}
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
@@ -157,6 +166,14 @@ public:
             {
             	screenshot = true;
             }
+        }
+        else
+        {
+        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
+        	{
+        		always_run = false;
+        		mchar->walk ();
+        	}
         }
 
         return true;

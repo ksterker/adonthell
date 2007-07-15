@@ -1,5 +1,5 @@
 /*
-   $Id: control_event.cc,v 1.4 2006/07/09 15:57:34 ksterker Exp $
+   $Id: control_event.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
 
    Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -71,10 +71,10 @@ namespace input
             keyboard_event::DOWN_KEY,
             keyboard_event::RIGHT_KEY,
             keyboard_event::LEFT_KEY,
-            keyboard_event::SPACE_KEY,
-            keyboard_event::ESCAPE_KEY,
+            keyboard_event::LSHIFT_KEY,	// run
+            keyboard_event::SPACE_KEY,	// jump
             keyboard_event::LCTRL_KEY,
-            keyboard_event::LALT_KEY            
+            keyboard_event::ESCAPE_KEY            
         };
         
         // read setting for each of our controls

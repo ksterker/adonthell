@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.3 2007/06/16 23:19:01 ksterker Exp $
+ $Id: moving.cc,v 1.4 2007/07/15 22:01:54 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -207,7 +207,7 @@ void moving::update_pos2()
             for (u_int16 l = 0; l < nby; ++l)
                 for (u_int16 k = 0; k < nbx; ++k)
                 {
-                	printf ("Processing square %i, %i\n", px + k, py + l); 
+                	// printf ("Processing square %i, %i\n", px + k, py + l); 
                     square * msqr = Mymap.get(px + k, py + l);
                     
                     if (vz() > 0)

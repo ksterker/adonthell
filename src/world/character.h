@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: character.h,v 1.3 2007/07/15 22:01:54 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -94,8 +94,12 @@ namespace world
          */
         void walk()
         {
-            Is_running = false;
-            set_direction (current_dir());
+    		ToggleRunning = false;
+        	if (VSpeed == 0.0)
+        	{
+            	IsRunning = false;
+            	set_direction (current_dir());
+        	}
         }
 
         /**
@@ -103,17 +107,21 @@ namespace world
          */
         void run()
         {
-            Is_running = true;
-            set_direction (current_dir());
+    		ToggleRunning = true;
+        	if (VSpeed == 0.0)
+        	{
+	            IsRunning = true;
+    	        set_direction (current_dir());
+        	}
         }
-
+        
         /**
          * Check if %character is currently running.
          * @return true if the %character is running, false otherwise.
          */
         bool is_running()
         {
-            return Is_running;
+            return IsRunning;
         }
         
         /**
@@ -140,7 +148,7 @@ namespace world
          */
         int current_dir()
         {
-            return Current_dir;
+            return CurrentDir;
         }
 
         /**
@@ -205,9 +213,11 @@ namespace world
         float VSpeed;
         
         /// whether character is running or not
-        bool Is_running;
+        bool IsRunning;
+        /// whether character should be running once on the ground
+        bool ToggleRunning;
         /// current direction the character is facing
-        int Current_dir;
+        int CurrentDir;
     };
 }
 

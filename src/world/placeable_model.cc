@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.4 2007/06/10 03:58:22 ksterker Exp $
+ $Id: placeable_model.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -117,12 +117,9 @@ bool placeable_model::get_state (base::flat & file)
     std::string state = record.get_string ("state");
     while (record.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
-        printf ("*** loading placeable_area %s ...", name);
         base::flat area ((const char*) value, size);
         placeable_area * mpa = add_state (std::string (name));
         mpa->get_state (area);
-        printf (" done\n");
-        fflush (stdout);
     }
     
     set_state (state);

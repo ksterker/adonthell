@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+   $Id: character.cc,v 1.3 2007/07/15 22:01:54 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,22 +42,36 @@ character::character (area & mymap) : moving (mymap)
     Type = CHARACTER;
     Speed = 2;
     VSpeed = 0;
-    Is_running = false;
-    Current_dir = NONE;
+    IsRunning = false;
+    ToggleRunning = false;
+    CurrentDir = NONE;
 }
 
 // jump
 void character::jump()
 {
-    VSpeed = 4.5;
+	if (VSpeed == 0.0)
+	{
+    	VSpeed = 4.5;
+	}
 }
 
 // process character movement
 void character::update()
 {
-    set_vertical_velocity(VSpeed);
+    set_vertical_velocity (VSpeed);
     moving::update();
-    if (!Is_falling) VSpeed = 0.0;
+    if (!Is_falling) 
+    {
+    	VSpeed = 0.0;
+    	
+    	// character no longer jumping or falling
+    	if (IsRunning != ToggleRunning)
+    	{
+    		IsRunning = ToggleRunning;
+    		set_direction (current_dir());
+    	}
+    }
     else VSpeed = vz() - 0.2;
 }
 
@@ -65,7 +79,7 @@ void character::set_direction(int ndir)
 {
   float vx = 0.0, vy = 0.0;
   
-  Current_dir = ndir;
+  CurrentDir = ndir;
   
   if (current_dir() & WEST) vx = -speed() * (1 + is_running());
   if (current_dir() & EAST) vx = speed() * (1 + is_running());
@@ -145,8 +159,8 @@ void character::update_state()
         state = current_state_name()[0];
         state += "_stand";
     }
+    
     set_state(state);
-
 }
 
 // save to stream
@@ -171,7 +185,7 @@ bool character::get_state (base::flat & file)
 // save to XML file
 bool character::save (const std::string & fname) const
 {
-    // try to save item
+    // try to save character
     base::diskio record (base::diskio::XML_FILE);
     if (!put_state (record))
     {

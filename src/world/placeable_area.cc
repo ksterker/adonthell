@@ -1,5 +1,5 @@
 /*
- $Id: placeable_area.cc,v 1.4 2007/06/10 03:58:22 ksterker Exp $
+ $Id: placeable_area.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -83,9 +83,6 @@ bool placeable_area::get_state (base::flat & file)
     zsize = file.get_uint16 ("size");
     set_area_size (var1, var2);
 
-    printf (" %i %i", var1, var2);
-    fflush (stdout);
-    
     for (u_int16 i = 0; i < var1; i++)
         for (u_int16 j = 0; j < var2; j++)
             area[i][j].get_state (file);
@@ -95,14 +92,10 @@ bool placeable_area::get_state (base::flat & file)
     var2 = file.get_uint16 ("y");
     base.set_position (var1, var2);
 
-    printf (" %i %i", var1, var2);
-
     // get offset
     var1 = file.get_uint16 ("x_off");
     var2 = file.get_uint16 ("y_off");
     base.set_offset (var1, var2);
-
-    printf (" %i %i", var1, var2);
 
     return file.success ();
 }
