@@ -5,7 +5,7 @@
     <list id="n_stand">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -16,7 +16,7 @@
     <list id="e_stand">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -27,7 +27,7 @@
     <list id="s_stand">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -38,7 +38,7 @@
     <list id="w_stand">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -49,7 +49,7 @@
     <list id="n_walk">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -60,7 +60,7 @@
     <list id="e_walk">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -71,7 +71,7 @@
     <list id="s_walk">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -82,7 +82,7 @@
     <list id="w_walk">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -93,7 +93,7 @@
     <list id="n_run">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -104,7 +104,7 @@
     <list id="e_run">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -115,7 +115,7 @@
     <list id="s_run">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
@@ -126,7 +126,7 @@
     <list id="w_run">
       <u_int16 id="length">1</u_int16>
       <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">25</u_int16>
+      <u_int16 id="size">80</u_int16>
       <bool>1</bool>
       <bool>0</bool>
       <u_int16 id="x">0</u_int16>
