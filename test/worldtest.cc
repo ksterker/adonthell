@@ -1,5 +1,5 @@
 /*
-   $Id: worldtest.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
+   $Id: worldtest.cc,v 1.6 2007/07/17 04:44:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -210,12 +210,15 @@ public:
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/wood-pole-l.xml");
 
-        // wooden pole, right, height 40 at index 3
+        // wooden pole, right, height 40 at index 4 
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
-        
-        world::coordinates mc;
 
+        // short wooden planks, 1x1 at index 5
+        mobj = (world::object_with_gfx *) world.add_object();
+        mobj->load("data/models/map/ground/outside/wood-2.xml");
+
+        world::coordinates mc;
         // create ground (grass tiles are 40x40)
         for (u_int16 i = 0; i < world.length(); i++)
             for (u_int16 j = 0; j < world.height(); j++)
@@ -225,40 +228,45 @@ public:
             }
 
 		// 4 poles
-        mc.set_position(10, 3);
+        mc.set_position(10, 4);
         world.put_object(3, mc);  // that one is actually invisible 
-        mc.set_position(10, 5);
+        mc.set_position(10, 6);
         world.put_object(3, mc); 
-        mc.set_position(12, 3);  // that one is actually invisible
+        mc.set_position(12, 4);  // that one is actually invisible
         world.put_object(4, mc); 
-        mc.set_position(12, 5);
+        mc.set_position(12, 6);
         world.put_object(4, mc); 
 
 		// wooden platform
         for (int i = 10; i < 12; i++)
+        {
+            world::coordinates mc (i-1, 6, 40);
+            world.put_object (5, mc);
+
             for (int j = 4; j < 6; j++)
             {
                 world::coordinates mc (i, j, 40);
                 world.put_object (2, mc); 
             }
+        }
 
 		// 4 wooden poles
-        mc.set_position(7, 6);
+        mc.set_position(7, 7);
         world.put_object(3, mc); 
         mc.set_altitude(40);
         world.put_object(3, mc); 
-        mc.set_position(7, 3);
+        mc.set_position(7, 4);
         mc.set_altitude(0);
         world.put_object(3, mc); 
         mc.set_altitude(40);
         world.put_object(3, mc); 
         
         mc.set_altitude(0);
-        mc.set_position(9, 6);
+        mc.set_position(9, 7);
         world.put_object(4, mc); 
         mc.set_altitude(40);
         world.put_object(4, mc); 
-        mc.set_position(9, 3);
+        mc.set_position(9, 4);
         mc.set_altitude(0);
         world.put_object(4, mc); 
         mc.set_altitude(40);
@@ -266,17 +274,24 @@ public:
 
 		// wooden platform
         for (int i = 7; i < 9; i++)
+        {
+            world::coordinates mc (i-1, 7, 80);
+            world.put_object (5, mc);
+
             for (int j = 4; j < 7; j++)
             {
                 world::coordinates mc (i, j, 80);
                 world.put_object (2, mc); 
             }
+        } 
 
 		// "stair"
         for (int i = 1; i < 14; i++)
         {
             world::coordinates mc (i, 9, 5 * i);
             world.put_object (2, mc); 
+            mc.set_position (i-1, 10);
+            world.put_object (5, mc); 
         }
         
         /* create ground (grass tiles are 60x60, but grid is 40x40)
