@@ -1,7 +1,6 @@
 
 
-                             Adonthell 0.3 
-                           
+                          Adonthell 0.4 Alpha
 
 
     This program is free software; you can redistribute it and/or modify
@@ -18,71 +17,62 @@
 Installation:
 =============
 
-See the INSTALL and NEWBIE files for details.
+See the INSTALL file for details.
 
-Note that this package alone doesn't allow you to play anything - 
-you'll need a game package in addition to this one. The official
-game package for this release is Waste's Edge release 0.3. If you
-don't already have it, you should download it and install it next to
-this package.
+Note that this package alone doesn't allow you to play anything -
+you'll need a game package in addition to this one. However, there
+are a few sample scripts and programs in the test directory that
+you can try. See test/README for further information.
 
 
 Configuring Adonthell:
 ======================
 
 The first time you run Adonthell, a configuration file is created:
-$HOME/.adonthell/adonthellrc. Edit it to customise the game to your
-convenience.
+adonthell.xml. Edit it to customise the game to your convenience.
 
-The available options and what they do are:
+The available options and their default values are:
 
-- Screen-mode
-  Whether Adonthell should run fullscreen or in windowed mode 
-  0 = Windowed mode, 1 = Fullscreen mode
-  
-  (If you have trouble with the fullscreen mode, see the NEWBIE
-  file for help)
+* Audio
 
-- Audio-channels
-  Whether sound should be mono or stereo
-  0 = Mono, 1 = Stereo
+  To be done.
 
-- Audio-resolution
-  Whether audio output should be 8 or 16 bit
-  0 = 8 bit, 1 = 16 bit
+* General
 
-- Audio-sample-rate
-  0 = 11025 Hz, 1 = 22050 Hz, 2 = 44100 Hz
+  <Backend>sdl</Backend>
+  Library to use for low level hardware access. For now, only 'sdl'
+  is available.
 
-- Audio-volume
-  The mixer setting, 0 - 100 %
-  
-  (Note that a value of 0 will turn audio completely off)
+* Input
 
+  <move_east>right</move_east>
+  <move_north>up</move_north>
+  <move_south>down</move_south>
+  <move_west>left</move_west>
+  Movement controls; defaults to arrow keys.
 
-Running Adonthell:
-==================
+  <a_button>left shift</a_button>
+  Run while this key is pressed.
 
-Okay, now you're ready to launch the program. Type
+  <b_button>space</b_button>
+  Jump.
 
-$> adonthell <gamename>
+  <c_button>left control</c_button>
+  Unused
 
-to run the game named <gamename>. To get a list of currently 
-installed games you can play, type:
+  <d_button>escape</d_button>
+  Unused
 
-$> adonthell -l
+* Video
 
-This will print a list of the installed games you can launch
-with above command.
-
-For further information on how to play Adonthell, please refer to the
-PLAYING file that comes with the game data.
+  <Fullscreen>1</Fullscreen>
+  Enable Fullscreen mode. Set to 0 to switch to Windowed mode.
 
 
 Directories:
 ============
 
-- $HOME/.adonthell 
+- $HOME/.adonthell
   contains the configuration file and your saved games.
 
 - Global data directory
@@ -92,25 +82,26 @@ Directories:
   play it by invoking 'adonthell -g </full/path/to/my/game>'
 
 
+Environment Variables:
+======================
+
+- ADONTHELL_MODULES_PATH
+  directory to search for Adonthell backend modules. Overwrites the
+  default path ($prefix/lib/adonthell).
+
+
 Release Notes:
 ==============
 
-The main purpose of this release is to attract new programmers, 
-artists and writers in order to shorten the time until the next 
-version.  So if you have experience in C++ (and optionally Python), 
+The main purpose of this release is to attract new programmers,
+artists and writers in order to shorten the time until the next
+version.  So if you have experience in C++ (and optionally Python),
 or if you are good at computer graphics or writing we would like to
-hear from you.  Please have a look at our development site 
-  
-  http://adonthell.linuxgames.com/development/
+hear from you.  Please have a look at our development Wiki
+
+  http://adonthell.berlios.de/doc/
 
 for further details.
-
-Adonthell - Waste's Edge -, or v0.3 for short is no complete RPG.
-As the v0.3 implies, the engine is far from being finished, although
-it should be free of severe bugs.  Missing features include combat, 
-items and magic.  But you can interact with NPC's and the game world, 
-and the internals enable us to create a basic plot, so v0.3 is actually
-playable!
 
 You're greatly invited to report us bugs, problems, or anything you
 think we should know. Any feedback is appreciated, so don't hesitate!
@@ -121,8 +112,7 @@ Contact:
 
 You can reach us in various ways:
 
-Email:         adonthell@linuxgames.com
-Mailing list:  adonthell-general@mail.freesoftware.fsf.org
+Mailing list:  adonthell-general@nongnu.org
 Web site:      http://adonthell.linuxgames.com
 Tech support:  http://savannah.gnu.org/support/?group_id=702
 
@@ -138,11 +128,11 @@ Reporting Bugs:
 
 We hope you'll never have to, but if you discover a problem, we
 would like to hear about it. Please use the Development mailing list
-(adonthell-devel@mail.freesoftware.fsf.org) for that. You can 
-subscribe to the mailing lists at 
+(adonthell-devel@nongnu.org) for that. You can subscribe to the
+mailing lists at
 
   http://adonthell.linuxgames.com/contact/mailinglist.shtml
 
 
 Thank you for trying this software.
-- The Adonthell team.
+- The Adonthell Team.

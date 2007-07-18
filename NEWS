@@ -1,3 +1,8 @@
+version 0.4
+- Broke Engine into separate Modules
+- Created Python bindings for Engine Modules 
+- ...
+
 version 0.3
 - Added Python scripting
 - Added Dialogue system

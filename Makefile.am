@@ -1,4 +1,4 @@
-EXTRA_DIST = adonthell.pc.in autogen.sh
+EXTRA_DIST = adonthell.pc.in autogen.sh README.Win32
 
 SUBDIRS = libltdl src doc test
 

@@ -13,14 +13,14 @@ Utility Scripts:
 ================
 
 * convert_data.py
-  
+
   Converts data files in compressed binary format to XML and back.
   Run with 'python convert_data.py <filename>'
 
 * convert_graphics.py
 
   Extracts images from v0.3 media files (.anim, .img, .mobj) and
-  converts them into PNG format. 
+  converts them into PNG format.
   Run with 'python convert_graphics.py <filename>'
 
 * filereport.py
@@ -50,12 +50,12 @@ Test Scripts:
 
 * equipmenttest.py
 
-  Creates an equipment inventory, saves it to data/eqp.data and 
+  Creates an equipment inventory, saves it to data/eqp.data and
   reloads it. Run with 'python equipmenttest.py'
 
 * eventtest.py
 
-  Tests the event system and time events. Creates the file 
+  Tests the event system and time events. Creates the file
   data/eventtest.data. Run with 'python eventtest.py'
 
 * gfxsave.py
@@ -92,8 +92,8 @@ Test Scripts:
 * questtest.py
 
   Tests the quest implementation: saving, loading, completing quest
-  steps and triggering associated events. 
-  Run with 'python questtest.py -g .'    
+  steps and triggering associated events.
+  Run with 'python questtest.py -g .'
 
 * searchtest.py
 
