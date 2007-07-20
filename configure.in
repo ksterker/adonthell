@@ -10,7 +10,7 @@ dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(adonthell, 0.4.0)
+AM_INIT_AUTOMAKE(adonthell, 0.4.0-alpha-1)
 AM_CONFIG_HEADER(config.h)
 
 dnl CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
@@ -345,4 +345,5 @@ src/py-wrappers/adonthell/Makefile
 src/py-wrappers/runtime/Makefile
 doc/Makefile
 test/Makefile
+test/data/Makefile
 ])

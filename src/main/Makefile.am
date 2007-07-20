@@ -27,7 +27,7 @@ pkglibmain_LTLIBRARIES = _sdl.la
 ## MacOS X specific files
 if OSX_COMPILE
 _sdl_hdrs = sdl/osx.h
-_sdl_la_SOURCES = sdl/osx.m $(sdl_hdrs)
+_sdl_la_SOURCES = sdl/osx.m $(_sdl_hdrs)
 
 ## Files specific to Linux (and others)
 else

@@ -13,7 +13,7 @@ pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la _gui.la _
 lib_LTLIBRARIES = libadonthell_py_main.la
 
 ## Rules to build libadonthell_py_main
-libadonthell_py_main_la_SOURCES = py_main.cc
+libadonthell_py_main_la_SOURCES = py_main.cc py_main.h
 libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS)
 libadonthell_py_main_la_LIBADD = $(PY_LIBS)
 

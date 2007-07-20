@@ -1,5 +1,7 @@
 CXXFLAGS += -I$(top_srcdir)/src
 
+SUBDIRS = data
+
 EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     worldtest.py configtest.py equipmenttest.py  gfxtest.py logtest.py \
     convert_data.py eventtest.py guitest.py questtest.py \
@@ -20,14 +22,13 @@ guitest_LDADD = \
 	-L$(top_builddir)/src/gui/ -ladonthell_gui                 \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                 \
 	-L$(top_builddir)/src/input/ -ladonthell_input             \
-	-L$(top_builddir)/src/audio/ -ladonthell_audio              \
+	-L$(top_builddir)/src/audio/ -ladonthell_audio             \
 	-L$(top_builddir)/src/event/ -ladonthell_event             \
 	-L$(top_builddir)/src/base/ -ladonthell_base               \
 	-L$(top_builddir)/src/main -ladonthell_main                \
 	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
 
 inputtest_SOURCES = inputtest.cc
-
 inputtest_LDADD = \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \

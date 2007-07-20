@@ -1,6 +1,5 @@
 CXXFLAGS += -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(top_builddir)
-EXTRA_DIST = py_runtime.i
 
 ## Our header files
 pkgincludepythondir = $(pkgincludedir)/python

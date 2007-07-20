@@ -5,6 +5,8 @@ DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 pkgincludeaudiodir = $(pkgincludedir)/audio
 pkgincludeaudio_HEADERS = \
 	audio.h \
+	audio_event.h \
+	audio_event_manager.h \
 	sound.h
 
 ## Main library

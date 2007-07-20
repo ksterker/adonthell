@@ -290,11 +290,8 @@ the toolchain we set up in preparation to compile Adonthell.
 
 To use Eclipse to develop C/C++, download and install the following:
 
-    * Eclipse SDK 3.2
+    * Eclipse IDE for C/C++ Developers
       http://www.eclipse.org/downloads/
-
-    * CTD Runtime 3.1
-      http://download.eclipse.org/tools/cdt/releases/callisto/dist/3.1.0/
 
 Then follow the tutorial at [1]  to import the Adonthell source code
 as a Standard Make C++ Project. 
