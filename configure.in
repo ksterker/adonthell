@@ -93,32 +93,37 @@ dnl **********************
 
 if test x$gamedatadir = xnone; then
   if test x$unixinst = xno; then
-    gamedatadir=""
     CXXFLAGS="$CXXFLAGS -DSINGLE_DIR_INST"
     case "$target" in
       *-*-darwin*)
         makebundle="yes"
+        backenddir="../PlugIns"
+        gamedatadir="../Resources"
+      ;;
+      *)
+        gamedatadir="."
+        backenddir="./lib/adonthell"
       ;;
     esac
   else
     case "$target" in
       *-*-cygwin* | *-*-mingw32*)
-        gamedatadir=""
-        CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\".\\\"\""
+        gamedatadir="."
+        backenddir="./lib/adonthell"
       ;;
       *-*-beos*)
         gamedatadir="/boot/home/config/share/adonthell"
-        CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\"$gamedatadir\\\"\""
       ;;
       *)
+        backenddir="${pkglibdir}"
         gamedatadir="${datadir}/adonthell"
-        CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\"$gamedatadir\\\"\""
       ;;
     esac
   fi
-else
-  CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\"$gamedatadir\\\"\""
 fi
+
+CXXFLAGS="$CXXFLAGS -DDATA_DIR=\"\\\"$gamedatadir\\\"\""
+AC_SUBST(backenddir)
 
 
 dnl ***************

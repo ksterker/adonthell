@@ -1,3 +1,4 @@
+@backenddir@
 CXXFLAGS += -I$(top_srcdir)/src
 
 ## Our header files
@@ -39,5 +40,5 @@ libadonthell_base_la_SOURCES = \
 	paths.cc \
 	timer.cc
 
-libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\"
+libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\"
 libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz

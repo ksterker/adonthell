@@ -1,5 +1,5 @@
 /*
-   $Id: main.cc,v 1.3 2007/01/08 07:51:23 ksterker Exp $
+   $Id: main.cc,v 1.4 2007/07/21 07:09:08 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,35 @@ int main (int argc, char *argv[])
 	{
 		// pointer to our main class
     	adonthell::app *application = adonthell::app::theApp;
-    
+
+// TODO: would be nice if that could be in the OSX specific backend module,
+//       but that won't work without partial redesign of the startup process.
+#ifdef __APPLE__ && SINGLE_DIR_INST
+        char* newArgv[3];
+        
+        // this is passed if we are launched from Finder
+        if (argc >= 2 && strncmp (argv[1], "-psn", 4) == 0) 
+        {
+            // path to the application
+            char *str = strrchr (argv[0], '/');
+            *str = 0;
+            
+            // set working directory to application directory
+            chdir (argv[0]);
+            
+            // reset changes to argv[0]
+            *str = '/';
+            
+            // fix arguments
+            newArgv[0] = argv[0];
+            newArgv[1] = str + 1;
+            newArgv[2] = NULL;
+            
+            argc = 2;
+            argv = newArgv;
+        }
+#endif
+        
 	    // parse command line arguments for framework related arguments
     	application->parse_args (argc, argv);
     
