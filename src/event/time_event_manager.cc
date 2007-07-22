@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.10 2007/07/22 05:23:11 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.11 2007/07/22 21:50:37 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -92,6 +92,8 @@ void time_event_manager::add (listener *li)
     // search for the proper place to insert new listener
     while (i != Listeners.end ())
     {
+        // FIXME: vector is sorted, using binary search would speed up insert
+        
         // skip events that are raised earlier than e
         if (((time_event *) li->get_event ())->time () > ((time_event *) (*i)->get_event ())->time ()) break;
         i++;

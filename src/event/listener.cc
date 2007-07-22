@@ -1,7 +1,7 @@
 /*
-   $Id: listener.cc,v 1.8 2006/06/18 19:25:53 ksterker Exp $
+   $Id: listener.cc,v 1.9 2007/07/22 21:50:37 ksterker Exp $
 
-   Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2004/2005/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -66,7 +66,7 @@ void listener::resume ()
 {
     if (Paused == 0)
     {
-        fprintf (stderr, "*** warning: listener::resume: listener was not paused!\n");
+        fprintf (stderr, "*** warning: listener::resume: listener '%s' was not paused!\n", Id.c_str());
         if (!Registered) manager::add (this);
     }
     else 
@@ -105,7 +105,7 @@ bool listener::get_state (base::flat & in)
         // try to load it
         if (Event == NULL || Event->get_state (in) == false)
         {
-            fprintf (stderr, "*** listener::get_state: could not load event of type '%s'!\n", type.c_str ());
+            fprintf (stderr, "*** listener::get_state: '%s' could not load event of type '%s'!\n", Id.c_str(), type.c_str ());
             return false;
         }    
     }

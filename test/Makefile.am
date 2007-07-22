@@ -6,7 +6,7 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     worldtest.py configtest.py equipmenttest.py  gfxtest.py logtest.py \
     convert_data.py eventtest.py guitest.py questtest.py \
     convert_quests.py filereport.py inputtest.py searchtest.py \
-    convert_graphics.py CMakeLists.txt
+    convert_graphics.py CMakeLists.txt README.worldtest
 
 noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest
 

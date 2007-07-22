@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.10 2006/09/28 19:13:26 gnurou Exp $
+   $Id: listener.h,v 1.11 2007/07/22 21:50:37 ksterker Exp $
 
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -260,12 +260,12 @@ namespace events
          */
         event *Event;
         
-    private:
         /**
          * (Optional) Id of the event
          */
         string Id;
         
+    private:
         /**
          * Whether the %listener is registered with the %event %manager
          */

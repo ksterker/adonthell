@@ -1,5 +1,5 @@
 /*
- $Id: listener_cxx.cc,v 1.1 2006/06/18 19:25:53 ksterker Exp $
+ $Id: listener_cxx.cc,v 1.2 2007/07/22 21:50:37 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -70,7 +70,7 @@ s_int32 listener_cxx::raise_event (const event* evnt)
     }
     else
     {
-        if (!Callback) fprintf (stderr, "*** warning: listener_cxx::raise_event: no callback connected\n");
+        if (!Callback) fprintf (stderr, "*** warning: listener_cxx::raise_event: '%s' has no callback connected\n", Id.c_str());
         return 0;
     }
     

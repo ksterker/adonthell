@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.h,v 1.7 2006/09/28 19:13:26 gnurou Exp $
+   $Id: time_event_manager.h,v 1.8 2007/07/22 21:50:37 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,6 +56,7 @@ namespace events
          * deleted.
          *
          * @param li Pointer to the %listener to be registered.
+         * @todo use binary search to find position for insert.
          */
         void add (listener *li);
         

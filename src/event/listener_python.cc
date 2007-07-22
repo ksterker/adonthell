@@ -1,5 +1,5 @@
 /*
- $Id: listener_python.cc,v 1.1 2006/06/18 19:25:53 ksterker Exp $
+ $Id: listener_python.cc,v 1.2 2007/07/22 21:50:37 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -135,7 +135,7 @@ s_int32 listener_python::raise_event (const event* evnt)
     }
     else
     {
-        if (!Method) fprintf (stderr, "*** warning: listener::raise_event: no callback connected\n");
+        if (!Method) fprintf (stderr, "*** warning: listener::raise_event: '%s' no callback connected\n", Id.c_str());
         return 0;
     }
     
@@ -176,7 +176,7 @@ bool listener_python::get_state (base::flat & in)
         Method = new python::method ();
         if (Method->get_state (in) == false)
         {
-            fprintf (stderr, "*** listener::get_state: restoring callback failed!\n");
+            fprintf (stderr, "*** listener::get_state: restoring callback failed for '%s'!\n", Id.c_str());
             return false;
         }
         

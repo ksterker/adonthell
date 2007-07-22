@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.cc,v 1.8 2007/07/22 05:23:11 ksterker Exp $
+   $Id: time_event.cc,v 1.9 2007/07/22 21:50:37 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,14 @@ time_event::time_event (const string & time, bool absolute) : event ()
 void time_event::set_repeat (const string & interval, s_int32 count)
 {
     Interval = date::parse_time (interval);
-    Repeat = count;
+    if (Interval > 0)
+    {
+        Repeat = count;
+    }
+    else
+    {
+        fprintf (stderr, "*** time_event::set_repeat: interval '%s' not allowed\n", interval.c_str());
+    }
 }
 
 // Save time event to file
@@ -77,12 +84,12 @@ bool time_event::get_state (base::flat & in)
 
 void time_event::do_repeat ()
 {
+	event::do_repeat ();
+
     // don't repeat multiple times after being resumed
 	if (Interval)
 	{
 		while (Time <= date::time ()) Time += Interval;
 	}
-	
-	event::do_repeat ();
 }
 

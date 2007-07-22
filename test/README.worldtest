@@ -1,0 +1,64 @@
+Adonthell - Dun Barethsol v0.40 aka Worldtest
+=============================================
+
+Purpose
+=======
+
+Worldtest is a very, very simple test of the Adonthell engine's graphics, map, 
+and input systems. It is designed to be useable with either a gamepad or the 
+keyboard. The demo does not take mouse input. 
+
+Please note that while the demo has been designed for gamepad input, this is
+not enabled by default. See below for details.
+
+Controls
+========
+
+Controls are configured in the main engine configuration file adonthell.xml.
+The default settings are listed below. Please change to better suit your own 
+preferences.
+
+Character Movement:
+-------------------
+CapsLock- Toggle Always Run
+Left 	- Go West
+Right	- Go East
+Up 	- Go North
+Down 	- Go South
+Shift	- Toggle Walk/Run
+Space	- Jump		
+
+Display Options:
+----------------
+G	- Toggle Map Grid
+B 	- Toggle Object Borders
+W	- Toggle Collision Info
+O	- Display Number of Objects on each square
+S	- Take a screenshot
+
+Other Options:
+--------------
+Escape	- Exit the Demo
+
+
+Game Controller Input:
+======================
+
+To configure game controller input, change the input configuration to
+something like:
+
+ <Input>
+   <a_button>button 0</a_button>
+   <b_button>button 1</b_button>
+   <c_button>button 2</c_button>
+   <d_button>button 3</d_button>
+   <move_south>axis 0 back</move_south>
+   <move_north>axis 0 fore</move_north>
+   <move_west>axis 1 back</move_west>
+   <move_east>axis 1 fore</move_east>
+ </Input>
+
+You may have to revert axis or juggle the buttons around a bit to get something
+that matches your specific controller. In the future, there will be a simpler
+in-game menu to configure input.
+

@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.11 2007/07/22 01:32:21 ksterker Exp $
+   $Id: animation.cc,v 1.12 2007/07/22 21:50:37 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -47,6 +47,7 @@ namespace gfx
     {
         m_listener = new events::listener_cxx (NULL, new events::time_event ());
         m_listener->connect_callback (base::make_functor (*this, &animation::update));
+        m_listener->set_id ("animation");
         m_listener->pause ();
     }
     
