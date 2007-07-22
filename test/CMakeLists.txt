@@ -57,6 +57,8 @@ TARGET_LINK_LIBRARIES(gfxtest
 ADD_EXECUTABLE(worldtest
 			worldtest.cc)
 
+include_directories(${PYTHON_INCLUDE_PATH})
+
 TARGET_LINK_LIBRARIES(worldtest
 	ltdl
 	adonthell_base

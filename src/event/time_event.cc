@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.cc,v 1.7 2005/06/03 17:29:13 ksterker Exp $
+   $Id: time_event.cc,v 1.8 2007/07/22 05:23:11 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,6 +36,7 @@ using events::time_event;
 time_event::time_event (const string & time, bool absolute) : event ()
 {
     Repeat = 1;
+    Interval = 0;
     Absolute = absolute;
     Time = date::parse_time (time);
     if (!absolute) Time += date::time ();
@@ -77,7 +78,11 @@ bool time_event::get_state (base::flat & in)
 void time_event::do_repeat ()
 {
     // don't repeat multiple times after being resumed
-    while (Time <= date::time ()) Time += Interval;
-    event::do_repeat ();
+	if (Interval)
+	{
+		while (Time <= date::time ()) Time += Interval;
+	}
+	
+	event::do_repeat ();
 }
 

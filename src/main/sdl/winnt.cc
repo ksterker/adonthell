@@ -1,5 +1,5 @@
 /*
-   $Id: winnt.cc,v 1.3 2007/06/10 23:02:48 ksterker Exp $
+   $Id: winnt.cc,v 1.4 2007/07/22 05:23:12 ksterker Exp $
 
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,6 +48,9 @@ extern "C" {
    calling conventions may differ... */
 static void cleanup(void)
 {
+	fclose (stdout);
+	fclose (stderr);
+		
 	SDL_Quit();
 }
 

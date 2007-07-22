@@ -1,5 +1,5 @@
 /*
-   $Id: time_event_manager.cc,v 1.9 2006/10/30 05:55:12 ksterker Exp $
+   $Id: time_event_manager.cc,v 1.10 2007/07/22 05:23:11 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,7 +53,7 @@ void time_event_manager::raise_event (const event * e)
 {
     s_int32 repeat;
     listener *li;
-
+    
     // As long as matching events are in the list
     while (!Listeners.empty () && (li = Listeners.back ())->equals (e))
     {

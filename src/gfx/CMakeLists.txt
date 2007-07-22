@@ -23,12 +23,14 @@ set(adonthell_gfx_HEADERS
 
 add_definitions(${PNG_DEFINITIONS}) 
 
-include_directories(${PNG_INCLUDE_DIR})
+include_directories(${PYTHON_INCLUDE_PATH} ${PNG_INCLUDE_DIR})
 
 # Create a shared library
 add_library(adonthell_gfx SHARED ${adonthell_gfx_SRCS})
 target_link_libraries(adonthell_gfx
+	${PYTHON_LIBRARIES}
 	adonthell_base
+	adonthell_event
 	${PNG_LIBRARY}
 	)
 
