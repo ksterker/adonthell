@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.10 2007/06/10 03:58:21 ksterker Exp $
+   $Id: animation.cc,v 1.11 2007/07/22 01:32:21 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -29,8 +29,11 @@
  * @brief  Defines the animation global interface.
  */
 
-#include "animation.h"
+#include "gfx/animation.h"
 #include "base/diskio.h"
+#include "base/callback.h"
+#include "event/date.h"
+#include "event/time_event.h"
 
 using namespace std;
 
@@ -39,42 +42,68 @@ namespace gfx
     // static storage
     animation::animation_cache animation::m_allAnimations;
 
+    // ctor
+    animation::animation () : m_valid(false), m_playing(false) 
+    {
+        m_listener = new events::listener_cxx (NULL, new events::time_event ());
+        m_listener->connect_callback (base::make_functor (*this, &animation::update));
+        m_listener->pause ();
+    }
+    
+    // dtor
+    animation::~animation ()
+    {
+        delete m_listener;
+    }
+    
     // change animation being played
     bool animation::change_animation (const std::string & new_animation)
     {
         //Check if the animation is valid yet
         if(!m_valid) return false;
 
-        //Look for an animation with the name passed in
+        // Look for an animation with the name passed in
         animation_map::iterator anim = m_sprite->second.find(new_animation);
         if(anim == m_sprite->second.end())
             return false;
 
-        //we found it so update our pointers
+        // stop playing current animation
+        if (m_playing)
+        {
+            stop ();
+        }
+        
+        // we found it so update our pointers
         m_animation = anim;
         m_surface = m_animation->second.begin();
 
         // update length and height of drawable
-        set_length((*m_surface)->image->length());
-        set_height((*m_surface)->image->height());
+        set_length ((*m_surface)->image->length());
+        set_height ((*m_surface)->image->height());
 
+        // set delay until next frame
+        events::time_event *evt = (events::time_event *) m_listener->get_event ();
+        evt->set_time (events::date::convert_millis ((*m_surface)->delay) + events::date::time ());
+        
         return true;
     }
 
     // update state of animation
     bool animation::update ()
     {
-        //Check if the animation is valid yet
-        if(!m_valid) return false;
+        // Check if the animation is valid yet
+        if (!m_valid) return false;
 
         if (m_playing)
         {
-            //TODO deal with delay here.
-
-            //Update to the next surface.  If it wraps, then reset it to the beginning
+            // Update to the next surface.  If it wraps, then reset it to the beginning
             m_surface++;
-            if(m_surface == m_animation->second.end())
+            if (m_surface == m_animation->second.end())
                 m_surface = m_animation->second.begin();
+        
+            // set delay until next frame
+            events::time_event *evt = (events::time_event *) m_listener->get_event ();
+            evt->set_time (events::date::convert_millis ((*m_surface)->delay) + events::date::time ());
         }
         
         return true;
@@ -84,18 +113,21 @@ namespace gfx
     void animation::play ()
     {
         m_playing = true;
+        if (m_animation->second.size() > 1)
+            m_listener->resume ();
     }
     
     // pause playing animation
     void animation::stop ()
     {
         m_playing = false;
+        if (m_animation->second.size() > 1 && !m_listener->is_paused ())
+            m_listener->pause ();
     }
     
     // reset to first frame
     void animation::rewind ()
     {
-        m_delay = 0;
         m_surface = m_animation->second.begin();
     }
     

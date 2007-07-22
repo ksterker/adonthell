@@ -1,5 +1,6 @@
 CXXFLAGS += -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
 pkgincludeeventdir = $(pkgincludedir)/event

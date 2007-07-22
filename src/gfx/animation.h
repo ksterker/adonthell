@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.6 2007/05/31 05:54:33 ksterker Exp $
+   $Id: animation.h,v 1.7 2007/07/22 01:32:21 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,7 @@
 #ifndef GFX_ANIMATION_H
 #define GFX_ANIMATION_H
 
-#include "base/flat.h"
+#include "event/listener_cxx.h"
 #include "gfx/gfx.h"
 #include <queue>
 
@@ -50,13 +50,13 @@ namespace gfx
          * Default constructor.
          *
          */
-        animation () : m_valid(false), m_playing(false) { }
+        animation ();
 
         /**
          * Destructor.
          *
          */
-        virtual ~animation () { }
+        virtual ~animation ();
 
         /**
          * @name Animation Control
@@ -73,6 +73,7 @@ namespace gfx
         /**
          * Update animation. Called once per game cycle to advance the
          * current frame of the current sprite, if neccessary.
+         * @return true.
          */
         virtual bool update ();
         
@@ -233,7 +234,8 @@ namespace gfx
         /// a frame
         animation_list::iterator m_surface;
 
-        u_int16 m_delay;
+        /// event listener for animation playback
+        events::listener_cxx *m_listener;
         /// all images are loaded
         bool m_valid;
         /// animation is playing

@@ -6,7 +6,7 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     worldtest.py configtest.py equipmenttest.py  gfxtest.py logtest.py \
     convert_data.py eventtest.py guitest.py questtest.py \
     convert_quests.py filereport.py inputtest.py searchtest.py \
-    convert_graphics.py
+    convert_graphics.py CMakeLists.txt
 
 noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest
 
@@ -43,8 +43,9 @@ gfxtest_SOURCES = gfxtest.cc
 gfxtest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx
 
+worldtest_CXXFLAGS = $(PY_CFLAGS)
 worldtest_SOURCES = worldtest.cc
-worldtest_LDADD = \
+worldtest_LDADD = $(PY_LIBS) \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
 	-L$(top_builddir)/src/input/ -ladonthell_input              \
 	-L$(top_builddir)/src/event/ -ladonthell_event              \

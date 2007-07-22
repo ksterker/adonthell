@@ -1,5 +1,5 @@
 CXXFLAGS += -I$(top_srcdir)/src
-EXTRA_DIST = py_runtime.i py_debug.i
+EXTRA_DIST = py_runtime.i py_debug.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/runtime/py_*_wrap.cc
 
 ## Python wrapper files.

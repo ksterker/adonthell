@@ -34,128 +34,128 @@
     <list id="data/gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="n_walk">
     <list id="data/gfx/char/npc/ng/north_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="s_walk">
     <list id="data/gfx/char/npc/ng/south_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="w_walk">
     <list id="data/gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   
@@ -164,128 +164,128 @@
     <list id="data/gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="n_run">
     <list id="data/gfx/char/npc/ng/north_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/north_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="s_run">
     <list id="data/gfx/char/npc/ng/south_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/south_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="w_run">
     <list id="data/gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
     <list id="data/gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
-      <u_int32 id="delay">25</u_int32>
+      <u_int32 id="delay">250</u_int32>
     </list>
   </list>
 </Data>

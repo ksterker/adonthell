@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.9 2006/09/28 19:13:26 gnurou Exp $
+   $Id: date.cc,v 1.10 2007/07/22 01:32:21 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,7 +36,7 @@
 
 using events::date;
 
-// gametime minutes spent in the gameworld so far
+// gametime seconds spent in the gameworld so far
 u_int32 date::Time = 0;
 
 // how many game cycles make one second of game time
@@ -249,4 +249,10 @@ std::string date::format_time (const std::string & format, const u_int32 & time)
 	}
 	
 	return result;
+}
+
+// convert realtime to gametime
+u_int32 date::convert_millis (const u_int32 & millis)
+{
+    return (u_int32) (millis / base::Timer.slice () / Scale);
 }

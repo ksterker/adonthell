@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.7 2006/09/22 01:15:22 ksterker Exp $
+   $Id: time_event.h,v 1.8 2007/07/22 01:32:21 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -159,6 +159,16 @@ namespace events
             return Time;
         }
 
+        /**
+         * Set the alarm time. Resets the repeat count to 1.
+         * @param time the alarm time in gametime seconds.
+         */
+        void set_time (const u_int32 & time)
+        {
+            Time = time;
+            Repeat = 1;
+        }
+        
 #ifndef SWIG
         /**
          * Allow %event to be passed as python argument

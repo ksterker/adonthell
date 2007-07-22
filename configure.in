@@ -115,7 +115,7 @@ if test x$gamedatadir = xnone; then
         gamedatadir="/boot/home/config/share/adonthell"
       ;;
       *)
-        backenddir="${pkglibdir}"
+        backenddir="${libdir}/adonthell"
         gamedatadir="${datadir}/adonthell"
       ;;
     esac

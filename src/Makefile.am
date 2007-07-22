@@ -1,5 +1,7 @@
 SUBDIRS = main base event gfx input audio gui python rpg world py-wrappers
 
+EXTRA_DIST = CMakeLists.txt
+
 noinst_SCRIPTS = $(top_builddir)/src/run.sh $(top_builddir)/src/python.sh
 
 ## Script to run binaries while the libraries aren't installed

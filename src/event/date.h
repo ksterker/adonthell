@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.7 2006/01/22 21:32:39 ksterker Exp $
+   $Id: date.h,v 1.8 2007/07/22 01:32:21 ksterker Exp $
 
    Copyright (C) 2002/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -118,6 +118,14 @@ public:
 	 */
 	static std::string format_time (const std::string & format, const u_int32 & time = Time); 
 
+    /**
+     * Return the approximate number of gametime seconds for the given 
+     * realtime milliseconds. This value can be used for time_events.
+     * @param millis time in milliseconds
+     * @return realtime converted to game time.
+     */
+    static u_int32 convert_millis (const u_int32 & millis);
+    
     /**
      * Load the state of the %gamedate class from disk
      * @param in stream to read the state from

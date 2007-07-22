@@ -1,5 +1,6 @@
 CXXFLAGS += -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
 pkgincludegfxdir = $(pkgincludedir)/gfx
@@ -27,7 +28,8 @@ libadonthell_gfx_la_SOURCES = \
 	screen.cc \
 	surface.cc
 
-libadonthell_gfx_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
+libadonthell_gfx_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
 
 
 

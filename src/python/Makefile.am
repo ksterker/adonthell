@@ -1,5 +1,6 @@
 CXXFLAGS += -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(top_builddir)
+EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
 pkgincludepythondir = $(pkgincludedir)/python

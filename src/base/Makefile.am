@@ -1,5 +1,6 @@
-@backenddir@
+backenddir = @backenddir@
 CXXFLAGS += -I$(top_srcdir)/src
+EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
 pkgincludebasedir = $(pkgincludedir)/base

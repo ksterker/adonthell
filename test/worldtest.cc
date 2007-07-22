@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.7 2007/07/18 06:44:54 ksterker Exp $
+   $Id: worldtest.cc,v 1.8 2007/07/22 01:32:23 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -21,6 +21,7 @@
 */
 
 #include "base/base.h"
+#include "event/date.h"
 #include "gfx/animation.h"
 #include "input/manager.h"
 #include "main/adonthell.h"
@@ -345,6 +346,7 @@ public:
 	        // for (int i = 0; i < base::Timer.frames_missed (); i++) 
 	        // {
             input::manager::update();
+            events::date::update();
             gc.world.update();
 	        //}
 	
