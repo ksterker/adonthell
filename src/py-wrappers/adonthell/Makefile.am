@@ -36,7 +36,10 @@ _event_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/event/ -ladonthell_event $
 _gfx_la_SOURCES = py_gfx_wrap.cc
 _gfx_la_CXXFLAGS = $(PY_CFLAGS)
 _gfx_la_LDFLAGS = -avoid-version -module
-_gfx_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/gfx/ -ladonthell_gfx $(PY_RUNTIME)
+_gfx_la_LIBADD = $(PY_LIBADD) \
+	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
+	-L$(top_builddir)/src/event/ -ladonthell_event \
+	$(PY_RUNTIME)
 
 ## Rules to build libpyinput (libinput's Python wrapper)
 _input_la_SOURCES = py_input_wrap.cc
