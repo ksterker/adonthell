@@ -8,6 +8,7 @@ pkgincludeworld_HEADERS = \
     character.h \
 	character_with_gfx.h \
 	coordinates.h \
+	cube3.h \
 	moving.h \
     object.h \
     object_with_gfx.h \
@@ -17,7 +18,9 @@ pkgincludeworld_HEADERS = \
     placeable_model.h \
 	placeable_model_gfx.h \
 	square.h \
-    square_walkable_info.h
+    square_walkable_info.h \
+    triangle.h \
+    vector3.h
 
 ## World library
 lib_LTLIBRARIES = libadonthell_world.la
@@ -28,6 +31,7 @@ libadonthell_world_la_SOURCES = \
     character.cc \
 	character_with_gfx.cc \
 	coordinates.cc \
+	cube3.cc \
 	moving.cc \
     object.cc \
     object_with_gfx.cc \
@@ -37,8 +41,8 @@ libadonthell_world_la_SOURCES = \
     placeable_model.cc \
 	placeable_model_gfx.cc \
 	square.cc \
-    square_walkable_info.cc
-
+    square_walkable_info.cc \
+	vector3.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS)
 libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \

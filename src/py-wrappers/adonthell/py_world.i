@@ -4,6 +4,7 @@
 %{
 #include "base/types.h"
 #include "world/area.h"
+#include "world/cube3.h"
 
 using namespace world;
 
@@ -27,3 +28,4 @@ using namespace world;
 %include "world/square.h"
 %include "world/area.h"
 %include "world/placeable_area.h"
+%include "world/cube3.h"

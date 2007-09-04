@@ -1,5 +1,5 @@
 /*
- $Id: coordinates.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: coordinates.h,v 1.3 2007/09/04 02:27:18 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -204,7 +204,7 @@ namespace world
     protected:
         /// location on the grid
         u_int16 X, Y;
-        /// altitute
+        /// altitude
         s_int32 Z;
         /// pixel(?) offset from x and y location
         u_int16 Ox, Oy;

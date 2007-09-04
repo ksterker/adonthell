@@ -4,6 +4,7 @@ set(adonthell_world_SRCS
     character.cc
     character_with_gfx.cc
     coordinates.cc
+    cube3.cc    
     moving.cc
     object.cc
     object_with_gfx.cc
@@ -14,6 +15,7 @@ set(adonthell_world_SRCS
     placeable_model_gfx.cc
     square.cc
     square_walkable_info.cc
+    vector3.cc
 )
 
 set(adonthell_world_HEADERS
@@ -21,6 +23,7 @@ set(adonthell_world_HEADERS
     character.h
     character_with_gfx.h
     coordinates.h
+    cube3.h
     moving.h
     object.h
     object_with_gfx.h
@@ -30,7 +33,9 @@ set(adonthell_world_HEADERS
     placeable_model.h
     placeable_model_gfx.h
     square.h
-    square_walkable_info.h
+    square_walkable_info.h    
+    triangle3.h
+    vector3.h
 )
 
 
