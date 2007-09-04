@@ -24,7 +24,9 @@ missing
 mkinstalldirs
 py-compile
 stamp-h1
-.project
 .cdtproject
+.cproject
+.project
+.pydevproject
 .settings
 
