@@ -11,6 +11,7 @@ foreach(name audio base event gfx gui input main rpg world)
   if(${name} STREQUAL main)
     swig_add_module(${name} python "py_${name}.i" "py_main.h" "py_main.cc")
   else(${name} STREQUAL main)
+    FILE (GLOB SWIG_MODULE_${name}_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/${name}/*.h)
     swig_add_module(${name} python "py_${name}.i")
   endif(${name} STREQUAL main)
   
