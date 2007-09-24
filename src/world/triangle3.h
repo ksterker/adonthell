@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.1 2007/09/04 02:27:18 ksterker Exp $
+ $Id: triangle3.h,v 1.2 2007/09/24 03:14:11 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -23,7 +23,7 @@
  * @file   world/triangle3.h
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
- * @brief  Implements the 3D triangle class.
+ * @brief  Defines the 3D triangle class.
  * 
  */
 
@@ -31,6 +31,7 @@
 #ifndef WORLD_TRIANGLE3_H
 #define WORLD_TRIANGLE3_H
 
+#include "gfx/surface.h"
 #include "world/vector3.h"
 
 namespace world 
@@ -47,17 +48,34 @@ public:
 	 * @param b second point
 	 * @param c third point
 	 */
-	triangle3 (const vector3 & a, const vector3 & b, const vector3 & c) : A (a), B (b), C (c)
+	triangle3 (const vector3<s_int16> & a, const vector3<s_int16> & b, const vector3<s_int16> & c) : A (a), B (b), C (c)
 	{
 	}
 	
+	/**
+	 * Calculate normal vector for the face of the triangle.
+	 * @return normal vector for this triangle.
+	 */
+	vector3<s_int16> normal () const
+	{
+		return (B - A) * (C - A);
+	}
+	
+	/**
+	 * Draw the triangle.
+	 * @param x x offset in pixels
+	 * @param y y offset in pixels
+	 * @param target surface to draw on. NULL to draw on screen surface.
+	 */
+	void draw (const u_int16 & x, const u_int16 & y, gfx::surface * target = NULL) const;
+	
 private:
 	/// first point
-	vector3 A;
+	vector3<s_int16> A;
 	/// second point
-	vector3 B;
+	vector3<s_int16> B;
 	/// third point
-	vector3 C;
+	vector3<s_int16> C;
 };
 
 } // namespace world

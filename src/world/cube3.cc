@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.1 2007/09/04 02:27:18 ksterker Exp $
+ $Id: cube3.cc,v 1.2 2007/09/24 03:14:11 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,12 +49,21 @@ void cube3::create_mesh ()
 {
 	Surface.clear ();
 	
-	convert_face (BOTTOM_FRONT_LEFT, BOTTOM_FRONT_RIGHT, BOTTOM_BACK_RIGHT, BOTTOM_BACK_LEFT);
-	convert_face (BOTTOM_FRONT_LEFT, BOTTOM_FRONT_RIGHT, TOP_FRONT_RIGHT, TOP_FRONT_LEFT);
-	convert_face (BOTTOM_FRONT_RIGHT, BOTTOM_BACK_RIGHT, TOP_BACK_RIGHT, TOP_FRONT_RIGHT);
-	convert_face (BOTTOM_BACK_RIGHT, TOP_BACK_RIGHT, TOP_BACK_LEFT, BOTTOM_BACK_LEFT);
-	convert_face (BOTTOM_FRONT_LEFT, BOTTOM_BACK_RIGHT, TOP_BACK_RIGHT, TOP_FRONT_LEFT);
-	convert_face (TOP_FRONT_LEFT, TOP_FRONT_RIGHT, TOP_BACK_RIGHT, TOP_BACK_LEFT);
+	convert_face (TOP_FRONT_LEFT, TOP_FRONT_RIGHT, TOP_BACK_RIGHT, TOP_BACK_LEFT);				// top face	
+	convert_face (BOTTOM_FRONT_RIGHT, BOTTOM_FRONT_LEFT, BOTTOM_BACK_LEFT, BOTTOM_BACK_RIGHT);	// bottom face
+	convert_face (TOP_FRONT_LEFT, BOTTOM_FRONT_LEFT, BOTTOM_FRONT_RIGHT, TOP_FRONT_RIGHT);		// front face
+	convert_face (BOTTOM_BACK_LEFT, TOP_BACK_LEFT, TOP_BACK_RIGHT, BOTTOM_BACK_RIGHT);			// back face
+	convert_face (BOTTOM_FRONT_LEFT, TOP_FRONT_LEFT, TOP_BACK_LEFT, BOTTOM_BACK_LEFT);			// left face
+	convert_face (BOTTOM_FRONT_RIGHT, BOTTOM_BACK_RIGHT, TOP_BACK_RIGHT, TOP_FRONT_RIGHT);		// right face
+}
+
+// draw mesh of cube
+void cube3::draw_mesh (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
+{
+	for (std::vector<triangle3*>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
+	{
+		(*i)->draw (x, y, target);
+	}
 }
 
 // save cube

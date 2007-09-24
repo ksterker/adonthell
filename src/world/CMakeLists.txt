@@ -15,6 +15,7 @@ set(adonthell_world_SRCS
     placeable_model_gfx.cc
     square.cc
     square_walkable_info.cc
+    triangle3.cc
     vector3.cc
 )
 

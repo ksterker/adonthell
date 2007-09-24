@@ -28,4 +28,6 @@ using namespace world;
 %include "world/square.h"
 %include "world/area.h"
 %include "world/placeable_area.h"
+%include "world/vector3.h"
+%include "world/triangle3.h"
 %include "world/cube3.h"

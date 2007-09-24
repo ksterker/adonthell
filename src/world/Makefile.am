@@ -42,6 +42,7 @@ libadonthell_world_la_SOURCES = \
 	placeable_model_gfx.cc \
 	square.cc \
     square_walkable_info.cc \
+    triangle3.cc \
 	vector3.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS)

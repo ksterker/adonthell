@@ -1,5 +1,5 @@
 /*
- $Id: vector3.cc,v 1.1 2007/09/04 02:27:18 ksterker Exp $
+ $Id: vector3.cc,v 1.2 2007/09/24 03:14:11 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,8 @@
 using world::vector3;
 
 // save vector
-bool vector3::put_state (base::flat & file) const
+template <>
+bool vector3<s_int16>::put_state (base::flat & file) const
 {
 	std::stringstream out (std::ios::out);
 	out << "[" << X << ", " << Y << ", " << Z << "]";
@@ -44,7 +45,8 @@ bool vector3::put_state (base::flat & file) const
 }
 
 // load vector
-bool vector3::get_state (base::flat & file)
+template <>
+bool vector3<s_int16>::get_state (base::flat & file)
 {
 	std::string vec = file.get_string ("p3d");
 	u_int32 res = sscanf (vec.c_str(), "[%hd, %hd, %hd]", &X, &Y, &Z);

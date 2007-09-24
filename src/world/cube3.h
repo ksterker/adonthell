@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.1 2007/09/04 02:27:18 ksterker Exp $
+ $Id: cube3.h,v 1.2 2007/09/24 03:14:11 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -64,12 +64,25 @@ public:
 	 * @param height size along z axis in pixel
 	 */
 	cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & height);
-
+	
+    /**
+     * @name Mesh Related Methods
+     */
+    //@{
 	/**
 	 * Convert the cube into a mesh of triangles. Call every time a point of the
 	 * cube is changed.
 	 */
 	void create_mesh ();
+	
+	/**
+	 * Draw the cube's mesh
+	 * @param x x offset in pixels
+	 * @param y y offset in pixels
+	 * @param target surface to draw on. NULL to draw on screen surface.
+	 */
+	void draw_mesh (const u_int16 & x, const u_int16 & y, gfx::surface * target = NULL) const;
+    //@}
 	
     /**
      * @name Loading / Saving
@@ -92,7 +105,7 @@ public:
 
 protected:
 	/// the cube's corners
-	vector3 Corners[8];	
+	vector3<s_int16> Corners[8];	
 
 private:
 	/**
