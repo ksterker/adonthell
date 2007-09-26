@@ -19,7 +19,7 @@ pkgincludeworld_HEADERS = \
 	placeable_model_gfx.h \
 	square.h \
     square_walkable_info.h \
-    triangle.h \
+    triangle3.h \
     vector3.h
 
 ## World library
