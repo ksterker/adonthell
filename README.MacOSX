@@ -1,0 +1,230 @@
+
+                       Adonthell on MacOSX
+
+This file  contains  additional information for compiling  Adonthell
+under MacOSX.  For  general  compilation instructions  refer  to the
+INSTALL file.
+
+
+Setup Build Environment:
+========================
+
+The instruction below assumes  that you have installed the Developer
+Tools that come on your OSX installation DVD. It will then march you 
+through a manual install of the remaining  tools and  libraries that 
+are required by  Adonthell.  An alternative  to that is Fink,  which
+allows you  to download  prebuild packages  (but  will  clutter your 
+System with things that are not strictly necessary for Adonthell).
+Visit http://finkproject.org/ for more information.
+
+We will further assume that all the packages below will be installed
+to  /usr/local,  since it is not recommended  to pollute your system 
+with 'foreign' files.  If you'd rather install things to a different
+location (e.g. /sw as used by Fink), make sure to replace occurences 
+of /usr/local with the chosen directory instead.
+
+Also note that  many of  the issues with the packages below  and the
+workarounds to get them compiling and installed might be specific to
+the version used.   If you resort to using different versions,  your
+mileage may vary,  although  it can be  expected that a  more recent
+version will give better results.
+
+
+1) Create the directory /usr/local (if not present yet)
+
+    Open a Terminal  (Applications --> Utilities --> Terminal).  All 
+    the subsequent procedures  will take place  on the command line, 
+    so keep the Terminal around.
+
+        $ sudo mkdir /usr/local
+	
+    We also want /usr/local/bin in the path before /usr/bin, so that
+    our newly installed  tools will take precedence  over stuff that 
+    is already present.
+    
+        $ export PATH="/usr/local/bin:$PATH"
+	
+    In order  to make  the change permanent,  add the  line above to 
+    your ~/.bash_profile.
+
+    
+2) Setup for building Universal Binaries (OSX 10.4 and higher)
+
+    If you want to make sure that the binaries you build will run on
+    both PPC and Intel Macs, then you can use the following settings
+    of CFLAGS and LDFLAGS to build universal binaries.
+    
+        $ export CFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk \
+	  -arch i386 -arch ppc"
+        $ export LDFLAGS="-arch i386 -arch ppc \
+	  -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
+        
+
+Prepare to build Adonthell CVS version:
+=======================================
+
+In order to compile  Adonthell from CVS,  recent versions of the GNU  
+autotools are required. Depending on your version of OSX,  you might
+want to upgrade autoconf and automake too, but for 10.4, all we need
+is a newer version of libtool.
+
+
+1) Install libtool (http://www.gnu.org/software/libtool/)
+
+    * Download libtool 1.5.24 and compile/install:
+    
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ sudo make install
+
+     
+
+Enable National Language Support (NLS):
+=======================================
+
+If you don't mind  compiling a version  of Adonthell  that will only
+support the English language, you can safely skip these steps.
+
+Otherwise,  you'll have to install the following libraries and tools
+before compiling Adonthell:
+
+
+q) Install GNU gettext (http://www.gnu.org/software/gettext/)
+
+    * Download gettext 0.16.1 and compile/install
+    
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+Install Adonthell prerequisites:
+================================
+
+The following  tools and libraries are required by Adonthell.   Make
+sure to install them in the listed order,  as they might also depend
+on each other.
+
+
+1) Install SDL (http://www.libsdl.org/)
+
+    * Note: the currently recent version of SDL, 1.2.12, is broken on 
+      OSX (see http://bugzilla.libsdl.org/show_bug.cgi?id=480). 
+      So either get an older release or a snapshot from SVN where the
+      bug is fixed. 
+
+    * Note:  to create  a universal binary,  you'll  have to use  the 
+      script provided by SDL: build-scripts/fatbuild.sh.
+
+    * Otherwise get SDL-1.2.12.tar.gz, extract and compile/install by 
+      following these steps:
+      
+        $ ./configure --prefix=/usr/local --without-x
+        $ make
+        $ make install
+
+
+2) Install pkg-config (http://pkgconfig.freedesktop.org/wiki/)
+
+    * Get pkg-config-0.22.tar.gz, extract and compile/install by 
+      following these steps:
+      
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+3) Install OggVorbis (http://www.xiph.org/downloads/)
+
+    * Download libogg 1.1.3, extract and compile with:
+    
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+    * Note: to create a universal binary of libogg.dylib, these
+      steps do not suffice. In addition, do the following:
+      
+        $ make distclean
+	
+      Now cross-compile a PPC version of libogg.dylib:
+      
+	$ mkdir ppc && cd ppc
+	$ ../configure --build=powerpc-apple-darwin8.10.3
+	$ make
+	
+      The problem here is that libtool does not seem to pass any
+      arch flag to the linker, so we have to do it ourselves.
+      
+	$ cd src
+	$ gcc -dynamiclib -arch ppc -isysroot \
+	  /Developer/SDKs/MacOSX10.4u.sdk \
+	  -o .libs/libogg.0.5.3.dylib  .libs/framing.o \
+	  .libs/bitwise.o  -install_name \
+	  /usr/local/lib/libogg.0.dylib -compatibility_version 6 \ -current_version 6.3
+	
+      We also need a Intel version of libogg.dylib:
+      
+	$ mkdir ../../x86 && cd ../../x86
+	$ ../configure --build=i686-apple-darwin8.10.3
+	$ make
+	
+      Finally, we create the universal binary, replacing the one
+      we installed previously.
+      
+	$ cd ..
+	$ sudo lipo -create \
+	  -arch ppc ppc/src/.libs/libogg.0.5.3.dylib \
+	  -arch i386 x86/src/.libs/libogg.0.5.3.dylib \
+	  -output /usr/local/lib/libogg.0.5.3.dylib 
+      
+	  
+    * Download libvorbis 1.2.0, extract and compile with:
+    
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+4) Install SDL_Mixer (http://www.libsdl.org/projects/SDL_mixer/)
+
+    * Get source code, extract and compile/install in cygwin:
+
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+5) Install libpng (http://www.libpng.org/pub/png/libpng.html)
+
+    * Get source code, extract and compile/install in cygwin:
+ 
+        $ ./configure
+        $ make
+        $ make install
+
+
+6) Install SWIG (http://www.swig.org/)
+
+    * Download swig-1.3.31.tar.gz and compile/install
+    
+        $ ./configure --prefix=/usr/local
+        $ make
+        $ make install
+
+
+Compiling Adonthell:
+====================
+
+After installing all the libraries and tools  above,  we are finally
+ready to compile Adonthell. Inside the adonthell directory, do:
+
+    $ mkdir ../adonthell-build && cd ../adonthell-build
+    $ ../adonthell/configure --prefix=/usr/local
+    $ make
+    $ sudo make install
+
+Note that this will put all compilation products  into a folder next
+to your source code,  as to not clutter it  with intermediate object 
+files, dylibs and all the other junk created when building Adonthell.
+
