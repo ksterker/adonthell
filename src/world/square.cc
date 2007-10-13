@@ -1,5 +1,5 @@
 /*
- $Id: square.cc,v 1.1 2007/05/25 03:16:10 ksterker Exp $
+ $Id: square.cc,v 1.2 2007/10/13 22:36:42 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -117,4 +117,3 @@ bool square::exist (placeable * obj, coordinates & pos)
     if (er == objects.end ()) return false;
     return true; 
 }
- 

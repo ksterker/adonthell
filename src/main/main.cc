@@ -1,5 +1,5 @@
 /*
-   $Id: main.cc,v 1.4 2007/07/21 07:09:08 ksterker Exp $
+   $Id: main.cc,v 1.5 2007/10/13 22:36:42 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,7 +47,7 @@ int main (int argc, char *argv[])
 
 // TODO: would be nice if that could be in the OSX specific backend module,
 //       but that won't work without partial redesign of the startup process.
-#ifdef __APPLE__ && SINGLE_DIR_INST
+#if defined(__APPLE__) && defined (SINGLE_DIR_INST)
         char* newArgv[3];
         
         // this is passed if we are launched from Finder
