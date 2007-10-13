@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -19,7 +19,7 @@ libadonthell_audio_la_SOURCES = \
 	audio_event.cc \
 	audio_event_manager.cc
 
-libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\"
+libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
 libadonthell_audio_la_LIBADD = $(PY_LIBS) -lstdc++ \
 		-L$(top_builddir)/src/base/ -ladonthell_base \
 		-L$(top_builddir)/src/event/ -ladonthell_event
@@ -38,6 +38,6 @@ pkgincludeaudiosdldir = $(pkgincludedir)/audio/sdl
 _sdl_la_SOURCES = \
 	sdl/audio_sdl.cc
 
-_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -avoid-version -module
 _sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++

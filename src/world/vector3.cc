@@ -1,5 +1,5 @@
 /*
- $Id: vector3.cc,v 1.2 2007/09/24 03:14:11 ksterker Exp $
+ $Id: vector3.cc,v 1.3 2007/10/13 21:15:21 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,8 +30,8 @@
 #include <sstream>
 #include "world/vector3.h"
 
-using world::vector3;
-
+namespace world
+{
 // save vector
 template <>
 bool vector3<s_int16>::put_state (base::flat & file) const
@@ -58,3 +58,5 @@ bool vector3<s_int16>::get_state (base::flat & file)
 	
 	return true;	
 }
+}
+

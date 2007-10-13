@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.25 2007/08/09 07:51:24 ksterker Exp $
+   $Id: flat.h,v 1.26 2007/10/13 21:15:19 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -536,7 +536,7 @@ namespace base
             std::string to_string () const
             {
                 u_int32 j = 0;
-                static char *Bin2Hex = "0123456789ABCDEF";
+                static const char *Bin2Hex = "0123456789ABCDEF";
                 char *hex = new char[(Size * 2) + 1];
                 
                 hex[Size * 2] = 0;
@@ -651,7 +651,7 @@ namespace base
             bool Success;
             
             /// names for datatypes
-            static char* TypeName[NBR_TYPES];
+            static const char* TypeName[NBR_TYPES];
     };
 }
 #endif // BASE_FLAT

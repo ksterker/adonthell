@@ -1,5 +1,5 @@
 /*
- $Id: dialog.h,v 1.4 2006/10/30 05:55:12 ksterker Exp $
+ $Id: dialog.h,v 1.5 2007/10/13 21:15:21 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,14 +113,14 @@ namespace rpg
          * @param end end of substring.
          * @return new string, containg part of given string.
          */
-        char* get_substr (const char* line, char* begin, char* end); 
+        char* get_substr (const char* line, const char* begin, const char* end); 
         
         /// arguments passed to the python dialogue script constructor
         PyObject *Args;
         /// history of this dialogue (i.e. its first line)
         rpg::dialog_line* Current;
         /// this dialogues lines of text
-        char** Lines;
+        const char** Lines;
         /// the lines of text that are allowed to loop
         std::vector<s_int32> Loop;
         /// the successors of the current line

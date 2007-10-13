@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = py_runtime.i py_debug.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/runtime/py_*_wrap.cc
 
@@ -18,14 +18,14 @@ py_runtime.cc: py_runtime.i Makefile.am
 
 ## Rules to build libadonthell_py_runtime
 libadonthell_py_runtime_la_SOURCES = py_runtime.cc
-libadonthell_py_runtime_la_CXXFLAGS = $(PY_CFLAGS) -DSWIGRUNTIME= -DSWIGINLINE=
+libadonthell_py_runtime_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) -DSWIGRUNTIME= -DSWIGINLINE=
 libadonthell_py_runtime_la_LIBADD = $(PY_LIBS)
 
 PY_LIBADD = -L$(top_builddir)/src/python -ladonthell_python $(PY_LIBS)
 
 ## Rules to build libpydebug (helper for debugging the engine)
 _debug_la_SOURCES = py_debug_wrap.cc
-_debug_la_CXXFLAGS = $(PY_CFLAGS)
+_debug_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _debug_la_LDFLAGS = -avoid-version -module
 _debug_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/python -ladonthell_python -ladonthell_py_runtime
 

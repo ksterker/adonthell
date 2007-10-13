@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -28,7 +28,7 @@ libadonthell_gfx_la_SOURCES = \
 	screen.cc \
 	surface.cc
 
-libadonthell_gfx_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_gfx_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
 
 
@@ -53,7 +53,7 @@ _sdl_la_SOURCES = \
 	sdl/screen_sdl.cc \
 	sdl/surface_sdl.cc
 
-_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -module -avoid-version
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
 
@@ -71,6 +71,6 @@ _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
 #	sdlgl/screen_sdlgl.cc \
 #	sdlgl/surface_sdlgl.cc
 
-#sdlgl_la_CXXFLAGS = $(SDL_CFLAGS)
+#sdlgl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 #sdlgl_la_LDFLAGS = -module -avoid-version
 #sdlgl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx -lGLU -lGL

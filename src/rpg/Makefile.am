@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
@@ -41,5 +41,5 @@ libadonthell_rpg_la_SOURCES = \
     schedule_data.cc \
     slot.cc
 
-libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_rpg_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

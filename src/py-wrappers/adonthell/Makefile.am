@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_gui.i py_main.i py_rpg.i py_world.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
 
@@ -14,7 +14,7 @@ lib_LTLIBRARIES = libadonthell_py_main.la
 
 ## Rules to build libadonthell_py_main
 libadonthell_py_main_la_SOURCES = py_main.cc py_main.h
-libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_py_main_la_LIBADD = $(PY_LIBS)
 
 PY_LIBADD = -L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)
@@ -22,19 +22,19 @@ PY_RUNTIME = -L$(top_builddir)/src/py-wrappers/runtime/ -ladonthell_py_runtime
 
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
-_base_la_CXXFLAGS = $(PY_CFLAGS)
+_base_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _base_la_LDFLAGS = -avoid-version -module
 _base_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/base/ -ladonthell_base  $(PY_RUNTIME)
 
 ## Rules to build libpyevent (libevent's Python wrapper)
 _event_la_SOURCES = py_event_wrap.cc
-_event_la_CXXFLAGS = $(PY_CFLAGS)
+_event_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _event_la_LDFLAGS = -avoid-version -module
 _event_la_LIBADD = $(PY_LIBADD) -L$(top_builddir)/src/event/ -ladonthell_event $(PY_RUNTIME)
 
 ## Rules to build libpygfx (libgfx's Python wrapper)
 _gfx_la_SOURCES = py_gfx_wrap.cc
-_gfx_la_CXXFLAGS = $(PY_CFLAGS)
+_gfx_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _gfx_la_LDFLAGS = -avoid-version -module
 _gfx_la_LIBADD = $(PY_LIBADD) \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
@@ -43,25 +43,25 @@ _gfx_la_LIBADD = $(PY_LIBADD) \
 
 ## Rules to build libpyinput (libinput's Python wrapper)
 _input_la_SOURCES = py_input_wrap.cc
-_input_la_CXXFLAGS = $(PY_CFLAGS)
+_input_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _input_la_LDFLAGS = -avoid-version -module
 _input_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/input/ -ladonthell_input $(PY_RUNTIME)
 
 ## Rules to build libpyaudio (libaudio's Python wrapper)
 _audio_la_SOURCES = py_audio_wrap.cc
-_audio_la_CXXFLAGS = $(PY_CFLAGS)
+_audio_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _audio_la_LDFLAGS = -avoid-version -module
 _audio_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/audio/ -ladonthell_audio $(PY_RUNTIME)
 
 ## Rules to build libpygui (libgui's Python wrapper)
 _gui_la_SOURCES = py_gui_wrap.cc
-_gui_la_CXXFLAGS = $(PY_CFLAGS)
+_gui_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _gui_la_LDFLAGS = -avoid-version -module
 _gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME)
 
 ## Rules to build libpymain (libmain's Python wrapper)
 _main_la_SOURCES = py_main_wrap.cc
-_main_la_CXXFLAGS = $(PY_CFLAGS)
+_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _main_la_LDFLAGS = -avoid-version -module
 _main_la_LIBADD = $(PY_LIBADD) -ladonthell_py_main	\
 	-L$(top_builddir)/src/main -ladonthell_main		\
@@ -73,7 +73,7 @@ _main_la_LIBADD = $(PY_LIBADD) -ladonthell_py_main	\
 
 ## Rules to build libpyrpg (librpg's Python wrapper)
 _rpg_la_SOURCES = py_rpg_wrap.cc
-_rpg_la_CXXFLAGS = $(PY_CFLAGS)
+_rpg_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _rpg_la_LDFLAGS = -avoid-version -module
 _rpg_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/rpg -ladonthell_rpg		\
@@ -82,7 +82,7 @@ _rpg_la_LIBADD = $(PY_LIBADD)						\
 
 ## Rules to build libpyworld (libworlds's Python wrapper)
 _world_la_SOURCES = py_world_wrap.cc
-_world_la_CXXFLAGS = $(PY_CFLAGS)
+_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _world_la_LDFLAGS = -avoid-version -module
 _world_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/world -ladonthell_world	\

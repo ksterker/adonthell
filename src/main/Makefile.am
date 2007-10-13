@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
@@ -14,7 +14,7 @@ libadonthell_main_la_SOURCES = \
 	adonthell.cc \
 	main.cc
 
-libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_main_la_LIBADD = $(PY_LIBS)
 
 
@@ -35,7 +35,7 @@ else
 _sdl_la_SOURCES = sdl/linux.cc
 endif
 
-_sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS)
-OBJCFLAGS = -ObjC++ $(CXXFLAGS) $(SDL_CFLAGS) 
+_sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS) $(AM_CXXFLAGS)
+AM_OBJCFLAGS = -ObjC++ $(CXXFLAGS) $(SDL_CFLAGS) 
 _sdl_la_LDFLAGS = -module -avoid-version
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++

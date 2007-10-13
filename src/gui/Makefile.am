@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -18,7 +18,7 @@ libadonthell_gui_la_SOURCES = \
 	layout.cc \
 	listlayout.cc
 
-libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG
+libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS)
 
 libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/input/ -ladonthell_input \

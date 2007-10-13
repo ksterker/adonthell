@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.h,v 1.3 2006/10/25 04:08:46 ksterker Exp $
+ $Id: diskwriter_xml.h,v 1.4 2007/10/13 21:15:18 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,7 +67,7 @@ namespace base {
         
 #ifndef SWIG
         /// Table storing hex characters
-        static char *Bin2Hex;
+        static const char *Bin2Hex;
 
         /// make this class available to python::pass_instance
         GET_TYPE_NAME(base::disk_writer_xml)

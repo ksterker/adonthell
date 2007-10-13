@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.10 2007/06/10 03:58:21 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.11 2007/10/13 21:15:18 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,7 +37,7 @@ using base::disk_writer_xml;
 using base::flat;
 
 /// for converting binary to ascii
-char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
+const char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
 
 /// Name of xml data file root node
 #define XML_ROOT_NODE "Data"

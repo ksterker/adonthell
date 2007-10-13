@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.14 2007/06/10 03:58:21 ksterker Exp $
+   $Id: flat.cc,v 1.15 2007/10/13 21:15:19 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@
 using base::flat;
 
 // names for supported data types
-char* flat::TypeName[flat::NBR_TYPES] =  {
+const char* flat::TypeName[flat::NBR_TYPES] =  {
         "bool", "char", "u_int8", "s_int8", "u_int16", "s_int16",
         "u_int32", "s_int32", "string", "float", "double", "blob",
         "list" };

@@ -12,7 +12,7 @@ rm -f `find . -name 'Makefile'`
 aclocal -I .
 libtoolize --force --copy --ltdl
 autoheader
-automake --add-missing --copy --foreign
+automake -Wno-portability --add-missing --copy --foreign
 autoconf 
 
 echo

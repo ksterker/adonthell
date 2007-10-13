@@ -1,5 +1,5 @@
 backenddir = @backenddir@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = CMakeLists.txt
 
 ## Our header files
@@ -41,5 +41,5 @@ libadonthell_base_la_SOURCES = \
 	paths.cc \
 	timer.cc
 
-libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\"
+libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
 libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz

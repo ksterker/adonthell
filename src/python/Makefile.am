@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -23,5 +23,5 @@ libadonthell_python_la_SOURCES = \
 	python.cc \
 	script.cc
 
-libadonthell_python_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_python_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_python_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

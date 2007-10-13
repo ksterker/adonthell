@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -32,5 +32,5 @@ libadonthell_event_la_SOURCES = \
 	time_event.cc \
 	time_event_manager.cc
 
-libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS)
+libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_event_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++

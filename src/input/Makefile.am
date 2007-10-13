@@ -1,4 +1,4 @@
-CXXFLAGS += -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
@@ -27,7 +27,7 @@ libadonthell_input_la_SOURCES = \
 	listener.cc \
 	manager.cc
 
-libadonthell_input_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\"
+libadonthell_input_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
 libadonthell_input_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++
 
 
@@ -47,6 +47,6 @@ _sdl_la_SOURCES = \
 	sdl/input_sdl.cc \
 	sdl/manager_sdl.cc
 
-_sdl_la_CXXFLAGS = $(SDL_CFLAGS)
+_sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -avoid-version -module
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_input -lstdc++
