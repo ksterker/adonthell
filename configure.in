@@ -2,7 +2,7 @@ dnl **************************************************************
 dnl Process this file with autoconf to produce a configure script.
 dnl **************************************************************
 
-AC_PREREQ(2.61)
+AC_PREREQ(2.59)
 AC_INIT
 AC_CONFIG_SRCDIR([README])
 AC_CONFIG_AUX_DIR(.)
@@ -12,7 +12,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(adonthell, 0.4.0-alpha-1)
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER([config.h])
 
 dnl CXXFLAGS="-g -Wall -fno-exceptions -fno-rtti"
 
