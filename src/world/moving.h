@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: moving.h,v 1.3 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #define WORLD_MOVING_H
 
 #include "world/placeable.h"
+#include "world/coordinates.h"
 
 namespace world
 {

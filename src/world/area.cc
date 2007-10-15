@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.4 2007/06/16 23:19:01 ksterker Exp $
+ $Id: area.cc,v 1.5 2007/10/15 02:19:30 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,40 +61,43 @@ world::square * area::get (const u_int16 x, const u_int16 y)
 // place object at given position on the grid
 bool area::put (placeable * obj, coordinates & pos)
 {
-    u_int16 i, j;
-    placeable_area * state = obj->current_state ();
+    placeable_shape *shape = obj->current_shape ();
 
-    if (!state) return false;
+    if (!shape) return false;
 
-    u_int16 start_x = pos.x () < state->base.x () ? 0 : pos.x () - state->base.x (); 
-    u_int16 start_y = pos.y () < state->base.y () ? 0 : pos.y () - state->base.y (); 
-    
-    u_int16 end_x = pos.x () + state->area_length () - state->base.x ();
-    u_int16 end_y = pos.y () + state->area_height () - state->base.y (); 
+    // calculate area of map squares occupied by the object's bounding box
+    u_int16 start_x = pos.x (); 
+    u_int16 start_y = pos.y (); 
+    u_int16 end_x = start_x + ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
 
-    if (pos.ox ()) end_x++;
-    if (pos.oy ()) end_y++; 
-    
+    // make sure we do not exceed map size
     if (end_x > length()) end_x = length() - 1;
     if (end_y > height()) end_y = height() - 1;
 
-    square * msqr; 
+    square *sq; 
     
-    for (j = start_y; j < end_y; j++) 
-        for (i = start_x; i < end_x; i++) 
+    // add object to all these squares
+    for (u_int16 j = start_y; j < end_y; j++)
+    {
+        for (u_int16 i = start_x; i < end_x; i++) 
         {
-            msqr = get (i, j);
-            // coordinates new_pos(pos.x() + i - start_x, pos.y() + j - start_y, pos.z(), 0, 0);
-            msqr->add (obj, pos); 
+            sq = get (i, j);
+            coordinates shape_offset (i - start_x, j - start_y, pos.z(), 0, 0);
+            sq->add (obj, pos); 
         }
-
+    }
+    
     return true; 
 }
 
 bool area::put (moving * obj) 
 {
+    // FIXME (implement like above
+    
+    /*
     u_int16 i, j;
-    placeable_area * state = obj->current_state ();
+    placeable_shape * state = obj->current_shape ();
 
     if (!state) return false;
 
@@ -120,41 +123,38 @@ bool area::put (moving * obj)
             msqr = get (i, j);
             msqr->add (obj); 
         }
-
+    
+    */
     return true; 
-
-    //    return put (obj, *obj); 
 }
 
 bool area::remove (placeable * obj, coordinates & pos) 
 {
-    u_int16 i, j;
-    placeable_area * state = obj->current_state ();
+    placeable_shape *shape = obj->current_shape ();
+    if (!shape) return false;
 
-    if (!state) return false;
-
-    u_int16 sx = pos.x () < state->base.x () ? 0 :
-        pos.x () - state->base.x (); 
-    u_int16 sy = pos.y () < state->base.y () ? 0 :
-        pos.y () - state->base.y (); 
+    // calculate area of map squares occupied by the object's bounding box
+    u_int16 start_x = pos.x (); 
+    u_int16 start_y = pos.y ();    
+    u_int16 end_x = start_x + ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
     
-    u_int16 fx = pos.x () + state->area_length () - state->base.x ();
-    u_int16 fy = pos.y () + state->area_height () - state->base.y (); 
-
-    if (pos.ox ()) fx++;
-    if (pos.oy ()) fy++; 
+    // make sure we do not exceed map size
+    if (end_x > length()) end_x = length() - 1;
+    if (end_y > height()) end_y = height() - 1;
     
-    if (fx > length()) fx = length() - 1;
-    if (fy > height()) fy = height() - 1;
-
-    square * msqr; 
+    square *sq; 
     
-    for (j = sy; j < fy; j++) 
-        for (i = sx; i < fx; i++) 
+    for (u_int16 j = start_y; j < end_y; j++) 
+    {
+        for (u_int16 i = start_x; i < end_x; i++) 
         {
-            msqr = get (i, j);
-            msqr->remove (obj, pos); 
+            sq = get (i, j);
+            coordinates shape_offset (i - start_x, j - start_y, pos.z(), 0, 0);
+            sq->remove (obj, pos); 
         }
+    }
+    
     return true; 
 }
 

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.4 2007/06/03 02:28:38 ksterker Exp $
+ $Id: placeable_model.h,v 1.5 2007/10/15 02:19:33 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,7 +34,7 @@
 
 #include <map>
 
-#include "world/placeable_area.h"
+#include "world/placeable_shape.h"
 
 namespace world
 {
@@ -46,14 +46,12 @@ namespace world
      * without depending on the whole map stuff. While it is suitable
      * for editing, it can't be actually placed on a map. Use placeable
      * for that instead.
-     * 
-     * FIXME: seems a lot in here actually duplicates stuff now located
-     * in the animation class. Need to update this accordingly.
      */
     class placeable_model
     {
     public:
-        typedef std::map <std::string, placeable_area>::iterator iterator;
+        /// short name to iterator over shapes map
+        typedef std::map <std::string, placeable_shape>::iterator iterator;
 
         /**
          * Constructor.
@@ -61,31 +59,69 @@ namespace world
         placeable_model();
         
         /**
-         * @name Map object states
-         * A state is usually represented by an %animation
+         * @name Map object shapes.
+         * Each %animation is accompanied by a distinct shape.
          */
         //@{
+        /**
+         * Return iterator to first object shape.
+         * @return iterator pointing to first shape.
+         */
         iterator begin ()
         {
-            return States.begin (); 
+            return Shapes.begin ();
         }
 
+        /**
+         * Return iterator pointing after last object shape.
+         * @return iterator pointing past last shape.
+         */
         iterator end () 
         {
-            return States.end (); 
+            return Shapes.end (); 
         }
 
-        world::placeable_area * current_state ();
+        /**
+         * Get current shape. This is the shape matching the %animation
+         * being played for this object.
+         * @return current shape.
+         */
+        world::placeable_shape * current_shape ();
 
-        world::placeable_area * get_model_state (const std::string & name);
+        /**
+         * Get name of current shape.
+         * @return name of current shape.
+         */
+        const std::string current_shape_name() const;
+        
+        /**
+         * Get shape with given name.
+         * @param name of the shape.
+         * @return shape or NULL if no such shape exists.
+         */
+        world::placeable_shape * get_shape (const std::string & name);
     
-        const std::string current_state_name() const;
-    
-        world::placeable_area * add_state (const std::string & name);
+        /**
+         * Add a shape with given name. The shape is created internally
+         * and returned for further initialization.
+         * @param name name of shape to create.
+         * @return newly created shape.
+         */
+        world::placeable_shape * add_shape (const std::string & name);
 
-        bool del_state (const std::string & name);
+        /**
+         * Delete the shape with given name.
+         * @param name name of shape to delete.
+         * @return true on success, false otherwise.
+         */
+        bool del_shape (const std::string & name);
     
-        void set_state (const std::string & name);
+        /**
+         * Make shape with given name the current shape. If no such 
+         * shape exists, the current shape remains unchanged.
+         * @param name name of the shape to activate.
+         */
+        void set_shape (const std::string & name);
         //@}
         
         /**
@@ -126,11 +162,11 @@ namespace world
         /// filename of this object
         mutable std::string Filename;
         /// possible states of this object
-        mutable std::map <std::string, placeable_area> States;
+        mutable std::map <std::string, placeable_shape> Shapes;
         /// current state of this object
-        std::map <std::string, placeable_area>::iterator Current_state;
+        std::map <std::string, placeable_shape>::iterator CurrentShape;
         /// whether state of object has changed recently
-        bool State_changed;
+        bool StateChanged;
     }; 
 }
 

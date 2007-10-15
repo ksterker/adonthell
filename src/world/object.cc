@@ -1,5 +1,5 @@
 /*
- $Id: object.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: object.cc,v 1.3 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,7 @@ bool object::put_state (base::flat & file) const
 bool object::get_state (base::flat & file)
 {
     placeable_model::get_state (file);
-    set_state ("default");
+    set_shape ("default");
     
     return file.success ();
 }

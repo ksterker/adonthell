@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.2 2007/09/24 03:14:11 ksterker Exp $
+ $Id: vector3.h,v 1.3 2007/10/15 02:19:35 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -82,7 +82,25 @@ public:
     	Y = y;
     	Z = z;
     }
+
+    /*
+     * Set the x coordinate of a vector.
+     * @param x new x location
+     */
+    void set_x (const T & x) { X = x; } 
+ 
+    /*
+     * Set the y coordinate of a vector.
+     * @param y new y location
+     */
+    void set_y (const T & y) { Y = y; } 
     
+    /*
+     * Set the z coordinate of a vector.
+     * @param z new z location
+     */
+    void set_z (const T & z) { Z = z; } 
+
     /**
      * Return x coordinate
      * @return x coordinate

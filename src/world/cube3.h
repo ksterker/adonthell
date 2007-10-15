@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.2 2007/09/24 03:14:11 ksterker Exp $
+ $Id: cube3.h,v 1.3 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,7 +54,8 @@ public:
 		TOP_FRONT_LEFT = 4,
 		TOP_FRONT_RIGHT = 5,
 		TOP_BACK_RIGHT = 6,
-		TOP_BACK_LEFT = 7,		
+		TOP_BACK_LEFT = 7,
+        NUM_CORNERS = 8
 	};
 	
 	/**
@@ -65,6 +66,24 @@ public:
 	 */
 	cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & height);
 	
+    /**
+     * @name Bounding Box
+     */
+    //@{
+    /**
+     * Calculate bounding box for this cube. Call every time a point of the
+	 * cube is changed.
+     */
+    void create_bounding_box ();
+    
+    s_int16 min_x () const { return Min.x (); }
+    s_int16 max_x () const { return Max.x (); }
+    s_int16 min_y () const { return Min.y (); }
+    s_int16 max_y () const { return Max.y (); }
+    s_int16 min_z () const { return Min.z (); }
+    s_int16 max_z () const { return Max.z (); }
+    //@}
+    
     /**
      * @name Mesh Related Methods
      */
@@ -121,6 +140,11 @@ private:
 	/// the cube's surface
 	std::vector<triangle3 *> Surface;
 	
+    /// bounding box minimum values
+    vector3<s_int16> Min;
+    /// bounding box maximum values
+    vector3<s_int16> Max;
+    
     /**
      * Forbid copy construction.
      */

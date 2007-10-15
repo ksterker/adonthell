@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.3 2007/07/15 22:01:54 ksterker Exp $
+   $Id: character.cc,v 1.4 2007/10/15 02:19:30 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -142,25 +142,25 @@ void character::update_state()
         }
         else 
         {
-            if ((vx() > 0) && (current_state_name()[0] == 'w'))
+            if ((vx() > 0) && (current_shape_name()[0] == 'w'))
                 state = "e";
-            else if ((vx() < 0) && (current_state_name()[0] == 'e'))
+            else if ((vx() < 0) && (current_shape_name()[0] == 'e'))
                 state = "w";
-            else if ((vy() > 0) && (current_state_name()[0] == 'n'))
+            else if ((vy() > 0) && (current_shape_name()[0] == 'n'))
                 state = "s";
-            else if ((vy() < 0) && (current_state_name()[0] == 's'))
+            else if ((vy() < 0) && (current_shape_name()[0] == 's'))
                 state = "n";
-            else state = current_state_name()[0];
+            else state = current_shape_name()[0];
         }
         state += is_running() ? "_run" : "_walk";
     }
     else if (!xvel)
     {
-        state = current_state_name()[0];
+        state = current_shape_name()[0];
         state += "_stand";
     }
     
-    set_state(state);
+    set_shape (state);
 }
 
 // save to stream
@@ -177,7 +177,7 @@ bool character::get_state (base::flat & file)
     // FIXME: load movement and direction ...
 
     placeable_model::get_state (file);
-    set_state ("s_stand");
+    set_shape ("s_stand");
     
     return file.success ();
 }

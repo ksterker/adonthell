@@ -1,5 +1,5 @@
 /*
- $Id: square.cc,v 1.2 2007/10/13 22:36:42 ksterker Exp $
+ $Id: square.cc,v 1.3 2007/10/15 02:19:34 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,13 +43,13 @@ square_info::square_info (coordinates & pos)
 bool square_info::operator < (const square_info & mi) const
 {
 //     if (y() == mi.y() || (y() == mi.y() + 1 && mi.oy()) &&
-//         z() + obj->current_state()->zsize <= mi.z()) return true;
+//         z() + obj->current_shape()->zsize <= mi.z()) return true;
 
 //     if (mi.y() == y() || (mi.y() == y() + 1 && oy()) &&
-//         z() >= mi.z() + mi.obj->current_state()->zsize) return false;
+//         z() >= mi.z() + mi.obj->current_shape()->zsize) return false;
 
-    if (z() + obj->current_state()->zsize <= mi.zground) return true;
-    if (zground >= mi.z() + mi.obj->current_state()->zsize) return false;
+    if (z() + obj->current_shape()->height() <= mi.zground) return true;
+    if (zground >= mi.z() + mi.obj->current_shape()->height()) return false;
     if (y() < mi.y()) return true;
     if (y() > mi.y()) return false;
     if (oy() < mi.oy()) return true;
@@ -57,13 +57,13 @@ bool square_info::operator < (const square_info & mi) const
 
 //     if (obj->type() == OBJECT) return true;
 //     if (obj->type() == CHARACTER) return false;
-//     if (z() + obj->current_state()->zsize < mi.z() + mi.obj->current_state()->zsize) return true;
-//     if (z() + obj->current_state()->zsize > mi.z() + mi.obj->current_state()->zsize) return false;
+//     if (z() + obj->current_shape()->zsize < mi.z() + mi.obj->current_shape()->zsize) return true;
+//     if (z() + obj->current_shape()->zsize > mi.z() + mi.obj->current_shape()->zsize) return false;
 
 //     if ((y() * square_size) + oy() + square_size <=
-//         (mi.y() - (mi.obj->current_state()->area_height() - 1)) * square_size + mi.oy()) return true;
+//         (mi.y() - (mi.obj->current_shape()->area_height() - 1)) * square_size + mi.oy()) return true;
 
-//     if ((y() - (obj->current_state()->area_height() - 1)) * square_size + oy() >=
+//     if ((y() - (obj->current_shape()->area_height() - 1)) * square_size + oy() >=
 //         square_size + mi.y() * square_size + mi.oy()) return false;
 
     // If the objects are at the same y position, we better
@@ -79,8 +79,8 @@ bool square::add (placeable * obj, coordinates & pos)
     square_info mi (pos);
     mi.obj = obj; 
     std::vector<square_info>::iterator it = objects.begin();
-    while(it != objects.end() && mi.z() + mi.obj->current_state()->zsize < 
-          it->z() + it->obj->current_state()->zsize) ++it;
+    while(it != objects.end() && mi.z() + mi.obj->current_shape()->height() < 
+          it->z() + it->obj->current_shape()->height()) ++it;
     objects.insert(it, mi);
     return true; 
 }
@@ -91,8 +91,8 @@ bool square::add (moving * obj)
     mi.obj = obj; 
     mi.zground = obj->zground;
     std::vector<square_info>::iterator it = objects.begin();
-    while(it != objects.end() && mi.z() + mi.obj->current_state()->zsize < 
-          it->z() + it->obj->current_state()->zsize) ++it;
+    while(it != objects.end() && mi.z() + mi.obj->current_shape()->height() < 
+          it->z() + it->obj->current_shape()->height()) ++it;
     objects.insert(it, mi);
     return true; 
 }

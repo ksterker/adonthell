@@ -1,5 +1,5 @@
 /*
- $Id: object_with_gfx.cc,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: object_with_gfx.cc,v 1.3 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,19 +37,7 @@ using world::object_with_gfx;
 // ctor
 object_with_gfx::object_with_gfx (world::area & mymap) : object (mymap), placeable_gfx ((placeable &) *this) 
 {
-    //     placeable_area * moa;
-    //     moa = add_state ("default");
-    //     moa->set_area_size (4, 5);
-    //     moa->base.set_position (3, 4);
-    //     moa->base.set_offset (40, 40);
-
-    //     placeable_area_gfx * moag;
-
-    //     moag = add_gfx ("default"); 
-    //     moag->get_animation()->load("adontest/house.anim");
-    
-    //     load("adontest/house.mdl");
-    set_state ("default"); 
+    set_shape ("default"); 
 }
 
 // save to stream
@@ -66,7 +54,7 @@ bool object_with_gfx::get_state (base::flat & file)
 {
     object::get_state (file);
     placeable_model_gfx::get_state (file);
-    set_gfx (current_state_name());
+    set_gfx (current_shape_name());
     
     return file.success ();
 }

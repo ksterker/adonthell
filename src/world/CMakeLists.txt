@@ -9,12 +9,11 @@ set(adonthell_world_SRCS
     object.cc
     object_with_gfx.cc
     placeable.cc
-    placeable_area.cc
     placeable_gfx.cc
     placeable_model.cc
     placeable_model_gfx.cc
+    placeable_shape.cc
     square.cc
-    square_walkable_info.cc
     triangle3.cc
     vector3.cc
 )
@@ -29,12 +28,11 @@ set(adonthell_world_HEADERS
     object.h
     object_with_gfx.h
     placeable.h
-    placeable_area.h
     placeable_gfx.h
     placeable_model.h
     placeable_model_gfx.h
+    placeable_shape.h
     square.h
-    square_walkable_info.h    
     triangle3.h
     vector3.h
 )

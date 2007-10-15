@@ -1,7 +1,7 @@
 /*
- $Id: placeable_area.h,v 1.3 2007/06/10 03:58:22 ksterker Exp $
+ $Id: placeable_shape.h,v 1.1 2007/10/15 02:19:34 ksterker Exp $
  
- Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -20,10 +20,10 @@
 */
 
 /**
- * @file   world/placeable_area.h
- * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @file   world/placeable_shape.h
+ * @author  Kai Sterker <kaisterker@linuxgames.com>
  * 
- * @brief  Declares the placeable_area class.
+ * @brief  Declares the placeable_shape class.
  * 
  * 
  */
@@ -34,68 +34,65 @@
 
 #include <vector>
 
-#include "world/coordinates.h"
-#include "world/square_walkable_info.h"
+#include "world/cube3.h"
 
 namespace world
 {
     /**
-     * Area of squares that represents the occupation of a placeable
-     * on the map. Used for collision detection.
+     * A rough 3D representation of a placeable on the map. It consists
+     * of a number of hexahedrons and a bounding box. It is used for 
+     * collision detection and rendering order.
      * 
-     * FIXME: is that per pixel or per grid square?
+     * All values returned are pixel based.
      */
-    class placeable_area
+    class placeable_shape
     {
     public:
         /**
          * Create new collision information for a placeable.
          */
-        placeable_area()
+        placeable_shape()
         {
-            zsize = 0;
         }
 
         /**
-         * Get extension of area in x direction
+         * Add a part to this shape.
+         * @param part the part to add to the shape.
+         */
+        void add_part (cube3 * part);
+        
+        /**
+         * @name Extension of Shape
+         */
+        //@{
+        /**
+         * Get extension of shape in x direction
          * @return extension in x direction.
          */
-        u_int16 area_length() const
+        u_int16 length () const
         {
-            return area.size ();
+            return Max.x() - Min.x();
         }
-    
+
         /**
-         * Get extension of area in y direction
+         * Get extension of shape in y direction
          * @return extension in y direction.
          */
-        u_int16 area_height() const;
-
-        /**
-         * Set extension of area
-         * @param nx extension in x direction.
-         * @param ny extension in y direction.
-         */
-        void set_area_size(u_int16 nx, u_int16 ny);
-
-        /**
-         * Get collision information for a particular location of the area.
-         * @param x x coordinate
-         * @param y y coordinate
-         */
-        square_walkable_info & get(u_int16 x, u_int16 y)
+        u_int16 width () const
         {
-            return area[x][y]; 
+            return Max.y() - Min.y();
         }
 
         /**
-         * Called once per game cycle by the engine to update state. 
+         * Get extension of shape in z direction
+         * @return extension in z direction.
          */
-        bool update ()
+        u_int16 height () const
         {
-            return true; 
+            return Max.z() - Min.z();
         }
-
+        //@}
+        
         /**
          * Loading / Saving
          */
@@ -113,15 +110,15 @@ namespace world
          */        
         bool get_state (base::flat & file);
         //@}
-        
-        /// object height
-        u_int16 zsize;
-        /// object length and width
-        coordinates base;
+
+        /// minimum of object bounding box
+        vector3<s_int16> Min;
+        /// maximum of object bounding box
+        vector3<s_int16> Max;
         
     private:
         /// collision information  
-        std::vector <std::vector <square_walkable_info> > area;
+        std::vector <cube3*> Parts;
     }; 
 }
 

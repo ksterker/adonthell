@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.2 2007/09/24 03:14:11 ksterker Exp $
+ $Id: cube3.cc,v 1.3 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,6 +42,25 @@ cube3::cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & hei
 	Corners[TOP_FRONT_RIGHT].set (length, 0, height);
 	Corners[TOP_BACK_RIGHT].set (length, width, height);
 	Corners[TOP_BACK_LEFT].set (0, width, height);
+    
+    // set initial bounding box
+    Max.set (length, width, height);
+}
+
+// update bounding box
+void cube3::create_bounding_box ()
+{
+    for (int i = 0; i < NUM_CORNERS; i++)
+    {
+        if (Corners[i].x() < Min.x()) Min.set_x (Corners[i].x());
+        else if (Corners[i].x() > Max.x()) Max.set_x (Corners[i].x());
+        
+        if (Corners[i].y() < Min.y()) Min.set_y (Corners[i].y());
+        else if (Corners[i].y() > Max.y()) Max.set_y (Corners[i].y());
+        
+        if (Corners[i].z() < Min.z()) Min.set_z (Corners[i].z());
+        else if (Corners[i].z() > Max.z()) Max.set_z (Corners[i].z());
+    }
 }
 
 // convert to triangles
@@ -70,7 +89,7 @@ void cube3::draw_mesh (const u_int16 & x, const u_int16 & y, gfx::surface * targ
 bool cube3::put_state (base::flat & file) const
 {
 	base::flat record;
-	for (u_int32 i = 0; i < 8; i++)
+	for (u_int32 i = 0; i < NUM_CORNERS; i++)
 	{
 		Corners[i].put_state (record);
 	}
@@ -84,12 +103,14 @@ bool cube3::get_state (base::flat & file)
 {
 	bool result = true;
 	base::flat record = file.get_flat ("cube");
-	for (u_int32 i = 0; result && i < 8; i++)
+	for (u_int32 i = 0; result && i < NUM_CORNERS; i++)
 	{
 		result = result & Corners[i].get_state (record);
 	}
 	
+    create_bounding_box();
 	create_mesh ();
+    
 	return result;
 }
 

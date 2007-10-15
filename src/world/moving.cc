@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.4 2007/07/15 22:01:54 ksterker Exp $
+ $Id: moving.cc,v 1.5 2007/10/15 02:19:31 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -81,6 +81,7 @@ void moving::set_limits (u_int16 mx, u_int16 my)
 
 void moving::update_pos2()
 {
+    /*
     Has_moved = 0; 
 
     u_int16 nX = X;
@@ -179,7 +180,7 @@ void moving::update_pos2()
     }
 
     // Now checking walkability
-    placeable_area * state = current_state();
+    placeable_shape * state = current_shape();
 
 	// the range to check when between tiles.
     u_int16 nbx = 1 + (nfox != 0.0);
@@ -217,13 +218,13 @@ void moving::update_pos2()
                         {
                             s_int32 objz = it->z();
                             // did we bump into object?
-                            if (objz > z() + current_state()->zsize || objz < prevz + current_state()->zsize) continue;
+                            if (objz > z() + current_shape()->zsize || objz < prevz + current_shape()->zsize) continue;
                             
-                            if (!it->obj->current_state()->get(px + k - it->x() + it->obj->current_state()->base.x(),
-                                                               py + l - it->y() + it->obj->current_state()->base.y())
+                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
+                                                               py + l - it->y() + it->obj->current_shape()->base.y())
                                 .is_walkable())
                             {
-                                set_altitude(objz - (current_state()->zsize + 1));
+                                set_altitude(objz - (current_shape()->zsize + 1));
                                 set_vertical_velocity (0.0);
                                 break;
                             }
@@ -234,13 +235,13 @@ void moving::update_pos2()
                     for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
                     {
                     	// z position of object
-                        s_int32 objz = it->z() + it->obj->current_state()->zsize;
+                        s_int32 objz = it->z() + it->obj->current_shape()->zsize;
                         // can movable climb on top of object from its current altitude?
                         if (objz > prevz + climb_capability()) continue;
                         
-                        int xx = px + k - it->x() + it->obj->current_state()->base.x();
-                        int yy = py + l - it->y() + it->obj->current_state()->base.y();
-                        placeable_area *sq = it->obj->current_state();
+                        int xx = px + k - it->x() + it->obj->current_shape()->base.x();
+                        int yy = py + l - it->y() + it->obj->current_shape()->base.y();
+                        placeable_shape *sq = it->obj->current_shape();
                         if (xx < sq->area_length() && yy < sq->area_height())
                         {
 	                        if (sq->get (xx, yy).is_walkable()) continue;
@@ -275,15 +276,15 @@ void moving::update_pos2()
 
                     for (square::iterator it = msqr->begin(); it != msqr->end(); ++it)
                     {
-                        int xx = px + k - it->x() + it->obj->current_state()->base.x();
-                        int yy = py + l - it->y() + it->obj->current_state()->base.y();
-                        placeable_area *sq = it->obj->current_state();
+                        int xx = px + k - it->x() + it->obj->current_shape()->base.x();
+                        int yy = py + l - it->y() + it->obj->current_shape()->base.y();
+                        placeable_shape *sq = it->obj->current_shape();
                         if (xx < sq->area_length() && yy < sq->area_height())
                         {
 	                        if (sq->get (xx, yy).is_walkable()) continue;
                         }
           
-                        if (z() + climb_capability() < it->z() + it->obj->current_state()->zsize && 
+                        if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
                             z() + state->zsize > it->z())
                             goto rollback;
                     }
@@ -300,10 +301,12 @@ void moving::update_pos2()
 
  rollback:
     zground = nzground;
+    */
 }
 
 void moving::update_pos()
 {
+    /*
     Has_moved = 0; 
 
     if (vx ()) 
@@ -345,7 +348,7 @@ void moving::update_pos()
 
         // Now check for walkability
         u_int16 nbr_sqr = nX > X ? nX - X : X - nX;
-        placeable_area * state = current_state();
+        placeable_shape * state = current_shape();
         
         for (u_int16 j = 0; j < state->area_height(); j++)
             for (u_int16 i = 0; i < state->area_length(); i++)
@@ -364,11 +367,11 @@ void moving::update_pos()
                         square * msqr = Mymap.get(px + k, py + l);
                         for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
                         {
-                            if (it->obj->current_state()->get(px + k - it->x() + it->obj->current_state()->base.x(),
-                                                               py + l - it->y() + it->obj->current_state()->base.y())
+                            if (it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
+                                                               py + l - it->y() + it->obj->current_shape()->base.y())
                                 .is_walkable()) continue;
 
-                            if (z() + climb_capability() < it->z() + it->obj->current_state()->zsize && 
+                            if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
                                 z() + state->zsize > it->z())
                                 goto ytest;
                         }
@@ -420,7 +423,7 @@ void moving::update_pos()
 
         // Now check for walkability
         u_int16 nbr_sqr = nY > Y ? nY - Y : Y - nY;
-        placeable_area * state = current_state();
+        placeable_shape * state = current_shape();
         
         for (u_int16 j = 0; j < state->area_height(); j++)
             for (u_int16 i = 0; i < state->area_length(); i++)
@@ -439,11 +442,11 @@ void moving::update_pos()
                         square * msqr = Mymap.get(px + k, py + l);
                         for (square::iterator it = msqr->begin(); it != msqr->end(); ++it)
                         {
-                            if (it->obj->current_state()->get(px + k - it->x() + it->obj->current_state()->base.x(),
-                                                               py + l - it->y() + it->obj->current_state()->base.y())
+                            if (it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
+                                                               py + l - it->y() + it->obj->current_shape()->base.y())
                                 .is_walkable()) continue;
 
-                            if (z() + climb_capability() < it->z() + it->obj->current_state()->zsize && 
+                            if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
                                 z() + state->zsize > it->z())
                                 goto ztest;
                         }
@@ -476,7 +479,7 @@ void moving::update_pos()
         }
     }
 
-    placeable_area * state = current_state();
+    placeable_shape * state = current_shape();
 
     Is_falling = true;
     
@@ -499,24 +502,24 @@ void moving::update_pos()
                         if (vz() > 0)
                         {
                             s_int32 objz = it->z();
-                            if (objz > z() + current_state()->zsize || objz < prevz + current_state()->zsize) continue;
+                            if (objz > z() + current_shape()->zsize || objz < prevz + current_shape()->zsize) continue;
 
-                            if (!it->obj->current_state()->get(px + k - it->x() + it->obj->current_state()->base.x(),
-                                                               py + l - it->y() + it->obj->current_state()->base.y())
+                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
+                                                               py + l - it->y() + it->obj->current_shape()->base.y())
                                 .is_walkable()) 
                             {
-                                set_altitude(objz - (current_state()->zsize + 1));
+                                set_altitude(objz - (current_shape()->zsize + 1));
                                 set_vertical_velocity(0.0);
                                 break;
                             }
                         }
                         else
                         {
-                            s_int32 objz = it->z() + it->obj->current_state()->zsize;
+                            s_int32 objz = it->z() + it->obj->current_shape()->zsize;
                             if (objz < z() || objz > prevz + climb_capability()) continue;
                             
-                            if (!it->obj->current_state()->get(px + k - it->x() + it->obj->current_state()->base.x(),
-                                                               py + l - it->y() + it->obj->current_state()->base.y())
+                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
+                                                               py + l - it->y() + it->obj->current_shape()->base.y())
                                 .is_walkable()) 
                             {
                                 set_altitude(objz);
@@ -528,6 +531,7 @@ void moving::update_pos()
                     }
                 }
         }
+     */
 }
 
 bool moving::update()

@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.8 2007/07/22 01:32:23 ksterker Exp $
+   $Id: worldtest.cc,v 1.9 2007/10/15 02:19:35 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -35,7 +35,7 @@ public:
     bool letsexit;
     bool draw_grid;
 	bool draw_walkable;
-	bool draw_border;
+	bool draw_bounding_box;
 	bool screenshot;
 	bool always_run;
 	
@@ -44,7 +44,7 @@ public:
         letsexit = false;
         draw_grid = false;
         draw_walkable = false;
-        draw_border = false;
+        draw_bounding_box = false;
         screenshot = false;
         always_run = false;
     }
@@ -150,7 +150,7 @@ public:
             // toggle object borders on|off
             if (kev->key() == input::keyboard_event::B_KEY)
             {
-                draw_border = !draw_border;
+                draw_bounding_box = !draw_bounding_box;
             }
             // toggle collision area on|off
             if (kev->key() == input::keyboard_event::W_KEY)
@@ -185,13 +185,15 @@ public:
         // that's 640x480
         world.resize (16, 12);
         
+        /*
         // Adding the map character
         mchar = (world::character_with_gfx *) world.add_character();
         mchar->load ("data/models/char/npc/ng.xml");
         mchar->set_speed (1.0);
         mchar->set_position (4, 4);
         mchar->set_limits (16, 12);
-        
+        */
+         
         // Adding map objects
         world::object_with_gfx * mobj;
 
@@ -395,10 +397,10 @@ public:
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
 		                    
-		                    if (gc.draw_border)
+		                    if (gc.draw_bounding_box)
 		                    {
 			                    ((world::object_with_gfx *)
-			                     (*it).obj)->draw_border (
+			                     (*it).obj)->draw_bounding_box (
 			                     			   (*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
 		                    }

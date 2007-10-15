@@ -27,7 +27,7 @@ using namespace world;
 %include "world/character_with_gfx.h"
 %include "world/square.h"
 %include "world/area.h"
-%include "world/placeable_area.h"
+%include "world/placeable_shape.h"
 %include "world/vector3.h"
 %include "world/triangle3.h"
 %include "world/cube3.h"

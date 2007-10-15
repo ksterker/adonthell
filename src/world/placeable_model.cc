@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
+ $Id: placeable_model.cc,v 1.6 2007/10/15 02:19:33 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,53 +35,60 @@ using namespace world;
 
 placeable_model::placeable_model()
 {
-    Current_state = States.begin (); 
+    CurrentShape = Shapes.begin (); 
 }
 
-placeable_area * placeable_model::current_state()
+// get current shape
+placeable_shape * placeable_model::current_shape ()
 {
-    if (Current_state != States.end ())
-        return &(Current_state->second);
+    if (CurrentShape != Shapes.end ())
+        return &(CurrentShape->second);
     else return NULL; 
 }
 
-placeable_area * placeable_model::get_model_state (const std::string & name) 
+// get shape by name
+placeable_shape * placeable_model::get_shape (const std::string & name) 
 {
-    std::map <std::string, placeable_area>::iterator State;
-    State = States.find (name); 
-    if (State == States.end())
+    std::map <std::string, placeable_shape>::iterator shape;
+    shape = Shapes.find (name); 
+    if (shape == Shapes.end())
         return NULL;
-    else return &(State->second);
+    else return &(shape->second);
 }
 
-const std::string placeable_model::current_state_name() const
+// get name of current shape
+const std::string placeable_model::current_shape_name() const
 {
-    if (Current_state != States.end ())
-        return Current_state->first;
+    if (CurrentShape != Shapes.end ())
+        return CurrentShape->first;
     else return std::string (); 
 }
 
-placeable_area * placeable_model::add_state (const std::string & name) 
+// add new shape
+placeable_shape * placeable_model::add_shape (const std::string & name) 
 {
-    return &((States.insert(std::pair<const std::string, const placeable_area> (name, placeable_area()))).first->second);
+    return &((Shapes.insert(std::pair<const std::string, const placeable_shape> (name, placeable_shape()))).first->second);
 }
 
-bool placeable_model::del_state (const std::string & name)
+// delete given shape
+bool placeable_model::del_shape (const std::string & name)
 {
-    return States.erase(name);
+    return Shapes.erase(name);
 }
 
-void placeable_model::set_state (const std::string & name) 
+// set the current shape
+void placeable_model::set_shape (const std::string & name) 
 {    
-    if (Current_state != States.end() && Current_state->first == name)
+    if (CurrentShape != Shapes.end() && CurrentShape->first == name)
         return;
         
-    std::map <std::string, placeable_area>::iterator Previous_state;
-    Previous_state = Current_state;
-    Current_state = States.find (name); 
-    if (Current_state == States.end())
-        Current_state = Previous_state;
-    else State_changed = true;
+    std::map <std::string, placeable_shape>::iterator prev_shape;
+    prev_shape = CurrentShape;
+    CurrentShape = Shapes.find (name); 
+    if (CurrentShape == Shapes.end())
+        CurrentShape = prev_shape;
+    
+    else StateChanged = true;
 }
 
 // save state to stream
@@ -89,9 +96,9 @@ bool placeable_model::put_state (base::flat & file) const
 {
     base::flat record;
     
-    record.put_string ("state", current_state_name ());
-    for (std::map <std::string, placeable_area>::iterator i = States.begin();
-         i != States.end(); i++)
+    record.put_string ("state", current_shape_name ());
+    for (std::map <std::string, placeable_shape>::iterator i = Shapes.begin();
+         i != Shapes.end(); i++)
     {
         base::flat area;
         
@@ -114,15 +121,19 @@ bool placeable_model::get_state (base::flat & file)
     void *value;
     u_int32 size;
     
-    std::string state = record.get_string ("state");
+    // load current shape
+    std::string shape = record.get_string ("state");
+    
+    // load actual shapes
     while (record.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
         base::flat area ((const char*) value, size);
-        placeable_area * mpa = add_state (std::string (name));
+        placeable_shape * mpa = add_shape (std::string (name));
         mpa->get_state (area);
     }
     
-    set_state (state);
+    // set current shape
+    set_shape (shape);
     
     return record.success ();
 }

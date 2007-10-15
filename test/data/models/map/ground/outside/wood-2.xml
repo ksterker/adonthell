@@ -3,15 +3,19 @@
   <list id="model">
     <string id="state">default</string>
     <list id="default">
-      <u_int16 id="length">2</u_int16>
-      <u_int16 id="height">1</u_int16>
-      <u_int16 id="size">0</u_int16>
-      <bool>1</bool>
-      <bool>1</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">0</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 40, 0]</string>
+          <string id="p3d">[0, 40, 0]</string>
+          <string id="p3d">[0, 0, 5]</string>
+          <string id="p3d">[40, 0, 5]</string>
+          <string id="p3d">[40, 40, 5]</string>
+          <string id="p3d">[0, 40, 5]</string>
+        </list>
+      </list>
     </list>
   </list>
   <string id="sprite">data/gfx/map/ground/outside/wood/wood-2.xml</string>

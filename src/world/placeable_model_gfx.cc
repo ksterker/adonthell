@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.5 2007/06/03 02:36:20 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.6 2007/10/15 02:19:33 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,8 @@
  */
 
 #include "gfx/image.h"
-#include "placeable_model_gfx.h"
+#include "world/coordinates.h"
+#include "world/placeable_model_gfx.h"
 
 using world::placeable_model_gfx;
 
@@ -95,10 +96,10 @@ bool placeable_model_gfx::set_gfx (const std::string & name)
 // update state of object
 bool placeable_model_gfx::update() 
 {
-    if (Target.State_changed)
+    if (Target.StateChanged)
     {
-        Target.State_changed = false;
-        return set_gfx (Target.current_state_name ()); 
+        Target.StateChanged = false;
+        return set_gfx (Target.current_shape_name ()); 
     }
     
     return true;
@@ -108,12 +109,12 @@ bool placeable_model_gfx::update()
 void placeable_model_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                 gfx::surface * target) const
 {
-    if (Target.Current_state != Target.States.end())
+    if (Target.CurrentShape != Target.Shapes.end())
     {
-        const placeable_area & t = Target.Current_state->second;
+        const placeable_shape & t = Target.CurrentShape->second;
         Sprite.draw (
-        	x - (t.base.x()) * SQUARE_SIZE - t.base.ox(), 
-            y - (t.base.y()) * SQUARE_SIZE - t.base.oy(), 
+        	x /*- t.length ()*/, 
+            y /*- t.width ()*/, 
             da_opt, target); 
     }
     else
@@ -127,13 +128,14 @@ void placeable_model_gfx::draw_walkable(s_int16 x, s_int16 y,
                                         const gfx::drawing_area * da_opt,
                                         gfx::surface * target) const
 {
+    /* fixme
 	// for now, collision area is square, will change later
     gfx::image im (SQUARE_SIZE, SQUARE_SIZE);
     im.fillrect (0, 0, im.length(), im.height(), 0xFF, 0, 0);
     im.set_alpha (128);
     
     // get collision information for object's current state
-    placeable_area * st = Target.current_state();
+    placeable_shape * st = Target.current_shape();
     
     for (int j = 0; j < st->area_height(); j++)
     {
@@ -148,23 +150,25 @@ void placeable_model_gfx::draw_walkable(s_int16 x, s_int16 y,
             }
         }
     }
+    */
 }
 
-// draw border around object
-void placeable_model_gfx::draw_border(s_int16 x, s_int16 y, 
+// draw bounding box around object
+void placeable_model_gfx::draw_bounding_box (s_int16 x, s_int16 y, 
                                       const gfx::drawing_area * da_opt,
                                       gfx::surface * target) const
 {
-    placeable_area * st = Target.current_state();
+    placeable_shape * st = Target.current_shape();
 
-    x -= st->base.x() * SQUARE_SIZE + st->base.ox();
-    y -= st->base.y() * SQUARE_SIZE + st->base.oy();
+    // ???
+    // x -= st->base.x() * SQUARE_SIZE + st->base.ox();
+    // y -= st->base.y() * SQUARE_SIZE + st->base.oy();
 
     gfx::surface *display = gfx::screen::get_surface();
-    display->fillrect(x, y, st->area_length() * SQUARE_SIZE, 1, 0xFFFFFF);
-    display->fillrect(x, y, 1, st->area_height() * SQUARE_SIZE, 0xFFFFFF);
-    display->fillrect(x + st->area_length() * SQUARE_SIZE - 1, y, 1, st->area_height() * SQUARE_SIZE, 0xFFFFFF);
-    display->fillrect(x, y + st->area_height() * SQUARE_SIZE - 1, st->area_length() * SQUARE_SIZE, 1, 0xFFFFFF);
+    display->fillrect(x, y, st->length(), 1, 0xFFFFFF);
+    display->fillrect(x, y, 1, st->width(), 0xFFFFFF);
+    display->fillrect(x + st->length() - 1, y, 1, st->width(), 0xFFFFFF);
+    display->fillrect(x, y + st->width() - 1, st->length(), 1, 0xFFFFFF);
 }
 
 // save to stream

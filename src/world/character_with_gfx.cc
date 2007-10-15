@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.4 2007/06/16 23:19:01 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.5 2007/10/15 02:19:30 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,7 +60,7 @@ bool character_with_gfx::get_state (base::flat & file)
 {
     character::get_state (file);
     placeable_model_gfx::get_state (file);
-    set_gfx (current_state_name ());
+    set_gfx (current_shape_name ());
     
     return file.success ();
 }
