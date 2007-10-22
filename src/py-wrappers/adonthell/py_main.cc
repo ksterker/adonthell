@@ -1,5 +1,5 @@
 /*
-   $Id: py_main.cc,v 1.3 2007/10/13 22:36:42 ksterker Exp $
+   $Id: py_main.cc,v 1.4 2007/10/22 06:03:30 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,7 +21,7 @@
 
 
 /**
- * @file   py_wrappers/adonthell/py_main.cc
+ * @file   py-wrappers/adonthell/py_main.cc
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
  * @brief  The main application class for python scripts using the Adonthell framework.
