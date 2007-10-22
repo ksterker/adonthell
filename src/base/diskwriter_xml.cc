@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_xml.cc,v 1.11 2007/10/13 21:15:18 ksterker Exp $
+ $Id: diskwriter_xml.cc,v 1.12 2007/10/22 02:19:46 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -665,7 +665,7 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
             char *hex = new char[(size * 2) + 1];
             hex[size * 2] = 0;
             
-            for (s_int32 i = 0; i < size; i++) 
+            for (u_int32 i = 0; i < size; i++) 
             {
                 hex[j++] = Bin2Hex[(bin[i] >> 4) & 0x0f];
                 hex[j++] = Bin2Hex[bin[i] & 0x0f];
@@ -676,7 +676,13 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
             
             break;
         }
-    }
+		// we should never get there
+		default:
+		{
+			fprintf (stderr, "*** diskwriter_xml::value_to_xmlChar: cannot convert '%s'\n", flat::name_for_type (type));
+			break;
+		}
+	}
     
     retval = tmp.str();
     return (xmlChar*) retval.c_str();

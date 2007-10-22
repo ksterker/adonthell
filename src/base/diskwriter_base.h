@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_base.h,v 1.1 2006/09/22 05:13:16 ksterker Exp $
+ $Id: diskwriter_base.h,v 1.2 2007/10/22 02:19:46 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,6 +38,12 @@ namespace base {
     class disk_writer_base
     {
     public:
+	
+		/**
+		 *
+		 */
+		virtual ~disk_writer_base () {}
+		
         /*
          *
          */

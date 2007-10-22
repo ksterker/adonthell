@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_gz.cc,v 1.3 2007/05/27 01:44:48 ksterker Exp $
+ $Id: diskwriter_gz.cc,v 1.4 2007/10/22 02:19:46 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,6 +57,8 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
     
     // reset
     data.clear ();
+	
+	return true;
 }
 
 // read from gz-compressed binary file
