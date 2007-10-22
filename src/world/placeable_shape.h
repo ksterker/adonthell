@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.1 2007/10/15 02:19:34 ksterker Exp $
+ $Id: placeable_shape.h,v 1.2 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,8 +31,6 @@
 
 #ifndef WORLD_PLACEABLE_AREA_H_
 #define WORLD_PLACEABLE_AREA_H_
-
-#include <vector>
 
 #include "world/cube3.h"
 

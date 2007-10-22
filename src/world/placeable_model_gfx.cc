@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.6 2007/10/15 02:19:33 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.7 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -158,17 +158,9 @@ void placeable_model_gfx::draw_bounding_box (s_int16 x, s_int16 y,
                                       const gfx::drawing_area * da_opt,
                                       gfx::surface * target) const
 {
-    placeable_shape * st = Target.current_shape();
-
-    // ???
-    // x -= st->base.x() * SQUARE_SIZE + st->base.ox();
-    // y -= st->base.y() * SQUARE_SIZE + st->base.oy();
-
-    gfx::surface *display = gfx::screen::get_surface();
-    display->fillrect(x, y, st->length(), 1, 0xFFFFFF);
-    display->fillrect(x, y, 1, st->width(), 0xFFFFFF);
-    display->fillrect(x + st->length() - 1, y, 1, st->width(), 0xFFFFFF);
-    display->fillrect(x, y + st->width() - 1, st->length(), 1, 0xFFFFFF);
+    placeable_shape *shape = Target.current_shape();
+    cube3 bbox (shape->length(), shape->width(), shape->height());
+    bbox.draw (x, y, da_opt, target);
 }
 
 // save to stream

@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.3 2007/10/15 02:19:31 ksterker Exp $
+ $Id: cube3.h,v 1.4 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -82,6 +82,15 @@ public:
     s_int16 max_y () const { return Max.y (); }
     s_int16 min_z () const { return Min.z (); }
     s_int16 max_z () const { return Max.z (); }
+    
+	/**
+     * Draw the cube's outline
+	 * @param x x offset in pixels
+	 * @param y y offset in pixels
+     * @param da_opt optional drawing area for clipping
+	 * @param target surface to draw on. NULL to draw on screen surface.
+	 */
+    void draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area * da_opt, gfx::surface * target) const;
     //@}
     
     /**

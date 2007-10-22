@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.2 2007/09/24 03:14:11 ksterker Exp $
+ $Id: triangle3.h,v 1.3 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,6 +61,23 @@ public:
 		return (B - A) * (C - A);
 	}
 	
+    /**
+     * Check whether the given point lies inside the triangle or not.
+     * Based on http://www.blackpawn.com/texts/pointinpoly/default.html
+     * @param p point to check whether it is located inside triangle.
+     * @return \e true if it does, \e false otherwise.
+     */
+    bool triangle3::contains (const vector3<float> & p) const;
+    
+    /**
+     * Return first point of the triangle.
+     * @return first point of the triangle.
+     */
+    const vector3<s_int16> & a () const
+    {
+        return A;
+    }
+    
 	/**
 	 * Draw the triangle.
 	 * @param x x offset in pixels
@@ -76,6 +93,11 @@ private:
 	vector3<s_int16> B;
 	/// third point
 	vector3<s_int16> C;
+    
+    /**
+     * forbid copy construction
+     */
+    triangle3 (const triangle3 & src);
 };
 
 } // namespace world

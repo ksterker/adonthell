@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.3 2007/10/15 02:19:35 ksterker Exp $
+ $Id: vector3.h,v 1.4 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -153,9 +153,10 @@ public:
 	 * Return a new vector that is the difference of two given vectors.
 	 * @return new vector
 	 */
-	vector3<T> operator - (const vector3<T> & v) const
+    template<class PT>
+	vector3<T> operator - (const vector3<PT> & v) const
 	{
-		return vector3 (X - v.X, Y - v.Y, Z - v.Z);
+		return vector3 (X - v.x(), Y - v.y(), Z - v.z());
 	}
 
 	/**
@@ -176,14 +177,24 @@ public:
 		return vector3 (Y * v.Z - Z * v.Y, Z * v.X - X * v.Z, X * v.Y - Y * v.X);
 	}
 	
+    /**
+     * Calculate the dot product of two given vectors.
+     * @return the dot product of the vectors.
+     */
+    template<class PT>
+    T dot (const vector3<PT> & v) const
+    {
+        return (X * v.x() + Y * v.y() + Z * v.z());
+    }
+    
 	/**
 	 * Return a normalized copy of this vector.
 	 * @return a vector3<float> as a normalized version of this vector.
 	 */
 	vector3<float> normalize () const
 	{
-		float length = sqrt (X * X + Y * Y + Z * Z);
-		return vector3<float> (X / length, Y / length, Z / length);
+		float scale = 1.0f / sqrt (X * X + Y * Y + Z * Z);
+		return vector3<float> (X * scale, Y * scale, Z * scale);
 	}
 	//@}
 	

@@ -13,6 +13,7 @@ set(adonthell_world_SRCS
     placeable_model.cc
     placeable_model_gfx.cc
     placeable_shape.cc
+    plane3.cc
     square.cc
     triangle3.cc
     vector3.cc
@@ -32,6 +33,7 @@ set(adonthell_world_HEADERS
     placeable_model.h
     placeable_model_gfx.h
     placeable_shape.h
+    plane3.h
     square.h
     triangle3.h
     vector3.h

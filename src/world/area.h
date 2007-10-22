@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.3 2007/05/25 03:16:10 ksterker Exp $
+ $Id: area.h,v 1.4 2007/10/22 06:05:08 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -41,7 +41,8 @@
 namespace world
 {
     /**
-     * The plane of existance.
+     * The plane of existance. A map consists of a grid of squares that
+     * contain the actual scenery elements, characters and items.
      */
     class area
     {
@@ -128,19 +129,13 @@ namespace world
             }
         };
         
-        /**
-         * Objects that are placed on this map.
-         * 
-         */
+        /// Pointers to objects that are placed on this map.
         thing_manager<object, object_with_gfx> objects;
         
-        /**
-         * Pointers to the characters that are on this
-         * map.
-         * 
-         */
+        /// Pointers to the characters that are on this map.
         thing_manager<character, character_with_gfx> characters;
-        
+
+        /// The individual map squares
         std::vector <std::vector <square> > Grid;
         
         bool put (placeable * obj, coordinates & pos); 
@@ -151,69 +146,116 @@ namespace world
 #endif // SWIG
         
     public:
-        area ()
-        {
-        }
+        /**
+         * Create an empty map. Call resize to set its initial size
+         * or load its state from disk.
+         */
+        area () { }
         
+        /**
+         * Delete the map and everything on it.
+         */
         ~area ();
         
-        void clear();
-        
+        /**
+         * @name The Grid
+         */
+        //@{
+        /**
+         * Return size of the map grid along the X axis.
+         * @return extension of the map in X direction.
+         */
         u_int16 length () const
         {
             return Grid.size ();
         }
         
+        /**
+         * Return size of the map grid along the Y axis.
+         * @return extension of the map in Y direction.
+         */
         u_int16 height () const
         {
             if (Grid.size ()) return Grid[0].size ();
             else return 0; 
         }
         
-        void resize (const u_int16 nx, const u_int16 ny);
+        /**
+         * Change the size of the map grid. It's probably a good
+         * idea to do that before placing anything onto the map,
+         * although growing the map should have no ill effect.
+         * @param nx new number of cells in x direction.
+         * @param ny new number of cells in y direction.
+         */
+        void resize (const u_int16 & nx, const u_int16 & ny);
+
+        /**
+         * Get the map square at the given location.
+         * @param x x location on the map grid
+         * @param y y location on the map grid
+         * @return square at given position on the grid.
+         */
+        square * get (const u_int16 & x, const u_int16 & y);         
+        //@}
         
-        square * get (const u_int16 x, const u_int16 y); 
+        /**
+         * @name Scenery and Characters
+         */
+        //@{
+        /**
+         * Remove all objects and characters from the map.
+         */
+        void clear();
         
-        
+        /**
+         * Update state of all characters and objects on the map.
+         * @todo decide if we need that, or if everything can be
+         *     updated based on events.
+         */
         void update();
         
         /** 
-         * Adds a object to this map.
-         * @warning Ownership of the object will be given
-         * to the map, which will delete it. DO NOT use the object
-         * separately after having called this method!
-         * 
+         * Adds an object to this map. Creates a new, empty object and returns
+         * it, so that it can be initialized by the caller of this method.
+         * The map will take ownership of the object.
+         *
          * @todo this function should load objects from files, being given
          * a object file name. That way, there won't be any ownership problem
          * anymore.
          *
-         * @param mobj object to add to this map.
-         * 
-         * @return index of the object in case of success, \e -1 otherwise.
+         * @return new object in case of success, \e NULL otherwise.
          */
         object * add_object();
         
         /** 
-         * Tell a map to handle a character. The map will take
-         * ownership of the character.
-         * 
-         * @warning Ownership of the character will be given
-         * to the map, which will delete it. DO NOT use the character
-         * separately after having called this method!
+         * Adds a new character to the map. Creates a new, empty character and 
+         * returns it, so that it can be initialized by the caller of this method.
+         * The map will take ownership of the character.
          * 
          * @todo this function should load objects from files, being given
          * a character file name. That way, there won't be any ownership problem
          * anymore.
-         * @param mchar character to handle.
          * 
-         * @return \e true in case of success, \e false otherwise.
+         * @return pointer to the character instance in case of success, 
+         *      \e NULL otherwise.
          */
         character * add_character();
+
+        /**
+         * Place object at a given index at the given location.
+         * @param index index of object int the list of objects.
+         * @param pos position to place object at.
+         */
+        bool put_object (const u_int32 & index, coordinates & pos);
+        //@}
         
-        bool put_object(u_int32 index, coordinates & pos);
-        
+        /**
+         * For debugging. Print how many objects are located on each square of 
+         * the map.
+         */
         void output_occupation();
         
+        /// This class is allowed to change and move objects on the map.
         friend class moving;
     }; 
 }

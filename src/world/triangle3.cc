@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.1 2007/09/24 03:15:34 ksterker Exp $
+ $Id: triangle3.cc,v 1.2 2007/10/22 06:05:09 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,30 @@
 
 using world::triangle3;
 using world::vector3;
+
+// check if point is inside triangle
+bool triangle3::contains (const vector3<float> & p) const
+{
+    // compute vectors        
+    vector3<s_int16> v0 = C - A;
+    vector3<s_int16> v1 = B - A;
+    vector3<float> v2 = p - A;
+    
+    // compute dot products
+    s_int16 dot00 = v0.dot (v0);
+    s_int16 dot01 = v1.dot (v0);
+    s_int16 dot11 = v1.dot (v1);
+    float dot02 = v2.dot (v0);
+    float dot12 = v2.dot (v1);
+    
+    // compute barycentric coordinates
+    float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+    float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    
+    // check if point is in triangle
+    return (u > 0.0f) && (v > 0.0f) && (u + v < 1.0f);
+}
 
 // draw triangle 
 void triangle3::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const

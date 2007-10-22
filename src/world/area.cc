@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.5 2007/10/15 02:19:30 ksterker Exp $
+ $Id: area.cc,v 1.6 2007/10/22 06:05:08 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,18 +34,21 @@ using world::area;
 using world::object;
 using world::character;
 
+// dtor
 area::~area()
 {
     clear();
 }
 
+// delete characters and objects
 void area::clear()
 {
     objects.clear();
     characters.clear();
 }
 
-void area::resize (const u_int16 nx, const u_int16 ny) 
+// set size of map grid
+void area::resize (const u_int16 & nx, const u_int16 & ny) 
 {
     Grid.resize (nx);
     for (std::vector <std::vector <square> >::iterator i = Grid.begin ();
@@ -53,9 +56,10 @@ void area::resize (const u_int16 nx, const u_int16 ny)
         i->resize (ny); 
 }
 
-world::square * area::get (const u_int16 x, const u_int16 y) 
+// get square of map grid
+world::square * area::get (const u_int16 & x, const u_int16 & y)
 {
-    return (&Grid[x][y]); 
+    return (&Grid[x][y]);
 }
 
 // place object at given position on the grid
@@ -91,43 +95,39 @@ bool area::put (placeable * obj, coordinates & pos)
     return true; 
 }
 
+// add movable object to map
 bool area::put (moving * obj) 
 {
-    // FIXME (implement like above
+    placeable_shape *shape = obj->current_shape ();
     
-    /*
-    u_int16 i, j;
-    placeable_shape * state = obj->current_shape ();
-
-    if (!state) return false;
-
-    u_int16 sx = obj->x () < state->base.x () ? 0 :
-        obj->x () - state->base.x (); 
-    u_int16 sy = obj->y () < state->base.y () ? 0 :
-        obj->y () - state->base.y (); 
+    if (!shape) return false;
     
-    u_int16 fx = obj->x () + state->area_length () - state->base.x ();
-    u_int16 fy = obj->y () + state->area_height () - state->base.y (); 
-
-    if (obj->ox ()) fx++;
-    if (obj->oy ()) fy++; 
+    // calculate area of map squares occupied by the object's bounding box
+    u_int16 start_x = obj->x (); 
+    u_int16 start_y = obj->y (); 
+    u_int16 end_x = start_x + ceil ((obj->ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + ceil ((obj->oy () + shape->width ()) / (float) SQUARE_SIZE); 
     
-    if (fx > length()) fx = length() - 1;
-    if (fy > height()) fy = height() - 1;
-
-    square * msqr; 
+    // make sure we do not exceed map size
+    if (end_x > length()) end_x = length() - 1;
+    if (end_y > height()) end_y = height() - 1;
     
-    for (j = sy; j < fy; j++) 
-        for (i = sx; i < fx; i++) 
+    square *sq; 
+    
+    // add object to all these squares
+    for (u_int16 j = start_y; j < end_y; j++)
+    {
+        for (u_int16 i = start_x; i < end_x; i++) 
         {
-            msqr = get (i, j);
-            msqr->add (obj); 
+            sq = get (i, j);
+            sq->add (obj); 
         }
+    }
     
-    */
     return true; 
 }
 
+// remove static object from map
 bool area::remove (placeable * obj, coordinates & pos) 
 {
     placeable_shape *shape = obj->current_shape ();
@@ -150,7 +150,6 @@ bool area::remove (placeable * obj, coordinates & pos)
         for (u_int16 i = start_x; i < end_x; i++) 
         {
             sq = get (i, j);
-            coordinates shape_offset (i - start_x, j - start_y, pos.z(), 0, 0);
             sq->remove (obj, pos); 
         }
     }
@@ -158,11 +157,13 @@ bool area::remove (placeable * obj, coordinates & pos)
     return true; 
 }
 
+// remov moving object from map
 bool area::remove (moving * obj) 
 {
     return remove (obj, *obj); 
 }
 
+// update state of map
 void area::update()
 {
     objects.update();
@@ -171,18 +172,17 @@ void area::update()
 
 object * area::add_object()
 {    
-    return objects.add(*this);
+    return objects.add (*this);
 }
 
 character * area::add_character()
 {
-    return characters.add(*this);
+    return characters.add (*this);
 }
 
-bool area::put_object(u_int32 index, coordinates & pos)
+bool area::put_object (const u_int32 & index, coordinates & pos)
 {
-    put(objects[index], pos);
-    return true;
+    return put(objects[index], pos);
 }
 
 void area::output_occupation()
