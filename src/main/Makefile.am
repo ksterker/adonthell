@@ -29,6 +29,7 @@ pkglibmain_LTLIBRARIES = _sdl.la
 if OSX_COMPILE
 _sdl_hdrs = sdl/osx.h
 _sdl_la_SOURCES = sdl/osx.m $(_sdl_hdrs)
+_sdl_la_OBJCFLAGS = -ObjC++ $(AM_CXXFLAGS) $(SDL_CFLAGS) 
 
 ## Files specific to Linux (and others)
 else
@@ -36,6 +37,5 @@ _sdl_la_SOURCES = sdl/linux.cc
 endif
 
 _sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS) $(AM_CXXFLAGS)
-AM_OBJCFLAGS = -ObjC++ $(CXXFLAGS) $(SDL_CFLAGS) 
 _sdl_la_LDFLAGS = -module -avoid-version
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++
