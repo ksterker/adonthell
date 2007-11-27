@@ -1,5 +1,5 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
-EXTRA_DIST = CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt sdl/linux.cc sdl/winnt.cc sdl/osx.h sdl/osx.m
 
 ## Our header files
 pkgincludemaindir = $(pkgincludedir)/main/

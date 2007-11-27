@@ -1,6 +1,7 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
-EXTRA_DIST = CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt sdlgl/screen_sdlgl.h sdlgl/surface_sdlgl.h sdlgl/gfx_sdlgl.cc \
+	sdlgl/screen_sdlgl.cc sdlgl/surface_sdlgl.cc
 
 ## Our header files
 pkgincludegfxdir = $(pkgincludedir)/gfx
@@ -35,7 +36,7 @@ libadonthell_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_
 
 ###### Following definitions are for the backends
 pkglibgfxdir = $(pkglibdir)/gfx
-pkglibgfx_LTLIBRARIES = _sdl.la 
+pkglibgfx_LTLIBRARIES = _sdl.la
 #sdlgl.la
 
 
