@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.4 2007/10/22 06:05:09 ksterker Exp $
+ $Id: cube3.h,v 1.5 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,7 @@
 #define WORLD_CUBE_3_H
 
 #include <vector>
-#include "world/triangle3.h"
+#include "world/collision.h"
 
 namespace world
 {
@@ -110,6 +110,13 @@ public:
 	 * @param target surface to draw on. NULL to draw on screen surface.
 	 */
 	void draw_mesh (const u_int16 & x, const u_int16 & y, gfx::surface * target = NULL) const;
+    
+    /**
+     * Perform collision against the mesh of this object. Result is stored in
+     * given collisionData parameter.
+     * @param collisionData information about the performed move.
+     */
+    void collide (collision * collisionData) const;
     //@}
 	
     /**

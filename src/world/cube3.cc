@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.4 2007/10/22 06:05:09 ksterker Exp $
+ $Id: cube3.cc,v 1.5 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -62,6 +62,15 @@ void cube3::create_bounding_box ()
         if (Corners[i].z() < Min.z()) Min.set_z (Corners[i].z());
         else if (Corners[i].z() > Max.z()) Max.set_z (Corners[i].z());
     }
+}
+
+// collision with all triangles in cube
+void cube3::collide (collision * collisionData) const
+{
+	for (std::vector<triangle3*>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
+	{
+		collisionData->check_triangle (*(*i));
+	}
 }
 
 // convert to triangles

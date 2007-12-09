@@ -7,6 +7,7 @@ pkgincludeworld_HEADERS = \
     area.h \
     character.h \
 	character_with_gfx.h \
+    collision.h \
 	coordinates.h \
 	cube3.h \
 	moving.h \
@@ -30,6 +31,7 @@ libadonthell_world_la_SOURCES = \
     area.cc \
     character.cc \
 	character_with_gfx.cc \
+    collision.cc \
 	coordinates.cc \
 	cube3.cc \
 	moving.cc \

@@ -1,5 +1,5 @@
 /*
- $Id: plane3.h,v 1.1 2007/10/22 06:05:09 ksterker Exp $
+ $Id: plane3.h,v 1.2 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,6 +46,48 @@ public:
      * @param triangle the triangle from which to create the plane.
      */
     plane3 (const triangle3 & triangle);
+
+    /**
+     * Create a plane given origin and normal vector.
+     * @param origin origin of the plane.
+     * @param normal normal vector of the plane.
+     */
+    plane3 (const vector3<float> & origin, const vector3<float> & normal);
+    
+    /**
+     * @name Member Access
+     */
+    //@{
+    /**
+     * Get the normal vector of this plane.
+     * Returns the normal vector of this plane.
+     */
+    const vector3<float> & normal () const { return Normal; }
+    //@}
+    
+    /**
+     * @name Geometric Checks 
+     */
+    //@{
+    /**
+     * Check whether the plane is facing towards the given point.
+     * @param point a point in 3d space
+     * @return true if the plane is facing the point, false otherwise.
+     */
+    bool is_facing (const vector3<float> & point) const
+    {
+        return Normal.dot (point) <= 0;
+    }
+    
+    /**
+     * Return the distance of the given point to the plane.
+     * @param return distance between point and plane.
+     */
+    float signed_distance (const vector3<float> & point) const 
+    { 
+        return Normal.dot (point) + Equation[C]; 
+    }
+    //@}
     
 private:
     /** Indizes of Plane equation */

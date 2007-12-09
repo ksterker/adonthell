@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.4 2007/10/15 02:19:30 ksterker Exp $
+   $Id: character.cc,v 1.5 2007/12/09 21:39:42 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,14 +57,12 @@ void character::jump()
 }
 
 // process character movement
-void character::update()
+void character::update ()
 {
-    set_vertical_velocity (VSpeed);
-    moving::update();
-    if (!Is_falling) 
+    moving::update ();
+
+    if (vz () == 0.0) 
     {
-    	VSpeed = 0.0;
-    	
     	// character no longer jumping or falling
     	if (IsRunning != ToggleRunning)
     	{
@@ -72,7 +70,6 @@ void character::update()
     		set_direction (current_dir());
     	}
     }
-    else VSpeed = vz() - 0.2;
 }
 
 void character::set_direction(int ndir)

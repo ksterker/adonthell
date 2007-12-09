@@ -1,5 +1,5 @@
 /*
- $Id: square.cc,v 1.3 2007/10/15 02:19:34 ksterker Exp $
+ $Id: square.cc,v 1.4 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -89,7 +89,7 @@ bool square::add (moving * obj)
 {
     square_info mi (*obj);
     mi.obj = obj; 
-    mi.zground = obj->zground;
+    mi.zground = obj->ground_pos();
     std::vector<square_info>::iterator it = objects.begin();
     while(it != objects.end() && mi.z() + mi.obj->current_shape()->height() < 
           it->z() + it->obj->current_shape()->height()) ++it;

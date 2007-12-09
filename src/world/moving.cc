@@ -1,7 +1,8 @@
 /*
- $Id: moving.cc,v 1.5 2007/10/15 02:19:31 ksterker Exp $
+ $Id: moving.cc,v 1.6 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -23,523 +24,194 @@
 /**
  * @file   world/moving.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @author Kai Sterker <kai.sterker@linuxgames.com>
  * 
  * @brief  Defines the moving class.
  * 
  * 
  */
 
+#include <cmath>
 #include "world/moving.h"
 #include "world/area.h"
+#include "world/plane3.h"
 
 using world::moving;
 using world::area;
+using world::plane3;
+using world::vector3;
 
+// ctor
 moving::moving (world::area & mymap)
     : placeable (mymap), coordinates ()
 {
-    Vx = 0.0;
-    Vy = 0.0; 
-    Vz = 0.0;
-
-    Lx = 65535;
-    Ly = 65535;
-    
-    fox = 0.0; 
-    foy = 0.0; 
-    foz = 0.0;
-
-    Has_moved = false;
-    Is_falling = false;
-
-    zground = -100000;
+    Lx = mymap.length();
+    Ly = mymap.height();
 }
 
-void moving::set_offset (u_int16 ox, u_int16 oy)
+// movement over ground
+void moving::set_velocity (const float & vx, const float & vy) 
 {
-    coordinates::set_offset (ox, oy);
-    fox = ox;
-    foy = oy; 
+    Velocity.set_x (vx);
+    Velocity.set_y (vy);
 }
 
-void moving::set_velocity (float vx, float vy) 
+// indicate falling or jumping
+void moving::set_vertical_velocity (const float & vz)
 {
-    Vx = vx;
-    Vy = vy;
+    Velocity.set_z (vz);
 }
 
-void moving::set_vertical_velocity(float vz)
-{
-    Vz = vz;
-}
-
-void moving::set_limits (u_int16 mx, u_int16 my)
+// boundary for movement
+void moving::set_limits (const u_int16 & mx, const u_int16 & my)
 {
     Lx = mx;
-    Ly = my; 
+    Ly = my;
 }
 
-void moving::update_pos2()
+// check objects on map for collision
+bool moving::collide_with_objects (collision *collisionData)
 {
-    /*
-    Has_moved = 0; 
-
-    u_int16 nX = X;
-    float nfox = fox;
-    u_int16 nY = Y;
-    float nfoy = foy;
-    s_int32 prevz = z();
-
-    // Calculating new X position
-    if (vx ()) 
-    {
-        Has_moved = 1;
-        
-        nfox += vx ();
-        
-        while (nfox < 0) 
-        {
-            if (nX > 0)
-            {
-                nX--;
-                nfox += SQUARE_SIZE;
-            }
-            else nfox = 0.0; 
-        }
-
-        while (nfox >= SQUARE_SIZE) 
-        {
-            if (nX < Lx) 
-            {
-                nX++; 
-                nfox -= SQUARE_SIZE;
-            }
-            else
-            {
-                nX = Lx - 1;
-                nfox = 39; 
-            }
-        }
-        if (nX == Lx - 1) 
-        {
-            nfox = 0;
-        }
-    }
-
-    // Calculating new Y position
-    if (vy ()) 
-    {
-        Has_moved = 1; 
-
-        nfoy += vy ();
-        while (nfoy < 0) 
-        {
-            if (nY > 0)
-            {
-                nfoy += SQUARE_SIZE;
-                nY--;
-            }
-            else nfoy = 0.0; 
-        }
-        
-        while (nfoy >= SQUARE_SIZE) 
-        {
-            if (nY < Ly) 
-            {
-                nfoy -= SQUARE_SIZE;
-                nY++;
-            }
-            else 
-            {
-                nY = Ly - 1;
-                nfoy = 39; 
-            }
-        }
-        if (nY == Ly - 1) 
-        {
-            nfoy = 0; 
-        }
-    }
-
-    // Calculating new Z position
-    if (vz())
-    {
-        Has_moved = 1;
-
-        foz += vz();
-        while (foz <= -1.0)
-        {
-            Z--;
-            foz += 1.0;
-        }
-        while (foz >= 1.0)
-        {
-            Z++;
-            foz -= 1.0;
-        }
-    }
-
-    // Now checking walkability
-    placeable_shape * state = current_shape();
-
-	// the range to check when between tiles.
-    u_int16 nbx = 1 + (nfox != 0.0);
-    u_int16 nby = 1 + (nfoy != 0.0);
-
-    // the current absolute location
-    u_int16 px = nX - state->base.x();
-    u_int16 py = nY - state->base.y();
-
-    u_int16 j;
-    u_int16 i;
-
-    Is_falling = true;
-    s_int32 nzground = -100000;
-
-    // each iteration increment py, reset px to initial value
-    for (j = 0; j < state->area_height(); px -= i, ++j, ++py)
-    {
-        for (i = 0; i < state->area_length(); ++i, ++px)
-        {
-        	// tile with collision mode off?
-            if (state->get(i, j).is_walkable()) continue;
-
-			// check current and adjecent tiles
-            for (u_int16 l = 0; l < nby; ++l)
-                for (u_int16 k = 0; k < nbx; ++k)
-                {
-                	// printf ("Processing square %i, %i\n", px + k, py + l); 
-                    square * msqr = Mymap.get(px + k, py + l);
-                    
-                    if (vz() > 0)
-                    {
-                    	// check for collision with floor or ceiling
-                        for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
-                        {
-                            s_int32 objz = it->z();
-                            // did we bump into object?
-                            if (objz > z() + current_shape()->zsize || objz < prevz + current_shape()->zsize) continue;
-                            
-                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
-                                                               py + l - it->y() + it->obj->current_shape()->base.y())
-                                .is_walkable())
-                            {
-                                set_altitude(objz - (current_shape()->zsize + 1));
-                                set_vertical_velocity (0.0);
-                                break;
-                            }
-                        }
-                    }
-
-                    // Check whether we hit the ground or not and calculate zground.
-                    for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
-                    {
-                    	// z position of object
-                        s_int32 objz = it->z() + it->obj->current_shape()->zsize;
-                        // can movable climb on top of object from its current altitude?
-                        if (objz > prevz + climb_capability()) continue;
-                        
-                        int xx = px + k - it->x() + it->obj->current_shape()->base.x();
-                        int yy = py + l - it->y() + it->obj->current_shape()->base.y();
-                        placeable_shape *sq = it->obj->current_shape();
-                        if (xx < sq->area_length() && yy < sq->area_height())
-                        {
-	                        if (sq->get (xx, yy).is_walkable()) continue;
-                        }
-                        else
-                        {
-                        	printf ("Trying to access %s[%i][%i]", it->obj->current_state_name().c_str(), xx, yy);
-                        	printf (" of object %s at %i, %i\n", it->obj->filename().c_str(), it->x(), it->y());
-                        	exit (1);
-                        }
-                        
-                        // found possibly new altitude of movable
-                        if (objz > nzground) nzground = objz;
-                        // movable still higher than new altitude
-                        if (objz < z()) continue;
-                        
-                        // if movable was falling, we now have hit the ground
-                        if (vz() <= 0)
-                        {
-                            set_altitude(objz);
-                            Is_falling = false;
-                            set_vertical_velocity(0.0);
-                            break;
-                        }
-                    }
-                }
-
-            for (u_int16 l = 0; l < nby; l++)
-                for (u_int16 k = 0; k < nbx; k++)
-                {
-                    square * msqr = Mymap.get(px + k, py + l);
-
-                    for (square::iterator it = msqr->begin(); it != msqr->end(); ++it)
-                    {
-                        int xx = px + k - it->x() + it->obj->current_shape()->base.x();
-                        int yy = py + l - it->y() + it->obj->current_shape()->base.y();
-                        placeable_shape *sq = it->obj->current_shape();
-                        if (xx < sq->area_length() && yy < sq->area_height())
-                        {
-	                        if (sq->get (xx, yy).is_walkable()) continue;
-                        }
-          
-                        if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
-                            z() + state->zsize > it->z())
-                            goto rollback;
-                    }
-                }
-        }
-    }
-
-    X = nX;
-    fox = nfox;
-    Ox = (u_int16) fox;
-    Y = nY;
-    foy = nfoy;
-    Oy = (u_int16) foy;
-
- rollback:
-    zground = nzground;
-    */
-}
-
-void moving::update_pos()
-{
-    /*
-    Has_moved = 0; 
-
-    if (vx ()) 
-    {
-        u_int16 nX = X;
-        float nfox = fox;
-
-        Has_moved = 1;
-        
-        nfox += vx ();
-        
-        while (nfox < 0) 
-        {
-            if (nX > 0)
-            {
-                nX--;
-                nfox += SQUARE_SIZE;
-            }
-            else nfox = 0.0; 
-        }
-
-        while (nfox >= SQUARE_SIZE) 
-        {
-            if (nX < Lx) 
-            {
-                nX++; 
-                nfox -= SQUARE_SIZE;
-            }
-            else
-            {
-                nX = Lx - 1;
-                nfox = 39; 
-            }
-        }
-        if (nX == Lx - 1) 
-        {
-            nfox = 0;
-        }
-
-        // Now check for walkability
-        u_int16 nbr_sqr = nX > X ? nX - X : X - nX;
-        placeable_shape * state = current_shape();
-        
-        for (u_int16 j = 0; j < state->area_height(); j++)
-            for (u_int16 i = 0; i < state->area_length(); i++)
-            {
-                if (state->get(i, j).is_walkable()) continue;
-
-                u_int16 px = x() - state->base.x() + i - (vx() < 0 ? nbr_sqr : 0);
-                u_int16 py = y() - state->base.y() + j;
-                
-                u_int16 nbx = 1 + (nfox != 0) + (vx() > 0 ? nbr_sqr : 0);
-                u_int16 nby = 1 + (oy() != 0);
-
-                for (u_int16 l = 0; l < nby; l++)
-                    for (u_int16 k = 0; k < nbx; k++)
-                    {
-                        square * msqr = Mymap.get(px + k, py + l);
-                        for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
-                        {
-                            if (it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
-                                                               py + l - it->y() + it->obj->current_shape()->base.y())
-                                .is_walkable()) continue;
-
-                            if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
-                                z() + state->zsize > it->z())
-                                goto ytest;
-                        }
-                    }
-            }
-
-        X = nX;
-        fox = nfox;
-        Ox = (u_int16) fox;
-    }
-
- ytest:
-
-    if (vy ()) 
-    {
-        u_int16 nY = Y;
-        float nfoy = foy;
-
-        Has_moved = 1; 
-
-        nfoy += vy ();
-        while (nfoy < 0) 
-        {
-            if (nY > 0)
-            {
-                nfoy += SQUARE_SIZE;
-                nY--;
-            }
-            else nfoy = 0.0; 
-        }
-        
-        while (nfoy >= SQUARE_SIZE) 
-        {
-            if (nY < Ly) 
-            {
-                nfoy -= SQUARE_SIZE;
-                nY++;
-            }
-            else 
-            {
-                nY = Ly - 1;
-                nfoy = 39; 
-            }
-        }
-        if (nY == Ly - 1) 
-        {
-            nfoy = 0; 
-        }
-
-        // Now check for walkability
-        u_int16 nbr_sqr = nY > Y ? nY - Y : Y - nY;
-        placeable_shape * state = current_shape();
-        
-        for (u_int16 j = 0; j < state->area_height(); j++)
-            for (u_int16 i = 0; i < state->area_length(); i++)
-            {
-                if (state->get(i, j).is_walkable()) continue;
-
-                u_int16 px = x() - state->base.x() + i;
-                u_int16 py = y() - state->base.y() + j - (vy() < 0 ? nbr_sqr : 0);
-                
-                u_int16 nbx = 1 + (ox() != 0);
-                u_int16 nby = 1 + (nfoy != 0) + (vy() > 0 ? nbr_sqr : 0);
-
-                for (u_int16 l = 0; l < nby; l++)
-                    for (u_int16 k = 0; k < nbx; k++)
-                    {
-                        square * msqr = Mymap.get(px + k, py + l);
-                        for (square::iterator it = msqr->begin(); it != msqr->end(); ++it)
-                        {
-                            if (it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
-                                                               py + l - it->y() + it->obj->current_shape()->base.y())
-                                .is_walkable()) continue;
-
-                            if (z() + climb_capability() < it->z() + it->obj->current_shape()->zsize && 
-                                z() + state->zsize > it->z())
-                                goto ztest;
-                        }
-                    }
-            }
-
-        Y = nY;
-        foy = nfoy;
-        Oy = (u_int16) foy;
-    }
-
- ztest:
-
-    s_int32 prevz = z();
-
-    if (vz())
-    {
-        Has_moved = 1;
-
-        foz += vz();
-        while (foz <= -1.0)
-        {
-            Z--;
-            foz += 1.0;
-        }
-        while (foz >= 1.0)
-        {
-            Z++;
-            foz -= 1.0;
-        }
-    }
-
-    placeable_shape * state = current_shape();
-
-    Is_falling = true;
+    GroundPos = -10000;
     
-    for (int j = 0; j < state->area_height(); j++)
-        for (int i = 0; i < state->area_length(); i++)
+    placeable_shape *shape = current_shape ();
+    
+    // calculate start point of squares we need to check for possible collisions
+    s_int16 start_x = X - (Velocity.x () + Ox) / SQUARE_SIZE;
+    s_int16 start_y = Y - (Velocity.y () + Oy) / SQUARE_SIZE;
+    
+    // don't exceed boundary of map!
+    if (start_x < 0) start_x = 0;
+    if (start_y < 0) start_y = 0;
+
+    // calculate end point of squares we need to check for possible collisions
+    s_int16 end_x = start_x + 1 + (Ox + shape->length () + Velocity.x ()) / SQUARE_SIZE;
+    s_int16 end_y = start_y + 1 + (Oy + shape->width () + Velocity.y ()) / SQUARE_SIZE;
+
+    // don't exceed boundary of map!
+    if (end_x > Lx) end_x = Lx;
+    if (end_y > Ly) end_y = Ly;
+    
+    for (s_int32 i = start_x; i < end_x; i++)
+    {
+        for (s_int32 j = start_y; j < end_y; j++)
         {
-            if (state->get(i, j).is_walkable()) continue;
-            u_int16 px = x() - state->base.x() + i;
-            u_int16 py = y() - state->base.y() + j;
-
-            u_int16 nbx = 1 + (ox() != 0);
-            u_int16 nby = 1 + (oy() != 0);
-
-            for (u_int16 l = 0; l < nby; l++)
-                for (u_int16 k = 0; k < nbx; k++)
-                {
-                    square * msqr = Mymap.get(px + k, py + l);
-                    for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
-                    {
-                        if (vz() > 0)
-                        {
-                            s_int32 objz = it->z();
-                            if (objz > z() + current_shape()->zsize || objz < prevz + current_shape()->zsize) continue;
-
-                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
-                                                               py + l - it->y() + it->obj->current_shape()->base.y())
-                                .is_walkable()) 
-                            {
-                                set_altitude(objz - (current_shape()->zsize + 1));
-                                set_vertical_velocity(0.0);
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            s_int32 objz = it->z() + it->obj->current_shape()->zsize;
-                            if (objz < z() || objz > prevz + climb_capability()) continue;
-                            
-                            if (!it->obj->current_shape()->get(px + k - it->x() + it->obj->current_shape()->base.x(),
-                                                               py + l - it->y() + it->obj->current_shape()->base.y())
-                                .is_walkable()) 
-                            {
-                                set_altitude(objz);
-                                Is_falling = false;
-                                set_vertical_velocity(0.0);
-                                break;
-                            }
-                        }
-                    }
-                }
+            // iterate over mapsquares in range
+            square *msqr = Mymap.get (i, j);
+            
+            // iterate over all objects on square ...
+            for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
+            {
+                // ... and check if collision occurs
+                shape = it->obj->current_shape ();
+                shape->collide (collisionData);
+                
+                // calculate z position of ground
+                s_int32 objz = it->z () + shape->height ();
+                if (GroundPos < objz) GroundPos = objz;
+            }
         }
-     */
+    }
+    
+    return collisionData->collision_found ();
 }
 
-bool moving::update()
+// try to move from given position with given velocity
+vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<float> & vel, u_int16 depth) 
 {
-    Mymap.remove(this);
+    static float veryCloseDistance = 0.005f;
+    
+    // do we need to worry? 
+    if (depth > 5) 
+    {
+        return pos; 
+    }
+    
+    // ok, we need to worry
+    collision collisionData (pos, vel);
+    
+    // check for collision
+    if (!collide_with_objects (&collisionData))
+    { 
+        // if no collision occured, we just move along the velocity
+        return pos + vel;
+    }
+    
+    // the desired destination point 
+    vector3<float> destinationPoint = pos + vel;
+    vector3<float> newBasePoint = pos;
+    
+    // only update if we are not already very close and if so we only 
+    // move very close to intersection, not to the exact spot. 
+    if (collisionData.distance () >= veryCloseDistance) 
+    {
+        vector3<float> v = vel;
+        v.set_length (collisionData.distance () - veryCloseDistance);
+        newBasePoint = pos + v; 
+        
+        // Adjust polygon intersection point (so sliding 
+        // plane will be unaffected by the fact that we 
+        // move slightly less than collision tells us) 
+        collisionData.update_intersection (v.normalize () * veryCloseDistance); 
+    }
+    
+    // determine the sliding plane 
+    vector3<float> slidePlaneOrigin = collisionData.intersection (); 
+    vector3<float> slidePlaneNormal = (newBasePoint - slidePlaneOrigin).normalize (); 
+    plane3 slidingPlane (slidePlaneOrigin, slidePlaneNormal);
+    
+    vector3<float> newDestinationPoint = destinationPoint - slidePlaneNormal * 
+        slidingPlane.signed_distance (destinationPoint);
+    
+    // Generate the slide vector, which will become our new velocity vector for the next iteration 
+    vector3<float> newVelocityVector = newDestinationPoint - slidePlaneOrigin; 
+    
+    // dont recurse if the new velocity is very small 
+    if (newVelocityVector.length() < veryCloseDistance) 
+    { 
+        return newBasePoint; 
+    }
+    
+    return execute_move (newBasePoint, newVelocityVector, depth++);  
+}
 
-    update_pos2();
+// calculate new position
+void moving::update_position ()
+{
+    // assuming that 1 meter is about 35px ...
+    static float gravity = 9.81 * 35;
+    
+    // calculate radius of ellipsoid
+    placeable_shape * shape = current_shape();
+    vector3<float> eRadius (shape->length(), shape->width(), shape->height());
+    
+    // calculate position and velocity in eSpace 
+    vector3<float> eSpacePosition (Position.x() / eRadius.x(), Position.y() / eRadius.y(), Position.z() / eRadius.z());
+    vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
+    vector3<float> finalPosition = execute_move (eSpacePosition, eSpaceVelocity); 
+    
+    // apply gravity effect
+    eSpaceVelocity = vector3<float> (0.0, 0.0, gravity / eRadius.z());
+    finalPosition = execute_move (finalPosition, eSpaceVelocity); 
 
-    Mymap.put(this);
+    // convert final result back to R3
+    Position.set (finalPosition.x() * eRadius.x(), 
+        finalPosition.y() * eRadius.y(), finalPosition.z() * eRadius.z()); 
+
+    // update position on map, which must be in whole pixels 
+    X = (u_int16) Position.x() / SQUARE_SIZE;
+    Ox = (u_int16) Position.x() % SQUARE_SIZE;
+    Y = (u_int16) Position.y() / SQUARE_SIZE;
+    Oy = (u_int16) Position.y() % SQUARE_SIZE;
+    Z = (s_int32) Position.z();
+}
+
+// update movable position
+bool moving::update ()
+{
+    Mymap.remove (this);
+    update_position ();
+    Mymap.put (this);
+    
     return true; 
 }

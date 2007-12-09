@@ -1,5 +1,5 @@
 /*
- $Id: square.h,v 1.2 2007/10/15 02:19:34 ksterker Exp $
+ $Id: square.h,v 1.3 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -126,28 +126,6 @@ namespace world
          * @param pos its location.
          */
         bool exist (placeable * obj, coordinates & pos); 
-        
-        /**
-         * ???
-         * @param obj
-         * @return
-         */
-        square_info * project_moving (moving & obj)
-        {
-            //        placeable_shape * movstat = obj.current_shape();
-            
-            square::iterator it = begin();
-            while (it != end())
-            {
-                placeable_shape * objstat = it->obj->current_shape();
-                if (obj.z() + obj.climb_capability() > it->z() + objstat->height()) break;
-                ++it;
-            }
-            
-            if (it == end()) return NULL;
-            // FIXME: that doesn't look right
-            return NULL;
-        }
     };
 }
 

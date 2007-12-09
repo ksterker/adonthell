@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.4 2007/10/22 06:05:09 ksterker Exp $
+ $Id: vector3.h,v 1.5 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,6 +67,15 @@ public:
     }
     
     /**
+     * Create a new 3D vector of floats from an existing vector of ints.
+     * @param v the vector to copy
+     */
+    template<class P>
+    vector3<T> (const vector3<P> & v) : X (v.x()), Y (v.y()), Z (v.z())
+    {
+    }
+    
+    /**
      * @name Member Access
      */
     //@{
@@ -101,6 +110,16 @@ public:
      */
     void set_z (const T & z) { Z = z; } 
 
+    /**
+     * Update length of the vector.
+     * @param length the vectors new length.
+     */
+    void set_length (const T & length)
+    {
+        float l = length / this->length ();
+        set (X * l, Y * l, Z * l);
+    }
+    
     /**
      * Return x coordinate
      * @return x coordinate
@@ -178,6 +197,16 @@ public:
 	}
 	
     /**
+     * Multiply vector with scalar.
+     * @param scalar value to multiply vector with
+     * @return new vector
+     */
+    vector3<T> operator * (const T & scalar) const
+    {
+        return vector3 (X * scalar, Y * scalar, Z * scalar);
+    }
+    
+    /**
      * Calculate the dot product of two given vectors.
      * @return the dot product of the vectors.
      */
@@ -196,6 +225,25 @@ public:
 		float scale = 1.0f / sqrt (X * X + Y * Y + Z * Z);
 		return vector3<float> (X * scale, Y * scale, Z * scale);
 	}
+    
+    /**
+     * Return the squared length of the vector. It's computed by
+     * taking the dot product with itself.
+     * @return squared length of this vector.
+     */
+    T squared_length () const
+    {
+        return dot (*this);
+    }
+    
+    /**
+     * Return the length of this vector.
+     * @return the length of this vector.
+     */
+    float length () const
+    {
+        return sqrt (squared_length ());
+    }
 	//@}
 	
     /**

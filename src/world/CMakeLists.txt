@@ -3,6 +3,7 @@ set(adonthell_world_SRCS
     area.cc
     character.cc
     character_with_gfx.cc
+    collision.cc
     coordinates.cc
     cube3.cc    
     moving.cc
@@ -23,6 +24,7 @@ set(adonthell_world_HEADERS
     area.h
     character.h
     character_with_gfx.h
+    collision.h
     coordinates.h
     cube3.h
     moving.h

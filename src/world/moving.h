@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.3 2007/10/15 02:19:31 ksterker Exp $
+ $Id: moving.h,v 1.4 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@ namespace world
     /**
      * Implements a map moving object.
      *
-     * While placeable can occupy space on a map, it has not the ability to move.
+     * While placeable can occupy space on a map, it does not have the ability to move.
      * Objects inheriting from this class can be placed on a map and have a certain
      * velocity, resulting in a path that they will follow each time they are updated.
      */
@@ -59,50 +59,57 @@ namespace world
          */
         //@{
         /**
-         * Return x velocity.
+         * Return x velocity (in pixels).
          * @return x velocity
          */
         float vx () const
         {
-            return Vx; 
+            return Velocity.x(); 
         }
 
         /**
-         * Return y velocity.
+         * Return y velocity (in pixels)
          * @return y velocity
          */
         float vy () const
         {
-            return Vy; 
+            return Velocity.y(); 
         }
 
         /**
-         * Return z velocity.
+         * Return z velocity (in pixels)
          * @return z velocity
          */        
         float vz() const
         {
-            return Vz;
+            return Velocity.z();
         }
 
         /**
-         * Return altitude difference that can be overcome
-         * without jumping.
-         * @return climb capability
-         */        
-        u_int16 climb_capability() const
-        {
-            return Climb_capability;
-        }
-
+         * Return movement limit in x direction (in squares)
+         * @return movement limit in x direction
+         */
         u_int16 lx () const
         {
             return Lx;
         }
 
+        /**
+         * Return movement limit in x direction (in squares)
+         * @return movement limit in x direction
+         */
         u_int16 ly () const
         {
             return Ly; 
+        }
+        
+        /**
+         * Get Position of ground under object.
+         * @return position of ground under object.
+         */
+        s_int32 ground_pos () const
+        {
+            return GroundPos;
         }
         //@}
         
@@ -115,60 +122,77 @@ namespace world
          * @param ox new x offset
          * @param oy new y offset
          */
-        void set_offset (u_int16 ox, u_int16 oy); 
+        void set_offset (const u_int16 & ox, const u_int16 & oy); 
     
         /**
-         * Set limit.
+         * Set limit of movement. Should not be bigger than the extend
+         * of the map this object is on (but could be smaller).
          * @param mx new maximum x limit
          * @param my new maximum y limit
          */
-        void set_limits (u_int16 mx, u_int16 my); 
+        void set_limits (const u_int16 & mx, const u_int16 & my); 
 
         /**
          * Set valocity on x/y plane.
          * @param vx new x velocity
          * @param vy new y velocity
          */
-        void set_velocity (float vx, float vy); 
+        void set_velocity (const float & vx, const float & vy); 
 
         /**
          * Set valocity along z axis.
          * @param vz new z velocity
          */
-        void set_vertical_velocity(float vz);
+        void set_vertical_velocity (const float & vz);
         //@}
         
-        /** 
-         * 
-         * 
-         * @bug When reaching an unreacheable area, the PREVIOUS position is restored
-         *      instead of taking the position nearest to the unreacheable square.
+        /**
+         * Called by the engine every cycle to update the position of this
+         * object, depending on its velocity and obstacles on the map.
+         * @return always true.
          */
-        void update_pos();
-
-        void update_pos2();
-
-        bool update(); 
-
-        /// ???
-        s_int32 zground;
+        bool update (); 
 
     protected:
-        /// ???
-        float fox, foy, foz;
-        /// velocites along the 3 axis in world space.
-        float Vx, Vy, Vz;
-        /// ???
-        bool Has_moved;
-        /// whether object has negative vertical velocity.
-        bool Is_falling;
-        /// Limit ???
+        /**
+         * Update position on the map.
+         */
+        void update_position ();
+        
+        /**
+         * Try to move from given point with given velocity, colliding with
+         * objects on the map and bouncing back in the process. Called recursively
+         * up to a certain depth.
+         *
+         * @param pos initial position
+         * @param vel initial velocity
+         * @param depth current recursion depth
+         *
+         * @return final position.
+         */
+        vector3<float> execute_move (const vector3<float> & pos, const vector3<float> & vel, u_int16 depth = 0); 
+        
+        /**
+         * Check whether the performed move collides with any object on the map.
+         * @param collisionData data of performed move.
+         * @return true if collision occured, false otherwise.
+         *
+         * @todo would be more efficient when filtering objects according to vertical 
+         * position and when comparing objects that span multiple squares only once.
+         */
+        bool collide_with_objects (collision *collisionData);
+        
+        /// do not allow movement outside the rectangle (0, 0) - (Lx, Ly) 
         u_int16 Lx, Ly;
         
-        /// difference in ground height an object can overcome without jumping
-        static const u_int16 Climb_capability = 5;
+        /// Altitude of ground under the object (for drawing shadow)
+        s_int32 GroundPos;
+        
+        /// precise position of object
+        vector3<float> Position;
+        /// velocites along the 3 axis in world space.
+        vector3<float> Velocity;
     }; 
 }
 
 #endif
-

@@ -1,5 +1,5 @@
 /*
- $Id: coordinates.h,v 1.3 2007/09/04 02:27:18 ksterker Exp $
+ $Id: coordinates.h,v 1.4 2007/12/09 21:39:42 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -131,7 +131,7 @@ namespace world
          * Set altitude.
          * @param z new altitude.
          */
-        void set_altitude(s_int32 z)
+        void set_altitude (s_int32 z)
         {
             Z = z;
         }
@@ -141,7 +141,7 @@ namespace world
          * @param ox offset in x direction
          * @param oy offset in y direction
          */
-        void set_offset (u_int16 ox, u_int16 oy) 
+        virtual void set_offset (u_int16 ox, u_int16 oy) 
         {
             Ox = ox;
             Oy = oy; 

@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.5 2007/10/15 02:19:30 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.6 2007/12/09 21:39:42 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -111,5 +111,6 @@ void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * d
 void character_with_gfx::draw_shadow (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                       gfx::surface * target)
 {
-    shadow.draw (x, y + 25 - zground, da_opt, target);
+    // FIXME: this only works for humanoid characters
+    shadow.draw (x, y + 25 - ground_pos(), da_opt, target);
 }

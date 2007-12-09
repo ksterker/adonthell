@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.3 2007/10/22 06:05:09 ksterker Exp $
+ $Id: triangle3.h,v 1.4 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -70,13 +70,42 @@ public:
     bool triangle3::contains (const vector3<float> & p) const;
     
     /**
-     * Return first point of the triangle.
-     * @return first point of the triangle.
+     * Return points of the triangle.
+     * @param point number between 0 and 2 for the point to return.
+     * @return points of the triangle.
      */
-    const vector3<s_int16> & a () const
+    const vector3<s_int16> & get_point (const u_int16 & point) const
     {
-        return A;
+        switch (point)
+        {
+            case 0: return A;
+            case 1: return B;
+            case 2: return C;
+            default: break;
+        }
+
+        fprintf (stderr, "*** triangle3::get_point: index %i out of range [0, 2]!\n", point);
+        return get_point (point % 3);
     }
+
+    /**
+     * Return edge of the triangle.
+     * @param edge number between 0 and 2 for the edge to return.
+     * @return edge of the triangle.
+     */
+    vector3<s_int16> get_edge (const u_int16 & edge) const
+    {
+        switch (edge)
+        {
+            case 0: return A - C;
+            case 1: return B - A;
+            case 2: return C - B;
+            default: break;
+        }
+        
+        fprintf (stderr, "*** triangle3::get_edge: index %i out of range [0, 2]!\n", edge);
+        return get_edge (edge % 3);
+    }    
     
 	/**
 	 * Draw the triangle.

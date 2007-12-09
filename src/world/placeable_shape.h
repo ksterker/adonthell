@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.2 2007/10/22 06:05:09 ksterker Exp $
+ $Id: placeable_shape.h,v 1.3 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -58,6 +58,13 @@ namespace world
          * @param part the part to add to the shape.
          */
         void add_part (cube3 * part);
+        
+        /**
+         * Perform collision against this object. Result is stored in
+         * given collisionData parameter.
+         * @param collisionData information about the performed move.
+         */
+        void collide (collision * collisionData) const;
         
         /**
          * @name Extension of Shape

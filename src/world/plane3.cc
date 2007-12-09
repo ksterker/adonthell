@@ -1,5 +1,5 @@
 /*
- $Id: plane3.cc,v 1.1 2007/10/22 06:05:09 ksterker Exp $
+ $Id: plane3.cc,v 1.2 2007/12/09 21:39:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,7 +34,7 @@ using world::plane3;
 // ctor
 plane3::plane3 (const triangle3 & triangle)
 {
-    Origin = triangle.a ();
+    Origin = triangle.get_point (0);
     Normal = triangle.normal ().normalize ();
     
     Equation[A] = Normal.x ();
@@ -42,3 +42,16 @@ plane3::plane3 (const triangle3 & triangle)
     Equation[C] = Normal.z ();
     Equation[D] = -(Normal.dot (Origin)); 
 }
+
+// another ctor
+plane3::plane3 (const vector3<float> & origin, const vector3<float> & normal)
+{
+    Origin = origin;
+    Normal = normal.normalize ();
+    
+    Equation[A] = Normal.x ();
+    Equation[B] = Normal.y ();
+    Equation[C] = Normal.z ();
+    Equation[D] = -(Normal.dot (Origin));     
+}
+
