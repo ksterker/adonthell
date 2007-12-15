@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.9 2007/10/15 02:19:35 ksterker Exp $
+   $Id: worldtest.cc,v 1.10 2007/12/15 23:15:10 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -185,14 +185,12 @@ public:
         // that's 640x480
         world.resize (16, 12);
         
-        /*
         // Adding the map character
         mchar = (world::character_with_gfx *) world.add_character();
         mchar->load ("data/models/char/npc/ng.xml");
         mchar->set_speed (1.0);
         mchar->set_position (4, 4);
         mchar->set_limits (16, 12);
-        */
          
         // Adding map objects
         world::object_with_gfx * mobj;
@@ -217,10 +215,6 @@ public:
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
 
-        // short wooden planks, 1x1 at index 5
-        // mobj = (world::object_with_gfx *) world.add_object();
-        // mobj->load("data/models/map/ground/outside/wood-2.xml");
-
         world::coordinates mc;
         // create ground (grass tiles are 40x40)
         for (u_int16 i = 0; i < world.length(); i++)
@@ -243,9 +237,6 @@ public:
 		// wooden platform
         for (int i = 10; i < 12; i++)
         {
-            // world::coordinates mc (i-1, 6, 40);
-            // world.put_object (5, mc);
-
             for (int j = 4; j < 6; j++)
             {
                 world::coordinates mc (i, j, 40);
@@ -278,9 +269,6 @@ public:
 		// wooden platform
         for (int i = 7; i < 9; i++)
         {
-            // world::coordinates mc (i-1, 7, 80);
-            // world.put_object (5, mc);
-
             for (int j = 4; j < 7; j++)
             {
                 world::coordinates mc (i, j, 80);
@@ -293,8 +281,6 @@ public:
         {
             world::coordinates mc (i, 9, 5 * i);
             world.put_object (2, mc); 
-            // mc.set_position (i-1, 10);
-            // world.put_object (5, mc); 
         }
         
         /* create ground (grass tiles are 60x60, but grid is 40x40)
@@ -388,7 +374,7 @@ public:
 		                {
 		                    ((world::character_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy ());
+		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
 		                    break; 
 		                }   
 		                case world::OBJECT:

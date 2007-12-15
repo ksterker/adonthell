@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.6 2007/12/09 21:39:43 ksterker Exp $
+ $Id: moving.cc,v 1.7 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -36,6 +36,10 @@
 #include "world/area.h"
 #include "world/plane3.h"
 
+#ifdef DEBUG_COLLISION
+#include "gfx/screen.h"
+#endif
+
 using world::moving;
 using world::area;
 using world::plane3;
@@ -62,6 +66,21 @@ void moving::set_vertical_velocity (const float & vz)
     Velocity.set_z (vz);
 }
 
+// set pixel position on tile
+void moving::set_offset (const u_int16 & ox, const u_int16 & oy)
+{
+    coordinates::set_offset (ox, oy);
+    Position.set_x (ox);
+    Position.set_y (oy);
+}
+
+// set z position
+void moving::set_altitude (const s_int32 & z)
+{
+    coordinates::set_altitude (z);
+    Position.set_z (z);
+}
+
 // boundary for movement
 void moving::set_limits (const u_int16 & mx, const u_int16 & my)
 {
@@ -74,19 +93,20 @@ bool moving::collide_with_objects (collision *collisionData)
 {
     GroundPos = -10000;
     
-    placeable_shape *shape = current_shape ();
-    
+    const placeable_shape *shape = current_shape ();
+    collisionData->set_radius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
+
     // calculate start point of squares we need to check for possible collisions
-    s_int16 start_x = X - (Velocity.x () + Ox) / SQUARE_SIZE;
-    s_int16 start_y = Y - (Velocity.y () + Oy) / SQUARE_SIZE;
+    s_int16 start_x = X + ((s_int16) Velocity.x () + Ox) / SQUARE_SIZE;
+    s_int16 start_y = Y + ((s_int16) Velocity.y () + Oy) / SQUARE_SIZE;
     
     // don't exceed boundary of map!
     if (start_x < 0) start_x = 0;
     if (start_y < 0) start_y = 0;
 
     // calculate end point of squares we need to check for possible collisions
-    s_int16 end_x = start_x + 1 + (Ox + shape->length () + Velocity.x ()) / SQUARE_SIZE;
-    s_int16 end_y = start_y + 1 + (Oy + shape->width () + Velocity.y ()) / SQUARE_SIZE;
+    s_int16 end_x = start_x + 1 + (Ox + shape->length () + (s_int16) Velocity.x ()) / SQUARE_SIZE;
+    s_int16 end_y = start_y + 1 + (Oy + shape->width () + (s_int16) Velocity.y ()) / SQUARE_SIZE;
 
     // don't exceed boundary of map!
     if (end_x > Lx) end_x = Lx;
@@ -102,9 +122,12 @@ bool moving::collide_with_objects (collision *collisionData)
             // iterate over all objects on square ...
             for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
             {
+                // ... get offset of shape from current tile ...                
+                const vector3<s_int16> offset (i - it->x() + it->ox(), j - it->y() + it->oy(), it->z());
+                
                 // ... and check if collision occurs
                 shape = it->obj->current_shape ();
-                shape->collide (collisionData);
+                shape->collide (collisionData, offset);
                 
                 // calculate z position of ground
                 s_int32 objz = it->z () + shape->height ();
@@ -166,44 +189,74 @@ vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<f
     // Generate the slide vector, which will become our new velocity vector for the next iteration 
     vector3<float> newVelocityVector = newDestinationPoint - slidePlaneOrigin; 
     
-    // dont recurse if the new velocity is very small 
+    // don't recurse if the new velocity is very small 
     if (newVelocityVector.length() < veryCloseDistance) 
     { 
         return newBasePoint; 
     }
     
-    return execute_move (newBasePoint, newVelocityVector, depth++);  
+    return execute_move (newBasePoint, newVelocityVector, ++depth); 
 }
 
 // calculate new position
 void moving::update_position ()
 {
     // assuming that 1 meter is about 35px ...
-    static float gravity = 9.81 * 35;
+    static float gravity = -9.81 * 35;
     
     // calculate radius of ellipsoid
     placeable_shape * shape = current_shape();
-    vector3<float> eRadius (shape->length(), shape->width(), shape->height());
-    
-    // calculate position and velocity in eSpace 
-    vector3<float> eSpacePosition (Position.x() / eRadius.x(), Position.y() / eRadius.y(), Position.z() / eRadius.z());
-    vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
-    vector3<float> finalPosition = execute_move (eSpacePosition, eSpaceVelocity); 
-    
-    // apply gravity effect
-    eSpaceVelocity = vector3<float> (0.0, 0.0, gravity / eRadius.z());
-    finalPosition = execute_move (finalPosition, eSpaceVelocity); 
+    if (shape != NULL)
+    {
+        const vector3<float> eRadius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
+        
+        // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
+        vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
+        vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
+        vector3<float> finalPosition = execute_move (eSpacePosition, eSpaceVelocity); 
+        
+        // apply gravity effect
+        eSpaceVelocity = vector3<float> (0.0, 0.0, gravity / eRadius.z());
+        finalPosition = execute_move (finalPosition, eSpaceVelocity); 
 
-    // convert final result back to R3
-    Position.set (finalPosition.x() * eRadius.x(), 
-        finalPosition.y() * eRadius.y(), finalPosition.z() * eRadius.z()); 
+        // convert final result back to R3
+        float x = (finalPosition.x() - 1) * eRadius.x();
+        float y = (finalPosition.y() - 1) * eRadius.y();
+        float z = (finalPosition.z() - 1) * eRadius.z();
+        
+        // update position on map, which must be in whole pixels 
+        if (x >= SQUARE_SIZE) 
+        {
+            x -= SQUARE_SIZE;
+            X++;
+        }
+        else if (x < 0)
+        {
+            x += SQUARE_SIZE;
+            X--;
+        }
+        if (y >= SQUARE_SIZE) 
+        {
+            y -= SQUARE_SIZE;
+            Y++;
+        }
+        else if (y < 0)
+        {
+            y += SQUARE_SIZE;
+            Y--;
+        }
+        
+        Ox = (u_int16) x;
+        Oy = (u_int16) y;
+        Z = (s_int32) z;
+                
+#ifdef DEBUG_COLLISION
+        printf ("Position = [%.2f, %.2f, %.2f]\n", x, y, z);
+#endif
 
-    // update position on map, which must be in whole pixels 
-    X = (u_int16) Position.x() / SQUARE_SIZE;
-    Ox = (u_int16) Position.x() % SQUARE_SIZE;
-    Y = (u_int16) Position.y() / SQUARE_SIZE;
-    Oy = (u_int16) Position.y() % SQUARE_SIZE;
-    Z = (s_int32) Position.z();
+        // update precise location for next iteration
+        Position.set (x, y, z);
+    }
 }
 
 // update movable position

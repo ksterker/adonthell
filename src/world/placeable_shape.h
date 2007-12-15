@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.3 2007/12/09 21:39:43 ksterker Exp $
+ $Id: placeable_shape.h,v 1.4 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -63,8 +63,9 @@ namespace world
          * Perform collision against this object. Result is stored in
          * given collisionData parameter.
          * @param collisionData information about the performed move.
+         * @param offset position of shape on the world map
          */
-        void collide (collision * collisionData) const;
+        void collide (collision * collisionData, const vector3<s_int16> & offset) const;
         
         /**
          * @name Extension of Shape

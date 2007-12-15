@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.4 2007/12/09 21:39:43 ksterker Exp $
+ $Id: moving.h,v 1.5 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -123,7 +123,13 @@ namespace world
          * @param oy new y offset
          */
         void set_offset (const u_int16 & ox, const u_int16 & oy); 
-    
+
+        /**
+         * Set altitude.
+         * @param z new z position
+         */
+        void set_altitude (const s_int32 & z); 
+        
         /**
          * Set limit of movement. Should not be bigger than the extend
          * of the map this object is on (but could be smaller).
@@ -188,7 +194,7 @@ namespace world
         /// Altitude of ground under the object (for drawing shadow)
         s_int32 GroundPos;
         
-        /// precise position of object
+        /// precise position of object, relative to current tile (X, Y)
         vector3<float> Position;
         /// velocites along the 3 axis in world space.
         vector3<float> Velocity;

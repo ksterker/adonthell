@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.1 2007/12/09 21:39:42 ksterker Exp $
+ $Id: collision.cc,v 1.2 2007/12/15 23:15:09 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -41,16 +41,20 @@ collision::collision (const vector3<float> & position, const vector3<float> & ve
     Velocity = velocity;
     NormalizedVelocity = velocity.normalize ();
     CollisionFound = false;
+    NearestDistance = 0.0;
 #ifdef DEBUG_COLLISION
     Triangle = NULL;
 #endif
 }
 
 // test collision against given triangle
-void collision::check_triangle (const triangle3 & triangle) 
+void collision::check_triangle (const triangle3<s_int16> & triangle, const vector3<s_int16> & offset) 
 {
+    // translate triangle into espace
+    triangle3<float> eTriangle = triangle.translate (Radius, offset);
+    
     // Make the plane containing this triangle. 
-    plane3 trianglePlane (triangle);
+    plane3 trianglePlane (eTriangle);
     
     // Is triangle front-facing to the velocity vector? 
     if (trianglePlane.is_facing (NormalizedVelocity)) 
@@ -121,7 +125,7 @@ void collision::check_triangle (const triangle3 & triangle)
         if (!embeddedInPlane) 
         { 
             vector3<float> planeIntersectionPoint = (BasePoint - trianglePlane.normal ()) + Velocity * t0; 
-            if (triangle.contains (planeIntersectionPoint)) 
+            if (eTriangle.contains (planeIntersectionPoint)) 
             { 
                 collisionPoint = planeIntersectionPoint; 
                 foundCollison = true;
@@ -148,22 +152,22 @@ void collision::check_triangle (const triangle3 & triangle)
             // check against points:
             for (int i = 0; i < 3; i++)
             {
-                const vector3<s_int16> p = triangle.get_point (i);
+                const vector3<float> p = eTriangle.get_point (i);
                 b = 2.0 * Velocity.dot (BasePoint - p); 
-                c = (p - BasePoint).squared_length () - 1.0; 
+                c = (p - BasePoint).squared_length () - 1.0;
                 if (solve_quadric_equation (velocitySquaredLength, b, c, t, &newT)) 
                 {
                     t = newT;
                     foundCollison = true;
-                    collisionPoint.set (p.x(), p.y(), p.z());
+                    collisionPoint = p;
                 }
             }
 
             // check agains edges:
             for (int i = 0; i < 3; i++)
             {
-                const vector3<s_int16> edge = triangle.get_edge (i);
-                const vector3<s_int16> baseToVertex = triangle.get_point (i) - BasePoint;
+                const vector3<float> edge = triangle.get_edge (i);
+                const vector3<float> baseToVertex = triangle.get_point (i) - BasePoint;
 
                 float edgeSquaredLength = edge.squared_length(); 
                 float edgeDotVelocity = edge.dot(Velocity); 
@@ -187,7 +191,7 @@ void collision::check_triangle (const triangle3 & triangle)
                         // intersection took place within segment. 
                         t = newT; 
                         foundCollison = true; 
-                        collisionPoint = vector3<float> (triangle.get_point (i) + edge * f); 
+                        collisionPoint = triangle.get_point (i) + edge * f; 
                     } 
                 } 
             }
@@ -210,7 +214,7 @@ void collision::check_triangle (const triangle3 & triangle)
                 
                 // debugging
 #ifdef DEBUG_COLLISION
-                Triangle = triangle;
+                Triangle = &triangle;
 #endif
             } 
         } 

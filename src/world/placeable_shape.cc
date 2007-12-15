@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.cc,v 1.2 2007/12/09 21:39:43 ksterker Exp $
+ $Id: placeable_shape.cc,v 1.3 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,12 +56,12 @@ void placeable_shape::add_part (world::cube3 * part)
 }
 
 // check for collision
-void placeable_shape::collide (collision * collisionData) const
+void placeable_shape::collide (collision * collisionData, const vector3<s_int16> & offset) const
 {
     for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
 	{
         // check each part of the shape
-        (*i)->collide (collisionData);
+        (*i)->collide (collisionData, offset);
 	}    
 }
 

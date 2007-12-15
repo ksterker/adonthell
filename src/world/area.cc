@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.6 2007/10/22 06:05:08 ksterker Exp $
+ $Id: area.cc,v 1.7 2007/12/15 23:15:09 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,8 +72,8 @@ bool area::put (placeable * obj, coordinates & pos)
     // calculate area of map squares occupied by the object's bounding box
     u_int16 start_x = pos.x (); 
     u_int16 start_y = pos.y (); 
-    u_int16 end_x = start_x + ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
+    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
 
     // make sure we do not exceed map size
     if (end_x > length()) end_x = length() - 1;
@@ -105,8 +105,8 @@ bool area::put (moving * obj)
     // calculate area of map squares occupied by the object's bounding box
     u_int16 start_x = obj->x (); 
     u_int16 start_y = obj->y (); 
-    u_int16 end_x = start_x + ceil ((obj->ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + ceil ((obj->oy () + shape->width ()) / (float) SQUARE_SIZE); 
+    u_int16 end_x = start_x + (u_int16) ceil ((obj->ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + (u_int16) ceil ((obj->oy () + shape->width ()) / (float) SQUARE_SIZE); 
     
     // make sure we do not exceed map size
     if (end_x > length()) end_x = length() - 1;
@@ -136,8 +136,8 @@ bool area::remove (placeable * obj, coordinates & pos)
     // calculate area of map squares occupied by the object's bounding box
     u_int16 start_x = pos.x (); 
     u_int16 start_y = pos.y ();    
-    u_int16 end_x = start_x + ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
+    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
     
     // make sure we do not exceed map size
     if (end_x > length()) end_x = length() - 1;

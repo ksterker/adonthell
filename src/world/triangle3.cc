@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.2 2007/10/22 06:05:09 ksterker Exp $
+ $Id: triangle3.cc,v 1.3 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,21 +30,21 @@
 #include "world/triangle3.h"
 #include "gfx/screen.h"
 
-using world::triangle3;
-using world::vector3;
-
+namespace world
+{
 // check if point is inside triangle
-bool triangle3::contains (const vector3<float> & p) const
+template<>
+bool triangle3<float>::contains (const vector3<float> & p) const
 {
     // compute vectors        
-    vector3<s_int16> v0 = C - A;
-    vector3<s_int16> v1 = B - A;
+    vector3<float> v0 = C - A;
+    vector3<float> v1 = B - A;
     vector3<float> v2 = p - A;
     
     // compute dot products
-    s_int16 dot00 = v0.dot (v0);
-    s_int16 dot01 = v1.dot (v0);
-    s_int16 dot11 = v1.dot (v1);
+    float dot00 = v0.dot (v0);
+    float dot01 = v1.dot (v0);
+    float dot11 = v1.dot (v1);
     float dot02 = v2.dot (v0);
     float dot12 = v2.dot (v1);
     
@@ -57,8 +57,21 @@ bool triangle3::contains (const vector3<float> & p) const
     return (u > 0.0f) && (v > 0.0f) && (u + v < 1.0f);
 }
 
+/*
+// convert to e-space
+template <>
+triangle3<float> triangle3<s_int16>::translate (const vector3<s_int16> & v) const
+{
+    return triangle3<float> (
+        vector3<float> (A.x() / v.x(), A.y() / v.y(), A.z() / v.z()),
+        vector3<float> (B.x() / v.x(), B.y() / v.y(), B.z() / v.z()),
+        vector3<float> (C.x() / v.x(), C.y() / v.y(), C.z() / v.z()));
+}
+*/
+
 // draw triangle 
-void triangle3::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
+template <>
+void triangle3<s_int16>::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
 {
 	if (!target) target = gfx::screen::get_surface();
 	
@@ -76,3 +89,5 @@ void triangle3::draw (const u_int16 & x, const u_int16 & y, gfx::surface * targe
 	target->draw_line (ox + n.x(), oy + n.y() + n.z(), ox + n.x() * 20, oy + (n.y() + n.z()) * 20, 0x00FF00);
 	*/
 }
+
+} // namespace world

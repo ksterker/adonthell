@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.1 2007/12/09 21:39:42 ksterker Exp $
+ $Id: collision.h,v 1.2 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,8 +53,9 @@ public:
      * #CollisionFound, #NearestDistance and #IntersectionPoint accordingly.
      *
      * @param triangle triangle to check collision against.
+     * @param offset position of triangle on world map.
      */
-    void check_triangle (const triangle3 & triangle);
+    void check_triangle (const triangle3<s_int16> & triangle, const vector3<s_int16> & offset);
 
     /**
      * @name Member access
@@ -87,12 +88,23 @@ public:
         IntersectionPoint = IntersectionPoint - difference;
     }
     
+    /**
+     * Set radius of sphere in ellipse space.
+     * @param x radius on x axis
+     * @param y radius on y axis
+     * @param z radius on z axis
+     */
+    void set_radius (const float & x, const float & y, const float & z)
+    {
+        Radius.set (x, y, z);
+    }
+    
 #ifdef DEBUG_COLLISION
     /**
      * Get the triangle we collided against.
      * @return the triangle we collided against.
      */
-    const triangle3 * triangle () const { return Triangle; }
+    const triangle3<s_int16> * triangle () const { return Triangle; }
 #endif
     //@}
     
@@ -111,6 +123,9 @@ private:
      * @return \c true if a solution greater zero and less than threshold exists.
      */
     bool solve_quadric_equation (const float & a, const float & b, const float & c, const float & threshold, float* result) const;
+    
+    /// Radius of sphere in ellipse space
+    vector3<float> Radius;
     
     /**
      * @name Planned Move
@@ -138,7 +153,7 @@ private:
     
 #ifdef DEBUG_COLLISION
     /// Pointer to triangle that caused collision
-    triangle3 *Triangle = triangle;
+    const triangle3<s_int16> *Triangle;
 #endif
 };
 

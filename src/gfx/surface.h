@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.11 2007/05/21 04:44:11 ksterker Exp $
+   $Id: surface.h,v 1.12 2007/12/15 23:15:09 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -211,7 +211,12 @@ namespace gfx
 
         /**
          * Draw a line of color col between coordinates (sx, sy) and (ex, ey).
-         *
+         * @param sx x coordinate of starting point 
+         * @param sy y coordinate of starting point
+         * @param ex x coordinate of end point
+         * @param ey y coordinate of end point  
+         * @param col color as returned by map_color
+         * @param da_opt optional clipping rectangle
          */
         virtual void draw_line (const s_int16 sx, const s_int16 sy, const s_int16 ex, const s_int16 ey,
                                 const u_int32 col, const drawing_area * da_opt = NULL);

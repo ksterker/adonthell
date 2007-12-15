@@ -3,136 +3,184 @@
   <list id="model">
     <string id="state">s_stand</string>
     <list id="n_stand">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="e_stand">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="s_stand">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="w_stand">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="n_walk">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="e_walk">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="s_walk">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="w_walk">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="n_run">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="e_run">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="s_run">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
     <list id="w_run">
-      <u_int16 id="length">1</u_int16>
-      <u_int16 id="height">2</u_int16>
-      <u_int16 id="size">80</u_int16>
-      <bool>1</bool>
-      <bool>0</bool>
-      <u_int16 id="x">0</u_int16>
-      <u_int16 id="y">1</u_int16>
-      <u_int16 id="x_off">0</u_int16>
-      <u_int16 id="y_off">0</u_int16>
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 25, 0]</string>
+          <string id="p3d">[0, 25, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 25, 80]</string>
+          <string id="p3d">[0, 25, 80]</string>
+        </list>
+      </list>
     </list>
   </list>
   <string id="sprite">data/gfx/char/npc/ng/naked_guy.xml</string>

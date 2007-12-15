@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.5 2007/12/09 21:39:43 ksterker Exp $
+ $Id: cube3.h,v 1.6 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -115,8 +115,9 @@ public:
      * Perform collision against the mesh of this object. Result is stored in
      * given collisionData parameter.
      * @param collisionData information about the performed move.
+     * @param offset position of object on the world map.
      */
-    void collide (collision * collisionData) const;
+    void collide (collision * collisionData, const vector3<s_int16> & offset) const;
     //@}
 	
     /**
@@ -154,7 +155,7 @@ private:
 	void convert_face (const u_int16 & a, const u_int16 & b, const u_int16 & c, const u_int16 & d);
 
 	/// the cube's surface
-	std::vector<triangle3 *> Surface;
+	std::vector<triangle3<s_int16> *> Surface;
 	
     /// bounding box minimum values
     vector3<s_int16> Min;

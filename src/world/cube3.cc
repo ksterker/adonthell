@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.5 2007/12/09 21:39:43 ksterker Exp $
+ $Id: cube3.cc,v 1.6 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -65,11 +65,11 @@ void cube3::create_bounding_box ()
 }
 
 // collision with all triangles in cube
-void cube3::collide (collision * collisionData) const
+void cube3::collide (collision * collisionData, const vector3<s_int16> & offset) const
 {
-	for (std::vector<triangle3*>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
+	for (std::vector<triangle3<s_int16> *>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
 	{
-		collisionData->check_triangle (*(*i));
+		collisionData->check_triangle (*(*i), offset);
 	}
 }
 
@@ -89,7 +89,7 @@ void cube3::create_mesh ()
 // draw mesh of cube
 void cube3::draw_mesh (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
 {
-	for (std::vector<triangle3*>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
+	for (std::vector<triangle3<s_int16> *>::const_iterator i = Surface.begin(); i != Surface.end(); i++)
 	{
 		(*i)->draw (x, y, target);
 	}
@@ -165,12 +165,12 @@ void cube3::convert_face (const u_int16 & a, const u_int16 & b, const u_int16 & 
 	// make sure that triangle is not actually a line
 	if (Corners[a] != Corners[b] &&  Corners[b] != Corners[c])
 	{
-		Surface.push_back (new triangle3 (Corners[a], Corners[b], Corners[c]));
+		Surface.push_back (new triangle3<s_int16> (Corners[a], Corners[b], Corners[c]));
 	}
 	
 	// make sure that triangle is not actually a line
 	if (Corners[a] != Corners[d] &&  Corners[c] != Corners[d])
 	{
-		Surface.push_back (new triangle3 (Corners[a], Corners[c], Corners[d]));
+		Surface.push_back (new triangle3<s_int16> (Corners[a], Corners[c], Corners[d]));
 	}
 }

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.7 2007/10/22 06:05:09 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.8 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -109,18 +109,11 @@ bool placeable_model_gfx::update()
 void placeable_model_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                 gfx::surface * target) const
 {
-    if (Target.CurrentShape != Target.Shapes.end())
-    {
-        const placeable_shape & t = Target.CurrentShape->second;
-        Sprite.draw (
-        	x /*- t.length ()*/, 
-            y /*- t.width ()*/, 
-            da_opt, target); 
-    }
-    else
-    {
-        Sprite.draw (x, y, da_opt, target); 
-    }
+    // const placeable_shape & t = Target.CurrentShape->second;
+    Sprite.draw (
+        x - Sprite.length(), 
+        y - Sprite.height(), 
+        da_opt, target);
 }
 
 // draw collision area

@@ -1,5 +1,5 @@
 /*
- $Id: plane3.h,v 1.2 2007/12/09 21:39:43 ksterker Exp $
+ $Id: plane3.h,v 1.3 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,7 +45,7 @@ public:
      * Create a plane given a triangle.
      * @param triangle the triangle from which to create the plane.
      */
-    plane3 (const triangle3 & triangle);
+    plane3 (const triangle3<float> & triangle);
 
     /**
      * Create a plane given origin and normal vector.
@@ -99,7 +99,7 @@ private:
     /// the plane's normal vector
     vector3<float> Normal;
     /// the plane's origin
-    vector3<s_int16> Origin;
+    vector3<float> Origin;
     /// the plane equation ax + by + cz + d = 0
     float Equation[4];
 };

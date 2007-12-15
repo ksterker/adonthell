@@ -1,5 +1,5 @@
 /*
- $Id: coordinates.h,v 1.4 2007/12/09 21:39:42 ksterker Exp $
+ $Id: coordinates.h,v 1.5 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,6 +61,11 @@ namespace world
         coordinates (u_int16 x, u_int16 y, u_int16 z, u_int16 ox = 0, u_int16 oy = 0); 
 
         /**
+         * Destructor.
+         */
+        virtual ~coordinates () { }
+        
+        /**
          * @name Member Access
          */
         //@{
@@ -121,7 +126,7 @@ namespace world
          * @param x new x coordinate
          * @param y new y coordinate
          */
-        void set_position (u_int16 x, u_int16 y) 
+        virtual void set_position (const u_int16 & x, const u_int16 & y) 
         {
             X = x;
             Y = y; 
@@ -131,7 +136,7 @@ namespace world
          * Set altitude.
          * @param z new altitude.
          */
-        void set_altitude (s_int32 z)
+        virtual void set_altitude (const s_int32 & z)
         {
             Z = z;
         }
@@ -141,7 +146,7 @@ namespace world
          * @param ox offset in x direction
          * @param oy offset in y direction
          */
-        virtual void set_offset (u_int16 ox, u_int16 oy) 
+        virtual void set_offset (const u_int16 & ox, const u_int16 & oy) 
         {
             Ox = ox;
             Oy = oy; 

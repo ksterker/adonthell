@@ -47,6 +47,6 @@ libadonthell_world_la_SOURCES = \
     triangle3.cc \
 	vector3.cc
 
-libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
+libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) -DDEBUG_COLLISION
 libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \
     -L../gfx -ladonthell_gfx $(SWIGRUNTIME_LIBS) -lstdc++

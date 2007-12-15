@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.5 2007/12/09 21:39:43 ksterker Exp $
+ $Id: vector3.h,v 1.6 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -201,7 +201,8 @@ public:
      * @param scalar value to multiply vector with
      * @return new vector
      */
-    vector3<T> operator * (const T & scalar) const
+    template<class PT>
+    vector3<PT> operator * (const PT & scalar) const
     {
         return vector3 (X * scalar, Y * scalar, Z * scalar);
     }

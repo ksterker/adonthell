@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.4 2007/12/09 21:39:43 ksterker Exp $
+ $Id: triangle3.h,v 1.5 2007/12/15 23:15:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,7 +39,7 @@ namespace world
 /**
  * A triangle in 3D space. 
  */
-class triangle3 
+template<class T> class triangle3 
 {
 public:
 	/**
@@ -48,7 +48,7 @@ public:
 	 * @param b second point
 	 * @param c third point
 	 */
-	triangle3 (const vector3<s_int16> & a, const vector3<s_int16> & b, const vector3<s_int16> & c) : A (a), B (b), C (c)
+	triangle3 (const vector3<T> & a, const vector3<T> & b, const vector3<T> & c) : A (a), B (b), C (c)
 	{
 	}
 	
@@ -67,14 +67,29 @@ public:
      * @param p point to check whether it is located inside triangle.
      * @return \e true if it does, \e false otherwise.
      */
-    bool triangle3::contains (const vector3<float> & p) const;
-    
+    bool contains (const vector3<float> & p) const;
+
+    /**
+     * Convert given triangle from world to ellipse space.
+     * @param v the units to scale each axis.
+     * @param offset the units to translate each axis.
+     * @return converted triangle.
+     */
+    triangle3<float> translate (const vector3<float> & v, const vector3<s_int16> & offset) const
+    {
+        float x = v.x(), y = v.y(), z = v.z();
+        return triangle3<float> (
+            vector3<float> ((A.x() + offset.x()) / x, (A.y() + offset.y()) / y, (A.z() + offset.z()) / z),
+            vector3<float> ((B.x() + offset.x()) / x, (B.y() + offset.y()) / y, (B.z() + offset.z()) / z),
+            vector3<float> ((C.x() + offset.x()) / x, (C.y() + offset.y()) / y, (C.z() + offset.z()) / z));
+    }
+
     /**
      * Return points of the triangle.
      * @param point number between 0 and 2 for the point to return.
      * @return points of the triangle.
      */
-    const vector3<s_int16> & get_point (const u_int16 & point) const
+    const vector3<T> & get_point (const u_int16 & point) const
     {
         switch (point)
         {
@@ -93,7 +108,7 @@ public:
      * @param edge number between 0 and 2 for the edge to return.
      * @return edge of the triangle.
      */
-    vector3<s_int16> get_edge (const u_int16 & edge) const
+    vector3<T> get_edge (const u_int16 & edge) const
     {
         switch (edge)
         {
@@ -117,16 +132,17 @@ public:
 	
 private:
 	/// first point
-	vector3<s_int16> A;
+	vector3<T> A;
 	/// second point
-	vector3<s_int16> B;
+	vector3<T> B;
 	/// third point
-	vector3<s_int16> C;
+	vector3<T> C;
     
     /**
      * forbid copy construction
      */
-    triangle3 (const triangle3 & src);
+    template<class PT>
+    triangle3<T> (const triangle3<PT> & src);
 };
 
 } // namespace world
