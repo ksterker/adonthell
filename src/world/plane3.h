@@ -1,5 +1,5 @@
 /*
- $Id: plane3.h,v 1.3 2007/12/15 23:15:10 ksterker Exp $
+ $Id: plane3.h,v 1.4 2007/12/16 22:30:43 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -85,7 +85,7 @@ public:
      */
     float signed_distance (const vector3<float> & point) const 
     { 
-        return Normal.dot (point) + Equation[C]; 
+        return Normal.dot (point) + Equation[D]; 
     }
     //@}
     

@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.7 2007/12/15 23:15:10 ksterker Exp $
+ $Id: moving.cc,v 1.8 2007/12/16 22:30:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -160,6 +160,11 @@ vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<f
         return pos + vel;
     }
     
+#ifdef DEBUG_COLLISION
+    vector3<float> intersection = collisionData.intersection ();
+    printf ("Collision = [%.2f, %.2f, %.2f]\n", intersection.x(), intersection.y(), intersection.z());
+#endif
+    
     // the desired destination point 
     vector3<float> destinationPoint = pos + vel;
     vector3<float> newBasePoint = pos;
@@ -216,7 +221,7 @@ void moving::update_position ()
         vector3<float> finalPosition = execute_move (eSpacePosition, eSpaceVelocity); 
         
         // apply gravity effect
-        eSpaceVelocity = vector3<float> (0.0, 0.0, gravity / eRadius.z());
+        eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
         finalPosition = execute_move (finalPosition, eSpaceVelocity); 
 
         // convert final result back to R3

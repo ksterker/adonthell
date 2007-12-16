@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.2 2007/12/15 23:15:09 ksterker Exp $
+ $Id: collision.cc,v 1.3 2007/12/16 22:30:43 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -71,8 +71,8 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
         float normalDotVelocity = trianglePlane.normal ().dot (Velocity);
         
         // if sphere is travelling parallel to the plane: 
-        if (normalDotVelocity == 0.0f) 
-        { 
+        if (fabsf (normalDotVelocity) < 0.0005f) 
+        {
             // sphere is not embedded in plane --> no collision possible: 
             if (fabs (signedDistToTrianglePlane) >= 1.0f) 
             { 

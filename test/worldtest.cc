@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.10 2007/12/15 23:15:10 ksterker Exp $
+   $Id: worldtest.cc,v 1.11 2007/12/16 22:30:43 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -190,6 +190,7 @@ public:
         mchar->load ("data/models/char/npc/ng.xml");
         mchar->set_speed (1.0);
         mchar->set_position (4, 4);
+        mchar->set_altitude (0);
         mchar->set_limits (16, 12);
          
         // Adding map objects
@@ -338,6 +339,8 @@ public:
             gc.world.update();
 	        //}
 	
+            gc.mchar->add_direction(gc.mchar->SOUTH);
+            
 	        std::list <world::square_info> drawqueue; 
 	
 	        // Rendering phase        
