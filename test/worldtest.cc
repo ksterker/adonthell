@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.11 2007/12/16 22:30:43 ksterker Exp $
+   $Id: worldtest.cc,v 1.12 2007/12/18 22:34:48 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -339,7 +339,7 @@ public:
             gc.world.update();
 	        //}
 	
-            gc.mchar->add_direction(gc.mchar->SOUTH);
+            // gc.mchar->add_direction(gc.mchar->SOUTH);
             
 	        std::list <world::square_info> drawqueue; 
 	
@@ -353,28 +353,22 @@ public:
 	                while (it != sq->begin())
 	                {
 	                    --it;
-	                    if (!it->oy())
-	                    {
-	                        if (it->x () == i && it->y () == j) 
-	                            drawqueue.push_back(*it);
-	                    }
-	                    else
-	                    {
-	                        if (it->x () == i && it->y () == j - 1) 
-	                            drawqueue.push_back(*it);
-	                    }	
+	                    if (it->IsBase) drawqueue.push_back (*it);
 	                }
 	            }
 
-		        drawqueue.sort();
-		            
-		        for (std::list <world::square_info>::iterator it = drawqueue.begin ();
-		             it != drawqueue.end (); it++)
+		        drawqueue.sort ();
+
+		        for (std::list <world::square_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
 		        {
 		            switch ((*it).obj->type ()) 
 		            {
 		                case world::CHARACTER:
 		                {
+                            printf ("Drawing = [%i, %i]\n", 
+                                    (*it).x () * world::SQUARE_SIZE + (*it).ox (),
+                                    (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
+
 		                    ((world::character_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());

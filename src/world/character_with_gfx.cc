@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.6 2007/12/09 21:39:42 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.7 2007/12/18 22:34:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -103,7 +103,7 @@ void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * d
                                gfx::surface * target)
 {
     draw_shadow (x, y, da_opt, target);
-    y -= z ();
+    // y -= z ();
     placeable_model_gfx::draw (x, y, da_opt, target);
 }
 

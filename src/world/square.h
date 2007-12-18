@@ -1,5 +1,5 @@
 /*
- $Id: square.h,v 1.3 2007/12/09 21:39:43 ksterker Exp $
+ $Id: square.h,v 1.4 2007/12/18 22:34:48 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -38,7 +38,10 @@
 namespace world
 {
     /**
-     * Information about an object on the world grid.
+     * Information about an object on the world grid. This includes 
+     * - a pointer to the object itself
+     * - the offset to the object's top left corner
+     * - and whether the object's base tile lies on that grid cell.
      */
     class square_info : public coordinates
     {
@@ -47,12 +50,15 @@ namespace world
         s_int32 zground;
         /// object the information belongs to
         placeable * obj;
+        /// whether this is an objects base tile.
+        bool IsBase;
         
         /**
-         * Create new object information.
+         * Create new cell content information.
          * @param pos the position of the object.
+         * @param is_base whether this cell contains object's base tile.
          */
-        square_info (coordinates & pos);
+        square_info (coordinates & pos, const bool & is_base);
         
         /**
          * Check two square_info instances for the order they appear on
@@ -77,8 +83,9 @@ namespace world
     }; 
     
     /**
-     * A cell in the world grid. It contains a list of objects that
-     * are located at this location.
+     * A cell in the world grid. It contains a list of square_info objects
+     * with information about the scenery and characters on that specific cell.
+     * These are ordered by their z position, from lowest to highest.
      */
     class square
     {
@@ -90,11 +97,19 @@ namespace world
         /// an object vector iterator
         typedef std::vector <square_info>::iterator iterator;
         
+        /**
+         * Return iterator pointing to first object on that tile.
+         * @return iterator pointing to front of object vector.
+         */
         iterator begin ()
         {
             return objects.begin (); 
         }
         
+        /**
+         * Return iterator pointing after the last object on that tile.
+         * @return iterator pointing after last element of object vector.
+         */
         iterator end ()
         {
             return objects.end (); 
@@ -104,14 +119,16 @@ namespace world
          * Add a static object to this square.
          * @param obj the object to add.
          * @param pos the location of this object
+         * @param is_base whether object's base tile is on this square.
          */
-        bool add (placeable * obj, coordinates & pos); 
+        bool add (placeable * obj, coordinates & pos, const bool & is_ase); 
         
         /**
          * Add a moving object to this square.
          * @param obj the object to add.
+         * @param is_base whether object's base tile is on this square.
          */
-        bool add (moving * obj);
+        bool add (moving * obj, const bool & is_base);
         
         /**
          * Remove a static object from this square.

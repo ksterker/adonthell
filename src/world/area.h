@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.4 2007/10/22 06:05:08 ksterker Exp $
+ $Id: area.h,v 1.5 2007/12/18 22:34:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -138,9 +138,33 @@ namespace world
         /// The individual map squares
         std::vector <std::vector <square> > Grid;
         
+        /**
+         * Add static objects to map at given position.
+         * @param obj the object to add
+         * @param pos position where to add object
+         * @return true on success, false otherwise
+         */
         bool put (placeable * obj, coordinates & pos); 
+        /**
+         * Add moveable object to the map. Position will be the
+         * object's current position.
+         * @param obj the object to add.
+         * @return true on success, false otherwise
+         */
         bool put (moving * obj); 
+        
+        /**
+         * Remove given static object from given location.
+         * @param obj the object to remove from the map.
+         * @param pos the location to remove the object from.
+         * @return true on success, false otherwise.
+         */
         bool remove (placeable * obj, coordinates & pos); 
+        /**
+         * Remove given moveable object from the map.
+         * @param obj the object to remove from the map.
+         * @return true on success, false otherwise.
+         */
         bool remove (moving * obj); 
 
 #endif // SWIG

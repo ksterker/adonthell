@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.7 2007/12/15 23:15:09 ksterker Exp $
+ $Id: area.cc,v 1.8 2007/12/18 22:34:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -79,6 +79,9 @@ bool area::put (placeable * obj, coordinates & pos)
     if (end_x > length()) end_x = length() - 1;
     if (end_y > height()) end_y = height() - 1;
 
+    // bottom right tile will be used for rendering objects 
+    u_int16 base_tile = end_x + end_y - 2;
+    
     square *sq; 
     
     // add object to all these squares
@@ -88,7 +91,7 @@ bool area::put (placeable * obj, coordinates & pos)
         {
             sq = get (i, j);
             coordinates shape_offset (i - start_x, j - start_y, pos.z(), 0, 0);
-            sq->add (obj, pos); 
+            sq->add (obj, pos, i + j == base_tile); 
         }
     }
     
@@ -104,7 +107,9 @@ bool area::put (moving * obj)
     
     // calculate area of map squares occupied by the object's bounding box
     u_int16 start_x = obj->x (); 
-    u_int16 start_y = obj->y (); 
+    u_int16 start_y = obj->y ();
+    
+    // FIXME: shouldn't this rather be image size???
     u_int16 end_x = start_x + (u_int16) ceil ((obj->ox () + shape->length ()) / (float) SQUARE_SIZE);
     u_int16 end_y = start_y + (u_int16) ceil ((obj->oy () + shape->width ()) / (float) SQUARE_SIZE); 
     
@@ -112,7 +117,10 @@ bool area::put (moving * obj)
     if (end_x > length()) end_x = length() - 1;
     if (end_y > height()) end_y = height() - 1;
     
-    square *sq; 
+    // bottom right tile will be used for rendering objects 
+    u_int16 base_tile = end_x + end_y - 2;
+
+    square *sq;
     
     // add object to all these squares
     for (u_int16 j = start_y; j < end_y; j++)
@@ -120,7 +128,7 @@ bool area::put (moving * obj)
         for (u_int16 i = start_x; i < end_x; i++) 
         {
             sq = get (i, j);
-            sq->add (obj); 
+            sq->add (obj, i + j == base_tile);
         }
     }
     

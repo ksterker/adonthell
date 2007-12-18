@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.8 2007/12/15 23:15:10 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.9 2007/12/18 22:34:48 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -111,8 +111,8 @@ void placeable_model_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * 
 {
     // const placeable_shape & t = Target.CurrentShape->second;
     Sprite.draw (
-        x - Sprite.length(), 
-        y - Sprite.height(), 
+        x /* - Sprite.length() */, 
+        y /* - Sprite.height() */, 
         da_opt, target);
 }
 

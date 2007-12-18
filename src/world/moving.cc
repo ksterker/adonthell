@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.8 2007/12/16 22:30:43 ksterker Exp $
+ $Id: moving.cc,v 1.9 2007/12/18 22:34:48 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -94,27 +94,27 @@ bool moving::collide_with_objects (collision *collisionData)
     GroundPos = -10000;
     
     const placeable_shape *shape = current_shape ();
-    collisionData->set_radius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
+    float fox = shape->length() / 2.0;
+    float foy = shape->width() / 2.0;
+    float foz = shape->height() / 2.0;
+    
+    collisionData->set_radius (fox, foy, foz);
 
     // calculate start point of squares we need to check for possible collisions
-    s_int16 start_x = X + ((s_int16) Velocity.x () + Ox) / SQUARE_SIZE;
-    s_int16 start_y = Y + ((s_int16) Velocity.y () + Oy) / SQUARE_SIZE;
-    
-    // don't exceed boundary of map!
-    if (start_x < 0) start_x = 0;
-    if (start_y < 0) start_y = 0;
-
-    // calculate end point of squares we need to check for possible collisions
-    s_int16 end_x = start_x + 1 + (Ox + shape->length () + (s_int16) Velocity.x ()) / SQUARE_SIZE;
-    s_int16 end_y = start_y + 1 + (Oy + shape->width () + (s_int16) Velocity.y ()) / SQUARE_SIZE;
+    float fsx = X * SQUARE_SIZE + (Velocity.x () < 0 ? Velocity.x() : 0) + fox + Ox;
+    float fsy = Y * SQUARE_SIZE + (Velocity.y () < 0 ? Velocity.y() : 0) + foy + Oy;
+    float fex = fsx + (Velocity.x () > 0 ? Velocity.x() : 0) + fox + Ox + SQUARE_SIZE;
+    float fey = fsy + (Velocity.y () > 0 ? Velocity.y() : 0) + foy + Oy + SQUARE_SIZE;
 
     // don't exceed boundary of map!
-    if (end_x > Lx) end_x = Lx;
-    if (end_y > Ly) end_y = Ly;
+    u_int16 start_x = fsx < 0 ? 0 : fsx / SQUARE_SIZE;
+    u_int16 start_y = fsy < 0 ? 0 : fsy / SQUARE_SIZE;
+    u_int16 end_x   = fex > Lx * SQUARE_SIZE ? Lx : fex / SQUARE_SIZE;
+    u_int16 end_y   = fey > Ly * SQUARE_SIZE ? Ly : fey / SQUARE_SIZE;
     
-    for (s_int32 i = start_x; i < end_x; i++)
+    for (u_int16 i = start_x; i < end_x; i++)
     {
-        for (s_int32 j = start_y; j < end_y; j++)
+        for (u_int16 j = start_y; j < end_y; j++)
         {
             // iterate over mapsquares in range
             square *msqr = Mymap.get (i, j);
@@ -123,7 +123,10 @@ bool moving::collide_with_objects (collision *collisionData)
             for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
             {
                 // ... get offset of shape from current tile ...                
-                const vector3<s_int16> offset (i - it->x() + it->ox(), j - it->y() + it->oy(), it->z());
+                const vector3<s_int16> offset ((it->x() - start_x) * SQUARE_SIZE + it->ox(), (it->y() - start_y) * SQUARE_SIZE + it->oy(), it->z());
+#ifdef DEBUG_COLLISION
+                printf ("Tile[%i, %i] = [%i, %i, %i]\n", i, j, offset.x(), offset.y(), offset.z());
+#endif
                 
                 // ... and check if collision occurs
                 shape = it->obj->current_shape ();
@@ -206,8 +209,7 @@ vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<f
 // calculate new position
 void moving::update_position ()
 {
-    // assuming that 1 meter is about 35px ...
-    static float gravity = -9.81 * 35;
+    static float gravity = -9.81;
     
     // calculate radius of ellipsoid
     placeable_shape * shape = current_shape();

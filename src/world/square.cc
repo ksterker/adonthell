@@ -1,5 +1,5 @@
 /*
- $Id: square.cc,v 1.4 2007/12/09 21:39:43 ksterker Exp $
+ $Id: square.cc,v 1.5 2007/12/18 22:34:48 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,10 +34,11 @@ using world::square_info;
 using world::square;
 
 // ctor
-square_info::square_info (coordinates & pos)
+square_info::square_info (coordinates & pos, const bool & is_base)
  : coordinates (pos) 
 {
     zground = pos.z();
+    IsBase = is_base;
 }
 
 bool square_info::operator < (const square_info & mi) const
@@ -74,9 +75,10 @@ bool square_info::operator < (const square_info & mi) const
     return false;
 }
 
-bool square::add (placeable * obj, coordinates & pos)
+// add static object to cell
+bool square::add (placeable * obj, coordinates & pos, const bool & is_base)
 {
-    square_info mi (pos);
+    square_info mi (pos, is_base);
     mi.obj = obj; 
     std::vector<square_info>::iterator it = objects.begin();
     while(it != objects.end() && mi.z() + mi.obj->current_shape()->height() < 
@@ -85,9 +87,10 @@ bool square::add (placeable * obj, coordinates & pos)
     return true; 
 }
 
-bool square::add (moving * obj)
+// add moving object to cell
+bool square::add (moving * obj, const bool & is_base)
 {
-    square_info mi (*obj);
+    square_info mi (*obj, is_base);
     mi.obj = obj; 
     mi.zground = obj->ground_pos();
     std::vector<square_info>::iterator it = objects.begin();
@@ -99,7 +102,7 @@ bool square::add (moving * obj)
 
 bool square::remove (placeable * obj, coordinates & pos)
 {
-    square_info mi (pos);
+    square_info mi (pos, false);
     mi.obj = obj; 
     std::vector <square_info>::iterator er;
     er = std::find (objects.begin (), objects.end (), mi);
@@ -110,7 +113,7 @@ bool square::remove (placeable * obj, coordinates & pos)
 
 bool square::exist (placeable * obj, coordinates & pos)
 {
-    square_info mi (pos);
+    square_info mi (pos, false);
     mi.obj = obj; 
     std::vector <square_info>::iterator er;
     er = std::find (objects.begin (), objects.end (), mi); 
