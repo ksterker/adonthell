@@ -8,7 +8,8 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     convert_quests.py filereport.py inputtest.py searchtest.py \
     convert_graphics.py CMakeLists.txt README.worldtest
 
-noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest
+noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest \
+    imagetest
 
 callbacktest_SOURCES = callbacktest.cc
 callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
@@ -59,3 +60,14 @@ worldtest_LDADD = $(PY_LIBS) \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
 	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
 
+imagetest_SOURCES = imagetest.cc
+imagetest_LDADD = $(PY_LIBS) \
+	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
+	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
+	-L$(top_builddir)/src/input/ -ladonthell_input              \
+	-L$(top_builddir)/src/audio/ -ladonthell_audio              \
+	-L$(top_builddir)/src/event/ -ladonthell_event              \
+	-L$(top_builddir)/src/base/ -ladonthell_base                \
+	-L$(top_builddir)/src/main -ladonthell_main                 \
+	-L${top_builddir}/src/world/ -ladonthell_world              \
+	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
