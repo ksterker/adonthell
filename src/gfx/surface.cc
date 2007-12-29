@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.14 2007/06/10 03:58:21 ksterker Exp $
+   $Id: surface.cc,v 1.15 2007/12/29 18:47:29 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -133,6 +133,9 @@ namespace gfx
             Dy=y1-y2;
         }
 
+        // put_pix() requires locking of surface
+        lock();
+        
         if(Dy<Dx)
         {
             inc1=(Dy-Dx)<<1;
@@ -180,6 +183,8 @@ namespace gfx
                 y+=IncY;
             }
         }
+        
+        unlock();
     }
 
     bool surface::get_png (ifstream & file)
