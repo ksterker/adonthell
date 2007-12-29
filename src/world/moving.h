@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.5 2007/12/15 23:15:10 ksterker Exp $
+ $Id: moving.h,v 1.6 2007/12/29 22:21:37 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,10 @@
 #include "world/placeable.h"
 #include "world/coordinates.h"
 
+#ifdef DEBUG_COLLISION
+#include "gfx/surface.h"
+#endif
+
 namespace world
 {
     /**
@@ -54,6 +58,16 @@ namespace world
          */
         moving (area & mymap); 
 
+        /**
+         * Destructor.
+         */
+        ~moving ()
+        {
+#ifdef DEBUG_COLLISION
+            delete Image;
+#endif
+        }
+        
         /**
          * @name Member Access
          */
@@ -86,7 +100,9 @@ namespace world
         }
 
         /**
-         * Return movement limit in x direction (in squares)
+         * Return movement limit in x direction (in squares).
+         * Movement along the x axis is only possible within 
+         * the range [0; lx()].
          * @return movement limit in x direction
          */
         u_int16 lx () const
@@ -96,6 +112,8 @@ namespace world
 
         /**
          * Return movement limit in x direction (in squares)
+         * Movement along the y axis is only possible within 
+         * the range [0; ly()].
          * @return movement limit in x direction
          */
         u_int16 ly () const
@@ -159,6 +177,19 @@ namespace world
          */
         bool update (); 
 
+        /**
+         * When compiled with -DDEBUG_COLLISION, calling this method after
+         * before blitting a frame to the screen will create an overlay with
+         * some helpful information for debugging collision detection.
+         * Otherwise it is a noop.
+         */
+        void debug_collision ()
+        {
+#ifdef DEBUG_COLLISION
+            Image->draw (0, 0);
+#endif
+        }
+        
     protected:
         /**
          * Update position on the map.
@@ -170,13 +201,12 @@ namespace world
          * objects on the map and bouncing back in the process. Called recursively
          * up to a certain depth.
          *
-         * @param pos initial position
-         * @param vel initial velocity
+         * @param collisionData data of performed move.
          * @param depth current recursion depth
          *
          * @return final position.
          */
-        vector3<float> execute_move (const vector3<float> & pos, const vector3<float> & vel, u_int16 depth = 0); 
+        vector3<float> execute_move (collision *collisionData, u_int16 depth = 0); 
         
         /**
          * Check whether the performed move collides with any object on the map.
@@ -198,6 +228,11 @@ namespace world
         vector3<float> Position;
         /// velocites along the 3 axis in world space.
         vector3<float> Velocity;
+        
+#ifdef DEBUG_COLLISION
+    private:
+        gfx::surface *Image;
+#endif
     }; 
 }
 

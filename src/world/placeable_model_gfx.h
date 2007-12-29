@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.h,v 1.6 2007/10/15 02:19:33 ksterker Exp $
+ $Id: placeable_model_gfx.h,v 1.7 2007/12/29 22:21:37 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,8 +32,8 @@
 #ifndef WORLD_PLACEABLE_MODEL_GFX_H
 #define WORLD_PLACEABLE_MODEL_GFX_H
 
-#include "gfx/animation.h"
 #include "world/placeable_model.h"
+#include "gfx/animation.h"
 #include "base/file.h"
 
 namespace world

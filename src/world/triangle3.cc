@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.3 2007/12/15 23:15:10 ksterker Exp $
+ $Id: triangle3.cc,v 1.4 2007/12/29 22:21:38 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -75,9 +75,9 @@ void triangle3<s_int16>::draw (const u_int16 & x, const u_int16 & y, gfx::surfac
 {
 	if (!target) target = gfx::screen::get_surface();
 	
-	target->draw_line (x + A.x(), y + A.y() + A.z(), x + B.x(), y + B.y() + B.z(), 0xFFFFFF);
-	target->draw_line (x + B.x(), y + B.y() + B.z(), x + C.x(), y + C.y() + C.z(), 0xFFFFFF);
-	target->draw_line (x + C.x(), y + C.y() + C.z(), x + A.x(), y + A.y() + A.z(), 0xFFFFFF);
+	target->draw_line (x + A.x(), y + A.y() + A.z(), x + B.x(), y + B.y() + B.z(), 0x00FFFF);
+	target->draw_line (x + B.x(), y + B.y() + B.z(), x + C.x(), y + C.y() + C.z(), 0x00FFFF);
+	target->draw_line (x + C.x(), y + C.y() + C.z(), x + A.x(), y + A.y() + A.z(), 0x00FFFF);
 	
 	/*
  	// draw normals
@@ -88,6 +88,17 @@ void triangle3<s_int16>::draw (const u_int16 & x, const u_int16 & y, gfx::surfac
 	int oy = y + (c.y() + c.z()) / 3;
 	target->draw_line (ox + n.x(), oy + n.y() + n.z(), ox + n.x() * 20, oy + (n.y() + n.z()) * 20, 0x00FF00);
 	*/
+}
+
+// draw triangle 
+template <>
+void triangle3<float>::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
+{
+	if (!target) target = gfx::screen::get_surface();
+	
+	target->draw_line (x + A.x(), y + A.y() + A.z(), x + B.x(), y + B.y() + B.z(), 0x00FFFF);
+	target->draw_line (x + B.x(), y + B.y() + B.z(), x + C.x(), y + C.y() + C.z(), 0x00FFFF);
+	target->draw_line (x + C.x(), y + C.y() + C.z(), x + A.x(), y + A.y() + A.z(), 0x00FFFF);
 }
 
 } // namespace world

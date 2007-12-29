@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.3 2007/12/16 22:30:43 ksterker Exp $
+ $Id: collision.cc,v 1.4 2007/12/29 22:21:37 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,16 +35,24 @@ using world::collision;
 using world::plane3;
 
 // ctor
-collision::collision (const vector3<float> & position, const vector3<float> & velocity)
+collision::collision (const vector3<float> & position, const vector3<float> & velocity, const vector3<float> & radius)
 {
-    BasePoint = position;
-    Velocity = velocity;
-    NormalizedVelocity = velocity.normalize ();
+    update_movement (position, velocity);
+    
+    Radius = radius;
     CollisionFound = false;
     NearestDistance = 0.0;
 #ifdef DEBUG_COLLISION
     Triangle = NULL;
 #endif
+}
+
+// change movement information
+void collision::update_movement (const vector3<float> & position, const vector3<float> & velocity)
+{
+    BasePoint = position;
+    Velocity = velocity;
+    NormalizedVelocity = velocity.normalize ();
 }
 
 // test collision against given triangle
@@ -71,7 +79,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
         float normalDotVelocity = trianglePlane.normal ().dot (Velocity);
         
         // if sphere is travelling parallel to the plane: 
-        if (fabsf (normalDotVelocity) < 0.0005f) 
+        if (fabsf (normalDotVelocity) < 0.005f) 
         {
             // sphere is not embedded in plane --> no collision possible: 
             if (fabs (signedDistToTrianglePlane) >= 1.0f) 
@@ -214,7 +222,8 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
                 
                 // debugging
 #ifdef DEBUG_COLLISION
-                Triangle = &triangle;
+                static triangle3<float> t = triangle.translate (vector3<float> (1.0f, 1.0f, 1.0f), offset);
+                Triangle = &t;
 #endif
             } 
         } 

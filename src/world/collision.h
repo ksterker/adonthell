@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.2 2007/12/15 23:15:10 ksterker Exp $
+ $Id: collision.h,v 1.3 2007/12/29 22:21:37 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,8 +35,8 @@
 namespace world
 {
 /**
- * Collision detection. Based on algorithm described by Kasper Fauerby 
- * at http://www.peroxide.dk . Version from 25th July 2003.
+ * Collision detection. Based on swept sphere algorithm described by 
+ * Kasper Fauerby at http://www.peroxide.dk . Version from 25th July 2003.
  */
 class collision
 {
@@ -45,8 +45,9 @@ public:
      * Create new collision object.
      * @param position initial position.
      * @param velocity initial velocity.
+     * @param radius the radius of the swept sphere. 
      */
-    collision (const vector3<float> & position, const vector3<float> & velocity);
+    collision (const vector3<float> & position, const vector3<float> & velocity, const vector3<float> & radius);
     
     /**
      * Test whether collision occurs with given triangle. If so, update members
@@ -87,24 +88,32 @@ public:
     {
         IntersectionPoint = IntersectionPoint - difference;
     }
+
+    /**
+     * Get the velocity of planned move.
+     * @return the velocity of planned move.
+     */
+    vector3<float> velocity () const { return Velocity; }
+
+    /**
+     * Get the starting position of planned move.
+     * @return the starting position of planned move.
+     */
+    vector3<float> position () const { return BasePoint; }
     
     /**
-     * Set radius of sphere in ellipse space.
-     * @param x radius on x axis
-     * @param y radius on y axis
-     * @param z radius on z axis
+     * Change movement information for subsequent collision iterations.
+     * @param position new position.
+     * @param velocity new velocity.
      */
-    void set_radius (const float & x, const float & y, const float & z)
-    {
-        Radius.set (x, y, z);
-    }
-    
+    void update_movement (const vector3<float> & position, const vector3<float> & velocity);
+        
 #ifdef DEBUG_COLLISION
     /**
      * Get the triangle we collided against.
      * @return the triangle we collided against.
      */
-    const triangle3<s_int16> * triangle () const { return Triangle; }
+    const triangle3<float> * triangle () const { return Triangle; }
 #endif
     //@}
     
@@ -152,8 +161,8 @@ private:
     //@}
     
 #ifdef DEBUG_COLLISION
-    /// Pointer to triangle that caused collision
-    const triangle3<s_int16> *Triangle;
+    /// Triangle that caused collision
+    const triangle3<float> *Triangle;
 #endif
 };
 

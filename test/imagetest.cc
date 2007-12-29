@@ -1,5 +1,5 @@
 /*
- $Id: imagetest.cc,v 1.1 2007/12/23 10:44:38 ksterker Exp $
+ $Id: imagetest.cc,v 1.2 2007/12/29 22:21:38 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,7 +40,7 @@ public:
         Image->resize (gfx::screen::length(), gfx::screen::height());
         Image->set_mask (true);
         
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100; i++)
         {
             printf ("Iteration %i\n", i);
             

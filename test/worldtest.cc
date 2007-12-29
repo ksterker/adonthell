@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.12 2007/12/18 22:34:48 ksterker Exp $
+   $Id: worldtest.cc,v 1.13 2007/12/29 22:21:38 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -19,6 +19,8 @@
    along with Adonthell; if not, write to the Free Software 
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+
+#define DEBUG_COLLISION 1
 
 #include "base/base.h"
 #include "event/date.h"
@@ -225,14 +227,16 @@ public:
                 world.put_object (0, mc); 
             }
 
-		// 4 poles
-        mc.set_position(10, 3);
+		// 4 poles (left side)
+        mc.set_position(10, 4);
         world.put_object(3, mc);  // that one is actually invisible 
-        mc.set_position(10, 5);
-        world.put_object(3, mc); 
-        mc.set_position(12, 3);  // that one is actually invisible
+        mc.set_position(10, 6);
+        world.put_object(3, mc);
+        // (right side)
+        mc.set_offset(30, 0);
+        mc.set_position(11, 4);  // that one is actually invisible
         world.put_object(4, mc); 
-        mc.set_position(12, 5);
+        mc.set_position(11, 6);
         world.put_object(4, mc); 
 
 		// wooden platform
@@ -246,22 +250,24 @@ public:
         }
 
 		// 4 wooden poles
-        mc.set_position(7, 6);
+        mc.set_offset(0, 0);
+        mc.set_position(7, 7);
         world.put_object(3, mc); 
         mc.set_altitude(40);
         world.put_object(3, mc); 
-        mc.set_position(7, 3);
+        mc.set_position(7, 4);
         mc.set_altitude(0);
         world.put_object(3, mc); 
         mc.set_altitude(40);
         world.put_object(3, mc); 
         
+        mc.set_offset(30, 0);
         mc.set_altitude(0);
-        mc.set_position(9, 6);
+        mc.set_position(8, 7);
         world.put_object(4, mc); 
         mc.set_altitude(40);
         world.put_object(4, mc); 
-        mc.set_position(9, 3);
+        mc.set_position(8, 4);
         mc.set_altitude(0);
         world.put_object(4, mc); 
         mc.set_altitude(40);
@@ -278,12 +284,15 @@ public:
         } 
 
 		// "stair"
-        for (int i = 1; i < 14; i++)
+        for (int i = 0; i < 13; i++)
         {
-            world::coordinates mc (i, 9, 5 * i);
+            world::coordinates mc (i+1, 9, 5 * i);
             world.put_object (2, mc); 
         }
-        
+
+        world::coordinates mc2 (4, 5, 0);
+        world.put_object (2, mc2);
+
         /* create ground (grass tiles are 60x60, but grid is 40x40)
         for (float i = 0; i < world.length(); i += 1.5)
             for (float j = 0; j < world.height(); j += 1.5)
@@ -365,10 +374,6 @@ public:
 		            {
 		                case world::CHARACTER:
 		                {
-                            printf ("Drawing = [%i, %i]\n", 
-                                    (*it).x () * world::SQUARE_SIZE + (*it).ox (),
-                                    (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
-
 		                    ((world::character_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
@@ -417,7 +422,11 @@ public:
 				gfx::surface *screen = gfx::screen::get_surface();
                 screen->save_png("screenshot.png");
 			}
-				
+            
+#if DEBUG_COLLISION
+            gc.mchar->debug_collision();
+#endif
+            
 	        base::Timer.update (); 
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 

@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.9 2007/12/18 22:34:48 ksterker Exp $
+ $Id: moving.cc,v 1.10 2007/12/29 22:21:37 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -51,6 +51,12 @@ moving::moving (world::area & mymap)
 {
     Lx = mymap.length();
     Ly = mymap.height();
+
+#ifdef DEBUG_COLLISION
+    Image = gfx::create_surface();
+    Image->resize (gfx::screen::length(), gfx::screen::height());
+    Image->set_mask (true);
+#endif
 }
 
 // movement over ground
@@ -96,16 +102,17 @@ bool moving::collide_with_objects (collision *collisionData)
     const placeable_shape *shape = current_shape ();
     float fox = shape->length() / 2.0;
     float foy = shape->width() / 2.0;
-    float foz = shape->height() / 2.0;
     
-    collisionData->set_radius (fox, foy, foz);
-
     // calculate start point of squares we need to check for possible collisions
     float fsx = X * SQUARE_SIZE + (Velocity.x () < 0 ? Velocity.x() : 0) + fox + Ox;
     float fsy = Y * SQUARE_SIZE + (Velocity.y () < 0 ? Velocity.y() : 0) + foy + Oy;
     float fex = fsx + (Velocity.x () > 0 ? Velocity.x() : 0) + fox + Ox + SQUARE_SIZE;
     float fey = fsy + (Velocity.y () > 0 ? Velocity.y() : 0) + foy + Oy + SQUARE_SIZE;
 
+    // calculate vertical range of moving
+    float fsz = Z + (Velocity.z() < 0 ? Velocity.z() : 0);
+    float fez = fsz + (Velocity.z() > 0 ? Velocity.z() : 0) + shape->height();
+    
     // don't exceed boundary of map!
     u_int16 start_x = fsx < 0 ? 0 : fsx / SQUARE_SIZE;
     u_int16 start_y = fsy < 0 ? 0 : fsy / SQUARE_SIZE;
@@ -122,19 +129,23 @@ bool moving::collide_with_objects (collision *collisionData)
             // iterate over all objects on square ...
             for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
             {
-                // ... get offset of shape from current tile ...                
-                const vector3<s_int16> offset ((it->x() - start_x) * SQUARE_SIZE + it->ox(), (it->y() - start_y) * SQUARE_SIZE + it->oy(), it->z());
-#ifdef DEBUG_COLLISION
-                printf ("Tile[%i, %i] = [%i, %i, %i]\n", i, j, offset.x(), offset.y(), offset.z());
-#endif
-                
-                // ... and check if collision occurs
                 shape = it->obj->current_shape ();
-                shape->collide (collisionData, offset);
-                
-                // calculate z position of ground
-                s_int32 objz = it->z () + shape->height ();
-                if (GroundPos < objz) GroundPos = objz;
+
+                // is object inside vertical range of moving
+                if ((fsz <= it->z() && it->z() < fez) ||
+                    (fsz >= it->z() && it->z() + shape->height() < fez) ||
+                    (fsz <= it->z() + shape->height() && it->z() + shape->height() < fez)) 
+                {
+                    // ... get offset of shape from current tile ...                
+                    const vector3<s_int16> offset ((it->x() - start_x) * SQUARE_SIZE + it->ox(), (it->y() - start_y) * SQUARE_SIZE + it->oy(), it->z());
+                    
+                    // ... and check if collision occurs
+                    shape->collide (collisionData, offset);
+                    
+                    // calculate z position of ground
+                    s_int32 objz = it->z () + shape->height ();
+                    if (GroundPos < objz) GroundPos = objz;
+                }
             }
         }
     }
@@ -143,29 +154,32 @@ bool moving::collide_with_objects (collision *collisionData)
 }
 
 // try to move from given position with given velocity
-vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<float> & vel, u_int16 depth) 
+vector3<float> moving::execute_move (collision *collisionData, u_int16 depth) 
 {
     static float veryCloseDistance = 0.005f;
+    
+    const vector3<float> & vel = collisionData->velocity ();
+    const vector3<float> & pos = collisionData->position ();
     
     // do we need to worry? 
     if (depth > 5) 
     {
-        return pos; 
+        return pos;
     }
     
-    // ok, we need to worry
-    collision collisionData (pos, vel);
-    
     // check for collision
-    if (!collide_with_objects (&collisionData))
+    if (!collide_with_objects (collisionData))
     { 
         // if no collision occured, we just move along the velocity
         return pos + vel;
     }
     
 #ifdef DEBUG_COLLISION
-    vector3<float> intersection = collisionData.intersection ();
-    printf ("Collision = [%.2f, %.2f, %.2f]\n", intersection.x(), intersection.y(), intersection.z());
+    const vector3<float> intersection = collisionData->intersection ();
+    printf ("Pos [%.2f, %.2f, %.2f] ", pos.x(), pos.y(), pos.z());
+    printf ("Vel [%.2f, %.2f, %.2f] ", vel.x(), vel.y(), vel.z());
+    printf ("Col [%.2f, %.2f, %.2f] ", intersection.x(), intersection.y(), intersection.z());
+    printf ("Dst %.3f\n", collisionData->distance());
 #endif
     
     // the desired destination point 
@@ -174,27 +188,27 @@ vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<f
     
     // only update if we are not already very close and if so we only 
     // move very close to intersection, not to the exact spot. 
-    if (collisionData.distance () >= veryCloseDistance) 
+    if (collisionData->distance () >= veryCloseDistance) 
     {
         vector3<float> v = vel;
-        v.set_length (collisionData.distance () - veryCloseDistance);
+        v.set_length (collisionData->distance () - veryCloseDistance);
         newBasePoint = pos + v; 
         
         // Adjust polygon intersection point (so sliding 
         // plane will be unaffected by the fact that we 
         // move slightly less than collision tells us) 
-        collisionData.update_intersection (v.normalize () * veryCloseDistance); 
+        collisionData->update_intersection (v.normalize () * veryCloseDistance); 
     }
     
     // determine the sliding plane 
-    vector3<float> slidePlaneOrigin = collisionData.intersection (); 
+    vector3<float> slidePlaneOrigin = collisionData->intersection (); 
     vector3<float> slidePlaneNormal = (newBasePoint - slidePlaneOrigin).normalize (); 
     plane3 slidingPlane (slidePlaneOrigin, slidePlaneNormal);
     
     vector3<float> newDestinationPoint = destinationPoint - slidePlaneNormal * 
         slidingPlane.signed_distance (destinationPoint);
     
-    // Generate the slide vector, which will become our new velocity vector for the next iteration 
+    // generate the slide vector, which will become our new velocity vector for the next iteration 
     vector3<float> newVelocityVector = newDestinationPoint - slidePlaneOrigin; 
     
     // don't recurse if the new velocity is very small 
@@ -203,33 +217,80 @@ vector3<float> moving::execute_move (const vector3<float> & pos, const vector3<f
         return newBasePoint; 
     }
     
-    return execute_move (newBasePoint, newVelocityVector, ++depth); 
+    collisionData->update_movement (newBasePoint, newVelocityVector);
+    return execute_move (collisionData, ++depth); 
 }
 
 // calculate new position
 void moving::update_position ()
 {
-    static float gravity = -9.81;
+    static float gravity = -0.981;
     
-    // calculate radius of ellipsoid
     placeable_shape * shape = current_shape();
     if (shape != NULL)
     {
+#ifdef DEBUG_COLLISION
+        // clear image
+        Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, gfx::screen::trans_color ());
+        gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
+            
+        u_int16 pos_x = X*SQUARE_SIZE+Ox;
+        u_int16 pos_y = Y*SQUARE_SIZE+Oy-Z-shape->height();
+        
+        // draw character bounding box
+        cube3 bbox (shape->length(), shape->width(), shape->height());
+        bbox.draw (pos_x, pos_y, &da, Image);
+        
+        pos_x += shape->length()/2;
+        pos_y += (shape->width()+shape->height())/2; 
+        
+        // draw velocity along x,y axis
+        Image->draw_line (pos_x, pos_y, pos_x + Velocity.x()*20, pos_y + Velocity.y() * 20, Image->map_color (0, 0, 255), &da);
+
+        // draw gravity
+        Image->draw_line (pos_x, pos_y, pos_x, pos_y - gravity * 20, Image->map_color (255, 0, 0), &da);        
+
+        // draw velocity along z axis
+        Image->draw_line (pos_x, pos_y, pos_x, pos_y - Velocity.z() * 20, Image->map_color (0, 0, 255), &da);        
+#endif
+        
+        // calculate radius of ellipsoid
         const vector3<float> eRadius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
         
         // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
         vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
         vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
-        vector3<float> finalPosition = execute_move (eSpacePosition, eSpaceVelocity); 
         
+        collision collisionData (eSpacePosition, eSpaceVelocity, eRadius);
+        vector3<float> finalPosition = execute_move (&collisionData); 
+        
+        /*
         // apply gravity effect
         eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
-        finalPosition = execute_move (finalPosition, eSpaceVelocity); 
-
+        collisionData.update_movement (finalPosition, eSpaceVelocity);
+        finalPosition = execute_move (&collisionData); 
+         */
+        
         // convert final result back to R3
         float x = (finalPosition.x() - 1) * eRadius.x();
         float y = (finalPosition.y() - 1) * eRadius.y();
         float z = (finalPosition.z() - 1) * eRadius.z();
+
+#ifdef DEBUG_COLLISION
+        // did we collide at all?
+        const triangle3<float> *tri = collisionData.triangle ();
+        if (tri != NULL)
+        {
+            // draw triangle we collided with
+            tri->draw (X*SQUARE_SIZE, Y*SQUARE_SIZE, Image);
+            
+            // draw actual movement along x,y axis
+            Image->draw_line (pos_x, pos_y, pos_x + (x - Position.x()) * 20, pos_y + (y - Position.y()) * 20, Image->map_color (0, 255, 0), &da);
+        
+            // draw actual movement along z axis
+            Image->draw_line (pos_x, pos_y, pos_x, pos_y - (z - Z) * 20, Image->map_color (0, 255, 0), &da);
+        }
+#endif
         
         // update position on map, which must be in whole pixels 
         if (x >= SQUARE_SIZE) 

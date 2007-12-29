@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.4 2007/12/15 23:15:10 ksterker Exp $
+ $Id: placeable_shape.h,v 1.5 2007/12/29 22:21:38 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -125,6 +125,10 @@ namespace world
     private:
         /// collision information  
         std::vector <cube3*> Parts;
+        /// 
+        u_int16 Ox;
+        /// 
+        u_int16 Oy;
     }; 
 }
 

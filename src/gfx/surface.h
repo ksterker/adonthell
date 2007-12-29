@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.12 2007/12/15 23:15:09 ksterker Exp $
+   $Id: surface.h,v 1.13 2007/12/29 22:21:37 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -88,7 +88,10 @@ namespace gfx
         }
 
         /**
-         * Sets the mask parameter of the surface.
+         * Sets the mask parameter of the surface. If set to true, all
+         * parts of the image colored with the mask color will be 
+         * transparent. The mask color can be obtained by a call to 
+         * gfx::screen::trans_color(), as it depends on color depth.
          *
          * @param m true if the surface should be masked, false otherwise.
          */
@@ -287,7 +290,7 @@ namespace gfx
         virtual void lock () const = 0;
 
         /**
-         * Unlock the surface after you've worked on it's pixels with the
+         * Unlock the surface after you've worked on its pixels with the
          * get_pix () and put_pix () methods.
          *
          */
