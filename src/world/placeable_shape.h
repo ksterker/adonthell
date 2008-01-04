@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.5 2007/12/29 22:21:38 ksterker Exp $
+ $Id: placeable_shape.h,v 1.6 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,8 +69,36 @@ namespace world
         
         /**
          * @name Extension of Shape
+         * Methods to query base point and size of the shape.
          */
         //@{
+        /**
+         * Get x-coordinate of shape's base point.
+         * @return x-coordinate of shape's base point.
+         */
+        s_int16 x () const
+        {
+            return Min.x();
+        }
+
+        /**
+         * Get y-coordinate of shape's base point.
+         * @return y-coordinate of shape's base point.
+         */
+        s_int16 y () const
+        {
+            return Min.y();
+        }
+        
+        /**
+         * Get z-coordinate of shape's base point.
+         * @return z-coordinate of shape's base point.
+         */
+        s_int16 z () const
+        {
+            return Min.z();
+        }
+        
         /**
          * Get extension of shape in x direction
          * @return extension in x direction.
@@ -117,18 +145,13 @@ namespace world
         bool get_state (base::flat & file);
         //@}
 
-        /// minimum of object bounding box
-        vector3<s_int16> Min;
-        /// maximum of object bounding box
-        vector3<s_int16> Max;
-        
     private:
         /// collision information  
         std::vector <cube3*> Parts;
-        /// 
-        u_int16 Ox;
-        /// 
-        u_int16 Oy;
+        /// minimum of object bounding box
+        vector3<s_int16> Min;
+        /// maximum of object bounding box
+        vector3<s_int16> Max;        
     }; 
 }
 

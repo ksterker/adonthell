@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.10 2007/12/29 22:21:37 ksterker Exp $
+ $Id: moving.cc,v 1.11 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -104,8 +104,8 @@ bool moving::collide_with_objects (collision *collisionData)
     float foy = shape->width() / 2.0;
     
     // calculate start point of squares we need to check for possible collisions
-    float fsx = X * SQUARE_SIZE + (Velocity.x () < 0 ? Velocity.x() : 0) + fox + Ox;
-    float fsy = Y * SQUARE_SIZE + (Velocity.y () < 0 ? Velocity.y() : 0) + foy + Oy;
+    float fsx = X * SQUARE_SIZE + Ox + (Velocity.x () < 0 ? Velocity.x() : 0) + fox + shape->x();
+    float fsy = Y * SQUARE_SIZE + Ox + (Velocity.y () < 0 ? Velocity.y() : 0) + foy + shape->y();
     float fex = fsx + (Velocity.x () > 0 ? Velocity.x() : 0) + fox + Ox + SQUARE_SIZE;
     float fey = fsy + (Velocity.y () > 0 ? Velocity.y() : 0) + foy + Oy + SQUARE_SIZE;
 
@@ -137,7 +137,10 @@ bool moving::collide_with_objects (collision *collisionData)
                     (fsz <= it->z() + shape->height() && it->z() + shape->height() < fez)) 
                 {
                     // ... get offset of shape from current tile ...                
-                    const vector3<s_int16> offset ((it->x() - start_x) * SQUARE_SIZE + it->ox(), (it->y() - start_y) * SQUARE_SIZE + it->oy(), it->z());
+                    const vector3<s_int16> offset ((it->x() - X) * SQUARE_SIZE + it->ox(), (it->y() - Y) * SQUARE_SIZE + it->oy(), it->z());
+#ifdef DEBUG_COLLISION
+                    printf ("Tile[%i, %i] = [%i, %i, %i]\n", i, j, offset.x(), offset.y(), offset.z());
+#endif
                     
                     // ... and check if collision occurs
                     shape->collide (collisionData, offset);
@@ -224,7 +227,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
 // calculate new position
 void moving::update_position ()
 {
-    static float gravity = -0.981;
+    static float gravity = -9.81;
     
     placeable_shape * shape = current_shape();
     if (shape != NULL)
@@ -234,15 +237,21 @@ void moving::update_position ()
         Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, gfx::screen::trans_color ());
         gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
             
-        u_int16 pos_x = X*SQUARE_SIZE+Ox;
-        u_int16 pos_y = Y*SQUARE_SIZE+Oy-Z-shape->height();
+        u_int16 pos_x = X*SQUARE_SIZE+Ox+shape->x();
+        u_int16 pos_y = Y*SQUARE_SIZE+Oy+shape->y()-Z-shape->height();
         
         // draw character bounding box
         cube3 bbox (shape->length(), shape->width(), shape->height());
         bbox.draw (pos_x, pos_y, &da, Image);
         
         pos_x += shape->length()/2;
-        pos_y += (shape->width()+shape->height())/2; 
+        pos_y += shape->width()/2 + shape->height();
+
+        // draw position of character
+        Image->draw_line (pos_x - 5, pos_y, pos_x + 5, pos_y, Image->map_color (255, 255, 0));                           
+        Image->draw_line (pos_x, pos_y - 5, pos_x, pos_y + 5, Image->map_color (255, 255, 0));                           
+                          
+        pos_y -= shape->height()/2; 
         
         // draw velocity along x,y axis
         Image->draw_line (pos_x, pos_y, pos_x + Velocity.x()*20, pos_y + Velocity.y() * 20, Image->map_color (0, 0, 255), &da);
@@ -258,22 +267,20 @@ void moving::update_position ()
         const vector3<float> eRadius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
         
         // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
-        vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
+        vector3<float> eSpacePosition ((Position.x() + shape->x()) / eRadius.x() + 1, (Position.y() + shape->y()) / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
         vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
         
         collision collisionData (eSpacePosition, eSpaceVelocity, eRadius);
         vector3<float> finalPosition = execute_move (&collisionData); 
         
-        /*
         // apply gravity effect
         eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
         collisionData.update_movement (finalPosition, eSpaceVelocity);
         finalPosition = execute_move (&collisionData); 
-         */
         
         // convert final result back to R3
-        float x = (finalPosition.x() - 1) * eRadius.x();
-        float y = (finalPosition.y() - 1) * eRadius.y();
+        float x = (finalPosition.x() - 1) * eRadius.x() - shape->x();
+        float y = (finalPosition.y() - 1) * eRadius.y() - shape->y();
         float z = (finalPosition.z() - 1) * eRadius.z();
 
 #ifdef DEBUG_COLLISION

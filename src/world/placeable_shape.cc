@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.cc,v 1.3 2007/12/15 23:15:10 ksterker Exp $
+ $Id: placeable_shape.cc,v 1.4 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,6 +69,7 @@ void placeable_shape::collide (collision * collisionData, const vector3<s_int16>
 bool placeable_shape::put_state (base::flat & file) const
 {
 	base::flat record;
+    
     record.put_uint16 ("num", Parts.size());
 	for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
 	{

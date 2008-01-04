@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.3 2007/12/29 22:21:37 ksterker Exp $
+ $Id: collision.h,v 1.4 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,6 +48,16 @@ public:
      * @param radius the radius of the swept sphere. 
      */
     collision (const vector3<float> & position, const vector3<float> & velocity, const vector3<float> & radius);
+    
+    /**
+     * Destructor.
+     */
+    ~collision ()
+    {
+#ifdef DEBUG_COLLISION
+        delete Triangle;
+#endif
+    }
     
     /**
      * Test whether collision occurs with given triangle. If so, update members

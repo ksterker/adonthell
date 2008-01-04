@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.4 2007/12/29 22:21:37 ksterker Exp $
+ $Id: collision.cc,v 1.5 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -216,14 +216,15 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
             if (CollisionFound == false || distToCollision < NearestDistance) 
             { 
                 // Collision information nessesary for sliding 
-                NearestDistance = distToCollision; 
-                IntersectionPoint = collisionPoint; 
+                NearestDistance = distToCollision;
+                IntersectionPoint = collisionPoint;
                 CollisionFound = true;
                 
                 // debugging
 #ifdef DEBUG_COLLISION
-                static triangle3<float> t = triangle.translate (vector3<float> (1.0f, 1.0f, 1.0f), offset);
-                Triangle = &t;
+                printf ("Collision @ [%.2f, %.2f, %.2f] Dist %.4f\n", collisionPoint.x(), collisionPoint.y(), collisionPoint.z(), distToCollision);
+                if (Triangle) delete Triangle; 
+                Triangle = new triangle3<float> (triangle.translate (vector3<float> (1.0f, 1.0f, 1.0f), offset));
 #endif
             } 
         } 

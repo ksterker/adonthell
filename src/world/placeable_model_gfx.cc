@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.10 2007/12/29 22:21:37 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.11 2008/01/04 22:44:08 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -109,11 +109,11 @@ bool placeable_model_gfx::update()
 void placeable_model_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                 gfx::surface * target) const
 {
-    const placeable_shape & shape = *Target.current_shape();
+    const placeable_shape * shape = Target.current_shape();
     
     Sprite.draw (
-        x /* - Sprite.length() */, 
-        y - shape.height() /* - Sprite.height() */, 
+        x, 
+        y - shape->height(), 
         da_opt, target);
 }
 
@@ -154,7 +154,7 @@ void placeable_model_gfx::draw_bounding_box (s_int16 x, s_int16 y,
 {
     placeable_shape *shape = Target.current_shape();
     cube3 bbox (shape->length(), shape->width(), shape->height());
-    bbox.draw (x, y - shape->height(), da_opt, target);
+    bbox.draw (x + shape->x(), y + shape->y() - shape->height(), da_opt, target);
 }
 
 // save to stream
