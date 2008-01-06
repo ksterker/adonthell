@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.5 2007/12/15 23:15:10 ksterker Exp $
+ $Id: triangle3.h,v 1.6 2008/01/06 15:49:41 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,7 +56,7 @@ public:
 	 * Calculate normal vector for the face of the triangle.
 	 * @return normal vector for this triangle.
 	 */
-	vector3<s_int16> normal () const
+	vector3<T> normal () const
 	{
 		return (B - A) * (C - A);
 	}
