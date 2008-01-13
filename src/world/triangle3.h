@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.h,v 1.6 2008/01/06 15:49:41 ksterker Exp $
+ $Id: triangle3.h,v 1.7 2008/01/13 18:36:02 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -112,9 +112,9 @@ public:
     {
         switch (edge)
         {
-            case 0: return A - C;
-            case 1: return B - A;
-            case 2: return C - B;
+            case 0: return B - A;
+            case 1: return C - B;
+            case 2: return A - C;
             default: break;
         }
         

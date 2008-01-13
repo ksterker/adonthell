@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.4 2007/12/29 22:21:38 ksterker Exp $
+ $Id: triangle3.cc,v 1.5 2008/01/13 18:36:02 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,27 +57,15 @@ bool triangle3<float>::contains (const vector3<float> & p) const
     return (u > 0.0f) && (v > 0.0f) && (u + v < 1.0f);
 }
 
-/*
-// convert to e-space
-template <>
-triangle3<float> triangle3<s_int16>::translate (const vector3<s_int16> & v) const
-{
-    return triangle3<float> (
-        vector3<float> (A.x() / v.x(), A.y() / v.y(), A.z() / v.z()),
-        vector3<float> (B.x() / v.x(), B.y() / v.y(), B.z() / v.z()),
-        vector3<float> (C.x() / v.x(), C.y() / v.y(), C.z() / v.z()));
-}
-*/
-
 // draw triangle 
 template <>
 void triangle3<s_int16>::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
 {
 	if (!target) target = gfx::screen::get_surface();
 	
-	target->draw_line (x + A.x(), y + A.y() + A.z(), x + B.x(), y + B.y() + B.z(), 0x00FFFF);
-	target->draw_line (x + B.x(), y + B.y() + B.z(), x + C.x(), y + C.y() + C.z(), 0x00FFFF);
-	target->draw_line (x + C.x(), y + C.y() + C.z(), x + A.x(), y + A.y() + A.z(), 0x00FFFF);
+	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), 0x00FFFF);
+	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), 0x00FFFF);
+	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), 0x00FFFF);
 	
 	/*
  	// draw normals
@@ -96,9 +84,9 @@ void triangle3<float>::draw (const u_int16 & x, const u_int16 & y, gfx::surface 
 {
 	if (!target) target = gfx::screen::get_surface();
 	
-	target->draw_line (x + A.x(), y + A.y() + A.z(), x + B.x(), y + B.y() + B.z(), 0x00FFFF);
-	target->draw_line (x + B.x(), y + B.y() + B.z(), x + C.x(), y + C.y() + C.z(), 0x00FFFF);
-	target->draw_line (x + C.x(), y + C.y() + C.z(), x + A.x(), y + A.y() + A.z(), 0x00FFFF);
+	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), 0x00FFFF);
+	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), 0x00FFFF);
+	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), 0x00FFFF);
 }
 
 } // namespace world

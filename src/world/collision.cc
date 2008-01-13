@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.5 2008/01/04 22:44:08 ksterker Exp $
+ $Id: collision.cc,v 1.6 2008/01/13 18:36:01 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,10 +40,17 @@ collision::collision (const vector3<float> & position, const vector3<float> & ve
     update_movement (position, velocity);
     
     Radius = radius;
-    CollisionFound = false;
     NearestDistance = 0.0;
 #ifdef DEBUG_COLLISION
     Triangle = NULL;
+#endif
+}
+
+// ctor
+collision::~collision ()
+{
+#ifdef DEBUG_COLLISION
+    delete Triangle;
 #endif
 }
 
@@ -53,6 +60,7 @@ void collision::update_movement (const vector3<float> & position, const vector3<
     BasePoint = position;
     Velocity = velocity;
     NormalizedVelocity = velocity.normalize ();
+    CollisionFound = false;
 }
 
 // test collision against given triangle
@@ -174,8 +182,8 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
             // check agains edges:
             for (int i = 0; i < 3; i++)
             {
-                const vector3<float> edge = triangle.get_edge (i);
-                const vector3<float> baseToVertex = triangle.get_point (i) - BasePoint;
+                const vector3<float> edge = eTriangle.get_edge (i);
+                const vector3<float> baseToVertex = eTriangle.get_point (i) - BasePoint;
 
                 float edgeSquaredLength = edge.squared_length(); 
                 float edgeDotVelocity = edge.dot(Velocity); 
@@ -197,9 +205,9 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
                     if (f >= 0.0 && f <= 1.0) 
                     { 
                         // intersection took place within segment. 
-                        t = newT; 
+                        t = newT;
                         foundCollison = true; 
-                        collisionPoint = triangle.get_point (i) + edge * f; 
+                        collisionPoint = eTriangle.get_point (i) + edge * f; 
                     } 
                 } 
             }

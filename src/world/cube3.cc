@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.6 2007/12/15 23:15:10 ksterker Exp $
+ $Id: cube3.cc,v 1.7 2008/01/13 18:36:01 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -106,24 +106,24 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     for (int i = TOP_FRONT_LEFT; i <= TOP_BACK_LEFT; i++)
     {
         j = (i + 1) % NUM_CORNERS;
-        target->draw_line (x + Corners[i].x(), y + Corners[i].y() + Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() + Corners[j].z(), 0xFFFFFF);
+        target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
     }
     
     // draw connection between top and bottom
     for (int i = BOTTOM_FRONT_LEFT; i <= BOTTOM_BACK_LEFT; i++)
     {
         j = i + TOP_FRONT_LEFT;
-        target->draw_line (x + Corners[i].x(), y + Corners[i].y() + Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() + Corners[j].z(), 0xFFFFFF);
+        target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
     }
     
     // draw top part
     for (int i = BOTTOM_FRONT_LEFT; i <= BOTTOM_BACK_LEFT; i++)
     {
         j = (i + 1) % TOP_FRONT_LEFT;
-        target->draw_line (x + Corners[i].x(), y + Corners[i].y() + Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() + Corners[j].z(), 0xFFFFFF);
+        target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
     }    
 }
 

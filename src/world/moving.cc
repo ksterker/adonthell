@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.11 2008/01/04 22:44:08 ksterker Exp $
+ $Id: moving.cc,v 1.12 2008/01/13 18:36:01 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -138,9 +138,9 @@ bool moving::collide_with_objects (collision *collisionData)
                 {
                     // ... get offset of shape from current tile ...                
                     const vector3<s_int16> offset ((it->x() - X) * SQUARE_SIZE + it->ox(), (it->y() - Y) * SQUARE_SIZE + it->oy(), it->z());
-#ifdef DEBUG_COLLISION
-                    printf ("Tile[%i, %i] = [%i, %i, %i]\n", i, j, offset.x(), offset.y(), offset.z());
-#endif
+//#ifdef DEBUG_COLLISION
+//                    printf ("Tile[%i, %i] = [%i, %i, %i]\n", i, j, offset.x(), offset.y(), offset.z());
+//#endif
                     
                     // ... and check if collision occurs
                     shape->collide (collisionData, offset);
@@ -159,7 +159,7 @@ bool moving::collide_with_objects (collision *collisionData)
 // try to move from given position with given velocity
 vector3<float> moving::execute_move (collision *collisionData, u_int16 depth) 
 {
-    static float veryCloseDistance = 0.005f;
+    static float veryCloseDistance = 0.00005f;
     
     const vector3<float> & vel = collisionData->velocity ();
     const vector3<float> & pos = collisionData->position ();
@@ -227,7 +227,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
 // calculate new position
 void moving::update_position ()
 {
-    static float gravity = -9.81;
+    static float gravity = -4.905;
     
     placeable_shape * shape = current_shape();
     if (shape != NULL)
@@ -238,14 +238,14 @@ void moving::update_position ()
         gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
             
         u_int16 pos_x = X*SQUARE_SIZE+Ox+shape->x();
-        u_int16 pos_y = Y*SQUARE_SIZE+Oy+shape->y()-Z-shape->height();
+        u_int16 pos_y = Y*SQUARE_SIZE+Oy+shape->y()-Z;
         
         // draw character bounding box
         cube3 bbox (shape->length(), shape->width(), shape->height());
         bbox.draw (pos_x, pos_y, &da, Image);
         
         pos_x += shape->length()/2;
-        pos_y += shape->width()/2 + shape->height();
+        pos_y += shape->width()/2;
 
         // draw position of character
         Image->draw_line (pos_x - 5, pos_y, pos_x + 5, pos_y, Image->map_color (255, 255, 0));                           
@@ -273,6 +273,16 @@ void moving::update_position ()
         collision collisionData (eSpacePosition, eSpaceVelocity, eRadius);
         vector3<float> finalPosition = execute_move (&collisionData); 
         
+#ifdef DEBUG_COLLISION
+        // did we collide at all?
+        const triangle3<float> *tri = collisionData.triangle ();
+        if (tri != NULL)
+        {
+            // draw triangle we collided with
+            tri->draw (X*SQUARE_SIZE, Y*SQUARE_SIZE, Image);
+        }
+#endif
+
         // apply gravity effect
         eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
         collisionData.update_movement (finalPosition, eSpaceVelocity);
@@ -282,15 +292,10 @@ void moving::update_position ()
         float x = (finalPosition.x() - 1) * eRadius.x() - shape->x();
         float y = (finalPosition.y() - 1) * eRadius.y() - shape->y();
         float z = (finalPosition.z() - 1) * eRadius.z();
-
+        
 #ifdef DEBUG_COLLISION
-        // did we collide at all?
-        const triangle3<float> *tri = collisionData.triangle ();
         if (tri != NULL)
         {
-            // draw triangle we collided with
-            tri->draw (X*SQUARE_SIZE, Y*SQUARE_SIZE, Image);
-            
             // draw actual movement along x,y axis
             Image->draw_line (pos_x, pos_y, pos_x + (x - Position.x()) * 20, pos_y + (y - Position.y()) * 20, Image->map_color (0, 255, 0), &da);
         
@@ -298,7 +303,7 @@ void moving::update_position ()
             Image->draw_line (pos_x, pos_y, pos_x, pos_y - (z - Z) * 20, Image->map_color (0, 255, 0), &da);
         }
 #endif
-        
+    
         // update position on map, which must be in whole pixels 
         if (x >= SQUARE_SIZE) 
         {
@@ -325,10 +330,6 @@ void moving::update_position ()
         Oy = (u_int16) y;
         Z = (s_int32) z;
                 
-#ifdef DEBUG_COLLISION
-        printf ("Position = [%.2f, %.2f, %.2f]\n", x, y, z);
-#endif
-
         // update precise location for next iteration
         Position.set (x, y, z);
     }

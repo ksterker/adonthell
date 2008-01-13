@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.6 2007/12/15 23:15:10 ksterker Exp $
+ $Id: vector3.h,v 1.7 2008/01/13 18:36:02 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,7 @@
 
 namespace world
 {
+    
 /**
  * Implements a point in 3D space.
  */
@@ -148,7 +149,7 @@ public:
 	 * @param v vector to compare with this.
 	 * @return true if all members are equal, false otherwise.
 	 */
-	bool operator == (const vector3<T> & v)
+	bool operator == (const vector3<T> & v) const
 	{
 		return (X == v.X && Y == v.Y && Z == v.Z);
 	}
@@ -158,7 +159,7 @@ public:
 	 * @param v vector to compare with this.
 	 * @return true if at least one members differs, false otherwise.
 	 */
-	bool operator != (const vector3<T> & v)
+	bool operator != (const vector3<T> & v) const
 	{
 		return (X != v.X || Y != v.Y || Z != v.Z);
 	}
@@ -223,9 +224,9 @@ public:
 	 */
 	vector3<float> normalize () const
 	{
-		float scale = 1.0f / sqrt (X * X + Y * Y + Z * Z);
-		return vector3<float> (X * scale, Y * scale, Z * scale);
-	}
+        float scale = 1.0f / length ();
+        return vector3<float> (X * scale, Y * scale, Z * scale);
+    }
     
     /**
      * Return the squared length of the vector. It's computed by

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.cc,v 1.11 2008/01/04 22:44:08 ksterker Exp $
+ $Id: placeable_model_gfx.cc,v 1.12 2008/01/13 18:36:02 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -154,7 +154,7 @@ void placeable_model_gfx::draw_bounding_box (s_int16 x, s_int16 y,
 {
     placeable_shape *shape = Target.current_shape();
     cube3 bbox (shape->length(), shape->width(), shape->height());
-    bbox.draw (x + shape->x(), y + shape->y() - shape->height(), da_opt, target);
+    bbox.draw (x + shape->x(), y + shape->y(), da_opt, target);
 }
 
 // save to stream

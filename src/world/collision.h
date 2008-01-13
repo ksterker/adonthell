@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.4 2008/01/04 22:44:08 ksterker Exp $
+ $Id: collision.h,v 1.5 2008/01/13 18:36:01 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,12 +52,7 @@ public:
     /**
      * Destructor.
      */
-    ~collision ()
-    {
-#ifdef DEBUG_COLLISION
-        delete Triangle;
-#endif
-    }
+    ~collision ();
     
     /**
      * Test whether collision occurs with given triangle. If so, update members
