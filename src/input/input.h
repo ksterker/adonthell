@@ -1,5 +1,5 @@
 /*
-   $Id: input.h,v 1.3 2006/07/08 17:04:03 ksterker Exp $
+   $Id: input.h,v 1.4 2008/01/18 21:26:13 ksterker Exp $
 
    Copyright (C) 2003/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,14 +31,6 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#include <string>
-#include "base/configuration.h"
-#include "input/event.h"
-#include "input/control_event.h"
-#include "input/keyboard_event.h"
-#include "input/joystick_event.h"
-#include "input/mouse_event.h"
-#include "input/listener.h"
 #include "input/manager.h"
 
 /**
