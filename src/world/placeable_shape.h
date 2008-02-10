@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.6 2008/01/04 22:44:08 ksterker Exp $
+ $Id: placeable_shape.h,v 1.7 2008/02/10 21:51:47 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -128,7 +128,7 @@ namespace world
         //@}
         
         /**
-         * Loading / Saving
+         * @name Loading / Saving
          */
         //@{
         /**

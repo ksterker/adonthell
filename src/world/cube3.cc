@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.7 2008/01/13 18:36:01 ksterker Exp $
+ $Id: cube3.cc,v 1.8 2008/02/10 21:51:47 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -107,7 +107,7 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     {
         j = (i + 1) % NUM_CORNERS;
         target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF, da_opt);
     }
     
     // draw connection between top and bottom
@@ -115,7 +115,7 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     {
         j = i + TOP_FRONT_LEFT;
         target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF, da_opt);
     }
     
     // draw top part
@@ -123,7 +123,7 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     {
         j = (i + 1) % TOP_FRONT_LEFT;
         target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF);
+                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), 0xFFFFFF, da_opt);
     }    
 }
 

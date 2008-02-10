@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.8 2007/12/18 22:34:47 ksterker Exp $
+ $Id: area.cc,v 1.9 2008/02/10 21:51:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -90,7 +90,6 @@ bool area::put (placeable * obj, coordinates & pos)
         for (u_int16 i = start_x; i < end_x; i++) 
         {
             sq = get (i, j);
-            coordinates shape_offset (i - start_x, j - start_y, pos.z(), 0, 0);
             sq->add (obj, pos, i + j == base_tile); 
         }
     }
