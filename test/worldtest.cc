@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.13 2007/12/29 22:21:38 ksterker Exp $
+   $Id: worldtest.cc,v 1.14 2008/02/10 21:54:42 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -190,8 +190,9 @@ public:
         // Adding the map character
         mchar = (world::character_with_gfx *) world.add_character();
         mchar->load ("data/models/char/npc/ng.xml");
-        mchar->set_speed (1.0);
-        mchar->set_position (4, 4);
+        mchar->set_speed (1.5);
+        mchar->set_position (4, 5);
+        mchar->set_offset (5, 0);
         mchar->set_altitude (0);
         mchar->set_limits (16, 12);
          
@@ -219,6 +220,7 @@ public:
         mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
 
         world::coordinates mc;
+        
         // create ground (grass tiles are 40x40)
         for (u_int16 i = 0; i < world.length(); i++)
             for (u_int16 j = 0; j < world.height(); j++)
@@ -226,7 +228,7 @@ public:
                 world::coordinates mc (i, j, 0, 0, 0);
                 world.put_object (0, mc); 
             }
-
+        
 		// 4 poles (left side)
         mc.set_position(10, 4);
         world.put_object(3, mc);  // that one is actually invisible 
@@ -284,13 +286,13 @@ public:
         } 
 
 		// "stair"
-        for (int i = 0; i < 13; i++)
+        for (int i = 4; i < 17; i++)
         {
-            world::coordinates mc (i+1, 9, 5 * i);
+            world::coordinates mc (i/2, 9, 5 * (i-4), (i%2)*20, 0);
             world.put_object (2, mc); 
         }
 
-        world::coordinates mc2 (4, 5, 0);
+        world::coordinates mc2 (3, 5, 0);
         world.put_object (2, mc2);
 
         /* create ground (grass tiles are 60x60, but grid is 40x40)
@@ -348,7 +350,7 @@ public:
             gc.world.update();
 	        //}
 	
-            // gc.mchar->add_direction(gc.mchar->SOUTH);
+            // gc.mchar->add_direction(gc.mchar->WEST);
             
 	        std::list <world::square_info> drawqueue; 
 	
@@ -425,6 +427,7 @@ public:
             
 #if DEBUG_COLLISION
             gc.mchar->debug_collision();
+            // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
             
 	        base::Timer.update (); 

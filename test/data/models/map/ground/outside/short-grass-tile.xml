@@ -6,10 +6,10 @@
       <list id="shape">
         <u_int16 id="num">1</u_int16>
         <list id="cube">
-          <string id="p3d">[0, 0, 0]</string>
-          <string id="p3d">[40, 0, 0]</string>
-          <string id="p3d">[40, 40, 0]</string>
-          <string id="p3d">[0, 40, 0]</string>
+          <string id="p3d">[0, 0, -5]</string>
+          <string id="p3d">[40, 0, -5]</string>
+          <string id="p3d">[40, 40, -5]</string>
+          <string id="p3d">[0, 40, -5]</string>
           <string id="p3d">[0, 0, 0]</string>
           <string id="p3d">[40, 0, 0]</string>
           <string id="p3d">[40, 40, 0]</string>
