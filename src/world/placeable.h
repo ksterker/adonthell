@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: placeable.h,v 1.3 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -76,7 +76,7 @@ namespace world
         {
             return Type; 
         }
-
+        
     protected:
         /// whether placeable is character, scenery or item    
         placeable_type Type; 

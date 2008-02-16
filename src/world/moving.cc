@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.13 2008/02/10 21:51:47 ksterker Exp $
+ $Id: moving.cc,v 1.14 2008/02/16 21:13:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -54,9 +54,8 @@ moving::moving (world::area & mymap)
 
 #ifdef DEBUG_COLLISION
     Image = gfx::create_surface();
+    Image->set_alpha (255, true);
     Image->resize (gfx::screen::length(), gfx::screen::height());
-    Image->set_mask (true);
-    Image->set_alpha (128);
 #endif
 }
 
@@ -98,8 +97,6 @@ void moving::set_limits (const u_int16 & mx, const u_int16 & my)
 // check objects on map for collision
 bool moving::collide_with_objects (collision *collisionData)
 {
-    GroundPos = -10000;
-    
     const placeable_shape *shape = current_shape ();
     
     // calculate start point of squares we need to check for possible collisions
@@ -123,10 +120,10 @@ bool moving::collide_with_objects (collision *collisionData)
     // show squares used for collision detection
     Image->fillrect (start_x * SQUARE_SIZE, start_y * SQUARE_SIZE, 
                      (end_x - start_x) * SQUARE_SIZE, (end_y - start_y) * SQUARE_SIZE,
-                     Image->map_color (0, 0, 128));
+                     Image->map_color (0, 0, 128, 64));
 #endif
 */
-    
+ 
     for (u_int16 i = start_x; i < end_x; i++)
     {
         for (u_int16 j = start_y; j < end_y; j++)
@@ -149,10 +146,6 @@ bool moving::collide_with_objects (collision *collisionData)
                     
                     // ... and check if collision occurs
                     shape->collide (collisionData, offset);
-                    
-                    // calculate z position of ground
-                    s_int32 objz = it->z () + shape->height ();
-                    if (GroundPos < objz) GroundPos = objz;
                 }
             }
         }
@@ -232,6 +225,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     // don't recurse if the new velocity is very small 
     if (newVelocityVector.length() < veryCloseDistance) 
     { 
+        collisionData->set_falling (false);
         return newBasePoint; 
     }
     
@@ -247,12 +241,6 @@ void moving::update_position ()
     placeable_shape * shape = current_shape();
     if (shape != NULL)
     {
-#ifdef DEBUG_COLLISION
-        // clear image
-        Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, gfx::screen::trans_color ());
-        gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
-#endif
-        
         // calculate radius of ellipsoid
         const vector3<float> eRadius (shape->length() / 2.0, shape->width() / 2.0, shape->height() / 2.0);
         
@@ -264,6 +252,8 @@ void moving::update_position ()
         vector3<float> finalPosition = execute_move (&collisionData);         
         
 #ifdef DEBUG_COLLISION
+        gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
+
         u_int16 pos_x = X*SQUARE_SIZE+Ox+shape->x();
         u_int16 pos_y = Y*SQUARE_SIZE+Oy+shape->y()-Z;
         
@@ -304,7 +294,7 @@ void moving::update_position ()
         eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
         collisionData.update_movement (finalPosition, eSpaceVelocity);
         finalPosition = execute_move (&collisionData); 
-        
+                
         // convert final result back to R3
         float x = (finalPosition.x() - 1) * eRadius.x() - shape->x();
         float y = (finalPosition.y() - 1) * eRadius.y() - shape->y();
@@ -346,18 +336,60 @@ void moving::update_position ()
         Ox = (u_int16) x;
         Oy = (u_int16) y;
         Z = (s_int32) z;
+
+        // calculate ground position if different from z-pos
+        if (collisionData.is_falling ())
+        {
+            calculate_ground_pos ();
+        }
+        else
+        {
+            GroundPos = Z;
+        }
                 
         // update precise location for next iteration
         Position.set (x, y, z);
     }
 }
 
+// calculate z position of ground
+void moving::calculate_ground_pos ()
+{
+    GroundPos = -10000;
+    
+    // get square we occupy
+    square *msqr = Mymap.get (X, Y);
+    
+    // iterate over all objects on square ...
+    for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
+    {
+        placeable_shape *shape = it->obj->current_shape ();
+        
+        s_int32 objz = it->z () + shape->z() + shape->height ();
+        printf ("ObjZ = %i (%i + %i + %i) MyZ = %i\n", objz, it->z(), shape->z(), shape->height (), Z);
+        
+        // only check objects below our character
+        if (objz > Z) return;
+        
+        if (GroundPos < objz) GroundPos = objz;
+    }
+}
+
 // update movable position
 bool moving::update ()
 {
-    Mymap.remove (this);
-    update_position ();
-    Mymap.put (this);
+#ifdef DEBUG_COLLISION
+    // clear image
+    Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, Image->map_color (0, 0, 0, 0));
+#endif
+    
+    // we can skip the whole collision stuff if we're not moving
+    if (vx() != 0.0f || vy() != 0.0f || vz() != 0.0f || GroundPos != Z)
+    {
+        Mymap.remove (this);
+        update_position ();
+        Mymap.put (this);
+    }
     
     return true; 
 }

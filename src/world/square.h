@@ -1,5 +1,5 @@
 /*
- $Id: square.h,v 1.4 2007/12/18 22:34:48 ksterker Exp $
+ $Id: square.h,v 1.5 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -79,6 +79,15 @@ namespace world
             // We call coordinates::operator == here
             return ((coordinates)*this == (coordinates)mi && 
                     obj == mi.obj);
+        }
+        
+        /**
+         * Return the Z coordinate of the object.
+         * @param the Z position of the object.
+         */
+        s_int32 z_pos () const
+        {
+            return Z + obj->current_shape()->z() + obj->current_shape()->height();
         }
     }; 
     

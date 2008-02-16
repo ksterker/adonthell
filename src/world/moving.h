@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.6 2007/12/29 22:21:37 ksterker Exp $
+ $Id: moving.h,v 1.7 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -195,6 +195,11 @@ namespace world
          * Update position on the map.
          */
         void update_position ();
+        
+        /**
+         * Find the z-position of the ground under the movable.
+         */
+        void calculate_ground_pos ();
         
         /**
          * Try to move from given point with given velocity, colliding with

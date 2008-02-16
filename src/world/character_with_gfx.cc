@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.8 2007/12/29 22:21:37 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.9 2008/02/16 21:13:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,7 +45,8 @@ character_with_gfx::character_with_gfx (area & mymap) : character (mymap),
 {
 	// TODO: shadow needs to be more fitting to shape of character
 	shadow.fillrect (0, 0, 40, 15, 45, 20, 45);
-	shadow.set_alpha (128);}
+	shadow.set_alpha (128);
+}
 
 // save character to screen
 bool character_with_gfx::put_state (base::flat & file) const
@@ -103,7 +104,6 @@ void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * d
                                gfx::surface * target)
 {
     draw_shadow (x, y, da_opt, target);
-    // y -= z ();
     placeable_model_gfx::draw (x, y, da_opt, target);
 }
 
@@ -111,6 +111,5 @@ void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * d
 void character_with_gfx::draw_shadow (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                       gfx::surface * target)
 {
-    // FIXME: this only works for humanoid characters
-    shadow.draw (x, y - ground_pos(), da_opt, target);
+    shadow.draw (x, y - ground_pos() + z() - this->y(), da_opt, target);
 }

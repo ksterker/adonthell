@@ -1,5 +1,5 @@
 /*
- $Id: object_with_gfx.cc,v 1.3 2007/10/15 02:19:31 ksterker Exp $
+ $Id: object_with_gfx.cc,v 1.4 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -89,11 +89,4 @@ bool object_with_gfx::load (const std::string & fname)
         return get_state (record);
     
     return false;
-}
-
-// render object
-void object_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
-                            gfx::surface * target) const
-{
-    placeable_model_gfx::draw (x, y, da_opt, target);
 }

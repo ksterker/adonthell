@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.7 2008/02/10 21:51:47 ksterker Exp $
+ $Id: collision.cc,v 1.8 2008/02/16 21:13:25 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,6 +60,7 @@ void collision::update_movement (const vector3<float> & position, const vector3<
     BasePoint = position;
     Velocity = velocity;
     NormalizedVelocity = velocity.normalize ();
+    IsFalling = velocity.z() != 0.0f;
     CollisionFound = false;
 }
 

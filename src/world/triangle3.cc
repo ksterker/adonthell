@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.5 2008/01/13 18:36:02 ksterker Exp $
+ $Id: triangle3.cc,v 1.6 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -62,10 +62,11 @@ template <>
 void triangle3<s_int16>::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
 {
 	if (!target) target = gfx::screen::get_surface();
-	
-	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), 0x00FFFF);
-	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), 0x00FFFF);
-	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), 0x00FFFF);
+	u_int32 color = target->map_color (0, 255, 255);
+    
+	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), color);
+	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), color);
+	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), color);
 	
 	/*
  	// draw normals
@@ -83,10 +84,11 @@ template <>
 void triangle3<float>::draw (const u_int16 & x, const u_int16 & y, gfx::surface * target) const
 {
 	if (!target) target = gfx::screen::get_surface();
+	u_int32 color = target->map_color (0, 255, 255);
 	
-	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), 0x00FFFF);
-	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), 0x00FFFF);
-	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), 0x00FFFF);
+	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), color);
+	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), color);
+	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), color);
 }
 
 } // namespace world

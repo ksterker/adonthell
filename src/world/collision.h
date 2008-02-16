@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.5 2008/01/13 18:36:01 ksterker Exp $
+ $Id: collision.h,v 1.6 2008/02/16 21:13:25 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -95,6 +95,24 @@ public:
     }
 
     /**
+     * Set whether object is falling.
+     * @param is_falling true or false.
+     */
+    void set_falling (const bool & is_falling)
+    {
+        IsFalling = is_falling;
+    }
+    
+    /**
+     * Check whether the object is falling
+     * @param true if it is, false otherwise.
+     */
+    bool is_falling () const
+    {
+        return IsFalling;
+    }
+    
+    /**
      * Get the velocity of planned move.
      * @return the velocity of planned move.
      */
@@ -157,6 +175,8 @@ private:
      * @name Results of Move
      */
     //@{
+    /// whether character has Z-velocity != 0
+    bool IsFalling;
     /// whether collision was detected 
     bool CollisionFound; 
     /// distance between start and intersection point

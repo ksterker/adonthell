@@ -1,5 +1,5 @@
 /*
- $Id: object_with_gfx.h,v 1.2 2007/05/21 04:44:12 ksterker Exp $
+ $Id: object_with_gfx.h,v 1.3 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -81,21 +81,6 @@ namespace world
          * @return true on success, false otherwise.
          */
         bool load (const std::string & fname);
-        //@}
-
-        /**
-         * @name Rendering
-         */
-        //@{
-        /**
-         * Draw object graphics at given location.
-         * @param x x offset
-         * @param y y offset
-         * @param da_opt clipping rectangel
-         * @param target surface to draw on, NULL to draw on screen surface 
-         */
-        void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
-                  gfx::surface * target = NULL) const;
         //@}
     }; 
 }

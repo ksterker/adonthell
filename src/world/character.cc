@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.5 2007/12/09 21:39:42 ksterker Exp $
+   $Id: character.cc,v 1.6 2008/02/16 21:13:25 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,19 +50,24 @@ character::character (area & mymap) : moving (mymap)
 // jump
 void character::jump()
 {
-	if (VSpeed == 0.0)
+    // only jump if resting on the ground
+	if (GroundPos == Z)
 	{
-    	VSpeed = 4.5;
+    	VSpeed = 10;
 	}
 }
 
 // process character movement
 void character::update ()
 {
+    // reset vertical velocity
+    set_vertical_velocity (VSpeed);
     moving::update ();
 
-    if (vz () == 0.0) 
+    if (GroundPos == Z) 
     {
+        VSpeed = 0;
+        
     	// character no longer jumping or falling
     	if (IsRunning != ToggleRunning)
     	{
@@ -70,6 +75,7 @@ void character::update ()
     		set_direction (current_dir());
     	}
     }
+    else if (VSpeed > 0) VSpeed -= 0.4;
 }
 
 void character::set_direction(int ndir)
@@ -151,7 +157,7 @@ void character::update_state()
         }
         state += is_running() ? "_run" : "_walk";
     }
-    else if (!xvel)
+    else /* if (!xvel) */
     {
         state = current_shape_name()[0];
         state += "_stand";

@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model_gfx.h,v 1.7 2007/12/29 22:21:37 ksterker Exp $
+ $Id: placeable_model_gfx.h,v 1.8 2008/02/16 21:13:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -93,10 +93,10 @@ namespace world
          * 
          * @param x X position where to draw
          * @param y Y position where to draw
-         * @param da_opt Optionnal drawing area to use during the blit operation
-         * @param target Optionnal surface to draw to (defaults to the screen)
+         * @param da_opt Optional drawing area to use during the blit operation
+         * @param target Optional surface to draw to (defaults to the screen)
          */
-        void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
+        virtual void draw(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                   gfx::surface * target = NULL) const;
     
     	/**
@@ -105,8 +105,8 @@ namespace world
     	 * 
          * @param x X position where to draw
          * @param y Y position where to draw
-         * @param da_opt Optionnal drawing area to use during the blit operation
-         * @param target Optionnal surface to draw to (defaults to the screen)
+         * @param da_opt Optional drawing area to use during the blit operation
+         * @param target Optional surface to draw to (defaults to the screen)
     	 */
         void draw_walkable(s_int16 x, s_int16 y, const gfx::drawing_area * da_opt = NULL,
                            gfx::surface * target = NULL) const;
