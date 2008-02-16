@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.10 2007/06/15 05:29:35 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.11 2008/02/16 19:08:44 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,11 +56,12 @@ namespace gfx
     }
 
 
-    void surface_sdl::set_alpha (u_int8 t)
+    void surface_sdl::set_alpha (const u_int8 & t, const bool & alpha_channel)
     {
         if ((t == 255) && (alpha_ != 255) && vis)
             SDL_SetAlpha (vis, 0, 0);
         alpha_ = t;
+        alpha_channel_ = alpha_channel;
     }
 
     void surface_sdl::draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
@@ -86,7 +87,7 @@ namespace gfx
                 SDL_SetColorKey (vis, 0, 0); 
         }
 
-        if (alpha () != 255)
+        if (alpha () != 255 || has_alpha_channel())
             SDL_SetAlpha (vis, SDL_SRCALPHA, alpha_);
 
         SDL_BlitSurface (vis, &srcrect, display_target, &dstrect); 
@@ -114,14 +115,16 @@ namespace gfx
         SDL_FillRect (vis, &dstrect, col);
     }
 
-    u_int32 surface_sdl::map_color(u_int8 r, u_int8 g, u_int8 b) const
+    // convert RGBA color to surface format
+    u_int32 surface_sdl::map_color (const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a) const
     {
-        return SDL_MapRGB(vis->format, r, g, b);
+        return SDL_MapRGBA(vis->format, r, g, b, a);
     }
 
-    void surface_sdl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b) const
+    // convert surface color format into RGBA
+    void surface_sdl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const
     {
-        SDL_GetRGB(col, vis->format, &r, &g, &b);
+        SDL_GetRGBA(col, vis->format, &r, &g, &b, &a);
     }
 
     void surface_sdl::lock () const
@@ -234,25 +237,42 @@ namespace gfx
         set_length (l);
         set_height (h); 
 
+        // is screen surface initialized?
         if (display->vis)
         {
-             vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
-                                    length (), height (),
-                                    display->vis->format->BitsPerPixel,
-                                    display->vis->format->Rmask,
-                                    display->vis->format->Gmask,
-                                    display->vis->format->Bmask,
-                                    display->vis->format->Amask);
+            // create surface with per-pixel alpha?
+            if (alpha_channel_)
+            {
+                SDL_Surface *tmp = SDL_CreateRGBSurface (
+                    SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+                    length (), height (), BYTES_PER_PIXEL,
+                    R_MASK, G_MASK, B_MASK, A_MASK);
+                
+                // does created surface match screen?
+                if (display->vis->format->BitsPerPixel != BYTES_PER_PIXEL)
+                {
+                    vis = SDL_DisplayFormatAlpha (tmp);
+                    SDL_FreeSurface (tmp);
+                }
+                else
+                {
+                    vis = tmp;
+                }
+            }
+            else
+            {
+                vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+                    length (), height (),
+                    display->vis->format->BitsPerPixel,
+                    display->vis->format->Rmask,
+                    display->vis->format->Gmask,
+                    display->vis->format->Bmask,
+                    display->vis->format->Amask);
+            }
         }
         else
         {
-             vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
-                                    length (), height (),
-                                    RAW_BYTES_PER_PIXEL,
-                                    RAW_RED_MASK,
-                                    RAW_GREEN_MASK,
-                                    RAW_BLUE_MASK,
-                                    0);
+            fprintf (stderr, "*** surface:resize: screen surface not initialized!\n");
         }
     }
 
@@ -286,7 +306,10 @@ namespace gfx
                                                      blue_mask, alpha_mask);
 
         if (alpha_mask)
+        {
             vis = SDL_DisplayFormatAlpha(tmp);
+            alpha_channel_ = true;
+        }
         else
             vis = SDL_DisplayFormat(tmp);
 

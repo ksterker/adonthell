@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.cc,v 1.4 2006/10/07 21:16:21 gnurou Exp $
+   $Id: surface_sdlgl.cc,v 1.5 2008/02/16 19:08:44 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,10 +46,11 @@ namespace gfx
         }
     }
 
-
-    void surface_sdlgl::set_alpha (u_int8 t)
+    // set alpha properties of surface
+    void surface_sdlgl::set_alpha (const u_int8 & surface_alpha, const bool & alpha_channel)
     {
-	alpha_ = t;
+        alpha_ = surface_alpha;
+        alpha_channel_ = alpha_channel;
     }
 
     void surface_sdlgl::draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
@@ -92,12 +93,12 @@ namespace gfx
 	// TODO
     }
 
-    u_int32 surface_sdlgl::map_color(u_int8 r, u_int8 g, u_int8 b) const
+    u_int32 surface_sdlgl::map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 0) const
     {
 	// TODO
     }
 
-    void surface_sdlgl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b) const
+    void surface_sdlgl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const
     {
 	// TODO
     }

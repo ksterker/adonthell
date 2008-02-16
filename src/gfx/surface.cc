@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.15 2007/12/29 18:47:29 ksterker Exp $
+   $Id: surface.cc,v 1.16 2008/02/16 19:08:43 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -34,27 +34,18 @@
 #include "gfx/surface.h"
 #include "gfx/png_wrapper.h"
 
-#ifdef __BIG_ENDIAN__
-#   define R_MASK 0x00ff0000
-#   define G_MASK 0x0000ff00
-#   define B_MASK 0x000000ff
-#   define A_MASK 0xff000000
-#else
-#   define R_MASK 0x000000ff
-#   define G_MASK 0x0000ff00
-#   define B_MASK 0x00ff0000
-#   define A_MASK 0xff000000
-#endif
 
 using namespace std;
 
 namespace gfx
 {
+    // ctor
     surface::surface()
-        : is_masked_(false), alpha_(255), is_mirrored_x_(false), is_mirrored_y_(false)
+        : is_masked_(false), alpha_(255), alpha_channel_(false), is_mirrored_x_(false), is_mirrored_y_(false)
     {
     }
 
+    // dtor
     surface::~surface()
     {
     }
@@ -81,7 +72,7 @@ namespace gfx
             u_int8 *rawdata = (u_int8 *)get_data(3, R_MASK, G_MASK, B_MASK);
             for(int idx = 0; idx < height(); idx++)
                 reverseArray(&rawdata[idx*length()*3], length()*3);
-            //This is swaped (BGR) because we swaped at a byte level, not at a pixel level
+            //This is swapped (BGR) because we swapped at a byte level, not at a pixel level
             set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK);
             is_mirrored_x_ = !is_mirrored_x_;
         }
@@ -198,7 +189,7 @@ namespace gfx
         if (!rawdata) return false;
 
         clear ();
-
+        
         set_data(rawdata, l, h, alpha ? 4 : 3,
                  R_MASK, G_MASK, B_MASK, alpha ? A_MASK : 0);
 

@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.13 2007/12/29 22:21:37 ksterker Exp $
+   $Id: surface.h,v 1.14 2008/02/16 19:08:43 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,9 +37,21 @@
 #include <string>
 #include <fstream>
 
+#ifdef __BIG_ENDIAN__
+#   define R_MASK 0x00ff0000
+#   define G_MASK 0x0000ff00
+#   define B_MASK 0x000000ff
+#   define A_MASK 0xff000000
+#else
+#   define R_MASK 0x000000ff
+#   define G_MASK 0x0000ff00
+#   define B_MASK 0x00ff0000
+#   define A_MASK 0xff000000
+#endif
+#define BYTES_PER_PIXEL 4
+
 namespace gfx
 {
-
     /**
      * Class where drawables can actually be drawn to.
      * Another name for a surface could be "pixmap", or "image". A surface
@@ -109,11 +121,23 @@ namespace gfx
         }
 
         /**
-         * Sets the alpha value of the surface.
-         *
-         * @param a The new alpha value for this surface.
+         * Returns whether the surface has an alpha channel.
+         * @return true if it has an alpha channel, false otherwise.
          */
-        virtual void set_alpha (u_int8 a) = 0;
+        bool has_alpha_channel () const
+        {
+            return alpha_channel_;
+        }
+        
+        /**
+         * Sets the alpha value of the surface. If alpha_channel is set to true,
+         * then the surface_alpha value will be silently ignored. Needs to
+         * be called before surface::resize to take effect.
+         *
+         * @param surface_alpha The new alpha value for this surface.
+         * @param alpha_channel Whether to enable per-pixel alpha for the surface.
+         */
+        virtual void set_alpha (const u_int8 & surface_alpha, const bool & alpha_channel = false) = 0;
 
         /**
          *
@@ -254,29 +278,32 @@ namespace gfx
 
 
         /**
-         * Maps the color triplet made of (r, g, b) into the
+         * Maps the color triplet made of (r, g, b, alpha) into the
          * same color for the surface format.
          *
          * @param r Red componant.
          * @param g Green componant.
          * @param b Blue componant.
+         * @param a Alpha component (optional, default = 255).
          *
-         * @return The corresponding color for the hex triplet (r, g, b),
+         * @return The corresponding color for the hex triplet (r, g, b, alpha),
          *         but in the actual surface format.
          */
-        virtual u_int32 map_color(u_int8 r, u_int8 g, u_int8 b) const = 0;
+        virtual u_int32 map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 255) const = 0;
 
         /**
          * Unmaps the color col (in the surface format) into the hex
-         * triplet of its red, green and blue componants.
+         * triplet of its red, green, blue and (if supported by the surface)
+         * alpha componants.
          *
          * @param col The color to unmap.
          * @param r Red componant.
          * @param g Green componant.
          * @param b Blue componant.
+         * @param a Alpha component.
          *
          */
-        virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b) const = 0;
+        virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const = 0;
 
         /**
          * Locks the surface.
@@ -418,9 +445,12 @@ namespace gfx
         /// Mask
         bool is_masked_;
 
-        /// Alpha value
+        /// Per-Surface Alpha value
         u_int8 alpha_;
 
+        /// Whether Per-Pixel alpha is enabled
+        bool alpha_channel_;
+        
         /// Mirrored in x
         bool is_mirrored_x_;
 
@@ -429,7 +459,6 @@ namespace gfx
 
         /// Filename
         std::string filename_;
-
 
         /**
          * Sets the surface pixel data from a given memory zone.
@@ -454,9 +483,9 @@ namespace gfx
          * expected to have been allocated with malloc() and/or calloc().
          */
         virtual void set_data (void * data, u_int16 l, u_int16 h,
-                               u_int8 bytes_per_pixel = RAW_BYTES_PER_PIXEL,
-                               u_int32 red_mask = RAW_RED_MASK, u_int32 green_mask = RAW_GREEN_MASK,
-                               u_int32 blue_mask = RAW_BLUE_MASK, u_int32 alpha_mask = 0) = 0;
+                               u_int8 bytes_per_pixel = BYTES_PER_PIXEL,
+                               u_int32 red_mask = R_MASK, u_int32 green_mask = G_MASK,
+                               u_int32 blue_mask = B_MASK, u_int32 alpha_mask = 0) = 0;
 
         /**
          * Returns the surface pixel data in the chosen format.
@@ -479,15 +508,6 @@ namespace gfx
         virtual void * get_data (u_int8 bytes_per_pixel,
                                  u_int32 red_mask, u_int32 green_mask,
                                  u_int32 blue_mask) const = 0;
-
-        /// Internal format red mask value
-        static const u_int32 RAW_RED_MASK = 0xF800;
-        /// Internal format green mask value
-        static const u_int32 RAW_GREEN_MASK = 0x07E0;
-        /// Internal format blue mask value
-        static const u_int32 RAW_BLUE_MASK = 0x001F;
-        /// Internal format number of bytes per pixel
-        static const u_int8 RAW_BYTES_PER_PIXEL = 2;
 
     private:
         /**

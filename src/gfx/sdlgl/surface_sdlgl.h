@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.h,v 1.5 2006/10/09 05:58:11 ksterker Exp $
+   $Id: surface_sdlgl.h,v 1.6 2008/02/16 19:08:44 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,7 @@ namespace gfx
 
         virtual void set_mask (bool m); 
 
-        virtual void set_alpha (u_int8 a); 
+        virtual void set_alpha (const u_int8 & surface_alpha, const bool & alpha_channel = false);
 
         virtual void draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
                            u_int16 sh, const drawing_area * da_opt = NULL,
@@ -58,8 +58,8 @@ namespace gfx
         virtual void draw_line (const s_int16 sx, const s_int16 sy, const s_int16 ex, const s_int16 ey, 
                                 const u_int32 col, const drawing_area * da_opt = NULL); 
 
-        virtual u_int32 map_color(u_int8 r, u_int8 g, u_int8 b) const;
-        virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b) const;
+        virtual u_int32 map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 255) const;
+        virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const;
         virtual void lock () const; 
         virtual void unlock () const;
         virtual void put_pix (u_int16 x, u_int16 y, u_int32 col); 
@@ -73,17 +73,19 @@ namespace gfx
 
     protected:
         void set_data (void * data, u_int16 l, u_int16 h,
-                       u_int8 bytes_per_pixel = RAW_BYTES_PER_PIXEL,
-                       u_int32 red_mask = RAW_RED_MASK, u_int32 green_mask = RAW_GREEN_MASK,
-                       u_int32 blue_mask = RAW_BLUE_MASK, u_int32 alpha_mask = 0);
+                       u_int8 bytes_per_pixel = BYTES_PER_PIXEL,
+                       u_int32 red_mask = R_MASK, u_int32 green_mask = G_MASK,
+                       u_int32 blue_mask = B_MASK, u_int32 alpha_mask = 0);
 
         void * get_data (u_int8 bytes_per_pixel,
                          u_int32 red_mask, u_int32 green_mask,
                          u_int32 blue_mask) const;
 
-	// Image texture
-	GLuint texture;
-        void *texture_data; /* Raw data stored within 'texture', or NULL */
+        /// Image texture
+        GLuint texture;
+        
+        /// Raw data stored within 'texture', or NULL
+        void *texture_data;
 
     private: 
 
