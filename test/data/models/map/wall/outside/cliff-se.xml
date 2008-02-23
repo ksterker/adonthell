@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Data>
+  <list id="model">
+    <string id="state">default</string>
+    <list id="default">
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[40, 0, 0]</string>
+          <string id="p3d">[0, 40, 0]</string>
+          <string id="p3d">[0, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[40, 0, 80]</string>
+          <string id="p3d">[0, 40, 80]</string>
+        </list>
+      </list>
+    </list>
+  </list>
+  <string id="sprite">data/gfx/map/wall/outside/cliff/cliff-se.xml</string>
+</Data>
