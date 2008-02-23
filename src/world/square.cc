@@ -1,5 +1,5 @@
 /*
- $Id: square.cc,v 1.6 2008/02/16 21:13:26 ksterker Exp $
+ $Id: square.cc,v 1.7 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,39 +34,31 @@ using world::square_info;
 using world::square;
 
 // ctor
-square_info::square_info (coordinates & pos, const bool & is_base)
+square_info::square_info (coordinates & pos, const s_int32 & ground_z, const bool & is_base)
  : coordinates (pos) 
 {
-    zground = pos.z();
+    GroundZ = ground_z;
     IsBase = is_base;
 }
 
+// determine drawing order of map objects
 bool square_info::operator < (const square_info & mi) const
 {
-//     if (y() == mi.y() || (y() == mi.y() + 1 && mi.oy()) &&
-//         z() + obj->current_shape()->zsize <= mi.z()) return true;
-
-//     if (mi.y() == y() || (mi.y() == y() + 1 && oy()) &&
-//         z() >= mi.z() + mi.obj->current_shape()->zsize) return false;
-
-    if (z() + obj->current_shape()->height() <= mi.zground) return true;
-    if (zground >= mi.z() + mi.obj->current_shape()->height()) return false;
+    if (z_pos () <= mi.GroundZ) return true;
+    if (GroundZ >= mi.z_pos ()) return false;
+    
+    /*
+    s_int32 y1 = y() * SQUARE_SIZE + oy() + obj->current_shape()->y() + z_pos();
+    s_int32 y2 = mi.y() * SQUARE_SIZE + mi.oy() + mi.obj->current_shape()->y() + mi.z_pos();
+    if (y1 < y2) return true;
+    if (y1 > y2) return false;
+     */
+    
     if (y() < mi.y()) return true;
     if (y() > mi.y()) return false;
     if (oy() < mi.oy()) return true;
     if (oy() > mi.oy()) return false;
-
-//     if (obj->type() == OBJECT) return true;
-//     if (obj->type() == CHARACTER) return false;
-//     if (z() + obj->current_shape()->zsize < mi.z() + mi.obj->current_shape()->zsize) return true;
-//     if (z() + obj->current_shape()->zsize > mi.z() + mi.obj->current_shape()->zsize) return false;
-
-//     if ((y() * square_size) + oy() + square_size <=
-//         (mi.y() - (mi.obj->current_shape()->area_height() - 1)) * square_size + mi.oy()) return true;
-
-//     if ((y() - (obj->current_shape()->area_height() - 1)) * square_size + oy() >=
-//         square_size + mi.y() * square_size + mi.oy()) return false;
-
+     
     // If the objects are at the same y position, we better
     // make an arbitrary test to make sure a moving object
     // won't go from behind to before another object when
@@ -75,10 +67,10 @@ bool square_info::operator < (const square_info & mi) const
     return false;
 }
 
-// add static object to cell
-bool square::add (placeable * obj, coordinates & pos, const bool & is_base)
+// add object to cell
+bool square::add (placeable * obj, coordinates & pos, const s_int32 & ground_z, const bool & is_base)
 {
-    square_info mi (pos, is_base);
+    square_info mi (pos, ground_z, is_base);
     mi.obj = obj; 
     std::vector<square_info>::iterator it = objects.begin();
     while(it != objects.end() && mi.z_pos () > it->z_pos ()) ++it;
@@ -86,21 +78,10 @@ bool square::add (placeable * obj, coordinates & pos, const bool & is_base)
     return true; 
 }
 
-// add moving object to cell
-bool square::add (moving * obj, const bool & is_base)
-{
-    square_info mi (*obj, is_base);
-    mi.obj = obj; 
-    mi.zground = obj->ground_pos();
-    std::vector<square_info>::iterator it = objects.begin();
-    while(it != objects.end() && mi.z_pos () > it->z_pos ()) ++it;
-    objects.insert(it, mi);
-    return true; 
-}
-
+// remove object from cell
 bool square::remove (placeable * obj, coordinates & pos)
 {
-    square_info mi (pos, false);
+    square_info mi (pos, pos.z(), false);
     mi.obj = obj; 
     std::vector <square_info>::iterator er;
     er = std::find (objects.begin (), objects.end (), mi);
@@ -109,9 +90,10 @@ bool square::remove (placeable * obj, coordinates & pos)
     return true; 
 }
 
+// check if cell contains object
 bool square::exist (placeable * obj, coordinates & pos)
 {
-    square_info mi (pos, false);
+    square_info mi (pos, pos.z(), false);
     mi.obj = obj; 
     std::vector <square_info>::iterator er;
     er = std::find (objects.begin (), objects.end (), mi); 

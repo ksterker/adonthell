@@ -1,8 +1,8 @@
  /*
-   $Id: worldtest.cc,v 1.14 2008/02/10 21:54:42 ksterker Exp $
+   $Id: worldtest.cc,v 1.15 2008/02/23 20:51:56 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
-   Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#define DEBUG_COLLISION 1
+#define DEBUG_COLLISION 0
 
 #include "base/base.h"
 #include "event/date.h"
@@ -219,7 +219,20 @@ public:
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
 
+        /*
+        // diagonal cliff, height 80 at index 5
+        mobj = (world::object_with_gfx *) world.add_object();
+        mobj->load("data/models/map/wall/outside/cliff-se.xml");
+        */
+        
         world::coordinates mc;
+        
+        /*
+        mc.set_position (4, 5);
+        world.put_object (0, mc); 
+
+        mc.set_altitude (80);
+        world.put_object (2, mc);
         
         // create ground (grass tiles are 40x40)
         for (u_int16 i = 0; i < world.length(); i++)
@@ -228,6 +241,7 @@ public:
                 world::coordinates mc (i, j, 0, 0, 0);
                 world.put_object (0, mc); 
             }
+         */
         
 		// 4 poles (left side)
         mc.set_position(10, 4);
@@ -294,18 +308,26 @@ public:
 
         world::coordinates mc2 (3, 5, 0);
         world.put_object (2, mc2);
-
-        /* create ground (grass tiles are 60x60, but grid is 40x40)
+        
+        // create ground (grass tiles are 60x60, but grid is 40x40)
         for (float i = 0; i < world.length(); i += 1.5)
             for (float j = 0; j < world.height(); j += 1.5)
             {
                 int x = world::SQUARE_SIZE * i;
                 int y = world::SQUARE_SIZE * j;
                 
-                world::coordinates mc (x / world::SQUARE_SIZE, y / world::SQUARE_SIZE, 0, 0, 0);
-//                                       x % world::SQUARE_SIZE, y % world::SQUARE_SIZE);
-                world.put_object (0, mc); 
+                world::coordinates mc (x / world::SQUARE_SIZE, y / world::SQUARE_SIZE, 0, 
+                                       x % world::SQUARE_SIZE, y % world::SQUARE_SIZE);
+                world.put_object (1, mc); 
             }
+        
+        /*
+        // create diagonal wall
+        for (int i = 0; i < 4; i++)
+        {
+            world::coordinates mc (i, 4-i, 0, 0, 0);
+            world.put_object (5, mc); 
+        }
         */
     }
 };
@@ -320,7 +342,8 @@ public:
     
     	// Set video mode
     	gfx::screen::set_video_mode(640, 480);
-
+        gfx::drawing_area da (0, 0, 640, 480);
+        
 		// Contains map and player controls
 	    game_client gc;
 
@@ -353,18 +376,18 @@ public:
             // gc.mchar->add_direction(gc.mchar->WEST);
             
 	        std::list <world::square_info> drawqueue; 
-	
-	        // Rendering phase        
+            world::square *sq;
+	        
+            // Rendering phase        
 	        for (j = 0; j < gc.world.height (); j++)
 	        {
 	            for (i = 0; i < gc.world.length (); i++) 
 	            {
-	                world::square * sq = gc.world.get (i, j); 
-	                world::square::iterator it = sq->end();
-	                while (it != sq->begin())
+	                sq = gc.world.get (i, j); 
+	                
+	                for (world::square::iterator it = sq->begin(); it != sq->end(); it++)
 	                {
-	                    --it;
-	                    if (it->IsBase) drawqueue.push_back (*it);
+	                    if (it->is_base()) drawqueue.push_back (*it);
 	                }
 	            }
 
@@ -379,8 +402,16 @@ public:
 		                    ((world::character_with_gfx *)
 		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
 		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
+
+		                    if (gc.draw_bounding_box)
+		                    {
+			                    ((world::character_with_gfx *)
+			                     (*it).obj)->draw_bounding_box (
+                                                                (*it).x () * world::SQUARE_SIZE + (*it).ox (),
+                                                                (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
+		                    }		                
 		                    break; 
-		                }   
+                        }   
 		                case world::OBJECT:
 		                {
 		                    ((world::object_with_gfx *)
@@ -392,7 +423,7 @@ public:
 			                    ((world::object_with_gfx *)
 			                     (*it).obj)->draw_bounding_box (
 			                     			   (*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
+		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
 		                    }
 		                    if (gc.draw_walkable)
 		                    {

@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.7 2008/02/16 21:13:26 ksterker Exp $
+ $Id: moving.h,v 1.8 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,12 +61,7 @@ namespace world
         /**
          * Destructor.
          */
-        ~moving ()
-        {
-#ifdef DEBUG_COLLISION
-            delete Image;
-#endif
-        }
+        ~moving ();
         
         /**
          * @name Member Access
@@ -183,12 +178,7 @@ namespace world
          * some helpful information for debugging collision detection.
          * Otherwise it is a noop.
          */
-        void debug_collision ()
-        {
-#ifdef DEBUG_COLLISION
-            Image->draw (0, 0);
-#endif
-        }
+        void debug_collision ();
         
     protected:
         /**

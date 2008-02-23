@@ -1,5 +1,5 @@
 /*
- $Id: character_with_gfx.cc,v 1.9 2008/02/16 21:13:25 ksterker Exp $
+ $Id: character_with_gfx.cc,v 1.10 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -111,5 +111,8 @@ void character_with_gfx::draw (s_int16 x, s_int16 y, const gfx::drawing_area * d
 void character_with_gfx::draw_shadow (s_int16 x, s_int16 y, const gfx::drawing_area * da_opt,
                                       gfx::surface * target)
 {
-    shadow.draw (x, y - ground_pos() + z() - this->y(), da_opt, target);
+    // 'ground_pos() + z()' gives the current distance of the character above ground
+    // 'shape->width() + shape->y() - shadow.height()/2' centers the shadow around the character's base
+    const placeable_shape * shape = placeable_model_gfx::Target.current_shape();
+    shadow.draw (x, y - ground_pos() + z() - shape->width() - shape->y() + shadow.height()/2, da_opt, target);
 }

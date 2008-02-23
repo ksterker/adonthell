@@ -1,5 +1,5 @@
 /*
- $Id: square.h,v 1.5 2008/02/16 21:13:26 ksterker Exp $
+ $Id: square.h,v 1.6 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -40,25 +40,22 @@ namespace world
     /**
      * Information about an object on the world grid. This includes 
      * - a pointer to the object itself
-     * - the offset to the object's top left corner
-     * - and whether the object's base tile lies on that grid cell.
+     * - the offset to the object's top left corner and
+     * - whether the object's base tile is on that grid cell.
      */
     class square_info : public coordinates
     {
     public:
-        /// objects vertical position
-        s_int32 zground;
         /// object the information belongs to
         placeable * obj;
-        /// whether this is an objects base tile.
-        bool IsBase;
         
         /**
          * Create new cell content information.
          * @param pos the position of the object.
+         * @param ground_z position of ground under object
          * @param is_base whether this cell contains object's base tile.
          */
-        square_info (coordinates & pos, const bool & is_base);
+        square_info (coordinates & pos, const s_int32 & ground_z, const bool & is_base);
         
         /**
          * Check two square_info instances for the order they appear on
@@ -89,6 +86,22 @@ namespace world
         {
             return Z + obj->current_shape()->z() + obj->current_shape()->height();
         }
+        
+        /**
+         * Check whether this is the base tile of the object.
+         * @return true if it is the case, false otherwise.
+         */
+        bool is_base () const
+        {
+            return IsBase;
+        }
+        
+    private:
+        /// objects vertical position
+        s_int32 GroundZ;
+        /// whether this is an objects base tile.
+        bool IsBase;
+        
     }; 
     
     /**
@@ -128,16 +141,10 @@ namespace world
          * Add a static object to this square.
          * @param obj the object to add.
          * @param pos the location of this object
+         * @param ground_z position of ground under object
          * @param is_base whether object's base tile is on this square.
          */
-        bool add (placeable * obj, coordinates & pos, const bool & is_ase); 
-        
-        /**
-         * Add a moving object to this square.
-         * @param obj the object to add.
-         * @param is_base whether object's base tile is on this square.
-         */
-        bool add (moving * obj, const bool & is_base);
+        bool add (placeable * obj, coordinates & pos, const s_int32 & ground_z, const bool & is_ase); 
         
         /**
          * Remove a static object from this square.

@@ -1,8 +1,8 @@
 /*
- $Id: area.h,v 1.5 2007/12/18 22:34:47 ksterker Exp $
+ $Id: area.h,v 1.6 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
- Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -145,6 +145,7 @@ namespace world
          * @return true on success, false otherwise
          */
         bool put (placeable * obj, coordinates & pos); 
+        
         /**
          * Add moveable object to the map. Position will be the
          * object's current position.
@@ -159,7 +160,8 @@ namespace world
          * @param pos the location to remove the object from.
          * @return true on success, false otherwise.
          */
-        bool remove (placeable * obj, coordinates & pos); 
+        bool remove (placeable * obj, coordinates & pos);
+        
         /**
          * Remove given moveable object from the map.
          * @param obj the object to remove from the map.
@@ -281,6 +283,21 @@ namespace world
         
         /// This class is allowed to change and move objects on the map.
         friend class moving;
+
+    private:
+            
+        /**
+         * Add object to all map squares enclosed by the rectangle [pos.x(), pos.y(); end_x, end_y].
+         * This method should not be called directly. Use put(moving*) or put(object*, coordinates&)
+         * instead.
+         * @param end_x x coordinate of lower right square
+         * @param end_y y coordinate of lower right square
+         * @param obj the object to add
+         * @param pos position where to add object
+         * @param ground_z position of ground under object
+         * @return true on success, false otherwise
+         */
+        bool put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z);        
     }; 
 }
 

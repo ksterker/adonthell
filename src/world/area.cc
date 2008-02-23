@@ -1,7 +1,8 @@
 /*
- $Id: area.cc,v 1.9 2008/02/10 21:51:47 ksterker Exp $
+ $Id: area.cc,v 1.10 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -51,8 +52,7 @@ void area::clear()
 void area::resize (const u_int16 & nx, const u_int16 & ny) 
 {
     Grid.resize (nx);
-    for (std::vector <std::vector <square> >::iterator i = Grid.begin ();
-         i != Grid.end (); i++)
+    for (std::vector <std::vector <square> >::iterator i = Grid.begin (); i != Grid.end (); i++)
         i->resize (ny); 
 }
 
@@ -65,22 +65,57 @@ world::square * area::get (const u_int16 & x, const u_int16 & y)
 // place object at given position on the grid
 bool area::put (placeable * obj, coordinates & pos)
 {
-    placeable_shape *shape = obj->current_shape ();
-
+    const placeable_shape *shape = obj->current_shape ();
     if (!shape) return false;
 
     // calculate area of map squares occupied by the object's bounding box
-    u_int16 start_x = pos.x (); 
+    u_int16 end_x = (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
+    u_int16 end_y = (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
+
+    // add to map
+    return put (end_x, end_y, obj, pos, pos.z());
+}
+
+// add movable object to map
+bool area::put (moving * obj) 
+{
+    const placeable_shape *shape = obj->current_shape ();
+    if (!shape) return false;
+    
+    // calculate area of map squares occupied by the object's bounding box
+    u_int16 end_x = (u_int16) ceil ((obj->ox () + shape->length ()/2.0f + shape->x()) / (float) SQUARE_SIZE);
+    u_int16 end_y = (u_int16) ceil ((obj->oy () + shape->width ()/2.0f + shape->y()) / (float) SQUARE_SIZE); 
+        
+    return put (end_x, end_y, obj, *obj, obj->ground_pos());
+}
+
+// add to map
+bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z)
+{
+    u_int16 base_tile;
+
+    u_int16 start_x = pos.x ();
     u_int16 start_y = pos.y (); 
-    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
-
+    
+    end_x += start_x;
+    end_y += start_y;
+    
     // make sure we do not exceed map size
-    if (end_x > length()) end_x = length() - 1;
-    if (end_y > height()) end_y = height() - 1;
-
-    // bottom right tile will be used for rendering objects 
-    u_int16 base_tile = end_x + end_y - 2;
+    if (end_x > length()) end_x = length();
+    if (end_y > height()) end_y = height();
+    
+    // calculate base tile
+    const placeable_shape *shape = obj->current_shape ();
+    if (shape->width() <= shape->height())
+    {
+        // bottom right tile will be used for rendering vertical objects 
+        base_tile = end_x + end_y - 2;
+    }
+    else
+    {
+        // top left tile will be used for rendering flat objects
+        base_tile = start_x + start_y;
+    }
     
     square *sq; 
     
@@ -90,48 +125,11 @@ bool area::put (placeable * obj, coordinates & pos)
         for (u_int16 i = start_x; i < end_x; i++) 
         {
             sq = get (i, j);
-            sq->add (obj, pos, i + j == base_tile); 
+            sq->add (obj, pos, ground_z, i + j == base_tile); 
         }
     }
     
-    return true; 
-}
-
-// add movable object to map
-bool area::put (moving * obj) 
-{
-    placeable_shape *shape = obj->current_shape ();
-    
-    if (!shape) return false;
-    
-    // calculate area of map squares occupied by the object's bounding box
-    u_int16 start_x = obj->x (); 
-    u_int16 start_y = obj->y ();
-    
-    // FIXME: shouldn't this rather be image size???
-    u_int16 end_x = start_x + (u_int16) ceil ((obj->ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + (u_int16) ceil ((obj->oy () + shape->width ()) / (float) SQUARE_SIZE); 
-    
-    // make sure we do not exceed map size
-    if (end_x > length()) end_x = length() - 1;
-    if (end_y > height()) end_y = height() - 1;
-    
-    // bottom right tile will be used for rendering objects 
-    u_int16 base_tile = end_x + end_y - 2;
-
-    square *sq;
-    
-    // add object to all these squares
-    for (u_int16 j = start_y; j < end_y; j++)
-    {
-        for (u_int16 i = start_x; i < end_x; i++) 
-        {
-            sq = get (i, j);
-            sq->add (obj, i + j == base_tile);
-        }
-    }
-    
-    return true; 
+    return true;     
 }
 
 // remove static object from map
@@ -143,12 +141,13 @@ bool area::remove (placeable * obj, coordinates & pos)
     // calculate area of map squares occupied by the object's bounding box
     u_int16 start_x = pos.x (); 
     u_int16 start_y = pos.y ();    
-    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
+    
+    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length () + shape->x()) / (float) SQUARE_SIZE);
+    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width () + shape->y()) / (float) SQUARE_SIZE); 
     
     // make sure we do not exceed map size
-    if (end_x > length()) end_x = length() - 1;
-    if (end_y > height()) end_y = height() - 1;
+    if (end_x > length()) end_x = length();
+    if (end_y > height()) end_y = height();
     
     square *sq; 
     

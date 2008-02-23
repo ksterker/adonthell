@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.14 2008/02/16 21:13:25 ksterker Exp $
+ $Id: moving.cc,v 1.15 2008/02/23 20:51:17 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -36,10 +36,6 @@
 #include "world/area.h"
 #include "world/plane3.h"
 
-#ifdef DEBUG_COLLISION
-#include "gfx/screen.h"
-#endif
-
 using world::moving;
 using world::area;
 using world::plane3;
@@ -58,6 +54,15 @@ moving::moving (world::area & mymap)
     Image->resize (gfx::screen::length(), gfx::screen::height());
 #endif
 }
+
+// dtor
+moving::~moving ()
+{
+#ifdef DEBUG_COLLISION
+    delete Image;
+#endif
+}
+
 
 // movement over ground
 void moving::set_velocity (const float & vx, const float & vy) 
@@ -364,9 +369,7 @@ void moving::calculate_ground_pos ()
     for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
     {
         placeable_shape *shape = it->obj->current_shape ();
-        
-        s_int32 objz = it->z () + shape->z() + shape->height ();
-        printf ("ObjZ = %i (%i + %i + %i) MyZ = %i\n", objz, it->z(), shape->z(), shape->height (), Z);
+        s_int32 objz = it->z_pos ();
         
         // only check objects below our character
         if (objz > Z) return;
@@ -393,3 +396,12 @@ bool moving::update ()
     
     return true; 
 }
+
+// debugging
+void moving::debug_collision ()
+{
+#ifdef DEBUG_COLLISION
+    Image->draw (0, 0);
+#endif
+}
+
