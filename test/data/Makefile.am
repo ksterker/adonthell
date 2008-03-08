@@ -36,6 +36,12 @@ EXTRA_DIST = \
 	gfx/map/ground/outside/wood/wood-1.xml \
 	gfx/map/ground/outside/wood/wood-pole.png \
 	gfx/map/ground/outside/wood/wood-pole.xml \
+	gfx/map/wall/outside/cliff/cliff-s.png \
+	gfx/map/wall/outside/cliff/cliff-s.xml \
+	gfx/map/wall/outside/cliff/cliff-se-top.png \
+	gfx/map/wall/outside/cliff/cliff-se-top.xml \
+	gfx/map/wall/outside/cliff/cliff-se.png \
+	gfx/map/wall/outside/cliff/cliff-se.xml \
 	items/__init__.py \
 	items/item.py \
 	items/lightsource.py \
@@ -60,4 +66,7 @@ EXTRA_DIST = \
 	models/map/ground/outside/short-grass-tile.xml \
 	models/map/ground/outside/wood-1.xml \
 	models/map/ground/outside/wood-pole-l.xml \
-	models/map/ground/outside/wood-pole-r.xml
+	models/map/ground/outside/wood-pole-r.xml \
+	models/map/wall/outside/cliff-s.xml \
+	models/map/wall/outside/cliff-se-top.xml \
+	models/map/wall/outside/cliff-se.xml

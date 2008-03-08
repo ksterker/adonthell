@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.15 2008/02/23 20:51:56 ksterker Exp $
+   $Id: worldtest.cc,v 1.16 2008/03/08 16:22:19 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -20,7 +20,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#define DEBUG_COLLISION 0
+// #define DEBUG_COLLISION 1
 
 #include "base/base.h"
 #include "event/date.h"
@@ -219,11 +219,17 @@ public:
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
 
-        /*
-        // diagonal cliff, height 80 at index 5
+        // diagonal cliff, 40x45x75 at index 5
         mobj = (world::object_with_gfx *) world.add_object();
         mobj->load("data/models/map/wall/outside/cliff-se.xml");
-        */
+
+        // diagonal cliff top, 40x45x5 at index 6
+        mobj = (world::object_with_gfx *) world.add_object();
+        mobj->load("data/models/map/wall/outside/cliff-se-top.xml");
+        
+        // cliff facing south, 80x5x80 at index 7
+        mobj = (world::object_with_gfx *) world.add_object();
+        mobj->load("data/models/map/wall/outside/cliff-s.xml");
         
         world::coordinates mc;
         
@@ -233,15 +239,23 @@ public:
 
         mc.set_altitude (80);
         world.put_object (2, mc);
+         */
         
         // create ground (grass tiles are 40x40)
         for (u_int16 i = 0; i < world.length(); i++)
-            for (u_int16 j = 0; j < world.height(); j++)
+            for (u_int16 j = 0; j < 3; j++)
             {
-                world::coordinates mc (i, j, 0, 0, 0);
-                world.put_object (0, mc); 
+                world::coordinates mc (i, j, 80, 0, 0);
+                world.put_object (0, mc);
             }
-         */
+                
+        for (u_int16 j = 0; j < 3; j++)
+            for (u_int16 i = 0; i < 3-j; i++)
+            {
+                world::coordinates mc (i, j+3, 80, 0, 0);
+                world.put_object (0, mc);
+            }
+                        
         
 		// 4 poles (left side)
         mc.set_position(10, 4);
@@ -311,7 +325,7 @@ public:
         
         // create ground (grass tiles are 60x60, but grid is 40x40)
         for (float i = 0; i < world.length(); i += 1.5)
-            for (float j = 0; j < world.height(); j += 1.5)
+            for (float j = 2; j < world.height(); j += 1.5)
             {
                 int x = world::SQUARE_SIZE * i;
                 int y = world::SQUARE_SIZE * j;
@@ -321,14 +335,22 @@ public:
                 world.put_object (1, mc); 
             }
         
-        /*
+        
         // create diagonal wall
         for (int i = 0; i < 4; i++)
         {
-            world::coordinates mc (i, 4-i, 0, 0, 0);
+            world::coordinates mc (i, 6-i, 0, 0, 0);
             world.put_object (5, mc); 
+            mc.set_altitude (75);
+            world.put_object (6, mc);
         }
-        */
+        
+        // create straight wall
+        for (int i = 4; i < 16; i+=2)
+        {
+            world::coordinates mc (i, 3, 0, 0, 0);
+            world.put_object (7, mc); 
+        }
     }
 };
 
@@ -407,8 +429,8 @@ public:
 		                    {
 			                    ((world::character_with_gfx *)
 			                     (*it).obj)->draw_bounding_box (
-                                                                (*it).x () * world::SQUARE_SIZE + (*it).ox (),
-                                                                (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
+                                                (*it).x () * world::SQUARE_SIZE + (*it).ox (),
+                                                (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
 		                    }		                
 		                    break; 
                         }   
