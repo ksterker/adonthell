@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.9 2006/10/30 05:55:11 ksterker Exp $
+   $Id: paths.h,v 1.10 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,10 @@
 #ifndef BASE_PATHS_H
 #define BASE_PATHS_H
 
+#ifndef LT_SCOPE
 #define LT_SCOPE extern
+#endif
+
 #include "ltdl.h"
 
 #include "base/file.h"

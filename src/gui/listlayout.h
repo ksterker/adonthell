@@ -1,5 +1,5 @@
 /*
-   $Id: listlayout.h,v 1.2 2003/11/22 09:37:13 ksterker Exp $
+   $Id: listlayout.h,v 1.3 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,8 @@ namespace gui
     {
     public:
       listlayout ();
-      
+      virtual ~listlayout() { }
+	  
       bool update ();
       
     protected:

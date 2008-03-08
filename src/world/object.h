@@ -1,5 +1,5 @@
 /*
- $Id: object.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: object.h,v 1.3 2008/03/08 20:07:53 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,6 +55,11 @@ namespace world
          */
         object (area & mymap); 
 
+		/**
+		 * Delete object.
+		 */
+		virtual ~object () { }
+		 
         /**
          * Update %object state. Called every game cycle.
          */

@@ -44,7 +44,7 @@ add_library(adonthell_base SHARED ${adonthell_base_SRCS})
 
 
 target_link_libraries(adonthell_base
-	${LIBXML2_LIBRARIES} -lltdl)
+	${LIBXML2_LIBRARIES} -lltdl ${ZLIB_LIBRARIES})
 
 
 

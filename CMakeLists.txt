@@ -119,6 +119,10 @@ else(PYTHONINTERP_FOUND)
 		"Impossible to find the Python Interpreter")
 endif(PYTHONINTERP_FOUND)
 
+#######################
+# libZ
+#######################
+FIND_PACKAGE(ZLIB)
 
 #######################
 # PNG

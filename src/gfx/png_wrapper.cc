@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.6 2007/06/16 20:28:17 ksterker Exp $
+   $Id: png_wrapper.cc,v 1.7 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -122,7 +122,7 @@ namespace gfx
 
         *alpha = (info_ptr->color_type == PNG_COLOR_TYPE_RGBA);
         const int bytes_per_pixel = (*alpha) ? 4 : 3;
-        char *image = image = (char *)calloc (length * height, bytes_per_pixel);
+        char *image = (char *)calloc (length * height, bytes_per_pixel);
         int idx = 0;
 
         switch (info_ptr->color_type)

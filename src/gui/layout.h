@@ -1,5 +1,5 @@
 /*
-   $Id: layout.h,v 1.4 2004/12/21 22:03:17 jol Exp $
+   $Id: layout.h,v 1.5 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,7 @@ namespace gui
     {
     public:
       layout ();
+	  virtual ~layout() { }
       
       virtual bool update ();
       

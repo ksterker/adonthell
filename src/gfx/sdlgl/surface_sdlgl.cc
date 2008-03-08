@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.cc,v 1.5 2008/02/16 19:08:44 ksterker Exp $
+   $Id: surface_sdlgl.cc,v 1.6 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -93,7 +93,7 @@ namespace gfx
 	// TODO
     }
 
-    u_int32 surface_sdlgl::map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 0) const
+    u_int32 surface_sdlgl::map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a) const
     {
 	// TODO
     }

@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event.h,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio_event.h,v 1.3 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,10 @@ namespace audio
          *
          * @param sample The sample to trigger on
          */
-        audio_event (const sound *sample): Sample (sample), event () { }
+        audio_event (const sound *sample): event () 
+		{ 
+			Sample = sample; 
+		}
 
 #ifndef SWIG
         /**

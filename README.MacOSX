@@ -157,7 +157,9 @@ on each other.
 
     * Get source code, extract and compile/install with:
 
-        $ ./configure --prefix=/usr/local
+        $ ./configure --prefix=/usr/local --enable-music-ogg \
+		CC=./gcc-fat.sh CFLAGS="-I/usr/local/include" \
+		LDFLAGS="-L/usr/local/lib/ -lvorbisfile -lvorbis -logg"
         $ make
         $ sudo make install
 

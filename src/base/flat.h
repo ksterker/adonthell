@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.26 2007/10/13 21:15:19 ksterker Exp $
+   $Id: flat.h,v 1.27 2008/03/08 20:07:53 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -85,7 +85,8 @@ namespace base
                 T_FLAT = 12, 
                 NBR_TYPES = 13
             } data_type;
-        
+
+#ifndef SWIG
 		    /**
 		     * Internal structure to store unflattened data
 		     */
@@ -100,6 +101,7 @@ namespace base
 		                
 		            ~data () { delete Next; }
 		    };
+#endif // SWIG
         
             /**
              * Create a new flattener.
