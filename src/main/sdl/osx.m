@@ -15,6 +15,13 @@
 #define main_init _sdl_LTX_main_init
 #endif
 
+/* For some reaon, Apple removed setAppleMenu from the headers in 10.4,
+ but the method still is there and works. To avoid warnings, we declare
+ it ourselves here. */
+@interface NSApplication(SDL_Missing_Methods)
+- (void)setAppleMenu:(NSMenu *)menu;
+@end
+
 /* Portions of CPS.h */
 typedef struct CPSProcessSerNum
 {
@@ -37,6 +44,7 @@ extern "C" {
 @end
 
 @implementation SDLApplication
+
 /* Invoked from the Quit menu item */
 - (void)terminate:(id)sender
 {
@@ -51,7 +59,7 @@ extern "C" {
 /* The main class of the application, the application's delegate */
 @implementation SDLMain
 
-- init: (adonthell::app*) theApp
+- setAdonthellApp: (adonthell::app*) theApp
 {
     Application = theApp;
 }
@@ -167,7 +175,8 @@ void CustomApplicationMain (adonthell::app *theApp)
     setupWindowMenu();
     
     /* Create SDLMain and make it the app delegate */
-    sdlMain = [[SDLMain alloc] init:theApp];
+    sdlMain = [[SDLMain alloc] init];
+    [sdlMain setAdonthellApp:theApp];
     [NSApp setDelegate:sdlMain];
     
     /* Start the main event loop */

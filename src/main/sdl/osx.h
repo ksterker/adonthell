@@ -13,5 +13,5 @@
     adonthell::app *Application;
 }
     
-- init:(adonthell::app *)theApp;
+- setAdonthellApp:(adonthell::app *)theApp;
 @end
