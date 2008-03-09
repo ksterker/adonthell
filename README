@@ -99,7 +99,7 @@ version.  So if you have experience in C++ (and optionally Python),
 or if you are good at computer graphics or writing we would like to
 hear from you.  Please have a look at our development Wiki
 
-  http://adonthell.berlios.de/doc/
+    http://adonthell.berlios.de/doc/
 
 for further details.
 
@@ -112,6 +112,7 @@ Contact:
 
 You can reach us in various ways:
 
+IRC Channel:   #adonthell at irc.freenode.net
 Mailing list:  adonthell-general@nongnu.org
 Web site:      http://adonthell.linuxgames.com
 Tech support:  http://savannah.gnu.org/support/?group_id=702
@@ -127,11 +128,10 @@ Reporting Bugs:
 ===============
 
 We hope you'll never have to, but if you discover a problem, we
-would like to hear about it. Please use the Development mailing list
-(adonthell-devel@nongnu.org) for that. You can subscribe to the
-mailing lists at
+would like to hear about it. Please use the bug tracker at 
 
-  http://adonthell.linuxgames.com/contact/mailinglist.shtml
+    http://savannah.nongnu.org/bugs/?group=adonthell
+
 
 
 Thank you for trying this software.

@@ -1,6 +1,7 @@
 version 0.4
 - Broke Engine into separate Modules
 - Created Python bindings for Engine Modules 
+- Map engine uses 3D internally for more freedom of movement
 - ...
 
 version 0.3
@@ -23,5 +24,6 @@ _________________________________________________________________________
 For the latest news on the functionality of the Adonthell Project,  
 please visit the project's website:
 
-http://adonthell.linuxgames.com/en_frames/whats_new.shtml
+    http://adonthell.linuxgames.com/news/
+
 
