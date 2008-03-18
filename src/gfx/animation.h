@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.7 2007/07/22 01:32:21 ksterker Exp $
+   $Id: animation.h,v 1.8 2008/03/18 21:46:22 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -167,7 +167,6 @@ namespace gfx
         /**
          * Load the available animtions from a xml file
          * 
-         * @todo Implement xml loading...
          * @param filename xml file to load
          * @return true if successful
          */
@@ -194,7 +193,7 @@ namespace gfx
         struct animation_frame
         {
             /**
-            * Create a new frame
+             * Create a new frame
              * @param img the image data
              * @param dly the delay before switching to the next frame
              */

@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.27 2008/03/08 20:07:53 ksterker Exp $
+   $Id: flat.h,v 1.28 2008/03/18 21:46:22 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,6 +30,8 @@
 #define BASE_FLAT
 
 #include <string>
+#include <string.h>
+#include <stdlib.h>
 #include "base/types.h"
 #include "python/callback_support.h"
 

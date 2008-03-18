@@ -1,5 +1,5 @@
 /*
-   $Id: configio.cc,v 1.4 2006/09/22 01:15:22 ksterker Exp $
+   $Id: configio.cc,v 1.5 2008/03/18 21:46:22 ksterker Exp $
 
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
