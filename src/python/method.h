@@ -1,5 +1,5 @@
 /*
-   $Id: method.h,v 1.7 2004/11/15 08:54:33 ksterker Exp $
+   $Id: method.h,v 1.8 2008/04/14 11:05:43 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,6 +60,12 @@ namespace python
          * Destructor.
          */
         ~method ();
+        
+        /**
+         * Return name of method.
+         * @return method name, or empty string on error.
+         */
+        std::string name () const;
         
         /**
          * Execute the connected %method with the given arguments.

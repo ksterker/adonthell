@@ -1,5 +1,5 @@
 /*
-   $Id: method.cc,v 1.5 2004/05/13 06:44:01 ksterker Exp $
+   $Id: method.cc,v 1.6 2008/04/14 11:05:43 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,6 +55,29 @@ method::~method ()
     Py_XDECREF (Method);
 }
 
+// figure out name of python method
+std::string method::name () const
+{
+    std::string result ("");
+    
+    if (Method)
+    {
+        PyObject *methodname = PyObject_GetAttrString (Method, "__name__");
+        if (methodname != NULL)
+        {
+            result = PyString_AsString (methodname);
+            Py_DECREF (methodname);
+        }
+        else
+        {
+            fprintf (stderr, "*** method::name: cannot retrieve method name!\n");
+        }
+    }
+    
+    return result;
+}
+
+// execute python method
 bool method::execute (PyObject *args)
 {
     if (Method) 
@@ -81,15 +104,7 @@ void method::put_state (base::flat & out) const
     {
         out.put_string ("mfn", Script->file_name ());
         out.put_string ("mcn", Script->class_name ());
-        
-        PyObject *methodname = PyObject_GetAttrString (Method, "__name__");
-        if (methodname != NULL)
-        {
-            out.put_string ("mmn", PyString_AsString (methodname));
-            Py_DECREF (methodname);
-        }
-        else
-            fprintf (stderr, "*** method::put_state: cannot retrieve method name!\n");
+        out.put_string ("mmn", name ());
     }
 }
 
