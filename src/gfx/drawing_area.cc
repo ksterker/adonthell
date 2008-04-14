@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.5 2003/11/22 09:35:21 ksterker Exp $
+   $Id: drawing_area.cc,v 1.6 2008/04/14 11:07:19 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,7 @@ namespace gfx
     {
         drawing_area ret = *this;
         ret.assign_drawing_area(NULL);
-        for(drawing_area* it = this->assigned_drawing_area(); it; it = it->assigned_drawing_area())
+        for(const drawing_area* it = this->assigned_drawing_area(); it; it = it->assigned_drawing_area())
 	{
             s_int32 x = std::max(ret.x(), it->x());
             s_int32 y = std::max(ret.y(), it->y());

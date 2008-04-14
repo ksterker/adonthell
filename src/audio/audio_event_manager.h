@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event_manager.h,v 1.3 2006/09/28 19:13:26 gnurou Exp $
+   $Id: audio_event_manager.h,v 1.4 2008/04/14 11:06:40 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -73,9 +73,9 @@ namespace audio
          * Raise one or more events in case the given time matches their
          * "sound" pointer.
          *
-         * @param evnt An %event structure with the current audio clip
+         * @param e An %event structure with the current audio clip
          */
-        void raise_event (const event *evnt);
+        void raise_event (const event *e);
 
         /**
          * Register %time events with %event subsystem.

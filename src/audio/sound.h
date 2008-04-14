@@ -1,5 +1,5 @@
 /*
-   $Id: sound.h,v 1.2 2006/04/01 22:45:54 Mithander Exp $
+   $Id: sound.h,v 1.3 2008/04/14 11:06:40 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,6 +34,10 @@
 
 namespace audio {
 
+    /**
+     * Playback sound effects or background music.
+     *
+     */
     class sound
     {
     public:
@@ -101,11 +105,14 @@ namespace audio {
         static void handle_channel_stop(int channel);
 #endif
     protected:
-
-        std::string m_filename; // the name of the file we loaded
-        void * m_sample; // the sound data
-        int m_channel; // the channel the sound it playing on
-        bool m_forcedhalt; //Was this sound stoped by the user
+        /// the name of the file we loaded
+        std::string m_filename; 
+        /// the sound data
+        void * m_sample;
+        /// the channel the sound is playing on
+        int m_channel; 
+        /// Was this sound stoped by the user
+        bool m_forcedhalt;
 
         //Functions from the audio backend
         static void *(*m_open)(const char *);
@@ -116,7 +123,7 @@ namespace audio {
         static void (*m_fadeout)(int, double);
         static bool (*m_setpos)(int, int, double);
 
-        //This lets us know which channel is associated with which class.
+        /// This lets us know which channel is associated with which class.
         static std::vector<sound *> m_channels;
 
         bool handle_channel_create(void);

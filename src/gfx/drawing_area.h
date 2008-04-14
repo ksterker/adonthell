@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.h,v 1.7 2006/07/08 17:04:03 ksterker Exp $
+   $Id: drawing_area.h,v 1.8 2008/04/14 11:07:19 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -141,7 +141,7 @@ namespace gfx
          *  by the drawing_area is the intersection of the two.
          *  @param da the drawing_area to assign.
          */  
-        void assign_drawing_area (drawing_area * da) 
+        void assign_drawing_area (const drawing_area * da) 
         {
             draw_to = da; 
         }
@@ -152,7 +152,7 @@ namespace gfx
          * 
          * @return pointer to the assigned drawing_area, NULL if none.
          */
-        drawing_area * assigned_drawing_area () const
+        const drawing_area * assigned_drawing_area () const
         {
             return draw_to; 
         }
@@ -195,7 +195,7 @@ namespace gfx
         u_int16 w_, h_;
 
         /// Attached drawing_area.
-        drawing_area *draw_to; 
+        const drawing_area *draw_to; 
 
     }; 
 }

@@ -1,5 +1,5 @@
 /*
-   $Id: drawable.h,v 1.7 2007/05/19 07:42:07 ksterker Exp $
+   $Id: drawable.h,v 1.8 2008/04/14 11:07:19 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -102,7 +102,7 @@ namespace gfx
         /** 
          * Virtual update function, provided for %objects which
          * doesn't need one.
-         * 
+         * @return always true.
          */
         virtual bool update ();
 

@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.8 2007/06/16 22:57:24 ksterker Exp $
+   $Id: screen.h,v 1.9 2008/04/14 11:07:19 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -94,6 +94,12 @@ namespace gfx
          */
         static u_int32 trans_color() { return trans_color_p(); }
 
+        /**
+         * Return a pointer to the display surface for drawing directly
+         * to the screen. Note that the screen is usually double buffered.
+         * New content will not appear before a call to screen::update().
+         * @return display surface.
+         */
         static surface * get_surface() { return get_surface_p(); }
 
         /** Returns whether the current mode is fullscreen or windowed.
@@ -115,7 +121,7 @@ namespace gfx
         /** 
          * Toggles between fullscreen/windowed mode. Needs to be called
          * before set_video_mode to be effective.
-         *  @param mode
+         *  @param m
          *     - true: fullscreen mode.
          *     - false: windowed mode.
          */ 
