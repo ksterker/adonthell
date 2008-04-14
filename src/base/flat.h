@@ -1,5 +1,5 @@
 /*
-   $Id: flat.h,v 1.28 2008/03/18 21:46:22 ksterker Exp $
+   $Id: flat.h,v 1.29 2008/04/14 11:03:09 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -321,10 +321,11 @@ namespace base
              * Retrieve a boolean value previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b false on error.
              */
-            bool get_bool (const string & name) {
-                data *d = get (name, T_BOOL);
+            bool get_bool (const string & name, bool optional = false) {
+                data *d = get (name, T_BOOL, optional);
                 if (d) return (bool) *((u_int8*) d->Content);
                 else return false;
             }
@@ -333,10 +334,11 @@ namespace base
              * Retrieve a character value previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b '\\0' on error.
              */
-            char get_char (const string & name) {
-                data *d = get (name, T_CHAR);
+            char get_char (const string & name, bool optional = false) {
+                data *d = get (name, T_CHAR, optional);
                 if (d) return (char) *d->Content;
                 else return '\0';
             }
@@ -345,10 +347,11 @@ namespace base
              * Retrieve 8 bit unsigned integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b 0 on error.
              */
-            u_int8 get_uint8 (const string & name) {
-                data *d = get (name, T_UINT8);
+            u_int8 get_uint8 (const string & name, bool optional = false) {
+                data *d = get (name, T_UINT8, optional);
                 if (d) return *((u_int8*) d->Content);
                 else return 0;
             }
@@ -357,10 +360,11 @@ namespace base
              * Retrieve 8 bit signed integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b -1 on error.
              */
-            s_int8 get_sint8 (const string & name) {
-                data *d = get (name, T_SINT8);
+            s_int8 get_sint8 (const string & name, bool optional = false) {
+                data *d = get (name, T_SINT8, optional);
                 if (d) return *((s_int8*) d->Content);
                 else return -1;
             }
@@ -369,10 +373,11 @@ namespace base
              * Retrieve 16 bit unsigned integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b 0 on error.
              */
-            u_int16 get_uint16 (const string & name) {
-                data *d = get (name, T_UINT16);
+            u_int16 get_uint16 (const string & name, bool optional = false) {
+                data *d = get (name, T_UINT16, optional);
                 if (d) return *((u_int16*) d->Content);
                 else return 0;
             }
@@ -381,10 +386,11 @@ namespace base
              * Retrieve 16 bit signed integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b -1 on error.
              */
-            s_int16 get_sint16 (const string & name) {
-                data *d = get (name, T_SINT16);
+            s_int16 get_sint16 (const string & name, bool optional = false) {
+                data *d = get (name, T_SINT16, optional);
                 if (d) return *((s_int16*) d->Content);
                 else return -1;
             }
@@ -393,10 +399,11 @@ namespace base
              * Retrieve 32 bit unsigned integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b 0 on error.
              */
-            u_int32 get_uint32 (const string & name) {
-                data *d = get (name, T_UINT32);
+            u_int32 get_uint32 (const string & name, bool optional = false) {
+                data *d = get (name, T_UINT32, optional);
                 if (d) return *((u_int32*) d->Content);
                 else return 0;
                 
@@ -406,10 +413,11 @@ namespace base
              * Retrieve 32 bit signed integer previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b -1 on error.
              */
-            s_int32 get_sint32 (const string & name) {
-                data *d = get (name, T_SINT32);
+            s_int32 get_sint32 (const string & name, bool optional = false) {
+                data *d = get (name, T_SINT32, optional);
                 if (d) return *((s_int32*) d->Content);
                 else return -1;
             }
@@ -418,10 +426,11 @@ namespace base
              * Retrieve string previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b "" (empty string) on error.
              */
-            string get_string (const string & name) {
-                data *d = get (name, T_STRING);
+            string get_string (const string & name, bool optional = false) {
+                data *d = get (name, T_STRING, optional);
                 if (d) return string (d->Content);
                 else return string ("");
             }
@@ -430,10 +439,11 @@ namespace base
              * Retrieve floating point number previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b 0.0 on error.
              */
-            float get_float (const string & name) {
-                data *d = get (name, T_FLOAT);
+            float get_float (const string & name, bool optional = false) {
+                data *d = get (name, T_FLOAT, optional);
                 if (d) return (float) strtod (d->Content, NULL);
                 else return 0.0;
             }
@@ -442,10 +452,11 @@ namespace base
              * Retrieve double value previously stored with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b 0.0 on error.
              */
-            double get_double (const string & name) {
-                data *d = get (name, T_DOUBLE);
+            double get_double (const string & name, bool optional = false) {
+                data *d = get (name, T_DOUBLE, optional);
                 if (d) return strtod (d->Content, NULL);
                 else return 0.0;
             }
@@ -457,10 +468,11 @@ namespace base
              * with it.
              * @param name id used to retrieve the value later on.
              * @param size will contain number of bytes returned.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b NULL on error.
              */
-            void* get_block (const string & name, int *size = NULL) {
-                data *d = get (name, T_BLOB);
+            void* get_block (const string & name, int *size = NULL, bool optional = false) {
+                data *d = get (name, T_BLOB, optional);
                 if (d) {
                     if (size != NULL) *size = d->Size;
                     u_int8 *ret = new u_int8[d->Size];
@@ -475,10 +487,11 @@ namespace base
              * Retrieve a nested flat with given id. Call 
              * success() to check whether value retrieval was successful.
              * @param name id used to retrieve the value later on.
+             * @param optional whether to gracefully ignore missing data.
              * @return value stored or \b empty flat on error.
              */
-            flat get_flat (const string & name) {
-                data *d = get (name, T_FLAT);
+            flat get_flat (const string & name, bool optional = false) {
+                data *d = get (name, T_FLAT, optional);
                 if (d) return flat (d->Content, d->Size);
                 else return flat ();
             }
@@ -622,12 +635,17 @@ namespace base
             void put (const string & name, const data_type & type, const u_int32 & size, const void *data);
             
             /**
-             * Reads data from the buffer.
+             * Reads data from the buffer. If data is not found in the buffer, an error message
+             * is printed and the success flag will be set to false, unless the data is specially
+             * marked as optional by passing true in the last method argument.
+             *
              * @param name Identifier of data to retrieve
              * @param type Type of data to retrieve
+             * @param optional Whether the data is optional.
+             *
              * @return data structure filled with desired data, or NULL if data does not exist.
              */
-            data* get (const string & name, const data_type & type);
+            data* get (const string & name, const data_type & type, const bool & optional = false);
             
             /**
              * Unflatten the internal buffer for easier data retrieval. 

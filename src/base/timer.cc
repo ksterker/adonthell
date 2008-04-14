@@ -1,5 +1,5 @@
 /*
-   $Id: timer.cc,v 1.11 2007/05/25 03:13:55 ksterker Exp $
+   $Id: timer.cc,v 1.12 2008/04/14 11:03:09 ksterker Exp $
 
    Copyright (C) 2003/2004/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,9 +39,15 @@
 #include <windows.h>
 #endif
 
+/**
+ * POSIX timespec struct, for use by non-POSIX systems.
+ *
+ */
 struct timespec 
 {
+    /// time in seconds
 	time_t tv_sec;
+    /// fraction of a second, in nanoseconds
 	long tv_nsec;
 };
 

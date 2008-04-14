@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_base.h,v 1.2 2007/10/22 02:19:46 ksterker Exp $
+ $Id: diskwriter_base.h,v 1.3 2008/04/14 11:03:08 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,24 +33,32 @@
 
 namespace base {
     /**
-     *
+     * Base class for saving structured data to or loading it back from a file. The type of
+     * file will be determined by the actual implementation. It might be an XML file or a
+     * compressed binary file.
      */
     class disk_writer_base
     {
     public:
 	
 		/**
-		 *
+		 * Destructor.
 		 */
 		virtual ~disk_writer_base () {}
 		
         /*
-         *
+         * Save given record in file with give name.
+         * @param name file name
+         * @param data data to save
+         * @return \b true on success, \b false otherwise.
          */
         virtual bool put_state (const std::string & name, base::flat & data) const = 0;
         
         /**
-         *
+         * Load content of file into given record.
+         * @param name file name
+         * @param data container for data to load
+         * @return \b true on success, \b false otherwise.
          */
         virtual bool get_state (const std::string & name, base::flat & data) const = 0;
 

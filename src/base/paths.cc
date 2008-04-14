@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.12 2007/04/15 21:58:46 ksterker Exp $
+   $Id: paths.cc,v 1.13 2008/04/14 11:03:09 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -89,7 +89,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 
     // set OS specific directory containing configuration and saved games
 #if defined(__APPLE__)		// OSX
-    CfgDataDir = string (getenv ("HOME")) + "/Library/Adonthell/";
+    CfgDataDir = string (getenv ("HOME")) + "/Library/Application Support/Adonthell/";
 #elif defined (WIN32)		// Windows
     CfgDataDir = "./";
 #else						// Unix

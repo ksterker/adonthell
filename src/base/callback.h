@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.4 2004/12/28 02:03:59 jol Exp $
+   $Id: callback.h,v 1.5 2008/04/14 11:03:08 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -102,6 +102,10 @@ namespace base
         }
     };
     
+    /**
+     * Translate function with zero arguments into method. 
+     *
+     */
     template <class Func>
     class functiontranslator_0:public functor_0{
     public:
@@ -191,7 +195,10 @@ namespace base
         }
     };
     
-    
+    /**
+     * Translate function with zero arguments and return value into method. 
+     *
+     */    
     template <class RT,class Func>
     class functiontranslator_0ret:public functor_0ret<RT>{
     public:
@@ -320,6 +327,10 @@ namespace base
         }
     };
     
+    /**
+     * Translate function with one argument into method. 
+     *
+     */    
     template <class P1, class Func> 
     class functiontranslator_1 : public functor_1 <P1>
     {
@@ -443,7 +454,10 @@ namespace base
     }
   };
   
-  
+    /**
+     * Translate function with two arguments into method. 
+     *
+     */    
   template <class P1, class P2, class Func> 
   class functiontranslator_2 : public functor_2 <P1, P2> {
   public:

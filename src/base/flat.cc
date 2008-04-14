@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.15 2007/10/13 21:15:19 ksterker Exp $
+   $Id: flat.cc,v 1.16 2008/04/14 11:03:08 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -113,7 +113,7 @@ void flat::put (const string & name, const data_type & type, const u_int32 & siz
 }
 
 // retrieve given data
-flat::data* flat::get (const string & name, const data_type & type)
+flat::data* flat::get (const string & name, const data_type & type, const bool & optional)
 {
     if (Data == NULL) 
     {
@@ -155,8 +155,12 @@ flat::data* flat::get (const string & name, const data_type & type)
     }
     
     // still not found -> panic
-    fprintf (stderr, "*** error: flat::get: parameter '%s' not available\n", name.c_str ());
-    Success = false;
+    if (!optional)
+    {
+        fprintf (stderr, "*** error: flat::get: parameter '%s' not available\n", name.c_str ());
+        Success = false;
+    }
+    
     return NULL;
 }
 
