@@ -23,6 +23,6 @@ swig_link_libraries(debug ${PYTHON_LIBRARIES} adonthell_py_runtime)
 set_target_properties (_debug PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
 
 # install modules
-adonthell_install_py (_debug "debug.py")
+adonthell_install_py (_debug "${CMAKE_CURRENT_BINARY_DIR}/debug.py")
 adonthell_install_lib (adonthell_py_runtime)
 
