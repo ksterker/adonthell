@@ -65,7 +65,7 @@ set(gfx_sdlgl_SRCS
 # Add specific include directory for this library.
 include_directories(${SDL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
-add_library(sdlgl MODULE ${gfx_sdlgl_SRCS})
+add_library(gfx-backend-sdlgl MODULE ${gfx_sdlgl_SRCS})
 target_link_libraries(gfx-backend-sdlgl
 	${SDL_LIBRARY}
 	${OPENGL_LIBRARY}

@@ -36,6 +36,7 @@ TARGET_LINK_LIBRARIES(gfxtest
 #	adonthell_main
 #	adonthell_python
 #	adonthell_py_runtime
+	${PYTHON_EXTRA_LIBRARIES}
 	)
 
 ###############################
@@ -50,6 +51,7 @@ TARGET_LINK_LIBRARIES(gfxtest
 #	adonthell_main
 #	adonthell_python
 #	adonthell_py_runtime
+#	${PYTHON_EXTRA_LIBRARIES}
 #	)
 
 ###############################
@@ -66,7 +68,8 @@ TARGET_LINK_LIBRARIES(worldtest
 	adonthell_input
 	adonthell_main
 	adonthell_world
-	
+
 #	adonthell_python
 #	adonthell_py_runtime
+	${PYTHON_EXTRA_LIBRARIES}
 	)

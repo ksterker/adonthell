@@ -10,10 +10,20 @@ if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 # -- use automatic escaping in add_definitions
     cmake_policy(SET CMP0005 NEW)
+    set(ESCAPE "")
+else(COMMAND cmake_policy)
+
+# -- pre 2.6 needs escaping in add_definitions
+if(CMAKE_GENERATOR MATCHES ".*Makefiles")
+    set(ESCAPE "\\\"")
+else(CMAKE_GENERATOR MATCHES ".*Makefiles")
+    set(ESCAPE "\\\\\"")
+endif(CMAKE_GENERATOR MATCHES ".*Makefiles")
+
 endif(COMMAND cmake_policy)
 
 
-add_definitions(-DVERSION="0.4.0" -DHAVE_CONFIG_H=1)
+add_definitions(-DVERSION="${ESCAPE}0.4.0${ESCAPE}" -DHAVE_CONFIG_H=1)
 
 if(APPLE)
    set(CMAKE_SHARED_LINKER_FLAGS "-single_module" CACHE INTERNAL "")
@@ -32,11 +42,11 @@ if(NOT ADONTHELL_DATADIR)
 endif(NOT ADONTHELL_DATADIR)
 message(STATUS
 	"Adonthell data directory: ${ADONTHELL_DATADIR}")
-add_definitions(-DDATA_DIR="${ADONTHELL_DATADIR}")
+add_definitions(-DDATA_DIR="${ESCAPE}${ADONTHELL_DATADIR}${ESCAPE}")
 
 
 # FIXME: We need to manage the package lib directory for different plattforms!
-add_definitions(-DPKGLIBDIR="${CMAKE_INSTALL_PREFIX}/lib/adonthell")
+add_definitions(-DPKGLIBDIR="${ESCAPE}${CMAKE_INSTALL_PREFIX}/lib/adonthell${ESCAPE}")
 
 
 ##########################
@@ -103,6 +113,7 @@ endif(SDLMIXER_FOUND)
 #######################
 # Python
 #######################
+
 find_package(PythonLibs REQUIRED)
 if(PYTHON_INCLUDE_PATH)
 	message(STATUS
@@ -128,6 +139,10 @@ else(PYTHONINTERP_FOUND)
 	message(FATAL_ERROR
 		"Impossible to find the Python Interpreter")
 endif(PYTHONINTERP_FOUND)
+
+include(config/PythonExtraLibs.cmake)
+	message(STATUS
+		"\tLDEXTRA: ${PYTHON_EXTRA_LIBRARIES}")
 
 #######################
 # libZ
