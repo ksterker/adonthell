@@ -21,7 +21,7 @@ set(adonthell_gfx_HEADERS
 	surface.h
 )
 
-add_definitions(${PNG_DEFINITIONS}) 
+add_definitions(${PNG_DEFINITIONS})
 
 include_directories(${PYTHON_INCLUDE_PATH} ${PNG_INCLUDE_DIR})
 
@@ -46,12 +46,12 @@ set(gfx_sdl_SRCS
 # Add specific include directory for this library.
 include_directories(${SDL_INCLUDE_DIR})
 
-add_library(sdl MODULE ${gfx_sdl_SRCS})
-target_link_libraries(sdl
+add_library(gfx-backend-sdl MODULE ${gfx_sdl_SRCS})
+target_link_libraries(gfx-backend-sdl
 	${SDL_LIBRARY}
 	adonthell_gfx
 	)
-set_target_properties(sdl PROPERTIES PREFIX "_")
+set_target_properties(gfx-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
 ###########################################################
 # Create the OpenGL Backend if OpenGL and SDL are available
@@ -66,20 +66,20 @@ set(gfx_sdlgl_SRCS
 include_directories(${SDL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
 
 add_library(sdlgl MODULE ${gfx_sdlgl_SRCS})
-target_link_libraries(sdlgl
+target_link_libraries(gfx-backend-sdlgl
 	${SDL_LIBRARY}
 	${OPENGL_LIBRARY}
 	adonthell_gfx
 	)
-set_target_properties(sdlgl PROPERTIES PREFIX "_")
+set_target_properties(gfx-backend-sdlgl PROPERTIES PREFIX "_" OUTPUT_NAME "sdlgl")
 ENDIF(OPENGL_FOUND)
 
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_gfx)
-adonthell_install_include(gfx "${adonthell_gfx_HEADERS}") 
-adonthell_install_backend(gfx sdl)
+adonthell_install_include(gfx "${adonthell_gfx_HEADERS}")
+adonthell_install_backend(gfx gfx-backend-sdl)
 
 IF(OPENGL_FOUND)
-adonthell_install_backend(gfx sdlgl)
+adonthell_install_backend(gfx gfx-backend-sdlgl)
 ENDIF(OPENGL_FOUND)

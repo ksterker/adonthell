@@ -46,9 +46,9 @@ endif(APPLE)
 
 include_directories(${SDL_INCLUDE_DIR})
 
-add_library(sdl MODULE ${sdl_SRCS})
-set_target_properties(sdl PROPERTIES PREFIX "_")
-target_link_libraries(sdl
+add_library(main-backend-sdl MODULE ${sdl_SRCS})
+set_target_properties(main-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
+target_link_libraries(main-backend-sdl
 	${SDL_LIBRARY}
 	adonthell_main
 )
@@ -57,5 +57,5 @@ target_link_libraries(sdl
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_main)
-adonthell_install_include(main "${adonthell_main_HEADERS}") 
-adonthell_install_backend(main sdl)
+adonthell_install_include(main "${adonthell_main_HEADERS}")
+adonthell_install_backend(main main-backend-sdl)

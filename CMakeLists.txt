@@ -3,7 +3,17 @@ project(adonthell)
 
 cmake_minimum_required(VERSION 2.4.3)
 
-add_definitions(-DVERSION="\\"0.4.0\\"" -DHAVE_CONFIG_H=1)
+
+# -- for CMake 2.6.x
+if(COMMAND cmake_policy)
+# -- pass fully qualified libraries directly to linker
+    cmake_policy(SET CMP0003 NEW)
+# -- use automatic escaping in add_definitions
+    cmake_policy(SET CMP0005 NEW)
+endif(COMMAND cmake_policy)
+
+
+add_definitions(-DVERSION="0.4.0" -DHAVE_CONFIG_H=1)
 
 if(APPLE)
    set(CMAKE_SHARED_LINKER_FLAGS "-single_module" CACHE INTERNAL "")
@@ -22,11 +32,11 @@ if(NOT ADONTHELL_DATADIR)
 endif(NOT ADONTHELL_DATADIR)
 message(STATUS
 	"Adonthell data directory: ${ADONTHELL_DATADIR}")
-add_definitions(-DDATA_DIR="\\"${ADONTHELL_DATADIR}\\"")
+add_definitions(-DDATA_DIR="${ADONTHELL_DATADIR}")
 
 
 # FIXME: We need to manage the package lib directory for different plattforms!
-add_definitions(-DPKGLIBDIR="\\"${CMAKE_INSTALL_PREFIX}/lib/adonthell\\"")
+add_definitions(-DPKGLIBDIR="${CMAKE_INSTALL_PREFIX}/lib/adonthell")
 
 
 ##########################
@@ -71,13 +81,13 @@ ENDIF(SDL_FOUND)
 # SDL_mixer
 ##########################
 
-find_package(SDL_mixer REQUIRED PATH_SUFFIXES SDL)
+find_package(SDL_mixer REQUIRED)
 if(SDLMIXER_FOUND)
 	# take a lucky guess
 	if(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
 		set(SDLMIXER_INCLUDE_DIR ${SDL_INCLUDE_DIR})
 	endif(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
-	
+
 	MESSAGE(STATUS
 		"SDL_mixer has been found:")
 	MESSAGE(STATUS
@@ -110,7 +120,7 @@ find_package(PythonInterp)
 if(PYTHONINTERP_FOUND)
 	EXEC_PROGRAM(${PYTHON_EXECUTABLE}
 		ARGS "-c \"import sys;vi = sys.version_info; print \\\"python%s.%s\\\" %(vi[0],vi[1])\""
-		OUTPUT_VARIABLE PYTHON_VERSION_DIR	
+		OUTPUT_VARIABLE PYTHON_VERSION_DIR
 	)
 	message(STATUS
 		"\tVERSION: ${PYTHON_VERSION_DIR}")
@@ -207,7 +217,7 @@ if(LIBXML2_FOUND)
 	message(STATUS
 		"\tCFLAGS : ${LIBXML2_INCLUDE_PATH}")
 	message(STATUS
-		"\tLDFLAGS: ${LIBXML2_LIBRARIES}")	
+		"\tLDFLAGS: ${LIBXML2_LIBRARIES}")
 else(LIBXML2_FOUND)
 	message(FATAL_ERROR
 		"LibXml2 is required.")
@@ -235,7 +245,7 @@ check_include_files ("stdlib.h;stdarg.h;string.h" STDC_HEADERS)
 include (CheckFunctionExists)
 check_function_exists(nanosleep HAVE_NANOSLEEP)
 
-include (CheckLibraryExists) 
+include (CheckLibraryExists)
 check_library_exists(ltdl lt_dlerror "" HAVE_LIBLTDL)
 
 if(NOT HAVE_LIBLTDL)

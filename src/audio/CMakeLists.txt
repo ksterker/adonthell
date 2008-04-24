@@ -7,9 +7,9 @@ set(adonthell_audio_SRCS
 )
 
 set(adonthell_audio_HEADERS
-	audio_event.h  
-	audio_event_manager.h  
-	audio.h  
+	audio_event.h
+	audio_event_manager.h
+	audio.h
 	sound.h
 )
 
@@ -35,17 +35,17 @@ set(audio_sdl_SRCS
 include_directories(${SDL_INCLUDE_DIR} ${SDLMIXER_INCLUDE_DIR})
 
 
-add_library(sdl MODULE ${audio_sdl_SRCS})
-target_link_libraries(sdl
+add_library(audio-backend-sdl MODULE ${audio_sdl_SRCS})
+target_link_libraries(audio-backend-sdl
 	${SDL_LIBRARY}
 	${SDLMIXER_LIBRARY}
 	adonthell_audio
 	)
-set_target_properties(sdl PROPERTIES PREFIX "_")
+set_target_properties(audio-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
 
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_audio)
-adonthell_install_include(audio "${adonthell_audio_HEADERS}") 
-adonthell_install_backend(audio sdl)
+adonthell_install_include(audio "${adonthell_audio_HEADERS}")
+adonthell_install_backend(audio audio-backend-sdl)

@@ -41,16 +41,16 @@ set(input_sdl_SRCS
 include_directories(${SDL_INCLUDE_DIR})
 
 
-add_library(sdl MODULE ${input_sdl_SRCS})
-target_link_libraries(sdl
+add_library(input-backend-sdl MODULE ${input_sdl_SRCS})
+target_link_libraries(input-backend-sdl
 	${SDL_LIBRARY}
 	adonthell_input
 	)
-set_target_properties(sdl PROPERTIES PREFIX "_")
+set_target_properties(input-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
 
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_input)
-adonthell_install_include(input "${adonthell_input_HEADERS}") 
-adonthell_install_backend(input sdl)
+adonthell_install_include(input "${adonthell_input_HEADERS}")
+adonthell_install_backend(input input-backend-sdl)
