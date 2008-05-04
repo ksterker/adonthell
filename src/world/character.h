@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.3 2007/07/15 22:01:54 ksterker Exp $
+ $Id: character.h,v 1.4 2008/05/04 13:49:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -205,7 +205,14 @@ namespace world
          */
         bool load (const std::string & fname);
         //@}
-        
+
+#ifndef SWIG
+        /**
+         * Allow %character to be passed as python argument
+         */
+        GET_TYPE_NAME_VIRTUAL (world::character)
+#endif
+            
     protected:
         /// horizontal speed for walking / running
         float Speed; 

@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.6 2008/02/23 20:51:17 ksterker Exp $
+ $Id: area.h,v 1.7 2008/05/04 13:49:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -37,6 +37,7 @@
 #include "world/character_with_gfx.h"
 #include "world/object_with_gfx.h"
 #include "world/square.h"
+#include "world/chunk.h"
 
 namespace world
 {
@@ -182,6 +183,8 @@ namespace world
          * Delete the map and everything on it.
          */
         ~area ();
+        
+        chunk Chunk;
         
         /**
          * @name The Grid

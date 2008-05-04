@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.10 2008/02/23 20:51:17 ksterker Exp $
+ $Id: area.cc,v 1.11 2008/05/04 13:49:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -92,6 +92,8 @@ bool area::put (moving * obj)
 // add to map
 bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z)
 {
+    Chunk.add (obj, pos);
+    
     u_int16 base_tile;
 
     u_int16 start_x = pos.x ();

@@ -5,7 +5,8 @@ set(adonthell_world_SRCS
     character_with_gfx.cc
     collision.cc
     coordinates.cc
-    cube3.cc    
+    cube3.cc
+    chunk.cc
     moving.cc
     object.cc
     object_with_gfx.cc
@@ -27,6 +28,7 @@ set(adonthell_world_HEADERS
     collision.h
     coordinates.h
     cube3.h
+    chunk.h
     moving.h
     object.h
     object_with_gfx.h

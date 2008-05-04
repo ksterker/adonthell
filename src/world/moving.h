@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.8 2008/02/23 20:51:17 ksterker Exp $
+ $Id: moving.h,v 1.9 2008/05/04 13:49:21 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -179,7 +179,14 @@ namespace world
          * Otherwise it is a noop.
          */
         void debug_collision ();
-        
+
+#ifndef SWIG
+        /**
+         * Allow %moving to be passed as python argument
+         */
+        GET_TYPE_NAME_VIRTUAL (world::moving)
+#endif
+            
     protected:
         /**
          * Update position on the map.

@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.3 2008/02/16 21:13:26 ksterker Exp $
+ $Id: placeable.h,v 1.4 2008/05/04 13:49:21 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,6 +69,11 @@ namespace world
         placeable(area & mymap);
     
         /**
+         * Destructor.
+         */
+        virtual ~placeable() { }
+
+        /**
          * Get type of this placeable.
          * @return one of OBJECT, CHARACTER or ITEM
          */
@@ -77,6 +82,13 @@ namespace world
             return Type; 
         }
         
+#ifndef SWIG
+        /**
+         * Allow %placeable to be passed as python argument
+         */
+        GET_TYPE_NAME_VIRTUAL (world::placeable)
+#endif
+            
     protected:
         /// whether placeable is character, scenery or item    
         placeable_type Type; 

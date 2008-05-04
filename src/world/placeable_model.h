@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.5 2007/10/15 02:19:33 ksterker Exp $
+ $Id: placeable_model.h,v 1.6 2008/05/04 13:49:21 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,6 +57,11 @@ namespace world
          * Constructor.
          */
         placeable_model();
+        
+        /**
+         * Destructor.
+         */
+        virtual ~placeable_model () {}
         
         /**
          * @name Map object shapes.
@@ -157,7 +162,14 @@ namespace world
          * can modify the Has_changed member.
          */
         friend class placeable_model_gfx;
-        
+
+#ifndef SWIG
+        /**
+         * Allow %placeable_model to be passed as python argument
+         */
+        GET_TYPE_NAME_VIRTUAL (world::placeable_model)
+#endif
+            
     protected:
         /// filename of this object
         mutable std::string Filename;
