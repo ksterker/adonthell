@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.1 2008/05/04 13:49:21 ksterker Exp $
+ $Id: chunk.cc,v 1.2 2008/05/04 14:23:57 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,7 +47,7 @@ typedef enum
 /// number of objects in a node before we try to split it
 #define MAX_OBJECTS 16
 /// minimum node size (in all 3 dimensions)
-#define MIN_SIZE = 240;
+#define MIN_SIZE 240
 
 // ctor
 chunk::chunk ()
