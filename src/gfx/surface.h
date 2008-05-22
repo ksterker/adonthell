@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.14 2008/02/16 19:08:43 ksterker Exp $
+   $Id: surface.h,v 1.15 2008/05/22 12:59:43 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -191,7 +191,7 @@ namespace gfx
          * @param da_opt optional drawing_area to use during the drawing operation.
          * @param target pointer to the surface where to draw the drawable. If NULL, draw on the screen.
          */
-        void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
+        void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
                    surface * target = NULL) const
         {
             draw (x, y, 0, 0, length (), height (), da_opt, target);

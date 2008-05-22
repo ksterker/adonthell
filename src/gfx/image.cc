@@ -1,5 +1,5 @@
 /*
- $Id: image.cc,v 1.3 2007/06/16 23:19:35 ksterker Exp $
+ $Id: image.cc,v 1.4 2008/05/22 12:59:42 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -51,7 +51,7 @@ image::~image ()
 }
 
 // draw image
-void image::draw (s_int16 x, s_int16 y, const drawing_area * da_opt, surface * target) const
+void image::draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt, surface * target) const
 {
     Image->draw (x, y, 0, 0, length(), height(), da_opt, target);
 }

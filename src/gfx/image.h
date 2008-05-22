@@ -1,5 +1,5 @@
 /*
- $Id: image.h,v 1.2 2007/05/21 04:44:11 ksterker Exp $
+ $Id: image.h,v 1.3 2008/05/22 12:59:43 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -65,7 +65,7 @@ namespace gfx
          * @param target pointer to the surface where to draw the drawable. If NULL,
          *               draw on the screen.
          */
-        virtual void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
+        virtual void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const;
 
         

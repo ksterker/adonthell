@@ -1,5 +1,5 @@
 /*
-   $Id: drawable.h,v 1.8 2008/04/14 11:07:19 ksterker Exp $
+   $Id: drawable.h,v 1.9 2008/05/22 12:59:42 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -115,7 +115,7 @@ namespace gfx
          * @param target pointer to the surface where to draw the drawable. If NULL,
          *               draw on the screen.
          */
-        virtual void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
+        virtual void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const = 0;
 
     protected:

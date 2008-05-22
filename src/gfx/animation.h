@@ -1,5 +1,5 @@
 /*
-   $Id: animation.h,v 1.8 2008/03/18 21:46:22 ksterker Exp $
+   $Id: animation.h,v 1.9 2008/05/22 12:59:42 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -110,7 +110,7 @@ namespace gfx
          * @sa draw_part ()
          *
          */
-        virtual void draw (s_int16 x, s_int16 y, const drawing_area * da_opt = NULL,
+        virtual void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const
         {
             draw (x, y, 0, 0, length(), height(), da_opt, target);
