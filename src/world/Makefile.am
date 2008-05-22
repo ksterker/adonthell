@@ -11,6 +11,7 @@ pkgincludeworld_HEADERS = \
     collision.h \
 	coordinates.h \
 	cube3.h \
+    mapview.h \
 	moving.h \
     object.h \
     object_with_gfx.h \
@@ -36,6 +37,7 @@ libadonthell_world_la_SOURCES = \
     collision.cc \
 	coordinates.cc \
 	cube3.cc \
+    mapview.cc \
 	moving.cc \
     object.cc \
     object_with_gfx.cc \
@@ -46,8 +48,7 @@ libadonthell_world_la_SOURCES = \
     placeable_shape.cc \
     plane3.cc \
 	square.cc \
-    triangle3.cc \
-	vector3.cc
+    triangle3.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) 
 libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \

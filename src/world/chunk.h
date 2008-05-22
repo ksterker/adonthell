@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.1 2008/05/04 13:49:21 ksterker Exp $
+ $Id: chunk.h,v 1.2 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,8 @@
 #ifndef WORLD_CHUNK_H
 #define WORLD_CHUNK_H
 
+#include <list>
+
 #include "world/coordinates.h"
 #include "world/placeable.h"
 
@@ -44,6 +46,8 @@ namespace world
             : Object (o), Min (min), Max (max)
         {
         }
+        
+        bool operator < (const chunk_info & ci) const;
         
         placeable * Object;
         vector3<s_int32> Min;
@@ -58,6 +62,18 @@ namespace world
         void add (placeable * object, const coordinates & pos);
         void add (const chunk_info * ci);
         
+        /**
+         * Collects a list of objects that are contained in the given mapview.
+         *
+         * @param  min_x  x-coordinate of the views origin
+         * @param  max_x  x-coordinate of the views origin plus length of the view
+         * @param  b      sum of y and z-coordinates of the views origin
+         * @param  width  width of the view
+         *
+         * @return vector to populate with contained objects.
+         */
+        std::list<chunk_info> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
+        
         bool is_leaf () const
         {
             static vector3<s_int32> EMPTY;
@@ -66,11 +82,40 @@ namespace world
         
         bool can_split () const;
         
+        u_int32 length () const { return Max.x() - Min.x(); }
+        u_int32 height () const { return Max.y() - Min.y(); }
+        
         void debug () const;
             
-    private:
+        /**
+         * Checks whether a given mapview overlaps with an axis aligned bounding box.
+         *
+         * @param min_x x-coordinate of the views origin
+         * @param max_x x-coordinate of the views origin plus length of the view
+         * @param b     sum of y and z-coordinates of the views origin
+         * @param width width of the view
+         * @param min   minimum corner of the AABB
+         * @param max   maximum corner of the AABB
+         * @return true if view and AABB overlap, false otherwise.
+         */
+        bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        
+private:
         const u_int8 find_chunks (s_int8 chunks[9], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        
+        /**
+         * Collects a list of objects that are contained in the given mapview.
+         *
+         * @param min_x  x-coordinate of the views origin
+         * @param max_x  x-coordinate of the views origin plus length of the view
+         * @param b      sum of y and z-coordinates of the views origin
+         * @param width  width of the view
+         * @param result vector to populate with contained objects.
+         */
+        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, std::list<chunk_info> & result) const;
+        
         void split ();
+        
         void debug (std::ofstream & graph, const int & parent) const;
         
         chunk* Children[8];

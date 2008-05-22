@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.2 2008/05/04 14:23:57 ksterker Exp $
+ $Id: chunk.cc,v 1.3 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,6 +32,7 @@
 #include "world/chunk.h"
 
 using world::chunk;
+using world::chunk_info;
 
 /// node positions
 typedef enum
@@ -48,6 +49,16 @@ typedef enum
 #define MAX_OBJECTS 16
 /// minimum node size (in all 3 dimensions)
 #define MIN_SIZE 240
+ 
+bool chunk_info::operator < (const chunk_info & ci) const
+{
+    // draw everything with smaller z-position first
+    if (Max.z () <= ci.Min.z ()) return true;
+    if (Min.z () >= ci.Max.z ()) return false;
+    
+    // on equal z-position, draw everything with smaller y-position first
+    return Min.y () < ci.Min.y ();
+}
 
 // ctor
 chunk::chunk ()
@@ -163,6 +174,69 @@ void chunk::add (const chunk_info * ci)
         // if the size of objects grows too big again
     }
 }
+
+// return list of objects in the given view
+std::list<world::chunk_info> chunk::objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const
+{
+    std::list<chunk_info> result;
+    objects_in_view (x, x + length, y + z, width, result);
+    return result;
+}
+
+// recursively collect objects in given view
+void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, std::list<chunk_info> & result) const
+{
+    // process childrem
+    for (u_int32 i = 0; i < 8; i++)
+    {
+        chunk *c = Children[i];
+        if (c != NULL && in_view (min_x, max_x, b, width, c->Min, c->Max))
+        {
+            // recurse
+            c->objects_in_view (min_x, max_x, b, width, result);
+        }
+    }
+    
+    // process contained map objects
+    std::vector<const chunk_info *>::const_iterator i = Objects.begin ();
+    for (; i != Objects.end(); i++)
+    {
+        if (in_view (min_x, max_x, b, width, (*i)->Min, (*i)->Max))
+        {
+            result.push_back (*(*i));
+        }
+    }
+}
+
+// does given AABB overlap with mapview?
+inline bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, const vector3<s_int32> & min, const vector3<s_int32> & max) const
+{
+    // no overlap on x-axis
+    if (max_x < min.x() || min_x > max.x()) return false;
+    
+    // cube is wider than heigh, so we check top and bottom
+    if (max.y() - min.y() > max.z() - min.z())
+    {
+        s_int32 y1 = b - min.z();
+        s_int32 y2 = b - max.z();
+        
+        if ((y1 + width < min.y() || y1 > max.y()) &&
+            (y2 + width < min.y() || y2 > max.y())) return false;
+    }
+    
+    // cube is heigher than wide, so we check front and back
+    else
+    {
+        s_int32 z1 = b - min.y();
+        s_int32 z2 = b - max.y();
+        
+        if ((z1 + width < min.z() || z1 > max.z()) &&
+            (z2 + width < min.z() || z2 > max.z())) return false;
+    }
+
+    return true;
+}
+
 
 // return a list of chunks that intersect with the given bbox
 const u_int8 chunk::find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const

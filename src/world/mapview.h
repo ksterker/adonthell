@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.1 2008/05/04 13:49:21 ksterker Exp $
+ $Id: mapview.h,v 1.2 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,7 @@
 
 #include "gfx/surface.h"
 #include "python/method.h"
-#include "world/area.h"
+#include "world/chunk.h"
 
 namespace world
 {
@@ -50,7 +50,7 @@ namespace world
          * @param length extension of mapview along x axis in pixels.
          * @param height extension of mapview along y axis in pixels.
          */
-        mapview (const u_int32 & length, const u_int32 & height)
+        mapview (const u_int32 & length, const u_int32 & height) : Z(0), FinalZ(0), Speed(0)
         {
             set_length (length);
             set_height (height);
@@ -64,7 +64,7 @@ namespace world
          * Set the map being displayed by the mapview.
          * @param map pointer to the map instance.
          */
-        void set_map (area * map)
+        void set_map (chunk * map)
         {
             Map = map;
         }
@@ -73,7 +73,7 @@ namespace world
          * Get the map this view is attached to.
          * @return map this view is attached to.
          */
-        area * get_map () const
+        chunk * get_map () const
         {
             return Map;
         }
@@ -218,10 +218,10 @@ namespace world
          * @param da rectangle restricting the visible area.
          * @param target surface to draw on. NULL for screen surface.
          */
-        void render (std::list <world::square_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
+        void render (std::list <world::chunk_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
         
         /// the map displayed by this view.
-        area *Map;
+        chunk *Map;
 
         /**
          * @name Positioning script 

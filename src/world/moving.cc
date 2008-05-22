@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.15 2008/02/23 20:51:17 ksterker Exp $
+ $Id: moving.cc,v 1.16 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -368,7 +368,6 @@ void moving::calculate_ground_pos ()
     // iterate over all objects on square ...
     for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
     {
-        placeable_shape *shape = it->obj->current_shape ();
         s_int32 objz = it->z_pos ();
         
         // only check objects below our character

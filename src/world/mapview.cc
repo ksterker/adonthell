@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.1 2008/05/04 13:49:21 ksterker Exp $
+ $Id: mapview.cc,v 1.2 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,6 +27,8 @@
  * 
  */
 
+#include "world/character_with_gfx.h"
+#include "world/object_with_gfx.h"
 #include "world/mapview.h"
 #include "gfx/screen.h"
 #include "python/pool.h"
@@ -95,8 +97,8 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     if (!Map) return;
     
     // calculate size of map in pixels
-    const u_int16 ml = Map->length() * SQUARE_SIZE;
-    const u_int16 mh = Map->height() * SQUARE_SIZE;
+    const u_int16 ml = Map->length();
+    const u_int16 mh = Map->height();
     
     // calculate start and offset of view (x-axis)
     if (length() >= ml) 
@@ -145,123 +147,10 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
         da = da.setup_rects ();
     }
     
-    // drawing
-    static std::list <world::square_info> drawqueue; 
-    world::square *sq;
+    // get objects we need to draw
+    std::list<world::chunk_info> drawqueue = Map->objects_in_view (Sx, Sy, Z, length(), height());
     
-    // the coordinates from which the drawing starts
-    u_int16 start_x = Sx / SQUARE_SIZE - (Sx % SQUARE_SIZE != 0);
-    u_int16 start_y = Sy / SQUARE_SIZE - (Sy % SQUARE_SIZE != 0);
-    
-    // the coordinates where the drawing ends
-    u_int16 end_x = (Sx + length() - 2 * Ox) / SQUARE_SIZE;
-    u_int16 end_y = (Sy + length() - 2 * Oy) / SQUARE_SIZE;
-    
-    // first row
-    for (u_int16 i = start_x; i < end_x; i++)
-    {
-        sq = Map->get (i, start_y);
-        
-        for (world::square::iterator it = sq->begin(); it != sq->end(); it++)
-        {
-            // overflowing first row
-            if (it->base_y() < start_y)
-            {
-                if (it->base_x () == i)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-                
-                // top left corner
-                if (i == start_x && it->base_x () < start_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;                
-                }
-                
-                // top right corner
-                if (i == end_x && it->base_x () > end_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-            }
-        }
-    }
-    
-    render (drawqueue, da, target);
-    
-    // for every row
-    for (u_int16 j = start_y; j < end_y; j++)
-    {
-        // for every cell in the current row
-        for (u_int16 i = start_x; i <= end_x; i++) 
-        {
-            sq = Map->get (i, j);
-
-            // collect all objects whose base tile is in the current row
-            for (world::square::iterator it = sq->begin(); it != sq->end(); it++)
-            {
-                // base tile in view
-                if (it->is_base()) 
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-                
-                // base tile left of view
-                if (i == start_x && it->base_x() < start_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-                
-                // base tile right of view
-                if (i == end_x && it->base_x() > end_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-            }
-        }
-        
-        render (drawqueue, da, target);
-    }
-    
-    // last row
-    for (u_int16 i = start_x; i < end_x; i++)
-    {
-        sq = Map->get (i, end_y);
-        
-        for (world::square::iterator it = sq->begin(); it != sq->end(); it++)
-        {
-            // overflowing last row
-            if (it->base_y() > end_y)
-            {
-                if (it->base_x () == i)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-                
-                // bottom left corner
-                if (i == start_x && it->base_x () < start_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;                
-                }
-                
-                // bottom right corner
-                if (i == end_x && it->base_x () > end_x)
-                {
-                    drawqueue.push_back (*it);
-                    continue;
-                }
-            }
-        }
-    }
-    
+    // draw everything on screen
     render (drawqueue, da, target);
 }
 
@@ -331,27 +220,27 @@ bool mapview::get_state (base::flat & file)
 }
 
 // render objects in queue
-void mapview::render (std::list <world::square_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const
+void mapview::render (std::list <world::chunk_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const
 {
     // sort according to drawing order
     drawqueue.sort ();
     
     // draw everything which has its base tile in the current row
-    for (std::list <world::square_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
+    for (std::list <world::chunk_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
     {
-        s_int16 pos_x = Ox + (*it).x () * world::SQUARE_SIZE + (*it).ox ();
-        s_int16 pos_y = Oy + (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(); 
+        s_int16 pos_x = Ox + (*it).Min.x ();
+        s_int16 pos_y = Oy + (*it).Min.y () - (*it).Min.z(); 
         
-        switch ((*it).obj->type ()) 
+        switch ((*it).Object->type ()) 
         {
             case world::CHARACTER:
             {
-                ((world::character_with_gfx *) (*it).obj)->draw (pos_x, pos_y, &da, target);               
+                ((world::character_with_gfx *) (*it).Object)->draw (pos_x, pos_y, &da, target);               
                 break; 
             }   
             case world::OBJECT:
             {
-                ((world::object_with_gfx *) (*it).obj)->draw (pos_x, pos_y, &da, target);
+                ((world::object_with_gfx *) (*it).Object)->draw (pos_x, pos_y, &da, target);
                 break;
             }   
             default:

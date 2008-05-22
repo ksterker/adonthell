@@ -7,6 +7,7 @@ set(adonthell_world_SRCS
     coordinates.cc
     cube3.cc
     chunk.cc
+    mapview.cc
     moving.cc
     object.cc
     object_with_gfx.cc
@@ -18,7 +19,6 @@ set(adonthell_world_SRCS
     plane3.cc
     square.cc
     triangle3.cc
-    vector3.cc
 )
 
 set(adonthell_world_HEADERS
@@ -29,6 +29,7 @@ set(adonthell_world_HEADERS
     coordinates.h
     cube3.h
     chunk.h
+    mapview.h
     moving.h
     object.h
     object_with_gfx.h

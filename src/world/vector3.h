@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.7 2008/01/13 18:36:02 ksterker Exp $
+ $Id: vector3.h,v 1.8 2008/05/22 13:05:00 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #define WORLD_VECTOR_3_H
 
 #include <cmath>
+#include <sstream>
 #include "base/flat.h"
 
 namespace world
@@ -257,14 +258,36 @@ public:
      * @param file stream to save vector to.
      * @return \b true if saving successful, \b false otherwise.
      */
-    bool put_state (base::flat & file) const;
-    
+    bool put_state (base::flat & file) const
+    {
+        std::stringstream out (std::ios::out);
+        out << "[" << X << ", " << Y << ", " << Z << "]";
+        
+        file.put_string ("p3d", out.str());
+        
+        return true;
+    }
+
     /**
      * Load vector from stream. Implemented for vector3<s_int16>.
      * @param file stream to load vecotr from.
      * @return \b true if loading successful, \b false otherwise.
      */
-    bool get_state (base::flat & file);
+    bool get_state (base::flat & file)
+    {
+        char delim;
+        std::string vec = file.get_string ("p3d");    
+        std::stringstream in (vec);
+        
+        in >> std::skipws >> delim >> X >> delim >> Y >> delim >> Z >> delim; 
+        if (in.fail ())    
+        {
+            fprintf (stderr, "*** vector3::get_state: error parsing vector '%s'", vec.c_str());
+            return false;
+        }
+        
+        return true;
+    } 
     //@}
 
 private:
