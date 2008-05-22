@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.16 2008/03/08 16:22:19 ksterker Exp $
+   $Id: worldtest.cc,v 1.17 2008/05/22 13:05:37 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -20,7 +20,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-// #define DEBUG_COLLISION 1
+#define DEBUG_COLLISION 1
 
 #include "base/base.h"
 #include "event/date.h"
@@ -28,6 +28,7 @@
 #include "input/manager.h"
 #include "main/adonthell.h"
 #include "world/area.h"
+#include "world/mapview.h"
 
 class game_client
 {
@@ -382,10 +383,14 @@ public:
 		// Create game world
 	    gc.create_map();
 
-		// The renderer ...
+        // The renderer ...
+        world::mapview mv (320, 240);
+        mv.set_map (&gc.world.Chunk);
+        mv.center_on ((u_int32) 320, (u_int32) 240);
+        
 	    while (!gc.letsexit) 
     	{
-        	u_int16 i, j;
+        	u_int16 i;
         
         	// FIXME frames_missed is probably not what we want here 
 	        // for (int i = 0; i < base::Timer.frames_missed (); i++) 
@@ -394,76 +399,9 @@ public:
             events::date::update();
             gc.world.update();
 	        //}
-	
-            // gc.mchar->add_direction(gc.mchar->WEST);
+	            
+            mv.draw (160, 120);
             
-	        std::list <world::square_info> drawqueue; 
-            world::square *sq;
-	        
-            // Rendering phase        
-	        for (j = 0; j < gc.world.height (); j++)
-	        {
-	            for (i = 0; i < gc.world.length (); i++) 
-	            {
-	                sq = gc.world.get (i, j); 
-	                
-	                for (world::square::iterator it = sq->begin(); it != sq->end(); it++)
-	                {
-	                    if (it->is_base()) drawqueue.push_back (*it);
-	                }
-	            }
-
-		        drawqueue.sort ();
-
-		        for (std::list <world::square_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
-		        {
-		            switch ((*it).obj->type ()) 
-		            {
-		                case world::CHARACTER:
-		                {
-		                    ((world::character_with_gfx *)
-		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
-
-		                    if (gc.draw_bounding_box)
-		                    {
-			                    ((world::character_with_gfx *)
-			                     (*it).obj)->draw_bounding_box (
-                                                (*it).x () * world::SQUARE_SIZE + (*it).ox (),
-                                                (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
-		                    }		                
-		                    break; 
-                        }   
-		                case world::OBJECT:
-		                {
-		                    ((world::object_with_gfx *)
-		                     (*it).obj)->draw ((*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
-		                    
-		                    if (gc.draw_bounding_box)
-		                    {
-			                    ((world::object_with_gfx *)
-			                     (*it).obj)->draw_bounding_box (
-			                     			   (*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                       (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z(), &da);
-		                    }
-		                    if (gc.draw_walkable)
-		                    {
-			                    ((world::object_with_gfx *)
-			                     (*it).obj)->draw_walkable (
-			                     				(*it).x () * world::SQUARE_SIZE + (*it).ox (),
-		                                        (*it).y () * world::SQUARE_SIZE + (*it).oy () - (*it).z());
-		                    }
-		                    break;
-		                }   
-		                default:
-		                    break; 
-		            }
-		        }
-	        
-	        	drawqueue.clear ();
-	    	}
-
 	        if (gc.draw_grid)
 	        {
 	            for (i = 0; i < gfx::screen::length (); i += world::SQUARE_SIZE) 
@@ -482,7 +420,12 @@ public:
             gc.mchar->debug_collision();
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
-            
+            // rectangle that should be filled with the mapview
+            gfx::screen::get_surface()->fillrect (160, 120, 320, 1, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (160, 360, 320, 1, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (160, 120, 1, 240, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (480, 120, 1, 240, 0xFF8888); 
+
 	        base::Timer.update (); 
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 
