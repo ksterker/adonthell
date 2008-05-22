@@ -87,6 +87,7 @@ _world_la_LDFLAGS = -avoid-version -module
 _world_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/world -ladonthell_world	\
 	-L$(top_builddir)/src/gfx -ladonthell_gfx		\
+	-L$(top_builddir)/src/event -ladonthell_event	\
 	$(PY_RUNTIME)
 
 ## Swig arguments

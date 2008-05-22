@@ -15,6 +15,9 @@ using namespace world;
 %import "base/types.h"
 %import "py_gfx.i"
 
+// object is an existing python class
+%rename(entity) world::object;
+
 %include "world/placeable_model.h"
 %include "world/placeable.h"
 %include "world/placeable_model_gfx.h"
@@ -29,5 +32,6 @@ using namespace world;
 %include "world/area.h"
 %include "world/placeable_shape.h"
 %include "world/vector3.h"
-%include "world/triangle3.h"
-%include "world/cube3.h"
+%include "world/chunk.h"
+
+%template(vector3i) world::vector3<s_int32>;
