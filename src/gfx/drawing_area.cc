@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.6 2008/04/14 11:07:19 ksterker Exp $
+   $Id: drawing_area.cc,v 1.7 2008/05/24 11:41:13 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,7 +56,7 @@ namespace gfx
             s_int32 x = std::max(ret.x(), it->x());
             s_int32 y = std::max(ret.y(), it->y());
             s_int32 w = std::min(it->x() + it->length(), ret.x() + ret.length()) - x;
-            s_int32 h = std::min(it->y() + it->length(), ret.y() + ret.length()) - y;
+            s_int32 h = std::min(it->y() + it->height(), ret.y() + ret.height()) - y;
             
             ret.move(x, y);
             ret.resize(w > 0 ? w : 0, 

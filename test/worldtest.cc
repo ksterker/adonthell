@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.17 2008/05/22 13:05:37 ksterker Exp $
+   $Id: worldtest.cc,v 1.18 2008/05/24 11:41:13 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -386,6 +386,8 @@ public:
         // The renderer ...
         world::mapview mv (320, 240);
         mv.set_map (&gc.world.Chunk);
+        int ox = 77;
+        int oy = 133;
         mv.center_on ((u_int32) 320, (u_int32) 240);
         
 	    while (!gc.letsexit) 
@@ -400,7 +402,7 @@ public:
             gc.world.update();
 	        //}
 	            
-            mv.draw (160, 120);
+            mv.draw (ox, oy);
             
 	        if (gc.draw_grid)
 	        {
@@ -421,10 +423,10 @@ public:
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
             // rectangle that should be filled with the mapview
-            gfx::screen::get_surface()->fillrect (160, 120, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (160, 360, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (160, 120, 1, 240, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (480, 120, 1, 240, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (ox, oy, 320, 1, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (ox, 240+oy, 320, 1, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (ox, oy, 1, 240, 0xFF8888); 
+            gfx::screen::get_surface()->fillrect (320+ox, oy, 1, 240, 0xFF8888); 
 
 	        base::Timer.update (); 
 	        gfx::screen::update ();

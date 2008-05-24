@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.2 2008/05/22 13:05:00 ksterker Exp $
+ $Id: mapview.cc,v 1.3 2008/05/24 11:41:13 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -97,8 +97,8 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     if (!Map) return;
     
     // calculate size of map in pixels
-    const u_int16 ml = Map->length();
-    const u_int16 mh = Map->height();
+    const u_int32 ml = Map->length();
+    const u_int32 mh = Map->height();
     
     // calculate start and offset of view (x-axis)
     if (length() >= ml) 
@@ -125,12 +125,14 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     else 
     {
         Oy = 0;
-        Sy = y * SQUARE_SIZE + oy - length()/2;
+        Sy = y * SQUARE_SIZE + oy - height()/2;
         
         // don't go past edge of map
         if (Sy < 0) Sy = 0;
         else if (Sy + height() > mh) Sy = mh - height();        
     }
+    
+    printf ("%i, %i - %i, %i\n", Sx, Sy, Ox, Oy);
 }
 
 // render map
@@ -140,8 +142,8 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     if (!Map || !Map->length() || !Map->height()) return;
     
     // this is the area we need to draw
-    gfx::drawing_area da (Ox + x, Oy + y, length() - Ox, height() - Oy);
-    if (da_opt) 
+    gfx::drawing_area da (x, y, length() - 2*Ox, height() - 2*Oy);
+    if (da_opt)
     {
         da.assign_drawing_area (da_opt);
         da = da.setup_rects ();
@@ -160,13 +162,13 @@ bool mapview::put_state (base::flat & file) const
     base::flat record;
     
     // save current position
-    record.put_uint16("vox", Ox);
-    record.put_uint16("voy", Oy);
-    record.put_uint16("vsx", Sx);
-    record.put_uint16("vsy", Sy);
+    record.put_uint16 ("vox", Ox);
+    record.put_uint16 ("voy", Oy);
+    record.put_uint16 ("vsx", Sx);
+    record.put_uint16 ("vsy", Sy);
     
     // save height related variables
-    record.put_sint32("vz", Z);
+    record.put_sint32 ("vz", Z);
     record.put_sint32 ("vfz", FinalZ);
     record.put_sint16 ("vsp", Speed);
     
@@ -228,8 +230,8 @@ void mapview::render (std::list <world::chunk_info> & drawqueue, const gfx::draw
     // draw everything which has its base tile in the current row
     for (std::list <world::chunk_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
     {
-        s_int16 pos_x = Ox + (*it).Min.x ();
-        s_int16 pos_y = Oy + (*it).Min.y () - (*it).Min.z(); 
+        s_int16 pos_x = da.x() + (*it).Min.x () - Sx;
+        s_int16 pos_y = da.y() + (*it).Min.y () - (*it).Min.z() - Sy; 
         
         switch ((*it).Object->type ()) 
         {
