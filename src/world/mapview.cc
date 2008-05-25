@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.3 2008/05/24 11:41:13 ksterker Exp $
+ $Id: mapview.cc,v 1.4 2008/05/25 17:54:48 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -131,8 +131,6 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
         if (Sy < 0) Sy = 0;
         else if (Sy + height() > mh) Sy = mh - height();        
     }
-    
-    printf ("%i, %i - %i, %i\n", Sx, Sy, Ox, Oy);
 }
 
 // render map
@@ -142,7 +140,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     if (!Map || !Map->length() || !Map->height()) return;
     
     // this is the area we need to draw
-    gfx::drawing_area da (x, y, length() - 2*Ox, height() - 2*Oy);
+    gfx::drawing_area da (x + Ox, y + Oy, length() - Ox, height() - Oy);
     if (da_opt)
     {
         da.assign_drawing_area (da_opt);

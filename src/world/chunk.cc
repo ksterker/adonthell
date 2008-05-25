@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.3 2008/05/22 13:05:00 ksterker Exp $
+ $Id: chunk.cc,v 1.4 2008/05/25 17:54:47 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -60,9 +60,23 @@ bool chunk_info::operator < (const chunk_info & ci) const
     return Min.y () < ci.Min.y ();
 }
 
+bool chunk_info::operator == (const chunk_info & ci) const
+{
+    if (Object == ci.Object)
+    {
+        // we only check min, as that is the objects position. Max might
+        // change if the shape of the object changes.
+        return Min == ci.Min;
+    }
+    
+    return false;
+}
+
 // ctor
 chunk::chunk ()
 {
+    // chunk does not have to be resized
+    Resize = false;
     // initialise children to NULL
     memset (Children, 0, 8 * sizeof(chunk*));
 }
@@ -80,25 +94,40 @@ void chunk::add (placeable * object, const coordinates & pos)
                           min.y() + shape->width(),
                           min.z() + shape->height());
     
-    add (new chunk_info (object, min, max));
+    add (chunk_info (object, min, max));
+}
+
+void chunk::remove (placeable * object, const coordinates & pos)
+{
+    const world::placeable_shape *shape = object->current_shape();
+    
+    // calculate axis-aligned bbox for object
+    vector3<s_int32> min (pos.x() * SQUARE_SIZE + pos.ox(), 
+                          pos.y() * SQUARE_SIZE + pos.oy(),
+                          pos.z());
+    vector3<s_int32> max (min.x() + shape->length(),
+                          min.y() + shape->width(),
+                          min.z() + shape->height());
+
+    remove (chunk_info (object, min, max));
 }
 
 // add an object to chunk
-void chunk::add (const chunk_info * ci)
+void chunk::add (const chunk_info & ci)
 {
     // update bounding box of chunk
-    Min.set_x (std::min (Min.x(), ci->Min.x()));
-    Min.set_y (std::min (Min.y(), ci->Min.y()));
-    Min.set_z (std::min (Min.z(), ci->Min.z()));
+    Min.set_x (std::min (Min.x(), ci.Min.x()));
+    Min.set_y (std::min (Min.y(), ci.Min.y()));
+    Min.set_z (std::min (Min.z(), ci.Min.z()));
 
-    Max.set_x (std::max (Max.x(), ci->Max.x()));
-    Max.set_y (std::max (Max.y(), ci->Max.y()));
-    Max.set_z (std::max (Max.z(), ci->Max.z()));
+    Max.set_x (std::max (Max.x(), ci.Max.x()));
+    Max.set_y (std::max (Max.y(), ci.Max.y()));
+    Max.set_z (std::max (Max.z(), ci.Max.z()));
 
     // we're in a leaf ...
     if (is_leaf())
     {
-        // ... and we have place for another object
+        // ... and we have room for another object
         if (Objects.size() < MAX_OBJECTS || !can_split())
         {
             Objects.push_back (ci);
@@ -113,10 +142,10 @@ void chunk::add (const chunk_info * ci)
             split ();
             
             s_int8 chunks[8];
-            std::vector<const chunk_info*>::iterator i = Objects.begin();
+            std::list<chunk_info>::iterator i = Objects.begin();
             while (i != Objects.end ())
             {
-                const u_int8 num = find_chunks (chunks, (*i)->Min, (*i)->Max);
+                const u_int8 num = find_chunks (chunks, (*i).Min, (*i).Max);
                 
                 // if objects would be split between children, we have to keep them
                 // in the current node
@@ -128,7 +157,7 @@ void chunk::add (const chunk_info * ci)
                     if (c == NULL)
                     {
                         c = new chunk;
-                        c->Min = (*i)->Min;
+                        c->Min = (*i).Min;
                         Children[chunks[0]] = c; 
                     }
                     
@@ -150,7 +179,7 @@ void chunk::add (const chunk_info * ci)
     // we're not (or no longer) in a leaf, so we need to find the chunk
     // to which we add the object to
     s_int8 chunks[8];
-    const u_int8 num = find_chunks (chunks, ci->Min, ci->Max);
+    const u_int8 num = find_chunks (chunks, ci.Min, ci.Max);
     if (num == 1)
     {
         chunk *c = Children[chunks[0]];
@@ -159,7 +188,7 @@ void chunk::add (const chunk_info * ci)
         if (c == NULL)
         {
             c = new chunk;
-            c->Min = ci->Min;
+            c->Min = ci.Min;
             Children[chunks[0]] = c; 
         }
         
@@ -175,65 +204,111 @@ void chunk::add (const chunk_info * ci)
     }
 }
 
+void chunk::remove (const chunk_info & ci)
+{
+    if (!is_leaf())
+    {
+        s_int8 chunks[8];
+        const u_int8 num = find_chunks (chunks, ci.Min, ci.Max);
+        if (num == 1)
+        {
+            chunk *c = Children[chunks[0]];
+            if (c != NULL)
+            {
+                c->remove (ci);
+                
+                // we can get rid of empty leafs
+                if (c->is_empty() && c->is_leaf())
+                {
+                    delete c;
+                    Children[chunks[0]] = NULL;
+                }
+                
+                return;
+            }
+        }
+    }
+    
+    std::list<chunk_info>::iterator it = find (Objects.begin(), Objects.end(), ci);
+    if (it != Objects.end())
+    {
+        if (!Resize || 
+            Min.x() == (*it).Min.x() || Min.y() == (*it).Min.y() || Min.z() == (*it).Min.z() ||
+            Max.x() == (*it).Max.x() || Max.y() == (*it).Max.y() || Max.z() == (*it).Max.z())
+        {
+            Resize = true;
+        }
+        
+        Objects.erase (it);
+    }
+}
+
 // return list of objects in the given view
 std::list<world::chunk_info> chunk::objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const
 {
     std::list<chunk_info> result;
-    objects_in_view (x, x + length, y + z, width, result);
+    objects_in_view (x, x + length, y - z, y + width - z, result);
     return result;
 }
 
 // recursively collect objects in given view
-void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, std::list<chunk_info> & result) const
+void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info> & result) const
 {
     // process childrem
     for (u_int32 i = 0; i < 8; i++)
     {
         chunk *c = Children[i];
-        if (c != NULL && in_view (min_x, max_x, b, width, c->Min, c->Max))
+        if (c != NULL && in_view (min_x, max_x, min_yz, max_yz, c->Min, c->Max))
         {
             // recurse
-            c->objects_in_view (min_x, max_x, b, width, result);
+            c->objects_in_view (min_x, max_x, min_yz, max_yz, result);
         }
     }
     
+    u_int32 num = result.size();
+    
     // process contained map objects
-    std::vector<const chunk_info *>::const_iterator i = Objects.begin ();
-    for (; i != Objects.end(); i++)
+    std::list<chunk_info>::const_iterator i;
+    for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (in_view (min_x, max_x, b, width, (*i)->Min, (*i)->Max))
+        if (in_view (min_x, max_x, min_yz, max_yz, (*i).Min, (*i).Max))
         {
-            result.push_back (*(*i));
+            result.push_back (*i);
         }
     }
+    
+    /*
+    // we actually searched this node because its size is no longer accurate 
+    if (Resize && num == result.size())
+    {
+        vector3<s_int32> tmp = Max;
+        Max = Min;
+        Min = Max;
+        
+        for (i = Objects.begin (); i != Objects.end(); i++)
+        {
+            Min.set_x (std::min (Min.x(), (*i).Min.x()));
+            Min.set_y (std::min (Min.y(), (*i).Min.y()));
+            Min.set_z (std::min (Min.z(), (*i).Min.z()));
+            
+            Max.set_x (std::max (Max.x(), (*i).Max.x()));
+            Max.set_y (std::max (Max.y(), (*i).Max.y()));
+            Max.set_z (std::max (Max.z(), (*i).Max.z()));
+        }
+        
+        Resize = false;
+    }
+     */
 }
 
 // does given AABB overlap with mapview?
-inline bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, const vector3<s_int32> & min, const vector3<s_int32> & max) const
+bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const
 {
     // no overlap on x-axis
     if (max_x < min.x() || min_x > max.x()) return false;
+    // no overlap on y/z-axis
+    if (max_yz < (min.y() - min.z()) || min_yz > (max.y() - max.z())) return false;
     
-    // cube is wider than heigh, so we check top and bottom
-    if (max.y() - min.y() > max.z() - min.z())
-    {
-        s_int32 y1 = b - min.z();
-        s_int32 y2 = b - max.z();
-        
-        if ((y1 + width < min.y() || y1 > max.y()) &&
-            (y2 + width < min.y() || y2 > max.y())) return false;
-    }
-    
-    // cube is heigher than wide, so we check front and back
-    else
-    {
-        s_int32 z1 = b - min.y();
-        s_int32 z2 = b - max.y();
-        
-        if ((z1 + width < min.z() || z1 > max.z()) &&
-            (z2 + width < min.z() || z2 > max.z())) return false;
-    }
-
     return true;
 }
 

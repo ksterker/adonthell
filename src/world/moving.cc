@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.16 2008/05/22 13:05:00 ksterker Exp $
+ $Id: moving.cc,v 1.17 2008/05/25 17:54:48 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -62,7 +62,6 @@ moving::~moving ()
     delete Image;
 #endif
 }
-
 
 // movement over ground
 void moving::set_velocity (const float & vx, const float & vy) 

@@ -1,5 +1,5 @@
 /*
-   $Id: paths.h,v 1.10 2008/03/08 20:07:53 ksterker Exp $
+   $Id: paths.h,v 1.11 2008/05/25 17:54:47 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -115,6 +115,12 @@ namespace base
              * @return path to the data directory of current game.
              */
             std::string game_data_dir () const { return GameDataDir; }
+
+            /**
+             * Return the optional user data directory.
+             * @return path to the user data directory, if present.
+             */
+            std::string user_data_dir () const { return UserDataDir; }
             
             /**
              * Return name of the game currently running.

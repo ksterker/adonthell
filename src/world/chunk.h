@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.2 2008/05/22 13:05:00 ksterker Exp $
+ $Id: chunk.h,v 1.3 2008/05/25 17:54:48 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,13 @@ namespace world
             : Object (o), Min (min), Max (max)
         {
         }
+
+        chunk_info (const chunk_info & ci) 
+            : Object (ci.Object), Min (ci.Min), Max (ci.Max)
+        {
+        }
         
+        bool operator == (const chunk_info & ci) const;
         bool operator < (const chunk_info & ci) const;
         
         placeable * Object;
@@ -60,17 +66,21 @@ namespace world
         chunk ();
         
         void add (placeable * object, const coordinates & pos);
-        void add (const chunk_info * ci);
+        void add (const chunk_info & ci);
+        
+        void remove (placeable * object, const coordinates & pos);
+        void remove (const chunk_info & ci);
         
         /**
          * Collects a list of objects that are contained in the given mapview.
          *
-         * @param  min_x  x-coordinate of the views origin
-         * @param  max_x  x-coordinate of the views origin plus length of the view
-         * @param  b      sum of y and z-coordinates of the views origin
-         * @param  width  width of the view
+         * @param x      x-coordinate of the views origin
+         * @param y      y-coordinate of the views origin
+         * @param z      z-coordinates of the views origin
+         * @param length length of the view
+         * @param width  width of the view
          *
-         * @return vector to populate with contained objects.
+         * @return list of objects contained in view.
          */
         std::list<chunk_info> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
         
@@ -80,6 +90,11 @@ namespace world
             return Split == EMPTY;
         }
         
+        bool is_empty () const
+        {
+            return Objects.empty ();
+        }
+        
         bool can_split () const;
         
         u_int32 length () const { return Max.x() - Min.x(); }
@@ -87,19 +102,6 @@ namespace world
         
         void debug () const;
             
-        /**
-         * Checks whether a given mapview overlaps with an axis aligned bounding box.
-         *
-         * @param min_x x-coordinate of the views origin
-         * @param max_x x-coordinate of the views origin plus length of the view
-         * @param b     sum of y and z-coordinates of the views origin
-         * @param width width of the view
-         * @param min   minimum corner of the AABB
-         * @param max   maximum corner of the AABB
-         * @return true if view and AABB overlap, false otherwise.
-         */
-        bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-        
 private:
         const u_int8 find_chunks (s_int8 chunks[9], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
@@ -108,21 +110,51 @@ private:
          *
          * @param min_x  x-coordinate of the views origin
          * @param max_x  x-coordinate of the views origin plus length of the view
-         * @param b      sum of y and z-coordinates of the views origin
-         * @param width  width of the view
+         * @param min_yz difference of y and z-coordinates of the views origin
+         * @param max_yz min_yz plus width of the view
          * @param result vector to populate with contained objects.
          */
-        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & b, const s_int32 & width, std::list<chunk_info> & result) const;
+        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info> & result) const;
+
+        /**
+         * Checks whether a given mapview overlaps with an axis aligned bounding box.
+         *
+         * @param min_x x-coordinate of the views origin
+         * @param max_x x-coordinate of the views origin plus length of the view
+         * @param min_yz difference of y and z-coordinates of the views origin
+         * @param max_yz min_yz plus width of the view
+         * @param min   minimum corner of the AABB
+         * @param max   maximum corner of the AABB
+         * @return true if view and AABB overlap, false otherwise.
+         */
+        bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
+        /**
+         * Calculate the split planes of the chunk. Can be called only once in
+         * the chunks lifetime, unless its children are merged together.
+         */
         void split ();
         
+        /**
+         * Generate a picture of the chunk (and its children) in .dot format, as
+         * parsed by AT&Ts graphviz package.
+         * @param
+         * @param
+         */
         void debug (std::ofstream & graph, const int & parent) const;
         
+        /// indicates that the chunk size has changed and needs to be recalculated 
+        bool Resize;
+        /// the children of the chunk
         chunk* Children[8];
-        std::vector<const chunk_info *> Objects;
+        /// the objects contained in the chunk
+        std::list<chunk_info> Objects;
         
+        /// the minimum of the chunks AABB
         vector3<s_int32> Min;
+        /// the maximum of the chunks AABB
         vector3<s_int32> Max;
+        /// the split planes of the chunk
         vector3<s_int32> Split;
     };
 }

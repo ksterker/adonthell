@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.11 2008/05/04 13:49:20 ksterker Exp $
+ $Id: area.cc,v 1.12 2008/05/25 17:54:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -137,6 +137,8 @@ bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & 
 // remove static object from map
 bool area::remove (placeable * obj, coordinates & pos) 
 {
+    Chunk.remove (obj, pos);
+    
     placeable_shape *shape = obj->current_shape ();
     if (!shape) return false;
 

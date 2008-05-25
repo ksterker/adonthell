@@ -4,7 +4,7 @@
 %{
 #include "base/types.h"
 #include "world/area.h"
-#include "world/cube3.h"
+#include "world/mapview.h"
 
 using namespace world;
 
@@ -33,5 +33,6 @@ using namespace world;
 %include "world/placeable_shape.h"
 %include "world/vector3.h"
 %include "world/chunk.h"
+%include "world/mapview.h"
 
 %template(vector3i) world::vector3<s_int32>;
