@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.4 2008/05/25 17:54:48 ksterker Exp $
+ $Id: mapview.cc,v 1.5 2008/05/26 21:15:07 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -229,7 +229,7 @@ void mapview::render (std::list <world::chunk_info> & drawqueue, const gfx::draw
     for (std::list <world::chunk_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
     {
         s_int16 pos_x = da.x() + (*it).Min.x () - Sx;
-        s_int16 pos_y = da.y() + (*it).Min.y () - (*it).Min.z() - Sy; 
+        s_int16 pos_y = da.y() + Z + (*it).Min.y () - (*it).Min.z() - Sy; 
         
         switch ((*it).Object->type ()) 
         {

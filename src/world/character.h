@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.4 2008/05/04 13:49:20 ksterker Exp $
+ $Id: character.h,v 1.5 2008/05/26 21:15:07 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -84,7 +84,7 @@ namespace world
          * Get base speed of %character.
          * @return the %character's base speed.
          */
-        float speed () 
+        float speed () const
         {
             return Speed; 
         }
@@ -119,7 +119,7 @@ namespace world
          * Check if %character is currently running.
          * @return true if the %character is running, false otherwise.
          */
-        bool is_running()
+        bool is_running() const
         {
             return IsRunning;
         }
@@ -146,7 +146,7 @@ namespace world
          * Get current direction(s) the %character is facing.
          * @return a flag indication orientation.
          */
-        int current_dir()
+        s_int32 current_dir() const
         {
             return CurrentDir;
         }
@@ -155,7 +155,7 @@ namespace world
          * Set the %character's current direction.
          * @param flag indicating character's orientation.
          */
-        void set_direction(int ndir);
+        void set_direction(const s_int32 & ndir);
 
         /**
          * Change the %character's orientation by given direction.
@@ -224,7 +224,7 @@ namespace world
         /// whether character should be running once on the ground
         bool ToggleRunning;
         /// current direction the character is facing
-        int CurrentDir;
+        s_int32 CurrentDir;
     };
 }
 

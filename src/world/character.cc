@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.6 2008/02/16 21:13:25 ksterker Exp $
+   $Id: character.cc,v 1.7 2008/05/26 21:15:06 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -78,32 +78,33 @@ void character::update ()
     else if (VSpeed > 0) VSpeed -= 0.4;
 }
 
-void character::set_direction(int ndir)
+// set character movement
+void character::set_direction (const s_int32 & ndir)
 {
-  float vx = 0.0, vy = 0.0;
-  
-  CurrentDir = ndir;
-  
-  if (current_dir() & WEST) vx = -speed() * (1 + is_running());
-  if (current_dir() & EAST) vx = speed() * (1 + is_running());
-  if (current_dir() & NORTH) vy = -speed() * (1 + is_running());
-  if (current_dir() & SOUTH) vy = speed() * (1 + is_running());
-  
-  if (vx && vy)
-  {
-      float s = sqrt (vx*vx + vy*vy);
-      vx = (vx * fabs (vx))/s;
-      vy = (vy * fabs (vy))/s;
-  }
-  
-  set_velocity(vx, vy);
+    float vx = 0.0, vy = 0.0;
+    
+    CurrentDir = ndir;
 
-  update_state();
+    if (ndir & WEST) vx = -speed() * (1 + is_running());
+    if (ndir & EAST) vx = speed() * (1 + is_running());
+    if (ndir & NORTH) vy = -speed() * (1 + is_running());
+    if (ndir & SOUTH) vy = speed() * (1 + is_running());
+
+    if (vx && vy)
+    {
+        float s = 1/sqrt (vx*vx + vy*vy);
+        vx = (vx * fabs (vx)) * s;
+        vy = (vy * fabs (vy)) * s;
+    }
+
+    set_velocity(vx, vy);
+    update_state();
 }
 
+// add direction to character movement
 void character::add_direction(direction ndir)
 {
-    int tstdir = current_dir();
+    s_int32 tstdir = current_dir();
     switch (ndir)
     {
         case WEST:
@@ -125,6 +126,7 @@ void character::add_direction(direction ndir)
     set_direction(tstdir | ndir);
 }
 
+// figure out name of character shape (and animation) to use
 void character::update_state()
 {
     std::string state;
@@ -157,7 +159,7 @@ void character::update_state()
         }
         state += is_running() ? "_run" : "_walk";
     }
-    else /* if (!xvel) */
+    else
     {
         state = current_shape_name()[0];
         state += "_stand";
