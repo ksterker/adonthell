@@ -137,11 +137,19 @@ SWIGEXPORT void log_py_objects ()
 // pass a C++ object to Python
 SWIGEXPORT PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership)
 {
-    swig_type_info * tt = SWIG_Python_TypeQuery (name);
-    if (tt) return SWIG_NewPointerObj (instance, tt, ownership);
+    if (SWIG_Python_GetModule())
+    {
+        swig_type_info * tt = SWIG_Python_TypeQuery (name);
+        if (tt) return SWIG_NewPointerObj (instance, tt, ownership);
     
-    fprintf (stderr, "*** cxx_to_py: '%s' not found. ", name);
-    log_py_objects ();
+        fprintf (stderr, "*** cxx_to_py: '%s' not found. ", name);
+        log_py_objects ();
+    }
+    else
+    {
+        fprintf (stderr, "*** cxx_to_py: no Python module imported!\n");
+    }
+    
     return NULL;
 }
 
