@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.18 2008/05/24 11:41:13 ksterker Exp $
+   $Id: worldtest.cc,v 1.19 2008/05/26 16:04:09 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -27,6 +27,7 @@
 #include "gfx/animation.h"
 #include "input/manager.h"
 #include "main/adonthell.h"
+#include "python/python.h"
 #include "world/area.h"
 #include "world/mapview.h"
 
@@ -361,11 +362,10 @@ public:
 	int main () 
 	{
         // Initialize the gfx and input systems
-    	init_modules (GFX | INPUT);
+    	init_modules (GFX | INPUT | PYTHON);
     
     	// Set video mode
     	gfx::screen::set_video_mode(640, 480);
-        gfx::drawing_area da (0, 0, 640, 480);
         
 		// Contains map and player controls
 	    game_client gc;
@@ -383,12 +383,20 @@ public:
 		// Create game world
 	    gc.create_map();
 
+        // we need to update the python search path to find our map view schedule 
+        python::add_search_path (base::Paths.user_data_dir() + "/data/");
+        
+        // we need to load the world module before we can pass the character object to python
+        python::import_module ("adonthell.world");        
+
+        // arguments to map view schedule
+        PyObject *args = PyTuple_New (1);
+        PyTuple_SetItem (args, 0, python::pass_instance ((world::character*) gc.mchar));
+        
         // The renderer ...
         world::mapview mv (320, 240);
         mv.set_map (&gc.world.Chunk);
-        int ox = 77;
-        int oy = 133;
-        mv.center_on ((u_int32) 320, (u_int32) 240);
+        mv.set_schedule ("focus_on_character", args);
         
 	    while (!gc.letsexit) 
     	{
@@ -400,9 +408,10 @@ public:
             input::manager::update();
             events::date::update();
             gc.world.update();
+            mv.update();
 	        //}
 	            
-            mv.draw (ox, oy);
+            mv.draw (160, 120);
             
 	        if (gc.draw_grid)
 	        {
@@ -422,12 +431,7 @@ public:
             gc.mchar->debug_collision();
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
-            // rectangle that should be filled with the mapview
-            gfx::screen::get_surface()->fillrect (ox, oy, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (ox, 240+oy, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (ox, oy, 1, 240, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (320+ox, oy, 1, 240, 0xFF8888); 
-
+            
 	        base::Timer.update (); 
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 
