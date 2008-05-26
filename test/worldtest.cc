@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.19 2008/05/26 16:04:09 ksterker Exp $
+   $Id: worldtest.cc,v 1.20 2008/05/26 21:17:17 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -20,7 +20,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#define DEBUG_COLLISION 1
+// #define DEBUG_COLLISION 1
 
 #include "base/base.h"
 #include "event/date.h"
