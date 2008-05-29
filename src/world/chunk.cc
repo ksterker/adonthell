@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.4 2008/05/25 17:54:47 ksterker Exp $
+ $Id: chunk.cc,v 1.5 2008/05/29 20:18:26 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -247,7 +247,7 @@ void chunk::remove (const chunk_info & ci)
 std::list<world::chunk_info> chunk::objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const
 {
     std::list<chunk_info> result;
-    objects_in_view (x, x + length, y - z, y + width - z, result);
+    objects_in_view (x, x + length, y - z, y - z + width, result);
     return result;
 }
 
@@ -307,11 +307,10 @@ bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32
     // no overlap on x-axis
     if (max_x < min.x() || min_x > max.x()) return false;
     // no overlap on y/z-axis
-    if (max_yz < (min.y() - min.z()) || min_yz > (max.y() - max.z())) return false;
+    if (max_yz < (min.y() - max.z()) || min_yz > (max.y() - min.z())) return false;
     
     return true;
 }
-
 
 // return a list of chunks that intersect with the given bbox
 const u_int8 chunk::find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const

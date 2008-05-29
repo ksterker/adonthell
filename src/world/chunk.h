@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.3 2008/05/25 17:54:48 ksterker Exp $
+ $Id: chunk.h,v 1.4 2008/05/29 20:18:27 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -76,7 +76,7 @@ namespace world
          *
          * @param x      x-coordinate of the views origin
          * @param y      y-coordinate of the views origin
-         * @param z      z-coordinates of the views origin
+         * @param z      z-coordinate of the views origin
          * @param length length of the view
          * @param width  width of the view
          *
