@@ -143,6 +143,8 @@ endif(PYTHONINTERP_FOUND)
 include(config/PythonExtraLibs.cmake)
 	message(STATUS
 		"\tLDEXTRA: ${PYTHON_EXTRA_LIBRARIES}")
+	message(STATUS
+		"\tSITEPKG: ${PYTHON_SITE_PACKAGE_DIR}")
 
 #######################
 # libZ

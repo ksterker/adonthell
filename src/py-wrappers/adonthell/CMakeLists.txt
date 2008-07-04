@@ -28,4 +28,4 @@ set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/py_mainPYTHON_wrap.cxx"
 
 # need __init__.py for modules being recognized correctly
 write_file (${CMAKE_CURRENT_BINARY_DIR}/__init__.py "\n")
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/__init__.py DESTINATION lib/${PYTHON_VERSION_DIR}/site-packages/adonthell)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/__init__.py DESTINATION ${PYTHON_SITE_PACKAGE_DIR}/adonthell)

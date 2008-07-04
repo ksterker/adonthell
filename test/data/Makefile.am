@@ -69,4 +69,7 @@ EXTRA_DIST = \
 	models/map/ground/outside/wood-pole-r.xml \
 	models/map/wall/outside/cliff-s.xml \
 	models/map/wall/outside/cliff-se-top.xml \
-	models/map/wall/outside/cliff-se.xml
+	models/map/wall/outside/cliff-se.xml \
+	schedules/__init__.py \
+	schedules/map/__init__.py \
+	schedules/map/mapview.py

@@ -36,8 +36,8 @@ macro(adonthell_install_backend name lib)
 endmacro(adonthell_install_backend)
 
 macro(adonthell_install_py libs scripts)
-   install(TARGETS ${libs} DESTINATION "lib/${PYTHON_VERSION_DIR}/site-packages/adonthell")
-   install(FILES ${scripts} DESTINATION "lib/${PYTHON_VERSION_DIR}/site-packages/adonthell")
+   install(TARGETS ${libs} DESTINATION "${PYTHON_SITE_PACKAGE_DIR}/adonthell")
+   install(FILES ${scripts} DESTINATION "${PYTHON_SITE_PACKAGE_DIR}/adonthell")
 endmacro(adonthell_install_py)
 
 #

@@ -38,6 +38,24 @@ sys.stdout.write(distutils.sysconfig.get_config_var(\"${PythonVar}\"))")
   ENDIF(NOT ${PythonLibs_get_variable_result} EQUAL 0)
 ENDMACRO(PythonLibs_get_variable)
 
+# internal macro
+MACRO(PythonLibs_get_site_package_dir OutVar)
+  SET(PythonLibs_get_site_package_dir_command
+    "import distutils.sysconfig, sys
+sys.stdout.write(distutils.sysconfig.get_python_lib(0,0))")
+  EXECUTE_PROCESS(COMMAND ${PYTHON_EXECUTABLE} -c ${PythonLibs_get_site_package_dir_command}
+    OUTPUT_VARIABLE ${OutVar}
+    ERROR_VARIABLE PythonLibs_get_site_package_dir_error
+    RESULT_VARIABLE PythonLibs_get_site_package_dir_result
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+  IF(NOT ${PythonLibs_get_site_package_dir_result} EQUAL 0)
+    MESSAGE(SEND_ERROR "Command \"${PythonInterp_EXECUTABLE} -c ${PythonLibs_get_site_package_dir_command} failed with output:\n${PythonLibs_get_site_package_dir_error}")
+  ENDIF(NOT ${PythonLibs_get_site_package_dir_result} EQUAL 0)
+ENDMACRO(PythonLibs_get_site_package_dir)
+
+SET(PYTHON_SITE_PACKAGE_DIR "")
+PythonLibs_get_site_package_dir (PYTHON_SITE_PACKAGE_DIR)
+
 SET(PYTHON_EXTRA_LIBRARIES "")
 IF(NOT WIN32)
   # Also link with Python dependencies (needed when using static version)
