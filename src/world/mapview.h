@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.2 2008/05/22 13:05:00 ksterker Exp $
+ $Id: mapview.h,v 1.3 2008/07/04 08:39:50 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
 
 #include <list>
 #include <cmath>
+#include <cstdlib>
 
 #include "gfx/surface.h"
 #include "python/method.h"
