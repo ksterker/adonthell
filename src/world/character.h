@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.5 2008/05/26 21:15:07 ksterker Exp $
+ $Id: character.h,v 1.6 2008/07/10 20:19:40 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,8 +42,8 @@ namespace world
      *
      * This class implements all that you need to represent a character
      * on the map. It mostly defines some additionnal functions on moving
-     * to set the correct state according to the character move, and limits 
-     * it's speed.
+     * to set the correct representation according to the character movement
+     * on the map, and limits its speed.
      * 
      */
     class character : public moving
@@ -58,12 +58,17 @@ namespace world
         character (area & mymap);
 
         /**
-         * Call every cycle to "process" the %character.
+         * Call every cycle to "process" the %character. This
+         * takes care of the %character's physics, like falling
+         * or jumping.
          */
-        void update ();
+        virtual bool update ();
 
         /**
-         * Update %character state.
+         * Update %character state. This takes care of the
+         * character's movement state -- like whether he's
+         * running, walking or standing still -- and direction
+         * he is facing.
          */
         void update_state ();
 

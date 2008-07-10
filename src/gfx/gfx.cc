@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.10 2007/06/16 22:54:43 ksterker Exp $
+   $Id: gfx.cc,v 1.11 2008/07/10 20:19:37 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 
 #include "base/paths.h"
 #include "gfx/gfx.h"
+#include "gfx/surface_cacher.h"
 
 /**
  * The handler of our library file.
@@ -146,11 +147,21 @@ namespace gfx
     	// option to toggle fullscreen on/off
         screen::set_fullscreen (cfg.get_int ("Video", "Fullscreen", 1) == 1);
         cfg.option ("Video", "Fullscreen", base::cfg_option::BOOL);
+        
+        if (!(surfaces = new surface_cacher()))
+        {
+            cerr << "Unable to create a surface cacher\n";
+            return;
+        }
+        surfaces->set_max_mem (cfg.get_int("Video", "CacheSize", DEFAULT_CACHE_SIZE));
     }
 
     // shutdown gfx
     void cleanup()
     {
+    	delete surfaces;
+        surfaces = NULL;
+
         if (gfxcleanup) gfxcleanup();
         gfxcleanup = NULL;
 
@@ -162,32 +173,9 @@ namespace gfx
     {
         return create_surface_p();
     }
-
-    //TODO  cache needs some work right now you there is no way to clear it
-    //      perhaps it should be moved into a class
-    const surface * surface_cache (const string & file, bool set_mask, bool invert_x)
-    {
-        static map<string, surface *> _cache;
-
-        //Create a unique name based on all parameters
-        string cachename = file + "_" + (set_mask?"true":"false") + "_" + (invert_x?"true":"false");
-
-        map<string, surface *>::iterator idx = _cache.find(cachename);
-
-        if (idx != _cache.end())
-        {
-            //We already found it in the cache
-            return idx->second;
-        }
-
-        //Cache miss, try to load the file
-        surface *cur = create_surface();
-        cur->load_png(file);
-        cur->set_mask(set_mask);
-        cur->mirror(invert_x, false);
-
-        //Add it to the cache
-        _cache[cachename] = cur;
-        return cur;
-    }
+    
+    /**
+     * A single global surfacecacher
+     */
+    surface_cacher* surfaces;
 }

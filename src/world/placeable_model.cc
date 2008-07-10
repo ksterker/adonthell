@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.6 2007/10/15 02:19:33 ksterker Exp $
+ $Id: placeable_model.cc,v 1.7 2008/07/10 20:19:44 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,9 +33,15 @@
 
 using namespace world;
 
+// ctor
 placeable_model::placeable_model()
 {
     CurrentShape = Shapes.begin (); 
+}
+
+// dtor
+placeable_model::~placeable_model()
+{
 }
 
 // get current shape
@@ -79,16 +85,47 @@ bool placeable_model::del_shape (const std::string & name)
 // set the current shape
 void placeable_model::set_shape (const std::string & name) 
 {    
+    // shape is already set
     if (CurrentShape != Shapes.end() && CurrentShape->first == name)
         return;
-        
-    std::map <std::string, placeable_shape>::iterator prev_shape;
-    prev_shape = CurrentShape;
+
+    // keep track of current shape in case we need to revert
+    std::map <std::string, placeable_shape>::iterator prev_shape = CurrentShape;
+    
+    // find new shape
     CurrentShape = Shapes.find (name); 
     if (CurrentShape == Shapes.end())
+    {
+        // shape not found
         CurrentShape = prev_shape;
-    
-    else StateChanged = true;
+    }
+    else
+    {
+        // shape found, update sprite
+        if (Sprite.change_animation (name))
+        {
+            Sprite.play ();
+        }
+    }
+}
+
+// set graphical representation of model
+void placeable_model::set_sprite (const std::string & name)
+{
+    Sprite.clear ();
+    Sprite.set_filename (name);
+}
+
+// get graphical representation of model
+gfx::sprite *placeable_model::get_sprite ()
+{
+    // deferred loading
+    if (!Sprite.is_valid())
+    {
+        Sprite.load ();
+    }
+
+    return &Sprite;
 }
 
 // save state to stream
@@ -107,7 +144,9 @@ bool placeable_model::put_state (base::flat & file) const
         record.put_flat (i->first, area);
     }
     
+    record.put_string ("sprite", Sprite.filename ());
     file.put_flat ("model", record);
+    
     return true;
 }
 
@@ -131,6 +170,10 @@ bool placeable_model::get_state (base::flat & file)
         placeable_shape * mpa = add_shape (std::string (name));
         mpa->get_state (area);
     }
+    
+    // get associated sprite
+    std::string sprite = record.get_string ("sprite");
+    Sprite.set_filename (sprite);
     
     // set current shape
     set_shape (shape);

@@ -4,6 +4,8 @@
 %{
 #include "base/types.h"
 #include "world/area.h"
+#include "world/object.h"
+#include "world/character.h"
 #include "world/mapview.h"
 
 using namespace world;
@@ -20,14 +22,10 @@ using namespace world;
 
 %include "world/placeable_model.h"
 %include "world/placeable.h"
-%include "world/placeable_model_gfx.h"
 %include "world/coordinates.h"
 %include "world/object.h"
-%include "world/placeable_gfx.h"
 %include "world/moving.h"
-%include "world/object_with_gfx.h"
 %include "world/character.h"
-%include "world/character_with_gfx.h"
 %include "world/square.h"
 %include "world/area.h"
 %include "world/placeable_shape.h"

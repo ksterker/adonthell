@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.6 2008/05/04 13:49:21 ksterker Exp $
+ $Id: placeable_model.h,v 1.7 2008/07/10 20:19:44 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,8 +32,7 @@
 #ifndef WORLD_PLACEABLE_MODEL_H
 #define WORLD_PLACEABLE_MODEL_H
 
-#include <map>
-
+#include "gfx/sprite.h"
 #include "world/placeable_shape.h"
 
 namespace world
@@ -61,11 +60,11 @@ namespace world
         /**
          * Destructor.
          */
-        virtual ~placeable_model () {}
+        virtual ~placeable_model ();
         
         /**
          * @name Map object shapes.
-         * Each %animation is accompanied by a distinct shape.
+         * Each map object is accompanied by a distinct shape.
          */
         //@{
         /**
@@ -130,6 +129,31 @@ namespace world
         //@}
         
         /**
+         * @name Map object graphics.
+         * Each map object is represented on screen by a sprite.
+         */
+        //@{
+        /**
+         * Assign a (new) sprite to the model. The currently assigned
+         * sprite (if any) will be deleted.
+         * @param name file containing the new graphical representation of this model.
+         */
+        void set_sprite (const std::string & name);
+        
+        /**
+         * Get sprite associated with this model. If the sprite
+         * is not valid yet, if will be loaded the first time 
+         * this method is called.
+         * @return Sprite or NULL if none is assigned yet.
+         */
+        gfx::sprite * get_sprite ();
+        //@}
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /**
          * Get file from which this model was loaded.
          * @return file name of this model.
          */
@@ -138,10 +162,6 @@ namespace world
             return Filename;
         }
         
-        /**
-         * @name Loading / Saving
-         */
-        //@{
         /**
          * Save %model state to stream. 
          * @param file stream to save model to.
@@ -157,12 +177,6 @@ namespace world
         bool get_state (base::flat & file);
         //@}
 
-        /**
-         * This friendship is needed so placeable_model_gfx
-         * can modify the Has_changed member.
-         */
-        friend class placeable_model_gfx;
-
 #ifndef SWIG
         /**
          * Allow %placeable_model to be passed as python argument
@@ -177,8 +191,8 @@ namespace world
         mutable std::map <std::string, placeable_shape> Shapes;
         /// current state of this object
         std::map <std::string, placeable_shape>::iterator CurrentShape;
-        /// whether state of object has changed recently
-        bool StateChanged;
+        /// the sprite associated with this model
+        gfx::sprite Sprite;
     }; 
 }
 

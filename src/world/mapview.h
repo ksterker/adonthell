@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.3 2008/07/04 08:39:50 ksterker Exp $
+ $Id: mapview.h,v 1.4 2008/07/10 20:19:42 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,11 +51,7 @@ namespace world
          * @param length extension of mapview along x axis in pixels.
          * @param height extension of mapview along y axis in pixels.
          */
-        mapview (const u_int32 & length, const u_int32 & height) : Z(0), FinalZ(0), Speed(0)
-        {
-            set_length (length);
-            set_height (height);
-        }
+        mapview (const u_int32 & length, const u_int32 & height);
         
         /**
          * @name Member access.

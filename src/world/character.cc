@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.7 2008/05/26 21:15:06 ksterker Exp $
+   $Id: character.cc,v 1.8 2008/07/10 20:19:40 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -58,7 +58,7 @@ void character::jump()
 }
 
 // process character movement
-void character::update ()
+bool character::update ()
 {
     // reset vertical velocity
     set_vertical_velocity (VSpeed);
@@ -76,6 +76,8 @@ void character::update ()
     	}
     }
     else if (VSpeed > 0) VSpeed -= 0.4;
+    
+    return true;
 }
 
 // set character movement

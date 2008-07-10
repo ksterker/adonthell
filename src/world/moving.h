@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.9 2008/05/04 13:49:21 ksterker Exp $
+ $Id: moving.h,v 1.10 2008/07/10 20:19:42 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,7 +61,7 @@ namespace world
         /**
          * Destructor.
          */
-        ~moving ();
+        virtual ~moving ();
         
         /**
          * @name Member Access
@@ -170,7 +170,7 @@ namespace world
          * object, depending on its velocity and obstacles on the map.
          * @return always true.
          */
-        bool update (); 
+        virtual bool update (); 
 
         /**
          * When compiled with -DDEBUG_COLLISION, calling this method after

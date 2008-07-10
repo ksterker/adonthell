@@ -6,28 +6,31 @@ EXTRA_DIST = CMakeLists.txt sdlgl/screen_sdlgl.h sdlgl/surface_sdlgl.h sdlgl/gfx
 ## Our header files
 pkgincludegfxdir = $(pkgincludedir)/gfx
 pkgincludegfx_HEADERS = \
-	animation.h \
 	drawable.h \
 	drawing_area.h \
 	gfx.h \
     image.h \
 	png_wrapper.h \
 	screen.h \
-	surface.h
+    sprite.h \
+	surface.h \
+    surface_cacher.h
 
 ## Main library
 lib_LTLIBRARIES = libadonthell_gfx.la
 
 ## Rules to build libgfx
 libadonthell_gfx_la_SOURCES = \
-	animation.cc \
 	drawable.cc \
 	drawing_area.cc \
 	gfx.cc \
     image.cc \
 	png_wrapper.cc \
 	screen.cc \
-	surface.cc
+    sprite.cc \
+	surface.cc \
+    surface_cacher.cc
+
 
 libadonthell_gfx_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng

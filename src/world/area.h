@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.7 2008/05/04 13:49:20 ksterker Exp $
+ $Id: area.h,v 1.8 2008/07/10 20:19:40 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -27,151 +27,26 @@
  * 
  * @brief  Declares the area class.
  * 
- * 
  */
 
 
 #ifndef WORLD_AREA_H
 #define WORLD_AREA_H
 
-#include "world/character_with_gfx.h"
-#include "world/object_with_gfx.h"
+#include "base/hash_map.h"
+
+#include "world/entity.h"
 #include "world/square.h"
 #include "world/chunk.h"
 
 namespace world
-{
+{    
     /**
      * The plane of existance. A map consists of a grid of squares that
      * contain the actual scenery elements, characters and items.
      */
     class area
-    {
-    private:
-
-#ifndef SWIG
-
-        template<class T, class T_gfx>
-        class thing_manager
-        {
-        protected:
-            std::vector<T *> objects;
-            
-            bool handle_gfx;
-            
-        public:
-            thing_manager()
-            {
-                handle_gfx = true;
-            }
-            
-            ~thing_manager()
-            {
-                clear();
-            }
-            
-            void clear()
-            {
-                // FIXME: doesn't a virtual destructor take care of deleting the proper object already???
-                if(handle_gfx)
-                    for (typename std::vector<T *>::iterator i = objects.begin();
-                         i != objects.end(); i++)
-                        // FIXME: check whether it works or not.
-                        delete ((T_gfx*)*i);
-                else
-                    for (typename std::vector<T *>::iterator i = objects.begin();
-                         i != objects.end(); i++)
-                        delete *i;
-                
-                objects.clear();
-            }
-            
-            bool update()
-            {
-                if (handle_gfx) return update_gfx();
-                else return update_nogfx();
-            }
-            
-            bool update_nogfx()
-            {
-                for (typename std::vector<T *>::iterator i = objects.begin();
-                     i != objects.end(); i++)
-                    (*i)->update();
-                
-                return true;
-            }
-            
-            bool update_gfx()
-            {
-                for (typename std::vector<T *>::iterator i = objects.begin();
-                     i != objects.end(); i++)
-                {
-                    (*i)->update();
-                    ((T_gfx *)(*i))->placeable_gfx::update();
-                }
-                return true;
-            }
-            
-            T * add(area & lm)
-            {
-                T * obj;
-                if (handle_gfx) obj = new T_gfx(lm);
-                else obj = new T(lm);
-                
-                objects.push_back(obj);
-                
-                return (obj);
-            }
-            
-            
-            T * operator [] (const int & index)
-            {
-                return objects[index];
-            }
-        };
-        
-        /// Pointers to objects that are placed on this map.
-        thing_manager<object, object_with_gfx> objects;
-        
-        /// Pointers to the characters that are on this map.
-        thing_manager<character, character_with_gfx> characters;
-
-        /// The individual map squares
-        std::vector <std::vector <square> > Grid;
-        
-        /**
-         * Add static objects to map at given position.
-         * @param obj the object to add
-         * @param pos position where to add object
-         * @return true on success, false otherwise
-         */
-        bool put (placeable * obj, coordinates & pos); 
-        
-        /**
-         * Add moveable object to the map. Position will be the
-         * object's current position.
-         * @param obj the object to add.
-         * @return true on success, false otherwise
-         */
-        bool put (moving * obj); 
-        
-        /**
-         * Remove given static object from given location.
-         * @param obj the object to remove from the map.
-         * @param pos the location to remove the object from.
-         * @return true on success, false otherwise.
-         */
-        bool remove (placeable * obj, coordinates & pos);
-        
-        /**
-         * Remove given moveable object from the map.
-         * @param obj the object to remove from the map.
-         * @return true on success, false otherwise.
-         */
-        bool remove (moving * obj); 
-
-#endif // SWIG
-        
+    {        
     public:
         /**
          * Create an empty map. Call resize to set its initial size
@@ -228,10 +103,6 @@ namespace world
         //@}
         
         /**
-         * @name Scenery and Characters
-         */
-        //@{
-        /**
          * Remove all objects and characters from the map.
          */
         void clear();
@@ -242,53 +113,89 @@ namespace world
          *     updated based on events.
          */
         void update();
+
+        /**
+         * Place object at a given index at the given location.
+         * @param index index of object in the list of objects.
+         * @param pos position to place object at.
+         */
+        bool put_entity (const u_int32 & index, coordinates & pos);
         
+        /**
+         * Get named entity.
+         * @param id unique identifier for the entity to retrieve.
+         * @return the matching entity, or NULL if no such entity exists.
+         */
+        placeable * get_entity (const std::string & id);
+        
+        /**
+         * @name Map entity creation.
+         */
+        //@{
         /** 
          * Adds an object to this map. Creates a new, empty object and returns
          * it, so that it can be initialized by the caller of this method.
          * The map will take ownership of the object.
          *
-         * @todo this function should load objects from files, being given
-         * a object file name. That way, there won't be any ownership problem
-         * anymore.
-         *
-         * @return new object in case of success, \e NULL otherwise.
+         * @return pointer to the added object in case of success, \e NULL otherwise.
          */
-        object * add_object();
+        placeable * add_entity (const placeable_type & type);
         
         /** 
-         * Adds a new character to the map. Creates a new, empty character and 
-         * returns it, so that it can be initialized by the caller of this method.
-         * The map will take ownership of the character.
-         * 
-         * @todo this function should load objects from files, being given
-         * a character file name. That way, there won't be any ownership problem
-         * anymore.
-         * 
-         * @return pointer to the character instance in case of success, 
-         *      \e NULL otherwise.
+         * Adds a new, named entity to the map. The enitiy of the specified type 
+         * will be created and returned for further initialization.
+         *   
+         * @return pointer to the added object in case of success, \e NULL otherwise.
          */
-        character * add_character();
+        placeable * add_entity (const placeable_type & type, const std::string & id);
 
         /**
-         * Place object at a given index at the given location.
-         * @param index index of object int the list of objects.
-         * @param pos position to place object at.
+         * Adds an existing object as a new, named entity to the map. This is useful
+         * if different instances of an entity (identified by their unique id) can
+         * share the same graphical representation.
+         *
+         * @return pointer to the added object in case of success, \e NULL otherwise.
          */
-        bool put_object (const u_int32 & index, coordinates & pos);
+        placeable * add_entity (placeable * object, const std::string & id);
         //@}
-        
-        /**
-         * For debugging. Print how many objects are located on each square of 
-         * the map.
-         */
-        void output_occupation();
         
         /// This class is allowed to change and move objects on the map.
         friend class moving;
 
     private:
             
+#ifndef SWIG
+        /**
+         * Add static objects to map at given position.
+         * @param obj the object to add
+         * @param pos position where to add object
+         * @return true on success, false otherwise
+         */
+        bool put (placeable * obj, coordinates & pos); 
+        
+        /**
+         * Add moveable object to the map. Position will be the
+         * object's current position.
+         * @param obj the object to add.
+         * @return true on success, false otherwise
+         */
+        bool put (moving * obj); 
+        
+        /**
+         * Remove given static object from given location.
+         * @param obj the object to remove from the map.
+         * @param pos the location to remove the object from.
+         * @return true on success, false otherwise.
+         */
+        bool remove (placeable * obj, coordinates & pos);
+        
+        /**
+         * Remove given moveable object from the map.
+         * @param obj the object to remove from the map.
+         * @return true on success, false otherwise.
+         */
+        bool remove (moving * obj); 
+                
         /**
          * Add object to all map squares enclosed by the rectangle [pos.x(), pos.y(); end_x, end_y].
          * This method should not be called directly. Use put(moving*) or put(object*, coordinates&)
@@ -300,7 +207,18 @@ namespace world
          * @param ground_z position of ground under object
          * @return true on success, false otherwise
          */
-        bool put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z);        
+        bool put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z); 
+        
+        /// The individual map squares
+        std::vector <std::vector <square> > Grid;
+        
+        /// The individual objects on the map
+        std::vector <world::entity *> Entities;
+        
+        /// Named objects on the map
+        std::hash_map <std::string, world::named_entity *> NamedEntities;
+        
+#endif // SWIG
     }; 
 }
 

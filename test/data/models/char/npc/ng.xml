@@ -182,6 +182,6 @@
         </list>
       </list>
     </list>
+    <string id="sprite">data/gfx/char/npc/ng/naked_guy.xml</string>
   </list>
-  <string id="sprite">data/gfx/char/npc/ng/naked_guy.xml</string>
 </Data>

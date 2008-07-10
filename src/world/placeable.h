@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.4 2008/05/04 13:49:21 ksterker Exp $
+ $Id: placeable.h,v 1.5 2008/07/10 20:19:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,10 +54,9 @@ namespace world
      * that can be placed on a map and occupies some space on it.
      *
      * What makes this class different from placeable_model is that it has a type,
-     * that higher-level class can overwrite to indicate what kind of placeable it is,
-     * and a reference to the map the placeable belongs to, so update functions can
+     * that higher-level class can overwrite to indicate what kind of placeable it is
+     * and a reference to the map the placeable belongs to, so update functions can 
      * check the terrain around the placeable.
-     * 
      */
     class placeable : public placeable_model
     {
@@ -82,6 +81,17 @@ namespace world
             return Type; 
         }
         
+        /**
+         * Update placeable each game cycle. 
+         * @return true on success, false otherwise.
+         * @todo if only characters really require this, 
+         *      then limit to those for efficiency. 
+         */
+        virtual bool update ()
+        {
+            return true;
+        }
+        
 #ifndef SWIG
         /**
          * Allow %placeable to be passed as python argument
@@ -94,6 +104,10 @@ namespace world
         placeable_type Type; 
         /// the map this placeable belongs to
         area & Mymap;
+    
+    private:
+        /// forbid passing by value
+        placeable (const placeable & p);
     };
 }
 

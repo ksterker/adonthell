@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.h,v 1.7 2006/10/30 05:55:12 ksterker Exp $
+   $Id: gfx.h,v 1.8 2008/07/10 20:19:37 ksterker Exp $
 
    Copyright (C) 2003/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,13 +69,6 @@ namespace gfx
      */
     void cleanup();
 
-#ifdef SWIG
-    /*
-      SWIG directive - create_surface returns a new
-      surface, not a pointer to an existing one.
-    */
-    // %newobject create_surface;
-#endif
     /**
      * Return a new surface. Surfaces can \e only be created
      * by this function, and you have the responsability
@@ -85,15 +78,6 @@ namespace gfx
      * the current backend.
      */
     surface * create_surface();
-
-    /**
-     * Return a cached surface object, or load one if not already cached
-     *
-     * @param file which file to return a cached version of
-     *
-     * @return a pointer to an existing drawable object.  Do not delete it.
-     */
-    const surface * surface_cache(const std::string & file, bool set_mask = true, bool invert_x = false);
 }
 
 

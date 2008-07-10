@@ -1,5 +1,5 @@
 /*
-   $Id: animation.cc,v 1.12 2007/07/22 21:50:37 ksterker Exp $
+   $Id: sprite.cc,v 1.1 2008/07/10 20:19:37 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -22,14 +22,14 @@
 
 
 /**
- * @file gfx/animation.cc
+ * @file  gfx/sprite.cc
  *
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
  *
- * @brief  Defines the animation global interface.
+ * @brief  Defines the sprite global interface.
  */
 
-#include "gfx/animation.h"
+#include "gfx/sprite.h"
 #include "base/diskio.h"
 #include "base/callback.h"
 #include "event/date.h"
@@ -39,33 +39,42 @@ using namespace std;
 
 namespace gfx
 {
-    // static storage
-    animation::animation_cache animation::m_allAnimations;
-
     // ctor
-    animation::animation () : m_valid(false), m_playing(false) 
+    sprite::sprite () : m_valid(false), m_playing(false) 
     {
         m_listener = new events::listener_cxx (NULL, new events::time_event ());
-        m_listener->connect_callback (base::make_functor (*this, &animation::update));
+        m_listener->connect_callback (base::make_functor (*this, &sprite::update));
         m_listener->set_id ("animation");
         m_listener->pause ();
     }
     
     // dtor
-    animation::~animation ()
+    sprite::~sprite ()
     {
         delete m_listener;
     }
     
+    // reset sprite
+    void sprite::clear ()
+    {
+        m_states.clear ();
+        m_valid = false;
+        m_playing = false;
+        if (!m_listener->is_paused()) 
+        {
+            m_listener->pause();
+        }
+    }
+    
     // change animation being played
-    bool animation::change_animation (const std::string & new_animation)
+    bool sprite::change_animation (const std::string & new_animation)
     {
         //Check if the animation is valid yet
         if(!m_valid) return false;
 
         // Look for an animation with the name passed in
-        animation_map::iterator anim = m_sprite->second.find(new_animation);
-        if(anim == m_sprite->second.end())
+        animation_map::iterator anim = m_states.find(new_animation);
+        if(anim == m_states.end())
             return false;
 
         // stop playing current animation
@@ -79,8 +88,8 @@ namespace gfx
         m_surface = m_animation->second.begin();
 
         // update length and height of drawable
-        set_length ((*m_surface)->image->length());
-        set_height ((*m_surface)->image->height());
+        set_length ((*m_surface)->image->s->length());
+        set_height ((*m_surface)->image->s->height());
 
         // set delay until next frame
         events::time_event *evt = (events::time_event *) m_listener->get_event ();
@@ -90,13 +99,20 @@ namespace gfx
     }
 
     // update state of animation
-    bool animation::update ()
+    bool sprite::update ()
     {
         // Check if the animation is valid yet
         if (!m_valid) return false;
 
         if (m_playing)
         {
+            // stop animation?
+            if ((*m_surface)->delay == 0)
+            {
+                m_playing = false;
+                return true;
+            }
+            
             // Update to the next surface.  If it wraps, then reset it to the beginning
             m_surface++;
             if (m_surface == m_animation->second.end())
@@ -111,7 +127,7 @@ namespace gfx
     }
 
     // start playing animation
-    void animation::play ()
+    void sprite::play ()
     {
         m_playing = true;
         if (m_animation->second.size() > 1)
@@ -119,7 +135,7 @@ namespace gfx
     }
     
     // pause playing animation
-    void animation::stop ()
+    void sprite::stop ()
     {
         m_playing = false;
         if (m_animation->second.size() > 1 && !m_listener->is_paused ())
@@ -127,13 +143,13 @@ namespace gfx
     }
     
     // reset to first frame
-    void animation::rewind ()
+    void sprite::rewind ()
     {
         m_surface = m_animation->second.begin();
     }
     
     // load from stream
-    bool animation::get_state (base::flat & file)
+    bool sprite::get_state (base::flat & file)
     {
         u_int32 size;
         void *value;
@@ -148,75 +164,66 @@ namespace gfx
             while (anim.next (&value, &size, &id) == base::flat::T_FLAT) 
             {
                 base::flat frame ((const char*) value, size);
-
-                cur_animation.push_back(new animation_frame(surface_cache(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
+                cur_animation.push_back(new animation_frame(surfaces->get_surface(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
             }
-
-            m_sprite->second[animation_name] = cur_animation;
+            
+            m_states[animation_name] = cur_animation;
         }
 
         return file.success ();
     }
     
     // load from XML file
-    bool animation::load_animation (const std::string & filename)
+    bool sprite::load (const std::string & filename)
     {
-        //Check if we have already loaded the file
-        m_sprite = m_allAnimations.find(filename);
-        if (m_sprite != m_allAnimations.end()) {
-            m_valid = true;
-            return m_valid;
-        }
-
-        //We have not loaded it before so load it from the file
+        const std::string & file = (filename.length() != 0) ? filename : m_filename;
+        
+        // load sprite from the file
         base::diskio animation (base::diskio::XML_FILE);
-
-        if (!animation.get_record (filename))
+        if (!animation.get_record (file))
+        {
             //Error loading the file (file not found?)
             return false;
-
-        //Sprite doesn't exist so create a blank one
-        animation_map sprite;
-        m_allAnimations[filename] = sprite;
-        m_sprite = m_allAnimations.find(filename);
-
+        }
+        
         //This will populate the sprite that we just created
         bool retval = get_state (animation);
         if (retval)
         {
-            m_animation = m_sprite->second.begin();  //TODO This should be part of the XML File, not hardcoded here
+            m_animation = m_states.begin(); // TODO This should be part of the XML File, not hardcoded here
             m_surface = m_animation->second.begin();
 
-            set_length((*m_surface)->image->length());          //TODO This should be part of the XML File, not hardcoded here
-            set_height((*m_surface)->image->height());          //TODO This should be part of the XML File, not hardcoded here
-
+            set_length((*m_surface)->image->s->length());          
+            set_height((*m_surface)->image->s->height());          
+            
             m_valid = true;
-            m_playing = true;                                   //TODO This should be part of the XML File, not hardcoded here
+            m_filename = filename;
         }
+        
         return retval;
     }
 
     // save to stream
-    bool animation::put_state (base::flat & file) const
+    bool sprite::put_state (base::flat & file) const
     {
-        animation_map::iterator ii;
+        animation_map::const_iterator ii;
 
         //Loop through all available animations
-        for(ii = m_sprite->second.begin(); ii != m_sprite->second.end(); ii++) {
+        for(ii = m_states.begin(); ii != m_states.end(); ii++) {
             base::flat anim;
-            animation_list::iterator jj;
+            animation_list::const_iterator jj;
 
             //Loop through all frames in current animation
             for(jj = ii->second.begin(); jj != ii->second.end(); jj++) {
                 base::flat frame;
 
                 //Add information about the frame.
-                frame.put_bool("mask", (*jj)->image->is_masked());
-                frame.put_bool("mirrored_x", (*jj)->image->is_mirrored_x());
+                frame.put_bool("mask", (*jj)->image->s->is_masked());
+                frame.put_bool("mirrored_x", (*jj)->image->s->is_mirrored_x());
                 frame.put_uint32("delay", (*jj)->delay);
 
                 //Add the frame to the animation
-                anim.put_flat((*jj)->image->filename(), frame);
+                anim.put_flat((*jj)->image->s->filename(), frame);
             }
 
             //Add the current animation to the diskio
@@ -227,7 +234,7 @@ namespace gfx
     }
 
     // save to XML file
-    bool animation::save_animation (const std::string & filename) const
+    bool sprite::save (const std::string & filename) const
     {
         // create container
         base::diskio animation (base::diskio::XML_FILE);
@@ -240,12 +247,13 @@ namespace gfx
     }
     
     // get filename of sprite
-    std::string animation::filename() const
+    std::string sprite::filename() const
     {
     	if (m_valid)
     	{
-    		return m_sprite->first;
+    		return m_filename;
     	}
+        
     	return "";
     }
 }

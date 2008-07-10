@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.2 2007/10/15 02:19:31 ksterker Exp $
+ $Id: placeable.cc,v 1.3 2008/07/10 20:19:43 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,5 +36,4 @@ using world::placeable;
 placeable::placeable(world::area & mymap) : Mymap(mymap)
 {
     Type = UNKNOWN;
-    StateChanged = false;
 }

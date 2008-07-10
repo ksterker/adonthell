@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.17 2008/03/18 21:46:22 ksterker Exp $
+   $Id: surface.cc,v 1.18 2008/07/10 20:19:38 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -179,6 +179,29 @@ namespace gfx
         unlock();
     }
 
+    // save meta data to stream
+    bool surface::put_state (base::flat & file) const
+    {
+        file.put_bool ("mask", is_masked_);
+        file.put_uint8 ("alpha", alpha_);
+        file.put_bool ("mirror_x", is_mirrored_x_);
+        file.put_bool ("mirror_y", is_mirrored_y_);
+        
+        return true;
+    }
+    
+    // load meta data from stream
+    bool surface::get_state (base::flat & file)
+    {
+        is_masked_ = file.get_bool ("mask");
+        alpha_ = file.get_uint8 ("alpha");
+        is_mirrored_x_ = file.get_bool ("mirror_x");
+        is_mirrored_y_ = file.get_bool ("mirror_y");
+        
+        return file.success();
+    }
+
+    // load png into image
     bool surface::get_png (ifstream & file)
     {
         void *rawdata;
@@ -191,12 +214,16 @@ namespace gfx
 
         clear ();
         
+        // temporary till a real method can be used to compute the size
+        size_ = l * h * (alpha ? 4 : 3);
+        
         set_data(rawdata, l, h, alpha ? 4 : 3,
                  R_MASK, G_MASK, B_MASK, alpha ? A_MASK : 0);
 
         return true;
     }
 
+    // load png into image from file
     bool surface::load_png (const string & fname)
     {
         // find file in adonthell's search path
@@ -221,6 +248,7 @@ namespace gfx
         return ret;
     }
 
+    // save image data as png
     bool surface::put_png (ofstream & file) const
     {
         void * rawdata = get_data(3, R_MASK, G_MASK, B_MASK);
@@ -234,6 +262,7 @@ namespace gfx
         return true;
     }
 
+    // save image data as png in given file
     bool surface::save_png (const string & fname) const
     {
         ofstream file(fname.c_str(), ios::binary);

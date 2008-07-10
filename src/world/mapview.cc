@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.5 2008/05/26 21:15:07 ksterker Exp $
+ $Id: mapview.cc,v 1.6 2008/07/10 20:19:41 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,8 +27,6 @@
  * 
  */
 
-#include "world/character_with_gfx.h"
-#include "world/object_with_gfx.h"
 #include "world/mapview.h"
 #include "gfx/screen.h"
 #include "python/pool.h"
@@ -37,6 +35,16 @@ using world::mapview;
 
 /// the python script containing mapview schedules
 #define SCHEDULE_SCRIPT "schedules.map.mapview"
+
+// ctor
+mapview::mapview (const u_int32 & length, const u_int32 & height) : Z(0), FinalZ(0), Speed(0)
+{
+    set_length (length);
+    set_height (height);
+    
+    Schedule = NULL;
+    Args = NULL;
+}
 
 // set script called to position view on map
 bool mapview::set_schedule (const std::string & method, PyObject *extraArgs)
@@ -231,23 +239,10 @@ void mapview::render (std::list <world::chunk_info> & drawqueue, const gfx::draw
         s_int16 pos_x = da.x() + (*it).Min.x () - Sx;
         s_int16 pos_y = da.y() + Z + (*it).Min.y () - (*it).Min.z() - Sy; 
         
-        switch ((*it).Object->type ()) 
-        {
-            case world::CHARACTER:
-            {
-                ((world::character_with_gfx *) (*it).Object)->draw (pos_x, pos_y, &da, target);               
-                break; 
-            }   
-            case world::OBJECT:
-            {
-                ((world::object_with_gfx *) (*it).Object)->draw (pos_x, pos_y, &da, target);
-                break;
-            }   
-            default:
-            {
-                break; 
-            }
-        }
+        const gfx::sprite *sprite = it->Object->get_sprite();
+        const placeable_shape * shape = it->Object->current_shape();
+        
+        sprite->draw (pos_x, pos_y - shape->height() - shape->z(), &da, target);               
     }
     
     drawqueue.clear ();    

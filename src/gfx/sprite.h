@@ -1,7 +1,7 @@
 /*
-   $Id: animation.h,v 1.9 2008/05/22 12:59:42 ksterker Exp $
+   $Id: sprite.h,v 1.1 2008/07/10 20:19:37 ksterker Exp $
 
-   Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -21,43 +21,48 @@
 
 
 /**
- * @file   gfx/animation.h
+ * @file   gfx/sprite.h
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
  *
- * @brief  Declares the animation interface.
+ * @brief  Declares the sprite interface.
  *
  *
  */
 
 
-#ifndef GFX_ANIMATION_H
-#define GFX_ANIMATION_H
+#ifndef GFX_SPRITE_H
+#define GFX_SPRITE_H
 
 #include "event/listener_cxx.h"
-#include "gfx/gfx.h"
+
+#include "gfx/surface_cacher.h"
+#include "gfx/surface.h"
 #include <queue>
 
 namespace gfx
 {
     /**
-     * Class to handle storing several surfaces in an animation sequence.
+     * Class to handle storing several surfaces in an sprite sequence.
      *
      */
-    class animation : public drawable
+    class sprite : public drawable
     {
     public:
         /**
          * Default constructor.
-         *
          */
-        animation ();
+        sprite ();
 
         /**
          * Destructor.
-         *
          */
-        virtual ~animation ();
+        virtual ~sprite ();
 
+        /**
+         * Reset the %sprite.
+         */
+        void clear ();
+        
         /**
          * @name Animation Control
          */
@@ -71,7 +76,16 @@ namespace gfx
         bool change_animation (const std::string & new_animation);
         
         /**
-         * Update animation. Called once per game cycle to advance the
+         * Whether all image data has been loaded for the sprite.
+         * @return true if sprite is fully initialized, false otherwise.
+         */
+        bool is_valid () const
+        {
+            return m_valid;
+        }
+        
+        /**
+         * Update sprite. Called once per game cycle to advance the
          * current frame of the current sprite, if neccessary.
          * @return true.
          */
@@ -105,10 +119,6 @@ namespace gfx
          * @param y Y position where to draw.
          * @param da_opt optional drawing_area to use during the drawing operation.
          * @param target pointer to the surface where to draw the drawable. If NULL, draw on the screen.
-         *
-         * @attention Not accessible from Python. Use draw_part () from Python instead.
-         * @sa draw_part ()
-         *
          */
         virtual void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const
@@ -127,16 +137,12 @@ namespace gfx
          * @param sh height of the part of this image to draw.
          * @param da_opt optional drawing_area to use during the drawing operation.
          * @param target pointer to the surface where to draw the drawable. If NULL, draw on the screen.
-         *
-         * @attention Not accessible from Python. Use draw_part () from Python instead.
-         * @sa draw_part ()
-         *
-         */
+        */
         virtual void draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
                            u_int16 sh, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const
         {
-            if (m_valid) (*m_surface)->image->draw(x, y, sx, sy, sl, sh, da_opt, target);
+            if (m_valid) (*m_surface)->image->s->draw(x, y, sx, sy, sl, sh, da_opt, target);
         }
         //@}
         
@@ -145,44 +151,53 @@ namespace gfx
          */
         //@{
         /**
-         * Get file name the sprite was loaded from, if any.
-         * @return file name or empty string, if sprite was loaded elsewhere.
+         * Get file name the %sprite was loaded from, if any.
+         * @return file name or empty string, if %sprite was loaded elsewhere.
          */
         std::string filename () const; 
         
         /**
-         * Save %animation state to stream. 
-         * @param file stream to save %animation to.
+         * Set file name to load the %sprite from.
+         * @param filename path to file containing %sprite data.
+         */
+        void set_filename (const std::string & filename)
+        {
+            m_filename = filename;
+        }
+        
+        /**
+         * Save %sprite state to stream. 
+         * @param file stream to save %sprite to.
          * @return \b true if saving successful, \b false otherwise.
          */
         bool put_state (base::flat & file) const;
         
         /**
-         * Load %animation state from stream. 
-         * @param file stream to load %animation from.
+         * Load %sprite state from stream. 
+         * @param file stream to load %sprite from.
          * @return \b true if loading successful, \b false otherwise.
          */
         bool get_state (base::flat & file);        
         
         /**
-         * Load the available animtions from a xml file
+         * Load %sprite from a xml file
          * 
          * @param filename xml file to load
          * @return true if successful
          */
-        bool load_animation (const std::string & filename);
+        bool load (const std::string & filename = "");
         
         /**
-         * Save the available animtions from a xml file
+         * Save %sprite to a xml file
          * 
          * @param filename xml file to save
          * @return true if successful
          */
-        bool save_animation (const std::string & filename) const;
+        bool save (const std::string & filename) const;
         //@}
         
 #ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(gfx::animation)
+        GET_TYPE_NAME_VIRTUAL(gfx::sprite)
 #endif // SWIG
 
     protected:
@@ -197,11 +212,19 @@ namespace gfx
              * @param img the image data
              * @param dly the delay before switching to the next frame
              */
-            animation_frame(const surface *img, u_int16 dly = 0):
+            animation_frame(const surface_ref *img, u_int16 dly = 0):
             image(img), delay(dly) { }
             
+            /**
+             * Destroy frame and free reference to associated surface.
+             */
+            ~animation_frame()
+            {
+                delete image;
+            }
+            
             /// what image to draw for this frame
-            const surface *image;
+            const surface_ref *image;
             /// how long before we switch to the next frame
             u_int16 delay;              
         };
@@ -209,43 +232,36 @@ namespace gfx
         /**
          * @name Animation Storage
          * Typedefs for the animation storage
-         *
          */
         //@{
         /// The different frames in an animation
         typedef std::deque<const animation_frame *> animation_list;
-        /// A named animation sequence
+        /// A named animation sequence (one state of a sprite)
         typedef std::map<std::string, animation_list> animation_map;
-        /// The different animation sequences in a sprite
-        typedef std::map<std::string, animation_map> animation_cache;
         //@}
         
-        /**
-         * All data is stored here.  One huge map allowing for access to different parts through iterators.
-         *
-         */
-        static animation_cache m_allAnimations;
-
-        /// a sprite
-        animation_cache::iterator m_sprite;
+        /// states of the sprite
+        animation_map m_states;
         /// an animation
         animation_map::iterator m_animation;
         /// a frame
         animation_list::iterator m_surface;
-
+        
         /// event listener for animation playback
         events::listener_cxx *m_listener;
         /// all images are loaded
         bool m_valid;
         /// animation is playing
         bool m_playing;
+        /// name of the sprite
+        std::string m_filename;
         
     private:
         /**
          * Forbid copy construction.
          *
          */
-        animation (const animation & src);
+        sprite (const sprite & src);
     };
 }
 

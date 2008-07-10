@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.15 2008/05/22 12:59:43 ksterker Exp $
+   $Id: surface.h,v 1.16 2008/07/10 20:19:38 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #ifndef SURFACE_H_
 #define SURFACE_H_
 
+#include "base/flat.h"
 #include "gfx/drawable.h"
 #include <string>
 #include <fstream>
@@ -208,10 +209,6 @@ namespace gfx
          * @param sh height of the part of this image to draw.
          * @param da_opt optional drawing_area to use during the drawing operation.
          * @param target pointer to the surface where to draw the drawable. If NULL, draw on the screen.
-         *
-         * @attention Not accessible from Python. Use draw_part () from Python instead.
-         * @sa draw_part ()
-         *
          */
         virtual void draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
                            u_int16 sh, const drawing_area * da_opt = NULL,
@@ -387,6 +384,16 @@ namespace gfx
          */
         virtual void resize (u_int16 l, u_int16 h) = 0;
 
+        /** 
+         * Get the size of this surface
+         *
+         * @return the size in bytes
+         */
+        u_int32 size() const 
+        { 
+            return size_;
+        }
+        
         /**
          * Resets the surface to it's initial state, that is totally
          * empty.
@@ -396,11 +403,24 @@ namespace gfx
 
         /**
          * @name Loading/saving Methods
-         * Load and save surfaces in various formats.
+         * Load and save surface meta and image data in various formats.
          *
          */
         //@{
-
+        /**
+         * Save image meta data to stream. 
+         * @param file stream to save meta date to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load image meta data from stream. 
+         * @param file stream to load meta data from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);   
+        
         /** Loads an image from an opened file, in PNG format, without
          *  alpha and mask values.
          *  @param file the opened file from which to read.
@@ -434,7 +454,6 @@ namespace gfx
          *  @sa put_png ()
          */
         bool save_png (const std::string & fname) const;
-
         //@}
 
 #ifndef SWIG
@@ -460,6 +479,9 @@ namespace gfx
         /// Filename
         std::string filename_;
 
+        /// Surface size in bytes
+        u_int32 size_;
+        
         /**
          * Sets the surface pixel data from a given memory zone.
          * \e data must point to a memory area of size

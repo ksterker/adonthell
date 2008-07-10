@@ -17,6 +17,6 @@
         </list>
       </list>
     </list>
+    <string id="sprite">data/gfx/map/wall/outside/cliff/cliff-se.xml</string>
   </list>
-  <string id="sprite">data/gfx/map/wall/outside/cliff/cliff-se.xml</string>
 </Data>

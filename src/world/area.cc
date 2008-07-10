@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.12 2008/05/25 17:54:47 ksterker Exp $
+ $Id: area.cc,v 1.13 2008/07/10 20:19:39 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -29,11 +29,12 @@
  */
 
 #include "world/area.h"
+#include "world/character.h"
+#include "world/object.h"
 
 using world::coordinates;
+using world::placeable;
 using world::area;
-using world::object;
-using world::character;
 
 // dtor
 area::~area()
@@ -41,11 +42,17 @@ area::~area()
     clear();
 }
 
-// delete characters and objects
+// delete all entities
 void area::clear()
 {
-    objects.clear();
-    characters.clear();
+    std::vector<entity*>::const_iterator i;
+    for (i = Entities.begin(); i != Entities.end(); i++)
+    {
+        delete *i;
+    }
+    
+    Entities.clear();
+    NamedEntities.clear();
 }
 
 // set size of map grid
@@ -60,6 +67,12 @@ void area::resize (const u_int16 & nx, const u_int16 & ny)
 world::square * area::get (const u_int16 & x, const u_int16 & y)
 {
     return (&Grid[x][y]);
+}
+
+// convenience method for adding object at a know index 
+bool area::put_entity (const u_int32 & index, coordinates & pos)
+{
+    return put(Entities[index]->get_object(), pos);
 }
 
 // place object at given position on the grid
@@ -176,37 +189,100 @@ bool area::remove (moving * obj)
 // update state of map
 void area::update()
 {
-    objects.update();
-    characters.update();
-}
-
-object * area::add_object()
-{    
-    return objects.add (*this);
-}
-
-character * area::add_character()
-{
-    return characters.add (*this);
-}
-
-bool area::put_object (const u_int32 & index, coordinates & pos)
-{
-    return put(objects[index], pos);
-}
-
-void area::output_occupation()
-{
-    for (u_int16 j = 0; j < height(); j++)
+    std::vector<world::entity*>::const_iterator i;
+    for (i = Entities.begin(); i != Entities.end(); i++)
     {
-        for (u_int16 i = 0; i < length(); i++)
-        {
-            square * msqr = get(i, j);
-            u_int16 nb = 0;
-            for (square::iterator it = msqr->begin(); it != msqr->end(); it++)
-                nb++;
-            std::cout << nb << " ";
-        }
-        std::cout << std::endl;
+        (*i)->get_object()->update();
     }
+}
+
+// get named entity
+placeable * area::get_entity (const std::string & id)
+{
+    std::hash_map<std::string, world::named_entity*>::iterator entity = NamedEntities.find (id);
+    if (entity == NamedEntities.end())
+    {
+        fprintf (stderr, "*** area::get_entity: entity '%s' doesn't exist!\n", id.c_str());
+        return NULL;
+    }
+    
+    return (*entity).second->get_object();
+}
+
+// add anonymous entity
+placeable * area::add_entity (const placeable_type & type)
+{
+    return add_entity (type, "");
+}
+
+// add named entity that can be retrieved by its id
+placeable * area::add_entity (const placeable_type & type, const std::string & id)
+{
+    // check if entity is unique
+    if (id.length() > 0 && NamedEntities.find (id) != NamedEntities.end ())
+    {
+        fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
+        return NULL;
+    }
+
+    placeable *object = NULL;    
+
+    // TODO: maybe generalize the event factory code (events::types) and use here as well
+    switch (type)
+    {
+        case world::OBJECT:
+        {
+            object = new world::object (*this);
+            break;
+        }
+        case world::CHARACTER:
+        {
+            object = new world::character (*this);
+            break;
+        }
+        default:
+        {
+            fprintf (stderr, "*** area::add_entity: unknown type %i\n", type);
+            break;
+        }
+    }
+
+    // entity has been created successfully
+    if (object != NULL)
+    {
+        world::entity *ety = NULL;
+        
+        if (id.length() == 0)
+        {
+            // handle anonymous entities
+            ety = new world::entity (object);
+        }
+        else
+        {
+            // handle named entities
+            ety = new world::named_entity (object, id);
+            NamedEntities[id] = dynamic_cast<world::named_entity*> (ety);
+        }
+        
+        // this list contains a copy to all entities, unique or not.
+        Entities.push_back (ety);
+    }
+    
+    // we do return the object here, as that's what is really interesting
+    return object;
+}
+
+// add existing object as new entity
+placeable * area::add_entity (placeable * object, const std::string & id)
+{
+    // check that entity is unique
+    if (id.length() == 0 || NamedEntities.find (id) != NamedEntities.end ())
+    {
+        fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
+        return NULL;
+    }
+    
+    // no need to add to Entities, as the object is already contained.
+    NamedEntities[id] = new world::named_entity (object, id);
+    return object;    
 }
