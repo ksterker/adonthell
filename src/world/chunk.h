@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.4 2008/05/29 20:18:27 ksterker Exp $
+ $Id: chunk.h,v 1.5 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -39,6 +39,10 @@
 
 namespace world
 {
+    /**
+     * Container to store an object with its world-space coordinates.
+     * Coordinates are expressed by an axis aligned bounding box (AABB).
+     */
     class chunk_info
     {
     public:
@@ -55,11 +59,24 @@ namespace world
         bool operator == (const chunk_info & ci) const;
         bool operator < (const chunk_info & ci) const;
         
+        /// pointer to map object
         placeable * Object;
+        /// position of the object
         vector3<s_int32> Min;
+        /// extend of the object
         vector3<s_int32> Max;
     };
-            
+    
+    /**
+     * An octree-like structure that keeps track of the location of map objects in
+     * 3D space. Unlike most octrees, it allows dynamic adding and removal of 
+     * objects to reflect changes in the game world.
+     *
+     * All objects in the tree of chunks is stored by axis aligned bounding boxes (AABB),
+     * allowing for efficient retrieval methods. Those include finding objects that
+     * intersect with a given AABB (for collision detection) and finding objects that
+     * are visible in a given map view.
+     */
     class chunk
     {
     public:        

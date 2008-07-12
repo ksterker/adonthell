@@ -1,5 +1,5 @@
 /*
- $Id: entity.h,v 1.1 2008/07/10 20:19:41 ksterker Exp $
+ $Id: entity.h,v 1.2 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com

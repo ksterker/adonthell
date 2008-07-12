@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.4 2008/07/10 20:19:42 ksterker Exp $
+ $Id: mapview.h,v 1.5 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,7 @@
 
 #include "gfx/surface.h"
 #include "python/method.h"
-#include "world/chunk.h"
+#include "world/area.h"
 
 namespace world
 {
@@ -61,7 +61,7 @@ namespace world
          * Set the map being displayed by the mapview.
          * @param map pointer to the map instance.
          */
-        void set_map (chunk * map)
+        void set_map (area * map)
         {
             Map = map;
         }
@@ -70,7 +70,7 @@ namespace world
          * Get the map this view is attached to.
          * @return map this view is attached to.
          */
-        chunk * get_map () const
+        area * get_map () const
         {
             return Map;
         }
@@ -218,7 +218,7 @@ namespace world
         void render (std::list <world::chunk_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
         
         /// the map displayed by this view.
-        chunk *Map;
+        area *Map;
 
         /**
          * @name Positioning script 

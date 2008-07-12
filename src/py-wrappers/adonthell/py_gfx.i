@@ -18,3 +18,4 @@
 %include "gfx/surface.h"
 %include "gfx/screen.h"
 %include "gfx/sprite.h"
+%include "gfx/surface_cacher.h"

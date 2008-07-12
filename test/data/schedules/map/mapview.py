@@ -1,5 +1,5 @@
 #
-# $Id: mapview.py,v 1.2 2008/05/26 21:17:17 ksterker Exp $
+# $Id: mapview.py,v 1.3 2008/07/12 11:12:38 ksterker Exp $
 #   
 # Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,9 @@ class mapview (object):
      This schedule keeps the focus centered on the given
      character and will follow its movement across the map.
     """
-    def focus_on_character (self, view, character):
-        view.center_on (character.x(), character.y(), character.ox(), character.oy())
-        if character.ground_pos() != view.get_z():
-            view.scroll_to_z (character.ground_pos(), 2) # abs(int(character.vz())))
+    def focus_on_character (self, view, char_name):
+        area = view.get_map ()
+        char = area.get_character (char_name)
+        view.center_on (char.x(), char.y(), char.ox(), char.oy())
+        if char.ground_pos() != view.get_z():
+            view.scroll_to_z (char.ground_pos(), 2) # abs(int(character.vz())))

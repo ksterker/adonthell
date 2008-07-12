@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.13 2008/07/10 20:19:39 ksterker Exp $
+ $Id: area.cc,v 1.14 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -105,7 +105,7 @@ bool area::put (moving * obj)
 // add to map
 bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z)
 {
-    Chunk.add (obj, pos);
+    chunk::add (obj, pos);
     
     u_int16 base_tile;
 
@@ -150,7 +150,7 @@ bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & 
 // remove static object from map
 bool area::remove (placeable * obj, coordinates & pos) 
 {
-    Chunk.remove (obj, pos);
+    chunk::remove (obj, pos);
     
     placeable_shape *shape = obj->current_shape ();
     if (!shape) return false;

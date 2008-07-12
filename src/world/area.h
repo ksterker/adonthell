@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.8 2008/07/10 20:19:40 ksterker Exp $
+ $Id: area.h,v 1.9 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -39,27 +39,28 @@
 #include "world/square.h"
 #include "world/chunk.h"
 
+/**
+ * The graphical representation of the game %world is implemented by this module.
+ */
 namespace world
 {    
     /**
      * The plane of existance. A map consists of a grid of squares that
      * contain the actual scenery elements, characters and items.
      */
-    class area
+    class area : public chunk
     {        
     public:
         /**
          * Create an empty map. Call resize to set its initial size
          * or load its state from disk.
          */
-        area () { }
+        area () : chunk () { }
         
         /**
          * Delete the map and everything on it.
          */
         ~area ();
-        
-        chunk Chunk;
         
         /**
          * @name The Grid

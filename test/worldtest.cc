@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.21 2008/07/10 20:19:45 ksterker Exp $
+   $Id: worldtest.cc,v 1.22 2008/07/12 11:12:38 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -389,11 +389,11 @@ public:
 
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
-        PyTuple_SetItem (args, 0, python::pass_instance ((world::character*) gc.mchar));
+        PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
         
         // The renderer ...
         world::mapview mv (320, 240);
-        mv.set_map (&gc.world.Chunk);
+        mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
         
 	    while (!gc.letsexit) 

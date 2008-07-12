@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.6 2008/07/10 20:19:41 ksterker Exp $
+ $Id: mapview.cc,v 1.7 2008/07/12 11:12:37 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -105,8 +105,8 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     if (!Map) return;
     
     // calculate size of map in pixels
-    const u_int32 ml = Map->length();
-    const u_int32 mh = Map->height();
+    const u_int32 ml = ((chunk *)Map)->length();
+    const u_int32 mh = ((chunk *)Map)->height();
     
     // calculate start and offset of view (x-axis)
     if (length() >= ml) 
