@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.5 2008/05/29 20:18:26 ksterker Exp $
+ $Id: chunk.cc,v 1.6 2008/09/14 14:25:14 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,16 +50,6 @@ typedef enum
 /// minimum node size (in all 3 dimensions)
 #define MIN_SIZE 240
  
-bool chunk_info::operator < (const chunk_info & ci) const
-{
-    // draw everything with smaller z-position first
-    if (Max.z () <= ci.Min.z ()) return true;
-    if (Min.z () >= ci.Max.z ()) return false;
-    
-    // on equal z-position, draw everything with smaller y-position first
-    return Min.y () < ci.Min.y ();
-}
-
 bool chunk_info::operator == (const chunk_info & ci) const
 {
     if (Object == ci.Object)
@@ -73,7 +63,7 @@ bool chunk_info::operator == (const chunk_info & ci) const
 }
 
 // ctor
-chunk::chunk ()
+chunk::chunk () : Split ()
 {
     // chunk does not have to be resized
     Resize = false;
@@ -84,32 +74,22 @@ chunk::chunk ()
 // add an object to chunk
 void chunk::add (placeable * object, const coordinates & pos)
 {
-    const world::placeable_shape *shape = object->current_shape();
-    
     // calculate axis-aligned bbox for object
-    vector3<s_int32> min (pos.x() * SQUARE_SIZE + pos.ox(), 
-                          pos.y() * SQUARE_SIZE + pos.oy(),
-                          pos.z());
-    vector3<s_int32> max (min.x() + shape->length(),
-                          min.y() + shape->width(),
-                          min.z() + shape->height());
+    vector3<s_int32> max (pos.x() + object->max_length(),
+                          pos.y() + object->max_width(),
+                          pos.z() + object->max_height());
     
-    add (chunk_info (object, min, max));
+    add (chunk_info (object, pos, max));
 }
 
 void chunk::remove (placeable * object, const coordinates & pos)
 {
-    const world::placeable_shape *shape = object->current_shape();
-    
     // calculate axis-aligned bbox for object
-    vector3<s_int32> min (pos.x() * SQUARE_SIZE + pos.ox(), 
-                          pos.y() * SQUARE_SIZE + pos.oy(),
-                          pos.z());
-    vector3<s_int32> max (min.x() + shape->length(),
-                          min.y() + shape->width(),
-                          min.z() + shape->height());
+    vector3<s_int32> max (pos.x() + object->max_length(),
+                          pos.y() + object->max_width(),
+                          pos.z() + object->max_height());
 
-    remove (chunk_info (object, min, max));
+    remove (chunk_info (object, pos, max));
 }
 
 // add an object to chunk
@@ -312,9 +292,61 @@ bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32
     return true;
 }
 
+std::list<chunk_info> chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const
+{
+    std::list<chunk_info> result;
+    objects_in_bbox (min, max, result);
+    return result;
+}
+
+void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const
+{
+    s_int8 chunks[8];
+    
+    // process children
+    u_int8 num = find_chunks (chunks, min, max);
+    for (u_int32 i; i < num; i++)
+    {
+        chunk *c = Children[chunks[i]];
+        if (c != NULL)
+        {
+            // recurse
+            c->objects_in_bbox (min, max, result);
+        }
+    }
+    
+    // process objects contained in chunk
+    std::list<chunk_info>::const_iterator i;
+    for (i = Objects.begin (); i != Objects.end(); i++)
+    {
+        if (in_bbox (min, max, i->Min, i->Max))
+        {
+            result.push_back (*i);
+        }
+    }
+}
+
+// does given AABBs overlap with each other?
+bool chunk::in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_max, const vector3<s_int32> & b_min, const vector3<s_int32> & b_max) const
+{
+    // no overlap on x-axis
+    if (a_max.x() < b_min.x() || a_min.x() > b_max.x()) return false;
+    // no overlap on y-axis
+    if (a_max.y() < b_min.y() || a_min.y() > b_max.y()) return false;
+    // no overlap on z-axis
+    if (a_max.z() < b_min.z() || a_min.z() > b_max.z()) return false;
+    
+    return true;
+}
+
 // return a list of chunks that intersect with the given bbox
 const u_int8 chunk::find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const
 {
+    // FIXME: we may need to call in_bbox here, to make sure that the given bbox 
+    // intersects with this chunk at all. If it does not, the code below will 
+    // return wrong results. Maybe it should be rewritten to consider the chunk
+    // boundaries as well as the split plane.
+    
     // usually, there will be one chunk returned, but there might be two, four or eight
     u_int8 num = 1;
     

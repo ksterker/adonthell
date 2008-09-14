@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.7 2008/07/12 11:12:37 ksterker Exp $
+ $Id: mapview.cc,v 1.8 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,9 +27,10 @@
  * 
  */
 
-#include "world/mapview.h"
 #include "gfx/screen.h"
 #include "python/pool.h"
+#include "world/mapview.h"
+#include "world/area.h"
 
 using world::mapview;
 
@@ -100,11 +101,11 @@ bool mapview::set_schedule (const std::string & method, PyObject *extraArgs)
 }
 
 // update position of mapview
-void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & ox, const u_int16 & oy)
+void mapview::center_on (const s_int32 & x, const s_int32 & y)
 {
     if (!Map) return;
     
-    // calculate size of map in pixels
+    // get size of map in pixels
     const u_int32 ml = ((chunk *)Map)->length();
     const u_int32 mh = ((chunk *)Map)->height();
     
@@ -117,7 +118,7 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     else 
     {
         Ox = 0;
-        Sx = x * SQUARE_SIZE + ox - length()/2;
+        Sx = x - length()/2;
 
         // don't go past edge of map
         if (Sx < 0) Sx = 0;
@@ -133,7 +134,7 @@ void mapview::center_on (const u_int16 & x, const u_int16 & y, const u_int16 & o
     else 
     {
         Oy = 0;
-        Sy = y * SQUARE_SIZE + oy - height()/2;
+        Sy = y - height()/2;
         
         // don't go past edge of map
         if (Sy < 0) Sy = 0;
@@ -155,8 +156,20 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
         da = da.setup_rects ();
     }
     
+    std::list <render_info> drawqueue;
+
     // get objects we need to draw
-    std::list<world::chunk_info> drawqueue = Map->objects_in_view (Sx, Sy, Z, length(), height());
+    const std::list<world::chunk_info> & objectlist = Map->objects_in_view (Sx, Sy, Z, length(), height());
+    
+    // populate drawqueue
+    std::list<world::chunk_info>::const_iterator i;
+    for (i = objectlist.begin(); i != objectlist.end(); i++)
+    {
+        for (placeable::iterator obj = i->Object->begin(); obj != i->Object->end(); obj++)
+        {
+            drawqueue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
+        }
+    }
     
     // draw everything on screen
     render (drawqueue, da, target);
@@ -228,21 +241,17 @@ bool mapview::get_state (base::flat & file)
 }
 
 // render objects in queue
-void mapview::render (std::list <world::chunk_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const
+void mapview::render (std::list <world::render_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const
 {
     // sort according to drawing order
     drawqueue.sort ();
     
-    // draw everything which has its base tile in the current row
-    for (std::list <world::chunk_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
+    for (std::list <world::render_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
     {
-        s_int16 pos_x = da.x() + (*it).Min.x () - Sx;
-        s_int16 pos_y = da.y() + Z + (*it).Min.y () - (*it).Min.z() - Sy; 
+        s_int16 pos_x = da.x() + it->Pos.x () - Sx;
+        s_int16 pos_y = da.y() + Z + it->Pos.y () - it->Pos.z() - Sy - it->Shape->height() - it->Shape->z(); 
         
-        const gfx::sprite *sprite = it->Object->get_sprite();
-        const placeable_shape * shape = it->Object->current_shape();
-        
-        sprite->draw (pos_x, pos_y - shape->height() - shape->z(), &da, target);               
+        it->Sprite->draw (pos_x, pos_y, &da, target);
     }
     
     drawqueue.clear ();    

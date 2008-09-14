@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.8 2008/05/22 13:05:00 ksterker Exp $
+ $Id: vector3.h,v 1.9 2008/09/14 14:25:26 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -290,7 +290,7 @@ public:
     } 
     //@}
 
-private:
+protected:
 	/// X coordinate
 	T X; 
 	/// Y coordinate

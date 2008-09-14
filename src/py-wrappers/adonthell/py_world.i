@@ -20,25 +20,40 @@ using namespace world;
 // object is an existing python class
 %rename(mapobject) world::object;
 
-%include "world/placeable_model.h"
-%include "world/placeable.h"
-%include "world/coordinates.h"
-%include "world/object.h"
-%include "world/moving.h"
-%include "world/character.h"
-%include "world/square.h"
-%include "world/chunk.h"
-%include "world/area.h"
-%include "world/placeable_shape.h"
 %include "world/vector3.h"
-%include "world/mapview.h"
 
 %template(vector3i) world::vector3<s_int32>;
 
+%include "world/placeable_model.h"
+%include "world/placeable.h"
+%include "world/object.h"
+%include "world/coordinates.h"
+%include "world/moving.h"
+%include "world/character.h"
+%include "world/chunk.h"
+%include "world/area.h"
+%include "world/placeable_shape.h"
+%include "world/mapview.h"
+
+/// no downcasting in python, so we have to improvise ...
 %extend world::area {
+    /// add an object to the map
+    world::object* add_object ()
+    {
+        return dynamic_cast<world::object*> (self->add_entity (world::OBJECT));
+    }
+
+    /// add a character to the map
+    world::character* add_character (const std::string & name)
+    {
+        return dynamic_cast<world::character*> (self->add_entity (world::CHARACTER, name));
+    }
+
     /// get a character from the map
     world::character* get_character (const std::string & name)
     {
         return dynamic_cast<world::character*> (self->get_entity (name));
     }
+    
+    
 };

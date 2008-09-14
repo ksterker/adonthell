@@ -1,5 +1,5 @@
 /*
- $Id: square.h,v 1.6 2008/02/23 20:51:17 ksterker Exp $
+ $Id: square.h,v 1.7 2008/09/14 14:25:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -84,7 +84,7 @@ namespace world
          */
         s_int32 z_pos () const
         {
-            return Z + obj->current_shape()->z() + obj->current_shape()->height();
+            return Z + /* obj->z() + */ obj->height();
         }
         
         /**

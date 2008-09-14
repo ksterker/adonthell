@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.8 2008/07/10 20:19:40 ksterker Exp $
+   $Id: character.cc,v 1.9 2008/09/14 14:25:14 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,7 @@ character::character (area & mymap) : moving (mymap)
 void character::jump()
 {
     // only jump if resting on the ground
-	if (GroundPos == Z)
+	if (GroundPos == z())
 	{
     	VSpeed = 10;
 	}
@@ -64,7 +64,7 @@ bool character::update ()
     set_vertical_velocity (VSpeed);
     moving::update ();
 
-    if (GroundPos == Z) 
+    if (GroundPos == z()) 
     {
         VSpeed = 0;
         
@@ -78,29 +78,6 @@ bool character::update ()
     else if (VSpeed > 0) VSpeed -= 0.4;
     
     return true;
-}
-
-// set character movement
-void character::set_direction (const s_int32 & ndir)
-{
-    float vx = 0.0, vy = 0.0;
-    
-    CurrentDir = ndir;
-
-    if (ndir & WEST) vx = -speed() * (1 + is_running());
-    if (ndir & EAST) vx = speed() * (1 + is_running());
-    if (ndir & NORTH) vy = -speed() * (1 + is_running());
-    if (ndir & SOUTH) vy = speed() * (1 + is_running());
-
-    if (vx && vy)
-    {
-        float s = 1/sqrt (vx*vx + vy*vy);
-        vx = (vx * fabs (vx)) * s;
-        vy = (vy * fabs (vy)) * s;
-    }
-
-    set_velocity(vx, vy);
-    update_state();
 }
 
 // add direction to character movement
@@ -128,6 +105,29 @@ void character::add_direction(direction ndir)
     set_direction(tstdir | ndir);
 }
 
+// set character movement
+void character::set_direction (const s_int32 & ndir)
+{
+    float vx = 0.0, vy = 0.0;
+    
+    if (ndir & WEST) vx = -speed() * (1 + is_running());
+    if (ndir & EAST) vx = speed() * (1 + is_running());
+    if (ndir & NORTH) vy = -speed() * (1 + is_running());
+    if (ndir & SOUTH) vy = speed() * (1 + is_running());
+    
+    if (vx && vy)
+    {
+        float s = 1/sqrt (vx*vx + vy*vy);
+        vx = (vx * fabs (vx)) * s;
+        vy = (vy * fabs (vy)) * s;
+    }
+    
+    set_velocity(vx, vy);
+    update_state();
+    
+    CurrentDir = ndir;    
+}
+
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
@@ -149,25 +149,25 @@ void character::update_state()
         }
         else 
         {
-            if ((vx() > 0) && (current_shape_name()[0] == 'w'))
+            if ((vx() > 0) && (CurrentDir & WEST))
                 state = "e";
-            else if ((vx() < 0) && (current_shape_name()[0] == 'e'))
+            else if ((vx() < 0) && (CurrentDir & EAST))
                 state = "w";
-            else if ((vy() > 0) && (current_shape_name()[0] == 'n'))
+            else if ((vy() > 0) && (CurrentDir & NORTH))
                 state = "s";
-            else if ((vy() < 0) && (current_shape_name()[0] == 's'))
+            else if ((vy() < 0) && (CurrentDir & SOUTH))
                 state = "n";
-            else state = current_shape_name()[0];
+            else state = placeable::state()[0];
         }
         state += is_running() ? "_run" : "_walk";
     }
     else
     {
-        state = current_shape_name()[0];
+        state = placeable::state()[0];
         state += "_stand";
     }
     
-    set_shape (state);
+    set_state (state);
 }
 
 // save to stream
@@ -175,16 +175,14 @@ bool character::put_state (base::flat & file) const
 {
     // FIXME: save movement and direction ...
     
-    return placeable_model::put_state (file);
+    return placeable::put_state (file);
 }
 
 // load from stream
 bool character::get_state (base::flat & file)
 {
     // FIXME: load movement and direction ...
-
-    placeable_model::get_state (file);
-    set_shape ("s_stand");
+    placeable::get_state (file);
     
     return file.success ();
 }

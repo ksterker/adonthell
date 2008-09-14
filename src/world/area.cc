@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.14 2008/07/12 11:12:37 ksterker Exp $
+ $Id: area.cc,v 1.15 2008/09/14 14:25:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -55,135 +55,16 @@ void area::clear()
     NamedEntities.clear();
 }
 
-// set size of map grid
-void area::resize (const u_int16 & nx, const u_int16 & ny) 
-{
-    Grid.resize (nx);
-    for (std::vector <std::vector <square> >::iterator i = Grid.begin (); i != Grid.end (); i++)
-        i->resize (ny); 
-}
-
-// get square of map grid
-world::square * area::get (const u_int16 & x, const u_int16 & y)
-{
-    return (&Grid[x][y]);
-}
-
 // convenience method for adding object at a know index 
 bool area::put_entity (const u_int32 & index, coordinates & pos)
 {
-    return put(Entities[index]->get_object(), pos);
-}
-
-// place object at given position on the grid
-bool area::put (placeable * obj, coordinates & pos)
-{
-    const placeable_shape *shape = obj->current_shape ();
-    if (!shape) return false;
-
-    // calculate area of map squares occupied by the object's bounding box
-    u_int16 end_x = (u_int16) ceil ((pos.ox () + shape->length ()) / (float) SQUARE_SIZE);
-    u_int16 end_y = (u_int16) ceil ((pos.oy () + shape->width ()) / (float) SQUARE_SIZE); 
-
-    // add to map
-    return put (end_x, end_y, obj, pos, pos.z());
-}
-
-// add movable object to map
-bool area::put (moving * obj) 
-{
-    const placeable_shape *shape = obj->current_shape ();
-    if (!shape) return false;
-    
-    // calculate area of map squares occupied by the object's bounding box
-    u_int16 end_x = (u_int16) ceil ((obj->ox () + shape->length ()/2.0f + shape->x()) / (float) SQUARE_SIZE);
-    u_int16 end_y = (u_int16) ceil ((obj->oy () + shape->width ()/2.0f + shape->y()) / (float) SQUARE_SIZE); 
-        
-    return put (end_x, end_y, obj, *obj, obj->ground_pos());
-}
-
-// add to map
-bool area::put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z)
-{
-    chunk::add (obj, pos);
-    
-    u_int16 base_tile;
-
-    u_int16 start_x = pos.x ();
-    u_int16 start_y = pos.y (); 
-    
-    end_x += start_x;
-    end_y += start_y;
-    
-    // make sure we do not exceed map size
-    if (end_x > length()) end_x = length();
-    if (end_y > height()) end_y = height();
-    
-    // calculate base tile
-    const placeable_shape *shape = obj->current_shape ();
-    if (shape->width() <= shape->height())
+    if (index < Entities.size())
     {
-        // bottom right tile will be used for rendering vertical objects 
-        base_tile = end_x + end_y - 2;
-    }
-    else
-    {
-        // top left tile will be used for rendering flat objects
-        base_tile = start_x + start_y;
+        chunk::add(Entities[index]->get_object(), pos);
+        return true;
     }
     
-    square *sq; 
-    
-    // add object to all these squares
-    for (u_int16 j = start_y; j < end_y; j++)
-    {
-        for (u_int16 i = start_x; i < end_x; i++) 
-        {
-            sq = get (i, j);
-            sq->add (obj, pos, ground_z, i + j == base_tile); 
-        }
-    }
-    
-    return true;     
-}
-
-// remove static object from map
-bool area::remove (placeable * obj, coordinates & pos) 
-{
-    chunk::remove (obj, pos);
-    
-    placeable_shape *shape = obj->current_shape ();
-    if (!shape) return false;
-
-    // calculate area of map squares occupied by the object's bounding box
-    u_int16 start_x = pos.x (); 
-    u_int16 start_y = pos.y ();    
-    
-    u_int16 end_x = start_x + (u_int16) ceil ((pos.ox () + shape->length () + shape->x()) / (float) SQUARE_SIZE);
-    u_int16 end_y = start_y + (u_int16) ceil ((pos.oy () + shape->width () + shape->y()) / (float) SQUARE_SIZE); 
-    
-    // make sure we do not exceed map size
-    if (end_x > length()) end_x = length();
-    if (end_y > height()) end_y = height();
-    
-    square *sq; 
-    
-    for (u_int16 j = start_y; j < end_y; j++) 
-    {
-        for (u_int16 i = start_x; i < end_x; i++) 
-        {
-            sq = get (i, j);
-            sq->remove (obj, pos); 
-        }
-    }
-    
-    return true; 
-}
-
-// remov moving object from map
-bool area::remove (moving * obj) 
-{
-    return remove (obj, *obj); 
+    return false;
 }
 
 // update state of map
@@ -282,7 +163,12 @@ placeable * area::add_entity (placeable * object, const std::string & id)
         return NULL;
     }
     
-    // no need to add to Entities, as the object is already contained.
-    NamedEntities[id] = new world::named_entity (object, id);
+    // create non-unique entity
+    world::named_entity *ety = new world::named_entity (object, id, false);
+    
+    // store in area
+    Entities.push_back (ety);
+    NamedEntities[id] = ety;
+    
     return object;    
 }

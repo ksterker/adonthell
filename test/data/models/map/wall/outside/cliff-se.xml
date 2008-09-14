@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <Data>
-  <list id="model">
+  <list id="entity">
     <string id="state">default</string>
+  <list id="model">
     <list id="default">
       <list id="shape">
         <u_int16 id="num">1</u_int16>
@@ -18,5 +19,6 @@
       </list>
     </list>
     <string id="sprite">data/gfx/map/wall/outside/cliff/cliff-se.xml</string>
+  </list>
   </list>
 </Data>

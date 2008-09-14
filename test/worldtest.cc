@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.22 2008/07/12 11:12:38 ksterker Exp $
+   $Id: worldtest.cc,v 1.23 2008/09/14 14:25:27 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -184,9 +184,6 @@ public:
 
     void create_map ()
     {
-        // that's 640x480
-        world.resize (16, 12);
-        
         // Adding map objects
         world::object * mobj;
 
@@ -226,10 +223,8 @@ public:
         mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
         mchar->load ("data/models/char/npc/ng.xml");
         mchar->set_speed (1.5);
-        mchar->set_position (4, 5);
-        mchar->set_offset (5, 0);
-        mchar->set_altitude (0);
-        mchar->set_limits (16, 12);
+        mchar->set_position (165, 200);
+        mchar->set_z (0);
                 
         world::coordinates mc;
         
@@ -237,7 +232,7 @@ public:
         mc.set_position (4, 5);
         world.put_entity (0, mc); 
 
-        mc.set_altitude (80);
+        mc.set_z (80);
         world.put_entity (2, mc);
          */
         
@@ -245,28 +240,27 @@ public:
         for (u_int16 i = 0; i < world.length(); i++)
             for (u_int16 j = 0; j < 3; j++)
             {
-                world::coordinates mc (i, j, 80, 0, 0);
+                world::coordinates mc (i*40, j*40, 80);
                 world.put_entity (0, mc);
             }
                 
         for (u_int16 j = 0; j < 3; j++)
             for (u_int16 i = 0; i < 3-j; i++)
             {
-                world::coordinates mc (i, j+3, 80, 0, 0);
+                world::coordinates mc (i*40, (j+3)*40, 80);
                 world.put_entity (0, mc);
             }
                         
         
 		// 4 poles (left side)
-        mc.set_position(10, 4);
+        mc.set_x(400);mc.set_y(160);
         world.put_entity(3, mc);  // that one is actually invisible 
-        mc.set_position(10, 6);
+        mc.set_x(400);mc.set_y(240);
         world.put_entity(3, mc);
         // (right side)
-        mc.set_offset(30, 0);
-        mc.set_position(11, 4);  // that one is actually invisible
+        mc.set_x(470);mc.set_y(160);  // that one is actually invisible
         world.put_entity(4, mc); 
-        mc.set_position(11, 6);
+        mc.set_x(470);mc.set_y(240);
         world.put_entity(4, mc); 
 
 		// wooden platform
@@ -274,33 +268,31 @@ public:
         {
             for (int j = 4; j < 6; j++)
             {
-                world::coordinates mc (i, j, 40);
+                world::coordinates mc (i*40, j*40, 40);
                 world.put_entity (2, mc); 
             }
         }
 
 		// 4 wooden poles
-        mc.set_offset(0, 0);
-        mc.set_position(7, 7);
+        mc.set_x(280);mc.set_y(280);
         world.put_entity(3, mc); 
-        mc.set_altitude(40);
+        mc.set_z(40);
         world.put_entity(3, mc); 
-        mc.set_position(7, 4);
-        mc.set_altitude(0);
+        mc.set_x(280);mc.set_y(160);
+        mc.set_z(0);
         world.put_entity(3, mc); 
-        mc.set_altitude(40);
+        mc.set_z(40);
         world.put_entity(3, mc); 
         
-        mc.set_offset(30, 0);
-        mc.set_altitude(0);
-        mc.set_position(8, 7);
+        mc.set_z(0);
+        mc.set_x(350);mc.set_y(280);
         world.put_entity(4, mc); 
-        mc.set_altitude(40);
+        mc.set_z(40);
         world.put_entity(4, mc); 
-        mc.set_position(8, 4);
-        mc.set_altitude(0);
+        mc.set_x(350);mc.set_y(160);
+        mc.set_z(0);
         world.put_entity(4, mc); 
-        mc.set_altitude(40);
+        mc.set_z(40);
         world.put_entity(4, mc); 
 
 		// wooden platform
@@ -308,7 +300,7 @@ public:
         {
             for (int j = 4; j < 7; j++)
             {
-                world::coordinates mc (i, j, 80);
+                world::coordinates mc (i*40, j*40, 80);
                 world.put_entity (2, mc); 
             }
         } 
@@ -316,22 +308,21 @@ public:
 		// "stair"
         for (int i = 4; i < 17; i++)
         {
-            world::coordinates mc (i/2, 9, 5 * (i-4), (i%2)*20, 0);
+            world::coordinates mc ((i/2) * 40 + (i%2) * 20, 360, 5 * (i-4));
             world.put_entity (2, mc); 
         }
 
-        world::coordinates mc2 (3, 5, 0);
+        world::coordinates mc2 (120, 200, 0);
         world.put_entity (2, mc2);
         
         // create ground (grass tiles are 60x60, but grid is 40x40)
-        for (float i = 0; i < world.length(); i += 1.5)
-            for (float j = 2; j < world.height(); j += 1.5)
+        for (float i = 0; i < 16; i += 1.5)
+            for (float j = 2; j < 12; j += 1.5)
             {
-                int x = world::SQUARE_SIZE * i;
-                int y = world::SQUARE_SIZE * j;
+                u_int16 x = 40 * i;
+                u_int16 y = 40 * j;
                 
-                world::coordinates mc (x / world::SQUARE_SIZE, y / world::SQUARE_SIZE, 0, 
-                                       x % world::SQUARE_SIZE, y % world::SQUARE_SIZE);
+                world::coordinates mc (x, y, 0);
                 world.put_entity (1, mc); 
             }
         
@@ -339,16 +330,16 @@ public:
         // create diagonal wall
         for (int i = 0; i < 4; i++)
         {
-            world::coordinates mc (i, 6-i, 0, 0, 0);
+            world::coordinates mc (i*40, (6-i)*40, 0);
             world.put_entity (5, mc); 
-            mc.set_altitude (75);
+            mc.set_z (75);
             world.put_entity (6, mc);
         }
         
         // create straight wall
         for (int i = 4; i < 16; i+=2)
         {
-            world::coordinates mc (i, 3, 0, 0, 0);
+            world::coordinates mc (i*40, 120, 0);
             world.put_entity (7, mc); 
         }
     }
@@ -385,7 +376,7 @@ public:
         python::add_search_path (base::Paths.user_data_dir() + "/data/");
         
         // we need to load the world module before we can pass the character object to python
-        python::import_module ("adonthell.world");        
+        if (python::import_module ("adonthell.world") == NULL) return 1;        
 
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
@@ -413,9 +404,9 @@ public:
             
 	        if (gc.draw_grid)
 	        {
-	            for (i = 0; i < gfx::screen::length (); i += world::SQUARE_SIZE) 
+	            for (i = 0; i < gfx::screen::length (); i += 40) 
 	                gfx::screen::get_surface()->fillrect (i, 0, 1, gfx::screen::height (), 0xFFFF00); 
-	            for (i = 0; i < gfx::screen::height (); i += world::SQUARE_SIZE) 
+	            for (i = 0; i < gfx::screen::height (); i += 40) 
 	                gfx::screen::get_surface()->fillrect (0, i, gfx::screen::length (), 1, 0xFFFF00); 
 	        }
 			

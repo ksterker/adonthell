@@ -2,8 +2,6 @@
 set(adonthell_world_SRCS
     area.cc
     character.cc
-    collision.cc
-    coordinates.cc
     cube3.cc
     chunk.cc
     mapview.cc
@@ -32,6 +30,7 @@ set(adonthell_world_HEADERS
     placeable_model.h
     placeable_shape.h
     plane3.h
+    render_info.h
     square.h
     triangle3.h
     vector3.h

@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.10 2008/07/10 20:19:42 ksterker Exp $
+ $Id: moving.h,v 1.11 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,7 @@
 #include "world/placeable.h"
 #include "world/coordinates.h"
 
-#ifdef DEBUG_COLLISION
+#if DEBUG_COLLISION
 #include "gfx/surface.h"
 #endif
 
@@ -95,28 +95,6 @@ namespace world
         }
 
         /**
-         * Return movement limit in x direction (in squares).
-         * Movement along the x axis is only possible within 
-         * the range [0; lx()].
-         * @return movement limit in x direction
-         */
-        u_int16 lx () const
-        {
-            return Lx;
-        }
-
-        /**
-         * Return movement limit in x direction (in squares)
-         * Movement along the y axis is only possible within 
-         * the range [0; ly()].
-         * @return movement limit in x direction
-         */
-        u_int16 ly () const
-        {
-            return Ly; 
-        }
-        
-        /**
          * Get Position of ground under object.
          * @return position of ground under object.
          */
@@ -131,25 +109,17 @@ namespace world
          */
         //@{
         /**
-         * Set offset.
-         * @param ox new x offset
-         * @param oy new y offset
+         * Set location on x/y plane.
+         * @param x new x position
+         * @param y new y position
          */
-        void set_offset (const u_int16 & ox, const u_int16 & oy); 
-
+        void set_position (const s_int32 & x, const s_int32 & y);         
+        
         /**
          * Set altitude.
          * @param z new z position
          */
         void set_altitude (const s_int32 & z); 
-        
-        /**
-         * Set limit of movement. Should not be bigger than the extend
-         * of the map this object is on (but could be smaller).
-         * @param mx new maximum x limit
-         * @param my new maximum y limit
-         */
-        void set_limits (const u_int16 & mx, const u_int16 & my); 
 
         /**
          * Set valocity on x/y plane.
@@ -173,7 +143,7 @@ namespace world
         virtual bool update (); 
 
         /**
-         * When compiled with -DDEBUG_COLLISION, calling this method after
+         * When compiled with -DDEBUG_COLLISION, calling this method
          * before blitting a frame to the screen will create an overlay with
          * some helpful information for debugging collision detection.
          * Otherwise it is a noop.
@@ -220,18 +190,15 @@ namespace world
          */
         bool collide_with_objects (collision *collisionData);
         
-        /// do not allow movement outside the rectangle (0, 0) - (Lx, Ly) 
-        u_int16 Lx, Ly;
-        
         /// Altitude of ground under the object (for drawing shadow)
         s_int32 GroundPos;
         
-        /// precise position of object, relative to current tile (X, Y)
+        /// precise position of object
         vector3<float> Position;
         /// velocites along the 3 axis in world space.
         vector3<float> Velocity;
         
-#ifdef DEBUG_COLLISION
+#if DEBUG_COLLISION
     private:
         gfx::surface *Image;
 #endif

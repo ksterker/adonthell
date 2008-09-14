@@ -1,5 +1,5 @@
 #
-# $Id: mapview.py,v 1.3 2008/07/12 11:12:38 ksterker Exp $
+# $Id: mapview.py,v 1.4 2008/09/14 14:25:28 ksterker Exp $
 #   
 # Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,6 @@ class mapview (object):
     def focus_on_character (self, view, char_name):
         area = view.get_map ()
         char = area.get_character (char_name)
-        view.center_on (char.x(), char.y(), char.ox(), char.oy())
-        if char.ground_pos() != view.get_z():
+        view.center_on (char.x(), char.y())
+	if char.ground_pos() != view.get_z():
             view.scroll_to_z (char.ground_pos(), 2) # abs(int(character.vz())))

@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.5 2008/07/12 11:12:37 ksterker Exp $
+ $Id: chunk.h,v 1.6 2008/09/14 14:25:15 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,7 +57,6 @@ namespace world
         }
         
         bool operator == (const chunk_info & ci) const;
-        bool operator < (const chunk_info & ci) const;
         
         /// pointer to map object
         placeable * Object;
@@ -82,12 +81,31 @@ namespace world
     public:        
         chunk ();
         
+        /**
+         * @name Chunk population
+         */
+        //@{
+        /**
+         * Add object at given coordinates.
+         * @param object entity to add to the world.
+         * @param coordinates location of the entity.
+         */
         void add (placeable * object, const coordinates & pos);
         void add (const chunk_info & ci);
         
+        /**
+         * Remove object at given coordinates.
+         * @param object entity to remove from the world.
+         * @param coordinates location of the entity.
+         */
         void remove (placeable * object, const coordinates & pos);
         void remove (const chunk_info & ci);
+        //@}
         
+        /**
+         * @name Object retrieval
+         */
+        //@{
         /**
          * Collects a list of objects that are contained in the given mapview.
          *
@@ -101,26 +119,75 @@ namespace world
          */
         std::list<chunk_info> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
         
+        /**
+         * Collects a list of objects that are contained by the given bounding box.
+         *
+         * @param min the lower coordinate triplet of the bbox.
+         * @param max the upper coordinate triplet of the bbox.
+         *
+         * @return list of objects contained in bbox.
+         */
+        std::list<chunk_info> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        //@}
+        
+        /**
+         * @name Chunk attributes
+         */
+        //@{
+        /**
+         * Check if the %chunk has any children.
+         * @return true, if it doesn't, false otherwise.
+         */
         bool is_leaf () const
         {
             static vector3<s_int32> EMPTY;
             return Split == EMPTY;
         }
         
+        /**
+         * Check whether the %chunk contains any objects.
+         * @return true if it doesn't, false otherwise.
+         */
         bool is_empty () const
         {
             return Objects.empty ();
         }
         
+        /**
+         * Check whether the %chunk can be split or if it already has
+         * minimum dimensions.
+         * @return true if it can be split, false otherwise.
+         */        
         bool can_split () const;
         
+        /**
+         * Return the extend of the %chunk in x direction.
+         * @return extend of %chunk in x direction.
+         */
         u_int32 length () const { return Max.x() - Min.x(); }
+        
+        /**
+         * Return the extend of the %chunk in y direction.
+         * @return extend of %chunk in y direction.
+         */
         u_int32 height () const { return Max.y() - Min.y(); }
+        //@}
         
         void debug () const;
             
 private:
-        const u_int8 find_chunks (s_int8 chunks[9], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        /**
+         * Find those children of the %chunk that overlap with the bbox
+         * specified by its minumum and maximum coordinate triplets.
+         *
+         * @param chunks this array will be filled with the indices of 
+         *   the child %chunks that overlap with the given bbox.
+         * @param min minimum coordinate triplet
+         * @param max maximum coordinate triplet
+         *
+         * @return number of children that overlap.
+         */
+        const u_int8 find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
         /**
          * Collects a list of objects that are contained in the given mapview.
@@ -146,6 +213,10 @@ private:
          */
         bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
+        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const;
+
+        bool in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_max, const vector3<s_int32> & b_min, const vector3<s_int32> & b_max) const;
+
         /**
          * Calculate the split planes of the chunk. Can be called only once in
          * the chunks lifetime, unless its children are merged together.
@@ -155,8 +226,8 @@ private:
         /**
          * Generate a picture of the chunk (and its children) in .dot format, as
          * parsed by AT&Ts graphviz package.
-         * @param
-         * @param
+         * @param graph file stream to write to
+         * @param parent id of the parent %chunk
          */
         void debug (std::ofstream & graph, const int & parent) const;
         

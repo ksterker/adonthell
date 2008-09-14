@@ -1,5 +1,5 @@
 /*
- $Id: object.cc,v 1.3 2007/10/15 02:19:31 ksterker Exp $
+ $Id: object.cc,v 1.4 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,15 +43,14 @@ object::object(world::area & mymap) : placeable(mymap)
 // save object to stream
 bool object::put_state (base::flat & file) const
 {
-    placeable_model::put_state (file);
+    placeable::put_state (file);
     return true;
 }
 
 // load object from stream
 bool object::get_state (base::flat & file)
 {
-    placeable_model::get_state (file);
-    set_shape ("default");
+    placeable::get_state (file);
     
     return file.success ();
 }

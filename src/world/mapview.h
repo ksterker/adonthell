@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.5 2008/07/12 11:12:37 ksterker Exp $
+ $Id: mapview.h,v 1.6 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,10 +33,12 @@
 
 #include "gfx/surface.h"
 #include "python/method.h"
-#include "world/area.h"
+#include "world/render_info.h"
 
 namespace world
 {
+    class area;
+    
     /**
      * Displays a part of a map on screen. Which part of a map
      * is displayed is determined by a python script that is
@@ -116,23 +118,11 @@ namespace world
         }
         
         /**
-         * Center the mapview on the given position.
-         * @param x position on the world grids x axis.
-         * @param y position on the world grids y axis.
-         * @param ox pixel offset on x axis.
-         * @param oy pixel offset on y axis.
-         */
-        void center_on (const u_int16 & x, const u_int16 & y, const u_int16 & ox = 0, const u_int16 & oy = 0);
-        
-        /**
          * Center on the given pixel coordinates.
          * @param x position on the map in pixels
          * @param y position on the map in pixels
          */
-        void center_on (const u_int32 & x, const u_int32 & y)
-        {
-            center_on (x / SQUARE_SIZE, y / SQUARE_SIZE, x % SQUARE_SIZE, y % SQUARE_SIZE);
-        }
+        void center_on (const s_int32 & x, const s_int32 & y);
         
         /**
          * Set the height of the mapview. 
@@ -215,7 +205,7 @@ namespace world
          * @param da rectangle restricting the visible area.
          * @param target surface to draw on. NULL for screen surface.
          */
-        void render (std::list <world::chunk_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
+        void render (std::list <world::render_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
         
         /// the map displayed by this view.
         area *Map;

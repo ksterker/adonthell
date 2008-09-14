@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.5 2008/07/10 20:19:43 ksterker Exp $
+ $Id: placeable.h,v 1.6 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,21 +51,25 @@ namespace world
 
     /**
      * Class representing a placeable, i.e. something (character, object, ...)
-     * that can be placed on a map and occupies some space on it.
+     * that can be placed on a map and occupies some space on it. Each placeable
+     * is represented by one or more placeable_models, that contain the graphics
+     * and %collision data of the placeable. 
      *
-     * What makes this class different from placeable_model is that it has a type,
-     * that higher-level class can overwrite to indicate what kind of placeable it is
-     * and a reference to the map the placeable belongs to, so update functions can 
-     * check the terrain around the placeable.
+     * It has a type that higher-level classes can overwrite to indicate what kind of 
+     * placeable it is (%item, %character or scenery) and a reference to the map it 
+     * belongs to, so update functions can check the terrain around the placeable.
      */
-    class placeable : public placeable_model
+    class placeable
     {
     public:
+        /// type definitions for iterator over models
+        typedef std::vector<world::placeable_model*>::const_iterator iterator;
+        
         /**
          * Create a thing on the map.
          * @param mymap map this thing belongs to.
          */
-        placeable(area & mymap);
+        placeable (area & mymap);
     
         /**
          * Destructor.
@@ -92,6 +96,109 @@ namespace world
             return true;
         }
         
+        /**
+         * @name Placeable representation
+         *
+         * The sprites and shapes a placeable is composed of.
+         */
+        //@{
+        /**
+         * Add model to the placeable. Each placeable needs at least
+         * one model, but can be composed of more than one.
+         * @param model model 
+         */
+        void add_model (placeable_model *model);
+        
+        iterator begin () const { return Model.begin (); }
+        
+        iterator end () const { return Model.end (); }
+        //@}
+        
+        /**
+         * @name Placeable extension
+         *
+         * The maximum size of a placeable is the space that
+         * encloses all its models with all their states. The
+         * current size may vary from that, depending on its 
+         * current state.
+         */
+        //@{
+        /**
+         * Get maximum placeable length.
+         * @return max extension of placeable in x direction.
+         */
+        u_int16 max_length () const { return MaxSize.x(); }
+        /**
+         * Get maximum placeable width.
+         * @return max extension of placeable in y direction.
+         */
+        u_int16 max_width () const { return MaxSize.y(); }
+        /**
+         * Get maximum placeable height.
+         * @return max extension of placeable in z direction.
+         */
+        u_int16 max_height () const { return MaxSize.z(); }
+        
+        /**
+         * Get placeable's current length.
+         * @return actual extension of placeable in x direction.
+         */
+        u_int16 length () const { return CurSize.x(); }
+        /**
+         * Get placeable's current width.
+         * @return actual extension of placeable in y direction.
+         */
+        u_int16 width () const { return CurSize.y(); }
+        /**
+         * Get placeable's current height.
+         * @return actual extension of placeable in z direction.
+         */
+        u_int16 height () const { return CurSize.z(); }        
+        //@}
+        
+        /**
+         * @name Placeable state
+         *
+         * The state usually determines the representation
+         * that is used to display the placeable on the map.
+         */
+        //@{
+        /**
+         * Set the state of the underlying model. This will
+         * become the placeables new state, even if one or more
+         * of the models do not have a representation for this
+         * state.
+         *
+         * @param state the new state of the placeable.
+         */
+        void set_state (const std::string & state);
+        
+        /**
+         * Get the current state of the placeable.
+         * @return current state of the placeable.
+         */
+        const std::string & state () const { return State; }
+        //@}
+        
+        /**
+         * @name Loading / Saving
+         */
+        //@{
+        /**
+         * Save %placeable state to stream. 
+         * @param file stream to save %placeable to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load %placeable state from stream. 
+         * @param file stream to load %placeable from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
+        //@}
+        
 #ifndef SWIG
         /**
          * Allow %placeable to be passed as python argument
@@ -100,6 +207,14 @@ namespace world
 #endif
             
     protected:
+        /// representation of the placeable
+        std::vector<world::placeable_model*> Model;
+        /// bounding box of this placeable. It's updated when adding shapes.
+        vector3<u_int16> MaxSize;
+        /// bounding box of this placeable. It's calculated when the state changes.
+        vector3<u_int16> CurSize;
+        /// the placeables current state
+        std::string State;
         /// whether placeable is character, scenery or item    
         placeable_type Type; 
         /// the map this placeable belongs to

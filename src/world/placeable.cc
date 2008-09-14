@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.3 2008/07/10 20:19:43 ksterker Exp $
+ $Id: placeable.cc,v 1.4 2008/09/14 14:25:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,12 +28,90 @@
  * 
  */
 
+#include <algorithm>
+
 #include "placeable.h"
 #include "world/area.h"
 
 using world::placeable;
 
-placeable::placeable(world::area & mymap) : Mymap(mymap)
+// ctor
+placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
 {
     Type = UNKNOWN;
+    State = "";
+}
+
+// change state of placeable
+void placeable::set_state (const std::string & state)
+{
+    // reset current size
+    CurSize.set (0, 0, 0);
+
+    // update shape and size
+    std::vector<world::placeable_model*>::iterator i;
+    for (i = Model.begin(); i != Model.end(); i++)
+    {
+        (*i)->set_shape (state);
+        const placeable_shape *shape = (*i)->current_shape ();
+        if (shape != NULL)
+        {
+            CurSize.set_x (std::max (CurSize.x(), shape->length()));
+            CurSize.set_y (std::max (CurSize.y(), shape->width()));
+            CurSize.set_z (std::max (CurSize.z(), shape->height()));
+        }
+    }
+    
+    State = state;
+}
+
+// add model to placeable
+void placeable::add_model (world::placeable_model * model)
+{
+    Model.push_back (model);
+    
+    // update bounding box, using the extend of the largest shape
+    for (placeable_model::iterator shape = model->begin(); shape != model->end(); shape++)
+    {
+        MaxSize.set_x (std::max (MaxSize.x(), shape->second.length()));
+        MaxSize.set_y (std::max (MaxSize.y(), shape->second.width()));
+        MaxSize.set_z (std::max (MaxSize.z(), shape->second.height()));
+    }
+}
+
+// save to stream
+bool placeable::put_state (base::flat & file) const
+{
+    base::flat entity;
+
+    entity.put_string ("state", State);
+    for (iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        (*i)->put_state (entity);
+    }
+    file.put_flat ("entity", entity);
+
+    return true;
+}
+
+// load from stream
+bool placeable::get_state (base::flat & file)
+{
+    base::flat entity = file.get_flat ("entity");    
+    std::string state = entity.get_string ("state");
+    
+    char *name;
+    void *value;
+    u_int32 size;
+    
+    // load actual models
+    while (entity.next (&value, &size, &name) == base::flat::T_FLAT) 
+    {
+        placeable_model * model = new placeable_model ();
+        model->get_state (entity);
+        add_model (model);
+    }    
+    
+    set_state (state);
+    return file.success ();
 }

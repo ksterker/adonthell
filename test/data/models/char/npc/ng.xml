@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <Data cs="f7302e25f">
-  <list id="model">
+  <list id="entity">
     <string id="state">s_stand</string>
+  <list id="model">
     <list id="n_stand">
       <list id="shape">
         <u_int16 id="num">1</u_int16>
@@ -183,5 +184,6 @@
       </list>
     </list>
     <string id="sprite">data/gfx/char/npc/ng/naked_guy.xml</string>
+  </list>
   </list>
 </Data>

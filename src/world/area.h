@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.9 2008/07/12 11:12:37 ksterker Exp $
+ $Id: area.h,v 1.10 2008/09/14 14:25:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -36,7 +36,6 @@
 #include "base/hash_map.h"
 
 #include "world/entity.h"
-#include "world/square.h"
 #include "world/chunk.h"
 
 /**
@@ -61,47 +60,6 @@ namespace world
          * Delete the map and everything on it.
          */
         ~area ();
-        
-        /**
-         * @name The Grid
-         */
-        //@{
-        /**
-         * Return size of the map grid along the X axis.
-         * @return extension of the map in X direction.
-         */
-        u_int16 length () const
-        {
-            return Grid.size ();
-        }
-        
-        /**
-         * Return size of the map grid along the Y axis.
-         * @return extension of the map in Y direction.
-         */
-        u_int16 height () const
-        {
-            if (Grid.size ()) return Grid[0].size ();
-            else return 0; 
-        }
-        
-        /**
-         * Change the size of the map grid. It's probably a good
-         * idea to do that before placing anything onto the map,
-         * although growing the map should have no ill effect.
-         * @param nx new number of cells in x direction.
-         * @param ny new number of cells in y direction.
-         */
-        void resize (const u_int16 & nx, const u_int16 & ny);
-
-        /**
-         * Get the map square at the given location.
-         * @param x x location on the map grid
-         * @param y y location on the map grid
-         * @return square at given position on the grid.
-         */
-        square * get (const u_int16 & x, const u_int16 & y);         
-        //@}
         
         /**
          * Remove all objects and characters from the map.
@@ -166,53 +124,6 @@ namespace world
     private:
             
 #ifndef SWIG
-        /**
-         * Add static objects to map at given position.
-         * @param obj the object to add
-         * @param pos position where to add object
-         * @return true on success, false otherwise
-         */
-        bool put (placeable * obj, coordinates & pos); 
-        
-        /**
-         * Add moveable object to the map. Position will be the
-         * object's current position.
-         * @param obj the object to add.
-         * @return true on success, false otherwise
-         */
-        bool put (moving * obj); 
-        
-        /**
-         * Remove given static object from given location.
-         * @param obj the object to remove from the map.
-         * @param pos the location to remove the object from.
-         * @return true on success, false otherwise.
-         */
-        bool remove (placeable * obj, coordinates & pos);
-        
-        /**
-         * Remove given moveable object from the map.
-         * @param obj the object to remove from the map.
-         * @return true on success, false otherwise.
-         */
-        bool remove (moving * obj); 
-                
-        /**
-         * Add object to all map squares enclosed by the rectangle [pos.x(), pos.y(); end_x, end_y].
-         * This method should not be called directly. Use put(moving*) or put(object*, coordinates&)
-         * instead.
-         * @param end_x x coordinate of lower right square
-         * @param end_y y coordinate of lower right square
-         * @param obj the object to add
-         * @param pos position where to add object
-         * @param ground_z position of ground under object
-         * @return true on success, false otherwise
-         */
-        bool put (u_int16 & end_x, u_int16 & end_y, placeable *obj, coordinates & pos, const s_int32 & ground_z); 
-        
-        /// The individual map squares
-        std::vector <std::vector <square> > Grid;
-        
         /// The individual objects on the map
         std::vector <world::entity *> Entities;
         

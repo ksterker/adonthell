@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.cc,v 1.7 2008/07/10 20:19:44 ksterker Exp $
+ $Id: placeable_model.cc,v 1.8 2008/09/14 14:25:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -133,15 +133,14 @@ bool placeable_model::put_state (base::flat & file) const
 {
     base::flat record;
     
-    record.put_string ("state", current_shape_name ());
     for (std::map <std::string, placeable_shape>::iterator i = Shapes.begin();
          i != Shapes.end(); i++)
     {
-        base::flat area;
+        base::flat shape;
         
-        // save each area with its own name
-        i->second.put_state (area);
-        record.put_flat (i->first, area);
+        // save each shape with its own name
+        i->second.put_state (shape);
+        record.put_flat (i->first, shape);
     }
     
     record.put_string ("sprite", Sprite.filename ());
@@ -160,23 +159,17 @@ bool placeable_model::get_state (base::flat & file)
     void *value;
     u_int32 size;
     
-    // load current shape
-    std::string shape = record.get_string ("state");
-    
     // load actual shapes
     while (record.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
-        base::flat area ((const char*) value, size);
+        base::flat shape ((const char*) value, size);
         placeable_shape * mpa = add_shape (std::string (name));
-        mpa->get_state (area);
+        mpa->get_state (shape);
     }
     
     // get associated sprite
     std::string sprite = record.get_string ("sprite");
     Sprite.set_filename (sprite);
-    
-    // set current shape
-    set_shape (shape);
     
     return record.success ();
 }

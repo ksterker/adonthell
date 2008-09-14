@@ -1,5 +1,5 @@
 /*
- $Id: placeable_model.h,v 1.7 2008/07/10 20:19:44 ksterker Exp $
+ $Id: placeable_model.h,v 1.8 2008/09/14 14:25:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -193,7 +193,11 @@ namespace world
         std::map <std::string, placeable_shape>::iterator CurrentShape;
         /// the sprite associated with this model
         gfx::sprite Sprite;
-    }; 
+        
+    private:
+        /// forbid passing by value
+        placeable_model (const placeable_model & p);
+    };    
 }
 
 #endif

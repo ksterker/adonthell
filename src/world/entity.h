@@ -1,5 +1,5 @@
 /*
- $Id: entity.h,v 1.2 2008/07/12 11:12:37 ksterker Exp $
+ $Id: entity.h,v 1.3 2008/09/14 14:25:24 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,23 +43,42 @@ namespace world
 class entity
 {
 public:
+    /**
+     * Create an anonymous entity.
+     * @param object representation of the entity.
+     */
     entity (placeable *object) : Object (object) { }
-    
+
+    /**
+     * Delete entity and its associated object.
+     */
     virtual ~entity ()
     {
         delete Object;
     }
     
+    /**
+     * Return associated object.
+     * @return associated object. 
+     */
     placeable *get_object () const
     {
         return Object;
     }
     
+    /**
+     * Check whether this is a named entity.
+     * @return true if this is the case, false otherwise.
+     */
     bool has_name () const 
     { 
         return id () != NULL; 
     }
     
+    /**
+     * Get id of the entity.
+     * @return NULL if its an anonymous entity, the unique entity id otherwise.
+     */
     virtual const std::string * id () const 
     { 
         return NULL; 
@@ -81,8 +100,28 @@ protected:
 class named_entity : public entity
 {
 public:
-    named_entity (placeable *object, const std::string & id) : entity (object), Id (id) { }
+    /**
+     * Create an (uniquely) named entity.
+     * @param object representation of the entity.
+     * @param id name of the object.
+     * @param unique set to true if the same object is already contained in a different entity.
+     */
+    named_entity (placeable *object, const std::string & id, const bool & unique = true) 
+        : entity (object), Id (id) { }
     
+    /**
+     * Destructor.
+     */
+    virtual ~named_entity ()
+    {
+        // make sure the object is not deleted, if it is not unique
+        if (!IsUnique) Object = NULL;
+    }
+    
+    /**
+     * Get Id of this entity.
+     * @return Unique identifier for the contained object.
+     */
     const std::string * id () const
     {
         return &Id;
@@ -91,6 +130,8 @@ public:
 private:
     /// name of entity
     std::string Id;
+    /// entity with same object exists elsewhere?
+    bool IsUnique;
 };
 
 }
