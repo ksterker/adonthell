@@ -11,7 +11,6 @@ set(adonthell_world_SRCS
     placeable_model.cc
     placeable_shape.cc
     plane3.cc
-    square.cc
     triangle3.cc
 )
 
@@ -31,7 +30,6 @@ set(adonthell_world_HEADERS
     placeable_shape.h
     plane3.h
     render_info.h
-    square.h
     triangle3.h
     vector3.h
 )
