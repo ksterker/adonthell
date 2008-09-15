@@ -2,6 +2,7 @@
 set(adonthell_world_SRCS
     area.cc
     character.cc
+    collision.cc
     cube3.cc
     chunk.cc
     mapview.cc
