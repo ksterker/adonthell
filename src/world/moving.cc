@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.18 2008/09/14 14:25:25 ksterker Exp $
+ $Id: moving.cc,v 1.19 2008/10/03 17:16:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -64,7 +64,7 @@ moving::moving (world::area & mymap)
 #if DEBUG_COLLISION
     Image = gfx::create_surface();
     Image->set_alpha (255, true);
-    Image->resize (gfx::screen::length(), gfx::screen::height());
+    Image->resize (160, 240);
 #endif
 }
 
@@ -112,32 +112,18 @@ void moving::set_altitude (const s_int32 & z)
 bool moving::collide_with_objects (collision *collisionData)
 {
     // bbox around character and projected movement
-    vector3<s_int32> min (
+    const vector3<s_int32> min (
         x() + (Velocity.x() < 0 ? floor (Velocity.x()) : 0), 
-        y() + (Velocity.y() < 0 ? floor (Velocity.y()) : 0), 
+        y() - placeable::width()/2 + (Velocity.y() < 0 ? floor (Velocity.y()) : 0), 
         z() + (Velocity.z() < 0 ? floor (Velocity.z()) : 0));
                           
-    vector3<s_int32> max (
+    const vector3<s_int32> max (
         min.x() + placeable::length() + (Velocity.x () > 0 ? ceil (Velocity.x()) : 0),
         min.y() + placeable::width() + (Velocity.y () > 0 ? ceil (Velocity.y()) : 0),
         min.z() + placeable::height() + (Velocity.z () > 0 ? ceil (Velocity.z()) : 0));
 
 #if DEBUG_COLLISION
-    gfx::surface *area = gfx::create_surface();
-    area->set_alpha (128);
-    area->set_mask (true);
-    area->resize (gfx::screen::length(), gfx::screen::height());
-    area->fillrect (0, 0, area->length(), area->height(), gfx::screen::trans_color());
-    
-    // show area used for collision detection    
-    area->fillrect (min.x(), min.y() - max.z(),
-                     max.x() - min.x(), (max.y() - min.y()) + (max.z() - min.z()),
-                     Image->map_color (0, 0, 128, 128));
-    cube3 box (max.x() - min.x(), max.y() - min.y(), max.z() - min.z());
-    box.draw (min.x(), min.y() - min.z(), NULL, area);
-    
-    area->draw (0, 0, NULL, Image);
-    delete area;
+    printf ("   area [%i, %i, %i] - [%i, %i, %i]\n", min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
 #endif
 
     // get all objects in our path
@@ -151,12 +137,13 @@ bool moving::collide_with_objects (collision *collisionData)
         {
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
+
+#if DEBUG_COLLISION
+            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", i->Min.x(), i->Min.y(), i->Min.z(), shape->length(), shape->width(), shape->height());
+#endif
             
-            // ... get offset of shape from current position ...                
-            const vector3<s_int16> offset = i->Min - *this;
-                                           
             // ... and check if collision occurs
-            shape->collide (collisionData, offset);
+            shape->collide (collisionData, i->Min);
         }
     }
     
@@ -172,7 +159,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     const vector3<float> & pos = collisionData->position ();
 
 #if DEBUG_COLLISION
-    if (vel.x() != 0.0f || vel.y() != 0.0f)
+    if (vel.x() != 0.0f || vel.y() != 0.0f || vel.z() != 0.0f)
     {
         printf ("[%i] ", depth);
         printf ("Pos [%.4f, %.4f, %.4f] ", pos.x(), pos.y(), pos.z());
@@ -194,7 +181,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     }
     
 #if DEBUG_COLLISION
-    if (vel.x() != 0.0f || vel.y() != 0.0f)
+    if (vel.x() != 0.0f || vel.y() != 0.0f || vel.z() != 0.0f)
     {
         const vector3<float> intersection = collisionData->intersection ();
         printf ("    Col [%.4f, %.4f, %.4f] ", intersection.x(), intersection.y(), intersection.z());
@@ -251,7 +238,7 @@ void moving::update_position ()
     const vector3<float> eRadius (placeable::length() / 2.0, width() / 2.0, height() / 2.0);
     
     // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
-    vector3<float> eSpacePosition ((Position.x() /* + shape->x()*/) / eRadius.x() + 1, (Position.y() /*+ shape->y()*/) / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
+    vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y(), Position.z() / eRadius.z() + 1);
     vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
     
     collision collisionData (eSpacePosition, eSpaceVelocity, eRadius);
@@ -260,21 +247,25 @@ void moving::update_position ()
 #if DEBUG_COLLISION
     gfx::drawing_area da (0, 0, Image->length() - 1, Image->height() - 1);
 
-    u_int16 pos_x = X/*+shape->x()*/;
-    u_int16 pos_y = Y/*+shape->y()*/-Z;
-    
-    // draw character bounding box
+    // create character bounding box
     cube3 bbox (placeable::length(), width(), height());
+
+    // center on debug image
+    u_int16 pos_x = (Image->length() - bbox.max_x()) / 2;
+    u_int16 pos_y = (Image->height() - bbox.max_z() + bbox.max_y()) / 2;
+        
     bbox.draw (pos_x, pos_y, &da, Image);
     
-    /* pos_x += shape->length()/2;
-    pos_y += shape->width()/2; */
+    // center on character shape (ground level)
+    pos_x += placeable::length()/2;
+    pos_y += placeable::width()/2;
 
     // draw position of character
     Image->draw_line (pos_x - 5, pos_y, pos_x + 5, pos_y, Image->map_color (255, 255, 0), &da);                           
     Image->draw_line (pos_x, pos_y - 5, pos_x, pos_y + 5, Image->map_color (255, 255, 0), &da);                           
-                      
-    /* pos_y -= shape->height()/2; */
+    
+    // actual center of the character
+    pos_y -= placeable::height()/2;
     
     // draw velocity along x,y axis
     Image->draw_line (pos_x, pos_y, pos_x + Velocity.x()*20, pos_y + Velocity.y() * 20, Image->map_color (0, 0, 255), &da);
@@ -292,7 +283,7 @@ void moving::update_position ()
         printf ("\n");
 
         // draw triangle we collided with
-        tri->draw (X, Y, Image);
+        tri->draw (pos_x, pos_y, Image);
     }
 #endif
 
@@ -302,8 +293,8 @@ void moving::update_position ()
     finalPosition = execute_move (&collisionData); 
             
     // convert final result back to R3
-    float x = (finalPosition.x() - 1) * eRadius.x() /*- shape->x()*/;
-    float y = (finalPosition.y() - 1) * eRadius.y() /*- shape->y()*/;
+    float x = (finalPosition.x() - 1) * eRadius.x();
+    float y = (finalPosition.y()) * eRadius.y();
     float z = (finalPosition.z() - 1) * eRadius.z();
         
 #if DEBUG_COLLISION
@@ -373,10 +364,10 @@ bool moving::update ()
 }
 
 // debugging
-void moving::debug_collision ()
+void moving::debug_collision (const u_int16 & x, const u_int16 & y) const
 {
 #if DEBUG_COLLISION
-    Image->draw (0, 0);
+    Image->draw (x, y);
 #endif
 }
 

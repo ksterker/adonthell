@@ -35,6 +35,11 @@ using namespace world;
 %include "world/placeable_shape.h"
 %include "world/mapview.h"
 
+%pythoncode %{
+class coordinates (vector3i):
+    pass
+%}
+
 /// no downcasting in python, so we have to improvise ...
 %extend world::area {
     /// add an object to the map

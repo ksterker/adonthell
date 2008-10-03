@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.23 2008/09/14 14:25:27 ksterker Exp $
+   $Id: worldtest.cc,v 1.24 2008/10/03 17:16:25 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -417,7 +417,7 @@ public:
 			}
             
 #if DEBUG_COLLISION
-            gc.mchar->debug_collision();
+            gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
             // rectangle that should be filled with the mapview

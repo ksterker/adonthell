@@ -23,13 +23,13 @@ class App (adonthell.main.AdonthellApp):
         # -- load character model from file
         chr.load ("data/models/char/npc/ng.xml")
 
-        # -- set character location in world
-        pos = world.coordinates (4, 4, 0, 0, 0)
-        wrld.put_entity (0, pos)
-
         # -- set character attributes
-        chr.set_position (4, 4)
+        chr.set_position (160, 160)
+        chr.set_altitude (5)
         chr.set_speed (1.0);
+
+        # -- set character location in world
+        wrld.put_entity (0, chr)
 
         # -- create a ground tile
         tile = wrld.add_object ()
@@ -38,7 +38,7 @@ class App (adonthell.main.AdonthellApp):
         tile.load ("data/models/map/ground/outside/wood-1.xml")
         
         # -- place tile in world
-        pos.set_offset (0, 0)
+        pos = world.coordinates (160, 160, 0)
         wrld.put_entity (1, pos)
 
         # -- create mapview
@@ -49,9 +49,19 @@ class App (adonthell.main.AdonthellApp):
 
         # -- set schedule of view
         view.set_schedule ("focus_on_character", ("Player",))
-        
+
+        mov = { 0:chr.EAST, 20:chr.SOUTH, 60:chr.WEST, 100:chr.NORTH, 140:chr.EAST }
+        i = 0
+        cur_mov = 0        
+
         # -- main loop
         while 1:
+           if i in mov:
+               # -- let character walk
+               chr.remove_direction(cur_mov)
+               cur_mov = mov[i]
+               chr.add_direction(cur_mov)
+
            # -- update game clock
            event.date.update ()
         
@@ -63,7 +73,8 @@ class App (adonthell.main.AdonthellApp):
            view.draw (0, 0)
            
            # -- debugging
-           chr.debug_collision()
+           chr.debug_collision(0, 0)
+           print chr.x(), chr.y(), chr.z()
            
            # -- process gfx output
            gfx.screen.update()
@@ -72,8 +83,7 @@ class App (adonthell.main.AdonthellApp):
            # -- keep framerate stable
            base.Timer.update()
         
-           # -- let character walk
-           chr.add_direction (chr.SOUTH)
+           i = (i + 1) % 160
 
         return 0
     

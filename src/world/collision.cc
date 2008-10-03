@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.10 2008/09/15 08:20:36 ksterker Exp $
+ $Id: collision.cc,v 1.11 2008/10/03 17:16:24 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -41,7 +41,7 @@ collision::collision (const vector3<float> & position, const vector3<float> & ve
     
     Radius = radius;
     NearestDistance = 0.0;
-#ifdef DEBUG_COLLISION
+#if DEBUG_COLLISION
     Triangle = NULL;
 #endif
 }
@@ -49,7 +49,7 @@ collision::collision (const vector3<float> & position, const vector3<float> & ve
 // ctor
 collision::~collision ()
 {
-#ifdef DEBUG_COLLISION
+#if DEBUG_COLLISION
     delete Triangle;
 #endif
 }
@@ -84,7 +84,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
         // Calculate the signed distance from sphere position to triangle plane 
         double signedDistToTrianglePlane = trianglePlane.signed_distance (BasePoint);
         
-        // cache this as we’re going to use it a few times below: 
+        // cache this as we're going to use it a few times below: 
         float normalDotVelocity = trianglePlane.normal ().dot (Velocity);
         
         // if sphere is travelling parallel to the plane: 
@@ -230,7 +230,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
                 CollisionFound = true;
                 
                 // debugging
-#ifdef DEBUG_COLLISION
+#if DEBUG_COLLISION
                 if (Triangle) delete Triangle; 
                 Triangle = new triangle3<float> (triangle.translate (vector3<float> (1.0f, 1.0f, 1.0f), offset));
 #endif
@@ -278,4 +278,13 @@ bool collision::solve_quadric_equation (const float & a, const float & b, const 
     
     // no (valid) solutions 
     return false; 
+}
+
+const world::triangle3<float> * collision::triangle () const
+{ 
+#if DEBUG_COLLISION
+    return Triangle;
+#else
+    return NULL;
+#endif
 }

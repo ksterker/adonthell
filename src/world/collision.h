@@ -1,5 +1,5 @@
 /*
- $Id: collision.h,v 1.7 2008/09/14 14:25:24 ksterker Exp $
+ $Id: collision.h,v 1.8 2008/10/03 17:16:24 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -131,13 +131,11 @@ public:
      */
     void update_movement (const vector3<float> & position, const vector3<float> & velocity);
         
-#if DEBUG_COLLISION
     /**
      * Get the triangle we collided against.
      * @return the triangle we collided against.
      */
-    const triangle3<float> * triangle () const { return Triangle; }
-#endif
+    const triangle3<float> * triangle () const;
     //@}
     
 private:
@@ -185,10 +183,8 @@ private:
     vector3<float> IntersectionPoint;
     //@}
     
-#if DEBUG_COLLISION
     /// Triangle that caused collision
     const triangle3<float> *Triangle;
-#endif
 };
 
 }

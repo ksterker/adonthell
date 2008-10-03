@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.6 2007/12/15 23:15:10 ksterker Exp $
+ $Id: cube3.h,v 1.7 2008/10/03 17:16:24 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -76,11 +76,40 @@ public:
      */
     void create_bounding_box ();
     
+    /**
+     * Return the point of the cube furthest to the left.
+     * @return the left side of the cube.
+     */
     s_int16 min_x () const { return Min.x (); }
+    
+    /**
+     * Return the point of the cube furthest to the right.
+     * @return the right side of the cube.
+     */
     s_int16 max_x () const { return Max.x (); }
+    
+    /**
+     * Return the point representing the back of the cube.
+     * @return the back of the cube.
+     */
     s_int16 min_y () const { return Min.y (); }
+    
+    /**
+     * Return the point representing the front of the cube.
+     * @return the front of the cube.
+     */
     s_int16 max_y () const { return Max.y (); }
+    
+    /**
+     * Return the lowest point of the cube.
+     * @return the lowest point of the cube.
+     */
     s_int16 min_z () const { return Min.z (); }
+    
+    /**
+     * Return the highest point of the cube.
+     * @return the highest point of the cube.
+     */
     s_int16 max_z () const { return Max.z (); }
     
 	/**

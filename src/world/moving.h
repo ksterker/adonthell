@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.11 2008/09/14 14:25:25 ksterker Exp $
+ $Id: moving.h,v 1.12 2008/10/03 17:16:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,9 +35,7 @@
 #include "world/placeable.h"
 #include "world/coordinates.h"
 
-#if DEBUG_COLLISION
 #include "gfx/surface.h"
-#endif
 
 namespace world
 {
@@ -148,7 +146,7 @@ namespace world
          * some helpful information for debugging collision detection.
          * Otherwise it is a noop.
          */
-        void debug_collision ();
+        void debug_collision (const u_int16 & x, const u_int16 & y) const;
 
 #ifndef SWIG
         /**
@@ -198,10 +196,8 @@ namespace world
         /// velocites along the 3 axis in world space.
         vector3<float> Velocity;
         
-#if DEBUG_COLLISION
     private:
         gfx::surface *Image;
-#endif
     }; 
 }
 
