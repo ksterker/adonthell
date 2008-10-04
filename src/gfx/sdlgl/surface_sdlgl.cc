@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.cc,v 1.6 2008/03/08 20:07:53 ksterker Exp $
+   $Id: surface_sdlgl.cc,v 1.7 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -96,6 +96,7 @@ namespace gfx
     u_int32 surface_sdlgl::map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a) const
     {
 	// TODO
+        return 0;
     }
 
     void surface_sdlgl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const
@@ -121,6 +122,7 @@ namespace gfx
     u_int32 surface_sdlgl::get_pix (u_int16 x, u_int16 y) const
     {
 	// TODO
+        return 0;
     }
 
     surface & surface_sdlgl::operator = (const surface& src)
@@ -151,7 +153,7 @@ namespace gfx
 	set_height(h);
 
 	u_int8 * ndata = (u_int8*) malloc(l * h * 4);
-	for (u_int32 i = 0; i < l * h; i++)
+	for (u_int32 i = 0; i < (u_int32) l * h; i++)
 	{
 		u_int8 red = ((u_int8*)data)[i * bytes_per_pixel];
 		u_int8 green = ((u_int8*)data)[i * bytes_per_pixel + 1];

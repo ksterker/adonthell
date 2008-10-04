@@ -25,6 +25,10 @@ endif(COMMAND cmake_policy)
 
 add_definitions(-DVERSION="${ESCAPE}0.4.0${ESCAPE}" -DHAVE_CONFIG_H=1)
 
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "-fno-strict-aliasing" CACHE INTERNAL "")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 if(APPLE)
    set(CMAKE_SHARED_LINKER_FLAGS "-single_module" CACHE INTERNAL "")
 endif(APPLE)

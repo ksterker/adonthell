@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.12 2007/10/13 22:36:42 ksterker Exp $
+   $Id: quest.cc,v 1.13 2008/10/04 16:52:30 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -407,7 +407,7 @@ const quest_part* quest::get_part (const std::string & path)
 // split given path
 std::vector<std::string> quest::split (const std::string & path)
 {
-    int idx, pos = 0;
+    unsigned int idx, pos = 0;
     std::vector<std::string> result;
     
     // split

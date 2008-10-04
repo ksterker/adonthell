@@ -1,5 +1,5 @@
 /*
-   $Id: sound.cc,v 1.3 2006/04/01 22:45:54 Mithander Exp $
+   $Id: sound.cc,v 1.4 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -119,7 +119,7 @@ bool sound::handle_channel_create (void)
     if(m_channel>=0)
     {
         //The call was successful, add to m_channels list;
-        if(m_channels.size() <= m_channel)
+        if(m_channels.size() <= (unsigned int) m_channel)
             m_channels.resize(m_channel + 1);
         m_channels[m_channel] = this;
         return true;

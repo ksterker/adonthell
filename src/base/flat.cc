@@ -1,5 +1,5 @@
 /*
-   $Id: flat.cc,v 1.16 2008/04/14 11:03:08 ksterker Exp $
+   $Id: flat.cc,v 1.17 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2004/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -198,7 +198,7 @@ void flat::parse ()
     bool swap = (Buffer[0] != DATA_BYTE_ORDER);
     Buffer[0] = DATA_BYTE_ORDER;
     
-    data *first, *decoded;
+    data *first = 0, *decoded = 0;
     u_int32 pos = 1;
     Ptr = Buffer + 1;
     

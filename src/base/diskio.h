@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.10 2006/10/25 04:08:46 ksterker Exp $
+   $Id: diskio.h,v 1.11 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,7 @@ namespace base {
             typedef enum
             {
                 GZ_FILE,
-                XML_FILE,
+                XML_FILE
             } file_format;
         
             /**

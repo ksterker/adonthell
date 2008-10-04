@@ -39,7 +39,7 @@ OBJC="gcc"
 AC_SUBST(OBJC)
 
 if test x$ac_cv_cxx_compiler_gnu = xyes; then
-   CXXFLAGS="$CXXFLAGS -fno-exceptions"
+   CXXFLAGS="$CXXFLAGS -fno-exceptions -fno-strict-aliasing"
 fi
 
 case "$target" in

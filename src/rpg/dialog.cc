@@ -1,5 +1,5 @@
 /*
- $Id: dialog.cc,v 1.6 2007/10/13 21:15:21 ksterker Exp $
+ $Id: dialog.cc,v 1.7 2008/10/04 16:52:30 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -163,7 +163,7 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
     {
         PyObject *speakers, *speech, *arg, *result;
         bool stop = false;
-        dialog_line *next;
+        dialog_line *next = 0;
         u_int32 size;
         
         // sanity check (answer out of bounds)

@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.cc,v 1.3 2007/10/13 22:36:42 ksterker Exp $
+   $Id: quest_event.cc,v 1.4 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -103,7 +103,7 @@ bool quest_event::get_state (base::flat& in)
 // split given path into its parts
 void quest_event::set_pattern (const std::string & pattern)
 {
-	int idx, pos = 0;
+	unsigned int idx, pos = 0;
 
     // split pattern into its levels
     while ((idx = pattern.find (".", pos)) != pattern.npos)

@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.11 2008/02/16 19:08:44 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.12 2008/10/04 16:52:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -208,6 +208,9 @@ namespace gfx
             }
             case 4:
                 col = *((Uint32 *)(offset));
+                break;
+            default:
+                col = 0;
                 break;
         }
         return col;
