@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.19 2008/10/03 17:16:25 ksterker Exp $
+ $Id: moving.cc,v 1.20 2008/10/05 09:22:03 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -113,14 +113,14 @@ bool moving::collide_with_objects (collision *collisionData)
 {
     // bbox around character and projected movement
     const vector3<s_int32> min (
-        x() + (Velocity.x() < 0 ? floor (Velocity.x()) : 0), 
-        y() - placeable::width()/2 + (Velocity.y() < 0 ? floor (Velocity.y()) : 0), 
-        z() + (Velocity.z() < 0 ? floor (Velocity.z()) : 0));
+        x() + (Velocity.x() < 0 ? static_cast<s_int32>(floor (Velocity.x())) : 0), 
+        y() - placeable::width()/2 + (Velocity.y() < 0 ? static_cast<s_int32>(floor (Velocity.y())) : 0), 
+        z() + (Velocity.z() < 0 ? static_cast<s_int32>( floor (Velocity.z()) ): 0));
                           
     const vector3<s_int32> max (
-        min.x() + placeable::length() + (Velocity.x () > 0 ? ceil (Velocity.x()) : 0),
-        min.y() + placeable::width() + (Velocity.y () > 0 ? ceil (Velocity.y()) : 0),
-        min.z() + placeable::height() + (Velocity.z () > 0 ? ceil (Velocity.z()) : 0));
+        min.x() + placeable::length() + (Velocity.x () > 0 ? static_cast<s_int32>(ceil (Velocity.x())) : 0),
+        min.y() + placeable::width() + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
+        min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0));
 
 #if DEBUG_COLLISION
     printf ("   area [%i, %i, %i] - [%i, %i, %i]\n", min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
@@ -268,13 +268,13 @@ void moving::update_position ()
     pos_y -= placeable::height()/2;
     
     // draw velocity along x,y axis
-    Image->draw_line (pos_x, pos_y, pos_x + Velocity.x()*20, pos_y + Velocity.y() * 20, Image->map_color (0, 0, 255), &da);
+    Image->draw_line (pos_x, pos_y, (u_int16) (pos_x + Velocity.x()*20), (u_int16) (pos_y + Velocity.y() * 20), Image->map_color (0, 0, 255), &da);
 
     // draw gravity
-    Image->draw_line (pos_x, pos_y, pos_x, pos_y - gravity * 20, Image->map_color (255, 0, 0), &da);        
+    Image->draw_line (pos_x, pos_y, pos_x, (u_int16) (pos_y - gravity * 20), Image->map_color (255, 0, 0), &da);        
 
     // draw velocity along z axis
-    Image->draw_line (pos_x, pos_y, pos_x, pos_y - Velocity.z() * 20, Image->map_color (0, 0, 255), &da);        
+    Image->draw_line (pos_x, pos_y, pos_x, (u_int16) (pos_y - Velocity.z() * 20), Image->map_color (0, 0, 255), &da);        
 
     // did we collide at all?
     const triangle3<float> *tri = collisionData.triangle ();
@@ -301,10 +301,10 @@ void moving::update_position ()
     if (tri != NULL)
     {
         // draw actual movement along x,y axis
-        Image->draw_line (pos_x, pos_y, pos_x + (x - Position.x()) * 20, pos_y + (y - Position.y()) * 20, Image->map_color (0, 255, 0), &da);
+        Image->draw_line (pos_x, pos_y, (u_int16) (pos_x + (x - Position.x()) * 20), (u_int16) (pos_y + (y - Position.y()) * 20), Image->map_color (0, 255, 0), &da);
     
         // draw actual movement along z axis
-        Image->draw_line (pos_x, pos_y, pos_x, pos_y - (z - Z) * 20, Image->map_color (0, 255, 0), &da);
+        Image->draw_line (pos_x, pos_y, pos_x, (u_int16) (pos_y - (z - Z) * 20), Image->map_color (0, 255, 0), &da);
     }
 #endif
 

@@ -1,5 +1,5 @@
 /*
- $Id: surface_cacher.h,v 1.1 2008/07/10 20:19:38 ksterker Exp $
+ $Id: surface_cacher.h,v 1.2 2008/10/05 09:22:02 ksterker Exp $
  
  Copyright (C) 2008 Rian Shelley <rians@cc.usu.edu>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -36,9 +36,6 @@
 #include <ctime>
 #include <string>
 #include <map>
-
-using std::map;
-using std::string;
 
 #define DEFAULT_CACHE_SIZE 10000000
 
@@ -196,9 +193,9 @@ namespace gfx
         
     private:
         /// list of surfaces by name
-        map<string, surface_ref> Cache;
+        std::map<string, surface_ref> Cache;
         /// mapping of surface to name
-		map<const surface*, string> SurfToString;
+		std::map<const surface*, string> SurfToString;
         /// memory used by cache
 		u_int32 MemUsed;
         /// memory allowed to use
@@ -215,7 +212,9 @@ namespace gfx
 	/**
 	 * A singleton surface_cacher
 	 */
+#ifndef SWIG
 	extern surface_cacher* surfaces;
+#endif
 }
 
 #endif

@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.8 2008/09/14 14:25:25 ksterker Exp $
+ $Id: mapview.cc,v 1.9 2008/10/05 09:22:03 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -122,7 +122,7 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
 
         // don't go past edge of map
         if (Sx < 0) Sx = 0;
-        else if (Sx + length() > ml) Sx = ml - length();
+        else if (Sx + length() > (s_int32) ml) Sx = ml - length();
     }
     
     // calculate start and offset of view (y-axis)
@@ -138,7 +138,7 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
         
         // don't go past edge of map
         if (Sy < 0) Sy = 0;
-        else if (Sy + height() > mh) Sy = mh - height();        
+        else if (Sy + height() > (s_int32) mh) Sy = mh - height();        
     }
 }
 

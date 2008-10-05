@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.6 2008/09/14 14:25:14 ksterker Exp $
+ $Id: chunk.cc,v 1.7 2008/10/05 09:22:03 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -244,9 +244,7 @@ void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const
             c->objects_in_view (min_x, max_x, min_yz, max_yz, result);
         }
     }
-    
-    u_int32 num = result.size();
-    
+
     // process contained map objects
     std::list<chunk_info>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
@@ -305,7 +303,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     
     // process children
     u_int8 num = find_chunks (chunks, min, max);
-    for (u_int32 i; i < num; i++)
+    for (u_int32 i = 0; i < num; i++)
     {
         chunk *c = Children[chunks[i]];
         if (c != NULL)

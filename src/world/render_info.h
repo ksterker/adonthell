@@ -16,7 +16,7 @@ class render_info
 {
 public:
     render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
-    : Shape (shape), Sprite (sprite), Pos (pos)
+    : Pos (pos), Shape (shape), Sprite (sprite)
     {
         Pos.set (Pos.x() + Shape->x(), Pos.y() + Shape->y(), Pos.z() + Shape->z());
     }

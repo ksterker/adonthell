@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.9 2008/09/14 14:25:14 ksterker Exp $
+   $Id: character.cc,v 1.10 2008/10/05 09:22:03 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -87,16 +87,16 @@ void character::add_direction(direction ndir)
     switch (ndir)
     {
         case WEST:
-            if (tstdir && EAST) tstdir &= ~EAST;
+            tstdir &= ~EAST;
             break;
         case EAST:
-            if (tstdir && WEST) tstdir &= ~WEST;
+            tstdir &= ~WEST;
             break;
         case SOUTH:
-            if (tstdir && NORTH) tstdir &= ~NORTH;
+            tstdir &= ~NORTH;
             break;
         case NORTH:
-            if (tstdir && SOUTH) tstdir &= ~SOUTH;
+            tstdir &= ~SOUTH;
             break;
         default:
             break;

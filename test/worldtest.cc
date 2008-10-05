@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.24 2008/10/03 17:16:25 ksterker Exp $
+   $Id: worldtest.cc,v 1.25 2008/10/05 09:22:03 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -319,8 +319,8 @@ public:
         for (float i = 0; i < 16; i += 1.5)
             for (float j = 2; j < 12; j += 1.5)
             {
-                u_int16 x = 40 * i;
-                u_int16 y = 40 * j;
+                u_int16 x = (u_int16) (40 * i);
+                u_int16 y = (u_int16) (40 * j);
                 
                 world::coordinates mc (x, y, 0);
                 world.put_entity (1, mc); 

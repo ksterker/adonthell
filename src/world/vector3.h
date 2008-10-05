@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.9 2008/09/14 14:25:26 ksterker Exp $
+ $Id: vector3.h,v 1.10 2008/10/05 09:22:03 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,7 @@ public:
     /**
      * Create a 3D vector located at the origin
      */
-    vector3<T> () : X (0), Y (0), Z (0)
+    vector3 () : X (0), Y (0), Z (0)
     {
     }
 
@@ -56,7 +56,7 @@ public:
 	 * @param y y coordinate
 	 * @param z z coordinate
 	 */
-	vector3<T> (const T & x, const T & y, const T & z) : X (x), Y (y), Z (z)
+	vector3 (const T & x, const T & y, const T & z) : X (x), Y (y), Z (z)
 	{
 	}
 
@@ -64,7 +64,7 @@ public:
      * Create a new 3D vector as copy of existing vector
      * @param v the vector to copy
      */
-    vector3<T> (const vector3<T> & v) : X (v.X), Y (v.Y), Z (v.Z)
+    vector3 (const vector3 & v) : X (v.X), Y (v.Y), Z (v.Z)
     {
     }
     
@@ -73,7 +73,7 @@ public:
      * @param v the vector to copy
      */
     template<class P>
-    vector3<T> (const vector3<P> & v) : X (v.x()), Y (v.y()), Z (v.z())
+    vector3 (const vector3<P> & v) : X (v.x()), Y (v.y()), Z (v.z())
     {
     }
     
@@ -119,7 +119,7 @@ public:
     void set_length (const T & length)
     {
         float l = length / this->length ();
-        set (X * l, Y * l, Z * l);
+        set (static_cast<T>(X * l), static_cast<T>(Y * l), static_cast<T>(Z * l));
     }
     
     /**
@@ -150,7 +150,7 @@ public:
 	 * @param v vector to compare with this.
 	 * @return true if all members are equal, false otherwise.
 	 */
-	bool operator == (const vector3<T> & v) const
+	bool operator == (const vector3 & v) const
 	{
 		return (X == v.X && Y == v.Y && Z == v.Z);
 	}
@@ -160,7 +160,7 @@ public:
 	 * @param v vector to compare with this.
 	 * @return true if at least one members differs, false otherwise.
 	 */
-	bool operator != (const vector3<T> & v) const
+	bool operator != (const vector3 & v) const
 	{
 		return (X != v.X || Y != v.Y || Z != v.Z);
 	}
@@ -175,7 +175,7 @@ public:
 	 * @return new vector
 	 */
     template<class PT>
-	vector3<T> operator - (const vector3<PT> & v) const
+	vector3 operator - (const vector3<PT> & v) const
 	{
 		return vector3 (X - v.x(), Y - v.y(), Z - v.z());
 	}
@@ -184,7 +184,7 @@ public:
 	 * Return a vector that is the sum of the two given vectors.
 	 * @return new vector.
 	 */
-	vector3<T> operator + (const vector3<T> & v) const
+	vector3 operator + (const vector3 & v) const
 	{
 		return vector3 (X + v.X, Y + v.Y, Z + v.Z);
 	}
@@ -193,7 +193,7 @@ public:
 	 * Calculate the cross product of two given vectors.
 	 * @return vector representing the cross product of two vectors.
 	 */
-	vector3<T> operator * (const vector3<T> & v) const
+	vector3 operator * (const vector3 & v) const
 	{
 		return vector3 (Y * v.Z - Z * v.Y, Z * v.X - X * v.Z, X * v.Y - Y * v.X);
 	}

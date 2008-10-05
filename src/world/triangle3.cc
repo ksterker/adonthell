@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.6 2008/02/16 21:13:26 ksterker Exp $
+ $Id: triangle3.cc,v 1.7 2008/10/05 09:22:03 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -86,9 +86,21 @@ void triangle3<float>::draw (const u_int16 & x, const u_int16 & y, gfx::surface 
 	if (!target) target = gfx::screen::get_surface();
 	u_int32 color = target->map_color (0, 255, 255);
 	
-	target->draw_line (x + A.x(), y + A.y() - A.z(), x + B.x(), y + B.y() - B.z(), color);
-	target->draw_line (x + B.x(), y + B.y() - B.z(), x + C.x(), y + C.y() - C.z(), color);
-	target->draw_line (x + C.x(), y + C.y() - C.z(), x + A.x(), y + A.y() - A.z(), color);
+	target->draw_line (x + static_cast<u_int16>(A.x()),
+		y + static_cast<u_int16>(A.y()) - static_cast<u_int16>(A.z()),
+		x + static_cast<u_int16>(B.x()),
+		y + static_cast<u_int16>(B.y()) - static_cast<u_int16>(B.z()),
+		color);
+	target->draw_line (x + static_cast<u_int16>(B.x()),
+		y + static_cast<u_int16>(B.y()) - static_cast<u_int16>(B.z()),
+		x + static_cast<u_int16>(C.x()),
+		y + static_cast<u_int16>(C.y()) - static_cast<u_int16>(C.z()),
+		color);
+	target->draw_line (x + static_cast<u_int16>(C.x()),
+		y + static_cast<u_int16>(C.y()) - static_cast<u_int16>(C.z()),
+		x + static_cast<u_int16>(A.x()),
+		y + static_cast<u_int16>(A.y()) - static_cast<u_int16>(A.z()),
+		color);
 }
 
 } // namespace world

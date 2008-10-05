@@ -1,5 +1,5 @@
 /*
-   $Id: callback.h,v 1.7 2004/12/28 02:03:59 jol Exp $
+   $Id: callback.h,v 1.8 2008/10/05 09:22:03 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -84,7 +84,7 @@ namespace python
     private:
         RT run()
         {
-            RT retvalue;
+            RT retvalue = RT();
             PyObject * pyres;
             
             // We can directly call our function
@@ -200,7 +200,7 @@ namespace python
     private:
         RT run(P1 arg1)
         {
-            RT retvalue;
+            RT retvalue = RT();
             PyObject * pyarg1;
             PyObject * pyres;
             

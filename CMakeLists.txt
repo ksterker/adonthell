@@ -26,7 +26,7 @@ endif(COMMAND cmake_policy)
 add_definitions(-DVERSION="${ESCAPE}0.4.0${ESCAPE}" -DHAVE_CONFIG_H=1)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "-fno-strict-aliasing" CACHE INTERNAL "")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing" CACHE INTERNAL "")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(APPLE)
