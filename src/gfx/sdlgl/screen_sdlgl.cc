@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdlgl.cc,v 1.8 2008/10/04 16:52:30 ksterker Exp $
+   $Id: screen_sdlgl.cc,v 1.9 2008/10/05 10:53:26 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -104,7 +104,6 @@ u_int32 gfx_screen_trans_color()
 void gfx_screen_clear()
 {
     // TODO
-    return 0;
 }
 
 gfx::surface * gfx_screen_get_surface()
