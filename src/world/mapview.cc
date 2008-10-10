@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.9 2008/10/05 09:22:03 ksterker Exp $
+ $Id: mapview.cc,v 1.10 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -249,7 +249,7 @@ void mapview::render (std::list <world::render_info> & drawqueue, const gfx::dra
     for (std::list <world::render_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
     {
         s_int16 pos_x = da.x() + it->Pos.x () - Sx;
-        s_int16 pos_y = da.y() + Z + it->Pos.y () - it->Pos.z() - Sy - it->Shape->height() - it->Shape->z(); 
+        s_int16 pos_y = da.y() + Z + it->Pos.y () - it->Pos.z() - Sy - it->Shape->height()/* - it->Shape->z()*/; 
         
         it->Sprite->draw (pos_x, pos_y, &da, target);
     }

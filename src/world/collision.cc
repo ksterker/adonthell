@@ -1,5 +1,5 @@
 /*
- $Id: collision.cc,v 1.11 2008/10/03 17:16:24 ksterker Exp $
+ $Id: collision.cc,v 1.12 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -150,7 +150,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
             }
         }
         
-        // if we haven’t found a collision already we’ll have to sweep sphere against 
+        // if we haven't found a collision already we'll have to sweep sphere against 
         // points and edges of the triangle. 
         // Note: A collision inside the triangle (the check above) will always happen 
         // before a vertex or edge collision! This is why we can skip the swept test 
@@ -180,7 +180,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
                 }
             }
 
-            // check agains edges:
+            // check against edges:
             for (int i = 0; i < 3; i++)
             {
                 const vector3<float> edge = eTriangle.get_edge (i);
@@ -217,11 +217,11 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
         // set result 
         if (foundCollison) 
         { 
-            // distance to collision: ’t’ is time of collision 
+            // distance to collision: 't' is time of collision 
             float distToCollision = t * Velocity.length ();
             
             // Does this triangle qualify for the closest hit? 
-            // It does if it’s the first hit or the closest 
+            // It does if it's the first hit or the closest 
             if (CollisionFound == false || distToCollision < NearestDistance) 
             { 
                 // Collision information nessesary for sliding 
@@ -230,7 +230,9 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
                 CollisionFound = true;
                 
                 // debugging
-#if DEBUG_COLLISION
+#if DEBUG_COLLISION                
+                printf ("    col [%.3f, %.3f, %.3f] dist %.5f\n", collisionPoint.x() * Radius.x(), collisionPoint.y() * Radius.y(), collisionPoint.z() * Radius.z(), distToCollision);
+
                 if (Triangle) delete Triangle; 
                 Triangle = new triangle3<float> (triangle.translate (vector3<float> (1.0f, 1.0f, 1.0f), offset));
 #endif

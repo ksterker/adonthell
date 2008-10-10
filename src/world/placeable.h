@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.6 2008/09/14 14:25:25 ksterker Exp $
+ $Id: placeable.h,v 1.7 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -109,8 +109,18 @@ namespace world
          */
         void add_model (placeable_model *model);
         
+        /**
+         * Return const iterator to the first model the placeable
+         * consists of.
+         * @return iterator pointing to first model.
+         */
         iterator begin () const { return Model.begin (); }
         
+        /**
+         * Return const iterator indicating the end of the list 
+         * of models the placeable consists of.
+         * @return iterator pointing after last model.
+         */
         iterator end () const { return Model.end (); }
         //@}
         
@@ -139,6 +149,10 @@ namespace world
          */
         u_int16 max_height () const { return MaxSize.z(); }
         
+        s_int16 min_x () const { return MinPos.x(); }
+        s_int16 min_y () const { return MinPos.y(); }
+        s_int16 min_z () const { return MinPos.z(); }
+        
         /**
          * Get placeable's current length.
          * @return actual extension of placeable in x direction.
@@ -155,6 +169,10 @@ namespace world
          */
         u_int16 height () const { return CurSize.z(); }        
         //@}
+
+        s_int16 cur_x () const { return CurPos.x(); }
+        s_int16 cur_y () const { return CurPos.y(); }
+        s_int16 cur_z () const { return CurPos.z(); }
         
         /**
          * @name Placeable state
@@ -211,8 +229,12 @@ namespace world
         std::vector<world::placeable_model*> Model;
         /// bounding box of this placeable. It's updated when adding shapes.
         vector3<u_int16> MaxSize;
+        /// position of this placeable. It's calculated when adding shapes.
+        vector3<s_int16> MinPos;
         /// bounding box of this placeable. It's calculated when the state changes.
         vector3<u_int16> CurSize;
+        /// position of this placeable. It's calculated when the state changes.
+        vector3<s_int16> CurPos;
         /// the placeables current state
         std::string State;
         /// whether placeable is character, scenery or item    

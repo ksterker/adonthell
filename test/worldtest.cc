@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.25 2008/10/05 09:22:03 ksterker Exp $
+   $Id: worldtest.cc,v 1.26 2008/10/10 20:37:35 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -219,13 +219,19 @@ public:
         mobj = (world::object *) world.add_entity(world::OBJECT);
         mobj->load("data/models/map/wall/outside/cliff-s.xml");
      
-        // Adding the map character
+        // Adding the map character at index 8
         mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
         mchar->load ("data/models/char/npc/ng.xml");
+        
+        // set position and speed
         mchar->set_speed (1.5);
         mchar->set_position (165, 200);
         mchar->set_z (0);
-                
+        
+        // put character on map
+        world.put_entity (8, *mchar);
+        
+        
         world::coordinates mc;
         
         /*
@@ -237,7 +243,7 @@ public:
          */
         
         // create ground (grass tiles are 40x40)
-        for (u_int16 i = 0; i < world.length(); i++)
+        for (u_int16 i = 0; i < 16; i++)
             for (u_int16 j = 0; j < 3; j++)
             {
                 world::coordinates mc (i*40, j*40, 80);

@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.20 2008/10/05 09:22:03 ksterker Exp $
+ $Id: moving.cc,v 1.21 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -139,7 +139,7 @@ bool moving::collide_with_objects (collision *collisionData)
             const placeable_shape * shape = (*model)->current_shape ();
 
 #if DEBUG_COLLISION
-            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", i->Min.x(), i->Min.y(), i->Min.z(), shape->length(), shape->width(), shape->height());
+            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", i->Min.x() + shape->x(), i->Min.y() + shape->y(), i->Min.z() + shape->z(), i->Min.x() + shape->x() + shape->length(), i->Min.y() + shape->y() + shape->width(), i->Min.z() + shape->z() + shape->height());
 #endif
             
             // ... and check if collision occurs
@@ -157,15 +157,6 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     
     const vector3<float> & vel = collisionData->velocity ();
     const vector3<float> & pos = collisionData->position ();
-
-#if DEBUG_COLLISION
-    if (vel.x() != 0.0f || vel.y() != 0.0f || vel.z() != 0.0f)
-    {
-        printf ("[%i] ", depth);
-        printf ("Pos [%.4f, %.4f, %.4f] ", pos.x(), pos.y(), pos.z());
-        printf ("Vel [%.4f, %.4f, %.4f]\n", vel.x(), vel.y(), vel.z());
-    }
-#endif
     
     // do we need to worry? 
     if (depth > 5) 
@@ -179,15 +170,6 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
         // if no collision occured, we just move along the velocity
         return pos + vel;
     }
-    
-#if DEBUG_COLLISION
-    if (vel.x() != 0.0f || vel.y() != 0.0f || vel.z() != 0.0f)
-    {
-        const vector3<float> intersection = collisionData->intersection ();
-        printf ("    Col [%.4f, %.4f, %.4f] ", intersection.x(), intersection.y(), intersection.z());
-        printf ("Dst %.5f\n", collisionData->distance());
-    }
-#endif
     
     // the desired destination point 
     vector3<float> destinationPoint = pos + vel;
@@ -232,14 +214,18 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
 // calculate new position
 void moving::update_position ()
 {
-    static float gravity = -4.905;
+    static float gravity = -4.905f;
     
     // calculate radius of ellipsoid
-    const vector3<float> eRadius (placeable::length() / 2.0, width() / 2.0, height() / 2.0);
+    const vector3<float> eRadius (placeable::length() / 2.0f, width() / 2.0f, height() / 2.0f);
     
     // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
     vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y(), Position.z() / eRadius.z() + 1);
     vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
+
+#if DEBUG_COLLISION
+    printf ("    pos [%.3f, %.3f, %.3f]\n", eSpacePosition.x() * eRadius.x(), eSpacePosition.y() * eRadius.y(), (eSpacePosition.z() - 1) * eRadius.z());
+#endif
     
     collision collisionData (eSpacePosition, eSpaceVelocity, eRadius);
     vector3<float> finalPosition = execute_move (&collisionData);         
@@ -280,18 +266,25 @@ void moving::update_position ()
     const triangle3<float> *tri = collisionData.triangle ();
     if (tri != NULL)
     {
-        printf ("\n");
-
         // draw triangle we collided with
         tri->draw (pos_x, pos_y, Image);
     }
+    
+    printf ("    pos [%.3f, %.3f, %.3f]\n", finalPosition.x() * eRadius.x(), finalPosition.y() * eRadius.y(), (finalPosition.z() - 1) * eRadius.z());    
 #endif
 
-    // apply gravity effect
+    // our velocity for gravity calculation
+    float vz = Velocity.z();
+    Velocity.set_z (gravity);
+
+    // apply gravity effect    
     eSpaceVelocity = vector3<float> (0.0f, 0.0f, gravity / eRadius.z());
     collisionData.update_movement (finalPosition, eSpaceVelocity);
     finalPosition = execute_move (&collisionData); 
-            
+
+    // restore velocity
+    Velocity.set_z (vz);
+    
     // convert final result back to R3
     float x = (finalPosition.x() - 1) * eRadius.x();
     float y = (finalPosition.y()) * eRadius.y();
@@ -331,17 +324,27 @@ void moving::update_position ()
 void moving::calculate_ground_pos ()
 {
     // bbox below our center
-    vector3<s_int32> min (X + placeable::length()/2, Y + width()/2, -10000);
-    vector3<s_int32> max (X + placeable::length()/2, Y + width()/2, Z);
+    vector3<s_int32> min (X + placeable::length()/2, Y, -10000);
+    vector3<s_int32> max (X + placeable::length()/2, Y, Z);
     
     // get objects below us
     std::list<chunk_info> result = Mymap.objects_in_bbox (min, max);
-
-    // sort according to their z-Order
-    result.sort (z_order());
+    if (!result.empty ())
+    {
+        // sort according to their z-Order
+        result.sort (z_order());
     
-    // the topmost object will be our ground pos
-    GroundPos = result.front().Max.z();
+        // the topmost object will be our ground pos
+        const chunk_info & ci = result.front();
+        GroundPos = ci.Max.z() + ci.Object->cur_z();
+    }
+    else
+    {
+        // there are no objects below ... this also means we will
+        // drop out of the world, so here could be a good place
+        // to avoid this. But for now we'll just let it happen ...
+        GroundPos = Z - 1;
+    }
 }
 
 // update movable position

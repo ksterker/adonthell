@@ -1,5 +1,5 @@
 /*
- $Id: triangle3.cc,v 1.7 2008/10/05 09:22:03 ksterker Exp $
+ $Id: triangle3.cc,v 1.8 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,7 +54,7 @@ bool triangle3<float>::contains (const vector3<float> & p) const
     float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
     
     // check if point is in triangle
-    return (u > 0.0f) && (v > 0.0f) && (u + v < 1.0f);
+    return (u > 0.0f) && (v > 0.0f) && (u + v <= 1.0f);
 }
 
 // draw triangle 

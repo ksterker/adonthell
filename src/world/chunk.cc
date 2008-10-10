@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.7 2008/10/05 09:22:03 ksterker Exp $
+ $Id: chunk.cc,v 1.8 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -88,7 +88,7 @@ void chunk::remove (placeable * object, const coordinates & pos)
     vector3<s_int32> max (pos.x() + object->max_length(),
                           pos.y() + object->max_width(),
                           pos.z() + object->max_height());
-
+    
     remove (chunk_info (object, pos, max));
 }
 

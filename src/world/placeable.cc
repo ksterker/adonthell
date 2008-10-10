@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.4 2008/09/14 14:25:25 ksterker Exp $
+ $Id: placeable.cc,v 1.5 2008/10/10 20:37:35 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,9 +35,12 @@
 
 using world::placeable;
 
+#define MI16 32767
+
 // ctor
 placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
 {
+    MinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
     State = "";
 }
@@ -45,9 +48,10 @@ placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
 // change state of placeable
 void placeable::set_state (const std::string & state)
 {
-    // reset current size
+    // reset current size and position
     CurSize.set (0, 0, 0);
-
+    CurPos.set (MI16, MI16, MI16);
+    
     // update shape and size
     std::vector<world::placeable_model*>::iterator i;
     for (i = Model.begin(); i != Model.end(); i++)
@@ -59,6 +63,10 @@ void placeable::set_state (const std::string & state)
             CurSize.set_x (std::max (CurSize.x(), shape->length()));
             CurSize.set_y (std::max (CurSize.y(), shape->width()));
             CurSize.set_z (std::max (CurSize.z(), shape->height()));
+            
+            CurPos.set_x (std::min (CurPos.x(), shape->x()));
+            CurPos.set_y (std::min (CurPos.y(), shape->y()));
+            CurPos.set_z (std::min (CurPos.z(), shape->z()));            
         }
     }
     
@@ -76,6 +84,10 @@ void placeable::add_model (world::placeable_model * model)
         MaxSize.set_x (std::max (MaxSize.x(), shape->second.length()));
         MaxSize.set_y (std::max (MaxSize.y(), shape->second.width()));
         MaxSize.set_z (std::max (MaxSize.z(), shape->second.height()));
+        
+        MinPos.set_x (std::min (MinPos.x(), shape->second.x()));
+        MinPos.set_y (std::min (MinPos.y(), shape->second.y()));
+        MinPos.set_z (std::min (MinPos.z(), shape->second.z()));        
     }
 }
 
