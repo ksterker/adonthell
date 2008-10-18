@@ -19,6 +19,7 @@ pkgincludeworld_HEADERS = \
     placeable_shape.h \
     plane3.h \
     render_info.h \
+    renderer.h \
     triangle3.h \
     vector3.h
 
@@ -39,6 +40,7 @@ libadonthell_world_la_SOURCES = \
     placeable_model.cc \
     placeable_shape.cc \
     plane3.cc \
+    renderer.cc \
     triangle3.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)

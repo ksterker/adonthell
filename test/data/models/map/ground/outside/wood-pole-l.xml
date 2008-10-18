@@ -7,14 +7,14 @@
       <list id="shape">
         <u_int16 id="num">1</u_int16>
         <list id="cube">
-          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[0, -10, 0]</string>
+          <string id="p3d">[10, -10, 0]</string>
           <string id="p3d">[10, 0, 0]</string>
-          <string id="p3d">[10, 10, 0]</string>
-          <string id="p3d">[0, 10, 0]</string>
-          <string id="p3d">[0, 0, 40]</string>
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[0, -10, 40]</string>
+          <string id="p3d">[10, -10, 40]</string>
           <string id="p3d">[10, 0, 40]</string>
-          <string id="p3d">[10, 10, 40]</string>
-          <string id="p3d">[0, 10, 40]</string>
+          <string id="p3d">[0, 0, 40]</string>
         </list>
       </list>
     </list>

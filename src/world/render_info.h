@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.3 2008/10/10 20:37:35 ksterker Exp $
+ $Id: render_info.h,v 1.4 2008/10/18 12:41:18 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,7 +53,8 @@ public:
     render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
     : Pos (pos), Shape (shape), Sprite (sprite)
     {
-        Pos.set (Pos.x() + Shape->x(), Pos.y() + Shape->y(), Pos.z() + Shape->z());
+        // Pos.set (Pos.x() + Shape->x(), Pos.y() + Shape->y(), Pos.z() + Shape->z());
+        IsFlat = shape->width() > shape->height();
     }
     
     /**
@@ -64,19 +65,34 @@ public:
      */
     bool operator < (const render_info & ri) const
     {
-        if (z_pos() <= ri.Pos.z()) return true;
-        if (Pos.z() >= ri.z_pos()) return false;
+        if (IsFlat && ri.IsFlat)
+        {
+            if (z() == ri.z()) return y() < ri.y();
+            else return z() < ri.z();
+        }
         
-        return Pos.y() + Shape->width() < ri.Pos.y() + ri.Shape->width();
+        if (!IsFlat && !ri.IsFlat)
+        {
+            if (y() == ri.y()) return z() < ri.z();
+            else return y() < ri.y();
+        }
+        
+        return y() + Shape->width() + z() + Shape->height() < ri.y() + ri.Shape->width() + ri.z() + ri.Shape->height();
+    }
+    
+    s_int32 x () const
+    {
+        return Pos.x();
     }
 
-    /**
-     * Return the Z coordinate of the object.
-     * @param the Z position of the object.
-     */
-    s_int32 z_pos () const
+    s_int32 y () const
     {
-        return Pos.z() + Shape->z() + Shape->height();
+        return Pos.y() + Shape->y();
+    }
+
+    s_int32 z () const
+    {
+        return Pos.z() + Shape->z();
     }
 
     /// position of object in world space
@@ -85,8 +101,28 @@ public:
     const placeable_shape *Shape;
     /// the object's graphical representation
     const gfx::sprite *Sprite;
+    /// whether the tile is flat or upright
+    bool IsFlat;
     
 private:
+    /**
+     * Return the Y coordinate of the object.
+     * @param the Y position of the object.
+     */
+    s_int32 y_pos () const
+    {
+        return Pos.y() + Shape->y() /* + (IsFlat ? Shape->height() : Shape->width ()) */;
+    }
+    
+    /**
+     * Return the Z coordinate of the object.
+     * @param the Z position of the object.
+     */
+    s_int32 z_pos () const
+    {
+        return y() - z() - Shape->height() /* + (IsFlat ? Shape->width()) */;
+    }
+        
     /// forbid copy construction
     // render_info (const render_info & ri);
 };

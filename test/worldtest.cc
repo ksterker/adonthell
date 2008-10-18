@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.26 2008/10/10 20:37:35 ksterker Exp $
+   $Id: worldtest.cc,v 1.27 2008/10/18 12:41:18 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -43,6 +43,7 @@ public:
     bool draw_grid;
 	bool draw_walkable;
 	bool draw_bounding_box;
+    bool print_queue;
 	bool screenshot;
 	bool always_run;
 	
@@ -52,6 +53,7 @@ public:
         draw_grid = false;
         draw_walkable = false;
         draw_bounding_box = false;
+        print_queue = false;
         screenshot = false;
         always_run = false;
     }
@@ -169,6 +171,11 @@ public:
             {
             	screenshot = true;
             }
+            // print queue
+            if (kev->key() == input::keyboard_event::Q_KEY)
+            {
+            	print_queue = true;
+            }
         }
         else
         {
@@ -225,7 +232,7 @@ public:
         
         // set position and speed
         mchar->set_speed (1.5);
-        mchar->set_position (165, 200);
+        mchar->set_position (420, 260);
         mchar->set_z (0);
         
         // put character on map
@@ -389,7 +396,8 @@ public:
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
         
         // The renderer ...
-        world::mapview mv (320, 240);
+        world::debug_renderer rndr;
+        world::mapview mv (320, 240, &rndr);
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
         
@@ -405,9 +413,24 @@ public:
             gc.world.update();
             mv.update();
 	        //}
-	            
-            mv.draw (160, 120);
             
+            // whether to draw bbox or not
+            rndr.set_draw_bbox (gc.draw_bounding_box);
+            
+            // print queue contents
+            if (gc.print_queue)
+            {
+                rndr.print_queue (true);
+                gc.print_queue = false;
+            }
+            
+            // render mapview on screen
+            mv.draw (160, 120);
+
+            // stop printing queue contents
+            rndr.print_queue (false);
+            
+            // whether to render grid
 	        if (gc.draw_grid)
 	        {
 	            for (i = 0; i < gfx::screen::length (); i += 40) 
@@ -416,6 +439,7 @@ public:
 	                gfx::screen::get_surface()->fillrect (0, i, gfx::screen::length (), 1, 0xFFFF00); 
 	        }
 			
+            // take a screenshot
 			if (gc.screenshot)
 			{
 				gfx::surface *screen = gfx::screen::get_surface();

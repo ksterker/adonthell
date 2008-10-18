@@ -33,6 +33,7 @@ using namespace world;
 %include "world/chunk.h"
 %include "world/area.h"
 %include "world/placeable_shape.h"
+%include "world/renderer.h"
 %include "world/mapview.h"
 
 %pythoncode %{

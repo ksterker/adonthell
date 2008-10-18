@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.6 2008/09/14 14:25:25 ksterker Exp $
+ $Id: mapview.h,v 1.7 2008/10/18 12:41:18 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,13 +27,11 @@
  * 
  */
 
-#include <list>
 #include <cmath>
 #include <cstdlib>
 
-#include "gfx/surface.h"
 #include "python/method.h"
-#include "world/render_info.h"
+#include "world/renderer.h"
 
 namespace world
 {
@@ -52,8 +50,9 @@ namespace world
          * Create a new view of the map with given length and height.
          * @param length extension of mapview along x axis in pixels.
          * @param height extension of mapview along y axis in pixels.
+         * @param renderer object that will perform the actual drawing to the screen.
          */
-        mapview (const u_int32 & length, const u_int32 & height);
+        mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer = NULL);
         
         /**
          * @name Member access.
@@ -160,6 +159,13 @@ namespace world
          * @name Rendering
          */
         //@{
+        /**
+         * Change the class that is used to do the actual drawing.
+         * Passing NULL will restore the default renderer.
+         * @param renderer the new renderer
+         */
+        void set_renderer (const renderer_base * renderer = NULL);
+        
         /** 
          * Draw the object on the %screen.
          * 
@@ -199,14 +205,6 @@ namespace world
 #endif
         
     private:
-        /**
-         * Draw the objects contained in queue in proper order on screen.
-         * @param drawqueue list of objects to render.
-         * @param da rectangle restricting the visible area.
-         * @param target surface to draw on. NULL for screen surface.
-         */
-        void render (std::list <world::render_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const;
-        
         /// the map displayed by this view.
         area *Map;
 
@@ -230,6 +228,17 @@ namespace world
         s_int32 FinalZ; 
         /// nbr of pixels to scroll per update
         s_int16 Speed;
+        //@}
+        
+        /**
+         * @name Rendering
+         */
+        //@{
+        /// the class taking care of the actual drawing.
+        const renderer_base* Renderer;
+        
+        /// fallback if no renderer is specified.
+        static default_renderer DefaultRenderer;
         //@}
         
         /**

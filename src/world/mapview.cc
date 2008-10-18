@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.10 2008/10/10 20:37:35 ksterker Exp $
+ $Id: mapview.cc,v 1.11 2008/10/18 12:41:18 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,7 +27,6 @@
  * 
  */
 
-#include "gfx/screen.h"
 #include "python/pool.h"
 #include "world/mapview.h"
 #include "world/area.h"
@@ -37,11 +36,17 @@ using world::mapview;
 /// the python script containing mapview schedules
 #define SCHEDULE_SCRIPT "schedules.map.mapview"
 
+/// the fallback if no renderer is set explicitly
+world::default_renderer mapview::DefaultRenderer;
+
 // ctor
-mapview::mapview (const u_int32 & length, const u_int32 & height) : Z(0), FinalZ(0), Speed(0)
+mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer) 
+ : Z(0), FinalZ(0), Speed(0)
 {
     set_length (length);
     set_height (height);
+    
+    set_renderer (renderer);
     
     Schedule = NULL;
     Args = NULL;
@@ -98,6 +103,19 @@ bool mapview::set_schedule (const std::string & method, PyObject *extraArgs)
     }
     
     return true;
+}
+
+// change renderer
+void mapview::set_renderer (const world::renderer_base * renderer)
+{
+    if (renderer == NULL)
+    {
+        Renderer = &DefaultRenderer;
+    }
+    else
+    {
+        Renderer = renderer;
+    }
 }
 
 // update position of mapview
@@ -170,9 +188,15 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
             drawqueue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
         }
     }
-    
+
+    // sort according to drawing order
+    drawqueue.sort ();
+        
     // draw everything on screen
-    render (drawqueue, da, target);
+    Renderer->render (da.x() - Sx, da.y() - Sy + Z, drawqueue, da, target);
+    
+    // cleanup for next iteration
+    drawqueue.clear ();
 }
 
 // save mapview state
@@ -238,21 +262,4 @@ bool mapview::get_state (base::flat & file)
     
     // loading successful?
     return record.success();
-}
-
-// render objects in queue
-void mapview::render (std::list <world::render_info> & drawqueue, const gfx::drawing_area & da, gfx::surface * target) const
-{
-    // sort according to drawing order
-    drawqueue.sort ();
-    
-    for (std::list <world::render_info>::iterator it = drawqueue.begin (); it != drawqueue.end (); it++)
-    {
-        s_int16 pos_x = da.x() + it->Pos.x () - Sx;
-        s_int16 pos_y = da.y() + Z + it->Pos.y () - it->Pos.z() - Sy - it->Shape->height()/* - it->Shape->z()*/; 
-        
-        it->Sprite->draw (pos_x, pos_y, &da, target);
-    }
-    
-    drawqueue.clear ();    
 }
