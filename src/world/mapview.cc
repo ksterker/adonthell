@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.11 2008/10/18 12:41:18 ksterker Exp $
+ $Id: mapview.cc,v 1.12 2008/10/28 22:01:56 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -173,7 +173,8 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
         da.assign_drawing_area (da_opt);
         da = da.setup_rects ();
     }
-    
+ 
+    world::plane3 camera_plane (world::vector3<float>(x, y + height(), Z), world::vector3<float>(0, -1, -1));
     std::list <render_info> drawqueue;
 
     // get objects we need to draw
@@ -185,7 +186,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     {
         for (placeable::iterator obj = i->Object->begin(); obj != i->Object->end(); obj++)
         {
-            drawqueue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
+            drawqueue.push_back (render_info (camera_plane, (*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
         }
     }
 

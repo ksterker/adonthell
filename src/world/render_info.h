@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.4 2008/10/18 12:41:18 ksterker Exp $
+ $Id: render_info.h,v 1.5 2008/10/28 22:01:57 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #define WORLD_RENDERINFO_H
 
 #include "gfx/sprite.h"
+#include "world/plane3.h"
 #include "world/placeable_shape.h"
 
 namespace world
@@ -50,10 +51,10 @@ public:
      * @param sprite the graphical representation of the object
      * @param pos the position of the object in world-space
      */
-    render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
+    render_info (const plane3 & camera_plane, const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
     : Pos (pos), Shape (shape), Sprite (sprite)
     {
-        // Pos.set (Pos.x() + Shape->x(), Pos.y() + Shape->y(), Pos.z() + Shape->z());
+        DistToCameraPlane = camera_plane.signed_distance (pos);
         IsFlat = shape->width() > shape->height();
     }
     
@@ -65,19 +66,7 @@ public:
      */
     bool operator < (const render_info & ri) const
     {
-        if (IsFlat && ri.IsFlat)
-        {
-            if (z() == ri.z()) return y() < ri.y();
-            else return z() < ri.z();
-        }
-        
-        if (!IsFlat && !ri.IsFlat)
-        {
-            if (y() == ri.y()) return z() < ri.z();
-            else return y() < ri.y();
-        }
-        
-        return y() + Shape->width() + z() + Shape->height() < ri.y() + ri.Shape->width() + ri.z() + ri.Shape->height();
+        return DistToCameraPlane > ri.DistToCameraPlane;
     }
     
     s_int32 x () const
@@ -105,6 +94,8 @@ public:
     bool IsFlat;
     
 private:
+    float DistToCameraPlane;
+        
     /**
      * Return the Y coordinate of the object.
      * @param the Y position of the object.
