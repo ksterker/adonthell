@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.5 2008/10/28 22:01:57 ksterker Exp $
+ $Id: render_info.h,v 1.6 2008/10/29 22:35:55 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -54,8 +54,8 @@ public:
     render_info (const plane3 & camera_plane, const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
     : Pos (pos), Shape (shape), Sprite (sprite)
     {
-        DistToCameraPlane = camera_plane.signed_distance (pos);
         IsFlat = shape->width() > shape->height();
+        DistToCameraPlane = camera_plane.signed_distance (vector3<float>(x(), Pos.y() - Shape->y(), z()));
     }
     
     /**
@@ -95,24 +95,6 @@ public:
     
 private:
     float DistToCameraPlane;
-        
-    /**
-     * Return the Y coordinate of the object.
-     * @param the Y position of the object.
-     */
-    s_int32 y_pos () const
-    {
-        return Pos.y() + Shape->y() /* + (IsFlat ? Shape->height() : Shape->width ()) */;
-    }
-    
-    /**
-     * Return the Z coordinate of the object.
-     * @param the Z position of the object.
-     */
-    s_int32 z_pos () const
-    {
-        return y() - z() - Shape->height() /* + (IsFlat ? Shape->width()) */;
-    }
         
     /// forbid copy construction
     // render_info (const render_info & ri);
