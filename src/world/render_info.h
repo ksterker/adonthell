@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.6 2008/10/29 22:35:55 ksterker Exp $
+ $Id: render_info.h,v 1.7 2008/11/09 14:07:40 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,11 +51,23 @@ public:
      * @param sprite the graphical representation of the object
      * @param pos the position of the object in world-space
      */
-    render_info (const plane3 & camera_plane, const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
+    render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
     : Pos (pos), Shape (shape), Sprite (sprite)
     {
-        IsFlat = shape->width() > shape->height();
-        DistToCameraPlane = camera_plane.signed_distance (vector3<float>(x(), Pos.y() - Shape->y(), z()));
+        if (shape->is_flat())
+        {
+            // flat tiles are sorted Z, Y, X
+            OrderValue[0] = z();
+            OrderValue[1] = y();
+            OrderValue[2] = x();
+        }
+        else
+        {
+            // flat tiles are sorted Y, X, Z
+            OrderValue[0] = y(); 
+            OrderValue[1] = x();
+            OrderValue[2] = z();
+        }
     }
     
     /**
@@ -66,17 +78,25 @@ public:
      */
     bool operator < (const render_info & ri) const
     {
-        return DistToCameraPlane > ri.DistToCameraPlane;
+        if (OrderValue[0] == ri.OrderValue[0])
+        {
+            if (OrderValue[1] == ri.OrderValue[1])
+            {
+                return OrderValue[2] < ri.OrderValue[2];
+            }
+            return OrderValue[1] < ri.OrderValue[1];
+        }
+        return OrderValue[0] < ri.OrderValue[0];
     }
     
     s_int32 x () const
     {
-        return Pos.x();
+        return Pos.x() + Shape->x();
     }
 
     s_int32 y () const
     {
-        return Pos.y() + Shape->y();
+        return Pos.y() - Shape->y();
     }
 
     s_int32 z () const
@@ -90,11 +110,9 @@ public:
     const placeable_shape *Shape;
     /// the object's graphical representation
     const gfx::sprite *Sprite;
-    /// whether the tile is flat or upright
-    bool IsFlat;
     
 private:
-    float DistToCameraPlane;
+    s_int32 OrderValue[3];
         
     /// forbid copy construction
     // render_info (const render_info & ri);

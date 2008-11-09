@@ -7,6 +7,7 @@ pkgincludeworld_HEADERS = \
     area.h \
     character.h \
     chunk.h \
+    chunk_info.h \
     collision.h \
 	coordinates.h \
 	cube3.h \

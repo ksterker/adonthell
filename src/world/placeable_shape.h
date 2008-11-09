@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.7 2008/02/10 21:51:47 ksterker Exp $
+ $Id: placeable_shape.h,v 1.8 2008/11/09 14:07:40 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -124,6 +124,15 @@ namespace world
         u_int16 height () const
         {
             return Max.z() - Min.z();
+        }
+        
+        /**
+         * Return whether the shape if flat or vertical.
+         * @return true if width >= height, false otherwise.
+         */
+        bool is_flat () const
+        {
+            return width() >= height();
         }
         //@}
         

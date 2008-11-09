@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.27 2008/10/18 12:41:18 ksterker Exp $
+   $Id: worldtest.cc,v 1.28 2008/11/09 14:07:41 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -43,6 +43,7 @@ public:
     bool draw_grid;
 	bool draw_walkable;
 	bool draw_bounding_box;
+    bool draw_delay;
     bool print_queue;
 	bool screenshot;
 	bool always_run;
@@ -53,6 +54,7 @@ public:
         draw_grid = false;
         draw_walkable = false;
         draw_bounding_box = false;
+        draw_delay = false;
         print_queue = false;
         screenshot = false;
         always_run = false;
@@ -165,6 +167,11 @@ public:
             if (kev->key() == input::keyboard_event::W_KEY)
             {
                 draw_walkable = !draw_walkable;
+            }
+            // toggle collision area on|off
+            if (kev->key() == input::keyboard_event::D_KEY)
+            {
+                draw_delay = true;
             }
             // save snapshot
             if (kev->key() == input::keyboard_event::S_KEY)
@@ -423,12 +430,20 @@ public:
                 rndr.print_queue (true);
                 gc.print_queue = false;
             }
+
+            // draw with delay
+            if (gc.draw_delay)
+            {
+                rndr.set_delay (150);
+                gc.draw_delay = false;
+            }            
             
             // render mapview on screen
             mv.draw (160, 120);
 
             // stop printing queue contents
             rndr.print_queue (false);
+            rndr.set_delay (0);
             
             // whether to render grid
 	        if (gc.draw_grid)

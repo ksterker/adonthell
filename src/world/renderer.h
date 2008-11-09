@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.1 2008/10/18 12:41:18 ksterker Exp $
+ $Id: renderer.h,v 1.2 2008/11/09 14:07:40 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #include <list>
 
 #include "gfx/surface.h"
+#include "world/chunk_info.h"
 #include "world/render_info.h"
 
 namespace world
@@ -48,11 +49,25 @@ public:
      * Draw objects in the draw queue on screen.
      * @param x offset on the x-axis.
      * @param y offset on the y-axis.
-     * @param queue list of objects to draw on screen.
+     * @param objectlist list of objects to draw on screen.
      * @param da clipping rectangle.
      * @param target surface to draw on, NULL for screen surface.
      */
-    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::render_info> & queue, const gfx::drawing_area & da, gfx::surface * target) const = 0;
+    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const = 0;
+    
+protected:
+    /**
+     * Draw a single object to the screen.
+     * @param x offset on the x-axis.
+     * @param y offset on the y-axis.
+     * @param obj the object to draw on screen.
+     * @param da clipping rectangle.
+     * @param target surface to draw on, NULL for screen surface.
+     */
+    virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
+    {
+        obj.Sprite->draw (x + obj.x (), y + obj.y () + obj.Shape->y() - obj.z() - obj.Shape->height(), &da, target);
+    }
 
 #ifndef SWIG
     /**
@@ -73,24 +88,39 @@ public:
      * Draw objects in the draw queue on screen.
      * @param x offset on the x-axis.
      * @param y offset on the y-axis.
-     * @param queue list of objects to draw on screen.
+     * @param objectlist list of objects to draw on screen.
      * @param da clipping rectangle.
      * @param target surface to draw on, NULL for screen surface.
      */
-    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::render_info> & queue, const gfx::drawing_area & da, gfx::surface * target) const;
+    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const;
     
 #ifndef SWIG
     /**
-     * Allow %renderer_base to be passed as python argument
+     * Allow %default_renderer to be passed as python argument
      */
     GET_TYPE_NAME_VIRTUAL (world::default_renderer)
-#endif        
+#endif
+        
+protected:
+    /// short for a render-queue-iterator
+    typedef std::list <world::render_info>::iterator iterator;
+    /// short for a const render-queue-iterator
+    typedef std::list <world::render_info>::const_iterator const_iterator;
+    
+    /**
+     * Check if any floor tile is below the given wall tile.
+     * @param begin first floor tile to check
+     * @param end last floor tile to check
+     * @param it_wall wall tile to check against
+     * @return true if floor is below the wall, false otherwise.
+     */
+    bool is_flat_below (const_iterator & begin, const_iterator & end, iterator & it_wall) const;
 };
 
 /**
  * A renderer with various debugging functionalities.
  */
-class debug_renderer : public renderer_base
+class debug_renderer : public default_renderer
 {
 public:
     /**
@@ -101,16 +131,6 @@ public:
     debug_renderer (const bool & draw_bbox = false, const u_int32 & delay = 0) 
      : DrawBBox (draw_bbox), Print (false), Delay (delay) 
     { }
-    
-    /**
-     * Draw objects in the draw queue on screen.
-     * @param x offset on the x-axis.
-     * @param y offset on the y-axis.
-     * @param queue list of objects to draw on screen.
-     * @param da clipping rectangle.
-     * @param target surface to draw on, NULL for screen surface.
-     */
-    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::render_info> & queue, const gfx::drawing_area & da, gfx::surface * target) const;
     
     /**
      * Set Delay between drawing objects.
@@ -132,10 +152,21 @@ public:
     
 #ifndef SWIG
     /**
-     * Allow %renderer_base to be passed as python argument
+     * Allow %debug_renderer to be passed as python argument
      */
     GET_TYPE_NAME_VIRTUAL (world::debug_renderer)
 #endif
+    
+protected:
+    /**
+     * Draw a single object to the screen.
+     * @param x offset on the x-axis.
+     * @param y offset on the y-axis.
+     * @param obj the object to draw on screen.
+     * @param da clipping rectangle.
+     * @param target surface to draw on, NULL for screen surface.
+     */
+    virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const;
     
 private:
     /// whether to draw object bounding boxes

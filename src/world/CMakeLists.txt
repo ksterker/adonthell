@@ -23,6 +23,7 @@ set(adonthell_world_HEADERS
     coordinates.h
     cube3.h
     chunk.h
+    chunk_info.h
     entity.h
     mapview.h
     moving.h

@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.12 2008/10/28 22:01:56 ksterker Exp $
+ $Id: mapview.cc,v 1.13 2008/11/09 14:07:40 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -174,30 +174,11 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
         da = da.setup_rects ();
     }
  
-    world::plane3 camera_plane (world::vector3<float>(x, y + height(), Z), world::vector3<float>(0, -1, -1));
-    std::list <render_info> drawqueue;
-
     // get objects we need to draw
     const std::list<world::chunk_info> & objectlist = Map->objects_in_view (Sx, Sy, Z, length(), height());
     
-    // populate drawqueue
-    std::list<world::chunk_info>::const_iterator i;
-    for (i = objectlist.begin(); i != objectlist.end(); i++)
-    {
-        for (placeable::iterator obj = i->Object->begin(); obj != i->Object->end(); obj++)
-        {
-            drawqueue.push_back (render_info (camera_plane, (*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
-        }
-    }
-
-    // sort according to drawing order
-    drawqueue.sort ();
-        
     // draw everything on screen
-    Renderer->render (da.x() - Sx, da.y() - Sy + Z, drawqueue, da, target);
-    
-    // cleanup for next iteration
-    drawqueue.clear ();
+    Renderer->render (da.x() - Sx, da.y() - Sy + Z, objectlist, da, target);
 }
 
 // save mapview state
