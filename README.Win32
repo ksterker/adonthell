@@ -270,7 +270,7 @@ After installing all the libraries and tools  above,  we are finally
 ready to compile Adonthell. Inside the adonthell directory, do:
 
     $ mkdir ../adonthell-build && cd ../adonthell-build
-    $ cmake -G "MSys Makefiles" ../adonthell
+    $ cmake -G "MSYS Makefiles" ../adonthell
 
 Note that this will put all compilation products  into a folder next
 to your source code,  as to not clutter it  with intermediate object 
