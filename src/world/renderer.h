@@ -1,7 +1,7 @@
 /*
- $Id: renderer.h,v 1.2 2008/11/09 14:07:40 ksterker Exp $
+ $Id: renderer.h,v 1.3 2009/01/09 20:26:08 ksterker Exp $
  
- Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -66,7 +66,7 @@ protected:
      */
     virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
     {
-        obj.Sprite->draw (x + obj.x (), y + obj.y () + obj.Shape->y() - obj.z() - obj.Shape->height(), &da, target);
+        obj.Sprite->draw (x + obj.x (), y + obj.Pos.y () - obj.z() - obj.Shape->height(), &da, target);
     }
 
 #ifndef SWIG
@@ -108,13 +108,13 @@ protected:
     typedef std::list <world::render_info>::const_iterator const_iterator;
     
     /**
-     * Check if any floor tile is below the given wall tile.
-     * @param begin first floor tile to check
-     * @param end last floor tile to check
-     * @param it_wall wall tile to check against
-     * @return true if floor is below the wall, false otherwise.
+     * Check if an object overlaps any other object in the view.
+     * @param obj object to check.
+     * @param begin begin of list of objects to check against
+     * @param end end of list of objects to check against
+     * @return true if overlap occurs, false otherwise.
      */
-    bool is_flat_below (const_iterator & begin, const_iterator & end, iterator & it_wall) const;
+    bool is_object_below (render_info & obj, const_iterator & begin, const_iterator & end) const;
 };
 
 /**

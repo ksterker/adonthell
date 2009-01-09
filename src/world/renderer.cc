@@ -1,7 +1,7 @@
 /*
- $Id: renderer.cc,v 1.2 2008/11/09 14:07:40 ksterker Exp $
+ $Id: renderer.cc,v 1.3 2009/01/09 20:26:08 ksterker Exp $
  
- Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 #include "gfx/screen.h"
 #include "world/renderer.h"
 #include "world/render_info.h"
+#include "world/vector3.h"
 
 namespace world
 {
@@ -38,87 +39,133 @@ namespace world
 // default rendering
 void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const
 {
-    std::list <render_info> flat_tiles, wall_tiles, render_queue;
-    
-    // split objects into "ground" and "wall" tiles
+    std::list <render_info> render_queue;
+
+    // populate render queue
     for (std::list<world::chunk_info>::const_iterator i = objectlist.begin(); i != objectlist.end(); i++)
     {
         for (placeable::iterator obj = i->Object->begin(); obj != i->Object->end(); obj++)
         {
-            placeable_shape *shape = (*obj)->current_shape();
-            if (shape->is_flat ())
-            {
-                flat_tiles.push_back (render_info (shape, (*obj)->get_sprite(), i->Min));
-            }
-            else
-            {
-                wall_tiles.push_back (render_info (shape, (*obj)->get_sprite(), i->Min));
-            }
+            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), i->Min));
         }
     }
     
-    // sort according to specific drawing order
-    flat_tiles.sort ();
-    wall_tiles.sort ();
-    
-    const_iterator it_flat;
-    const_iterator flat_end = flat_tiles.end();
-    
-    // FIXME: we need to figure out with which queue to start
-    for (it_flat = flat_tiles.begin (); it_flat != flat_end; it_flat++)
+    // paint while object remain in the queue
+    while (!render_queue.empty())
     {
-        s_int32 max_x = it_flat->x() + it_flat->Shape->length();
-        s_int32 max_y = it_flat->y() + it_flat->Shape->width();
-        s_int32 max_z = it_flat->z() + it_flat->Shape->height();        
-        
-        render_queue.push_back (*it_flat);
-    
-        for (iterator it_wall = wall_tiles.begin (); it_wall != wall_tiles.end(); /* nothing */)
+        int size = render_queue.size();
+
+        // check each object if it can be drawn
+        for (iterator it = render_queue.begin(); it != render_queue.end(); /* nothing */)
         {
-            // we can draw a wall tile if its bottom right corner is completely on the
-            // ground tile we drew last and if there is no other ground tile that would
-            // be below that wall
-            if (it_wall->x() + it_wall->Shape->length() >= it_flat->x() && it_wall->x() + it_wall->Shape->length() <= max_x &&
-                it_wall->y() + it_wall->Shape->width()  >= it_flat->y() && it_wall->y() + it_wall->Shape->width()  <= max_y &&
-                it_wall->z() >= max_z && !is_flat_below (it_flat, flat_end, it_wall))
+            const_iterator begin = render_queue.begin();
+            const_iterator end = render_queue.end();
+
+            // an object can be drawn if it cannot possibly collide with another object in the queue
+            if (!is_object_below (*it, begin, end))
             {
-                render_queue.push_back (*it_wall);
-                it_wall = wall_tiles.erase (it_wall);
+                // draw and remove from queue
+                draw (x, y, *it, da, target);
+                it = render_queue.erase (it);
                 continue;
             }
             
-            it_wall++;
+            it++;
         }
-    }    
-
-    // finally do the actual drawing
-    for (iterator it = render_queue.begin(); it != render_queue.end(); it++)
-    {
-        draw (x, y, *it, da, target);
+   
+        // should not happen, but does lead to a deadlock
+        if (size == render_queue.size())
+        {
+            fprintf (stderr, "*** warning: deadlock during rendering detected!\n");
+            draw (x, y, render_queue.front(), da, target);
+            render_queue.pop_front();
+        }
     }
 }
 
 // check draw order between floor and wall tiles
-bool default_renderer::is_flat_below (const_iterator & begin, const_iterator & end, iterator & it_wall) const
+bool default_renderer::is_object_below (render_info & obj, const_iterator & begin, const_iterator & end) const
 {
-    const_iterator it_flat = begin;
-
-    s_int32 max_x = it_wall->x() + it_wall->Shape->length();
-    s_int32 max_y = it_wall->y() + it_wall->Shape->width();
-
-    // compare all following flats with the current wall tile
-    for (it_flat++; it_flat != end; it_flat++)
+    // compare given object with all objects remaining in the draw queue
+    for (const_iterator it = begin; it != end; it++)
     {
-        // no intersection possible
-        if (it_flat->x() > max_x || it_flat->x() + it_flat->Shape->length() < it_wall->x() ||
-            it_flat->y() > max_y || it_flat->y() + it_flat->Shape->width()  < it_wall->y())
-            continue;
+        // ... but not with itself
+        if (&(*it) == &obj) continue;
         
-        // intersection on x/y plane, so check z-plane
-        if (it_flat->z() + it_flat->Shape->height() <= it_wall->z()) return true;
+        // if objects don't overlap, we're still good
+        if (obj.min_x()  >= it->max_x()  ||
+            obj.min_yz() >= it->max_yz() ||
+            it->min_x()  >= obj.max_x()  ||
+            it->min_yz() >= obj.max_yz())
+            continue;
+
+        // objects do overlap, so we need to figure out position of objects 
+        // relative to each other
+        // 
+        // 2 | 3 | 4   y           x | F | F
+        // --+---+--   ^           --+---+--
+        // 1 | 8 | 5   |           T | o | F
+        // --+---+--   |           --+---+--
+        // 0 | 7 | 6   +-----> z   T | T | x
+                            
+        if (it->y() + it->Shape->width() <= obj.y())
+        {                 
+            if (it->z() + it->Shape->height() <= obj.z()) // 0
+            {
+                return true;
+            }
+            else if (it->z() >= obj.z() + obj.Shape->height()) // 6
+            {
+                fprintf (stderr, "*** default_renderer::is_object_below: objects do not overlap!\n");
+                fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+                fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
+                continue;
+            }
+            else // 7
+            {
+                return true;
+            }
+        }
+        else if (it->y() >= obj.y() + obj.Shape->width())
+        {
+            if(it->z() + it->Shape->height() <= obj.z()) // 2
+            {
+                fprintf (stderr, "*** default_renderer::is_object_below: objects do not overlap!\n");
+                fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+                fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
+                continue;
+            }
+            else if(it->z() >= obj.z() + obj.Shape->height()) // 4
+            {
+                continue;
+            }
+            else // 3
+            {
+                continue;
+            }
+        }
+        else if (it->z() >= obj.z() + obj.Shape->height()) // 5
+        {
+            continue;
+        }
+        else if (it->z() + it->Shape->height() <= obj.z()) // 1
+        {
+            return true;
+        }
+        else // 8
+        {
+            // this will be allowed for certain cases and needs code to split objects for correct rendering
+            // in other cases, it cannot be avoided due to map structure or differences between collision
+            // detection and the code utilized here.
+            //
+            // fprintf (stderr, "*** default_renderer::is_object_below: object intersection!\n");
+            // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+            // fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
+            return true;
+        }
     }
     
-    // there are no floor tiles below this wall tile
+    // there are no tiles below this tile
     return false;
 }
 
@@ -130,7 +177,7 @@ void debug_renderer::draw (const s_int16 & x, const s_int16 & y, const render_in
     if (DrawBBox)
     {
         cube3 bbox (obj.Shape->length(), obj.Shape->width(), obj.Shape->height());
-        bbox.draw (x + obj.x(), y + obj.Pos.y () + obj.Shape->y() - obj.z(), &da, target);
+        bbox.draw (x + obj.x(), y + obj.y() - obj.z(), &da, target);
     }
     
     if (Print)

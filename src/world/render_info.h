@@ -1,7 +1,7 @@
 /*
- $Id: render_info.h,v 1.7 2008/11/09 14:07:40 ksterker Exp $
+ $Id: render_info.h,v 1.8 2009/01/09 20:26:07 ksterker Exp $
  
- Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -54,39 +54,10 @@ public:
     render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
     : Pos (pos), Shape (shape), Sprite (sprite)
     {
-        if (shape->is_flat())
-        {
-            // flat tiles are sorted Z, Y, X
-            OrderValue[0] = z();
-            OrderValue[1] = y();
-            OrderValue[2] = x();
-        }
-        else
-        {
-            // flat tiles are sorted Y, X, Z
-            OrderValue[0] = y(); 
-            OrderValue[1] = x();
-            OrderValue[2] = z();
-        }
-    }
-    
-    /**
-     * Compare two render_info objects based on their render sequence. 
-     * This is used to sort the render queue prior to rendering.
-     * @param ri render_info object to compare to this one.
-     * @return true if this needs to be rendered first, false otherwise.
-     */
-    bool operator < (const render_info & ri) const
-    {
-        if (OrderValue[0] == ri.OrderValue[0])
-        {
-            if (OrderValue[1] == ri.OrderValue[1])
-            {
-                return OrderValue[2] < ri.OrderValue[2];
-            }
-            return OrderValue[1] < ri.OrderValue[1];
-        }
-        return OrderValue[0] < ri.OrderValue[0];
+        Shadow[0] = x();
+        Shadow[1] = y() - z() - shape->height();
+        Shadow[2] = x() + shape->length();
+        Shadow[3] = y() - z() + shape->width();
     }
     
     s_int32 x () const
@@ -96,7 +67,7 @@ public:
 
     s_int32 y () const
     {
-        return Pos.y() - Shape->y();
+        return Pos.y() + Shape->y();
     }
 
     s_int32 z () const
@@ -104,6 +75,26 @@ public:
         return Pos.z() + Shape->z();
     }
 
+    s_int32 min_x () const
+    {
+        return Shadow[0];
+    }
+    
+    s_int32 min_yz () const
+    {
+        return Shadow[1];
+    }
+
+    s_int32 max_x () const
+    {
+        return Shadow[2];
+    }
+
+    s_int32 max_yz () const
+    {
+        return Shadow[3];
+    }
+    
     /// position of object in world space
     vector3<s_int32> Pos;
     /// the object's bounding box 
@@ -112,8 +103,8 @@ public:
     const gfx::sprite *Sprite;
     
 private:
-    s_int32 OrderValue[3];
-        
+    s_int32 Shadow[4];
+    
     /// forbid copy construction
     // render_info (const render_info & ri);
 };

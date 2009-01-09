@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.28 2008/11/09 14:07:41 ksterker Exp $
+   $Id: worldtest.cc,v 1.29 2009/01/09 20:26:08 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -273,12 +273,12 @@ public:
                         
         
 		// 4 poles (left side)
-        mc.set_x(400);mc.set_y(160);
+        mc.set_x(400);mc.set_y(170);
         world.put_entity(3, mc);  // that one is actually invisible 
         mc.set_x(400);mc.set_y(240);
         world.put_entity(3, mc);
         // (right side)
-        mc.set_x(470);mc.set_y(160);  // that one is actually invisible
+        mc.set_x(470);mc.set_y(170);  // that one is actually invisible
         world.put_entity(4, mc); 
         mc.set_x(470);mc.set_y(240);
         world.put_entity(4, mc); 
@@ -298,7 +298,7 @@ public:
         world.put_entity(3, mc); 
         mc.set_z(40);
         world.put_entity(3, mc); 
-        mc.set_x(280);mc.set_y(160);
+        mc.set_x(280);mc.set_y(170);
         mc.set_z(0);
         world.put_entity(3, mc); 
         mc.set_z(40);
@@ -309,7 +309,7 @@ public:
         world.put_entity(4, mc); 
         mc.set_z(40);
         world.put_entity(4, mc); 
-        mc.set_x(350);mc.set_y(160);
+        mc.set_x(350);mc.set_y(170);
         mc.set_z(0);
         world.put_entity(4, mc); 
         mc.set_z(40);
