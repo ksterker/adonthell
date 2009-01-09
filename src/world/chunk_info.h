@@ -1,7 +1,7 @@
 /*
- $Id: chunk_info.h,v 1.1 2008/11/09 14:07:40 ksterker Exp $
+ $Id: chunk_info.h,v 1.2 2009/01/09 22:39:41 ksterker Exp $
  
- Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -55,6 +55,16 @@ namespace world
 
         bool operator == (const chunk_info & ci) const;
 
+        vector3<s_int32> real_min () const
+        {
+            return Min + vector3<s_int32>(Object->min_x(), Object->min_y(), Object->min_z());
+        }
+
+        vector3<s_int32> real_max () const
+        {
+            return Max + vector3<s_int32>(Object->min_x(), Object->min_y(), Object->min_z());
+        }
+        
         /// pointer to map object
         placeable * Object;
         /// position of the object

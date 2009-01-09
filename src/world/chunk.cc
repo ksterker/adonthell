@@ -1,7 +1,7 @@
 /*
- $Id: chunk.cc,v 1.8 2008/10/10 20:37:35 ksterker Exp $
+ $Id: chunk.cc,v 1.9 2009/01/09 22:39:41 ksterker Exp $
  
- Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -317,7 +317,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     std::list<chunk_info>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (in_bbox (min, max, i->Min, i->Max))
+        if (in_bbox (min, max, i->real_min(), i->real_max()))
         {
             result.push_back (*i);
         }
