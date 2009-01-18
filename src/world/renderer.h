@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.3 2009/01/09 20:26:08 ksterker Exp $
+ $Id: renderer.h,v 1.4 2009/01/18 16:32:12 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -114,7 +114,8 @@ protected:
      * @param end end of list of objects to check against
      * @return true if overlap occurs, false otherwise.
      */
-    bool is_object_below (render_info & obj, const_iterator & begin, const_iterator & end) const;
+    bool can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const;
+    bool is_object_below (const render_info & obj, const s_int32 & min_x, const s_int32 & min_y, const s_int32 & min_z, const s_int32 & max_x, const s_int32 & max_y, const s_int32 & max_z) const;
 };
 
 /**
