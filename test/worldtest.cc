@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.29 2009/01/09 20:26:08 ksterker Exp $
+   $Id: worldtest.cc,v 1.30 2009/01/26 21:09:15 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -232,8 +232,12 @@ public:
         // cliff facing south, 80x5x80 at index 7
         mobj = (world::object *) world.add_entity(world::OBJECT);
         mobj->load("data/models/map/wall/outside/cliff-s.xml");
-     
-        // Adding the map character at index 8
+
+        // character shadow, 40x25 at index 8
+        mobj = (world::object *) world.add_entity(world::OBJECT, "Shadow");
+        mobj->load("data/models/char/shadow-40x25.xml");
+        
+        // Adding the map character at index 9
         mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
         mchar->load ("data/models/char/npc/ng.xml");
         
@@ -243,7 +247,7 @@ public:
         mchar->set_z (0);
         
         // put character on map
-        world.put_entity (8, *mchar);
+        world.put_entity (9, *mchar);
         
         
         world::coordinates mc;

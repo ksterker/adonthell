@@ -1,5 +1,5 @@
 /*
- $Id: object.cc,v 1.4 2008/09/14 14:25:25 ksterker Exp $
+ $Id: object.cc,v 1.5 2009/01/26 21:09:15 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,7 +50,8 @@ bool object::put_state (base::flat & file) const
 // load object from stream
 bool object::get_state (base::flat & file)
 {
-    placeable::get_state (file);
+    base::flat entity = file.get_flat ("entity");    
+    placeable::get_state (entity);
     
     return file.success ();
 }

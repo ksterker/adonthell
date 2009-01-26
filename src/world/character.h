@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.6 2008/07/10 20:19:40 ksterker Exp $
+ $Id: character.h,v 1.7 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,6 +57,11 @@ namespace world
          */
         character (area & mymap);
 
+        /**
+         * Free character and associated resources.
+         */
+        virtual ~character ();
+        
         /**
          * Call every cycle to "process" the %character. This
          * takes care of the %character's physics, like falling
@@ -230,6 +235,9 @@ namespace world
         bool ToggleRunning;
         /// current direction the character is facing
         s_int32 CurrentDir;
+        
+    private:
+        shadow *MyShadow;
     };
 }
 

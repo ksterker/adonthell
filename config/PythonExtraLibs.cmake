@@ -34,7 +34,7 @@ sys.stdout.write(distutils.sysconfig.get_config_var(\"${PythonVar}\"))")
     RESULT_VARIABLE PythonLibs_get_variable_result
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   IF(NOT ${PythonLibs_get_variable_result} EQUAL 0)
-    MESSAGE(SEND_ERROR "Command \"${PythonInterp_EXECUTABLE} -c ${PythonLibs_get_variable_command} failed with output:\n${PythonLibs_get_variable_error}")
+    MESSAGE(SEND_ERROR "Command \"${PYTHON_EXECUTABLE} -c ${PythonLibs_get_variable_command} failed with output:\n${PythonLibs_get_variable_error}")
   ENDIF(NOT ${PythonLibs_get_variable_result} EQUAL 0)
 ENDMACRO(PythonLibs_get_variable)
 
@@ -49,7 +49,7 @@ sys.stdout.write(distutils.sysconfig.get_python_lib(0,0))")
     RESULT_VARIABLE PythonLibs_get_site_package_dir_result
     OUTPUT_STRIP_TRAILING_WHITESPACE)
   IF(NOT ${PythonLibs_get_site_package_dir_result} EQUAL 0)
-    MESSAGE(SEND_ERROR "Command \"${PythonInterp_EXECUTABLE} -c ${PythonLibs_get_site_package_dir_command} failed with output:\n${PythonLibs_get_site_package_dir_error}")
+    MESSAGE(SEND_ERROR "Command \"${PYTHON_EXECUTABLE} -c ${PythonLibs_get_site_package_dir_command} failed with output:\n${PythonLibs_get_site_package_dir_error}")
   ENDIF(NOT ${PythonLibs_get_site_package_dir_result} EQUAL 0)
 ENDMACRO(PythonLibs_get_site_package_dir)
 

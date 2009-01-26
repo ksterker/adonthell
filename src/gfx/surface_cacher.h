@@ -1,5 +1,5 @@
 /*
- $Id: surface_cacher.h,v 1.2 2008/10/05 09:22:02 ksterker Exp $
+ $Id: surface_cacher.h,v 1.3 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2008 Rian Shelley <rians@cc.usu.edu>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -193,9 +193,9 @@ namespace gfx
         
     private:
         /// list of surfaces by name
-        std::map<string, surface_ref> Cache;
+        std::map<std::string, surface_ref> Cache;
         /// mapping of surface to name
-		std::map<const surface*, string> SurfToString;
+		std::map<const surface*, std::string> SurfToString;
         /// memory used by cache
 		u_int32 MemUsed;
         /// memory allowed to use
@@ -205,7 +205,7 @@ namespace gfx
          * Decrease reference of named surface.
          * @param surfname name of surface to decref.
          */
-		void free_by_name(const string& surfname);
+		void free_by_name(const std::string& surfname);
 	};
 
 

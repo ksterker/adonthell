@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.7 2008/11/09 14:07:40 ksterker Exp $
+ $Id: chunk.h,v 1.8 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,6 +101,15 @@ namespace world
          * @return list of objects contained in bbox.
          */
         std::list<chunk_info> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        
+        /**
+         * Collects a list of objects that are contained by the given bounding box and adds them to given list.
+         *
+         * @param min the lower coordinate triplet of the bbox.
+         * @param max the upper coordinate triplet of the bbox.
+         * @param result list that will receive the objects contained in the bbox
+         */
+        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const;
         //@}
         
         /**
@@ -186,8 +195,6 @@ private:
          */
         bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
-        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const;
-
         bool in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_max, const vector3<s_int32> & b_min, const vector3<s_int32> & b_max) const;
 
         /**

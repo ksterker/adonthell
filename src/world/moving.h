@@ -1,7 +1,8 @@
 /*
- $Id: moving.h,v 1.12 2008/10/03 17:16:25 ksterker Exp $
+ $Id: moving.h,v 1.13 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -22,6 +23,7 @@
 /**
  * @file   world/moving.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ * @author Kai Sterker <kai.sterker@gmail.com>
  * 
  * @brief  Declares the moving class.
  * 
@@ -32,8 +34,7 @@
 #ifndef WORLD_MOVING_H
 #define WORLD_MOVING_H
 
-#include "world/placeable.h"
-#include "world/coordinates.h"
+#include "world/chunk_info.h"
 
 #include "gfx/surface.h"
 
@@ -197,6 +198,9 @@ namespace world
         vector3<float> Velocity;
         
     private:
+        /// 
+        std::list<chunk_info> GroundTiles;
+        /// for debugging
         gfx::surface *Image;
     }; 
 }

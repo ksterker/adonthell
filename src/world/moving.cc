@@ -1,8 +1,8 @@
 /*
- $Id: moving.cc,v 1.21 2008/10/10 20:37:35 ksterker Exp $
+ $Id: moving.cc,v 1.22 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
- Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -71,6 +71,7 @@ moving::moving (world::area & mymap)
 // dtor
 moving::~moving ()
 {
+    GroundTiles.clear();
 #if DEBUG_COLLISION
     delete Image;
 #endif
@@ -306,15 +307,8 @@ void moving::update_position ()
     Y = (s_int32) y;
     Z = (s_int32) z;
 
-    // calculate ground position if different from z-pos
-    if (collisionData.is_falling ())
-    {
-        calculate_ground_pos ();
-    }
-    else
-    {
-        GroundPos = Z;
-    }
+    // calculate ground position and update shadow cast by ourself
+    calculate_ground_pos ();
             
     // update precise location for next iteration
     Position.set (x, y, z);
@@ -323,20 +317,33 @@ void moving::update_position ()
 // calculate z position of ground
 void moving::calculate_ground_pos ()
 {
-    // bbox below our center
-    vector3<s_int32> min (X + placeable::length()/2, Y, -10000);
-    vector3<s_int32> max (X + placeable::length()/2, Y, Z);
-    
+    // cleanup from previous iteration shadow
+    for (std::list<chunk_info>::iterator i = GroundTiles.begin(); i != GroundTiles.end(); i++)
+    {
+        i->Object->remove_shadow ();
+    }
+    GroundTiles.clear();
+
+    // bbox of everything below our character
+    const vector3<s_int32> min (x(), y() - placeable::width()/2, -10000);
+    const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z());
+        
     // get objects below us
-    std::list<chunk_info> result = Mymap.objects_in_bbox (min, max);
-    if (!result.empty ())
+    Mymap.objects_in_bbox (min, max, GroundTiles);
+    if (!GroundTiles.empty ())
     {
         // sort according to their z-Order
-        result.sort (z_order());
+        GroundTiles.sort (z_order());
     
         // the topmost object will be our ground pos
-        const chunk_info & ci = result.front();
-        GroundPos = ci.Max.z() + ci.Object->cur_z();
+        std::list<chunk_info>::iterator ci = GroundTiles.begin();
+        GroundPos = ci->Max.z() + ci->Object->cur_z();
+        
+        // apply shadow
+        for (; ci != GroundTiles.end(); ci++)
+        {
+            ci->Object->add_shadow (Shadow);
+        }
     }
     else
     {

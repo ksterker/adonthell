@@ -13,6 +13,7 @@ set(adonthell_world_SRCS
     placeable_shape.cc
     plane3.cc
     renderer.cc
+    shadow.cc
     triangle3.cc
 )
 
@@ -34,6 +35,7 @@ set(adonthell_world_HEADERS
     plane3.h
     render_info.h
     renderer.h
+    shadow.h
     triangle3.h
     vector3.h
 )

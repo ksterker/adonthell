@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.10 2008/10/05 09:22:03 ksterker Exp $
+   $Id: character.cc,v 1.11 2009/01/26 21:09:14 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #include <math.h>
 
 #include "base/diskio.h"
+#include "world/area.h"
 #include "world/character.h"
 
 using world::character;
@@ -45,6 +46,13 @@ character::character (area & mymap) : moving (mymap)
     IsRunning = false;
     ToggleRunning = false;
     CurrentDir = NONE;
+    MyShadow = NULL;
+}
+
+// dtor
+character::~character ()
+{
+    delete MyShadow;
 }
 
 // jump
@@ -62,8 +70,13 @@ bool character::update ()
 {
     // reset vertical velocity
     set_vertical_velocity (VSpeed);
+    
+    // reset shadow for next frame
+    MyShadow->reset ();
+    
+    // update character
     moving::update ();
-
+    
     if (GroundPos == z()) 
     {
         VSpeed = 0;
@@ -181,8 +194,14 @@ bool character::put_state (base::flat & file) const
 // load from stream
 bool character::get_state (base::flat & file)
 {
+    base::flat entity = file.get_flat ("entity");    
+
     // FIXME: load movement and direction ...
-    placeable::get_state (file);
+    std::string shadow_file = entity.get_string ("shadow");
+    MyShadow = new shadow (shadow_file, this);
+    
+    // load other parts of placeable
+    placeable::get_state (entity);
     
     return file.success ();
 }

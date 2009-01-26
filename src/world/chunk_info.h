@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.2 2009/01/09 22:39:41 ksterker Exp $
+ $Id: chunk_info.h,v 1.3 2009/01/26 21:09:14 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com

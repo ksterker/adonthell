@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.5 2008/10/10 20:37:35 ksterker Exp $
+ $Id: placeable.cc,v 1.6 2009/01/26 21:09:15 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -109,18 +109,17 @@ bool placeable::put_state (base::flat & file) const
 // load from stream
 bool placeable::get_state (base::flat & file)
 {
-    base::flat entity = file.get_flat ("entity");    
-    std::string state = entity.get_string ("state");
+    std::string state = file.get_string ("state");
     
     char *name;
     void *value;
     u_int32 size;
     
     // load actual models
-    while (entity.next (&value, &size, &name) == base::flat::T_FLAT) 
+    while (file.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
         placeable_model * model = new placeable_model ();
-        model->get_state (entity);
+        model->get_state (file);
         add_model (model);
     }    
     

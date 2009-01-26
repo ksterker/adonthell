@@ -1,7 +1,8 @@
 /*
- $Id: placeable.h,v 1.7 2008/10/10 20:37:35 ksterker Exp $
+ $Id: placeable.h,v 1.8 2009/01/26 21:09:15 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+ Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -22,7 +23,8 @@
 /**
  * @file   world/placeable.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * 
+ * @authos Kai Sterker <kai.sterker@gmail.com> 
+ *
  * @brief  Declares the placeable class.
  * 
  * 
@@ -32,6 +34,7 @@
 #define WORLD_PLACEABLE_H
 
 #include "world/placeable_model.h"
+#include "world/shadow.h"
 
 namespace world
 {
@@ -174,6 +177,33 @@ namespace world
         s_int16 cur_y () const { return CurPos.y(); }
         s_int16 cur_z () const { return CurPos.z(); }
         
+        
+        /**
+         * @name Placeable shadow
+         *
+         * Handling of shadow cast onto this placeable by another object.
+         * For now, only one shadow can be cast per placeable. Possibly,
+         * this needs to be extented to multiple shadows. 
+         */
+        //@{
+        /**
+         * Add a shadow to this placeable.
+         * @param shadow the shadow to add.
+         */
+        void add_shadow (shadow *s) { Shadow = s; }
+        
+        /**
+         * Remove shadow from the placeable.
+         */
+        void remove_shadow () { Shadow = NULL; }
+        
+        /**
+         * Get shadow that has been cast on this placeable.
+         * @return shadow on this placeable or NULL.
+         */
+        shadow *get_shadow () { return Shadow; }
+        //@}
+        
         /**
          * @name Placeable state
          *
@@ -241,7 +271,9 @@ namespace world
         placeable_type Type; 
         /// the map this placeable belongs to
         area & Mymap;
-    
+        /// shadow cast on this object 
+        shadow *Shadow;
+        
     private:
         /// forbid passing by value
         placeable (const placeable & p);
