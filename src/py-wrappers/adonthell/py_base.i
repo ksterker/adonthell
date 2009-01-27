@@ -18,7 +18,7 @@ namespace base {
     %typemap(in, numinputs = 0) (void **value, u_int32 *size, char **name) "
         void *value;
         char *name;
-        int size;
+        u_int32 size;
         
         $1 = &value;
         $2 = &size;
