@@ -12,6 +12,7 @@ using namespace world;
 
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 %import "base/types.h"

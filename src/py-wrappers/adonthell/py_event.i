@@ -10,6 +10,7 @@
 #include "event/listener_python.h"
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 namespace events {

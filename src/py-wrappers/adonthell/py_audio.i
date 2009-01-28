@@ -15,6 +15,7 @@ using namespace audio;
 
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 %import "py_event.i"    // since audio_event inherits from event

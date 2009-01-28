@@ -8,6 +8,7 @@
 using namespace gui;
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 %import "base/types.h"

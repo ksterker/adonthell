@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.8 2009/01/26 21:09:15 ksterker Exp $
+ $Id: placeable.h,v 1.9 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -271,10 +271,10 @@ namespace world
         placeable_type Type; 
         /// the map this placeable belongs to
         area & Mymap;
-        /// shadow cast on this object 
-        shadow *Shadow;
         
     private:
+        /// shadow cast on this object 
+        shadow *Shadow;
         /// forbid passing by value
         placeable (const placeable & p);
     };

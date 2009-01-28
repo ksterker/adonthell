@@ -1,5 +1,5 @@
 /*
- $Id: shadow.cc,v 1.1 2009/01/26 21:09:15 ksterker Exp $
+ $Id: shadow.cc,v 1.2 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,7 +55,7 @@ void shadow::reset ()
     Areas.push_back (area);
 }
 
-void shadow::draw (const vector3<s_int32> & pos, drawing_area * da, gfx::surface * target)
+void shadow::draw (const vector3<s_int32> & pos, const drawing_area * da, gfx::surface * target)
 {
     // set shadow opacity according to distance above ground
     u_int32 distance = Pos->z() - pos.z();
@@ -64,10 +64,10 @@ void shadow::draw (const vector3<s_int32> & pos, drawing_area * da, gfx::surface
     // draw those parts of the shadow that haven't been rendered yet
     for (std::list<drawing_area>::iterator area = Areas.begin(); area != Areas.end(); /* nothing */)
     {
-        area->move(Pos->x(), (Pos->y() - area->y()) + (Pos->y() - distance));
-        da->assign_drawing_area (&(*area));
-        Shadow->draw ((s_int16) Pos->x(), (s_int16) Pos->y() - distance, da, target);
-        da->detach_drawing_area ();
+        area->move(da->x(), (da->y() - area->y()) + (da->y() - distance));
+        area->assign_drawing_area (da);
+        Shadow->draw (da->x(), da->y() - distance, &(*area), target);
+        area->detach_drawing_area ();
         
         // remove piece we've just drawn from shadow
         subtract_area (*area, *da);

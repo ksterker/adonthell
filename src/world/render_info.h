@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.8 2009/01/09 20:26:07 ksterker Exp $
+ $Id: render_info.h,v 1.9 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #include "gfx/sprite.h"
 #include "world/plane3.h"
 #include "world/placeable_shape.h"
+#include "world/shadow.h"
 
 namespace world
 {
@@ -49,15 +50,25 @@ public:
      * Create render data for given object.
      * @param shape the physical representation of the object
      * @param sprite the graphical representation of the object
+     * @param shdw the shadow cast onto this object
      * @param pos the position of the object in world-space
      */
-    render_info (const placeable_shape *shape, const gfx::sprite * sprite, const vector3<s_int32> & pos) 
-    : Pos (pos), Shape (shape), Sprite (sprite)
+    render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, shadow *shdw) 
+    : Pos (pos), Shape (shape), Sprite (sprite), Shadow (shdw)
     {
-        Shadow[0] = x();
-        Shadow[1] = y() - z() - shape->height();
-        Shadow[2] = x() + shape->length();
-        Shadow[3] = y() - z() + shape->width();
+        Projection[0] = x();
+        Projection[1] = y() - z() - shape->height();
+        Projection[2] = x() + shape->length();
+        Projection[3] = y() - z() + shape->width();
+    }
+    
+    render_info (const render_info & ri)
+    : Pos (ri.Pos), Shape (ri.Shape), Sprite (ri.Sprite), Shadow (ri.Shadow)
+    {
+        Projection[0] = ri.Projection[0];
+        Projection[1] = ri.Projection[1];
+        Projection[2] = ri.Projection[2];
+        Projection[3] = ri.Projection[3];
     }
     
     s_int32 x () const
@@ -77,22 +88,22 @@ public:
 
     s_int32 min_x () const
     {
-        return Shadow[0];
+        return Projection[0];
     }
     
     s_int32 min_yz () const
     {
-        return Shadow[1];
+        return Projection[1];
     }
 
     s_int32 max_x () const
     {
-        return Shadow[2];
+        return Projection[2];
     }
 
     s_int32 max_yz () const
     {
-        return Shadow[3];
+        return Projection[3];
     }
     
     /// position of object in world space
@@ -101,12 +112,12 @@ public:
     const placeable_shape *Shape;
     /// the object's graphical representation
     const gfx::sprite *Sprite;
+    /// shadow cast onto this object
+    shadow *Shadow;
     
 private:
-    s_int32 Shadow[4];
-    
-    /// forbid copy construction
-    // render_info (const render_info & ri);
+    /// the 2D projection of the object
+    s_int32 Projection[4];
 };
 
 }

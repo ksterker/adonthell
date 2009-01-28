@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.11 2009/01/26 21:09:14 ksterker Exp $
+   $Id: character.cc,v 1.12 2009/01/28 21:39:09 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,13 +46,11 @@ character::character (area & mymap) : moving (mymap)
     IsRunning = false;
     ToggleRunning = false;
     CurrentDir = NONE;
-    MyShadow = NULL;
 }
 
 // dtor
 character::~character ()
 {
-    delete MyShadow;
 }
 
 // jump

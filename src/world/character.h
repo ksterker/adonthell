@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.7 2009/01/26 21:09:14 ksterker Exp $
+ $Id: character.h,v 1.8 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -237,7 +237,8 @@ namespace world
         s_int32 CurrentDir;
         
     private:
-        shadow *MyShadow;
+        /// forbid passing by value
+        character (const character & p);
     };
 }
 

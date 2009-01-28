@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.22 2009/01/26 21:09:14 ksterker Exp $
+ $Id: moving.cc,v 1.23 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -61,6 +61,8 @@ struct z_order : public std::binary_function<const chunk_info &, const chunk_inf
 moving::moving (world::area & mymap)
     : placeable (mymap), coordinates ()
 {
+    MyShadow = NULL;
+
 #if DEBUG_COLLISION
     Image = gfx::create_surface();
     Image->set_alpha (255, true);
@@ -72,6 +74,7 @@ moving::moving (world::area & mymap)
 moving::~moving ()
 {
     GroundTiles.clear();
+    delete MyShadow;
 #if DEBUG_COLLISION
     delete Image;
 #endif
@@ -326,7 +329,7 @@ void moving::calculate_ground_pos ()
 
     // bbox of everything below our character
     const vector3<s_int32> min (x(), y() - placeable::width()/2, -10000);
-    const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z());
+    const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
         
     // get objects below us
     Mymap.objects_in_bbox (min, max, GroundTiles);
@@ -342,7 +345,7 @@ void moving::calculate_ground_pos ()
         // apply shadow
         for (; ci != GroundTiles.end(); ci++)
         {
-            ci->Object->add_shadow (Shadow);
+            ci->Object->add_shadow (MyShadow);
         }
     }
     else

@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.4 2009/01/18 16:32:12 ksterker Exp $
+ $Id: renderer.h,v 1.5 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,6 +67,17 @@ protected:
     virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
     {
         obj.Sprite->draw (x + obj.x (), y + obj.Pos.y () - obj.z() - obj.Shape->height(), &da, target);
+        if (obj.Shadow != NULL)
+        {
+            // shadow area relocated to final screen coordinates 
+            gfx::drawing_area shdw_area (x + obj.x (), y + obj.y (), obj.Shape->length(), obj.Shape->width());
+            // clip with mapview ... just in case
+            shdw_area.assign_drawing_area (&da);
+            // shadow position
+            const vector3<s_int32> shdw_pos (obj.x(), obj.y(), obj.z() + obj.Shape->height());
+            // draw shadow
+            obj.Shadow->draw (shdw_pos, &shdw_area, target);
+        }
     }
 
 #ifndef SWIG

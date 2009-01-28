@@ -45,6 +45,7 @@ namespace rpg {
         PyList_SET_ITEM ($result, index++, PyString_FromString (*i));
 }
 
+%include "stdint.i"
 %include "std_string.i"
 
 // typemap for passing python list as vector<string>

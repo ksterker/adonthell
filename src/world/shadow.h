@@ -1,5 +1,5 @@
 /*
- $Id: shadow.h,v 1.1 2009/01/26 21:09:15 ksterker Exp $
+ $Id: shadow.h,v 1.2 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -71,7 +71,7 @@ public:
      * @param da surface area of placeable.
      * @param target surface to draw on.
      */
-    void draw (const vector3<s_int32> & pos, gfx::drawing_area * da, gfx::surface * target);
+    void draw (const vector3<s_int32> & pos, const gfx::drawing_area * da, gfx::surface * target);
     
 protected:
     void subtract_area (const gfx::drawing_area & a, const gfx::drawing_area & b);

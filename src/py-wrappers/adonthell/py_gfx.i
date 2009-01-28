@@ -9,6 +9,7 @@
 #include "gfx/sprite.h"
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 %import "base/types.h"

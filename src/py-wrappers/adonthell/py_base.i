@@ -11,6 +11,7 @@
 #include "base/configuration.h"
 %}
 
+%include "stdint.i"
 %include "std_string.i"
 
 // typemaps for the flat::next (...) method

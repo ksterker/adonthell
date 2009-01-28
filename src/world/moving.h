@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.13 2009/01/26 21:09:14 ksterker Exp $
+ $Id: moving.h,v 1.14 2009/01/28 21:39:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
@@ -196,12 +196,16 @@ namespace world
         vector3<float> Position;
         /// velocites along the 3 axis in world space.
         vector3<float> Velocity;
-        
+        /// shadow cast by this object
+        shadow *MyShadow;
+
     private:
-        /// 
+        /// list of tiles below this object
         std::list<chunk_info> GroundTiles;
         /// for debugging
         gfx::surface *Image;
+        /// forbid passing by value
+        moving (const moving & p);
     }; 
 }
 
