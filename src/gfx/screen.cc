@@ -1,5 +1,5 @@
 /*
-   $Id: screen.cc,v 1.4 2003/11/22 09:35:21 ksterker Exp $
+   $Id: screen.cc,v 1.5 2009/01/28 18:48:11 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,13 @@
 
 namespace gfx
 {
+    /// Red componant
+    const u_int8 screen::TRANS_RED = 0xff;
+    /// Green componant
+    const u_int8 screen::TRANS_GREEN = 0x00;
+    /// Blue componant
+    const u_int8 screen::TRANS_BLUE = 0xff;    
+    
     // All the static data for the screen.
     u_int16 screen::length_, screen::height_;
     u_int8 screen::bytes_per_pixel_;
