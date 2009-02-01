@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.13 2008/11/09 14:07:40 ksterker Exp $
+ $Id: mapview.cc,v 1.14 2009/02/01 15:18:25 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -175,7 +175,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     }
  
     // get objects we need to draw
-    const std::list<world::chunk_info> & objectlist = Map->objects_in_view (Sx, Sy, Z, length(), height());
+    const std::list<world::chunk_info*> & objectlist = Map->objects_in_view (Sx, Sy, Z, length(), height());
     
     // draw everything on screen
     Renderer->render (da.x() - Sx, da.y() - Sy + Z, objectlist, da, target);

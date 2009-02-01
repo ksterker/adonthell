@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.23 2009/01/28 21:39:10 ksterker Exp $
+ $Id: moving.cc,v 1.24 2009/02/01 15:18:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -49,11 +49,11 @@ using world::plane3;
 using world::vector3;
 
 /// sort chunk_info objects according to the z-position of their top
-struct z_order : public std::binary_function<const chunk_info &, const chunk_info &, bool> 
+struct z_order : public std::binary_function<const chunk_info *, const chunk_info *, bool> 
 {
-	bool operator() (const chunk_info & a, const chunk_info & b) 
+	bool operator() (const chunk_info * a, const chunk_info * b) 
     {
-        return a.Max.z() > b.Max.z();
+        return a->Max.z() > b->Max.z();
     }
 };
 
@@ -131,23 +131,23 @@ bool moving::collide_with_objects (collision *collisionData)
 #endif
 
     // get all objects in our path
-    std::list<chunk_info> objects = Mymap.objects_in_bbox (min, max);
+    const std::list<chunk_info*> & objects = Mymap.objects_in_bbox (min, max);
     
     // check all placeables in our path
-    for (std::list<chunk_info>::const_iterator i = objects.begin(); i != objects.end(); i++)
+    for (std::list<chunk_info*>::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         // check all models the placeable consists of
-        for (placeable::iterator model = i->Object->begin(); model != i->Object->end(); model++)
+        for (placeable::iterator model = (*i)->Object->begin(); model != (*i)->Object->end(); model++)
         {
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
 
 #if DEBUG_COLLISION
-            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", i->Min.x() + shape->x(), i->Min.y() + shape->y(), i->Min.z() + shape->z(), i->Min.x() + shape->x() + shape->length(), i->Min.y() + shape->y() + shape->width(), i->Min.z() + shape->z() + shape->height());
+            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", (*i)->Min.x() + shape->x(), (*i)->Min.y() + shape->y(), (*i)->Min.z() + shape->z(), (*i)->Min.x() + shape->x() + shape->length(), (*i)->Min.y() + shape->y() + shape->width(), (*i)->Min.z() + shape->z() + shape->height());
 #endif
             
             // ... and check if collision occurs
-            shape->collide (collisionData, i->Min);
+            shape->collide (collisionData, (*i)->Min);
         }
     }
     
@@ -321,9 +321,9 @@ void moving::update_position ()
 void moving::calculate_ground_pos ()
 {
     // cleanup from previous iteration shadow
-    for (std::list<chunk_info>::iterator i = GroundTiles.begin(); i != GroundTiles.end(); i++)
+    for (std::list<chunk_info*>::iterator i = GroundTiles.begin(); i != GroundTiles.end(); i++)
     {
-        i->Object->remove_shadow ();
+        (*i)->remove_shadow ();
     }
     GroundTiles.clear();
 
@@ -339,13 +339,13 @@ void moving::calculate_ground_pos ()
         GroundTiles.sort (z_order());
     
         // the topmost object will be our ground pos
-        std::list<chunk_info>::iterator ci = GroundTiles.begin();
-        GroundPos = ci->Max.z() + ci->Object->cur_z();
+        std::list<chunk_info*>::iterator ci = GroundTiles.begin();
+        GroundPos = (*ci)->Max.z() + (*ci)->Object->cur_z();
         
         // apply shadow
         for (; ci != GroundTiles.end(); ci++)
         {
-            ci->Object->add_shadow (MyShadow);
+            (*ci)->add_shadow (MyShadow);
         }
     }
     else

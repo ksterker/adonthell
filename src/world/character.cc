@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.12 2009/01/28 21:39:09 ksterker Exp $
+   $Id: character.cc,v 1.13 2009/02/01 15:18:23 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -195,12 +195,14 @@ bool character::get_state (base::flat & file)
     base::flat entity = file.get_flat ("entity");    
 
     // FIXME: load movement and direction ...
-    std::string shadow_file = entity.get_string ("shadow");
-    MyShadow = new shadow (shadow_file, this);
     
     // load other parts of placeable
     placeable::get_state (entity);
-    
+
+    // load shadow
+    std::string shadow_file = entity.get_string ("shadow");
+    MyShadow = new shadow (shadow_file, this, CurPos);
+        
     return file.success ();
 }
 

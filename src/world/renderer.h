@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.5 2009/01/28 21:39:10 ksterker Exp $
+ $Id: renderer.h,v 1.6 2009/02/01 15:18:26 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,7 +53,7 @@ public:
      * @param da clipping rectangle.
      * @param target surface to draw on, NULL for screen surface.
      */
-    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const = 0;
+    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const = 0;
     
 protected:
     /**
@@ -74,7 +74,7 @@ protected:
             // clip with mapview ... just in case
             shdw_area.assign_drawing_area (&da);
             // shadow position
-            const vector3<s_int32> shdw_pos (obj.x(), obj.y(), obj.z() + obj.Shape->height());
+            const vector3<s_int32> shdw_pos (x, y, obj.z() + obj.Shape->height());
             // draw shadow
             obj.Shadow->draw (shdw_pos, &shdw_area, target);
         }
@@ -103,7 +103,7 @@ public:
      * @param da clipping rectangle.
      * @param target surface to draw on, NULL for screen surface.
      */
-    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const;
+    virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const;
     
 #ifndef SWIG
     /**

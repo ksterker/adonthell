@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.9 2009/01/28 21:39:10 ksterker Exp $
+ $Id: placeable.h,v 1.10 2009/02/01 15:18:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -34,7 +34,6 @@
 #define WORLD_PLACEABLE_H
 
 #include "world/placeable_model.h"
-#include "world/shadow.h"
 
 namespace world
 {
@@ -175,34 +174,7 @@ namespace world
 
         s_int16 cur_x () const { return CurPos.x(); }
         s_int16 cur_y () const { return CurPos.y(); }
-        s_int16 cur_z () const { return CurPos.z(); }
-        
-        
-        /**
-         * @name Placeable shadow
-         *
-         * Handling of shadow cast onto this placeable by another object.
-         * For now, only one shadow can be cast per placeable. Possibly,
-         * this needs to be extented to multiple shadows. 
-         */
-        //@{
-        /**
-         * Add a shadow to this placeable.
-         * @param shadow the shadow to add.
-         */
-        void add_shadow (shadow *s) { Shadow = s; }
-        
-        /**
-         * Remove shadow from the placeable.
-         */
-        void remove_shadow () { Shadow = NULL; }
-        
-        /**
-         * Get shadow that has been cast on this placeable.
-         * @return shadow on this placeable or NULL.
-         */
-        shadow *get_shadow () { return Shadow; }
-        //@}
+        s_int16 cur_z () const { return CurPos.z(); }        
         
         /**
          * @name Placeable state
@@ -271,10 +243,8 @@ namespace world
         placeable_type Type; 
         /// the map this placeable belongs to
         area & Mymap;
-        
+
     private:
-        /// shadow cast on this object 
-        shadow *Shadow;
         /// forbid passing by value
         placeable (const placeable & p);
     };

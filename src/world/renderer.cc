@@ -1,5 +1,5 @@
 /*
- $Id: renderer.cc,v 1.5 2009/01/28 21:39:10 ksterker Exp $
+ $Id: renderer.cc,v 1.6 2009/02/01 15:18:26 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,17 +37,16 @@ namespace world
 {
     
 // default rendering
-void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const
+void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const
 {
     std::list <render_info> render_queue;
 
     // populate render queue
-    for (std::list<world::chunk_info>::const_iterator i = objectlist.begin(); i != objectlist.end(); i++)
+    for (std::list<world::chunk_info*>::const_iterator i = objectlist.begin(); i != objectlist.end(); i++)
     {
-        placeable *object = i->Object;
-        for (placeable::iterator obj = object->begin(); obj != object->end(); obj++)
+        for (placeable::iterator obj = (*i)->Object->begin(); obj != (*i)->Object->end(); obj++)
         {
-            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), i->Min, object->get_shadow()));
+            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->Min, (*i)->get_shadow()));
         }
     }
     

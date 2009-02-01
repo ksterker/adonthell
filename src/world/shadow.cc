@@ -1,5 +1,5 @@
 /*
- $Id: shadow.cc,v 1.2 2009/01/28 21:39:10 ksterker Exp $
+ $Id: shadow.cc,v 1.3 2009/02/01 15:18:27 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,9 +34,10 @@ using gfx::drawing_area;
 using world::shadow;
 
 // ctor
-shadow::shadow (const std::string & shadow, const coordinates *pos)
+shadow::shadow (const std::string & shadow, const coordinates *pos, const vector3<s_int32> & offset)
 {
     Shadow = (gfx::surface*) gfx::surfaces->get_surface_only (shadow, true, false);
+    Offset = offset;
     Pos = pos;
     reset();
 }
@@ -51,7 +52,7 @@ shadow::~shadow ()
 void shadow::reset ()
 {
     Areas.clear();
-    drawing_area area (Pos->x(), Pos->y(), Shadow->length(), Shadow->height());
+    drawing_area area (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow->length(), Shadow->height());
     Areas.push_back (area);
 }
 
@@ -59,19 +60,25 @@ void shadow::draw (const vector3<s_int32> & pos, const drawing_area * da, gfx::s
 {
     // set shadow opacity according to distance above ground
     u_int32 distance = Pos->z() - pos.z();
-    Shadow->set_alpha (200 - (distance > 200 ? 25 : distance));
+    Shadow->set_alpha (192 - (distance > 192 ? 32 : distance));
     
     // draw those parts of the shadow that haven't been rendered yet
     for (std::list<drawing_area>::iterator area = Areas.begin(); area != Areas.end(); /* nothing */)
     {
-        area->move(da->x(), (da->y() - area->y()) + (da->y() - distance));
+        area->move (pos.x() + area->x(), pos.y() + area->y() - pos.z());
         area->assign_drawing_area (da);
-        Shadow->draw (da->x(), da->y() - distance, &(*area), target);
+        Shadow->draw (pos.x() + Pos->x() + Offset.x(), pos.y() + Pos->y() + Offset.y() - pos.z(), &(*area), target);
         area->detach_drawing_area ();
         
         // remove piece we've just drawn from shadow
         subtract_area (*area, *da);
         area = Areas.erase (area);
+    }
+    
+    // "normalize" shadow area
+    for (std::list<drawing_area>::iterator area = Areas.begin(); area != Areas.end(); area++)
+    {
+        area->move (area->x() - pos.x(), area->y() - pos.y() - pos.z());
     }
 }
 

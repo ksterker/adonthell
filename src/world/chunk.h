@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.8 2009/01/26 21:09:14 ksterker Exp $
+ $Id: chunk.h,v 1.9 2009/02/01 15:18:24 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -90,7 +90,7 @@ namespace world
          *
          * @return list of objects contained in view.
          */
-        std::list<chunk_info> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
+        std::list<chunk_info*> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
         
         /**
          * Collects a list of objects that are contained by the given bounding box.
@@ -100,7 +100,7 @@ namespace world
          *
          * @return list of objects contained in bbox.
          */
-        std::list<chunk_info> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        std::list<chunk_info*> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
         
         /**
          * Collects a list of objects that are contained by the given bounding box and adds them to given list.
@@ -109,7 +109,7 @@ namespace world
          * @param max the upper coordinate triplet of the bbox.
          * @param result list that will receive the objects contained in the bbox
          */
-        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const;
+        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result) const;
         //@}
         
         /**
@@ -180,7 +180,7 @@ private:
          * @param max_yz min_yz plus width of the view
          * @param result vector to populate with contained objects.
          */
-        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info> & result) const;
+        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info*> & result) const;
 
         /**
          * Checks whether a given mapview overlaps with an axis aligned bounding box.

@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.31 2009/01/28 21:39:10 ksterker Exp $
+   $Id: worldtest.cc,v 1.32 2009/02/01 15:18:28 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -239,7 +239,7 @@ public:
         
         // set position and speed
         mchar->set_speed (1.5);
-        mchar->set_position (420, 260);
+        mchar->set_position (398, 322);
         mchar->set_z (0);
         
         // put character on map

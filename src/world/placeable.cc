@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.7 2009/01/28 21:39:10 ksterker Exp $
+ $Id: placeable.cc,v 1.8 2009/02/01 15:18:26 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,7 +42,6 @@ placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
 {
     MinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
-    Shadow = NULL;
     State = "";
 }
 

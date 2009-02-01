@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.9 2009/01/09 22:39:41 ksterker Exp $
+ $Id: chunk.cc,v 1.10 2009/02/01 15:18:24 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -224,15 +224,15 @@ void chunk::remove (const chunk_info & ci)
 }
 
 // return list of objects in the given view
-std::list<world::chunk_info> chunk::objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const
+std::list<world::chunk_info*> chunk::objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const
 {
-    std::list<chunk_info> result;
+    std::list<chunk_info*> result;
     objects_in_view (x, x + length, y - z, y - z + width, result);
     return result;
 }
 
 // recursively collect objects in given view
-void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info> & result) const
+void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info*> & result) const
 {
     // process childrem
     for (u_int32 i = 0; i < 8; i++)
@@ -251,7 +251,7 @@ void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const
     {
         if (in_view (min_x, max_x, min_yz, max_yz, (*i).Min, (*i).Max))
         {
-            result.push_back (*i);
+            result.push_back ((chunk_info*) &(*i));
         }
     }
     
@@ -290,14 +290,14 @@ bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32
     return true;
 }
 
-std::list<chunk_info> chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const
+std::list<chunk_info*> chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const
 {
-    std::list<chunk_info> result;
+    std::list<chunk_info*> result;
     objects_in_bbox (min, max, result);
     return result;
 }
 
-void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info> & result) const
+void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result) const
 {
     s_int8 chunks[8];
     
@@ -319,7 +319,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     {
         if (in_bbox (min, max, i->real_min(), i->real_max()))
         {
-            result.push_back (*i);
+            result.push_back ((chunk_info*) &(*i));
         }
     }
 }

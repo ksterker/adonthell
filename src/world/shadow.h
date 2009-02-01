@@ -1,5 +1,5 @@
 /*
- $Id: shadow.h,v 1.2 2009/01/28 21:39:10 ksterker Exp $
+ $Id: shadow.h,v 1.3 2009/02/01 15:18:27 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,8 +52,9 @@ public:
      * Create a new shadow object.
      * @param shadow filename of the shadow image.
      * @param pos position of the object that casts the shadow.
+     * @param offset offset of the object that casts the shadpw.
      */
-    shadow (const std::string & shadow, const coordinates * pos);
+    shadow (const std::string & shadow, const coordinates * pos, const vector3<s_int32> & offset);
 
     /**
      * Destroy shadow object.
@@ -64,6 +65,12 @@ public:
      * Clear shadow object for rendering next frame.
      */
     void reset ();
+    
+    /**
+     * Update offset of shadow.
+     * @param offset the new offset.
+     */
+    void set_offset (const vector3<s_int32> & offset) { Offset = offset; }
     
     /**
      * Draw part of shadow specified by given drawing area onto given target.
@@ -79,6 +86,8 @@ protected:
 private:
     /// current position of shadow casting object
     const coordinates *Pos;
+    /// offset of shadow casting object
+    vector3<s_int32> Offset;
     /// image representing the shadow
     gfx::surface *Shadow;
     /// region still covered by the shadow

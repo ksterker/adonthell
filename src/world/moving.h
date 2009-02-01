@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.14 2009/01/28 21:39:10 ksterker Exp $
+ $Id: moving.h,v 1.15 2009/02/01 15:18:25 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
@@ -201,7 +201,7 @@ namespace world
 
     private:
         /// list of tiles below this object
-        std::list<chunk_info> GroundTiles;
+        std::list<chunk_info*> GroundTiles;
         /// for debugging
         gfx::surface *Image;
         /// forbid passing by value
