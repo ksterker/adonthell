@@ -22,8 +22,10 @@ endif(CMAKE_GENERATOR MATCHES ".*Makefiles")
 
 endif(COMMAND cmake_policy)
 
+# Set version
+set (VERSION "0.4.0" CACHE INTERNAL "")
 
-add_definitions(-DVERSION="${ESCAPE}0.4.0${ESCAPE}" -DHAVE_CONFIG_H=1)
+add_definitions(-DVERSION="${ESCAPE}${VERSION}${ESCAPE}" -DHAVE_CONFIG_H=1)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing" CACHE INTERNAL "")
@@ -276,6 +278,16 @@ endif(NOT HAVE_LIBLTDL)
 
 # Now generate the configure file
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
+# Generate pkgconfig file
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/adonthell.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/adonthell.pc @ONLY)
+
+# install pkgconfig file
+install (
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/adonthell.pc
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig
+    COMPONENT "pkgconfig"
+)
 
 
 # Add the root of the binary distribution to the include directories !
