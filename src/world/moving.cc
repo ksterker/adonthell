@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.24 2009/02/01 15:18:25 ksterker Exp $
+ $Id: moving.cc,v 1.25 2009/02/07 21:47:09 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -37,6 +37,7 @@
 #include "world/moving.h"
 #include "world/area.h"
 #include "world/plane3.h"
+#include "world/shadow.h"
 
 #if DEBUG_COLLISION
 #include "gfx/gfx.h"
@@ -73,7 +74,6 @@ moving::moving (world::area & mymap)
 // dtor
 moving::~moving ()
 {
-    GroundTiles.clear();
     delete MyShadow;
 #if DEBUG_COLLISION
     delete Image;
@@ -320,32 +320,25 @@ void moving::update_position ()
 // calculate z position of ground
 void moving::calculate_ground_pos ()
 {
-    // cleanup from previous iteration shadow
-    for (std::list<chunk_info*>::iterator i = GroundTiles.begin(); i != GroundTiles.end(); i++)
-    {
-        (*i)->remove_shadow ();
-    }
-    GroundTiles.clear();
-
     // bbox of everything below our character
     const vector3<s_int32> min (x(), y() - placeable::width()/2, -10000);
     const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
         
     // get objects below us
-    Mymap.objects_in_bbox (min, max, GroundTiles);
-    if (!GroundTiles.empty ())
+    std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max);
+    if (!ground_tiles.empty ())
     {
         // sort according to their z-Order
-        GroundTiles.sort (z_order());
+        ground_tiles.sort (z_order());
     
         // the topmost object will be our ground pos
-        std::list<chunk_info*>::iterator ci = GroundTiles.begin();
+        std::list<chunk_info*>::iterator ci = ground_tiles.begin();
         GroundPos = (*ci)->Max.z() + (*ci)->Object->cur_z();
         
         // apply shadow
-        for (; ci != GroundTiles.end(); ci++)
+        for (; ci != ground_tiles.end(); ci++)
         {
-            (*ci)->add_shadow (MyShadow);
+            MyShadow->cast_on (*ci);
         }
     }
     else
@@ -368,6 +361,9 @@ bool moving::update ()
     // we can skip the whole collision stuff if we're not moving
     if (vx() != 0.0f || vy() != 0.0f || vz() != 0.0f || GroundPos != Z)
     {
+        // reset shadow for next frame
+        MyShadow->reset ();
+                
         Mymap.remove (this, *this);
         update_position ();
         Mymap.add (this, *this);

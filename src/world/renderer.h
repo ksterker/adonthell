@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.6 2009/02/01 15:18:26 ksterker Exp $
+ $Id: renderer.h,v 1.7 2009/02/07 21:47:10 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -66,17 +66,24 @@ protected:
      */
     virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
     {
+        // render object
         obj.Sprite->draw (x + obj.x (), y + obj.Pos.y () - obj.z() - obj.Shape->height(), &da, target);
-        if (obj.Shadow != NULL)
+        
+        // render shadows cast onto the object
+        for (std::vector<shadow_info>::const_iterator shdw = obj.Shadow->begin(); shdw != obj.Shadow->end(); shdw++)
         {
-            // shadow area relocated to final screen coordinates 
-            gfx::drawing_area shdw_area (x + obj.x (), y + obj.y (), obj.Shape->length(), obj.Shape->width());
-            // clip with mapview ... just in case
-            shdw_area.assign_drawing_area (&da);
-            // shadow position
-            const vector3<s_int32> shdw_pos (x, y, obj.z() + obj.Shape->height());
-            // draw shadow
-            obj.Shadow->draw (shdw_pos, &shdw_area, target);
+            // set shadow opacity according to distance above ground
+            shdw->Image->set_alpha (192 - (shdw->Distance > 192 ? 32 : shdw->Distance));
+            // draw all pieces of the shadow
+            for (std::list<gfx::drawing_area>::const_iterator area = shdw->Area.begin(); area != shdw->Area.end(); area++)
+            {
+                // relocate area to mapview position
+                gfx::drawing_area part (x + area->x(), y + area->y() - (obj.z() + obj.Shape->height()), area->length(), area->height());
+                // clip with mapview ... just in case
+                part.assign_drawing_area (&da);
+                // render shadow
+                shdw->Image->draw (x + shdw->X, y + shdw->Y - (obj.z() + obj.Shape->height()), &part, target);
+            }
         }
     }
 

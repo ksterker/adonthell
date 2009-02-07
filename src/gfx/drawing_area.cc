@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.7 2008/05/24 11:41:13 ksterker Exp $
+   $Id: drawing_area.cc,v 1.8 2009/02/07 21:47:09 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,7 +52,7 @@ namespace gfx
         drawing_area ret = *this;
         ret.assign_drawing_area(NULL);
         for(const drawing_area* it = this->assigned_drawing_area(); it; it = it->assigned_drawing_area())
-	{
+        {
             s_int32 x = std::max(ret.x(), it->x());
             s_int32 y = std::max(ret.y(), it->y());
             s_int32 w = std::min(it->x() + it->length(), ret.x() + ret.length()) - x;
@@ -70,4 +70,74 @@ namespace gfx
         return (px >= x () && px <= x () + length () &&
                 py >= y () && py <= y () + height ()); 
     }
+    
+    int drawing_area::compare (const drawing_area & da) const
+    {
+        int flags;
+        
+        if (da.x() <= x()) 
+        {
+            if (da.x() + da.length() - 1 < x()) 
+            {
+                flags = XLL;
+            } 
+            else if (da.x() + da.length() - 1 < x() + length() - 1) 
+            {
+                flags = XLM;
+            } 
+            else 
+            {
+                flags = XLR;
+            }
+        } 
+        else if (da.x() <= x() + length() - 1) 
+        {
+            if (da.x() + da.length() - 1 < x() + length() - 1) 
+            {
+                flags = XMM;
+            } 
+            else 
+            {
+                flags = XMR;
+            }
+        } 
+        else 
+        {
+            flags = XRR;
+        }
+        
+        if (da.y() <= y()) 
+        {
+            if (da.y() + da.height() - 1 < y()) 
+            {
+                flags |= YOO;
+            } 
+            else if (da.y() + da.height() - 1 < y() + height() - 1) 
+            {
+                flags |= YOM;
+            } 
+            else 
+            {
+                flags |= YOU;
+            }
+        } 
+        else if (da.y() <= y() + height() - 1) 
+        {
+            if (da.y() + da.height() - 1 < y() + height() - 1) 
+            {
+                flags |= YMM;
+            } 
+            else 
+            {
+                flags |= YMU;
+            }
+        } 
+        else 
+        {
+            flags |= YUU;
+        }
+        
+        return flags;
+    }
+    
 }

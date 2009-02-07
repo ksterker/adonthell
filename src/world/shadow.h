@@ -1,5 +1,5 @@
 /*
- $Id: shadow.h,v 1.3 2009/02/01 15:18:27 ksterker Exp $
+ $Id: shadow.h,v 1.4 2009/02/07 21:47:10 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,11 +31,14 @@
 #define WORLD_SHADOW_H
 
 #include <list>
+#include <vector>
 #include "gfx/surface.h"
 #include "world/coordinates.h"
 
 namespace world
 {
+
+class chunk_info;
     
 /**
  * Represents a character shadow that will be drawn on tiles
@@ -73,25 +76,39 @@ public:
     void set_offset (const vector3<s_int32> & offset) { Offset = offset; }
     
     /**
-     * Draw part of shadow specified by given drawing area onto given target.
-     * @param pos position of placeable to draw shadow on.
-     * @param da surface area of placeable.
-     * @param target surface to draw on.
+     * Cast (part) of shadow onto the given target.
+     * @param ci placeable to draw shadow on.
      */
-    void draw (const vector3<s_int32> & pos, const gfx::drawing_area * da, gfx::surface * target);
+    void shadow::cast_on (chunk_info* ci);
     
 protected:
+    /**
+     * Remove area a from area b and update #Remaining on the way.
+     * @param a current area of shadow
+     * @param b area to remove from shadow
+     */
     void subtract_area (const gfx::drawing_area & a, const gfx::drawing_area & b);
 
+    /// a list of shadow pieces
+    typedef std::list<gfx::drawing_area> parts;
+    
 private:
     /// current position of shadow casting object
     const coordinates *Pos;
     /// offset of shadow casting object
     vector3<s_int32> Offset;
     /// image representing the shadow
-    gfx::surface *Shadow;
-    /// region still covered by the shadow
-    std::list<gfx::drawing_area> Areas;
+    const gfx::surface *Shadow;
+    
+    /**
+     * @name Runtime data
+     */
+    ///@{
+    /// parts of the shadow not rendered
+    shadow::parts Remaining;
+    /// list of objects with a shadow on them
+    std::vector<chunk_info*> TilesWithShadow;
+    ///@}
 };
 
 }

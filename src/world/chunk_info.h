@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.4 2009/02/01 15:18:24 ksterker Exp $
+ $Id: chunk_info.h,v 1.5 2009/02/07 21:47:09 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,7 +33,7 @@
 #define WORLD_CHUNK_INFO_H
 
 #include "world/placeable.h"
-#include "world/shadow.h"
+#include "world/shadow_info.h"
 
 namespace world
 {
@@ -51,7 +51,7 @@ namespace world
          * @param max the extend of the object in world space
          */
         chunk_info (placeable *o, const vector3<s_int32> & min, const vector3<s_int32> & max) 
-        : Object (o), Min (min), Max (max), Shadow (NULL)
+        : Object (o), Min (min), Max (max)
         {
         }
 
@@ -100,18 +100,30 @@ namespace world
          * Add a shadow to this placeable.
          * @param shadow the shadow to add.
          */
-        void add_shadow (shadow *s) { Shadow = s; }
+        void add_shadow ( const shadow_info & s) { Shadow.push_back (s); }
         
         /**
          * Remove shadow from the placeable.
+         * @param x x-coordinate of shadow to remove.
+         * @param y y-coordinate of shadow to remove.
          */
-        void remove_shadow () { Shadow = NULL; }
+        void remove_shadow (const s_int32 & x, const s_int32 & y) 
+        { 
+            for (std::vector<shadow_info>::iterator shdw = Shadow.begin(); shdw != Shadow.end(); shdw++)
+            {
+                if (shdw->X == x && shdw->Y == y)
+                {
+                    Shadow.erase (shdw);
+                    return;
+                }
+            }
+        }
         
         /**
-         * Get shadow that has been cast on this placeable.
-         * @return shadow on this placeable or NULL.
+         * Get pointer to all shadows cast on this placeable.
+         * @return the vector of shadows.
          */
-        shadow *get_shadow () const { return Shadow; }
+        const std::vector<shadow_info> *get_shadow () const { return &Shadow; }
         //@}
                 
         /// pointer to map object
@@ -123,7 +135,7 @@ namespace world
         
     private:
         /// shadow cast on this object 
-        shadow *Shadow;
+        std::vector<shadow_info> Shadow;
     };
 }
 

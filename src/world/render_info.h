@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.9 2009/01/28 21:39:10 ksterker Exp $
+ $Id: render_info.h,v 1.10 2009/02/07 21:47:10 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,7 +53,7 @@ public:
      * @param shdw the shadow cast onto this object
      * @param pos the position of the object in world-space
      */
-    render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, shadow *shdw) 
+    render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, const std::vector<shadow_info> *shdw) 
     : Pos (pos), Shape (shape), Sprite (sprite), Shadow (shdw)
     {
         Projection[0] = x();
@@ -112,8 +112,8 @@ public:
     const placeable_shape *Shape;
     /// the object's graphical representation
     const gfx::sprite *Sprite;
-    /// shadow cast onto this object
-    shadow *Shadow;
+    /// shadows cast onto this object
+    const std::vector<shadow_info> *Shadow;
     
 private:
     /// the 2D projection of the object

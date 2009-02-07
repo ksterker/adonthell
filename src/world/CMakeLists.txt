@@ -36,6 +36,7 @@ set(adonthell_world_HEADERS
     render_info.h
     renderer.h
     shadow.h
+    shadow_info.h
     triangle3.h
     vector3.h
 )

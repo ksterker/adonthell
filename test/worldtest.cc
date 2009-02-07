@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.32 2009/02/01 15:18:28 ksterker Exp $
+   $Id: worldtest.cc,v 1.33 2009/02/07 21:47:10 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -352,7 +352,7 @@ public:
         {
             world::coordinates mc (i*40, (6-i)*40, 0);
             world.put_entity (5, mc); 
-            mc.set_z (75);
+            mc.set_z (80);
             world.put_entity (6, mc);
         }
         
@@ -459,6 +459,7 @@ public:
 			{
 				gfx::surface *screen = gfx::screen::get_surface();
                 screen->save_png("screenshot.png");
+                gc.screenshot = false;
 			}
             
 #if DEBUG_COLLISION

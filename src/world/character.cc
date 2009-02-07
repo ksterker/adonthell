@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.13 2009/02/01 15:18:23 ksterker Exp $
+   $Id: character.cc,v 1.14 2009/02/07 21:47:09 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #include "base/diskio.h"
 #include "world/area.h"
 #include "world/character.h"
+#include "world/shadow.h"
 
 using world::character;
 using world::area;
@@ -68,9 +69,6 @@ bool character::update ()
 {
     // reset vertical velocity
     set_vertical_velocity (VSpeed);
-    
-    // reset shadow for next frame
-    MyShadow->reset ();
     
     // update character
     moving::update ();

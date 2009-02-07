@@ -1,5 +1,5 @@
 /*
- $Id: shadow.cc,v 1.3 2009/02/01 15:18:27 ksterker Exp $
+ $Id: shadow.cc,v 1.4 2009/02/07 21:47:10 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,14 +29,16 @@
 
 #include "gfx/surface_cacher.h"
 #include "world/shadow.h"
+#include "world/chunk_info.h"
 
 using gfx::drawing_area;
 using world::shadow;
+using world::chunk_info;
 
 // ctor
 shadow::shadow (const std::string & shadow, const coordinates *pos, const vector3<s_int32> & offset)
 {
-    Shadow = (gfx::surface*) gfx::surfaces->get_surface_only (shadow, true, false);
+    Shadow = gfx::surfaces->get_surface_only (shadow, true, false);
     Offset = offset;
     Pos = pos;
     reset();
@@ -49,36 +51,72 @@ shadow::~shadow ()
     Shadow = NULL;
 }
 
+// cleanup at the beginning of each frame
 void shadow::reset ()
 {
-    Areas.clear();
+    // prepare shadow for next frame
+    Remaining.clear();
     drawing_area area (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow->length(), Shadow->height());
-    Areas.push_back (area);
+    Remaining.push_back (area);
+    
+    // clean tiles with shadow on them
+    for (std::vector<chunk_info*>::iterator i = TilesWithShadow.begin(); i != TilesWithShadow.end(); i++)
+    {
+        (*i)->remove_shadow(area.x(), area.y());
+    }
+    TilesWithShadow.clear();
 }
 
-void shadow::draw (const vector3<s_int32> & pos, const drawing_area * da, gfx::surface * target)
+// cast shadow on a "floor" object
+void shadow::cast_on (chunk_info* ci)
 {
-    // set shadow opacity according to distance above ground
-    u_int32 distance = Pos->z() - pos.z();
-    Shadow->set_alpha (192 - (distance > 192 ? 32 : distance));
-    
-    // draw those parts of the shadow that haven't been rendered yet
-    for (std::list<drawing_area>::iterator area = Areas.begin(); area != Areas.end(); /* nothing */)
+    // are there parts of the shadow remaining at all?
+    if (Remaining.size() > 0)
     {
-        area->move (pos.x() + area->x(), pos.y() + area->y() - pos.z());
-        area->assign_drawing_area (da);
-        Shadow->draw (pos.x() + Pos->x() + Offset.x(), pos.y() + Pos->y() + Offset.y() - pos.z(), &(*area), target);
-        area->detach_drawing_area ();
+        // distance between object and its shadow
+        u_int32 distance = Pos->z() - ci->Max.z() + ci->Object->cur_z();
         
-        // remove piece we've just drawn from shadow
-        subtract_area (*area, *da);
-        area = Areas.erase (area);
-    }
-    
-    // "normalize" shadow area
-    for (std::list<drawing_area>::iterator area = Areas.begin(); area != Areas.end(); area++)
-    {
-        area->move (area->x() - pos.x(), area->y() - pos.y() - pos.z());
+        // floor surface area
+        drawing_area obj_surface (ci->Min.x() + ci->Object->cur_x(),
+                                  ci->Min.y() + ci->Object->cur_y(),
+                                  ci->Object->length(), ci->Object->width());
+        
+        // data for rendering shadow later on
+        shadow_info si (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow, distance);
+
+        // check remaining shadow areas for overlap with floor ...
+        for (shadow::parts::iterator area = Remaining.begin(); area != Remaining.end(); /* nothing */)
+        {
+            bool no_overlap = 
+                    area->x() >= obj_surface.x() + obj_surface.length() ||
+                    area->y() >= obj_surface.y() + obj_surface.height() ||
+                    area->x() + area->length() <= obj_surface.x() ||
+                    area->y() + area->height() <= obj_surface.y();
+
+            if (no_overlap)
+            {
+                area++;
+            }
+            else
+            {
+                // store area for later rendering
+                area->assign_drawing_area (&obj_surface);
+                si.Area.push_back (area->setup_rects());
+                
+                // remove overlapping area from shadow
+                subtract_area (*area, obj_surface);
+                area = Remaining.erase (area);
+            }
+        }
+        
+        // is shadow cast on floor at all?
+        if (si.Area.size() > 0)
+        {
+            // assign shadow to floor ...
+            ci->add_shadow (si);
+            // ... and remember for later cleanup
+            TilesWithShadow.push_back (ci);
+        }
     }
 }
 
@@ -87,301 +125,209 @@ void shadow::draw (const vector3<s_int32> & pos, const drawing_area * da, gfx::s
 #define YT(da)   (da.y())
 #define YB(da)   (da.y() + da.height())
 
-/*
- * rect_compare (A, B) returns X??|Y??.
- */
-#define XLL (5 << 3) /* Bx1 <  Bx2 <  Ax1               <  Ax2              */
-#define XLM (4 << 3) /*        Bx1 <= Ax1 <= Bx2        <  Ax2              */
-#define XLR (3 << 3) /*        Bx1 <= Ax1               <  Ax2 <= Bx2       */
-#define XMM (2 << 3) /*               Ax1 <  Bx1 <  Bx2 <  Ax2              */
-#define XMR (1 << 3) /*               Ax1 <  Bx1        <= Ax2 <= Bx2       */
-#define XRR (0 << 3) /*               Ax1               <  Ax2 <  Bx1 < Bx2 */
-#define YOO (5 << 0) /* By1 <  By2 <  Ay1               <  Ay2              */
-#define YOM (4 << 0) /*        By1 <= Ay1 <= By2        <  Ay2              */
-#define YOU (3 << 0) /*        By1 <= Ay1               <  Ay2 <= By2       */
-#define YMM (2 << 0) /*               Ay1 <  By1 <  By2 <  Ay2              */
-#define YMU (1 << 0) /*               Ay1 <  By1        <= Ay2 <= By2       */
-#define YUU (0 << 0) /*               Ay1               <  Ay2 <  By1 < By2 */
-
-static int rect_compare (const drawing_area & a, const drawing_area & b)
-{
-    int flags;
-    
-    if (XL (b) <= XL (a)) {
-        if (XR (b) - 1 < XL (a)) {
-            flags = XLL;
-        } else if (XR (b) - 1 < XR (a) - 1) {
-            flags = XLM;
-        } else {
-            flags = XLR;
-        }
-    } else if (XL (b) <= XR (a) - 1) {
-        if (XR (b) - 1 < XR (a) - 1) {
-            flags = XMM;
-        } else {
-            flags = XMR;
-        }
-    } else {
-        flags = XRR;
-    }
-    
-    if (YT (b) <= YT (a)) {
-        if (YB (b) - 1 < YT (a)) {
-            flags |= YOO;
-        } else if (YB (b) - 1 < YB (a) - 1) {
-            flags |= YOM;
-        } else {
-            flags |= YOU;
-        }
-    } else if (YT (b) <= YB (a) - 1) {
-        if (YB (b) - 1 < YB (a) - 1) {
-            flags |= YMM;
-        } else {
-            flags |= YMU;
-        }
-    } else {
-        flags |= YUU;
-    }
-    return flags;
-}
-
-
+// remove area b from a
 void shadow::subtract_area (const drawing_area & a, const drawing_area & b)
 {
-    int flags = rect_compare (a, b);
+    int flags = a.compare (b);
     
-    /*
-     * gcc generates a nice jump table for the following switch...
-     *
-     * the dotted lines in the drawings indicated how `A' is splitted
-     * into smaller rectangles.
-     */
+    // gcc generates a nice jump table for the following switch...
+    //
+    // the dotted lines in the drawings indicated how `A' is splitted
+    // into smaller rectangles.
     switch (flags) 
     {
         case XMR|YMU:
         {
-            /*
-             * +---+
-             * | A |
-             * |.+-+-+
-             * | | | |
-             * +-+-+ |
-             *   | B |
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), YB (a) - YT (b)));
+            // +---+
+            // | A |
+            // |.+-+-+
+            // | | | |
+            // +-+-+ |
+            //   | B |
+            //   +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), YB (a) - YT (b)));
             break;
         }
         case XMR|YOM:
         {
-            /*
-             *   +---+
-             *   | B |
-             * +-+-+ |
-             * | | | |
-             * |.+-+-+
-             * | A |
-             * +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), YB (b) - YT(a)));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            //   +---+
+            //   | B |
+            // +-+-+ |
+            // | | | |
+            // |.+-+-+
+            // | A |
+            // +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), YB (b) - YT(a)));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         case XLM|YOM:
         {
-            /*
-             * +---+
-             * | B |
-             * | +-+-+
-             * | | | |
-             * +-+-+.|
-             *   | A |
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), YB (b) - YT (a)));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            // +---+
+            // | B |
+            // | +-+-+
+            // | | | |
+            // +-+-+.|
+            //   | A |
+            //   +---+
+            Remaining.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), YB (b) - YT (a)));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         case XLM|YMU:
         {
-            /*
-             *   +---+
-             *   | A |
-             * +-+-+.|
-             * | | | |
-             * | +-+-+
-             * | B |
-             * +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), YB (a) - YT (b)));
+            //   +---+
+            //   | A |
+            // +-+-+.|
+            // | | | |
+            // | +-+-+
+            // | B |
+            // +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), YB (a) - YT (b)));
             break;
         }
         case XMR|YMM:
         {
-            /*
-             * +---+
-             * |.+-+---+
-             * |A| | B |
-             * |.+-+---+
-             * +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), b.height()));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            // +---+
+            // |.+-+---+
+            // |A| | B |
+            // |.+-+---+
+            // +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), b.height()));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         case XMM|YOM:
         {
-            /*
-             *   +---+
-             *   | B |
-             * +-+---+-+
-             * | +---+ |
-             * | : A : |
-             * +-------+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
-            Areas.push_front (drawing_area (XL (b), YB (b), b.length(), YB (a) - YB (b)));
-            Areas.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
+            //   +---+
+            //   | B |
+            // +-+---+-+
+            // | +---+ |
+            // | : A : |
+            // +-------+
+            Remaining.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
+            Remaining.push_front (drawing_area (XL (b), YB (b), b.length(), YB (a) - YB (b)));
+            Remaining.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
             break;
         }
         case XLM|YMM:
         {
-            /*
-             *     +---+
-             * +---+-+.|
-             * | B | |A|
-             * +---+-+.|
-             *     +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), b.height()));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            //     +---+
+            // +---+-+.|
+            // | B | |A|
+            // +---+-+.|
+            //     +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), b.height()));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         case XMM|YMU:
         {
-            /*
-             * +-------+
-             * | : A : |
-             * | +---+ |
-             * +-+---+-+
-             *   | B |
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
-            Areas.push_front (drawing_area (XL (b), YT (a), b.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
+            // +-------+
+            // | : A : |
+            // | +---+ |
+            // +-+---+-+
+            //   | B |
+            //   +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
+            Remaining.push_front (drawing_area (XL (b), YT (a), b.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
             break;
         }
         case XMR|YOU:
         {
-            /*
-             *     +---+
-             * +---+-+ |
-             * | A | |B|
-             * +---+-+ |
-             *     +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));        
+            //     +---+
+            // +---+-+ |
+            // | A | |B|
+            // +---+-+ |
+            //     +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));        
             break;
         }   
         case XLR|YOM:
         {
-            /*
-             * +-------+
-             * |   B   |
-             * | +---+ |
-             * +-+---+-+
-             *   | A |
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            // +-------+
+            // |   B   |
+            // | +---+ |
+            // +-+---+-+
+            //   | A |
+            //   +---+
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         case XLM|YOU:
         {
-            /*
-             * +---+
-             * | +-+---+
-             * |B| | A |
-             * | +-+---+
-             * +---+
-             */
-            Areas.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
+            // +---+
+            // | +-+---+
+            // |B| | A |
+            // | +-+---+
+            // +---+
+            Remaining.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
             break;
         }
         case XLR|YMU:
         {
-            /*
-             *   +---+
-             *   | A |
-             * +-+---+-+
-             * | +---+ |
-             * |   B   |
-             * +-------+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            //   +---+
+            //   | A |
+            // +-+---+-+
+            // | +---+ |
+            // |   B   |
+            // +-------+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
             break;
         }
         case XLR|YMM:
         {
-            /*
-             *   +---+
-             * +-+---+---+
-             * | | A | B |
-             * +-+---+---+
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            //   +---+
+            // +-+---+---+
+            // | | A | B |
+            // +-+---+---+
+            //   +---+ 
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }   
         case XMM|YOU:
         {
-            /*
-             *   +---+
-             * +-+---+---+
-             * | | B | A |
-             * +-+---+---+
-             *   +---+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
-            Areas.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
+            //   +---+
+            // +-+---+---+
+            // | | B | A |
+            // +-+---+---+
+            //   +---+
+            Remaining.push_front (drawing_area (XL (a), YT (a), XL (b) - XL (a), a.height()));
+            Remaining.push_front (drawing_area (XR (b), YT (a), XR (a) - XR (b), a.height()));
             break;
         }   
         case XLR|YOU:
         {
-            /*
-             * +---------+
-             * | +---+   |
-             * | | A | B |
-             * | +---+   |
-             * +---------+
-             */
+            // +---------+
+            // | +---+   |
+            // | | A | B |
+            // | +---+   |
+            // +---------+
             break;
         }   
         case XMM|YMM:
         {
-            /*
-             * +---------+
-             * |.+---+...|
-             * | | B | A |
-             * |.+---+...|
-             * +---------+
-             */
-            Areas.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
-            Areas.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), b.height()));
-            Areas.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), b.height()));
-            Areas.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
+            // +---------+
+            // |.+---+...|
+            // | | B | A |
+            // |.+---+...|
+            // +---------+
+            Remaining.push_front (drawing_area (XL (a), YT (a), a.length(), YT (b) - YT (a)));
+            Remaining.push_front (drawing_area (XL (a), YT (b), XL (b) - XL (a), b.height()));
+            Remaining.push_front (drawing_area (XR (b), YT (b), XR (a) - XR (b), b.height()));
+            Remaining.push_front (drawing_area (XL (a), YB (b), a.length(), YB (a) - YB (b)));
             break;
         }
         default:
         {
             // no overlap
-            Areas.push_front (a);
+            Remaining.push_front (a);
             break;
         }
     }

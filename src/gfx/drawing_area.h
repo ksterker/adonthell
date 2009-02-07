@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.h,v 1.8 2008/04/14 11:07:19 ksterker Exp $
+   $Id: drawing_area.h,v 1.9 2009/02/07 21:47:09 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -185,7 +185,31 @@ namespace gfx
          */ 
         bool point_belong (s_int16 px, s_int16 py); 
 
-#ifndef SWIG
+        
+#ifndef SWIG        
+        /*
+         * rect_compare (A, B) returns X??|Y??.
+         */
+#define XLL (5 << 3) /* Bx1 <  Bx2 <  Ax1               <  Ax2              */
+#define XLM (4 << 3) /*        Bx1 <= Ax1 <= Bx2        <  Ax2              */
+#define XLR (3 << 3) /*        Bx1 <= Ax1               <  Ax2 <= Bx2       */
+#define XMM (2 << 3) /*               Ax1 <  Bx1 <  Bx2 <  Ax2              */
+#define XMR (1 << 3) /*               Ax1 <  Bx1        <= Ax2 <= Bx2       */
+#define XRR (0 << 3) /*               Ax1               <  Ax2 <  Bx1 < Bx2 */
+#define YOO (5 << 0) /* By1 <  By2 <  Ay1               <  Ay2              */
+#define YOM (4 << 0) /*        By1 <= Ay1 <= By2        <  Ay2              */
+#define YOU (3 << 0) /*        By1 <= Ay1               <  Ay2 <= By2       */
+#define YMM (2 << 0) /*               Ay1 <  By1 <  By2 <  Ay2              */
+#define YMU (1 << 0) /*               Ay1 <  By1        <= Ay2 <= By2       */
+#define YUU (0 << 0) /*               Ay1               <  Ay2 <  By1 < By2 */
+        
+        /**
+         * Compare positions of two drawing areas in relation to each other.
+         * @param the drawing_area to compare.
+         * @param a combination of the flags defined above.
+         */
+        int compare (const drawing_area & da) const;
+        
         GET_TYPE_NAME_VIRTUAL(gfx::drawing_area)
 #endif // SWIG
     
@@ -196,7 +220,6 @@ namespace gfx
 
         /// Attached drawing_area.
         const drawing_area *draw_to; 
-
     }; 
 }
 
