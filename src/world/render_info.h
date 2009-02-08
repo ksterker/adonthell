@@ -1,5 +1,5 @@
 /*
- $Id: render_info.h,v 1.10 2009/02/07 21:47:10 ksterker Exp $
+ $Id: render_info.h,v 1.11 2009/02/08 13:25:54 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #define WORLD_RENDERINFO_H
 
 #include "gfx/sprite.h"
-#include "world/plane3.h"
 #include "world/placeable_shape.h"
 #include "world/shadow.h"
 
@@ -50,8 +49,8 @@ public:
      * Create render data for given object.
      * @param shape the physical representation of the object
      * @param sprite the graphical representation of the object
-     * @param shdw the shadow cast onto this object
      * @param pos the position of the object in world-space
+     * @param shdw the shadow cast onto this object
      */
     render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, const std::vector<shadow_info> *shdw) 
     : Pos (pos), Shape (shape), Sprite (sprite), Shadow (shdw)
@@ -62,6 +61,10 @@ public:
         Projection[3] = y() - z() + shape->width();
     }
     
+    /**
+     * Create copy of render data.
+     * @param ri the render data to duplicate.
+     */
     render_info (const render_info & ri)
     : Pos (ri.Pos), Shape (ri.Shape), Sprite (ri.Sprite), Shadow (ri.Shadow)
     {
@@ -71,40 +74,84 @@ public:
         Projection[3] = ri.Projection[3];
     }
     
+    /**
+     * @name Sprite position
+     *
+     * Access to the location where sprite needs to be
+     * rendered on the drawing %surface.
+     */
+    ///@{
+    /**
+     * Return real world space position of sprite.
+     * @return sprite x-coordinate. 
+     */
     s_int32 x () const
     {
         return Pos.x() + Shape->x();
     }
 
+    /**
+     * Return real world space position of sprite.
+     * @return sprite y-coordinate. 
+     */
     s_int32 y () const
     {
         return Pos.y() + Shape->y();
     }
 
+    /**
+     * Return real world space position of sprite.
+     * @return sprite z-coordinate. 
+     */
     s_int32 z () const
     {
         return Pos.z() + Shape->z();
     }
-
+    ///@}
+    
+    /**
+     * @name Sprite projection.
+     *
+     * Gain access to the rectangle covered when projecting the
+     * sprite onto the drawing %surface.
+     */
+    ///@{
+    /**
+     * Return lower x coordinate of projected sprite.
+     * @return sprite lower x-coordinate. 
+     */
     s_int32 min_x () const
     {
         return Projection[0];
     }
     
+    /**
+     * Return lower y coordinate of projected sprite.
+     * @return sprite lower y-coordinate. 
+     */
     s_int32 min_yz () const
     {
         return Projection[1];
     }
 
+    /**
+     * Return upper x coordinate of projected sprite.
+     * @return sprite upper x-coordinate. 
+     */
     s_int32 max_x () const
     {
         return Projection[2];
     }
 
+    /**
+     * Return upper y coordinate of projected sprite.
+     * @return sprite upper y-coordinate. 
+     */
     s_int32 max_yz () const
     {
         return Projection[3];
     }
+    ///@}
     
     /// position of object in world space
     vector3<s_int32> Pos;

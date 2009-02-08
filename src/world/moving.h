@@ -1,5 +1,5 @@
 /*
- $Id: moving.h,v 1.16 2009/02/07 21:47:09 ksterker Exp $
+ $Id: moving.h,v 1.17 2009/02/08 13:25:53 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
@@ -34,7 +34,6 @@
 #ifndef WORLD_MOVING_H
 #define WORLD_MOVING_H
 
-#include "gfx/surface.h"
 #include "world/chunk_info.h"
 #include "world/coordinates.h"
 

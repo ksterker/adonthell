@@ -1,5 +1,5 @@
 /*
- $Id: shadow_info.h,v 1.1 2009/02/07 21:47:10 ksterker Exp $
+ $Id: shadow_info.h,v 1.2 2009/02/08 13:25:54 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,6 +45,8 @@ class shadow_info
 public:
     /**
      * Store information about shadow.
+     * @param x x-coordinate of shaodw casting object.
+     * @param y y-coordinate of shadow casting object.
      * @param image graphical representation of shadow.
      * @param distance distance between object and its shadow.
      */
@@ -58,7 +60,7 @@ public:
 
     /**
      * Copy constructor.
-     * @param shadow info structure to create a copy of.
+     * @param si %shadow info structure to create a copy of.
      */
     shadow_info (const shadow_info & si) : X (si.X), Y (si.Y), Distance (si.Distance), Image (si.Image)
     {

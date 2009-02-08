@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.7 2009/02/07 21:47:10 ksterker Exp $
+ $Id: renderer.h,v 1.8 2009/02/08 13:25:54 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,9 +30,6 @@
 #ifndef WORLD_RENDERER_H
 #define WORLD_RENDERER_H
 
-#include <list>
-
-#include "gfx/surface.h"
 #include "world/chunk_info.h"
 #include "world/render_info.h"
 

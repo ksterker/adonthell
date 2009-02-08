@@ -1,5 +1,5 @@
 /*
- $Id: renderer.cc,v 1.6 2009/02/01 15:18:26 ksterker Exp $
+ $Id: renderer.cc,v 1.7 2009/02/08 13:25:54 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,8 +30,6 @@
 #include "base/timer.h"
 #include "gfx/screen.h"
 #include "world/renderer.h"
-#include "world/render_info.h"
-#include "world/vector3.h"
 
 namespace world
 {

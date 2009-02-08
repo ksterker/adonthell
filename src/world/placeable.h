@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.10 2009/02/01 15:18:26 ksterker Exp $
+ $Id: placeable.h,v 1.11 2009/02/08 13:25:54 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -23,7 +23,7 @@
 /**
  * @file   world/placeable.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * @authos Kai Sterker <kai.sterker@gmail.com> 
+ * @author Kai Sterker <kai.sterker@gmail.com> 
  *
  * @brief  Declares the placeable class.
  * 

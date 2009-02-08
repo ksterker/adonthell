@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.16 2008/07/10 20:19:38 ksterker Exp $
+   $Id: surface.h,v 1.17 2009/02/08 13:25:53 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,7 +35,6 @@
 
 #include "base/flat.h"
 #include "gfx/drawable.h"
-#include <string>
 #include <fstream>
 
 #ifdef __BIG_ENDIAN__

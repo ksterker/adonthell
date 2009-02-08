@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.9 2009/02/01 15:18:24 ksterker Exp $
+ $Id: chunk.h,v 1.10 2009/02/08 13:25:53 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,8 +31,6 @@
 
 #ifndef WORLD_CHUNK_H
 #define WORLD_CHUNK_H
-
-#include <list>
 
 #include "world/chunk_info.h"
 #include "world/coordinates.h"

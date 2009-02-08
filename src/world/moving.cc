@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.25 2009/02/07 21:47:09 ksterker Exp $
+ $Id: moving.cc,v 1.26 2009/02/08 13:25:53 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -31,7 +31,6 @@
  * 
  */
 
-#include <cmath>
 #include <functional>
 
 #include "world/moving.h"

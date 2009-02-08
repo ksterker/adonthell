@@ -1,5 +1,5 @@
 /*
- $Id: coordinates.h,v 1.6 2008/09/14 14:25:24 ksterker Exp $
+ $Id: coordinates.h,v 1.7 2009/02/08 13:25:53 ksterker Exp $
  
  Copyright (C) 2002/2007 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,7 +31,6 @@
 #ifndef WORLD_COORDINATES_H
 #define WORLD_COORDINATES_H
 
-#include "base/types.h"
 #include "world/vector3.h"
 
 namespace world
