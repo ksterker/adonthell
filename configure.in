@@ -11,7 +11,7 @@ dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(adonthell, 0.4.0-alpha-2)
+AM_INIT_AUTOMAKE(adonthell, 0.4.0-alpha-3)
 AM_CONFIG_HEADER([config.h])
 
 dnl ********************

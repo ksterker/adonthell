@@ -297,3 +297,31 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(src)
 add_subdirectory(test)
+
+
+################
+# Source Package
+################
+
+set(CPACK_GENERATOR "")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Adonthell ${VERSION}")
+set(CPACK_PACKAGE_CONTACT adonthell-general@nongun.org)
+set(CPACK_PACKAGE_VENDOR com.linuxgames.adonthell)
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README)
+set(CPACK_PACKAGE_VERSION_MAJOR 0)
+set(CPACK_PACKAGE_VERSION_MINOR 4)
+set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_VERSION "${VERSION}")
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/COPYING)
+
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "adonthell-${VERSION}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "adonthell-${VERSION}")
+set(CPACK_SOURCE_IGNORE_FILES
+    "~$"
+    "\\\\.cvsignore"
+    "CVS/"
+)
+
+include(CPack)

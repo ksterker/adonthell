@@ -9,6 +9,7 @@ EXTRA_DIST = \
 	game_events/item_events.py \
 	game_events/quest_events.py \
 	game_events/time_events.py \
+    gfx/char/npc/shadow-40x25.png \
 	gfx/char/npc/ng/east_mov1.png \
 	gfx/char/npc/ng/east_mov2.png \
 	gfx/char/npc/ng/east_mov3.png \
