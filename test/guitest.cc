@@ -49,11 +49,11 @@ class GuiTest : public adonthell::app {
   }
   int main () {
     
-    InputHandler ih;
-    
     // Initialize the gfx and input systems
     init_modules (GFX | INPUT);
-    
+
+    InputHandler ih;
+        
     // Set us a nice window
 	gfx::screen::set_fullscreen(false);
     gfx::screen::set_video_mode(512,512);

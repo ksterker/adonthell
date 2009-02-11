@@ -4,7 +4,7 @@
 using std::string;
 #include <iostream>
 using std::cout;
-
+#include "base/base.h"
 
 namespace gui
 {
@@ -37,10 +37,13 @@ namespace gui
 		const char* defont = "data/gfx/gui/Vera.ttf";
 		if (!path)
 			path = defont;
+		
+		std::string fullpath (path); 
+		base::Paths.find_in_path (fullpath);
 		//make sure the library is initialized
 		error = 0;
 		ref(true);
-		if (error = FT_New_Face(library, path, 0, &face))
+		if (error = FT_New_Face(library, fullpath.c_str(), 0, &face))
 			cout << "Unable to load font " << path << "\n";
 		else
 			setSize(size);

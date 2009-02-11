@@ -17,7 +17,7 @@ callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
 diskiotest_SOURCES = diskiotest.cc
 diskiotest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
 
-guitest_CXXFLAGS = $(FT2_CFLAGS) -I../src
+guitest_CXXFLAGS = $(FT2_CFLAGS) -I$(top_srcdir)/src
 guitest_SOURCES = guitest.cc
 guitest_LDADD = \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)\
