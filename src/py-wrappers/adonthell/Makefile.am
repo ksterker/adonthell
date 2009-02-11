@@ -1,13 +1,13 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
-EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_gui.i py_main.i py_rpg.i py_world.i CMakeLists.txt
+EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py gui.py main.py rpg.py world.py
-noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc gui.pyc main.pyc rpg.pyc world.pyc
+pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py main.py rpg.py world.py
+noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc  main.pyc rpg.pyc world.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la _gui.la _main.la _rpg.la _world.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la  _main.la _rpg.la _world.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la
@@ -54,10 +54,10 @@ _audio_la_LDFLAGS = -avoid-version -module
 _audio_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/audio/ -ladonthell_audio $(PY_RUNTIME)
 
 ## Rules to build libpygui (libgui's Python wrapper)
-_gui_la_SOURCES = py_gui_wrap.cc
-_gui_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-_gui_la_LDFLAGS = -avoid-version -module
-_gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME)
+#_gui_la_SOURCES = py_gui_wrap.cc
+#_gui_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
+#_gui_la_LDFLAGS = -avoid-version -module
+#_gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME)
 
 ## Rules to build libpymain (libmain's Python wrapper)
 _main_la_SOURCES = py_main_wrap.cc
@@ -114,9 +114,9 @@ audio.py: py_audio_wrap.cc
 py_audio_wrap.cc: py_audio.i $(top_srcdir)/src/audio/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-gui.py: py_gui_wrap.cc
-py_gui_wrap.cc: py_gui.i  $(top_srcdir)/src/gui/*.h
-	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
+#gui.py: py_gui_wrap.cc
+#py_gui_wrap.cc: py_gui.i  $(top_srcdir)/src/gui/*.h
+#	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
 main.py: py_main_wrap.cc
 py_main_wrap.cc: py_main.i  $(top_srcdir)/src/main/*.h

@@ -1,26 +1,25 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir) $(FT2_CFLAGS)
 EXTRA_DIST = CMakeLists.txt
 
 pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
-	base.h \
-	container.h \
-	gui.h \
-	layout.h \
-	listlayout.h
+	font.h 
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
-	base.cc \
-	container.cc \
+	font.cpp \
+	widget.cpp \
+	label.cpp \
+	button.cpp \
 	layout.cc \
-	listlayout.cc
+	option.cpp \
+	textbox.cpp
 
 libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS)
 
 libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/input/ -ladonthell_input \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
-	-lstdc++
+	-lstdc++ $(FT2_LIBS)

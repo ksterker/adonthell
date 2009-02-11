@@ -1,5 +1,5 @@
 /*
-   $Id: timer.h,v 1.6 2006/09/30 23:04:59 ksterker Exp $
+   $Id: timer.h,v 1.7 2009/02/11 17:16:55 rians Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -24,6 +24,9 @@
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * @brief A timer implementation.
  */ 
+
+#ifndef BASE_TIMER_INCLUDED
+#define BASE_TIMER_INCLUDED
 
 #include <iostream>
 #include <sys/time.h>
@@ -125,3 +128,5 @@ namespace base
         u_int32 FramesMissed;
     };
 }
+
+#endif//BASE_TIMER_INCLUDED

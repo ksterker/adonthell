@@ -1,58 +1,68 @@
-/*
-   $Id: layout.h,v 1.5 2008/03/08 20:07:53 ksterker Exp $
+#ifndef GUI_LAYOUT_H
+#define GUI_LAYOUT_H
 
-   Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
-   Part of the Adonthell Project http://adonthell.linuxgames.com
+#include "base.h"
+#include "input/input.h"
+#include <vector>
+using std::vector;
 
-   Adonthell is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
 
-   Adonthell is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
-#ifndef GUI_LAYOUT_H_
-#define GUI_LAYOUT_H_
 
 namespace gui
 {
-  class container;
-  
-  class layout
-    {
-    public:
-      layout ();
-	  virtual ~layout() { }
-      
-      virtual bool update ();
-      
-      void set_container (container * ct);
+	struct guirect
+	{
+		int x, y, w, h;
+	};
+	struct layoutchild
+	{
+	public:
+		base* c;
+		guirect pos;
+		layoutchild(base*b, struct guirect& r):c(b),pos(r) {}
+	};
 
-      u_int16 get_max_length () const 
-	{ return m_length; }
+	enum fadetype {NONE, PLAIN, FADE, LEFT, RIGHT, BOTTOM, TOP};
+	class layout: public base
+	{
+	protected:
+		vector<layoutchild> children;
+		float dx, dy;
+		int which;
+		fadetype fading;
+		bool showing;
+		u_int32 ti;
+		bool focused;
+		//which way to move the focus. 
+		virtual bool moveright();
+		virtual bool moveleft();
+		virtual bool moveup();
+		virtual bool movedown();
+		//void dofade(int x, int y, const SDL_Surface* s);
+		bool mousestate[3];
+	public:
+		layout():which(0),dx(0),dy(0),fading(NONE),focused(false),hasborder(0) {selhilite=false;mousestate[0]=mousestate[1]=mousestate[2]=false;}
 
-      u_int16 get_max_height () const 
-	{return m_height; }
-      
-    protected:
-      
-      // define the space needed for this layout
-      // the space contains spaceborder and spacechild information
-      // from the container. m_length is the max size, m_height 
-      // the max height.
-      u_int16 m_length; 
-      u_int16 m_height;
+		virtual void draw(int x, int y, gfx::surface* s);
+		virtual bool keyup(input::keyboard_event & k);
+		virtual bool keydown(input::keyboard_event & k);
+//pending mouse support
+//		virtual bool mouseup(SDL_MouseButtonEvent & m);
+//		virtual bool mousedown(SDL_MouseButtonEvent & m);
+//		virtual bool mousemove(SDL_MouseMotionEvent & m) { return false; }
 
-      container * m_container;
-    };
-}
+		virtual bool focus(); 
+		virtual void unfocus() {if (children.size()) children[which].c->unfocus(); focused = false;}
 
-#endif
+		virtual void setSize(int width, int height) {w = width; h = height;}
+		
+		void addchild(base& c, int x, int y); 
+
+		void hide(fadetype f=PLAIN);
+		void show(fadetype f=PLAIN);
+		bool shown() { return visible;}
+		u_int32 hasborder; //could stick the color in here
+	};
+};
+
+#endif//GUI_BASE_H

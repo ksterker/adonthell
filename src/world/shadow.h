@@ -1,5 +1,5 @@
 /*
- $Id: shadow.h,v 1.4 2009/02/07 21:47:10 ksterker Exp $
+ $Id: shadow.h,v 1.5 2009/02/11 17:17:00 rians Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -79,7 +79,7 @@ public:
      * Cast (part) of shadow onto the given target.
      * @param ci placeable to draw shadow on.
      */
-    void shadow::cast_on (chunk_info* ci);
+    void cast_on (chunk_info* ci);
     
 protected:
     /**
