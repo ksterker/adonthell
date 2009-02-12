@@ -26,6 +26,9 @@ swig_link_libraries(input adonthell_python adonthell_py_runtime)
 # main module needs py_main.h to compile in out-of-source build
 set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/py_mainPYTHON_wrap.cxx" PROPERTIES COMPILE_FLAGS "-I${CMAKE_CURRENT_SOURCE_DIR}")
 
+# gui module requires freetype2 includes
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/py_guiPYTHON_wrap.cxx" PROPERTIES COMPILE_FLAGS "${LIBFT_CFLAGS}")
+
 # need __init__.py for modules being recognized correctly
 write_file (${CMAKE_CURRENT_BINARY_DIR}/__init__.py "\n")
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/__init__.py DESTINATION ${PYTHON_SITE_PACKAGE_DIR}/adonthell)

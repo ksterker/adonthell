@@ -246,6 +246,29 @@ else(LIBXML2_FOUND)
 		"LibXml2 is required.")
 endif(LIBXML2_FOUND)
 
+#######################
+# Freetype2
+#######################
+
+PKGCONFIG_FOUND(freetype2 LIBFREETYPE2_FOUND)
+IF(LIBFREETYPE2_FOUND)
+	PKGCONFIG(freetype2 LIBFT_INCLUDE_PATH LIBFT_LIBADD LIBFT_LIBRARIES LIBFT_CFLAGS)
+ELSE(LIBFREETYPE2_FOUND)
+	include(config/FindFreetype2.cmake)
+ENDIF(LIBFREETYPE2_FOUND)
+
+if(LIBFREETYPE2_FOUND)
+	message(STATUS
+		"LibFreetype2 has been found:")
+	message(STATUS
+		"\tCFLAGS : ${LIBFT_CFLAGS}")
+	message(STATUS
+		"\tLDFLAGS: ${LIBFT_LIBRARIES}")
+else(LIBFREETYPE2_FOUND)
+	message(FATAL_ERROR
+		"LibFreetype2 is required.")
+endif(LIBFREETYPE2_FOUND)
+
 
 ######################
 # Build the config.h file !

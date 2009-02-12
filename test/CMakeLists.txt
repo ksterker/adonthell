@@ -25,18 +25,23 @@ TARGET_LINK_LIBRARIES(diskiotest
 	)
 
 ###############################
-# Try to build the gfxtest
-ADD_EXECUTABLE(gfxtest
-			gfxtest.cc)
+# Try to build the guitest
+ADD_EXECUTABLE(guitest
+			guitest.cc)
 
-TARGET_LINK_LIBRARIES(gfxtest
+set_target_properties(guitest PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
+
+TARGET_LINK_LIBRARIES(guitest
 	ltdl
 	adonthell_base
 	adonthell_gfx
-#	adonthell_main
+	adonthell_gui
+	adonthell_input
+	adonthell_main
 #	adonthell_python
 #	adonthell_py_runtime
 	${PYTHON_EXTRA_LIBRARIES}
+	${LIBFT_LIBRARIES}
 	)
 
 ###############################

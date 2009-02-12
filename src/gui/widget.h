@@ -3,7 +3,7 @@
 
 #include "gfx/gfx.h"
 #include "gfx/surface_cacher.h"
-#include "base.h"
+#include "gui/base.h"
 
 namespace gui
 {

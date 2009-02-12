@@ -4,7 +4,15 @@ EXTRA_DIST = CMakeLists.txt
 
 pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
-	font.h 
+	base.h \
+	button.h \
+	draw.h \
+	font.h \
+	gui.h \
+	label.h \
+	layout.h \
+	option.h \
+	widget.h
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
