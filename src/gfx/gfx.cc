@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.11 2008/07/10 20:19:37 ksterker Exp $
+   $Id: gfx.cc,v 1.12 2009/02/16 10:32:32 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -123,6 +123,13 @@ namespace gfx
             goto bigerror;
         }
 
+        screen::info_p = (std::string (*)()) lt_dlsym(dlhandle, "gfx_screen_info");
+        if (!screen::info_p)
+        {
+            cerr << lt_dlerror() << endl;
+            goto bigerror;
+        }
+        
         create_surface_p = (surface *(*)()) lt_dlsym(dlhandle, "gfx_create_surface");
         if (!create_surface_p)
         {

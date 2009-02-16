@@ -1,5 +1,5 @@
 /*
-   $Id: screen.h,v 1.10 2009/01/28 18:48:11 ksterker Exp $
+   $Id: screen.h,v 1.11 2009/02/16 10:32:32 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -134,10 +134,9 @@ namespace gfx
          * Returns information about the current screen settings,
          * suitable for being displayed to the user.
          * 
-         * 
          * @return printable information about the current screen settings.
          */
-        //         static std::string info (); 
+        static std::string info () { return info_p(); }
         
         /**
          * @name Transparent color settings
@@ -166,6 +165,7 @@ namespace gfx
         static u_int32 (*trans_color_p)();
         static void (*clear_p)();
         static surface * (*get_surface_p)();
+        static std::string (*info_p)();
 
         friend bool gfx::init(const std::string &);
     };

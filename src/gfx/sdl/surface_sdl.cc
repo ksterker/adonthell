@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.12 2008/10/04 16:52:30 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.13 2009/02/16 10:32:32 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -221,6 +221,7 @@ namespace gfx
         const surface_sdl & src_sdl = (const surface_sdl &) src;
 
         (drawable&) (*this) = (drawable&) src;
+        alpha_channel_ = src.has_alpha_channel();
         is_masked_ = src.is_masked();
         alpha_ = src.alpha();
         if (vis) SDL_FreeSurface (vis);

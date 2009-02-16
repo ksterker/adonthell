@@ -1,5 +1,5 @@
 /*
-   $Id: screen_sdl.cc,v 1.8 2008/02/16 19:08:44 ksterker Exp $
+   $Id: screen_sdl.cc,v 1.9 2009/02/16 10:32:32 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,8 +26,10 @@
 #define gfx_screen_trans_color _sdl_LTX_gfx_screen_trans_color
 #define gfx_screen_clear _sdl_LTX_gfx_screen_clear
 #define gfx_screen_get_surface _sdl_LTX_gfx_screen_get_surface
+#define gfx_screen_info _sdl_LTX_gfx_screen_info
 #endif
 
+#include <sstream> 
 #include "gfx/sdl/screen_sdl.h"
 
 u_int32 trans_color = 0;
@@ -38,7 +40,8 @@ extern "C"
     void gfx_screen_update();
     u_int32 gfx_screen_trans_color();
     void gfx_screen_clear();
-    gfx::surface * gfx_screen_get_surface();
+    gfx::surface *gfx_screen_get_surface();
+    std::string gfx_screen_info();
 }
 
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
@@ -76,4 +79,32 @@ void gfx_screen_clear()
 gfx::surface * gfx_screen_get_surface()
 {
     return display;
+}
+
+std::string gfx_screen_info()
+{
+    const SDL_VideoInfo * vi = SDL_GetVideoInfo ();
+    std::ostringstream temp; 
+
+    const int driver_name_length = 500;
+    char drv_name[driver_name_length];
+
+    temp << "Video information: \n"
+         << "Video driver used:                   " << SDL_VideoDriverName(drv_name, driver_name_length) << std::endl
+         << "Internal game depth:                 " << ((int) vi->vfmt->BitsPerPixel) << std::endl
+         << "Can create hardware surfaces:        " << (vi->hw_available ? "Yes" : "No") << std::endl
+         << "Window manager available:            " << (vi->wm_available ? "Yes" : "No") << std::endl
+         << "Hardware blits accelerated:          " << (vi->blit_hw ? "Yes" : "No") << std::endl
+         << "Colorkey hardware blits accelerated: " << (vi->blit_hw_CC ? "Yes" : "No") << std::endl
+         << "Alpha hardware blits accelerated:    " << (vi->blit_hw_A ? "Yes" : "No") << std::endl
+         << "Software blits accelerated:          " << (vi->blit_sw ? "Yes" : "No") << std::endl
+         << "Colorkey software blits accelerated: " << (vi->blit_sw_CC ? "Yes" : "No") << std::endl
+         << "Alpha software blits accelerated:    " << (vi->blit_sw_A ? "Yes" : "No") << std::endl
+         << "Color fill blits accelerated:        " << (vi->blit_fill ? "Yes" : "No") << std::endl
+         << "Total video memory available:        " << vi->video_mem << " Kb" << std::endl 
+         << "Fullscreen:                          " << (gfx::screen::is_fullscreen() ? "Yes" : "No") << std::endl
+         << "Alpha value:                         " << ((int) vi->vfmt->alpha) << std::endl
+         << std::ends;
+
+    return temp.str ();
 }

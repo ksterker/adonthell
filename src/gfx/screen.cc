@@ -1,5 +1,5 @@
 /*
-   $Id: screen.cc,v 1.5 2009/01/28 18:48:11 ksterker Exp $
+   $Id: screen.cc,v 1.6 2009/02/16 10:32:32 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,6 +50,7 @@ namespace gfx
     u_int32 (*screen::trans_color_p)() = NULL;
     void (*screen::clear_p)() = NULL;
     surface * (*screen::get_surface_p)() = NULL;
+    std::string (*screen::info_p)() = NULL;
     
     bool screen::set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
     {
