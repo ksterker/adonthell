@@ -119,6 +119,7 @@ class GuiTest : public adonthell::app {
     // (that is, only the one we've connected) which will call the
     // callback function that has been connected to handle keyboard events.
 	gfx::surface * screen = gfx::screen::get_surface();
+	std::cout << gfx::screen::info ();
     while (!ih.letsexit) {
       ::base::Timer.update ();
       ::input::manager::update();
