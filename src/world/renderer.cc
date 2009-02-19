@@ -1,5 +1,5 @@
 /*
- $Id: renderer.cc,v 1.7 2009/02/08 13:25:54 ksterker Exp $
+ $Id: renderer.cc,v 1.8 2009/02/19 07:25:48 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
