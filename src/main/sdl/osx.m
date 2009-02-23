@@ -22,19 +22,6 @@
 - (void)setAppleMenu:(NSMenu *)menu;
 @end
 
-/* Portions of CPS.h */
-typedef struct CPSProcessSerNum
-{
-	UInt32		lo;
-	UInt32		hi;
-} CPSProcessSerNum;
-
-extern "C" {
-    OSErr	CPSGetCurrentProcess( CPSProcessSerNum *psn);
-    OSErr 	CPSEnableForegroundOperation( CPSProcessSerNum *psn, UInt32 _arg2, UInt32 _arg3, UInt32 _arg4, UInt32 _arg5);
-    OSErr	CPSSetFrontProcess( CPSProcessSerNum *psn);
-}
-
 /* An internal Apple class used to setup Apple menus */
 @interface NSAppleMenuController:NSObject {}
 - (void)controlMenu:(NSMenu *)aMenu;
@@ -160,14 +147,10 @@ void CustomApplicationMain (adonthell::app *theApp)
     /* Ensure the application object is initialised */
     [SDLApplication sharedApplication];
 
-    {
-        CPSProcessSerNum PSN;
-        /* Tell the dock about us */
-        if (!CPSGetCurrentProcess(&PSN))
-            if (!CPSEnableForegroundOperation(&PSN,0x03,0x3C,0x2C,0x1103))
-                if (!CPSSetFrontProcess(&PSN))
-                    [SDLApplication sharedApplication];
-    }
+    /* Tell the dock about us */
+	ProcessSerialNumber psn = { 0, kCurrentProcess };    
+  	/* Dock visibility, no error check because of bundle launchs. */
+	TransformProcessType (&psn, kProcessTransformToForegroundApplication);
 
     /* Set up the menubar */
     [NSApp setMainMenu:[[NSMenu alloc] init]];
@@ -189,6 +172,10 @@ void CustomApplicationMain (adonthell::app *theApp)
 /* Called when the internal event loop has just started running */
 - (void) applicationDidFinishLaunching: (NSNotification *) note
 {
+	/* make the application frontmost */
+	ProcessSerialNumber psn = { 0, kCurrentProcess };    
+	SetFrontProcess (&psn);
+    
     int status = Application->main ();
     Application->cleanup ();
     exit (status);

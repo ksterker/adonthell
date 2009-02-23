@@ -1,6 +1,9 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
-EXTRA_DIST = CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt sdl/manager_sdl.h sdl/input_sdl.cc \
+	sdl/manager_sdl.cc sdl13/manager_sdl.h sdl13/input_sdl.cc \
+	sdl13/manager_sdl.cc
+
 
 ## Our header files
 pkgincludeinputdir = $(pkgincludedir)/input
@@ -40,12 +43,12 @@ pkglibinput_LTLIBRARIES = _sdl.la
 ## Our header files
 pkgincludeinputsdldir = $(pkgincludedir)/input/sdl
 pkgincludeinputsdl_HEADERS = \
-	sdl/manager_sdl.h
+    $(sdlbackenddir)/manager_sdl.h
 
 ## Rules to build libinput_sdl
 _sdl_la_SOURCES = \
-	sdl/input_sdl.cc \
-	sdl/manager_sdl.cc
+	$(sdlbackenddir)/input_sdl.cc \
+	$(sdlbackenddir)/manager_sdl.cc
 
 _sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -avoid-version -module

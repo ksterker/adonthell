@@ -1,7 +1,10 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt sdlgl/screen_sdlgl.h sdlgl/surface_sdlgl.h sdlgl/gfx_sdlgl.cc \
-	sdlgl/screen_sdlgl.cc sdlgl/surface_sdlgl.cc
+	sdlgl/screen_sdlgl.cc sdlgl/surface_sdlgl.cc sdl/screen_sdl.h sdl/surface_sdl.h \
+	sdl/gfx_sdl.cc sdl/screen_sdl.cc sdl/surface_sdl.cc sdl13/screen_sdl.h sdl13/surface_sdl.h \
+	sdl13/gfx_sdl.cc sdl13/screen_sdl.cc sdl13/surface_sdl.cc
+
 
 ## Our header files
 pkgincludegfxdir = $(pkgincludedir)/gfx
@@ -48,14 +51,14 @@ pkglibgfx_LTLIBRARIES = _sdl.la
 ## Our header files
 pkgincludegfxsdldir = $(pkgincludedir)/gfx/sdl
 pkgincludegfxsdl_HEADERS = \
-	sdl/screen_sdl.h \
-	sdl/surface_sdl.h
+	$(sdlbackenddir)/screen_sdl.h \
+	$(sdlbackenddir)/surface_sdl.h
 
 ## Rules to build libgfx_sdl
 _sdl_la_SOURCES = \
-	sdl/gfx_sdl.cc \
-	sdl/screen_sdl.cc \
-	sdl/surface_sdl.cc
+	$(sdlbackenddir)/gfx_sdl.cc \
+	$(sdlbackenddir)/screen_sdl.cc \
+	$(sdlbackenddir)/surface_sdl.cc
 
 _sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -module -avoid-version
