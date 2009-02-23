@@ -1,5 +1,5 @@
 /*
-   $Id: drawing_area.cc,v 1.8 2009/02/07 21:47:09 ksterker Exp $
+   $Id: drawing_area.cc,v 1.9 2009/02/23 14:16:01 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
