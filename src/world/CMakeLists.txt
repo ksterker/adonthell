@@ -11,6 +11,7 @@ set(adonthell_world_SRCS
     placeable.cc
     placeable_model.cc
     placeable_shape.cc
+	 pathfinding.cc
     plane3.cc
     renderer.cc
     shadow.cc
@@ -28,11 +29,16 @@ set(adonthell_world_HEADERS
     entity.h
     mapview.h
     moving.h
+	 node.h
+	 node_cache.h
+	 node_bank.h
     object.h
+	 open_list.h
     placeable.h
     placeable_model.h
     placeable_shape.h
     plane3.h
+	 pathfinding.h
     render_info.h
     renderer.h
     shadow.h

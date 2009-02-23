@@ -80,6 +80,27 @@ TARGET_LINK_LIBRARIES(worldtest
 	)
 
 ###############################
+# Try to build the path_test
+ADD_EXECUTABLE(path_test
+			path_test.cc)
+
+include_directories(${PYTHON_INCLUDE_PATH})
+
+TARGET_LINK_LIBRARIES(path_test
+	ltdl
+	adonthell_base
+	adonthell_gfx
+	adonthell_input
+	adonthell_main
+	adonthell_world
+
+#	adonthell_python
+#	adonthell_py_runtime
+	${PYTHON_EXTRA_LIBRARIES}
+	)
+
+
+###############################
 # Try to build the smallworld
 ADD_EXECUTABLE(smallworld
 			smallworld.cc)

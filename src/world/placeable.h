@@ -1,33 +1,33 @@
 /*
- $Id: placeable.h,v 1.11 2009/02/08 13:25:54 ksterker Exp $
- 
+ $Id: placeable.h,v 1.12 2009/02/23 12:46:05 fr3dc3rv Exp $
+
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
- 
+
  Adonthell is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  Adonthell is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
- along with Adonthell; if not, write to the Free Software 
+ along with Adonthell; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   world/placeable.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * @author Kai Sterker <kai.sterker@gmail.com> 
+ * @author Kai Sterker <kai.sterker@gmail.com>
  *
  * @brief  Declares the placeable class.
- * 
- * 
+ *
+ *
  */
 
 #ifndef WORLD_PLACEABLE_H
@@ -40,25 +40,25 @@ namespace world
     class area;
 
     /// allowed types of objects on the map
-    typedef enum 
+    typedef enum
         {
-            UNKNOWN = 0, 
+            UNKNOWN = 0,
             /// scenery object
             OBJECT,
             /// creature
-            CHARACTER, 
+            CHARACTER,
             /// something that can be picked up
             ITEM
-        } placeable_type; 
+        } placeable_type;
 
     /**
      * Class representing a placeable, i.e. something (character, object, ...)
      * that can be placed on a map and occupies some space on it. Each placeable
      * is represented by one or more placeable_models, that contain the graphics
-     * and %collision data of the placeable. 
+     * and %collision data of the placeable.
      *
-     * It has a type that higher-level classes can overwrite to indicate what kind of 
-     * placeable it is (%item, %character or scenery) and a reference to the map it 
+     * It has a type that higher-level classes can overwrite to indicate what kind of
+     * placeable it is (%item, %character or scenery) and a reference to the map it
      * belongs to, so update functions can check the terrain around the placeable.
      */
     class placeable
@@ -66,13 +66,13 @@ namespace world
     public:
         /// type definitions for iterator over models
         typedef std::vector<world::placeable_model*>::const_iterator iterator;
-        
+
         /**
          * Create a thing on the map.
          * @param mymap map this thing belongs to.
          */
         placeable (area & mymap);
-    
+
         /**
          * Destructor.
          */
@@ -84,20 +84,20 @@ namespace world
          */
         placeable_type type () const
         {
-            return Type; 
+            return Type;
         }
-        
+
         /**
-         * Update placeable each game cycle. 
+         * Update placeable each game cycle.
          * @return true on success, false otherwise.
-         * @todo if only characters really require this, 
-         *      then limit to those for efficiency. 
+         * @todo if only characters really require this,
+         *      then limit to those for efficiency.
          */
         virtual bool update ()
         {
             return true;
         }
-        
+
         /**
          * @name Placeable representation
          *
@@ -107,31 +107,31 @@ namespace world
         /**
          * Add model to the placeable. Each placeable needs at least
          * one model, but can be composed of more than one.
-         * @param model model 
+         * @param model model
          */
         void add_model (placeable_model *model);
-        
+
         /**
          * Return const iterator to the first model the placeable
          * consists of.
          * @return iterator pointing to first model.
          */
         iterator begin () const { return Model.begin (); }
-        
+
         /**
-         * Return const iterator indicating the end of the list 
+         * Return const iterator indicating the end of the list
          * of models the placeable consists of.
          * @return iterator pointing after last model.
          */
         iterator end () const { return Model.end (); }
         //@}
-        
+
         /**
          * @name Placeable extension
          *
          * The maximum size of a placeable is the space that
          * encloses all its models with all their states. The
-         * current size may vary from that, depending on its 
+         * current size may vary from that, depending on its
          * current state.
          */
         //@{
@@ -150,11 +150,11 @@ namespace world
          * @return max extension of placeable in z direction.
          */
         u_int16 max_height () const { return MaxSize.z(); }
-        
+
         s_int16 min_x () const { return MinPos.x(); }
         s_int16 min_y () const { return MinPos.y(); }
         s_int16 min_z () const { return MinPos.z(); }
-        
+
         /**
          * Get placeable's current length.
          * @return actual extension of placeable in x direction.
@@ -169,13 +169,20 @@ namespace world
          * Get placeable's current height.
          * @return actual extension of placeable in z direction.
          */
-        u_int16 height () const { return CurSize.z(); }        
+        u_int16 height () const { return CurSize.z(); }
         //@}
 
         s_int16 cur_x () const { return CurPos.x(); }
         s_int16 cur_y () const { return CurPos.y(); }
-        s_int16 cur_z () const { return CurPos.z(); }        
-        
+        s_int16 cur_z () const { return CurPos.z(); }
+
+        /**
+         * Get placeable's map
+         * @return map where the placeable exists
+         */
+
+         area & map() const { return Mymap; }
+
         /**
          * @name Placeable state
          *
@@ -192,40 +199,40 @@ namespace world
          * @param state the new state of the placeable.
          */
         void set_state (const std::string & state);
-        
+
         /**
          * Get the current state of the placeable.
          * @return current state of the placeable.
          */
         const std::string & state () const { return State; }
         //@}
-        
+
         /**
          * @name Loading / Saving
          */
         //@{
         /**
-         * Save %placeable state to stream. 
+         * Save %placeable state to stream.
          * @param file stream to save %placeable to.
          * @return \b true if saving successful, \b false otherwise.
          */
         bool put_state (base::flat & file) const;
-        
+
         /**
-         * Load %placeable state from stream. 
+         * Load %placeable state from stream.
          * @param file stream to load %placeable from.
          * @return \b true if loading successful, \b false otherwise.
          */
         bool get_state (base::flat & file);
         //@}
-        
+
 #ifndef SWIG
         /**
          * Allow %placeable to be passed as python argument
          */
         GET_TYPE_NAME_VIRTUAL (world::placeable)
 #endif
-            
+
     protected:
         /// representation of the placeable
         std::vector<world::placeable_model*> Model;
@@ -239,8 +246,8 @@ namespace world
         vector3<s_int16> CurPos;
         /// the placeables current state
         std::string State;
-        /// whether placeable is character, scenery or item    
-        placeable_type Type; 
+        /// whether placeable is character, scenery or item
+        placeable_type Type;
         /// the map this placeable belongs to
         area & Mymap;
 
