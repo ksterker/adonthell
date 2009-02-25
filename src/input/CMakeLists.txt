@@ -32,10 +32,17 @@ target_link_libraries(adonthell_input
 
 ################################
 # Create the SDL Backend
+IF(${SDL_VERSION} STREQUAL 1.3)
+set(input_sdl_SRCS
+     sdl13/input_sdl.cc
+     sdl13/manager_sdl.cc
+)
+ELSE(${SDL_VERSION} STREQUAL 1.3)
 set(input_sdl_SRCS
      sdl/input_sdl.cc
      sdl/manager_sdl.cc
 )
+ENDIF(${SDL_VERSION} STREQUAL 1.3)
 
 # Add specific include directory for this library.
 include_directories(${SDL_INCLUDE_DIR})
