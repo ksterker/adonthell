@@ -82,6 +82,3 @@ class demo_intro_1 (dialogue.base):
 		self.the_player = p
 		self.the_npc = n
 
-	def __del__(self):
-		self.the_player.do_stuff ("enter_inn")
-

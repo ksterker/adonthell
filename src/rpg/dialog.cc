@@ -1,5 +1,5 @@
 /*
- $Id: dialog.cc,v 1.7 2008/10/04 16:52:30 ksterker Exp $
+ $Id: dialog.cc,v 1.8 2009/03/01 12:28:16 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -286,7 +286,8 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
 std::string dialog::scan_string (const char *s)
 {
     rpg::character *the_player = rpg::character::get_player();
-    char *tmp, *start, *mid, *str = NULL;
+    const char *start;
+    char *tmp, *mid, *str = NULL;
     u_int32 begin, end, len;
     std::string newstr (s); 
     PyObject *result;
@@ -340,7 +341,7 @@ std::string dialog::scan_string (const char *s)
         
         // Error!
         fprintf (stderr, "*** dialog::scan_string: unknown macro '%s' found!\n",  start);
-        start[0] = ' ';
+        newstr[newstr.length () - strlen (start)] = ' ';
     }
     
     // execute python functions
