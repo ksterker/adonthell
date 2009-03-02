@@ -7,7 +7,7 @@ pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py input.py audio.py main.py
 noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc input.pyc audio.pyc  main.pyc rpg.pyc world.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _input.la _audio.la  _main.la _rpg.la _world.la
+pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _gui.la _input.la _audio.la  _main.la _rpg.la _world.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la
@@ -54,10 +54,10 @@ _audio_la_LDFLAGS = -avoid-version -module
 _audio_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/audio/ -ladonthell_audio $(PY_RUNTIME)
 
 ## Rules to build libpygui (libgui's Python wrapper)
-#_gui_la_SOURCES = py_gui_wrap.cc
-#_gui_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-#_gui_la_LDFLAGS = -avoid-version -module
-#_gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME)
+_gui_la_SOURCES = py_gui_wrap.cc
+_gui_la_CXXFLAGS = $(PY_CFLAGS) $(FT2_CFLAGS) $(AM_CXXFLAGS)
+_gui_la_LDFLAGS = -avoid-version -module
+_gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME) $(FT2_LIBS)
 
 ## Rules to build libpymain (libmain's Python wrapper)
 _main_la_SOURCES = py_main_wrap.cc
@@ -114,9 +114,9 @@ audio.py: py_audio_wrap.cc
 py_audio_wrap.cc: py_audio.i $(top_srcdir)/src/audio/*.h
 	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
-#gui.py: py_gui_wrap.cc
-#py_gui_wrap.cc: py_gui.i  $(top_srcdir)/src/gui/*.h
-#	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
+gui.py: py_gui_wrap.cc
+py_gui_wrap.cc: py_gui.i  $(top_srcdir)/src/gui/*.h
+	$(SWIG) $(SWIG_ARGS) -o $(srcdir)/$@ $<
 
 main.py: py_main_wrap.cc
 py_main_wrap.cc: py_main.i  $(top_srcdir)/src/main/*.h
