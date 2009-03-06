@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.17 2009/02/08 13:25:53 ksterker Exp $
+   $Id: surface.h,v 1.18 2009/03/06 22:53:29 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -260,7 +260,7 @@ namespace gfx
          * @param x  Invert x axis
          * @param y  Invert y axis
          */
-        void mirror (bool x, bool y);
+        virtual void mirror (bool x, bool y) = 0;
 
         //@}
 
@@ -426,7 +426,7 @@ namespace gfx
          *  @return \e true in case of success, false otherwise.
          *  @sa load_png ()
          */
-        bool get_png (std::ifstream & file);
+        virtual bool get_png (std::ifstream & file) = 0;
 
         /** Loads an image from a file name, in PNG format, without
          *  alpha and mask values.
@@ -443,7 +443,7 @@ namespace gfx
          *  @return \e true in case of success, false otherwise.
          *  @sa save_png ()
          */
-        bool put_png (std::ofstream & file) const;
+        virtual bool put_png (std::ofstream & file) const = 0;
 
         /** Saves an image into an file, in PNG format, without
          *  alpha and mask values.
@@ -481,55 +481,6 @@ namespace gfx
         /// Surface size in bytes
         u_int32 size_;
         
-        /**
-         * Sets the surface pixel data from a given memory zone.
-         * \e data must point to a memory area of size
-         * l * h * bytes_per_pixel, containing the pixel data in
-         * the true color format, with the following masks:
-         * - Red: red_mask
-         * - Green: green_mask
-         * - Blue: blue_mask
-         * - Alpha: alpha_mask option (0 => none)
-         * 
-         * @param data Pointer to the new pixel data.
-         * @param l length of the image (in pixels)
-         * @param h height of the image (in pixels)
-         * @param bytes_per_pixel Number of data bytes per pixel.
-         * @param red_mask Red color mask.
-         * @param green_mask Green color mask.
-         * @param blue_mask Blue color mask.
-         * @param alpha_mask Alpha channel mask, or zero if disabled (default).
-         *
-         * set_data takes responsibility of memory management for 'data', which is
-         * expected to have been allocated with malloc() and/or calloc().
-         */
-        virtual void set_data (void * data, u_int16 l, u_int16 h,
-                               u_int8 bytes_per_pixel = BYTES_PER_PIXEL,
-                               u_int32 red_mask = R_MASK, u_int32 green_mask = G_MASK,
-                               u_int32 blue_mask = B_MASK, u_int32 alpha_mask = 0) = 0;
-
-        /**
-         * Returns the surface pixel data in the chosen format.
-         * The returned pointer points to a memory area of size
-         * length() * height() * bytes_per_pixel containing the pixel
-         * data in the requested color format, with the following masks:
-         * - Red: red_mask
-         * - Green: green_mask
-         * - Blue: blue_mask
-         *
-         * @attention The returned value has been allocated with calloc() -
-         * it's up to you to free() it when you no longer need it.
-         *
-         * @param bytes_per_pixel Number of data bytes per pixel.
-         * @param red_mask Red color mask.
-         * @param green_mask Green color mask.
-         * @param blue_mask Blue color mask.
-         * @return Image data converted to the requested format.
-         */
-        virtual void * get_data (u_int8 bytes_per_pixel,
-                                 u_int32 red_mask, u_int32 green_mask,
-                                 u_int32 blue_mask) const = 0;
-
     private:
         /**
          * Forbid copy construction.

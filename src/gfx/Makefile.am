@@ -17,6 +17,7 @@ pkgincludegfx_HEADERS = \
 	screen.h \
     sprite.h \
 	surface.h \
+    surface_ext.h \
     surface_cacher.h
 
 ## Main library
@@ -32,6 +33,7 @@ libadonthell_gfx_la_SOURCES = \
 	screen.cc \
     sprite.cc \
 	surface.cc \
+    surface_ext.cc \
     surface_cacher.cc
 
 
@@ -49,8 +51,7 @@ pkglibgfx_LTLIBRARIES = _sdl.la
 ### SDL backend
 
 ## Our header files
-pkgincludegfxsdldir = $(pkgincludedir)/gfx/sdl
-pkgincludegfxsdl_HEADERS = \
+noinst_HEADERS = \
 	$(sdlbackenddir)/screen_sdl.h \
 	$(sdlbackenddir)/surface_sdl.h
 
@@ -67,8 +68,7 @@ _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
 ### SDLGL backend
 
 ## Our header files
-#pkgincludegfxsdlgldir = $(pkgincludedir)/gfx/sdlgl
-#pkgincludegfxsdlgl_HEADERS = \
+#noinst_HEADERS = \
 #	sdlgl/screen_sdlgl.h \
 #	sdlgl/surface_sdlgl.h
 

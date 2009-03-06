@@ -1,5 +1,5 @@
 /*
-   $Id: manager_sdl.cc,v 1.1 2009/02/23 20:22:18 ksterker Exp $
+   $Id: manager_sdl.cc,v 1.2 2009/03/06 22:53:30 ksterker Exp $
 
    Copyright (C) 2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -105,7 +105,7 @@ namespace input
         /*  50 */ keyboard_event::BACKSLASH_KEY,
         /*  51 */ keyboard_event::SEMICOLON_KEY,
         /*  52 */ keyboard_event::BACKQUOTE_KEY, /* Apostrophe */
-        /*  53 */ keyboard_event::PLUS_KEY, /* Grave*/
+        /*  53 */ keyboard_event::CARET_KEY, /* Grave*/
         /*  54 */ keyboard_event::COMA_KEY,
         /*  55 */ keyboard_event::PERIOD_KEY,
         /*  56 */ keyboard_event::SLASH_KEY,
@@ -417,6 +417,7 @@ void input_manager_update()
                     return;
                 }
                     
+                // FIXME event.key.keysym.unicode is obsolete
                 input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.scancode], 
                                           event.key.keysym.unicode);
                 input::manager::raise_event (ke);
@@ -424,16 +425,22 @@ void input_manager_update()
             }
             case SDL_KEYUP:
             {
+                
                 // SDL 1.2 did not send keyup event when turning on caps lock
                 if (event.key.keysym.scancode == SDL_SCANCODE_CAPSLOCK && event.key.keysym.mod != 0)
                 {
                     return;
                 }
                 
+                // FIXME event.key.keysym.unicode is obsolete
                 input::keyboard_event ke (input::keyboard_event::KEY_RELEASED, input::sdl_key_trans[event.key.keysym.scancode], 
                                           event.key.keysym.unicode);
                 input::manager::raise_event (ke);
                 break;
+            }
+            case SDL_TEXTINPUT:
+            {
+                // event.text.text
             }
             case SDL_MOUSEMOTION:
             {

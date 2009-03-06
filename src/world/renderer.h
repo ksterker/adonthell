@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.8 2009/02/08 13:25:54 ksterker Exp $
+ $Id: renderer.h,v 1.9 2009/03/06 22:53:30 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,6 +42,11 @@ namespace world
 class renderer_base
 {
 public:
+    /**
+     * Destructor.
+     */
+    virtual ~renderer() { };
+    
     /**
      * Draw objects in the draw queue on screen.
      * @param x offset on the x-axis.
@@ -100,6 +105,11 @@ class default_renderer : public renderer_base
 {
 public:
     /**
+     * Destructor.
+     */
+    virtual ~default_renderer() { };
+        
+    /**
      * Draw objects in the draw queue on screen.
      * @param x offset on the x-axis.
      * @param y offset on the y-axis.
@@ -148,6 +158,11 @@ public:
      : DrawBBox (draw_bbox), Print (false), Delay (delay) 
     { }
     
+    /**
+     * Destructor.
+     */
+    virtual ~debug_renderer() { };
+        
     /**
      * Set Delay between drawing objects.
      * @param delay pause after each object has been rendered

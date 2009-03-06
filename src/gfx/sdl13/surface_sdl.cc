@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.1 2009/02/23 20:22:18 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.2 2009/03/06 22:53:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,7 @@ namespace gfx
     SDL_Rect surface_sdl::srcrect; 
     SDL_Rect surface_sdl::dstrect; 
 
-    surface_sdl::surface_sdl() : surface () 
+    surface_sdl::surface_sdl() : surface_ext () 
     { 
         vis = NULL;
         vis_data = NULL;

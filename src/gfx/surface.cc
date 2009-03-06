@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.18 2008/07/10 20:19:38 ksterker Exp $
+   $Id: surface.cc,v 1.19 2009/03/06 22:53:29 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -33,10 +33,6 @@
 #include <stdlib.h>
 #include "base/base.h"
 #include "gfx/surface.h"
-#include "gfx/png_wrapper.h"
-
-
-using namespace std;
 
 namespace gfx
 {
@@ -49,40 +45,6 @@ namespace gfx
     // dtor
     surface::~surface()
     {
-    }
-
-    // This should probably be somewhere else... like a utils in base or something...
-    template <class type>
-    void reverseArray (type *orig, size_t len)
-    {
-        size_t start=0;
-        type swap;
-
-        for(;start<--len;start++) //increment a and decrement b until they meet eachother
-        {
-            swap=orig[start];       //put what's in a into swap space
-            orig[start]=orig[len];    //put what's in b into a
-            orig[len]=swap;       //put what's in the swap (a) into b
-        }
-    }
-
-    void surface::mirror (bool x, bool y)
-    {
-        if (x)
-        {
-            u_int8 *rawdata = (u_int8 *)get_data(3, R_MASK, G_MASK, B_MASK);
-            for(int idx = 0; idx < height(); idx++)
-                reverseArray(&rawdata[idx*length()*3], length()*3);
-            //This is swapped (BGR) because we swapped at a byte level, not at a pixel level
-            set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK);
-            is_mirrored_x_ = !is_mirrored_x_;
-        }
-
-        if (y)
-        {
-            cout << "Mirroring in y is not supported yet." << endl;
-            is_mirrored_y_ = !is_mirrored_y_;
-        }
     }
 
     void surface::draw_line(const s_int16 x1, const s_int16 y1, const s_int16 x2, const s_int16 y2, 
@@ -201,28 +163,6 @@ namespace gfx
         return file.success();
     }
 
-    // load png into image
-    bool surface::get_png (ifstream & file)
-    {
-        void *rawdata;
-        u_int16 l, h; 
-        bool alpha = false;
-
-        rawdata = png::get (file, l, h, &alpha);
-
-        if (!rawdata) return false;
-
-        clear ();
-        
-        // temporary till a real method can be used to compute the size
-        size_ = l * h * (alpha ? 4 : 3);
-        
-        set_data(rawdata, l, h, alpha ? 4 : 3,
-                 R_MASK, G_MASK, B_MASK, alpha ? A_MASK : 0);
-
-        return true;
-    }
-
     // load png into image from file
     bool surface::load_png (const string & fname)
     {
@@ -235,10 +175,10 @@ namespace gfx
         }
         
         // try to open file
-        ifstream file (path.c_str(), ifstream::binary);
+        std::ifstream file (path.c_str(), std::ifstream::binary);
         if (!file.is_open()) 
         {
-            cout << "*** surface::load_png: unable to open '" << path << "'" << endl;
+            std::cout << "*** surface::load_png: unable to open '" << path << "'" << std::endl;
             return false;
         }
         
@@ -248,28 +188,15 @@ namespace gfx
         return ret;
     }
 
-    // save image data as png
-    bool surface::put_png (ofstream & file) const
-    {
-        void * rawdata = get_data(3, R_MASK, G_MASK, B_MASK);
-
-        if (!rawdata) return false;
-
-        png::put (file, (const char *)rawdata, length (), height (), false);
-
-        free(rawdata);
-
-        return true;
-    }
-
     // save image data as png in given file
     bool surface::save_png (const string & fname) const
     {
-        ofstream file(fname.c_str(), ios::binary);
+        std::ofstream file(fname.c_str(), std::ios::binary);
         bool ret = true;
 
         if (!file.is_open())
             return false;
+        
         ret = put_png (file);
         file.close();
         return true;

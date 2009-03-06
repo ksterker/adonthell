@@ -9,6 +9,7 @@ set(adonthell_gfx_SRCS
     sprite.cc
 	surface.cc
     surface_cacher.cc
+	surface_ext.cc
 )
 
 set(adonthell_gfx_HEADERS
@@ -21,6 +22,7 @@ set(adonthell_gfx_HEADERS
     sprite.h
 	surface.h
     surface_cacher.h
+	surface_ext.h
 )
 
 add_definitions(${PNG_DEFINITIONS})

@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdlgl.cc,v 1.7 2008/10/04 16:52:30 ksterker Exp $
+   $Id: surface_sdlgl.cc,v 1.8 2009/03/06 22:53:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -27,7 +27,7 @@
 
 namespace gfx
 {
-    surface_sdlgl::surface_sdlgl() : surface () 
+    surface_sdlgl::surface_sdlgl() : surface_ext () 
     {
 	texture = 0;
     }

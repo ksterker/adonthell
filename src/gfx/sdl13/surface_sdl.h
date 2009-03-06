@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.h,v 1.1 2009/02/23 20:22:18 ksterker Exp $
+   $Id: surface_sdl.h,v 1.2 2009/03/06 22:53:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -23,12 +23,12 @@
 #define SURFACE_SDL_H_
 
 
-#include "gfx/surface.h"
+#include "gfx/surface_ext.h"
 #include "SDL.h"
 
 namespace gfx
 {
-    class surface_sdl : public surface
+    class surface_sdl : public surface_ext
     {
     public:
         surface_sdl ();

@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.13 2009/02/16 10:32:32 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.14 2009/03/06 22:53:30 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,7 +30,7 @@ namespace gfx
     SDL_Rect surface_sdl::srcrect; 
     SDL_Rect surface_sdl::dstrect; 
 
-    surface_sdl::surface_sdl() : surface () 
+    surface_sdl::surface_sdl() : surface_ext () 
     { 
         vis = NULL;
         vis_data = NULL;
@@ -249,11 +249,11 @@ namespace gfx
             {
                 SDL_Surface *tmp = SDL_CreateRGBSurface (
                     SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
-                    length (), height (), BYTES_PER_PIXEL,
+                    length (), height (), BYTES_PER_PIXEL*8,
                     R_MASK, G_MASK, B_MASK, A_MASK);
                 
                 // does created surface match screen?
-                if (display->vis->format->BitsPerPixel != BYTES_PER_PIXEL)
+                if (display->vis->format->BytesPerPixel != BYTES_PER_PIXEL)
                 {
                     vis = SDL_DisplayFormatAlpha (tmp);
                     SDL_FreeSurface (tmp);
