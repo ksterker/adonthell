@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.9 2009/03/06 22:53:30 ksterker Exp $
+ $Id: renderer.h,v 1.10 2009/03/07 14:36:58 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -45,7 +45,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~renderer() { };
+    virtual ~renderer_base() { };
     
     /**
      * Draw objects in the draw queue on screen.
