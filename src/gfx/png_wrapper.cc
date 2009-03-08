@@ -1,5 +1,5 @@
 /*
-   $Id: png_wrapper.cc,v 1.7 2008/03/08 20:07:53 ksterker Exp $
+   $Id: png_wrapper.cc,v 1.8 2009/03/08 13:21:23 ksterker Exp $
 
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -206,10 +206,11 @@ namespace gfx
             return;
         }
 
-        png_set_IHDR(png_ptr, info_ptr, length, height,
-            8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
-            PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
-
+        int color_type = alpha ? PNG_COLOR_TYPE_RGBA : PNG_COLOR_TYPE_RGB;
+        png_set_IHDR(png_ptr, info_ptr, length, height, 8, color_type, 
+                     PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE, 
+                     PNG_FILTER_TYPE_BASE);
+        
         png_write_info(png_ptr, info_ptr);
 
         /* write bytes */
