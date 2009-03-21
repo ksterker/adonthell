@@ -1,5 +1,5 @@
 /*
-   $Id: manager_base.h,v 1.5 2005/10/09 07:38:40 ksterker Exp $
+   $Id: manager_base.h,v 1.6 2009/03/21 14:29:06 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,8 +52,9 @@ namespace events
 		manager_base (new_event create_event)
 		{
 			event *evt = create_event ();
-
 			Name = evt->name();
+            delete evt;
+            
 			event_type::register_type (Name, this, create_event);
 		}
 

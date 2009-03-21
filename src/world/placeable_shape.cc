@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.cc,v 1.4 2008/01/04 22:44:08 ksterker Exp $
+ $Id: placeable_shape.cc,v 1.5 2009/03/21 14:29:11 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,16 @@
 #include "world/placeable_shape.h"
 
 using world::placeable_shape;
+
+// dtor
+placeable_shape::~placeable_shape()
+{
+    for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
+	{
+        delete *i;
+    }
+    Parts.clear();
+}
 
 // add a part to object shape
 void placeable_shape::add_part (world::cube3 * part)

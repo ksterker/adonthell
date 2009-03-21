@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.8 2009/02/01 15:18:26 ksterker Exp $
+ $Id: placeable.cc,v 1.9 2009/03/21 14:29:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,6 +43,16 @@ placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
     MinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
     State = "";
+}
+
+// dtor
+placeable::~placeable()
+{
+    for (std::vector<world::placeable_model*>::iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        delete *i;
+    }
+    Model.clear();
 }
 
 // change state of placeable

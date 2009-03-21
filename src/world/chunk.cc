@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.11 2009/03/21 11:59:47 ksterker Exp $
+ $Id: chunk.cc,v 1.12 2009/03/21 14:29:09 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -69,6 +69,16 @@ chunk::chunk () : Split ()
     Resize = false;
     // initialise children to NULL
     memset (Children, 0, 8 * sizeof(chunk*));
+}
+
+// dtor
+chunk::~chunk()
+{
+    Objects.clear();
+    for (u_int8 i = 0; i < 8; i++)
+    {
+        delete Children[i];
+    }
 }
 
 // add an object to chunk

@@ -178,7 +178,8 @@ void CustomApplicationMain (adonthell::app *theApp)
     
     int status = Application->main ();
     Application->cleanup ();
-    exit (status);
+    // exit (status);
+    [NSApp stop:nil];
 }
 @end
 

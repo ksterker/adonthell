@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.27 2009/03/21 11:59:47 ksterker Exp $
+ $Id: moving.cc,v 1.28 2009/03/21 14:29:10 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -61,6 +61,7 @@ struct z_order : public std::binary_function<const chunk_info *, const chunk_inf
 moving::moving (world::area & mymap)
     : placeable (mymap), coordinates ()
 {
+    GroundPos = 0;
     MyShadow = NULL;
 
 #if DEBUG_COLLISION
@@ -109,6 +110,7 @@ void moving::set_altitude (const s_int32 & z)
 {
     coordinates::set_z (z);
     Position.set_z (z);
+    GroundPos = z;
 }
 
 // check objects on map for collision
@@ -354,7 +356,7 @@ void moving::calculate_ground_pos ()
 // update movable position
 bool moving::update ()
 {
-    static entity e (this);
+    static named_entity e (this, "", false);
     
 #if DEBUG_COLLISION
     // clear image

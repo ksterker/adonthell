@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.h,v 1.8 2007/07/22 01:32:21 ksterker Exp $
+   $Id: time_event.h,v 1.9 2009/03/21 14:29:06 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,6 +67,7 @@ namespace events
         time_event () : event ()
         {
             Repeat = 1;
+            Interval = 0;
         }
         
         /**
@@ -79,6 +80,7 @@ namespace events
         {
             Time = time;
             Repeat = 1;
+            Interval = 0;
         }
 #endif // SWIG
         

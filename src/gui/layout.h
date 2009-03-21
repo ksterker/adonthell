@@ -1,9 +1,10 @@
 #ifndef GUI_LAYOUT_H
 #define GUI_LAYOUT_H
 
-#include "base.h"
+#include "gui/base.h"
 #include "input/input.h"
 #include <vector>
+
 using std::vector;
 
 

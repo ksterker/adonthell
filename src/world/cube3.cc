@@ -1,5 +1,5 @@
 /*
- $Id: cube3.cc,v 1.9 2008/02/16 21:13:25 ksterker Exp $
+ $Id: cube3.cc,v 1.10 2009/03/21 14:29:09 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,6 +48,22 @@ cube3::cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & hei
     Max.set (length, width, height);
 }
 
+// dtor
+cube3::~cube3()
+{
+    clear();
+}
+
+// cleanup
+void cube3::clear()
+{
+    for (std::vector<triangle3<s_int16> *>::iterator i = Surface.begin(); i != Surface.end(); i++)
+    {
+        delete *i;
+    }
+    Surface.clear();
+}
+
 // update bounding box
 void cube3::create_bounding_box ()
 {
@@ -76,7 +92,7 @@ void cube3::collide (collision * collisionData, const vector3<s_int16> & offset)
 // convert to triangles
 void cube3::create_mesh ()
 {
-	Surface.clear ();
+	clear ();
 	
 	convert_face (TOP_FRONT_LEFT, TOP_FRONT_RIGHT, TOP_BACK_RIGHT, TOP_BACK_LEFT);				// top face	
 	convert_face (BOTTOM_FRONT_RIGHT, BOTTOM_FRONT_LEFT, BOTTOM_BACK_LEFT, BOTTOM_BACK_RIGHT);	// bottom face

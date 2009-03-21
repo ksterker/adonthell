@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.11 2009/03/21 11:59:47 ksterker Exp $
+ $Id: chunk.h,v 1.12 2009/03/21 14:29:09 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,8 +49,16 @@ namespace world
      */
     class chunk
     {
-    public:        
+    public:
+        /**
+         * Constructor.
+         */
         chunk ();
+        
+        /**
+         * Destructor.
+         */
+        virtual ~chunk();
         
         /**
          * @name Chunk population

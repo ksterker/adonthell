@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.13 2009/03/21 11:59:47 ksterker Exp $
+ $Id: placeable.h,v 1.14 2009/03/21 14:29:10 ksterker Exp $
 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -76,7 +76,7 @@ namespace world
         /**
          * Destructor.
          */
-        virtual ~placeable() { }
+        virtual ~placeable();
 
         /**
          * Get type of this placeable.

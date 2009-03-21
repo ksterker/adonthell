@@ -1,5 +1,5 @@
 /*
- $Id: cube3.h,v 1.7 2008/10/03 17:16:24 ksterker Exp $
+ $Id: cube3.h,v 1.8 2009/03/21 14:29:10 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -66,6 +66,11 @@ public:
 	 */
 	cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & height);
 	
+    /**
+     * Destructor.
+     */
+    ~cube3 ();
+    
     /**
      * @name Bounding Box
      */
@@ -172,6 +177,11 @@ protected:
 	/// the cube's corners
 	vector3<s_int16> Corners[8];	
 
+    /**
+     * Cleanup.
+     */
+    void clear();
+        
 private:
 	/**
 	 * Split a face of the cube, specified by the indices of its four corner points,

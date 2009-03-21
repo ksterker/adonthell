@@ -1,5 +1,5 @@
 /*
-   $Id: sprite.cc,v 1.1 2008/07/10 20:19:37 ksterker Exp $
+   $Id: sprite.cc,v 1.2 2009/03/21 14:29:07 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -52,11 +52,19 @@ namespace gfx
     sprite::~sprite ()
     {
         delete m_listener;
+        clear();
     }
     
     // reset sprite
     void sprite::clear ()
     {
+        for (animation_map::iterator i = m_states.begin(); i != m_states.end(); i++)
+        {
+            for (animation_list::const_iterator j = i->second.begin(); j != i->second.end(); j++) 
+            {
+                delete *j;
+            }                
+        }
         m_states.clear ();
         m_valid = false;
         m_playing = false;

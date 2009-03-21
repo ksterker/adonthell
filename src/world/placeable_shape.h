@@ -1,5 +1,5 @@
 /*
- $Id: placeable_shape.h,v 1.8 2008/11/09 14:07:40 ksterker Exp $
+ $Id: placeable_shape.h,v 1.9 2009/03/21 14:29:11 ksterker Exp $
  
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,6 +53,11 @@ namespace world
         {
         }
 
+        /**
+         * Destructor.
+         */
+        ~placeable_shape();
+        
         /**
          * Add a part to this shape.
          * @param part the part to add to the shape.
