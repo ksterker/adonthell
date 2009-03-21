@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.10 2009/02/08 13:25:53 ksterker Exp $
+ $Id: chunk.h,v 1.11 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -61,7 +61,12 @@ namespace world
          * @param object entity to add to the world.
          * @param coordinates location of the entity.
          */
-        void add (placeable * object, const coordinates & pos);
+        void add (entity * object, const coordinates & pos);
+        
+        /**
+         * Add object at given coordinates.
+         * @param ci entity to add to the world.
+         */        
         void add (const chunk_info & ci);
         
         /**
@@ -69,7 +74,12 @@ namespace world
          * @param object entity to remove from the world.
          * @param coordinates location of the entity.
          */
-        void remove (placeable * object, const coordinates & pos);
+        void remove (entity * object, const coordinates & pos);
+        
+        /**
+         * Remove object from world.
+         * @param ci entity to remove from world.
+         */                
         void remove (const chunk_info & ci);
         //@}
         

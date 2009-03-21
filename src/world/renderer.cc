@@ -1,5 +1,5 @@
 /*
- $Id: renderer.cc,v 1.8 2009/02/19 07:25:48 ksterker Exp $
+ $Id: renderer.cc,v 1.9 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,7 +42,9 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::
     // populate render queue
     for (std::list<world::chunk_info*>::const_iterator i = objectlist.begin(); i != objectlist.end(); i++)
     {
-        for (placeable::iterator obj = (*i)->Object->begin(); obj != (*i)->Object->end(); obj++)
+        const placeable *object = (*i)->get_object();
+        
+        for (placeable::iterator obj = object->begin(); obj != object->end(); obj++)
         {
             render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->Min, (*i)->get_shadow()));
         }

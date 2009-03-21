@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.cc,v 1.7 2006/09/30 23:04:59 ksterker Exp $
+   $Id: diskio.cc,v 1.8 2009/03/21 11:59:46 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -48,6 +48,11 @@ diskio::diskio (const diskio::file_format & format) : flat (256)
             Writer = new base::disk_writer_xml ();
             break;
         }
+        case BY_EXTENSION:
+        {
+            Writer = NULL;
+            break;
+        }
         default:
         {
             Writer = NULL;
@@ -66,6 +71,11 @@ diskio::~diskio ()
 // read record from file
 bool diskio::get_record (const std::string & filename)
 {
+    if (Writer == NULL)
+    {
+        get_writer_for_extension (filename);
+    }
+    
     if (Writer != NULL)
     {
         return Writer->get_state (filename, *this);
@@ -77,10 +87,29 @@ bool diskio::get_record (const std::string & filename)
 // write record to file
 bool diskio::put_record (const std::string & filename)
 {
+    if (Writer == NULL)
+    {
+        get_writer_for_extension (filename);
+    }
+    
     if (Writer != NULL)
     {
         return Writer->put_state (filename, *this);
     }
     
     return false;
+}
+
+// determine file format from file extension
+void diskio::get_writer_for_extension (const std::string & filename)
+{
+    // treat file names with '.xml' extension as XML, all others as binary
+    if (filename.compare (filename.length() - 4, 4, ".xml"))
+    {
+        Writer = new base::disk_writer_gz ();
+    }
+    else
+    {
+        Writer = new base::disk_writer_xml ();
+    }
 }

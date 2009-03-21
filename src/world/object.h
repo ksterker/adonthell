@@ -1,5 +1,5 @@
 /*
- $Id: object.h,v 1.3 2008/03/08 20:07:53 ksterker Exp $
+ $Id: object.h,v 1.4 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -89,9 +89,10 @@ namespace world
         /**
          * Save %object state to file.
          * @param fname file name.
+         * @param format type of file to create.
          * @return true on success, false otherwise.
          */
-        bool save (const std::string & fname) const;
+        bool save (const std::string & fname, const base::diskio::file_format & format) const;
         
         /**
          * Load %object state from file.

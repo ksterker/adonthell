@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.14 2009/02/07 21:47:09 ksterker Exp $
+   $Id: character.cc,v 1.15 2009/03/21 11:59:47 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -204,11 +204,11 @@ bool character::get_state (base::flat & file)
     return file.success ();
 }
 
-// save to XML file
-bool character::save (const std::string & fname) const
+// save to file
+bool character::save (const std::string & fname, const base::diskio::file_format & format) const
 {
     // try to save character
-    base::diskio record (base::diskio::XML_FILE);
+    base::diskio record (format);
     if (!put_state (record))
     {
         fprintf (stderr, "*** character::save: saving '%s' failed!\n", fname.c_str ());        
@@ -219,14 +219,17 @@ bool character::save (const std::string & fname) const
     return record.put_record (fname);
 }
 
-// load from XML file
+// load from file
 bool character::load(const std::string & fname)
 {
     // try to load character
-    base::diskio record (base::diskio::XML_FILE);
+    base::diskio record (base::diskio::BY_EXTENSION);
     
-    if (record.get_record (fname)) 
+    if (record.get_record (fname))
+    {
+        Filename = fname;
         return get_state (record);
+    }
     
     return false;
 }

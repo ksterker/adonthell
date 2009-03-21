@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.12 2009/02/23 12:46:05 fr3dc3rv Exp $
+ $Id: placeable.h,v 1.13 2009/03/21 11:59:47 ksterker Exp $
 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -234,6 +234,8 @@ namespace world
 #endif
 
     protected:
+        /// file this placeable was loaded from
+        std::string Filename;
         /// representation of the placeable
         std::vector<world::placeable_model*> Model;
         /// bounding box of this placeable. It's updated when adding shapes.

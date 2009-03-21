@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.5 2009/02/07 21:47:09 ksterker Exp $
+ $Id: chunk_info.h,v 1.6 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -32,7 +32,7 @@
 #ifndef WORLD_CHUNK_INFO_H
 #define WORLD_CHUNK_INFO_H
 
-#include "world/placeable.h"
+#include "world/entity.h"
 #include "world/shadow_info.h"
 
 namespace world
@@ -46,12 +46,12 @@ namespace world
     public:
         /**
          * Create a new chunk_info.
-         * @param o the object at this point in world space
+         * @param e the object at this point in world space
          * @param min the position of the object in world space
          * @param max the extend of the object in world space
          */
-        chunk_info (placeable *o, const vector3<s_int32> & min, const vector3<s_int32> & max) 
-        : Object (o), Min (min), Max (max)
+        chunk_info (entity *e, const vector3<s_int32> & min, const vector3<s_int32> & max) 
+        : Entity (e), Min (min), Max (max)
         {
         }
 
@@ -60,7 +60,7 @@ namespace world
          * @param ci object to copy.
          */
         chunk_info (const chunk_info & ci) 
-        : Object (ci.Object), Min (ci.Min), Max (ci.Max), Shadow (ci.Shadow)
+        : Entity (ci.Entity), Min (ci.Min), Max (ci.Max), Shadow (ci.Shadow)
         {
         }
 
@@ -71,12 +71,22 @@ namespace world
         bool operator == (const chunk_info & ci) const;
 
         /**
+         * Get pointer to the map object instance.
+         * @return pointer to the underlying placeable.
+         */
+        placeable *get_object() const
+        {
+            return Entity->get_object();
+        }
+        
+        /**
          * Return "real" position, taking placeable shape offset into account.
          * @return lower coordinate of bounding box
          */
         vector3<s_int32> real_min () const
         {
-            return Min + vector3<s_int32>(Object->min_x(), Object->min_y(), Object->min_z());
+            const placeable *object = Entity->get_object(); 
+            return Min + vector3<s_int32>(object->min_x(), object->min_y(), object->min_z());
         }
 
         /**
@@ -85,7 +95,8 @@ namespace world
          */
         vector3<s_int32> real_max () const
         {
-            return Max + vector3<s_int32>(Object->min_x(), Object->min_y(), Object->min_z());
+            const placeable *object = Entity->get_object(); 
+            return Max + vector3<s_int32>(object->min_x(), object->min_y(), object->min_z());
         }
         
         /**
@@ -125,15 +136,15 @@ namespace world
          */
         const std::vector<shadow_info> *get_shadow () const { return &Shadow; }
         //@}
-                
-        /// pointer to map object
-        placeable * Object;
+        
         /// position of the object
         vector3<s_int32> Min;
         /// extend of the object
         vector3<s_int32> Max;
         
     private:
+        /// pointer to map object
+        entity * Entity;
         /// shadow cast on this object 
         std::vector<shadow_info> Shadow;
     };

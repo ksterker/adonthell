@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.8 2009/01/28 21:39:10 ksterker Exp $
+ $Id: character.h,v 1.9 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -33,6 +33,7 @@
 #ifndef WORLD_CHARACTER_H
 #define WORLD_CHARACTER_H
 
+#include "base/diskio.h"
 #include "world/moving.h"
 
 namespace world
@@ -204,9 +205,10 @@ namespace world
         /**
          * Save character state to file.
          * @param fname file name.
+         * @param format type of file to create.
          * @return true on success, false otherwise.
          */
-        bool save (const std::string & fname) const;
+        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
         
         /**
          * Load character state from file.

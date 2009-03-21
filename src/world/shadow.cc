@@ -1,5 +1,5 @@
 /*
- $Id: shadow.cc,v 1.4 2009/02/07 21:47:10 ksterker Exp $
+ $Id: shadow.cc,v 1.5 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -73,13 +73,15 @@ void shadow::cast_on (chunk_info* ci)
     // are there parts of the shadow remaining at all?
     if (Remaining.size() > 0)
     {
+        const placeable *object = ci->get_object();
+        
         // distance between object and its shadow
-        u_int32 distance = Pos->z() - ci->Max.z() + ci->Object->cur_z();
+        u_int32 distance = Pos->z() - ci->Max.z() + object->cur_z();
         
         // floor surface area
-        drawing_area obj_surface (ci->Min.x() + ci->Object->cur_x(),
-                                  ci->Min.y() + ci->Object->cur_y(),
-                                  ci->Object->length(), ci->Object->width());
+        drawing_area obj_surface (ci->Min.x() + object->cur_x(),
+                                  ci->Min.y() + object->cur_y(),
+                                  object->length(), object->width());
         
         // data for rendering shadow later on
         shadow_info si (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow, distance);

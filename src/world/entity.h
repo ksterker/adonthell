@@ -1,5 +1,5 @@
 /*
- $Id: entity.h,v 1.3 2008/09/14 14:25:24 ksterker Exp $
+ $Id: entity.h,v 1.4 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -104,10 +104,10 @@ public:
      * Create an (uniquely) named entity.
      * @param object representation of the entity.
      * @param id name of the object.
-     * @param unique set to true if the same object is already contained in a different entity.
+     * @param unique set to false if the same object is already contained in a different entity.
      */
     named_entity (placeable *object, const std::string & id, const bool & unique = true) 
-        : entity (object), Id (id) { }
+        : entity (object), Id (id), IsUnique (unique) { }
     
     /**
      * Destructor.

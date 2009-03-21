@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.15 2008/09/14 14:25:14 ksterker Exp $
+ $Id: area.cc,v 1.16 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -55,12 +55,12 @@ void area::clear()
     NamedEntities.clear();
 }
 
-// convenience method for adding object at a know index 
+// convenience method for adding object at a known index 
 bool area::put_entity (const u_int32 & index, coordinates & pos)
 {
     if (index < Entities.size())
     {
-        chunk::add(Entities[index]->get_object(), pos);
+        chunk::add(Entities[index], pos);
         return true;
     }
     
@@ -75,6 +75,17 @@ void area::update()
     {
         (*i)->get_object()->update();
     }
+}
+
+// get entity at given index
+placeable * area::get_entity (const s_int32 & index) const
+{
+    if (index < Entities.size())
+    {
+        return Entities[index]->get_object();
+    }
+    
+    return NULL;
 }
 
 // get named entity
@@ -145,7 +156,7 @@ placeable * area::add_entity (const placeable_type & type, const std::string & i
             NamedEntities[id] = dynamic_cast<world::named_entity*> (ety);
         }
         
-        // this list contains a copy to all entities, unique or not.
+        // this list contains a copy of all entities, unique or not.
         Entities.push_back (ety);
     }
     
@@ -171,4 +182,47 @@ placeable * area::add_entity (placeable * object, const std::string & id)
     NamedEntities[id] = ety;
     
     return object;    
+}
+
+// save to stream
+bool area::put_state (base::flat & file) const
+{
+    
+    return true;
+}
+
+// load from stream
+bool area::get_state (base::flat & file)
+{
+    base::flat entity = file.get_flat ("entity");    
+    
+    
+    return file.success ();
+}
+
+// save to file
+bool area::save (const std::string & fname, const base::diskio::file_format & format) const
+{
+    // try to save character
+    base::diskio record (format);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** area::save: saving '%s' failed!\n", fname.c_str ());        
+        return false;
+    }
+    
+    // write item to disk
+    return record.put_record (fname);
+}
+
+// load from file
+bool area::load (const std::string & fname)
+{
+    // try to load character
+    base::diskio record (base::diskio::BY_EXTENSION);
+    
+    if (record.get_record (fname)) 
+        return get_state (record);
+    
+    return false;
 }

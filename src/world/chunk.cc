@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.10 2009/02/01 15:18:24 ksterker Exp $
+ $Id: chunk.cc,v 1.11 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -52,7 +52,7 @@ typedef enum
  
 bool chunk_info::operator == (const chunk_info & ci) const
 {
-    if (Object == ci.Object)
+    if (Entity->get_object() == ci.Entity->get_object())
     {
         // we only check min, as that is the objects position. Max might
         // change if the shape of the object changes.
@@ -72,22 +72,24 @@ chunk::chunk () : Split ()
 }
 
 // add an object to chunk
-void chunk::add (placeable * object, const coordinates & pos)
+void chunk::add (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
-    vector3<s_int32> max (pos.x() + object->max_length(),
-                          pos.y() + object->max_width(),
-                          pos.z() + object->max_height());
+    const placeable *p = object->get_object();
+    vector3<s_int32> max (pos.x() + p->max_length(),
+                          pos.y() + p->max_width(),
+                          pos.z() + p->max_height());
     
     add (chunk_info (object, pos, max));
 }
 
-void chunk::remove (placeable * object, const coordinates & pos)
+void chunk::remove (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
-    vector3<s_int32> max (pos.x() + object->max_length(),
-                          pos.y() + object->max_width(),
-                          pos.z() + object->max_height());
+    const placeable *p = object->get_object();
+    vector3<s_int32> max (pos.x() + p->max_length(),
+                          pos.y() + p->max_width(),
+                          pos.z() + p->max_height());
     
     remove (chunk_info (object, pos, max));
 }

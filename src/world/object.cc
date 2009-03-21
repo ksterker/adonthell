@@ -1,5 +1,5 @@
 /*
- $Id: object.cc,v 1.5 2009/01/26 21:09:15 ksterker Exp $
+ $Id: object.cc,v 1.6 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,11 +56,11 @@ bool object::get_state (base::flat & file)
     return file.success ();
 }
 
-// save object to XML file
-bool object::save (const std::string & fname) const
+// save object to file
+bool object::save (const std::string & fname, const base::diskio::file_format & format) const
 {
     // try to save object
-    base::diskio record (base::diskio::XML_FILE);
+    base::diskio record (format);
     if (!put_state (record))
     {
         fprintf (stderr, "*** object::save: saving '%s' failed!\n", fname.c_str ());        
@@ -71,14 +71,17 @@ bool object::save (const std::string & fname) const
     return record.put_record (fname);
 }
 
-// load object from XML file
+// load object from file
 bool object::load (const std::string & fname)
 {
     // try to load character
-    base::diskio record (base::diskio::XML_FILE);
+    base::diskio record (base::diskio::BY_EXTENSION);
     
-    if (record.get_record (fname)) 
+    if (record.get_record (fname))
+    {
+        Filename = fname;
         return get_state (record);
+    }
     
     return false;
 }

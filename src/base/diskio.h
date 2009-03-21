@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.h,v 1.11 2008/10/04 16:52:30 ksterker Exp $
+   $Id: diskio.h,v 1.12 2009/03/21 11:59:46 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -46,7 +46,8 @@ namespace base {
             typedef enum
             {
                 GZ_FILE,
-                XML_FILE
+                XML_FILE,
+                BY_EXTENSION
             } file_format;
         
             /**
@@ -90,6 +91,15 @@ namespace base {
             GET_TYPE_NAME(base::diskio)
                 
         private:
+            /**
+             * Determine file format by file extension. File names ending in '.xml'
+             * are treated as XML files, all others as binary.
+             *
+             * @param filename file to load or save.
+             */
+            void get_writer_for_extension (const std::string & filename);
+
+                
             /// writer to use for i/o operations
             base::disk_writer_base *Writer;
 #endif

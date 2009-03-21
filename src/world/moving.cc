@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.26 2009/02/08 13:25:53 ksterker Exp $
+ $Id: moving.cc,v 1.27 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -135,8 +135,10 @@ bool moving::collide_with_objects (collision *collisionData)
     // check all placeables in our path
     for (std::list<chunk_info*>::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
+        const placeable *object = (*i)->get_object();
+        
         // check all models the placeable consists of
-        for (placeable::iterator model = (*i)->Object->begin(); model != (*i)->Object->end(); model++)
+        for (placeable::iterator model = object->begin(); model != object->end(); model++)
         {
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
@@ -332,7 +334,7 @@ void moving::calculate_ground_pos ()
     
         // the topmost object will be our ground pos
         std::list<chunk_info*>::iterator ci = ground_tiles.begin();
-        GroundPos = (*ci)->Max.z() + (*ci)->Object->cur_z();
+        GroundPos = (*ci)->Max.z() + (*ci)->get_object()->cur_z();
         
         // apply shadow
         for (; ci != ground_tiles.end(); ci++)
@@ -352,6 +354,8 @@ void moving::calculate_ground_pos ()
 // update movable position
 bool moving::update ()
 {
+    static entity e (this);
+    
 #if DEBUG_COLLISION
     // clear image
     Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, Image->map_color (0, 0, 0, 0));
@@ -363,9 +367,9 @@ bool moving::update ()
         // reset shadow for next frame
         MyShadow->reset ();
                 
-        Mymap.remove (this, *this);
+        Mymap.remove (&e, *this);
         update_position ();
-        Mymap.add (this, *this);
+        Mymap.add (&e, *this);
     }
     
     return true; 

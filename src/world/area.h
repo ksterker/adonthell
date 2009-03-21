@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.10 2008/09/14 14:25:14 ksterker Exp $
+ $Id: area.h,v 1.11 2009/03/21 11:59:47 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -34,8 +34,8 @@
 #define WORLD_AREA_H
 
 #include "base/hash_map.h"
+#include "base/diskio.h"
 
-#include "world/entity.h"
 #include "world/chunk.h"
 
 /**
@@ -44,15 +44,15 @@
 namespace world
 {    
     /**
-     * The plane of existance. A map consists of a grid of squares that
-     * contain the actual scenery elements, characters and items.
+     * The plane of existance. It keeps track of all the scenery elements, characters 
+     * and items that are part of a map. Their actual locations are kept in the 
+     * underlying chunk, an octree-like structure.
      */
     class area : public chunk
     {        
     public:
         /**
-         * Create an empty map. Call resize to set its initial size
-         * or load its state from disk.
+         * Create an empty map.
          */
         area () : chunk () { }
         
@@ -78,8 +78,15 @@ namespace world
          * @param index index of object in the list of objects.
          * @param pos position to place object at.
          */
-        bool put_entity (const u_int32 & index, coordinates & pos);
+        bool put_entity (const u_int32& index, coordinates & pos);
         
+        /**
+         * Get entity at given index
+         * @param index index of object in the list of objects.
+         * @return the matching entity, or NULL if index out of range.
+         */
+        placeable * get_entity (const s_int32 & index) const;
+
         /**
          * Get named entity.
          * @param id unique identifier for the entity to retrieve.
@@ -117,6 +124,40 @@ namespace world
          */
         placeable * add_entity (placeable * object, const std::string & id);
         //@}
+
+        /**
+            * Loading / Saving
+         */
+        //@{
+        /**
+         * Save %area state to stream. 
+         * @param file stream to save %area to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+        
+        /**
+         * Load %area state from stream. 
+         * @param file stream to load %area from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file);
+        
+        /**
+         * Save %area state to file.
+         * @param fname file name.
+         * @param format type of file to create.
+         * @return true on success, false otherwise.
+         */
+        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;        
+        
+        /**
+         * Load %area state from file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        bool load (const std::string & fname);
+        //@}        
         
         /// This class is allowed to change and move objects on the map.
         friend class moving;
