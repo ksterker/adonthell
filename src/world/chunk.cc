@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.12 2009/03/21 14:29:09 ksterker Exp $
+ $Id: chunk.cc,v 1.13 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -449,6 +449,39 @@ bool chunk::can_split () const
     vector3<s_int32> size = Max - Min;
     static s_int32 min_size2 = MIN_SIZE * 2;
     return size.x() >= min_size2 || size.y() >= min_size2 || size.z() >= min_size2;
+}
+
+// serialize chunk
+void chunk::put_state (collector & objects) const
+{
+    // recursively save children
+    for (u_int8 i = 0; i < 8; i++)
+    {
+        chunk *c = Children[i];
+        if (c != NULL) c->put_state (objects);
+    }
+    
+    // save objects contained in this chunk
+    std::list<chunk_info>::const_iterator i;
+    for (i = Objects.begin (); i != Objects.end(); i++)
+    {
+        const entity *e = i->get_entity();
+        const std::string & name = e->get_object()->filename();
+        collector_data & data = objects[name];
+
+        if (!e->has_name()) 
+        {
+            // anonymous objects
+            data.Anonym.push_back ((chunk_info*) &(*i));
+        }
+        else
+        {
+            // named entities backed by same object instance
+            if (!((named_entity*)e)->is_unique()) data.Shared.push_back ((chunk_info*) &(*i));
+            // named entities backed by unique object
+            else data.Unique.push_back ((chunk_info*) &(*i));
+        }
+    }        
 }
 
 // create a picture of the tree in .dot format

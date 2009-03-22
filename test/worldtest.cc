@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.33 2009/02/07 21:47:10 ksterker Exp $
+   $Id: worldtest.cc,v 1.34 2009/03/22 13:53:20 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -50,6 +50,7 @@ public:
 	
     game_client()
     {
+        mchar = NULL;
         letsexit = false;
         draw_grid = false;
         draw_walkable = false;
@@ -195,174 +196,6 @@ public:
 
         return true;
     }
-
-    void create_map ()
-    {
-        // Adding map objects
-        world::object * mobj;
-
-		// short grass, 1x1 at index 0
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/short-grass-tile.xml");
-        
-        // long grass, 1.5x1.5 at index 1
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/long-grass-tile.xml");
-
-        // wooden planks, 1x1 at index 2
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-1.xml");
-
-        // wooden pole, left, height 40 at index 3
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-pole-l.xml");
-
-        // wooden pole, right, height 40 at index 4 
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
-
-        // diagonal cliff, 40x45x75 at index 5
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-se.xml");
-
-        // diagonal cliff top, 40x45x5 at index 6
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-se-top.xml");
-        
-        // cliff facing south, 80x5x80 at index 7
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-s.xml");
-
-        // Adding the map character at index 8
-        mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
-        mchar->load ("data/models/char/npc/ng.xml");
-        
-        // set position and speed
-        mchar->set_speed (1.5);
-        mchar->set_position (398, 322);
-        mchar->set_z (0);
-        
-        // put character on map
-        world.put_entity (8, *mchar);
-        
-        
-        world::coordinates mc;
-        
-        /*
-        mc.set_position (4, 5);
-        world.put_entity (0, mc); 
-
-        mc.set_z (80);
-        world.put_entity (2, mc);
-         */
-        
-        // create ground (grass tiles are 40x40)
-        for (u_int16 i = 0; i < 16; i++)
-            for (u_int16 j = 0; j < 3; j++)
-            {
-                world::coordinates mc (i*40, j*40, 80);
-                world.put_entity (0, mc);
-            }
-                
-        for (u_int16 j = 0; j < 3; j++)
-            for (u_int16 i = 0; i < 3-j; i++)
-            {
-                world::coordinates mc (i*40, (j+3)*40, 80);
-                world.put_entity (0, mc);
-            }
-                        
-        
-		// 4 poles (left side)
-        mc.set_x(400);mc.set_y(170);
-        world.put_entity(3, mc);  // that one is actually invisible 
-        mc.set_x(400);mc.set_y(240);
-        world.put_entity(3, mc);
-        // (right side)
-        mc.set_x(470);mc.set_y(170);  // that one is actually invisible
-        world.put_entity(4, mc); 
-        mc.set_x(470);mc.set_y(240);
-        world.put_entity(4, mc); 
-
-		// wooden platform
-        for (int i = 10; i < 12; i++)
-        {
-            for (int j = 4; j < 6; j++)
-            {
-                world::coordinates mc (i*40, j*40, 40);
-                world.put_entity (2, mc); 
-            }
-        }
-
-		// 4 wooden poles
-        mc.set_x(280);mc.set_y(280);
-        world.put_entity(3, mc); 
-        mc.set_z(40);
-        world.put_entity(3, mc); 
-        mc.set_x(280);mc.set_y(170);
-        mc.set_z(0);
-        world.put_entity(3, mc); 
-        mc.set_z(40);
-        world.put_entity(3, mc); 
-        
-        mc.set_z(0);
-        mc.set_x(350);mc.set_y(280);
-        world.put_entity(4, mc); 
-        mc.set_z(40);
-        world.put_entity(4, mc); 
-        mc.set_x(350);mc.set_y(170);
-        mc.set_z(0);
-        world.put_entity(4, mc); 
-        mc.set_z(40);
-        world.put_entity(4, mc); 
-
-		// wooden platform
-        for (int i = 7; i < 9; i++)
-        {
-            for (int j = 4; j < 7; j++)
-            {
-                world::coordinates mc (i*40, j*40, 80);
-                world.put_entity (2, mc); 
-            }
-        } 
-
-		// "stair"
-        for (int i = 4; i < 17; i++)
-        {
-            world::coordinates mc ((i/2) * 40 + (i%2) * 20, 360, 5 * (i-4));
-            world.put_entity (2, mc); 
-        }
-
-        world::coordinates mc2 (120, 200, 0);
-        world.put_entity (2, mc2);
-        
-        // create ground (grass tiles are 60x60, but grid is 40x40)
-        for (float i = 0; i < 16; i += 1.5)
-            for (float j = 2; j < 12; j += 1.5)
-            {
-                u_int16 x = (u_int16) (40 * i);
-                u_int16 y = (u_int16) (40 * j);
-                
-                world::coordinates mc (x, y, 0);
-                world.put_entity (1, mc); 
-            }
-        
-        
-        // create diagonal wall
-        for (int i = 0; i < 4; i++)
-        {
-            world::coordinates mc (i*40, (6-i)*40, 0);
-            world.put_entity (5, mc); 
-            mc.set_z (80);
-            world.put_entity (6, mc);
-        }
-        
-        // create straight wall
-        for (int i = 4; i < 16; i+=2)
-        {
-            world::coordinates mc (i*40, 120, 0);
-            world.put_entity (7, mc); 
-        }
-    }
 };
 
 class world_test : public adonthell::app
@@ -390,8 +223,14 @@ public:
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
 		// Create game world
-	    gc.create_map();
-
+        gc.world.load ("data/test-world.xml");
+        
+        // set position and speed of player character 
+        gc.mchar = (world::character *) (gc.world.get_entity ("Player"));
+        gc.mchar->set_speed (1.5);
+        gc.mchar->set_position (398, 322);
+        gc.mchar->set_z (0);
+                
         // we need to update the python search path to find our map view schedule 
         python::add_search_path (base::Paths.user_data_dir() + "/data/");
         

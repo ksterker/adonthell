@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.12 2009/03/21 14:29:09 ksterker Exp $
+ $Id: chunk.h,v 1.13 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -172,8 +172,29 @@ namespace world
         //@}
         
         void debug () const;
+
+#ifndef SWIG
+    protected:
+        /**
+         * Organise entities by their type.
+         */
+        typedef struct
+        {
+            std::vector<chunk_info*> Anonym;
+            std::vector<chunk_info*> Shared;
+            std::vector<chunk_info*> Unique;
+        } collector_data;
             
-private:
+        /// container for gathering map objects when serializing chunk
+        typedef std::map<std::string, collector_data> collector;
+        
+        /**
+         * Collect all chunk contents, so that they can be easily written
+         * to a file.
+         */
+        void put_state (collector & objects) const;
+            
+    private:
         /**
          * Find those children of the %chunk that overlap with the bbox
          * specified by its minumum and maximum coordinate triplets.
@@ -240,6 +261,7 @@ private:
         vector3<s_int32> Max;
         /// the split planes of the chunk
         vector3<s_int32> Split;
+#endif // SWIG
     };
 }
 

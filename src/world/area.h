@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.11 2009/03/21 11:59:47 ksterker Exp $
+ $Id: area.h,v 1.12 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -92,7 +92,7 @@ namespace world
          * @param id unique identifier for the entity to retrieve.
          * @return the matching entity, or NULL if no such entity exists.
          */
-        placeable * get_entity (const std::string & id);
+        placeable * get_entity (const std::string & id) const;
         
         /**
          * @name Map entity creation.

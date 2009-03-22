@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.14 2009/03/21 14:29:10 ksterker Exp $
+ $Id: placeable.h,v 1.15 2009/03/22 13:53:20 ksterker Exp $
 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -224,6 +224,22 @@ namespace world
          * @return \b true if loading successful, \b false otherwise.
          */
         bool get_state (base::flat & file);
+        
+        /**
+         * Load %placeable from given file.
+         * @param fname file name.
+         * @return true on success, false otherwise.
+         */
+        virtual bool load (const std::string & fname) 
+        {
+            Filename = fname;
+        }
+        
+        /**
+         * Return file this %object was loaded from.
+         * @return filename of this %object.
+         */
+        std::string filename () const { return Filename; }
         //@}
 
 #ifndef SWIG

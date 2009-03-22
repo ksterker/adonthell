@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.16 2009/03/21 11:59:47 ksterker Exp $
+ $Id: area.cc,v 1.17 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -89,16 +89,20 @@ placeable * area::get_entity (const s_int32 & index) const
 }
 
 // get named entity
-placeable * area::get_entity (const std::string & id)
+placeable * area::get_entity (const std::string & id) const
 {
-    std::hash_map<std::string, world::named_entity*>::iterator entity = NamedEntities.find (id);
+    std::hash_map<std::string, world::named_entity*>::const_iterator entity = NamedEntities.find (id);
     if (entity == NamedEntities.end())
     {
         fprintf (stderr, "*** area::get_entity: entity '%s' doesn't exist!\n", id.c_str());
+        for (entity = NamedEntities.begin(); entity != NamedEntities.end(); entity++)
+        {
+            fprintf (stderr, "  - '%s'\n", entity->first.c_str());
+        }
         return NULL;
     }
     
-    return (*entity).second->get_object();
+    return entity->second->get_object();
 }
 
 // add anonymous entity
@@ -187,6 +191,74 @@ placeable * area::add_entity (placeable * object, const std::string & id)
 // save to stream
 bool area::put_state (base::flat & file) const
 {
+    collector objects;
+    chunk::put_state (objects);
+    bool type_saved = false;
+    
+    for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
+    {
+        base::flat entity;
+        const collector_data & data = i->second;
+        std::vector<chunk_info*>::const_iterator j;
+
+        // save anonymous objects
+        if (!data.Anonym.empty())
+        {            
+            // save object type
+            entity.put_uint8 ("type", data.Anonym.back()->get_object()->type());
+            type_saved = true;
+            
+            base::flat anonym;
+            for (j = data.Anonym.begin(); j != data.Anonym.end(); j++)
+            {
+                (*j)->Min.put_state (anonym);
+            }
+            
+            entity.put_flat ("anonym", anonym);
+        }
+        
+        // save unique named objects
+        if (!data.Unique.empty())
+        {
+            if (!type_saved)
+            {
+                // save object type
+                entity.put_uint8 ("type", data.Unique.back()->get_object()->type());
+                type_saved = true;                
+            }
+            
+            base::flat unique;
+            for (j = data.Unique.begin(); j != data.Unique.end(); j++)
+            {
+                unique.put_string ("id", *((*j)->get_entity()->id()));
+                (*j)->Min.put_state (unique);
+            }
+            
+            entity.put_flat ("unique", unique);
+        }
+
+        // save other named objects
+        if (!data.Shared.empty())
+        {
+            if (!type_saved)
+            {
+                // save object type
+                entity.put_uint8 ("type", data.Shared.back()->get_object()->type());
+            }
+            
+            base::flat shared;
+            for (j = data.Shared.begin(); j != data.Shared.end(); j++)
+            {
+                shared.put_string ("id", *((*j)->get_entity()->id()));
+                (*j)->Min.put_state (shared);
+            }
+            
+            entity.put_flat ("shared", shared);
+        }
+        
+        type_saved = false;
+        file.put_flat (i->first, entity);
+    }
     
     return true;
 }
@@ -194,8 +266,100 @@ bool area::put_state (base::flat & file) const
 // load from stream
 bool area::get_state (base::flat & file)
 {
-    base::flat entity = file.get_flat ("entity");    
-    
+    u_int32 size;
+    u_int32 index = 0;
+    coordinates pos;
+    void *value;
+    char *id;
+
+    // iterate over map objects
+    while (file.next (&value, &size, &id) == base::flat::T_FLAT)
+    {
+        base::flat entity = base::flat ((const char*) value, size);
+        const std::string entity_file = id;
+        const placeable_type type = (placeable_type) entity.get_uint8 ("type");
+
+        // try loading anonymous objects
+        base::flat record = entity.get_flat ("anonym", true);
+        if (record.size() > 1)
+        {
+            // there are anonymous objects -> create instance
+            placeable *object = add_entity (type);
+            object->load (entity_file);
+
+            // iterate over object positions
+            while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+            {
+                // get coordinate
+                pos.set_str (std::string ((const char*) value, size));
+            
+                // place entity at current index at given coordinate
+                put_entity (index, pos);
+            }
+            
+            // increase entity index
+            index++;
+        }
+        
+        // try loading unique objects
+        record = entity.get_flat ("unique", true);
+        if (record.size() > 1)
+        {
+            // iterate over object positions
+            while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+            {
+                // first get id of entity 
+                std::string entity_name ((const char*) value);
+                
+                // create a unique instance for each object
+                placeable *object = add_entity (type, entity_name);
+                object->load (entity_file);
+                
+                // get coordinate
+                record.next (&value, &size, &id);
+                pos.set_str (std::string ((const char*) value, size));
+                
+                // place entity at current index at given coordinate
+                put_entity (index, pos);
+                
+                // increase entity index
+                index++;
+            }            
+        }
+        
+        // try loading shared objects
+        record = entity.get_flat ("shared", true);
+        if (record.size() > 1)
+        {
+            // that's the instance that will be shared by all objects
+            // it won't be placed on the actual map
+            placeable *object = add_entity (type);
+            object->load (entity_file);
+                        
+            // increase entity index
+            index++;
+            
+            // iterate over object positions
+            while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+            {
+                // first get id of entity 
+                std::string entity_name ((const char*) value);
+
+                // create shared instance
+                add_entity (object, entity_name);
+
+                // get coordinate
+                record.next (&value, &size, &id);
+                pos.set_str (std::string ((const char*) value, size));
+                
+                // place entity at current index at given coordinate
+                put_entity (index, pos);
+                
+                // increase entity index
+                index++;                
+            }
+        }        
+    }
     
     return file.success ();
 }

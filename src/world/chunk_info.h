@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.6 2009/03/21 11:59:47 ksterker Exp $
+ $Id: chunk_info.h,v 1.7 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -77,6 +77,15 @@ namespace world
         placeable *get_object() const
         {
             return Entity->get_object();
+        }
+        
+        /**
+         * Get pointer to the entity.
+         * @return pointer to the underlying entity.
+         */
+        entity *get_entity() const
+        {
+            return Entity;
         }
         
         /**

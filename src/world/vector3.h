@@ -1,5 +1,5 @@
 /*
- $Id: vector3.h,v 1.10 2008/10/05 09:22:03 ksterker Exp $
+ $Id: vector3.h,v 1.11 2009/03/22 13:53:20 ksterker Exp $
  
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -94,6 +94,28 @@ public:
     	Z = z;
     }
 
+    /**
+     * Set the value of the vector from a string in the format
+     * "[x, y, z]".
+     * @param vec string representing this vector.
+     * @return true on success, false otherwise.
+     */
+    bool set_str (const std::string & vec)
+    {
+        char delim;
+        
+        std::stringstream in (vec);        
+        in >> std::skipws >> delim >> X >> delim >> Y >> delim >> Z >> delim; 
+        
+        if (in.fail ())    
+        {
+            fprintf (stderr, "*** vector3::set: error parsing vector '%s'", vec.c_str());
+            return false;
+        }
+        
+        return true;        
+    }
+    
     /*
      * Set the x coordinate of a vector.
      * @param x new x location
@@ -275,18 +297,8 @@ public:
      */
     bool get_state (base::flat & file)
     {
-        char delim;
-        std::string vec = file.get_string ("p3d");    
-        std::stringstream in (vec);
-        
-        in >> std::skipws >> delim >> X >> delim >> Y >> delim >> Z >> delim; 
-        if (in.fail ())    
-        {
-            fprintf (stderr, "*** vector3::get_state: error parsing vector '%s'", vec.c_str());
-            return false;
-        }
-        
-        return true;
+        std::string vec = file.get_string ("p3d");
+        return set_str (vec);
     } 
     //@}
 
