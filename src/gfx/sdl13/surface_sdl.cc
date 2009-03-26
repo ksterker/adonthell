@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.2 2009/03/06 22:53:30 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.3 2009/03/26 22:09:04 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,11 +55,15 @@ namespace gfx
         }
     }
 
-
     void surface_sdl::set_alpha (const u_int8 & t, const bool & alpha_channel)
     {
         if ((t == 255) && (alpha_ != 255) && vis)
-            SDL_SetAlpha (vis, 0, 0);
+        {
+            SDL_SetSurfaceAlphaMod(vis, 0xFF);
+            SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_NONE);
+            SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
+        }
+        
         alpha_ = t;
         alpha_channel_ = alpha_channel;
     }
@@ -88,7 +92,11 @@ namespace gfx
         }
 
         if (alpha () != 255 || has_alpha_channel())
-            SDL_SetAlpha (vis, SDL_SRCALPHA, alpha_);
+        {
+            SDL_SetSurfaceAlphaMod(vis, alpha_);
+            SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_BLEND);
+            SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
+        }
 
         SDL_BlitSurface (vis, &srcrect, display_target, &dstrect); 
     }
