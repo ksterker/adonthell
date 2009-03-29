@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.13 2009/03/22 13:53:20 ksterker Exp $
+ $Id: chunk.h,v 1.14 2009/03/29 12:22:06 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -174,6 +174,11 @@ namespace world
         void debug () const;
 
 #ifndef SWIG
+        /**
+         * Allow %chunk to be passed as python argument
+         */
+        GET_TYPE_NAME_VIRTUAL (world::chunk)
+            
     protected:
         /**
          * Organise entities by their type.

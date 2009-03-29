@@ -1,8 +1,19 @@
+version 0.4 alpha 3
+- Added path finding
+- Added basic GUI system
+- Added Python controlled map view
+- Added loading & saving of maps
+
+version 0.4 alpha 2
+- Added proper collision detection
+
+version 0.4 alpha 1
+- Added basic map engine
+
 version 0.4
 - Broke Engine into separate Modules
 - Created Python bindings for Engine Modules 
 - Map engine uses 3D internally for more freedom of movement
-- ...
 
 version 0.3
 - Added Python scripting

@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.7 2008/10/18 12:41:18 ksterker Exp $
+ $Id: mapview.h,v 1.8 2009/03/29 12:22:07 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -122,6 +122,17 @@ namespace world
          * @param y position on the map in pixels
          */
         void center_on (const s_int32 & x, const s_int32 & y);
+        
+        /**
+         * Resise the map view.
+         * @param length the new length.
+         * @param height the new height.
+         */
+        void resize (const u_int32 & length, const u_int32 & height)
+        {
+            set_length (length);
+            set_height (height);
+        }
         
         /**
          * Set the height of the mapview. 

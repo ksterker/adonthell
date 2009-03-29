@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.7 2009/03/22 13:53:20 ksterker Exp $
+ $Id: chunk_info.h,v 1.8 2009/03/29 12:22:06 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -51,7 +51,7 @@ namespace world
          * @param max the extend of the object in world space
          */
         chunk_info (entity *e, const vector3<s_int32> & min, const vector3<s_int32> & max) 
-        : Entity (e), Min (min), Max (max)
+        : Min (min), Max (max), Entity (e)
         {
         }
 
@@ -60,7 +60,7 @@ namespace world
          * @param ci object to copy.
          */
         chunk_info (const chunk_info & ci) 
-        : Entity (ci.Entity), Min (ci.Min), Max (ci.Max), Shadow (ci.Shadow)
+        : Min (ci.Min), Max (ci.Max), Entity (ci.Entity), Shadow (ci.Shadow)
         {
         }
 

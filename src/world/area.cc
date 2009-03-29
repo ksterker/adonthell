@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.17 2009/03/22 13:53:20 ksterker Exp $
+ $Id: area.cc,v 1.18 2009/03/29 12:22:06 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -382,11 +382,15 @@ bool area::save (const std::string & fname, const base::diskio::file_format & fo
 // load from file
 bool area::load (const std::string & fname)
 {
-    // try to load character
+    // try to load area
     base::diskio record (base::diskio::BY_EXTENSION);
     
-    if (record.get_record (fname)) 
-        return get_state (record);
+    if (record.get_record (fname) &&
+        get_state (record))
+    {    
+        Filename = fname;
+        return true;
+    }
     
     return false;
 }

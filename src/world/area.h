@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.12 2009/03/22 13:53:20 ksterker Exp $
+ $Id: area.h,v 1.13 2009/03/29 12:22:06 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -126,7 +126,7 @@ namespace world
         //@}
 
         /**
-            * Loading / Saving
+         * Loading / Saving
          */
         //@{
         /**
@@ -157,20 +157,35 @@ namespace world
          * @return true on success, false otherwise.
          */
         bool load (const std::string & fname);
+        
+        /**
+         * Get the filename of this map. 
+         * @return the file this map was loaded from.
+         */
+        std::string filename () const
+        {
+            return Filename;
+        }
         //@}        
         
         /// This class is allowed to change and move objects on the map.
         friend class moving;
 
-    private:
-            
 #ifndef SWIG
+        /**
+         * Allow %area to be passed as python argument
+         */
+        GET_TYPE_NAME (world::area)
+        
+    private:            
         /// The individual objects on the map
         std::vector <world::entity *> Entities;
         
         /// Named objects on the map
         std::hash_map <std::string, world::named_entity *> NamedEntities;
         
+        /// name of map
+        std::string Filename;
 #endif // SWIG
     }; 
 }

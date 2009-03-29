@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.15 2009/03/22 13:53:20 ksterker Exp $
+ $Id: placeable.h,v 1.16 2009/03/29 12:22:07 ksterker Exp $
 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -233,6 +233,7 @@ namespace world
         virtual bool load (const std::string & fname) 
         {
             Filename = fname;
+            return true;
         }
         
         /**
