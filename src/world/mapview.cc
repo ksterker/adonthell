@@ -1,5 +1,5 @@
 /*
- $Id: mapview.cc,v 1.14 2009/02/01 15:18:25 ksterker Exp $
+ $Id: mapview.cc,v 1.15 2009/04/03 21:56:53 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,6 +50,7 @@ mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer
     
     Schedule = NULL;
     Args = NULL;
+    Map = NULL;
 }
 
 // set script called to position view on map

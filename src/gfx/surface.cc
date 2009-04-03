@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.19 2009/03/06 22:53:29 ksterker Exp $
+   $Id: surface.cc,v 1.20 2009/04/03 21:56:52 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -32,7 +32,7 @@
 
 #include <stdlib.h>
 #include "base/base.h"
-#include "gfx/surface.h"
+#include "gfx/screen.h"
 
 namespace gfx
 {
@@ -141,6 +141,61 @@ namespace gfx
         unlock();
     }
 
+    // adjust brightness
+    void surface::set_brightness (const u_int8 & level)
+    {
+        const s_int32 trans_col = screen::trans_color ();
+        const s_int8 mod = level - 127;
+        u_int8 ir, ig, ib, ia;
+        
+        lock();
+        
+        if (mod > 0)
+        {
+            for (int l = 0; l < length(); l++)
+            {
+                for (int h = 0; h < height(); h++)
+                {
+                    u_int32 pix = get_pix (l, h);
+                    if (!is_masked() || pix != trans_col)
+                    {
+                        unmap_color (pix, ir, ig, ib, ia);
+                        if (ia != 0)
+                        {
+                            ir = (ir + mod) > 255 ? 255 : ir + mod;
+                            ig = (ig + mod) > 255 ? 255 : ig + mod;
+                            ib = (ib + mod) > 255 ? 255 : ib + mod;
+                            put_pix (l, h, map_color (ir, ig, ib, ia));
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int l = 0; l < length(); l++)
+            {
+                for (int h = 0; h < height(); h++)
+                {
+                    u_int32 pix = get_pix (l, h);
+                    if (!is_masked() || pix != trans_col)
+                    {
+                        unmap_color (pix, ir, ig, ib, ia);
+                        if (ia != 0)
+                        {
+                            ir = (ir + mod) < 0 ? 0 : ir + mod;
+                            ig = (ig + mod) < 0 ? 0 : ig + mod;
+                            ib = (ib + mod) < 0 ? 0 : ib + mod;
+                            put_pix (l, h, map_color (ir, ig, ib, ia));
+                        }
+                    }
+                }
+            }
+        }
+        
+        unlock();        
+    }
+    
     // save meta data to stream
     bool surface::put_state (base::flat & file) const
     {

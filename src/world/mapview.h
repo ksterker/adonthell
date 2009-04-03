@@ -1,5 +1,5 @@
 /*
- $Id: mapview.h,v 1.8 2009/03/29 12:22:07 ksterker Exp $
+ $Id: mapview.h,v 1.9 2009/04/03 21:56:53 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -117,11 +117,31 @@ namespace world
         }
         
         /**
-         * Center on the given pixel coordinates.
+         * Center on the given pixel coordinates. This is the preferred way to
+         * set the mapview position from within the game, as it takes care of
+         * situations where the map is smaller than the view or the view overlaps
+         * the edge of the map.
+         *
          * @param x position on the map in pixels
          * @param y position on the map in pixels
          */
         void center_on (const s_int32 & x, const s_int32 & y);
+        
+        /**
+         * Set the position of the view to the given pixel coordinates. Does
+         * nothing to improve the visuals, so mostly useful if you know what
+         * you're doing.
+         *
+         * @param x position on the map in pixels
+         * @param y position on the map in pixels
+         */
+        void set_position (const s_int32 & x, const s_int32 & y)
+        {
+            Sx = x;
+            Sy = y;
+            Ox = 0;
+            Oy = 0;
+        }
         
         /**
          * Resise the map view.

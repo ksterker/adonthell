@@ -1,5 +1,5 @@
 /*
-   $Id: surface.h,v 1.18 2009/03/06 22:53:29 ksterker Exp $
+   $Id: surface.h,v 1.19 2009/04/03 21:56:52 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -262,6 +262,13 @@ namespace gfx
          */
         virtual void mirror (bool x, bool y) = 0;
 
+        /**
+         * Adjust image brightness. Values < 100 will darken
+         * the image, values > 100 brighten the image.
+         *
+         * @param level the new brightness level in percent.
+         */
+        void set_brightness (const u_int8 & level);
         //@}
 
         /**
