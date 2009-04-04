@@ -8,11 +8,19 @@
 #include "gfx/gfx.h"
 #include <string>
 using std::string;
+#include <vector>
+using std::vector;
 
 
 namespace gui
 {
-
+	class textsize
+	{
+	public:
+		int w, h;
+		int cpos;
+		textsize(int _w, int _h, int c): w(_w),h(_h),cpos(c) {}
+	};
 	class font
 	{
 	private:
@@ -36,6 +44,9 @@ namespace gui
 		int getSize() { return fontsize; }
 		void getSize(const string& s, int& w, int & h);
 		void getSize(const char* s, int&w, int&h) {getSize(string(s), w, h);}
+	//	void getMultilineSize(const char* s, int maxwidth, vector<int>& vpos, int & w, int & h)
+	//	{getMultilineSize(string(s), maxwidth, vpos, w, h);}
+		void getMultilineSize(const string& s, int maxwidth, vector<textsize>& ts, int & w, int & h);
 		u_int32 getColor() {return color;}
 		void setColor(u_int32 c) {color = c;}
 	};

@@ -400,6 +400,23 @@ namespace gui
 			h = y + c.getHeight();
 		children.push_back(layoutchild(&c, p));
 	}
-
-
+	void layout::removechild(base& c)
+	{
+		vector<layoutchild>::iterator i;
+		for (i = children.begin(); i != children.end(); i++)
+		{
+			if (&c == (*i).c)
+			{
+				children.erase(i);
+				if (which == i - children.begin())
+				{
+					//just deleted the selected item.
+					//TODO: what happens if nobody takes focus?
+					which = 0;
+					focus();
+				}				
+				break;
+			}
+		}
+	}
 };

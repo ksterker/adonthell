@@ -35,7 +35,7 @@ public:
 
 
 class GuiTest : public adonthell::app {
-  static void changelabel(bool down, void* arg) {
+  void changelabel(bool down, void* arg) {
     gui::label* l = (gui::label*)arg;
 	std::stringstream s; 
 	static int count = 0;
@@ -43,7 +43,7 @@ class GuiTest : public adonthell::app {
 	s << "Click " << count;
 	l->setString(s.str());
   }
-  static void print(bool down, void* arg) {
+  void print(bool down, void* arg) {
     char* s = (char*) arg;
 	std::cout << s << ":" << (down?"down":"up") << "\n";
   }
@@ -84,18 +84,20 @@ class GuiTest : public adonthell::app {
 	gui::label label_with_bg(testbg1.c_str());
 	label_with_bg.setString("Is this readable?");
 
-	gui::button b(testbuttonup.c_str(), testbuttondown.c_str(), changelabel, &l, 2);
+	gui::button b(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
 	b.setString("Click Me");
-	gui::button b2(testbuttonup.c_str(), testbuttondown.c_str(), print, (void*)"button 2", 1);
+	gui::button b2(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
 	b2.setString("Button 2");
-	gui::button b3(testbuttonup.c_str(), testbuttondown.c_str(), print, (void*)"button 3", 1);
+	gui::button b3(300,30, base::make_functor(*this, &GuiTest::print), (void*)"button 3", 1);
 	b3.setString("Button 3");
-	gui::option o1(testbuttonup.c_str(), testbuttondown.c_str(), print, (void*)"option 1", 1);
+	gui::option o1(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
 	o1.setString("Option 1");
 
 	gui::textbox t1(400, 30);
 	
-		
+	gui::label multiline_test(400, 100);
+	multiline_test.setString("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
+	multiline_test.multiline(true);
 	/* arrange them in a freeform layout object */
 	gui::layout widgets;
 	widgets.addchild( b, 10, 10);
@@ -112,7 +114,7 @@ class GuiTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
     /*************************************************************************/
-
+	
     // Run this loop until letsexit is set to 1 by the
     // callback function. Every time a key event is raised,
     // the input manager will send it to the listeners it handles
@@ -120,7 +122,8 @@ class GuiTest : public adonthell::app {
     // callback function that has been connected to handle keyboard events.
 	gfx::surface * screen = gfx::screen::get_surface();
 	std::cout << gfx::screen::info ();
-    while (!ih.letsexit) {
+    string ls = "I am typing a very long string that will not fit all the way within the alloted space";
+	while (!ih.letsexit) {
       ::base::Timer.update ();
       ::input::manager::update();
 	  	
@@ -129,9 +132,26 @@ class GuiTest : public adonthell::app {
 		f.render("Hello World", -10, 520, screen);
 		f.render("Hello World", 470, 520, screen);
 		f.render("Hello World", 470, 5, screen);
+		/*
+		std::vector<gui::textsize> ts;
+		int w = 0, h = 0;
+		f.getMultilineSize(ls, 200, ts, w, h);
+		gui::box(10, 300, w, h, c, screen);
+		int i;
+		int p = 0;
+		int y = 300;
+		for (i = 0; i < ts.size(); i++)
+		{
+			y += ts[i].h;
+			f.render(ls.substr(p, ts[i].cpos - p), 10, y, screen);
+			p = ts[i].cpos +1;
+		}
+// */
       	l.draw(10, 50, screen);
 		label_with_bg.draw(10, 80, screen);
 		widgets.draw(10, 120, screen);
+		multiline_test.draw(10, 350, screen);
+		gui::box(10, 350, 400, 100, 0xff0000b0, screen);
 
 		u_int32 c = 0xff0000b0;
 		gui::box(345, 5, 30, 50, c, screen);

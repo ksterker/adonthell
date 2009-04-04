@@ -49,6 +49,6 @@ namespace gui
 	void option::activate() 
 	{
 		clicked = !clicked;
-		clickit(clicked, arg);
+		(*clickit)(clicked, arg);
 	}
 };

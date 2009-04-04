@@ -12,7 +12,8 @@ pkgincludeinput_HEADERS = \
 	label.h \
 	layout.h \
 	option.h \
-	widget.h
+	widget.h \
+	conversation.h
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
@@ -23,11 +24,12 @@ libadonthell_gui_la_SOURCES = \
 	button.cpp \
 	layout.cc \
 	option.cpp \
-	textbox.cpp
+	textbox.cpp \
+	conversation.cc
 
-libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS)
+libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS)
 
 libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/input/ -ladonthell_input \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
-	-lstdc++ $(FT2_LIBS)
+	-lstdc++ $(FT2_LIBS) -ladonthell_python $(PY_LIBS) -ladonthell_rpg 

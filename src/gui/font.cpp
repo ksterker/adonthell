@@ -1,10 +1,12 @@
 #include "font.h"
 #include "base/base.h"
+#include "base/endians.h"
 #include <string>
 using std::string;
 #include <iostream>
 using std::cout;
 #include "base/base.h"
+#include <ctype.h>
 
 namespace gui
 {
@@ -22,6 +24,8 @@ namespace gui
 				else
 					refcount++;
 			}
+			else
+				refcount++;
 		}
 		else
 		{
@@ -106,10 +110,17 @@ namespace gui
 				{
 					float a2 = *data/255.0;
 					//use an "over" compositing function
+#ifndef __BIG_ENDIAN__
 					p1.b[0] = (int)(p1.b[0]*(1-a2) + p2.b[0]*a2);
 					p1.b[1] = (int)(p1.b[1]*(1-a2) + p2.b[1]*a2);
 					p1.b[2] = (int)(p1.b[2]*(1-a2) + p2.b[2]*a2);
 					p1.b[3] = (int)(p1.b[3]*(1-a2) + *data*a2);
+#else
+					p1.b[1] = (int)(p1.b[1]*(1-a2) + p2.b[1]*a2);
+					p1.b[2] = (int)(p1.b[2]*(1-a2) + p2.b[2]*a2);
+					p1.b[3] = (int)(p1.b[3]*(1-a2) + p2.b[3]*a2);
+					p1.b[0] = (int)(p1.b[0]*(1-a2) + *data*a2);
+#endif
 				}
 				s->put_pix(x + i, y + j, p1.c);
 				data++;
@@ -118,7 +129,55 @@ namespace gui
 			data -= maxx-minx;
 		}
 	}
+	void font::getMultilineSize(const string& s, int maxwidth, vector<textsize>& ts, int & w, int & h)
+	{
+		maxwidth <<= 6;
+		int maxw;
+		int th = 0;
+		int tw = 0;
+		int sw = 0;
+		string::const_iterator i, lastspace = s.end();
+		w = 0;
+		h = fontsize << 6;
+		int maxdrop = 0;
+		for (i = s.begin(); i != s.end(); i++)
+		{
+			int glyph_index = FT_Get_Char_Index(face, *i);
+			if (error = FT_Load_Char(face, *i, FT_LOAD_DEFAULT))
+				cout << "Unable to load the glyph for character '" << *i << "'\n";
+			else
+			{
+				if (isspace(*i))
+				{
+					tw = w;
+					lastspace = i;
+					sw = face->glyph->advance.x;
+				}
+				w += face->glyph->advance.x;
+				h += face->glyph->advance.y;
+				if (w > maxwidth)
+				{
+					ts.push_back(textsize(tw >> 6, h >> 6, lastspace - s.begin()));
+					if (maxwidth < tw)
+						maxwidth = tw;
+					w = w - tw - sw; //subtract the section, as well as the space
+					th += fontsize << 6;
+					maxdrop = 0; //only needs accounted for in the last line
+				}
 
+				if (maxdrop < face->glyph->metrics.height - face->glyph->metrics.horiBearingY)
+					maxdrop = face->glyph->metrics.height - face->glyph->metrics.horiBearingY;
+			}
+		}
+		ts.push_back(textsize(tw >> 6, h >> 6, s.end() - s.begin()));
+		h += maxdrop;
+		h += th;
+		w = maxwidth;
+		h >>= 6;
+		w >>= 6;
+		
+	}
+	//TODO: make this call getMultilineSize
 	void font::getSize(const string& s, int& w, int& h)
 	{
 		string::const_iterator i;

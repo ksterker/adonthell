@@ -82,6 +82,9 @@ namespace gui
 			//find the needed size of the cache
 			int nw, nh;
 			f.getSize(txt, nw, nh);
+			int mw = nw, mh = nh;
+			//TODO: properly account for the case where both centering and 
+			//multiline are enabled. 
 			if (nw > w) nw = w; //clamp the size to the size of the widget
 			if (nh > h) nh = h;
 			if (!cached) //does the existing cache need cleared?
@@ -108,24 +111,84 @@ namespace gui
 			//*
 			color old, n;
 			old.i = f.getColor();
-			n.c[0] = ~old.c[0];	
-			n.c[1] = ~old.c[1];	
-			n.c[2] = ~old.c[2];	
-			n.c[3] = old.c[3];	
+#ifndef __BIG_ENDIAN__
+			float intensity = old.c[0]*.3 + old.c[1]*0.59 + old.c[2]*0.11;
+			if (intensity < 128.0)
+				n.c[0] = n.c[1] = n.c[2] = n.c[3] = 0xff;
+			else
+			{
+				n.c[0] = n.c[1] = n.c[2] = 0;
+				n.c[3] = 0xff; //opaque black
+			}
+#else
+			float intensity = old.c[1]*.3 + old.c[2]*0.59 + old.c[3]*0.11;
+			if (intensity < 128.0)
+				n.c[0] = n.c[1] = n.c[2] = n.c[3] = 0xff;
+			else
+			{
+				n.c[1] = n.c[2] = n.c[3] = 0;
+				n.c[0] = 0xff;
+			}
+#endif
 			f.setColor(n.i);
 			//render in a background color, to get contrast
-			f.render(txt, rx,ry, cached);
+			if (_multiline)
+			{
+				std::vector<gui::textsize> ts;
+				int tw, th;
+				f.getMultilineSize(txt, w, ts, tw, th);
+				int i;
+				int p = 0;
+				int y = ry;
+				for (i = 0; i < ts.size(); i++)
+				{
+					f.render(txt.substr(p, ts[i].cpos-p), rx, y, cached);
+					y += ts[i].h;
+					p = ts[i].cpos + 1;
+				}
+			}
+			else
+				f.render(txt, rx,ry, cached);
 			f.setColor(old.i);
 			//apply a gaussian blur to it
 			gaussianblur(cached);			
 			// */
 			//render on top of the blur, with the normal color
-			f.render(txt, rx,ry, cached);
+			//
+			if (_multiline)
+			{
+				std::vector<gui::textsize> ts;
+				int tw, th;
+				f.getMultilineSize(txt, w, ts, tw, th);
+				int i;
+				int p = 0;
+				int y = ry;
+				for (i = 0; i < ts.size(); i++)
+				{
+					f.render(txt.substr(p, ts[i].cpos-p), rx, y, cached);
+					y += ts[i].h;
+					p = ts[i].cpos + 1;
+				}
+			}
+			else
+				f.render(txt, rx,ry, cached);
 			cachevalid = true;
 		}
 
 		widget::draw(x, y, s);
 		cached->draw(x+px, y+py, NULL, s);
+	}
+	/*
+	 * This function will change the height of the object based on the text
+	 * It sets multiline to true
+	 */
+	void label::reheight()
+	{
+		multiline(true);
+		vector<textsize> ts;
+		int newwidth=0, newheight=0;
+		f.getMultilineSize(txt, w, ts, newwidth, newheight);
+		setSize(w, newheight);
 	}
 };
 

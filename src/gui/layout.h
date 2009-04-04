@@ -58,7 +58,7 @@ namespace gui
 		virtual void setSize(int width, int height) {w = width; h = height;}
 		
 		void addchild(base& c, int x, int y); 
-
+		void removechild(base& c);
 		void hide(fadetype f=PLAIN);
 		void show(fadetype f=PLAIN);
 		bool shown() { return visible;}
