@@ -1,5 +1,5 @@
 /*
-   $Id: sprite.cc,v 1.2 2009/03/21 14:29:07 ksterker Exp $
+   $Id: sprite.cc,v 1.3 2009/04/07 21:13:16 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
@@ -51,8 +51,8 @@ namespace gfx
     // dtor
     sprite::~sprite ()
     {
-        delete m_listener;
         clear();
+        delete m_listener;
     }
     
     // reset sprite
