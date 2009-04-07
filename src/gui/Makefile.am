@@ -27,7 +27,7 @@ libadonthell_gui_la_SOURCES = \
 	textbox.cpp \
 	conversation.cc
 
-libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS)
+libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS) -D__BIG_ENDIAN__
 
 libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/input/ -ladonthell_input \

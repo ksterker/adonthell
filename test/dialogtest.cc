@@ -59,9 +59,8 @@ class DialogTest : public adonthell::app {
     // Set us a nice window
 	gfx::screen::set_fullscreen(false);
     gfx::screen::set_video_mode(512,512);
-  	python::add_search_path("./data/");
+	python::add_search_path(base::Paths.user_data_dir() + "data/");
   	python::import_module("adonthell.rpg");
-	//python::add_search_path(base::Paths.user_data_dir() + "/data/");
 	/* try to load a dialog */
 	rpg::character npc("NPC", "Id", rpg::NPC);
 	npc.set_dialogue("tech_preview");
@@ -92,12 +91,14 @@ class DialogTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
 
+    gfx::surface *screen = gfx::screen::get_surface();
+
     // Run this loop until letsexit is set to 1 by the
     // callback function. Every time a key event is raised,
     // the input manager will send it to the listeners it handles
     // (that is, only the one we've connected) which will call the
     // callback function that has been connected to handle keyboard events.
-	gfx::surface * screen = gfx::screen::get_surface();
+
     while (!ih.letsexit) {
       ::base::Timer.update ();
       ::input::manager::update();

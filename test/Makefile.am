@@ -30,7 +30,7 @@ guitest_LDADD = \
 	-L$(top_builddir)/src/main -ladonthell_main                \
 	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime \
 	$(FT2_LIBS)
-dialogtest_CXXFLAGS = $(FT2_CFLAGS) -I../src $(PY_CFLAGS)
+dialogtest_CXXFLAGS = $(FT2_CFLAGS) -I$(top_srcdir)/src $(PY_CFLAGS)
 dialogtest_SOURCES = dialogtest.cc
 dialogtest_LDADD = \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
