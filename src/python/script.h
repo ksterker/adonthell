@@ -1,5 +1,5 @@
 /*
-   $Id: script.h,v 1.10 2006/06/18 19:25:53 ksterker Exp $
+   $Id: script.h,v 1.11 2009/04/08 19:36:02 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2003/2006 Kai Sterker <kaisterker@linuxgames.com>
    Copyright (C) 2001 Alexandre Courbot <alexandrecourbot@linuxgames.com>
@@ -233,16 +233,16 @@ namespace python
         //@{
         /** 
          * Save the %script to a stream.
-         * @param out stream where to save the %script.
+         * @param record stream where to save the %script.
          */ 
-        void put_state (base::flat& out) const;
+        void put_state (base::flat& record) const;
         
         /** 
          * Loads the %script from a stream.
-         * @param in stream to load the %script from.
+         * @param record stream to load the %script from.
          * @return \e true if the %script was loaded successfully, \e false otherwise.
          */
-        bool get_state (base::flat& in);
+        bool get_state (base::flat& record);
         //@}
                 
 #ifndef SWIG

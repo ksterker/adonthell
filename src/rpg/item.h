@@ -1,5 +1,5 @@
 /*
-   $Id: item.h,v 1.5 2006/09/28 19:13:27 gnurou Exp $
+   $Id: item.h,v 1.6 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,6 +31,7 @@
 #ifndef RPG_ITEM_H
 #define RPG_ITEM_H
 
+#include "base/diskio.h"
 #include "python/script.h"
 #include "rpg/slot.h"
 #include <vector>
@@ -94,7 +95,7 @@ namespace rpg {
         /**
          * Destructor.
          */
-        ~item ();
+        virtual ~item ();
         
         /**
          * Convenience method to instanciate an item template. Its usage is 
@@ -340,9 +341,10 @@ namespace rpg {
          * if it already exists.
          *
          * @param file name of the file to save %item to.
+         * @param format whether to save as XML or compressed binary.
          * @return \b true if saving successful, \b false otherwise.
          */
-        bool put_state (const string & file) const;
+        bool put_state (const string & file, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
             
         /**
          * Load %item from stream. This will first load the %item template

@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.cc,v 1.4 2004/12/07 16:46:27 ksterker Exp $
+   $Id: log_entry.cc,v 1.5 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -43,7 +43,7 @@ log_entry::log_entry (const string & topic, const string & text, const string & 
 }
 
 // save log entry
-void log_entry::put_state (base::flat &out) const
+void log_entry::put_state (base::flat & file) const
 {
     base::flat record;
     
@@ -52,14 +52,14 @@ void log_entry::put_state (base::flat &out) const
     record.put_string ("ltx", Text);
     record.put_string ("lid", Uid);
     
-    out.put_flat ("le", record);
+    file.put_flat ("le", record);
 }
 
 // load log entry
-bool log_entry::get_state (base::flat &in)
+bool log_entry::get_state (base::flat & file)
 {
-    base::flat record = in.get_flat ("le");
-    if (!in.success ()) return false;
+    base::flat record = file.get_flat ("le");
+    if (!file.success ()) return false;
     
     Timestamp = record.get_uint32 ("let");
     Topic = record.get_string ("ltc");

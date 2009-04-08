@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.h,v 1.4 2006/09/22 01:15:23 ksterker Exp $
+   $Id: quest_event.h,v 1.5 2009/04/08 19:36:03 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -158,17 +158,17 @@ namespace rpg
         /** 
          * Saves the %event %data to a stream.
          * 
-         * @param out stream where to save the %event.
+         * @param file stream where to save the %event.
          */ 
-        void put_state (base::flat& out) const;
+        void put_state (base::flat& file) const;
         
         /** 
          * Loads the %event from a stream.
          * 
-         * @param in stream to load the %event from.
+         * @param file stream to load the %event from.
          * @return \e true if the %event could be loaded, \e false otherwise
          */
-        bool get_state (base::flat& in);
+        bool get_state (base::flat& file);
         //@}
     
 #ifndef SWIG

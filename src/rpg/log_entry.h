@@ -1,5 +1,5 @@
 /*
-   $Id: log_entry.h,v 1.6 2005/10/09 07:38:40 ksterker Exp $
+   $Id: log_entry.h,v 1.7 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -79,17 +79,17 @@ namespace rpg
             //@{
             /**
              * Load %log entry from stream. 
-             * @param in stream to load entry from.
+             * @param file stream to load entry from.
              * @return \b true if loading successful, \b false otherwise.
              */
-            bool get_state (base::flat & in);
+            bool get_state (base::flat & file);
         
             /**
              * Save %log entry to a stream.
-             * @param out stream to save entry to.
+             * @param file stream to save entry to.
              * @return \b true if saving successful, \b false otherwise.
              */
-            void put_state (base::flat & out) const;
+            void put_state (base::flat & file) const;
             //@}
 
         private:

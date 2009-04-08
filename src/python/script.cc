@@ -1,5 +1,5 @@
 /*
-   $Id: script.cc,v 1.8 2006/06/19 18:37:46 ksterker Exp $
+   $Id: script.cc,v 1.9 2009/04/08 19:36:02 ksterker Exp $
   
    Copyright (C) 1999/2000/2001/2003/2004/2006 Kai Sterker
    Copyright (C) 2001 Alexandre Courbot
@@ -236,21 +236,21 @@ void script::set_attribute_string (const string &name, const string & value)
 }
 
 // save script to disk
-void script::put_state (base::flat & out) const
+void script::put_state (base::flat & record) const
 {
-    out.put_string ("scf", Filename);
-    out.put_string ("scn", Classname);
-    python::put_tuple (Args, out);
+    record.put_string ("scf", Filename);
+    record.put_string ("scn", Classname);
+    python::put_tuple (Args, record);
 }
 
 // load callback connection from disk and reconnect
-bool script::get_state (base::flat & in)
+bool script::get_state (base::flat & record)
 {
-    std::string filename = in.get_string ("scf");
-    std::string classname = in.get_string ("scn");
-    PyObject *args = python::get_tuple (in);
+    std::string filename = record.get_string ("scf");
+    std::string classname = record.get_string ("scn");
+    PyObject *args = python::get_tuple (record);
     
-    if (in.success ())
+    if (record.success ())
     {
         return create_instance (filename, classname, args);
     }

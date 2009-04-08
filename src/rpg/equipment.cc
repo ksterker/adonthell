@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.cc,v 1.7 2006/09/28 19:13:27 gnurou Exp $
+   $Id: equipment.cc,v 1.8 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,7 +72,7 @@ bool slot_definition::fits (item *itm) const
 }
 
 // save slot definition to disk
-void slot_definition::put_state (base::flat & out) const
+void slot_definition::put_state (base::flat & file) const
 {
     // collect categories
     base::flat categories;
@@ -82,21 +82,21 @@ void slot_definition::put_state (base::flat & out) const
     }
     
     // save all data
-    out.put_string ("sdn", Name);    
-    out.put_flat ("sdc", categories);
-    out.put_double ("sdm", Modifier);
+    file.put_string ("sdn", Name);    
+    file.put_flat ("sdc", categories);
+    file.put_double ("sdm", Modifier);
 }
 
 // read slot definition from disk
-bool slot_definition::get_state (base::flat & in)
+bool slot_definition::get_state (base::flat & file)
 {
     char *cat;
     base::flat categories;
     
     // read variables
-    Name = in.get_string ("sdn");
-    categories = in.get_flat ("sdc");
-    Modifier = in.get_double ("sdm");
+    Name = file.get_string ("sdn");
+    categories = file.get_flat ("sdc");
+    Modifier = file.get_double ("sdm");
     
     // read categories
     while (categories.next ((void **) &cat) != -1)
@@ -104,7 +104,7 @@ bool slot_definition::get_state (base::flat & in)
         Categories.push_back (std::string (cat));
     }
     
-    return in.success();
+    return file.success();
 }
 
 // dtor
@@ -331,7 +331,7 @@ rpg::inventory *equipment::create_inventory (const std::string & type)
 }
 
 // save equipment setup to disk
-void equipment::put_state (base::flat & out)
+void equipment::put_state (base::flat & file)
 {
     base::flat record, slots;
     
@@ -359,17 +359,17 @@ void equipment::put_state (base::flat & out)
         slots.clear ();
     }
     
-    out.put_flat ("eqp", record);
+    file.put_flat ("eqp", record);
 }
 
 // load from disk
-bool equipment::get_state (base::flat & in)
+bool equipment::get_state (base::flat & file)
 {
     // remove current equipment setup
     cleanup ();
     
     char *val;
-    base::flat list, record = in.get_flat ("eqp");
+    base::flat list, record = file.get_flat ("eqp");
     
     // load slot definitions
     u_int32 size = record.get_uint8 ("esl");
@@ -397,5 +397,5 @@ bool equipment::get_state (base::flat & in)
         size--;
     }
     
-    return in.success ();
+    return file.success ();
 }

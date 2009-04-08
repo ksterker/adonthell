@@ -1,5 +1,5 @@
 /*
-   $Id: item.cc,v 1.7 2006/09/30 23:04:59 ksterker Exp $
+   $Id: item.cc,v 1.8 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -162,10 +162,10 @@ item *item::combine (item *itm)
 }
 
 // save a single item to file
-bool item::put_state (const string & file) const
+bool item::put_state (const string & file, const base::diskio::file_format & format) const
 {
     // try to save item
-    base::diskio record (base::diskio::GZ_FILE);
+    base::diskio record (format);
     if (!put_state (record))
     {
         fprintf (stderr, "*** item::put_state: saving '%s' failed!\n", file.c_str ());        
@@ -211,7 +211,7 @@ bool item::put_state (base::flat & file) const
 bool item::get_state (const string & file)
 {
     // try to load item
-    base::diskio record (base::diskio::GZ_FILE);
+    base::diskio record (base::diskio::BY_EXTENSION);
     
     if (record.get_record (file)) 
         return get_state (record);

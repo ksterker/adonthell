@@ -1,5 +1,5 @@
 /*
-   $Id: quest_event.cc,v 1.4 2008/10/04 16:52:30 ksterker Exp $
+   $Id: quest_event.cc,v 1.5 2009/04/08 19:36:03 ksterker Exp $
 
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -71,10 +71,10 @@ bool quest_event::equals (const events::event * e)
 }
 
 // save quest event
-void quest_event::put_state (base::flat& out) const
+void quest_event::put_state (base::flat& file) const
 {
     // save basic event data first
-    event::put_state (out);
+    event::put_state (file);
 
 	string pattern = "";
 	for (std::vector<std::string>::const_iterator i = Pattern.begin(); i != Pattern.end(); /* nothing */)
@@ -84,20 +84,20 @@ void quest_event::put_state (base::flat& out) const
 	}
 	
     // save quest event data
-    out.put_string ("qpt", pattern);
+    file.put_string ("qpt", pattern);
 }
 
 // load quest event
-bool quest_event::get_state (base::flat& in)
+bool quest_event::get_state (base::flat& file)
 {
     // get basic event data
-    if (event::get_state (in))
+    if (event::get_state (file))
     {   
         // get quest event data
-        string pattern = in.get_string ("qpt");
+        string pattern = file.get_string ("qpt");
 		set_pattern (pattern);
     }
-    return in.success ();
+    return file.success ();
 }
 
 // split given path into its parts

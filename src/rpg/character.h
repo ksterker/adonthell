@@ -1,5 +1,5 @@
 /*
-   $Id: character.h,v 1.7 2006/10/30 05:55:12 ksterker Exp $
+   $Id: character.h,v 1.8 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -30,11 +30,17 @@
 #ifndef RPG_CHARACTER_H
 #define RPG_CHARACTER_H
 
+#include "base/diskio.h"
 #include "rpg/schedule.h"
 #include "base/hash_map.h"
 
 namespace rpg
 {
+#ifndef SWIG
+    /** The Python package containing %item templates. */
+#   define CHARACTER_PACKAGE "characters."
+#endif
+    
     /** types of characters */
     enum char_type 
     { 
@@ -66,6 +72,18 @@ namespace rpg
             virtual ~character ();
         
             /**
+             * Convenience method to instanciate a character template. Its usage is 
+             * preferred over script::create_instance ().
+             * @param templ name of the item template without .py extension
+             * @param args argument tuple to pass to the template's constructor
+             * @return \b true if instanciated successful, \b false otherwise. 
+             */
+            bool create_instance (const std::string & templ, PyObject * args = NULL)
+            {
+                return python::script::create_instance (CHARACTER_PACKAGE + templ, templ, args);
+            }
+            
+            /**
              * @name Member access
              */
             //@{
@@ -78,6 +96,25 @@ namespace rpg
                 return Name;
             }
 
+            /**
+             * Set the color to use for speech produced by that 
+             * character.
+             * @param color the color associated with the character.
+             */
+            void set_color (const u_int32 & color)
+            {
+                Color = color;
+            }
+
+            /**
+             * Get the color associated to that character.
+             * @return the color to use for character speech.
+             */
+            u_int32 color () const
+            {
+                return Color;
+            }
+            
             /**
              * Return dialogue script of this character
              * @return dialogue script assigned to this character.
@@ -133,6 +170,27 @@ namespace rpg
              * @name Loading/Saving
              */
             //@{
+            /* Load character from named file. This will first load the %character 
+             * template to instanciate the underlying Python item class. Then it will
+             * restore the actual %character data. If an item is already instanciated,
+             * it will be replaced.
+             *
+             * @param file name of the file to load %item from.
+             * @return \b true if loading successful, \b false otherwise.
+             */
+             bool load (const string & file);
+            
+            /**
+             * Save %character to named file. This will save both the item template
+             * plus the actual data to the given file. The file will be replaced
+             * if it already exists.
+             *
+             * @param file name of the file to save %character to.
+             * @param format whether to save as XML or compressed binary.
+             * @return \b true if saving successful, \b false otherwise.
+             */
+            bool save (const string & file, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+            
             /**
              * Loads the %character from a stream.
              * @param in stream to load the %character from.
@@ -143,8 +201,9 @@ namespace rpg
             /**
              * Save the %character to a stream.
              * @param out stream where to save the %character.
+             * @return \b true if loading successful, \b false otherwise.
              */
-            void put_state (base::flat & file) const;
+            bool put_state (base::flat & file) const;
             //@}
             
 #ifndef SWIG
@@ -156,6 +215,9 @@ namespace rpg
             
             /// Unique identifier for this character
             std::string Id;
+            
+            /// Color used for the character in dialogues
+            u_int32 Color;
             
             /// Dialogue script assigned to this character
             std::string Dialogue;

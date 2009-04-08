@@ -1,5 +1,5 @@
 /*
-   $Id: equipment.h,v 1.8 2006/09/28 19:13:27 gnurou Exp $
+   $Id: equipment.h,v 1.9 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -96,16 +96,16 @@ namespace rpg
         //@{
         /**
          * Save equipment %slot definition to stream.
-         * @param out stream to save %equipment %slot to.
+         * @param file stream to save %equipment %slot to.
          */
-        void put_state (base::flat & out) const;
+        void put_state (base::flat & file) const;
         
         /**
          * Load equipment %slot definition from stream. 
-         * @param in stream to load %equipment %slot from.
+         * @param file stream to load %equipment %slot from.
          * @return \b true if loading successful, \b false otherwise.
          */
-        bool get_state (base::flat & in);
+        bool get_state (base::flat & file);
         //@}
         
     private:
@@ -233,16 +233,16 @@ namespace rpg
         //@{
         /**
          * Save %equipment definitions to stream.
-         * @param out stream to save %equipment to.
+         * @param file stream to save %equipment to.
          */
-        static void put_state (base::flat & out);
+        static void put_state (base::flat & file);
 
         /**
          * Load %equipment definitions from stream. 
-         * @param in stream to load %equipment from.
+         * @param file stream to load %equipment from.
          * @return \b true if loading successful, \b false otherwise.
          */
-        static bool get_state (base::flat & in);
+        static bool get_state (base::flat & file);
         //@}
         
     private:

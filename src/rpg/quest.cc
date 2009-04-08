@@ -1,5 +1,5 @@
 /*
-   $Id: quest.cc,v 1.13 2008/10/04 16:52:30 ksterker Exp $
+   $Id: quest.cc,v 1.14 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -206,7 +206,7 @@ std::string quest_part::full_name () const
 }
 
 // save quest_part
-void quest_part::put_state (base::flat & out) const
+void quest_part::put_state (base::flat & file) const
 {
     base::flat record;
     
@@ -234,14 +234,14 @@ void quest_part::put_state (base::flat & out) const
 	}
 	
     // save this quest part to stream
-    out.put_flat ("q", record);
+    file.put_flat ("q", record);
 }
 
 // load quest part
-bool quest_part::get_state (base::flat & in)
+bool quest_part::get_state (base::flat & file)
 {
-    base::flat record = in.get_flat ("q");
-    if (!in.success ()) return false;
+    base::flat record = file.get_flat ("q");
+    if (!file.success ()) return false;
 
 	// id needs to be loaded only for quest root 
 	if (Parent == NULL) Id = record.get_string ("qid");
@@ -337,13 +337,13 @@ bool quest::put_state (const std::string & path)
 }
 
 // save quests to record
-void quest::put_state (base::flat & out)
+void quest::put_state (base::flat & file)
 {
     std::map<std::string, quest_part*>::const_iterator i;
     
-    out.put_uint16 ("qsz", Quests.size ());
+    file.put_uint16 ("qsz", Quests.size ());
     for (i = Quests.begin (); i != Quests.end (); i++)
-        (*i).second->put_state (out);
+        (*i).second->put_state (file);
 }
 
 // load quests from file
@@ -359,18 +359,18 @@ bool quest::get_state ()
 }
 
 // load quests from record
-bool quest::get_state (base::flat & in)
+bool quest::get_state (base::flat & file)
 {
     quest_part *part;
-    u_int16 size = in.get_uint16 ("qsz");
+    u_int16 size = file.get_uint16 ("qsz");
     
     for (int i = 0; i < size; i++)
     {
         part = new quest_part ("", NULL);
-        if (part->get_state (in)) add (part);
+        if (part->get_state (file)) add (part);
     }
     
-    return in.success ();
+    return file.success ();
 }
 
 // add a quest to list of quests

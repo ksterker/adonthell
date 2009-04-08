@@ -1,5 +1,5 @@
 /*
-   $Id: quest.h,v 1.9 2007/06/04 01:42:26 ksterker Exp $
+   $Id: quest.h,v 1.10 2009/04/08 19:36:02 ksterker Exp $
    
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -150,17 +150,17 @@ namespace rpg
             //@{
             /**
              * Load %quest part (and its contents) from stream. 
-             * @param in stream to load %quest part from.
+             * @param file stream to load %quest part from.
              * @return \b true if loading successful, \b false otherwise.
              */
-            bool get_state (base::flat & in);
+            bool get_state (base::flat & file);
         
             /**
              * Save %quest part (and contents) to a stream.
-             * @param out stream to save %quest part to.
+             * @param file stream to save %quest part to.
              * @return \b true if saving successful, \b false otherwise.
              */
-            void put_state (base::flat & out) const;
+            void put_state (base::flat & file) const;
             //@}
                 
         protected:
@@ -288,10 +288,10 @@ namespace rpg
             //@{
             /**
              * Load all quests from stream. 
-             * @param in stream to load quests from.
+             * @param file stream to load quests from.
              * @return \b true if loading successful, \b false otherwise.
              */
-            static bool get_state (base::flat & in);
+            static bool get_state (base::flat & file);
             /**
              * Load all quests from %quest file. The file to load is
              * determined through the search path defined in base::Paths.
@@ -300,9 +300,9 @@ namespace rpg
             static bool get_state ();
             /**
              * Save all quests to stream.
-             * @param out stream to save quests to.
+             * @param file stream to save quests to.
              */
-            static void put_state (base::flat & out);
+            static void put_state (base::flat & file);
             /**
              * Save all quests to %quest file in given directory. This
              * will usually be a saved game directory.
