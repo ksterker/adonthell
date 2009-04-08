@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event.h,v 1.3 2008/03/08 20:07:53 ksterker Exp $
+   $Id: audio_event.h,v 1.4 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -101,17 +101,17 @@ namespace audio
          * Saves the basic %event %data (such as the type or script data)
          * to a stream.
          *
-         * @param out stream where to save the %event.
+         * @param file stream where to save the %event.
          */
-        void put_state (base::flat& out) const;
+        void put_state (base::flat& file) const;
 
         /**
          * Loads the basic %event %date from a stream.
          *
-         * @param in stream to load the %event from.
+         * @param file stream to load the %event from.
          * @return \e true if the %event could be loaded, \e false otherwise
          */
-        bool get_state (base::flat& in);
+        bool get_state (base::flat& file);
 
         //@}
 

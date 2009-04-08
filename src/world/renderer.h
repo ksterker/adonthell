@@ -1,5 +1,5 @@
 /*
- $Id: renderer.h,v 1.10 2009/03/07 14:36:58 ksterker Exp $
+ $Id: renderer.h,v 1.11 2009/04/08 21:52:10 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -177,9 +177,9 @@ public:
 
     /**
      * Toogle printing of drawing queue content to stdout.
-     * @param print whether to print drawing queue.
+     * @param prnt whether to print drawing queue.
      */
-    void print_queue (const bool & print) { Print = print; }
+    void print_queue (const bool & prnt) { Print = prnt; }
     
 #ifndef SWIG
     /**

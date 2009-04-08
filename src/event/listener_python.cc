@@ -1,5 +1,5 @@
 /*
- $Id: listener_python.cc,v 1.2 2007/07/22 21:50:37 ksterker Exp $
+ $Id: listener_python.cc,v 1.3 2009/04/08 21:52:09 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -144,7 +144,7 @@ s_int32 listener_python::raise_event (const event* evnt)
 }
 
 // save the state of the script associated with the event
-void listener_python::put_state (base::flat & out) const
+void listener_python::put_state (base::flat & file) const
 {
     base::flat record;
     
@@ -162,28 +162,28 @@ void listener_python::put_state (base::flat & out) const
         python::put_tuple (Args, record, 2);
     }
     
-    out.put_flat ("", record);
+    file.put_flat ("", record);
 }
 
 // load the state of the script associated with the event 
-bool listener_python::get_state (base::flat & in) 
+bool listener_python::get_state (base::flat & file) 
 {
-    listener::get_state (in);
+    listener::get_state (file);
 
     // load callback
-    if (in.get_bool ("lmt") == true)
+    if (file.get_bool ("lmt") == true)
     {
         Method = new python::method ();
-        if (Method->get_state (in) == false)
+        if (Method->get_state (file) == false)
         {
             fprintf (stderr, "*** listener::get_state: restoring callback failed for '%s'!\n", Id.c_str());
             return false;
         }
         
-        Args = python::get_tuple (in, 2);
+        Args = python::get_tuple (file, 2);
         PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
     }
 
-    return in.success ();
+    return file.success ();
 }
 

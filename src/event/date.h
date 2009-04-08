@@ -1,5 +1,5 @@
 /*
-   $Id: date.h,v 1.8 2007/07/22 01:32:21 ksterker Exp $
+   $Id: date.h,v 1.9 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2002/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,7 +29,7 @@
 #ifndef EVENT_DATE_H
 #define EVENT_DATE_H
 
-#include "base/file.h"
+#include "base/flat.h"
 
 #ifndef SWIG
 /**
@@ -128,16 +128,16 @@ public:
     
     /**
      * Load the state of the %gamedate class from disk
-     * @param in stream to read the state from
+     * @param file stream to read the state from
      * @return \b true if the state was successfully retrieved,
      *      \b false otherwise.
      */
-    static bool get_state (base::igzstream & in);
+    static bool get_state (base::flat & file);
     /**
      * Save the state of the %gamedate class to disk
-     * @param out stream to write the state to
+     * @param file stream to write the state to
      */
-    static void put_state (base::ogzstream & out);
+    static void put_state (base::flat & file);
 
 private:
 #ifndef SWIG

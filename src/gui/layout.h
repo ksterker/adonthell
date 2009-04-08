@@ -5,8 +5,9 @@
 #include "input/input.h"
 #include <vector>
 
+#ifndef SWIG
 using std::vector;
-
+#endif
 
 
 namespace gui

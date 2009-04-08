@@ -1,5 +1,5 @@
 /*
-   $Id: time_event.cc,v 1.9 2007/07/22 21:50:37 ksterker Exp $
+   $Id: time_event.cc,v 1.10 2009/04/08 21:52:10 ksterker Exp $
 
    Copyright (C) 2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -57,29 +57,29 @@ void time_event::set_repeat (const string & interval, s_int32 count)
 }
 
 // Save time event to file
-void time_event::put_state (base::flat & out) const
+void time_event::put_state (base::flat & file) const
 {
     // save basic event data first
-    event::put_state (out);
+    event::put_state (file);
     
     // save time event data
-    out.put_uint32 ("ttm", Time);
-    out.put_uint32 ("tin", Interval);
-    out.put_bool ("tab", Absolute);
+    file.put_uint32 ("ttm", Time);
+    file.put_uint32 ("tin", Interval);
+    file.put_bool ("tab", Absolute);
 }
 
 // load time event from file
-bool time_event::get_state (base::flat & in)
+bool time_event::get_state (base::flat & file)
 {
     // get basic event data
-    if (event::get_state (in))
+    if (event::get_state (file))
     {   
         // get time event data
-        Time = in.get_uint32 ("ttm");
-        Interval = in.get_uint32 ("tin");
-        Absolute = in.get_bool ("tab");
+        Time = file.get_uint32 ("ttm");
+        Interval = file.get_uint32 ("tin");
+        Absolute = file.get_bool ("tab");
     }
-    return in.success ();
+    return file.success ();
 }
 
 void time_event::do_repeat ()

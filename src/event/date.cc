@@ -1,5 +1,5 @@
 /*
-   $Id: date.cc,v 1.10 2007/07/22 01:32:21 ksterker Exp $
+   $Id: date.cc,v 1.11 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2002/2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,23 +72,23 @@ void date::update ()
 }
 
 // load state from disk
-bool date::get_state (base::igzstream &in)
+bool date::get_state (base::flat & file)
 {
     // read the current date as (gametime) minutes since start of the game
-    Time << in;
-    Scale << in;
-    Resolution << in;
+    Time = file.get_uint32 ("time");
+    Scale = file.get_float ("scale");
+    Resolution = file.get_uint16 ("resolution");
     
-    return true;
+    return file.success();
 }
 
 // save state to disk
-void date::put_state (base::ogzstream &out)
+void date::put_state (base::flat & file)
 {
     // write the time to disk
-    Time >> out;
-    Scale >> out;
-    Resolution >> out;
+    file.put_uint32 ("time", Time);
+    file.put_float ("scale", Scale);
+    file.put_uint16 ("resolution", Resolution);
 }
 
 // calculate the current weekday

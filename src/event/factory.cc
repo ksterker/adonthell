@@ -1,5 +1,5 @@
 /*
-   $Id: factory.cc,v 1.11 2007/06/10 03:58:21 ksterker Exp $
+   $Id: factory.cc,v 1.12 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -126,30 +126,30 @@ void factory::resume ()
 }
 
 // Save a factory to file
-void factory::put_state (base::flat& out) const
+void factory::put_state (base::flat& file) const
 {
     base::flat listeners;
     std::vector <listener *>::iterator i;
 
-    out.put_uint16 ("fps", Paused);
+    file.put_uint16 ("fps", Paused);
     
     for (i = Listeners.begin (); i != Listeners.end (); i++)
         if (!(*i)->is_destroyed ())
             (*i)->put_state (listeners);
 
-    out.put_flat ("fls", listeners);
+    file.put_flat ("fls", listeners);
 }
 
 // Loads a factory from file
-bool factory::get_state (base::flat& in)
+bool factory::get_state (base::flat& file)
 {
     void *value;
     listener *li;
     u_int32 size, type;
     base::flat::data_type data_type;
     
-    Paused = in.get_uint16 ("fps");
-    base::flat listeners = in.get_flat ("fls");
+    Paused = file.get_uint16 ("fps");
+    base::flat listeners = file.get_flat ("fls");
 
     // get registered listeners
     while ((data_type = listeners.next (&value, &size)) != -1) 

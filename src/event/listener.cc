@@ -1,5 +1,5 @@
 /*
-   $Id: listener.cc,v 1.9 2007/07/22 21:50:37 ksterker Exp $
+   $Id: listener.cc,v 1.10 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2004/2005/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -77,40 +77,40 @@ void listener::resume ()
 }
 
 // save the state of the script associated with the event
-void listener::put_state (base::flat & out) const
+void listener::put_state (base::flat & file) const
 {
     // save id and paused state
-    out.put_string ("lid", Id);
-    out.put_uint16 ("lps", Paused);
+    file.put_string ("lid", Id);
+    file.put_uint16 ("lps", Paused);
 
     // save attached event
-    out.put_bool ("lev", Event != NULL);
-    if (Event != NULL) Event->put_state (out);
+    file.put_bool ("lev", Event != NULL);
+    if (Event != NULL) Event->put_state (file);
 }
 
 // load the state of the script associated with the event 
-bool listener::get_state (base::flat & in) 
+bool listener::get_state (base::flat & file) 
 {
-    Id = in.get_string ("lid");
-    Paused = in.get_uint16 ("lps");
+    Id = file.get_string ("lid");
+    Paused = file.get_uint16 ("lps");
     
     // load event structure
-    if (in.get_bool ("lev") == true)
+    if (file.get_bool ("lev") == true)
     {
-        std::string type = in.get_string ("etp");
+        std::string type = file.get_string ("etp");
         
         // Instanciate an event of the given type
         Event = event_type::instanciate_event (type);
  
         // try to load it
-        if (Event == NULL || Event->get_state (in) == false)
+        if (Event == NULL || Event->get_state (file) == false)
         {
             fprintf (stderr, "*** listener::get_state: '%s' could not load event of type '%s'!\n", Id.c_str(), type.c_str ());
             return false;
         }    
     }
 
-    return in.success ();
+    return file.success ();
 }
 
 

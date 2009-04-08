@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.8 2005/06/03 17:29:13 ksterker Exp $
+   $Id: event.cc,v 1.9 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,18 +47,18 @@ u_int8 event::type ()
 }
 
 // save the state of the script associated with the event
-void event::put_state (base::flat & out) const
+void event::put_state (base::flat & file) const
 {
-    out.put_string ("etp", name ());
-    out.put_sint32 ("erp", Repeat);
+    file.put_string ("etp", name ());
+    file.put_sint32 ("erp", Repeat);
 }
 
 // load the state of the script associated with the event 
-bool event::get_state (base::flat & in) 
+bool event::get_state (base::flat & file) 
 {
     // Note that 'Type' is already read by listener::get_state 
     // to determine what event subclass to instanciate
-    Repeat = in.get_sint32 ("erp");
+    Repeat = file.get_sint32 ("erp");
     
-    return in.success ();
+    return file.success ();
 }

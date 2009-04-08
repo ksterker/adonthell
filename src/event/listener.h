@@ -1,5 +1,5 @@
 /*
-   $Id: listener.h,v 1.11 2007/07/22 21:50:37 ksterker Exp $
+   $Id: listener.h,v 1.12 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -235,16 +235,16 @@ namespace events
         /** 
          * Flattens the %event %listener to the given stream.
          * 
-         * @param out stream where to add the %event %listener.
+         * @param file stream where to add the %event %listener.
          */ 
-        virtual void put_state (base::flat& out) const;
+        virtual void put_state (base::flat& file) const;
         
         /** 
          * Loads the %event %listener from given stream.
          *
-         * @param in stream to load the %event %listener from.
+         * @param file stream to load the %event %listener from.
          */
-        virtual bool get_state (base::flat& in);
+        virtual bool get_state (base::flat& file);
         //@}
 
 #ifndef SWIG

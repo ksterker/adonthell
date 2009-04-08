@@ -1,5 +1,5 @@
 /*
-   $Id: audio_event.cc,v 1.2 2006/01/22 21:32:39 ksterker Exp $
+   $Id: audio_event.cc,v 1.3 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -31,14 +31,14 @@
 using audio::audio_event;
 
 // Save time event to file
-void audio_event::put_state (base::flat & out) const
+void audio_event::put_state (base::flat & file) const
 {
     //TODO Fill this in...
 }
 
 // load time event from file
-bool audio_event::get_state (base::flat & in)
+bool audio_event::get_state (base::flat & file)
 {
     //TODO Fill this in...
-    return in.success ();
+    return file.success ();
 }

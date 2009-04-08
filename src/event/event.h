@@ -1,5 +1,5 @@
 /*
-   $Id: event.h,v 1.8 2005/06/03 17:29:13 ksterker Exp $
+   $Id: event.h,v 1.9 2009/04/08 21:52:09 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2004/2005 Kai Sterker 
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -138,18 +138,18 @@ namespace events
          * Saves the basic %event %data (such as the type or repeat data)
          * to a file. Call this method from the derived class.
          *
-         * @param out stream where to save the %event.
+         * @param file stream where to save the %event.
          */
-        virtual void put_state (base::flat& out) const;
+        virtual void put_state (base::flat& file) const;
 
         /**
          * Loads the basic %event %data from stream. Call this method from
          * the derived class.
          *
-         * @param in flattener to load the %event from.
+         * @param file flattener to load the %event from.
          * @return \e true if the %event could be loaded, \e false otherwise
          */
-        virtual bool get_state (base::flat& in);
+        virtual bool get_state (base::flat& file);
         //@}
 
 #ifndef SWIG

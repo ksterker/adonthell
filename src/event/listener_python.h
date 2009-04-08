@@ -1,5 +1,5 @@
 /*
- $Id: listener_python.h,v 1.1 2006/06/18 19:25:53 ksterker Exp $
+ $Id: listener_python.h,v 1.2 2009/04/08 21:52:10 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -104,14 +104,14 @@ namespace events
          * 
          * @param out stream where to add the %event %listener.
          */ 
-        virtual void put_state (base::flat& out) const;
+        virtual void put_state (base::flat& file) const;
         
         /** 
          * Loads the %event %listener from given stream.
          *
          * @param in stream to load the %event %listener from.
          */
-        virtual bool get_state (base::flat& in);
+        virtual bool get_state (base::flat& file);
         //@}
         
 #ifndef SWIG

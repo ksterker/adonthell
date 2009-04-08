@@ -9,8 +9,9 @@
 #include <string>
 using std::string;
 #include <vector>
+#ifndef SWIG
 using std::vector;
-
+#endif
 
 namespace gui
 {
