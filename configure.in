@@ -54,6 +54,7 @@ AM_CONDITIONAL(OSX_COMPILE, test x$osx = xyes)
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
 AC_LIBLTDL_CONVENIENCE
+AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AC_SUBST(LIBLTDL)
 CPPFLAGS="$CPPFLAGS $INCLTDL"
@@ -109,6 +110,7 @@ if test x$gamedatadir = xnone; then
       *-*-cygwin* | *-*-mingw32*)
         gamedatadir="."
         backenddir="./lib/adonthell"
+        LDFLAGS="$LDFLAGS -no-undefined"
       ;;
       *-*-beos*)
         gamedatadir="/boot/home/config/share/adonthell"
@@ -198,7 +200,9 @@ dnl ****************
 
 AM_PATH_PYTHON([2.0])
 
-dnl convert windows paths to cygwin paths
+	dnl convert windows paths to cygwin paths
+	dnl required when building the python wrappers
+
 case "$target" in
 	*-*-cygwin* | *-*-mingw32*)
 		pyexecdir=`cd $pyexecdir && pwd`
@@ -215,6 +219,13 @@ if test "x$pycflags" = xnone; then
    PYINCLUDE=`$PYTHON -c 'import sys ; print "%s/include/python%s" % (sys.prefix, sys.version[:3])'`
    changequote([, ])
 
+   dnl convert windows paths to cygwin paths
+   case "$target" in
+   *-*-cygwin* | *-*-mingw32*)
+   		PYINCLUDE=`cd $PYINCLUDE && pwd`
+     ;;
+   esac
+   
    if test -r "$PYINCLUDE/Python.h"; then
       PY_CFLAGS="-I$PYINCLUDE"
       AC_SUBST(PY_CFLAGS)

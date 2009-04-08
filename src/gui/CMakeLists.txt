@@ -1,6 +1,7 @@
 # Define the adonthell_gui_SRCS variable containing all required files.
 set(adonthell_gui_SRCS
 	button.cpp
+	conversation.cc
 	font.cpp
 	label.cpp
 	layout.cc
@@ -12,6 +13,7 @@ set(adonthell_gui_SRCS
 set(adonthell_gui_HEADERS
     base.h
 	button.h
+	conversation.h
 	draw.h
 	font.h
 	gui.h
@@ -21,14 +23,18 @@ set(adonthell_gui_HEADERS
 	widget.h
 )
 
+include_directories(${PYTHON_INCLUDE_PATH})
+
 # Create a shared library
 add_library(adonthell_gui SHARED ${adonthell_gui_SRCS})
 set_target_properties(adonthell_gui PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
 target_link_libraries(adonthell_gui
     ${LIBFT_LIBRARIES}
+    ${PYTHON_LIBRARIES}
 	adonthell_base
 	adonthell_gfx
 	adonthell_input	
+	adonthell_rpg	
 	)
 
 
