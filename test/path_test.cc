@@ -1,6 +1,6 @@
 
  /*
-   $Id: path_test.cc,v 1.2 2009/04/09 14:43:19 fr3dc3rv Exp $
+   $Id: path_test.cc,v 1.3 2009/04/09 18:37:19 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -262,31 +262,29 @@ public:
         mobj = (world::object *) world.add_entity(world::OBJECT);
         mobj->load("data/models/map/wall/outside/cliff-s.xml");
 
-        // Adding the map character at index 8
-                mchar2 = (world::character *) world.add_entity(world::CHARACTER, "NPC2");
+        // Adding the map characters at index 8, 9 and 10
+        mchar2 = (world::character *) world.add_entity(world::CHARACTER, "NPC2");
         mchar2->load ("data/models/char/npc/ng.xml");
-                mchar3 = (world::character *) world.add_entity(world::CHARACTER, "NPC3");
+        mchar3 = (world::character *) world.add_entity(world::CHARACTER, "NPC3");
         mchar3->load ("data/models/char/npc/ng.xml");
         mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
         mchar->load ("data/models/char/npc/ng.xml");
 
-
-
         // set position and speed
         mchar->set_speed (1.5);
-        mchar->set_position (398, 322);
+        mchar->set_position (395, 322);
         mchar->set_z (0);
-                mchar2->set_speed (1.5);
-        mchar2->set_position (390, 380);
+        mchar2->set_speed (1.5);
+        mchar2->set_position (397, 353);
         mchar2->set_z (0);
-                mchar3->set_speed (1.5);
+        mchar3->set_speed (1.5);
         mchar3->set_position (450, 422);
         mchar3->set_z (0);
 
         // put character on map
         world.put_entity (8, *mchar2);
-        world.put_entity (18, *mchar3);
-        world.put_entity (20, *mchar);
+        world.put_entity (9, *mchar3);
+        world.put_entity (10, *mchar);
 
 
 

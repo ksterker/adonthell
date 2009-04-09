@@ -9,7 +9,7 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     convert_graphics.py CMakeLists.txt README.worldtest smallworld.cc
 
 noinst_PROGRAMS = callbacktest diskiotest guitest inputtest gfxtest worldtest \
-    imagetest dialogtest pathtest
+    imagetest dialogtest path_test
 
 callbacktest_SOURCES = callbacktest.cc
 callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base

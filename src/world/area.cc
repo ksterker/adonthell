@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.19 2009/04/09 14:43:18 fr3dc3rv Exp $
+ $Id: area.cc,v 1.20 2009/04/09 18:37:13 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -64,6 +64,7 @@ bool area::put_entity (const u_int32 & index, coordinates & pos)
         return true;
     }
     
+    fprintf (stderr, "*** area::put_entity: not entity at index %i!\n", index);
     return false;
 }
 
@@ -191,22 +192,12 @@ placeable * area::add_entity (placeable * object, const std::string & id)
 const std::string * area::get_entity(placeable * object)
 {
     //std::vector<world::entity *>::iterator ei = find_if(Entities.begin(), Entities.end(), );
-    std::vector<world::entity *>::iterator ei = Entities.begin();
-    while (ei != Entities.end())
+    std::hash_map<std::string, world::named_entity *>::const_iterator ei = NamedEntities.begin();
+    while (ei != NamedEntities.end())
     {
-        if ((*ei)->get_object() == object)
-            break;
+        if (ei->second->get_object() == object)
+            return &ei->first;
         ++ei;
-    }
-
-    if (ei != Entities.end())
-    {
-        if ((*ei)->has_name() == true)
-        {
-			return (*ei)->id();
-        } else {
-            return NULL;
-        }
     }
 
     return NULL;

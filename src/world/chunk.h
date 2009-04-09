@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.15 2009/04/09 14:43:19 fr3dc3rv Exp $
+ $Id: chunk.h,v 1.16 2009/04/09 18:37:15 ksterker Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -81,14 +81,18 @@ namespace world
          * Remove object at given coordinates.
          * @param object entity to remove from the world.
          * @param coordinates location of the entity.
+         * @return object that was removed, or NULL if no
+         *      such object existed.
          */
-        void remove (entity * object, const coordinates & pos);
+        entity * remove (entity * object, const coordinates & pos);
         
         /**
          * Remove object from world.
          * @param ci entity to remove from world.
+         * @return object that was removed, or NULL if no
+         *      such object existed.
          */                
-        void remove (const chunk_info & ci);
+        entity * remove (const chunk_info & ci);
         //@}
         
         /**

@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.13 2009/03/22 13:53:20 ksterker Exp $
+ $Id: chunk.cc,v 1.14 2009/04/09 18:37:13 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -93,7 +93,7 @@ void chunk::add (entity * object, const coordinates & pos)
     add (chunk_info (object, pos, max));
 }
 
-void chunk::remove (entity * object, const coordinates & pos)
+world::entity * chunk::remove (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
     const placeable *p = object->get_object();
@@ -101,7 +101,7 @@ void chunk::remove (entity * object, const coordinates & pos)
                           pos.y() + p->max_width(),
                           pos.z() + p->max_height());
     
-    remove (chunk_info (object, pos, max));
+    return remove (chunk_info (object, pos, max));
 }
 
 // add an object to chunk
@@ -196,8 +196,9 @@ void chunk::add (const chunk_info & ci)
     }
 }
 
-void chunk::remove (const chunk_info & ci)
+world::entity * chunk::remove (const chunk_info & ci)
 {
+    entity *removed = NULL;
     if (!is_leaf())
     {
         s_int8 chunks[8];
@@ -207,7 +208,7 @@ void chunk::remove (const chunk_info & ci)
             chunk *c = Children[chunks[0]];
             if (c != NULL)
             {
-                c->remove (ci);
+                removed = c->remove (ci);
                 
                 // we can get rid of empty leafs
                 if (c->is_empty() && c->is_leaf())
@@ -216,7 +217,7 @@ void chunk::remove (const chunk_info & ci)
                     Children[chunks[0]] = NULL;
                 }
                 
-                return;
+                return removed;
             }
         }
     }
@@ -224,6 +225,8 @@ void chunk::remove (const chunk_info & ci)
     std::list<chunk_info>::iterator it = find (Objects.begin(), Objects.end(), ci);
     if (it != Objects.end())
     {
+        removed = it->get_entity();
+        
         if (!Resize || 
             Min.x() == (*it).Min.x() || Min.y() == (*it).Min.y() || Min.z() == (*it).Min.z() ||
             Max.x() == (*it).Max.x() || Max.y() == (*it).Max.y() || Max.z() == (*it).Max.z())
@@ -233,6 +236,8 @@ void chunk::remove (const chunk_info & ci)
         
         Objects.erase (it);
     }
+    
+    return removed;
 }
 
 // return list of objects in the given view

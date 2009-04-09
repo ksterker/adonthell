@@ -1,5 +1,5 @@
 /*
- $Id: moving.cc,v 1.28 2009/03/21 14:29:10 ksterker Exp $
+ $Id: moving.cc,v 1.29 2009/04/09 18:37:16 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
@@ -61,7 +61,7 @@ struct z_order : public std::binary_function<const chunk_info *, const chunk_inf
 moving::moving (world::area & mymap)
     : placeable (mymap), coordinates ()
 {
-    GroundPos = 0;
+    GroundPos = -10000;
     MyShadow = NULL;
 
 #if DEBUG_COLLISION
@@ -356,7 +356,8 @@ void moving::calculate_ground_pos ()
 // update movable position
 bool moving::update ()
 {
-    static named_entity e (this, "", false);
+    // this is a dummy, as we don't know the real entity
+    named_entity e (this, "", false);
     
 #if DEBUG_COLLISION
     // clear image
@@ -369,9 +370,12 @@ bool moving::update ()
         // reset shadow for next frame
         MyShadow->reset ();
                 
-        Mymap.remove (&e, *this);
-        update_position ();
-        Mymap.add (&e, *this);
+        entity *myEntity = Mymap.remove (&e, *this);
+        if (myEntity != NULL)
+        {
+            update_position ();
+            Mymap.add (myEntity, *this);
+        }
     }
     
     return true; 
