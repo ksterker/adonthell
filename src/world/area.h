@@ -1,5 +1,5 @@
 /*
- $Id: area.h,v 1.13 2009/03/29 12:22:06 ksterker Exp $
+ $Id: area.h,v 1.14 2009/04/09 14:43:18 fr3dc3rv Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -93,6 +93,13 @@ namespace world
          * @return the matching entity, or NULL if no such entity exists.
          */
         placeable * get_entity (const std::string & id) const;
+
+		  /**
+         * Get the name of the entity that possess the placeable
+         * @param the placeable
+         * @return the name
+         */	
+		  const std::string * get_entity(placeable * object);
         
         /**
          * @name Map entity creation.

@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.18 2009/03/29 12:22:06 ksterker Exp $
+ $Id: area.cc,v 1.19 2009/04/09 14:43:18 fr3dc3rv Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -186,6 +186,30 @@ placeable * area::add_entity (placeable * object, const std::string & id)
     NamedEntities[id] = ety;
     
     return object;    
+}
+
+const std::string * area::get_entity(placeable * object)
+{
+    //std::vector<world::entity *>::iterator ei = find_if(Entities.begin(), Entities.end(), );
+    std::vector<world::entity *>::iterator ei = Entities.begin();
+    while (ei != Entities.end())
+    {
+        if ((*ei)->get_object() == object)
+            break;
+        ++ei;
+    }
+
+    if (ei != Entities.end())
+    {
+        if ((*ei)->has_name() == true)
+        {
+			return (*ei)->id();
+        } else {
+            return NULL;
+        }
+    }
+
+    return NULL;
 }
 
 // save to stream

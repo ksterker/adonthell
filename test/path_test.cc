@@ -1,5 +1,6 @@
+
  /*
-   $Id: path_test.cc,v 1.1 2009/02/23 12:46:06 fr3dc3rv Exp $
+   $Id: path_test.cc,v 1.2 2009/04/09 14:43:19 fr3dc3rv Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -34,10 +35,12 @@
 #include "world/character.h"
 #include "world/object.h"
 #include "world/mapview.h"
-#include "world/pathfinding.h"
+#include "world/pathfinding_manager.h"
 #include "world/vector3.h"
 #include "world/coordinates.h"
 
+
+world::pathfinding_manager ptmgr;
 
 class game_client
 {
@@ -47,9 +50,11 @@ public:
     bool letsexit;
     bool draw_grid;
 	bool draw_walkable;
+    world::character * mchar2;
 	bool draw_bounding_box;
     bool draw_delay;
     bool print_queue;
+    world::character * mchar3;
 	bool screenshot;
 	bool always_run;
 
@@ -78,10 +83,29 @@ public:
 	            	else mchar->walk ();
 	                break;
 	            }
-	            case input::control_event::B_BUTTON:
+	            /*case input::control_event::B_BUTTON:
 	            {
 	            	mchar->jump();
 	                break;
+	            }*/
+	            case input::control_event::B_BUTTON:
+	            {
+
+                    const int options[3][2] = {{580, 450},
+                                {150, 250},
+                                {500, 450}};
+                    int random = rand() % 3;
+
+                    world::vector3<s_int32> target(options[random][0], options[random][1] ,0);
+                    //150 250
+                    //540 450
+                    //590 450
+                    fprintf(stderr," TARGET: x:%d y:%d\n", options[random][0], options[random][1]);
+                    //int id1 = ptmgr.add_task(mchar, target);
+                    int id2 = ptmgr.add_task(mchar2, target);
+                    int id3 = ptmgr.add_task(mchar3, target);
+
+                    break;
 	            }
 	            case input::control_event::LEFT_BUTTON:
 	            {
@@ -239,16 +263,31 @@ public:
         mobj->load("data/models/map/wall/outside/cliff-s.xml");
 
         // Adding the map character at index 8
+                mchar2 = (world::character *) world.add_entity(world::CHARACTER, "NPC2");
+        mchar2->load ("data/models/char/npc/ng.xml");
+                mchar3 = (world::character *) world.add_entity(world::CHARACTER, "NPC3");
+        mchar3->load ("data/models/char/npc/ng.xml");
         mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
         mchar->load ("data/models/char/npc/ng.xml");
+
+
 
         // set position and speed
         mchar->set_speed (1.5);
         mchar->set_position (398, 322);
         mchar->set_z (0);
+                mchar2->set_speed (1.5);
+        mchar2->set_position (390, 380);
+        mchar2->set_z (0);
+                mchar3->set_speed (1.5);
+        mchar3->set_position (450, 422);
+        mchar3->set_z (0);
 
         // put character on map
-        world.put_entity (8, *mchar);
+        world.put_entity (8, *mchar2);
+        world.put_entity (18, *mchar3);
+        world.put_entity (20, *mchar);
+
 
 
         world::coordinates mc;
@@ -375,6 +414,10 @@ class world_test : public adonthell::app
 public:
 	int main ()
 	{
+        time_t a;
+        time(&a);
+        srand(a);
+
         // Initialize the gfx and input systems
     	init_modules (GFX | INPUT | PYTHON);
 
@@ -414,23 +457,6 @@ public:
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
 
-        time_t a;
-        time(&a);
-        srand(a);
-
-       const int options[3][2] = {{590, 450},
-                                {150, 250},
-                                {540, 450}};
-       int random = rand() % 3;
-       printf("random %d\n %d %d\n", random, options[random][0], options[random][1]);
-        world::vector3<s_int32> target(options[random][0], options[random][1] ,0);
-        //150 250
-        //540 450
-        //590 450
-        world::pathfinding path;
-
-        std::list<world::coordinates> path_to_follow = path.find_path(gc.mchar, target);
-        printf("Nº of paths: %d\n", path_to_follow.size());
 	    while (!gc.letsexit)
     	{
         	u_int16 i;
@@ -438,24 +464,10 @@ public:
         	// FIXME frames_missed is probably not what we want here
 	        // for (int i = 0; i < base::Timer.frames_missed (); i++)
 	        // {
-        world::vector3<s_int32> pos_to_move;
-        bool moved = false;
-
-        if (!path_to_follow.empty())
-        {
-            pos_to_move.set(path_to_follow.front().x() * 40,
-                            path_to_follow.front().y() * 40,
-                            0);
-
-            path_to_follow.pop_front();
-
-            gc.mchar->set_position(pos_to_move.x(), pos_to_move.y());
-            gc.mchar->add_direction(gc.mchar->SOUTH);
-            moved = true;
-        }
 
             input::manager::update();
             events::date::update();
+            ptmgr.update();
             gc.world.update();
             mv.update();
 	        //}
@@ -513,16 +525,6 @@ public:
 
 	        base::Timer.update ();
 	        gfx::screen::update ();
-
-            // Simple timer, waits one sec
-            time_t t1, t2;
-            time(&t1);
-
-            if (moved == true)
-                while (time(&t2), difftime(t2, t1) < 1) { }
-
-            moved = false;
-
 	        gfx::screen::clear ();
 	    }
 

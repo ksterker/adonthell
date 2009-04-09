@@ -1,0 +1,518 @@
+/*
+  $Id: pathfinding_manager.cc,v 1.1 2009/04/09 14:43:19 fr3dc3rv Exp $
+
+  Copyright (C) 2009   Frederico Cerveira
+  Part of the Adonthell Project http://adonthell.linuxgames.com
+
+  Adonthell is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  Adonthell is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Adonthell; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+*/
+
+/**
+ * @file   world/pathfinding_manager.cc
+ * @author Frederico Cerveira <frederico.cerveira@gmail.com>
+ *
+ * @brief  Implements the pathfinding_manager class
+ */
+
+#include "base/diskio.h"
+#include "world/pathfinding_manager.h"
+#include "world/character.h"
+#include "world/area.h"
+
+using world::pathfinding_manager;
+using world::character;
+
+// Max number of tasks, it's a fixed value so if every slot is occupied
+// there's going to be a problem
+static const s_int16 MAX_TASKS = 55;
+
+// Max number of times that a character can be stuck during a task,
+// it's used to prevent the stupid behaviour of keeping hitting always
+// the same obstacle. When it is exceeded the character will stop and the task deleted
+static const u_int8 MAX_TIMES_STUCK = 5;
+
+// The various phases a task can have
+static const u_int8 PHASE_PATHFINDING = 1;
+static const u_int8 PHASE_MOVING = 2;
+static const u_int8 PHASE_FINISHED = 4;
+static const u_int8 PHASE_PAUSED = 128;
+
+pathfinding_manager::pathfinding_manager()
+{
+    m_taskCount = 0;
+
+    m_task.reserve(MAX_TASKS);
+    m_locked.reserve(MAX_TASKS);
+
+    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    {
+        std::vector<world::coordinates> * coor = new std::vector<world::coordinates>;
+        m_task[i].path = coor;
+    }
+
+    m_locked.assign(MAX_TASKS, false);
+}
+
+pathfinding_manager::~pathfinding_manager()
+{
+    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    {
+        delete m_task[i].path;
+        m_task[i].path = NULL;
+    }
+}
+
+void pathfinding_manager::add_task_sp(const s_int16 id, character * chr,
+                                      const world::vector3<s_int32> & target, const u_int8 phase,
+                                      const u_int8 actualNode, const u_int8 actualDir,
+                                      const u_int8 pixMoved, const u_int8 pixToMove)
+{
+    m_task[id].chr = chr;
+    m_task[id].target = target;
+    m_task[id].phase = phase;
+    m_task[id].actualNode = actualNode;
+    m_task[id].actualDir = static_cast<character::direction>(actualDir);
+    m_task[id].path->clear();
+
+    m_task[id].pixelsMoved = pixMoved;
+    m_task[id].pixelsToMove = pixToMove;
+    m_task[id].startPos.set_x(m_task[id].chr->x());
+    m_task[id].startPos.set_y(m_task[id].chr->y());
+    m_task[id].timesStuck = 0;
+
+    m_locked[id] = true;
+    m_chars.push_front(chr);
+}
+
+s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target)
+{
+    slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), chr);
+    if (ichr != m_chars.end())
+        return -1;
+
+
+    s_int16 actualNode = m_taskCount - 1;
+    while ((m_locked[m_taskCount] == true))
+    {
+        if (m_taskCount > MAX_TASKS)
+        {
+            m_taskCount = 0;
+            continue;
+        }
+
+        if (m_taskCount == actualNode)
+            break;
+
+        ++m_taskCount;
+    }
+
+    add_task_sp(m_taskCount, chr, target, PHASE_PATHFINDING, 0, character::NONE);
+
+    return m_taskCount++;
+}
+
+void pathfinding_manager::pause_task(const s_int16 id)
+{
+    m_task[id].phase |= PHASE_PAUSED;
+}
+
+void pathfinding_manager::resume_task(const s_int16 id)
+{
+    m_task[id].phase &= ~PHASE_PAUSED;
+}
+
+bool pathfinding_manager::delete_task(const s_int16 id)
+{
+    // Deletion consists of pausing the task, unlocking it and popping out the character from the slist
+    if ((id >= MAX_TASKS) || (m_locked[id] == false))
+        return false;
+
+    pause_task(id);
+    m_locked[id] = false;
+
+    slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), m_task[id].chr);
+
+    if (ichr == m_chars.end())
+    {
+        fprintf(stderr, "Can't find chr in m_chars 'when deleting task!!\nThis is bad!\n");
+        return false;
+    }
+
+    m_chars.erase(ichr);
+
+    return true;
+}
+
+pathfinding_manager::state pathfinding_manager::return_state(const s_int16 id)
+{
+    // This might not work always
+    if (m_locked[id] == true)
+    {
+        return ACTIVE;
+    } else {
+        if (((m_task[id].target.x() / 20) == (m_task[id].chr->x() / 20)) &&
+            ((m_task[id].target.y() / 20) == (m_task[id].chr->y() / 20)))
+        {
+            return SUCCESS;
+        } else return FAILURE;
+    }
+}
+
+void pathfinding_manager::update()
+{
+    for (s_int16 id = 0; id < m_taskCount; id++)
+    {
+        if (m_locked[id] == true)
+        {
+            switch(m_task[id].phase)
+            {
+                case PHASE_PATHFINDING:
+                {
+                    // Calc the path
+                    if (m_pathfinding.find_path(m_task[id].chr, m_task[id].target,
+                        m_task[id].path) == false)
+                    {
+                        // Failed to find the path
+                        m_task[id].phase = PHASE_FINISHED;
+                        break;
+                    }
+
+                    m_task[id].phase = PHASE_MOVING;
+
+                    break;
+                }
+                case PHASE_MOVING:
+                {
+                    if (move_chr(id) == true)
+                        m_task[id].phase = PHASE_FINISHED;
+
+                    break;
+                }
+                case PHASE_FINISHED:
+                {
+                    m_task[id].chr->stop();
+                    m_task[id].chr->update_state();
+                    delete_task(id);
+                    break;
+                }
+            }
+
+        }
+    }
+}
+
+u_int8 pathfinding_manager::calc_distance(const world::coordinates & node, const world::character * chr) const
+{
+    u_int32 x_diff = abs(chr->x() - node.x());
+    u_int32 y_diff = abs(chr->y() - node.y());
+
+    x_diff *= x_diff;
+    y_diff *= y_diff;
+
+    return sqrt((x_diff + y_diff));
+}
+
+bool pathfinding_manager::move_chr(const s_int16 id)
+{
+    // Check if the direction has already been computed
+    if (m_task[id].actualDir != character::NONE)
+    {
+        // Verify if we've moved enough pixels
+        if (m_task[id].pixelsMoved >= m_task[id].pixelsToMove)
+        {
+            // Check if we've finished the path
+            if (m_task[id].path->size() - 1 == m_task[id].actualNode)
+            {
+                    // Verify if we're on the intended grid
+                    if ((m_task[id].chr->x() / 20) == (m_task[id].path->at(m_task[id].actualNode).x()) &&
+                        (m_task[id].chr->y() / 20) == (m_task[id].path->at(m_task[id].actualNode).y())) {
+
+                        return true;
+
+                    }
+            } else {
+                // We're not on the final node
+                // Verify if we've really reached the intended grid or their closest neigbhours
+                if ((m_task[id].chr->x() / 20) >= (m_task[id].path->at(m_task[id].actualNode).x() - 1) &&
+                (m_task[id].chr->x() / 20) <= (m_task[id].path->at(m_task[id].actualNode).x() + 1) &&
+                (m_task[id].chr->y() / 20) >= (m_task[id].path->at(m_task[id].actualNode).y() - 1) &&
+                (m_task[id].chr->y() / 20) <= (m_task[id].path->at(m_task[id].actualNode).y() + 1)) {
+                    ++m_task[id].actualNode;
+                }
+
+            }
+
+            m_task[id].actualDir = character::NONE;
+
+        } else {
+
+            m_task[id].pixelsMovedLst = m_task[id].pixelsMoved;
+            m_task[id].pixelsMoved = calc_distance(m_task[id].startPos, m_task[id].chr);
+
+            // Verify if we're stuck somewhere
+            if (m_task[id].pixelsMoved == m_task[id].pixelsMovedLst)
+            {
+                ++m_task[id].framesStuck;
+
+                if (m_task[id].framesStuck > 30)
+                {
+                    ++m_task[id].timesStuck;
+
+                    if (m_task[id].timesStuck > MAX_TIMES_STUCK)
+                        m_task[id].phase = PHASE_FINISHED;
+
+                    m_task[id].framesStuck = 0;
+
+                    // We can either recalculate all the path from actualNode-1 to the target
+                    // or calculate a way arround from actualNode-1 to actualNode
+                    // The first will take longer to calculate, however the path will be
+                    // smaller and more pleasing to the eye.
+                    // The last will be much quicker to calculate but will unnecessarily increase
+                    // the path size and return a rather strange path
+                    // We could decide beetween the both depending on the actual path size
+                    // If it was big then we would use the quicker way
+                    // Otherwise we would opt by the slower but nicer "calculate the whole path" way
+
+                    // Stops the character
+                    m_task[id].chr->stop();
+                    m_task[id].chr->update_state();
+
+                    // Don't forget to clear the path
+                    m_task[id].path->clear();
+
+                    if (m_pathfinding.find_path(m_task[id].chr, m_task[id].target, m_task[id].path) == false)
+                        m_task[id].phase = PHASE_FINISHED;
+
+                    if ((m_task[id].path->empty()) || (m_task[id].path->size() == 1))
+                        m_task[id].phase = PHASE_FINISHED;
+
+                    m_task[id].actualNode = 0;
+                    m_task[id].pixelsMoved = 0;
+                    m_task[id].pixelsMovedLst = 0;
+                    m_task[id].actualDir = character::NONE;
+                }
+            }
+
+        }
+    } else {
+
+        s_int32 grid_x = m_task[id].chr->x() / 20;
+        s_int32 grid_y = m_task[id].chr->y() / 20;
+        s_int32 target_grid_x = m_task[id].path->at(m_task[id].actualNode).x();
+        s_int32 target_grid_y = m_task[id].path->at(m_task[id].actualNode).y();
+
+        if ((grid_x == target_grid_x) && (grid_y == target_grid_y))
+        {
+            if ((m_task[id].actualNode == m_task[id].path->size() - 1) || (m_task[id].path->empty()))
+                return true;
+
+            ++m_task[id].actualNode;
+            return false;
+        }
+
+        //m_task[id].chr->clear_direction();
+		  m_task[id].chr->set_direction(character::NONE);
+        m_task[id].actualDir = character::NONE;
+
+        if (grid_y > target_grid_y)
+        {
+            // We have to move up
+				m_task[id].chr->add_direction(m_task[id].chr->NORTH);
+            m_task[id].actualDir |= character::NORTH;
+
+        } else if (grid_y < target_grid_y) {
+            // We have to move down
+				m_task[id].chr->add_direction(m_task[id].chr->SOUTH);
+            m_task[id].actualDir |= character::SOUTH;
+        }
+
+        if (grid_x > target_grid_x)
+        {
+            // We have to move to the left
+				m_task[id].chr->add_direction(m_task[id].chr->WEST);
+            m_task[id].actualDir |= character::WEST;
+
+        } else if (grid_x < target_grid_x) {
+            // We have to move to the right
+				m_task[id].chr->add_direction(m_task[id].chr->EAST);
+            m_task[id].actualDir |= character::EAST;
+        }
+
+        // Updates the direction
+        //m_task[id].chr->set_direction(m_task[id].actualDir);
+
+        world::coordinates temp_coor(target_grid_x * 20, target_grid_y * 20, 0);
+
+        // Calc the distance from the actual node to the target node
+        m_task[id].pixelsToMove = calc_distance(temp_coor, m_task[id].chr);
+
+        // Update the startPos with our actual pos
+        m_task[id].startPos.set_x(m_task[id].chr->x());
+        m_task[id].startPos.set_y(m_task[id].chr->y());
+
+        m_task[id].pixelsMoved = 0;
+
+    }
+
+    return false;
+}
+
+void pathfinding_manager::reset()
+{
+    m_taskCount = 0;
+
+    m_chars.clear();
+    m_locked.clear();
+    m_task.clear();
+
+    m_locked.assign(MAX_TASKS, false);
+}
+
+void pathfinding_manager::put_state(base::flat & out)
+{
+    base::flat taskBlock;
+
+    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    {
+        if (m_locked[i] == true)
+        {
+            std::string t = *(m_task[i].chr->map().get_entity(dynamic_cast<world::placeable *>(m_task[i].chr)));
+
+            if (t.empty() == false)
+            {
+                taskBlock.put_string("chrName", t);
+                taskBlock.put_sint32("target_x", m_task[i].target.x());
+                taskBlock.put_sint32("target_y", m_task[i].target.y());
+                taskBlock.put_uint8("phase", m_task[i].phase);
+                taskBlock.put_uint8("pixToMove", m_task[i].pixelsToMove);
+                taskBlock.put_uint8("pixMoved", m_task[i].pixelsMoved);
+                taskBlock.put_uint8("aNode", m_task[i].actualNode);
+                taskBlock.put_uint8("aDir", m_task[i].actualDir);
+
+                std::stringstream a;
+
+                // Saves the path
+                for (u_int16 c = 0; c < m_task[i].path->size(); c++)
+                {
+
+                    a.clear();a.str("");
+                    a << "node" << c << "x";
+                    taskBlock.put_sint32(a.str(), m_task[i].path->at(c).x());
+
+                    a.clear();a.str("");
+                    a << "node" << c << "y";
+                    taskBlock.put_sint32(a.str(), m_task[i].path->at(c).y());
+                }
+
+                a.clear();a.str("");
+                a << i;
+
+                out.put_flat(a.str(), taskBlock);
+                taskBlock.clear();
+            } else {
+                fprintf(stderr, "Can't find it!!\n");
+            }
+        }
+    }
+}
+
+
+void pathfinding_manager::get_state(base::flat & in, world::area & map)
+{
+    base::flat taskBlock;
+
+    // Clean everything
+    //reset();
+
+    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    {
+        std::stringstream a;
+
+        a << i;
+
+        taskBlock = in.get_flat(a.str());
+
+        if (taskBlock.size() == 1)
+            continue; // There isn't any data for this position
+
+        // Translates the character name into a pointer of a character existent
+        // in the map given
+        std::string chrName = taskBlock.get_string("chrName");
+        placeable * tPlac = map.get_entity(chrName);
+
+        if (tPlac == NULL)
+            continue;
+
+        character * tChr = dynamic_cast<character *>(tPlac);
+
+        s_int32 tX = taskBlock.get_sint32("target_x");
+        s_int32 tY = taskBlock.get_sint32("target_y");
+        u_int8 phase = taskBlock.get_uint8("phase");
+        u_int8 pixToMove = taskBlock.get_uint8("pixToMove");
+        u_int8 pixMoved = taskBlock.get_uint8("pixMoved");
+        u_int8 aNode = taskBlock.get_uint8("aNode");
+        u_int8 aDir = taskBlock.get_uint8("aDir");
+
+        world::vector3<s_int32> tempTarget(tX, tY, 0);
+
+        // Creates a new task with all the info
+        add_task_sp(i, tChr, tempTarget, phase, aNode, aDir, pixMoved, pixToMove);
+
+        // Now let's load the path
+        for (u_int16 c = 0; c < 65535; c++)
+        {
+            // Get the X axis value
+            a.clear();a.str("");
+            a << "node" << c << "x";
+            s_int32 nodeX = taskBlock.get_sint32(a.str());
+
+            if (taskBlock.success() == false)
+                break; // This node doesn't exists so we've already seen every node
+
+            // Get the Y axis value
+            a.clear();a.str("");
+            a << "node" << c << "y";
+            s_int32 nodeY = taskBlock.get_sint32(a.str());
+
+            // Add the node to the path
+            coordinates tempNode(nodeX, nodeY, 0);
+            m_task[i].path->push_back(tempNode);
+        }
+
+        // Set the character in the correct direction
+        tChr->set_direction((character::direction)aDir);
+        m_taskCount = i;
+    }
+}
+
+bool pathfinding_manager::save(std::string & fname)
+{
+    base::diskio record(base::diskio::XML_FILE);
+    put_state(record);
+
+    // write data to disk
+    return record.put_record(fname);
+}
+
+bool pathfinding_manager::load(std::string & fname, world::area & map)
+{
+    base::diskio record (base::diskio::XML_FILE);
+
+    if (record.get_record(fname))
+    {
+        get_state(record, map);
+        return true;
+    } else return false;
+}

@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.14 2009/03/29 12:22:06 ksterker Exp $
+ $Id: chunk.h,v 1.15 2009/04/09 14:43:19 fr3dc3rv Exp $
  
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -173,6 +173,11 @@ namespace world
         
         void debug () const;
 
+        /// the minimum of the chunks AABB
+        vector3<s_int32> Min;
+        /// the maximum of the chunks AABB
+        vector3<s_int32> Max;
+
 #ifndef SWIG
         /**
          * Allow %chunk to be passed as python argument
@@ -198,7 +203,8 @@ namespace world
          * to a file.
          */
         void put_state (collector & objects) const;
-            
+
+     
     private:
         /**
          * Find those children of the %chunk that overlap with the bbox
@@ -260,10 +266,6 @@ namespace world
         /// the objects contained in the chunk
         std::list<chunk_info> Objects;
         
-        /// the minimum of the chunks AABB
-        vector3<s_int32> Min;
-        /// the maximum of the chunks AABB
-        vector3<s_int32> Max;
         /// the split planes of the chunk
         vector3<s_int32> Split;
 #endif // SWIG

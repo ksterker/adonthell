@@ -12,6 +12,7 @@ set(adonthell_world_SRCS
     placeable_model.cc
     placeable_shape.cc
 	 pathfinding.cc
+	 pathfinding_manager.cc
     plane3.cc
     renderer.cc
     shadow.cc
@@ -39,6 +40,8 @@ set(adonthell_world_HEADERS
     placeable_shape.h
     plane3.h
 	 pathfinding.h
+	 pathfinding_manager.h
+	 pathfinding_task.h
     render_info.h
     renderer.h
     shadow.h

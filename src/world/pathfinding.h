@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding.h,v 1.1 2009/02/23 12:46:05 fr3dc3rv Exp $
+  $Id: pathfinding.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,7 +38,7 @@
 namespace world
 {
     /**
-     * Handles the pathfinding stuff
+     * Handles the pathfinding search stuff
      */
 
     class pathfinding
@@ -46,42 +46,38 @@ namespace world
     public:
 
         /**
-         * Finds the path and move to a certain place in the map
-         * @param character to move, and position to move to
-         * @note z is still unimplemented
-         * @return \b true if move was sucessful, \b false otherwise
+         * Finds the path, if possible, and adds it to the vector passed
+         * @param character to move, goal position, and (empty) vector to be filled with the path
+         * @return \b true on success, \b false on failure
          */
-        //bool move_to(character * chr, vector3<s_int32> & target);
-
-        /**
-         * Finds the path and return it
-         * @param character to move, and position to move to
-         * @note this method will become private in the future
-         *       and you should used the move_to instead
-         * @return a list with the coordinates of the path
-         */
-        std::list<coordinates> find_path(character * chr, const vector3<s_int32> & target);
+        bool find_path(const character * chr, const vector3<s_int32> & goal, std::vector<coordinates> * path);
 
     private:
 
         /**
-         * Calculates the heuristics of two pointa
+         * Resets the node bank, node cache and open list. So that it can be used again.
+         */
+        void reset()
+        {
+            m_nodeBank.reset();
+            m_nodeCache.reset();
+            m_openList.reset();
+        }
+
+        /**
+         * Calculates the heuristics of two points
          * @param a coordinate with the actual position and a
-         *        vector3 with the target position
+         *        vector3 with the goal position
          * @return the heuristic
          */
-        u_int32 calc_heuristics(const coordinates & actual, const vector3<s_int32> & target);
+        u_int32 calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const;
 
         /**
          * Returns the 8 adjacent nodes to the one given
-         * @param the coordinates of the central node
+         * @param the coordinates of the central nodes
          * @return a list with the coordinates of the adjacent nodes
          */
-        std::vector<coordinates> calc_adjacent_nodes(const coordinates & target);
-
-        /// Constants regarding the lists to which a node can be assigned to
-        static const u_int8 OPEN_LIST = 1;
-        static const u_int8 CLOSED_LIST = 2;
+        std::vector<coordinates> calc_adjacent_nodes(const coordinates & goal) const;
 
         /// The node bank
         node_bank m_nodeBank;

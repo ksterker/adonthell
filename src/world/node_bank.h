@@ -1,5 +1,5 @@
 /*
-  $Id: node_bank.h,v 1.1 2009/02/23 12:46:05 fr3dc3rv Exp $
+  $Id: node_bank.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -50,8 +50,26 @@ namespace world
         node_bank()
         {
             m_nodesTaken = 0;
-            m_freeNodes.reserve(START_NODES);
-            m_availableNodes = START_NODES;
+            m_freeNodes.reserve(MAX_NODES);
+
+            for (u_int16 i = 0; i < MAX_NODES; i++)
+            {
+                node * nd = new node;
+                m_freeNodes.push_back(nd);
+            }
+        }
+
+        ~node_bank()
+        {
+            std::vector<node *>::iterator i = m_freeNodes.begin();
+
+            while (i != m_freeNodes.end())
+            {
+                delete *i;
+                *i = NULL;
+
+                ++i;
+            }
         }
 
         /**
@@ -60,16 +78,9 @@ namespace world
          */
         node * get_node()
         {
-            ++m_nodesTaken;
+            verify_capacity();
 
-            //Verify if we've exceeded the available free nodes
-            if (m_nodesTaken > m_availableNodes)
-            {
-                m_availableNodes += REALLOC_NODES;
-                m_freeNodes.resize(m_availableNodes); //Add more free nodes
-            }
-
-            return &m_freeNodes[m_nodesTaken - 1];
+            return m_freeNodes[m_nodesTaken++];
         }
 
         /**
@@ -83,15 +94,58 @@ namespace world
 
     private:
 
-        /// Constants regarding the pre-allocated nodes
-        static const u_int16 START_NODES = 200;
+        /**
+         * Verifies if the maximum capacity as been exceded and then resizes
+         * the vector to accomodate more nodes
+         */
+         void verify_capacity()
+         {
+            if (m_nodesTaken == m_freeNodes.capacity() - 1)
+                safe_resize(m_freeNodes.capacity() + REALLOC_NODES);
+         }
+
+        /**
+         * Safely resizes the node vector
+         * @param capacity after resize
+         */
+        void safe_resize(u_int16 n)
+        {
+            vector<node *> temp;
+            vector<node *>::iterator i = m_freeNodes.begin();
+
+            while (i != m_freeNodes.end())
+            {
+                temp.push_back(*i);
+                ++i;
+            }
+
+            m_freeNodes.reserve(n);
+            // Do I need to clear
+            m_freeNodes.clear();
+
+            for (u_int a = 0; a < n; a++)
+            {
+                if (a < temp.size())
+                    m_freeNodes.push_back(temp.at(a));
+                else {
+                    node * nd = new node;
+                    m_freeNodes.push_back(nd);
+                }
+            }
+
+        }
+
+
+
+        /// Constants regarding the allocation of new nodes
         static const u_int16 REALLOC_NODES = 60;
+        static const u_int16 MAX_NODES = 20;
 
         /// A vector holding the nodes
-        vector<node> m_freeNodes;
+        vector<node *> m_freeNodes;
 
-        /// Counts how many nodes were taken and how many are free
-        u_int16 m_nodesTaken, m_availableNodes;
+        /// The last node in used
+        u_int16 m_nodesTaken;
     };
 }
 

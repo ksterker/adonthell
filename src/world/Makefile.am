@@ -24,6 +24,8 @@ pkgincludeworld_HEADERS = \
     placeable_shape.h \
     plane3.h \
 	 pathfinding.h \
+	 pathfinding_manager.h \
+	 pathfinding_task.h \
     render_info.h \
     renderer.h \
     shadow.h \
@@ -49,6 +51,7 @@ libadonthell_world_la_SOURCES = \
     placeable_shape.cc \
     plane3.cc \
 	 pathfinding.cc \
+	 pathfinding_manager.cc \
     renderer.cc \
     shadow.cc \
     triangle3.cc

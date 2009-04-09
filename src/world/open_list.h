@@ -1,5 +1,5 @@
 /*
-  $Id: open_list.h,v 1.1 2009/02/23 12:46:05 fr3dc3rv Exp $
+  $Id: open_list.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,12 +49,21 @@ namespace world
     {
     public:
 
+        open_list()
+        {
+            m_list.reserve(INITIAL_SIZE);
+        }
+
         /**
          * Adds a node to the open list
+         * @return /b true if everything went ok, /b false on error
+         * @note the error message will be sent to stderr
          * @param the node
          */
         void add_node(node * nd)
         {
+            verify_capacity();
+
             m_list.push_back(nd);
             push_heap(m_list.begin(), m_list.end(), cmp());
         }
@@ -86,6 +95,8 @@ namespace world
         {
             // O(log(N) + N)
 
+            verify_capacity();
+
             vector<node *>::iterator i = m_list.begin();
 
             while (i != m_list.end())
@@ -97,6 +108,7 @@ namespace world
 
                 ++i;
             }
+
         }
 
         /**
@@ -118,6 +130,31 @@ namespace world
         }
 
     private:
+
+        /**
+         * Verifies if the maximum capacity as been exceded and then resizes
+         * the vector to accomodate more nodes
+         */
+        void verify_capacity()
+        {
+            if (m_list.size() == m_list.capacity() - 1)
+            {
+                safe_resize(m_list.capacity() + REALLOC_SIZE);
+            }
+
+        }
+
+        /**
+         * Resizes the open list
+         */
+        void safe_resize(u_int16 n)
+        {
+            m_list.reserve(n);
+        }
+
+        /// Priority queue capacity constants
+        static const u_int16 INITIAL_SIZE = 200;
+        static const u_int8 REALLOC_SIZE = 60;
 
         /// The priority queue, implemented using a vector
         vector<node *> m_list;

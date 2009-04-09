@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding.cc,v 1.1 2009/02/23 12:46:04 fr3dc3rv Exp $
+  $Id: pathfinding.cc,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,6 +19,13 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
+/**
+ * @file   world/pathfinding.cc
+ * @author Frederico Cerveira <frederico.cerveira@gmail.com>
+ *
+ * @brief  Implements the pathfinding class
+ */
+
 #include "world/pathfinding.h"
 #include "world/character.h"
 #include "world/area.h"
@@ -31,42 +38,23 @@ using world::character;
 using world::pathfinding;
 using world::coordinates;
 
-/*
-bool pathfinding::move_to(character * chr, vector3<s_int32> & target)
+u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const
 {
-    vector3<float> vel(50, 50, 50);
-    vector3<float> sphere(20, 12.5 ,40);
-    vector3<float> pos_to_move;
+    return  (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y()));
+        /*return (sqrt(((actual.x() * 20 - goal.x()) * (actual.x() * 20 - goal.x())) +
+            ((actual.y() * 20 - goal.y()) * (actual.y() * 20 - goal.y()))
+    ));*/
+    /*u_int8 D = 20;
+    u_int8 D2 = 28;
+    u_int32 h_diagonal = min(abs(actual.x()-goal.x()), abs(actual.y()-goal.y()));
+    u_int32 h_straight = (abs(actual.x()-goal.x()) + abs(actual.y()-goal.y()));
+    return  (D2 * h_diagonal + D * (h_straight - 2*h_diagonal));*/
 
-    std::list<coordinates> path_to_follow = find_path(chr, target);
 
-    if (path_to_follow.empty()) //Failed to find the path
-        return false;
-
-    while (!path_to_follow.empty())
-    {
-        pos_to_move.set(path_to_follow.front().x() * 40,
-                         path_to_follow.front().y() * 40,
-                         0);
-
-        path_to_follow.pop_front();
-
-        collision col_data(pos_to_move, vel, sphere);
-        chr->set_position(pos_to_move.x(), pos_to_move.y());
-
-        //chr->execute_move(&col_data, 0);
-        //chr->update_position();
-        printf("Go one\n");
-    }
-    return true;
-}
-*/
-u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & target)
-{
-    return (abs(actual.x() * 40 - target.x()) + abs(actual.y() * 40 - target.y())) * 40;
 }
 
-std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & actual)
+
+std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & actual) const
 {
     std::vector<coordinates> temp;
     coordinates temp_pos;
@@ -75,56 +63,82 @@ std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & ac
 
     // TRICK: use the z as a pre-calculated cost to move
     // Left Center
-    temp_pos.set(actual.x() - 1, actual.y(), 40);
+    temp_pos.set(actual.x() - 1, actual.y(), 20);
     temp.push_back(temp_pos);
+
     //Left Top
-    temp_pos.set(actual.x() - 1, actual.y() - 1, 56);
+    temp_pos.set(actual.x() - 1, actual.y() - 1, 28);
     temp.push_back(temp_pos);
+
     //Left Bottom
-    temp_pos.set(actual.x() - 1, actual.y() + 1, 56);
+    temp_pos.set(actual.x() - 1, actual.y() + 1, 28);
     temp.push_back(temp_pos);
-    // Center Left
-    temp_pos.set(actual.x(), actual.y() - 1, 40);
-    temp.push_back(temp_pos);
-    // Center Right
-    temp_pos.set(actual.x(), actual.y() + 1, 40);
-    temp.push_back(temp_pos);
-    //Right Center
-    temp_pos.set(actual.x() + 1, actual.y(), 40);
-    temp.push_back(temp_pos);
-    // Right Top
-    temp_pos.set(actual.x() + 1, actual.y() + 1, 56);
-    temp.push_back(temp_pos);
+
     // Right Bottom
-    temp_pos.set(actual.x() + 1, actual.y() - 1, 56);
+    temp_pos.set(actual.x() + 1, actual.y() - 1, 28);
+    temp.push_back(temp_pos);
+
+    // Center Left
+    temp_pos.set(actual.x(), actual.y() - 1, 20);
+    temp.push_back(temp_pos);
+
+    // Center Right
+    temp_pos.set(actual.x(), actual.y() + 1, 20);
+    temp.push_back(temp_pos);
+
+    //Right Center
+    temp_pos.set(actual.x() + 1, actual.y(), 20);
+    temp.push_back(temp_pos);
+
+    // Right Top
+    temp_pos.set(actual.x() + 1, actual.y() + 1, 28);
     temp.push_back(temp_pos);
 
     return temp;
 }
 
-std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_int32> & target)
+bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal, std::vector<coordinates> * path)
 {
-    // Grid of the actual_node
-    s_int32 grid_x = trunc(chr->x() / 40);
-    s_int32 grid_y = trunc(chr->y() / 40);
+    // Verify pre condictions
+    if (!(((goal.x() >= chr->map().Min.x()) && (goal.x() <= chr->map().Max.x())) &&
+        (goal.y() >= chr->map().Min.y()) && (goal.y() <= chr->map().Max.y()))) {
 
-    // Grid of the target
-    const s_int32 target_grid_x = trunc(target.x() / 40);
-    const s_int32 target_grid_y = trunc(target.y() / 40);
+        fprintf(stderr, "Goal is out of the map scope\n");
+        return false;
+    }
+
+    // Constants regarding the lists to which a node can be assigned to
+    const u_int8 OPEN_LIST = 1;
+    const u_int8 CLOSED_LIST = 2;
+
+    // Number of revolutions
+    u_int16 rev = 0;
+
+    // The max revolutions(iterations) (may need fine tuning)
+    const float rev_per_dist = 5;
+    const u_int16 max_rev = 1 + rev_per_dist * (abs(chr->x() - goal.x()) + abs(chr->y() - goal.y()));
+
+    // Grid of the actual_node
+    s_int32 grid_x = trunc(chr->x() / 20);
+    s_int32 grid_y = trunc(chr->y() / 20);
+
+    // Grid of the goal
+    const s_int32 goal_grid_x = trunc(goal.x() / 20);
+    const s_int32 goal_grid_y = trunc(goal.y() / 20);
 
     // Pos of the character
     const s_int32 init_chr_x = chr->x();
     const s_int32 init_chr_y = chr->y();
 
-    // The node that's been choosen with the lowest
-    // total cost
+    // The node that's been choosen (with the lowest total cost)
     node * actual_node;
 
-    // Temporary stuff
+    // Temporary variables
     coordinates temp_pos;
     u_int16 temp_move_cost;
     node * temp_node;
     node * temp_node2;
+    placeable * temp_placeable = dynamic_cast<placeable *>(const_cast<character *>(chr));
     /* -------------------------------------------------------- */
 
     // Creates and adds the base node to the open list
@@ -139,7 +153,7 @@ std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_i
     m_nodeCache.add_node(temp_node);
     m_openList.add_node(temp_node);
 
-    while (!m_openList.is_empty()) {
+    while (!m_openList.is_empty() && (rev < max_rev)) {
 
         // Get the lowest cost node in the Open List
         actual_node = m_openList.get_top();
@@ -150,31 +164,25 @@ std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_i
         temp_pos.set(grid_x, grid_y, 0);
 
         // Check if we've arrived at the target
-        if ((grid_x == target_grid_x) && (grid_y == target_grid_y)) {
-            //printf("arrived");
-
-            //Place the char in its proper place
-            chr->set_position(init_chr_x, init_chr_y);
+        if ((grid_x == goal_grid_x) && (grid_y == goal_grid_y)) {
 
             // Recurse through the nodes and find the path
-            std::list<coordinates> path;
-            path.push_front(actual_node->pos);
+            path->insert(path->begin(), actual_node->pos);
 
             temp_node = actual_node->parent;
 
             while (temp_node != temp_node->parent) {
-                path.push_front(temp_node->pos);
+
+                path->insert(path->begin(), temp_node->pos);
 
                 temp_node = temp_node->parent;
             }
 
             // Resets the node cache, the open list and the node bank
-            // NOTE: should be in the move_to func instead
-            m_nodeBank.reset();
-            m_nodeCache.reset();
-            m_openList.reset();
+            reset();
+            printf("Rev: %d\n", rev);
 
-            return path;
+            return true;
         }
 
         // Change it from the open list to the closed list
@@ -189,22 +197,29 @@ std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_i
         while (i != pos_to_visit.end())
         {
             temp_node = m_nodeBank.get_node();
+
             temp_node->pos = *i;
 
+            temp_node->parent = actual_node;
+            temp_node->moveCost = (*i).z() + temp_node->parent->moveCost;
+            temp_node->total = calc_heuristics(temp_node->pos, goal) + temp_node->moveCost;
+
             // Check if this node is already in the open or closed list
-            temp_node2 = const_cast<node *>(m_nodeCache.search_node(temp_node));
+            temp_node2 = m_nodeCache.search_node(temp_node);
 
             if (temp_node2 != NULL) {
 
                 if (temp_node2->listAssignedTo == OPEN_LIST) {
                     // It's in the Open List, let's see if the move cost is lower now
-                    temp_move_cost = (*i).z() + temp_node2->parent->moveCost;
+                    //temp_move_cost = (*i).z() + temp_node2->parent->moveCost;
 
-                    if (temp_move_cost < temp_node2->moveCost) {
+                    if (temp_node->total < temp_node2->total) {
                         // Updates the move cost and rebalances the Open List
 
-                        temp_node2->moveCost = temp_move_cost;
-                        temp_node2->total = calc_heuristics(temp_node2->pos, target) + temp_node2->moveCost;
+                        temp_node2->moveCost = temp_node->moveCost;
+                        temp_node2->total = temp_node->total;
+                        temp_node2->parent = temp_node->parent;
+                        //temp_node2->total = calc_heuristics(temp_node2->pos, goal) + temp_node2->moveCost;
 
                         m_openList.rebalance_node(temp_node2);
 
@@ -212,35 +227,44 @@ std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_i
                 }
 
             } else {
-                // Check to see whether it is empty
-                vector3<s_int32> min(temp_node->pos.x() * 40, temp_node->pos.y() * 40, 0);
-                vector3<s_int32> max(temp_node->pos.x() * 40 + 40, temp_node->pos.y() * 40 + 40,
-                    1);
+                // Check if the tile is a hole
+                vector3<s_int32> min(temp_node->pos.x() * 20, temp_node->pos.y() * 20, chr->z() - 5);
+                vector3<s_int32> max(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20,
+                    chr->z());
 
-                std::list<chunk_info *> check_empty = chr->map().objects_in_bbox(min, max);
+                std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max);
 
-                if (check_empty.size() == 0) {
+                if (check_hole.empty()) {
                     ++i;
                     continue;
                 }
 
-                // Check if it has a obstacle in it
-                vector3<s_int32> cmin(temp_node->pos.x() * 40, temp_node->pos.y() * 40, 20);
-                vector3<s_int32> cmax(temp_node->pos.x() * 40 + 40, temp_node->pos.y() * 40 + 40, 50);
+                // Check if there is an obstacle in this node
+                vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, 10);
+                vector3<s_int32> cmax(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20, chr->placeable::height());
+                /*int half_length = round(chr->placeable::length() / 2);
+                int half_width = round(chr->placeable::width() / 2);
+                vector3<s_int32> cmin(temp_node->pos.x() * 40 + half_length,
+                        temp_node->pos.y() * 40 + half_width, 20);
+                vector3<s_int32> cmax(temp_node->pos.x() * 40 + 40 - half_length,
+                        temp_node->pos.y() * 40 + 40 - half_width, 50);*/
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(cmin, cmax);
 
-                if (collisions.size() > 0) {
-                    ++i;
-                    continue;
+                if (!collisions.empty()) {
+
+                    if ((collisions.size() == 1) && (temp_placeable == (*collisions.begin())->get_object()))
+                    {
+
+                    } else {
+
+                        ++i;
+                        continue;
+                    }
+
                 }
 
-
-                // Ask for free node, initialize, add to open list
-                temp_node->parent = actual_node;
-                temp_node->moveCost = (*i).z() + temp_node->parent->moveCost;
-                temp_node->total = calc_heuristics(temp_node->pos, target) + temp_node->moveCost;
-
+                // Add node to the open list
                 temp_node->listAssignedTo = OPEN_LIST;
                 m_nodeCache.add_node(temp_node);
                 m_openList.add_node(temp_node);
@@ -248,16 +272,12 @@ std::list<coordinates> pathfinding::find_path(character * chr, const vector3<s_i
 
         ++i;
         }
+
+        ++rev;
     }
 
-    //Place the char in its proper place
-    chr->set_position(init_chr_x, init_chr_y);
-
     // Resets the node cache, the open list and the node bank
-    m_nodeBank.reset();
-    m_nodeCache.reset();
-    m_openList.reset();
+    reset();
 
-    std::list<coordinates> empty_list;
-    return empty_list;
+    return false;
 }

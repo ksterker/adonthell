@@ -1,5 +1,5 @@
 /*
-  $Id: node_cache.h,v 1.1 2009/02/23 12:46:05 fr3dc3rv Exp $
+  $Id: node_cache.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -65,13 +65,14 @@ namespace world
         * Adds a node to the hash map
         * @param the node to be added
         */
-        void add_node(const node * nd)
+        void add_node(node * nd)
         {
             std::stringstream ss;
             std::string temp;
             ss << nd->pos.x() << ":" << nd->pos.y();
             ss >> temp;
 
+            //m_usedNodes.insert(nodeHash::value_type(temp, nd));
             m_usedNodes[temp] = nd;
         }
 
@@ -88,7 +89,10 @@ namespace world
             ss << nd->pos.x() << ":" << nd->pos.y();
             ss >> temp;
 
-            return const_cast<node *>(m_usedNodes[temp]);
+            /*nodeHash::iterator a = m_usedNodes.find(temp);
+            return *a;
+            */
+            return m_usedNodes[temp];
         }
 
        /**
@@ -103,7 +107,8 @@ namespace world
     private:
 
         /// The hash map
-        hash_map<std::string, const node *, hash<std::string>, eqstr> m_usedNodes;
+        typedef hash_map<std::string, node *, hash<std::string>, eqstr> nodeHash;
+        nodeHash m_usedNodes;
 
     };
 }
