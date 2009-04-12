@@ -1,5 +1,5 @@
 /*
-  $Id: node_bank.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
+  $Id: node_bank.h,v 1.3 2009/04/12 09:10:37 ksterker Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -123,7 +123,7 @@ namespace world
             // Do I need to clear
             m_freeNodes.clear();
 
-            for (u_int a = 0; a < n; a++)
+            for (u_int16 a = 0; a < n; a++)
             {
                 if (a < temp.size())
                     m_freeNodes.push_back(temp.at(a));
