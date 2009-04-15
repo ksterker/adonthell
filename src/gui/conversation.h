@@ -33,12 +33,13 @@ namespace gui
 		int optcount;
 		::base::functor_1<void*> * end;
 		void* arg;
+		unsigned int color;
 	public:
 		conversation(rpg::character & d, int w, int h, ::base::functor_1<void*>* e=NULL, void* a=NULL);
 
 		virtual void draw(int x, int y, gfx::surface* s) {objs.draw(x, y, s);}
-		virtual bool keyup(input::keyboard_event &k) {objs.keyup(k);}
-		virtual bool keydown(input::keyboard_event &k) {objs.keydown(k);}
+		virtual bool keyup(input::keyboard_event &k);
+		virtual bool keydown(input::keyboard_event &k);
 		virtual bool focus() {return objs.focus();}
 	
 	};

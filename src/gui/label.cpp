@@ -97,7 +97,9 @@ namespace gui
 				cout << "Unable to create label cache!\n";
 			cached->fillrect(0, 0, w, h, 0);
 			//compute where to render it
-			if (!offset && centerx) //if a manual offset has been set, centering doesnt matter
+			if (_multiline)
+				rx = 0;
+			else if (!offset && centerx) //if a manual offset has been set, centering doesnt matter
 				rx = (w - nw)/2;
 			else
 				rx = -offset;

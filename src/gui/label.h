@@ -34,6 +34,8 @@ namespace gui
 		void centerH(bool c) {centerx = c; cachevalid=false; }
 		void centerV(bool c) {centery = c; cachevalid=false; }
 		void multiline(bool m) {_multiline = m; cachevalid=false;}
+		void setColor(unsigned int c) {f.setColor(c); cachevalid=false;}
+		unsigned int getColor() {return f.getColor();}
 	};
 };
 
