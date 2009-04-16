@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.9 2009/03/21 11:59:47 ksterker Exp $
+ $Id: character.h,v 1.10 2009/04/16 21:06:09 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -35,6 +35,7 @@
 
 #include "base/diskio.h"
 #include "world/moving.h"
+#include "world/schedule.h"
 
 namespace world
 {
@@ -147,6 +148,18 @@ namespace world
         {
             set_velocity(0.0, 0.0);
         }
+        
+        /**
+         * Return schedule of this character. This is the high-level
+         * script that controls the characters behaviour.
+         *
+         * @return the character's schedule.
+         */
+        schedule* get_schedule ()
+        {
+            return &Schedule;
+        }
+        
         //@}
 
         /**
@@ -241,6 +254,9 @@ namespace world
     private:
         /// forbid passing by value
         character (const character & p);
+        
+        // Schedule assigned to this character
+        schedule Schedule;
     };
 }
 

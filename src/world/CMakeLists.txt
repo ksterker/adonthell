@@ -15,6 +15,8 @@ set(adonthell_world_SRCS
 	 pathfinding_manager.cc
     plane3.cc
     renderer.cc
+	schedule.cc
+	schedule_data.cc
     shadow.cc
     triangle3.cc
 )
@@ -44,6 +46,8 @@ set(adonthell_world_HEADERS
 	 pathfinding_task.h
     render_info.h
     renderer.h
+	schedule.h
+	schedule_data.h
     shadow.h
     shadow_info.h
     triangle3.h
@@ -60,6 +64,7 @@ target_link_libraries(adonthell_world
 	${PYTHON_LIBRARIES}
 	adonthell_base
 	adonthell_gfx
+    adonthell_python
 )
 
 #############################################

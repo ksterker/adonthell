@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.15 2009/03/21 11:59:47 ksterker Exp $
+   $Id: character.cc,v 1.16 2009/04/16 21:06:09 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,6 +47,7 @@ character::character (area & mymap) : moving (mymap)
     IsRunning = false;
     ToggleRunning = false;
     CurrentDir = NONE;
+    Schedule.set_map (&mymap);
 }
 
 // dtor
@@ -67,6 +68,9 @@ void character::jump()
 // process character movement
 bool character::update ()
 {
+    // character movement
+    Schedule.update ();
+    
     // reset vertical velocity
     set_vertical_velocity (VSpeed);
     

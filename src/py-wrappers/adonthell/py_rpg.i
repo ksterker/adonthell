@@ -12,7 +12,6 @@
 #include "rpg/log_index.h"
 #include "rpg/quest_event.h"
 #include "rpg/quest.h"
-#include "rpg/schedule.h"
     
 using rpg::slot;
 using rpg::quest_part;

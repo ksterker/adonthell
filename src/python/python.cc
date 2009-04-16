@@ -1,5 +1,5 @@
 /*
-   $Id: python.cc,v 1.14 2007/05/27 23:04:25 ksterker Exp $
+   $Id: python.cc,v 1.15 2009/04/16 21:06:09 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -140,7 +140,7 @@ namespace python
     // flatten the contents of a tuple
     void put_tuple (PyObject * tuple, base::flat & out, u_int16 start)
     {
-        u_int16 len = PyTuple_Size (tuple);
+        u_int16 len = tuple == NULL ? 0 : PyTuple_Size (tuple);
         out.put_uint16 ("pln", len - start);
         
         for (u_int16 i = start; i < len; i++) 

@@ -12,8 +12,6 @@ set(adonthell_rpg_SRCS
 	quest.cc
 	quest_event.cc
 	quest_event_manager.cc
-	schedule.cc
-	schedule_data.cc
 	slot.cc
 )
 
@@ -21,11 +19,9 @@ set(adonthell_rpg_HEADERS
 	character.h
 	inventory.h
 	log_index.h
-	schedule_data.h
 	dialog.h
 	item.h
 	quest_event.h
-	schedule.h
 	dialog_line.h
 	item_storage.h
 	quest_event_manager.h

@@ -7,6 +7,7 @@
 #include "world/object.h"
 #include "world/character.h"
 #include "world/mapview.h"
+#include "world/schedule.h"
 
 using namespace world;
 
@@ -25,6 +26,7 @@ using namespace world;
 
 %template(vector3i) world::vector3<s_int32>;
 
+%include "python/script.h"
 %include "world/placeable_model.h"
 %include "world/placeable.h"
 %include "world/object.h"
@@ -36,6 +38,7 @@ using namespace world;
 %include "world/placeable_shape.h"
 %include "world/renderer.h"
 %include "world/mapview.h"
+%include "world/schedule.h"
 
 %pythoncode %{
 class coordinates (vector3i):

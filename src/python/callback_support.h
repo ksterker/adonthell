@@ -1,5 +1,5 @@
 /*
-   $Id: callback_support.h,v 1.6 2004/05/31 11:44:50 ksterker Exp $
+   $Id: callback_support.h,v 1.7 2009/04/16 21:06:09 ksterker Exp $
    
    Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,14 +40,14 @@
  * class can be passed as arguments to Python callbacks.
  */
 #define GET_TYPE_NAME_VIRTUAL(CLASS) \
-virtual const char* get_type_name () { return #CLASS " *"; } \
+virtual const char* get_type_name () const { return #CLASS " *"; } \
 static const char* get_type_name_s () { return #CLASS " *"; } 
 
 #define GET_TYPE_NAME_ABSTRACT(CLASS) \
-virtual const char* get_type_name () = 0;
+virtual const char* get_type_name () const = 0;
 
 #define GET_TYPE_NAME(CLASS) \
-const char* get_type_name () { return #CLASS " *"; } \
+const char* get_type_name () const { return #CLASS " *"; } \
 static const char* get_type_name_s () { return #CLASS " *"; } 
 
 #endif

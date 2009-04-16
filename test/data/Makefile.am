@@ -1,6 +1,8 @@
 EXTRA_DIST = \
 	quest.data \
 	quests.xml \
+	characters/__init__.py \
+	characters/character.py \
 	dialogues/__init__.py \
 	dialogues/demo_intro_1.py \
 	dialogues/dialogue.py \
@@ -9,7 +11,7 @@ EXTRA_DIST = \
 	game_events/item_events.py \
 	game_events/quest_events.py \
 	game_events/time_events.py \
-    gfx/char/npc/shadow-40x25.png \
+	gfx/char/npc/shadow-40x25.png \
 	gfx/char/npc/ng/east_mov1.png \
 	gfx/char/npc/ng/east_mov2.png \
 	gfx/char/npc/ng/east_mov3.png \
@@ -29,6 +31,10 @@ EXTRA_DIST = \
 	gfx/char/npc/ng/south_mov4.png \
 	gfx/char/npc/ng/south_mov5.png \
 	gfx/char/npc/ng/south_mov6.png \
+	gfx/gui/testbg1.png \
+	gfx/gui/testbuttondown.png \
+	gfx/gui/testbuttonup.png \
+	gfx/gui/Vera.ttf \
 	gfx/map/ground/outside/grass/long-grass-tile.png \
 	gfx/map/ground/outside/grass/long-grass-tile.xml \
 	gfx/map/ground/outside/grass/short-grass-tile.png \
@@ -73,4 +79,6 @@ EXTRA_DIST = \
 	models/map/wall/outside/cliff-se.xml \
 	schedules/__init__.py \
 	schedules/map/__init__.py \
-	schedules/map/mapview.py
+	schedules/map/mapview.py \
+	schedules/char/player.py \
+	test-world.xml

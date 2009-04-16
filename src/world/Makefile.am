@@ -9,25 +9,27 @@ pkgincludeworld_HEADERS = \
     chunk.h \
     chunk_info.h \
     collision.h \
-	 coordinates.h \
-	 cube3.h \
+    coordinates.h \
+    cube3.h \
     entity.h \
     mapview.h \
-	 moving.h \
-	 node_bank.h \
-	 node_cache.h \
-	 node.h \
+    moving.h \
+    node_bank.h \
+    node_cache.h \
+    node.h \
     object.h \
-	 open_list.h \
+    open_list.h \
     placeable.h \
     placeable_model.h \
     placeable_shape.h \
     plane3.h \
-	 pathfinding.h \
-	 pathfinding_manager.h \
-	 pathfinding_task.h \
+    pathfinding.h \
+    pathfinding_manager.h \
+    pathfinding_task.h \
     render_info.h \
     renderer.h \
+    schedule.h \
+    schedule_data.h \
     shadow.h \
     shadow_info.h \
     triangle3.h \
@@ -42,17 +44,19 @@ libadonthell_world_la_SOURCES = \
     character.cc \
     chunk.cc \
     collision.cc \
-	 cube3.cc \
+    cube3.cc \
     mapview.cc \
-	 moving.cc \
+    moving.cc \
     object.cc \
     placeable.cc \
     placeable_model.cc \
     placeable_shape.cc \
     plane3.cc \
-	 pathfinding.cc \
-	 pathfinding_manager.cc \
+    pathfinding.cc \
+    pathfinding_manager.cc \
     renderer.cc \
+    schedule.cc \
+    schedule_data.cc \
     shadow.cc \
     triangle3.cc
 

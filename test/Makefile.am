@@ -73,6 +73,7 @@ worldtest_LDADD = $(PY_LIBS) \
 	-L$(top_builddir)/src/event/ -ladonthell_event              \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
+	-L$(top_builddir)/src/rpg/ -ladonthell_rpg                  \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
 	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
 

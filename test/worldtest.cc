@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.34 2009/03/22 13:53:20 ksterker Exp $
+   $Id: worldtest.cc,v 1.35 2009/04/16 21:06:10 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -38,7 +38,6 @@ class game_client
 {
 public:
     world::area world;
-    world::character * mchar;
     bool letsexit;
     bool draw_grid;
 	bool draw_walkable;
@@ -46,11 +45,9 @@ public:
     bool draw_delay;
     bool print_queue;
 	bool screenshot;
-	bool always_run;
 	
     game_client()
     {
-        mchar = NULL;
         letsexit = false;
         draw_grid = false;
         draw_walkable = false;
@@ -58,97 +55,13 @@ public:
         draw_delay = false;
         print_queue = false;
         screenshot = false;
-        always_run = false;
     }
 
-	// callback for control event listener
-    bool control_func(input::control_event * cev)
-    {
-        if (cev->type() == input::control_event::BUTTON_PUSHED)
-        {
-        	switch (cev->button())
-        	{       		
-	            case input::control_event::A_BUTTON:
-	            {
-	            	if (!always_run) mchar->run ();
-	            	else mchar->walk ();
-	                break;
-	            }            
-	            case input::control_event::B_BUTTON:
-	            {
-	            	mchar->jump();
-	                break;
-	            }            
-	            case input::control_event::LEFT_BUTTON:
-	            {
-	                mchar->add_direction(mchar->WEST);
-	                break;
-	            }
-	            case input::control_event::RIGHT_BUTTON:
-	            {
-	                mchar->add_direction(mchar->EAST);
-	                break;
-	            }
-	            case input::control_event::UP_BUTTON:
-	            {
-	                mchar->add_direction(mchar->NORTH);
-	                break;
-	            }
-	            case input::control_event::DOWN_BUTTON:
-	            {
-	                mchar->add_direction(mchar->SOUTH);
-	                break;
-	            }
-	            default: break;   
-        	}
-        }
-        else
-        {
-        	switch (cev->button())
-        	{       		
-	            case input::control_event::A_BUTTON:
-	            {
-	            	if (!always_run) mchar->walk();
-	            	else mchar->run ();
-	                break;
-	            }            
-	            case input::control_event::LEFT_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->WEST);
-	                break;
-	            }
-	            case input::control_event::RIGHT_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->EAST);
-	                break;
-	            }
-	            case input::control_event::UP_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->NORTH);
-	                break;
-	            }
-	            case input::control_event::DOWN_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->SOUTH);
-	                break;
-	            }
-	            default: break;   
-        	}
-        }
-
-        return true;
-    }
-    
     // callback for key event listener
     bool callback_func(input::keyboard_event * kev)
     {
         if (kev->type() == input::keyboard_event::KEY_PUSHED)
         {
-        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
-        	{
-        		always_run = true;
-				mchar->run ();
-        	}
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
@@ -185,16 +98,9 @@ public:
             	print_queue = true;
             }
         }
-        else
-        {
-        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
-        	{
-        		always_run = false;
-        		mchar->walk ();
-        	}
-        }
 
-        return true;
+        // do not consume event
+        return false;
     }
 };
 
@@ -216,27 +122,28 @@ public:
 	    input::listener il;
     	input::manager::add(&il);
 
-		// Listen for control events
-    	il.connect_control_function (base::make_functor_ret(gc, &game_client::control_func));
-
 		// Listen for keyboard events
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
 		// Create game world
         gc.world.load ("data/test-world.xml");
-        
-        // set position and speed of player character 
-        gc.mchar = (world::character *) (gc.world.get_entity ("Player"));
-        gc.mchar->set_speed (1.5);
-        gc.mchar->set_position (398, 322);
-        gc.mchar->set_z (0);
-                
-        // we need to update the python search path to find our map view schedule 
-        python::add_search_path (base::Paths.user_data_dir() + "/data/");
-        
-        // we need to load the world module before we can pass the character object to python
-        if (python::import_module ("adonthell.world") == NULL) return 1;        
 
+        // we need to update the python search path to find our map view and character schedules 
+        python::add_search_path (base::Paths.user_data_dir() + "data/");
+
+        // we need to load the world module before we can pass anything to python
+        if (python::import_module ("adonthell.world") == NULL) return 1;        
+        
+        // set position and speed of player character ...
+        world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
+        mchar->set_speed (1.5);
+        mchar->set_position (398, 322);
+        mchar->set_z (0);
+
+        // ... and enable its controls
+        world::schedule *controls = mchar->get_schedule();
+        controls->set_manager ("player", NULL);
+        
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));

@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.5 2009/04/08 19:36:02 ksterker Exp $
+   $Id: character.cc,v 1.6 2009/04/16 21:06:09 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -134,9 +134,6 @@ bool character::put_state (base::flat & file) const
     record.put_string ("cdlg", Dialogue);
     record.put_uint32 ("ccol", Color);
     
-    // save the schedule
-    Schedule.put_state (record);
-        
     // save the template this item uses
     record.put_string ("ccls", class_name ());
     
@@ -164,9 +161,6 @@ bool character::get_state (base::flat & file)
     // get attributes
     Dialogue = record.get_string ("cdlg");
     Color = record.get_uint32 ("ccol");
-    
-    // load the schedule
-    if (!Schedule.get_state (record)) return false;
     
     // get template to use for character
     std::string tmpl = record.get_string ("ccls");
