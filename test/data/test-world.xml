@@ -5,6 +5,8 @@
     <list id="unique">
       <string id="id">Player</string>
       <string id="p3d">[398, 322, 0]</string>
+      <string id="id">NPC</string>
+      <string id="p3d">[210, 190, 0]</string>
     </list>
   </list>
   <list id="data/models/map/ground/outside/long-grass-tile.xml">

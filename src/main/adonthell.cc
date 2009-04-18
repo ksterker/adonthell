@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.19 2007/05/14 02:00:05 ksterker Exp $
+   $Id: adonthell.cc,v 1.20 2009/04/18 21:54:58 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,6 +40,7 @@
 #include "base/base.h"
 #include "input/input.h"
 #include "audio/audio.h"
+#include "world/world.h"
 #include "main/adonthell.h"
 
 using adonthell::app;
@@ -113,6 +114,12 @@ bool app::init_modules (const u_int16 & modules)
         if (!audio::init (Backend)) return false;
     }
 
+    // init map stuff
+    if (m & WORLD)
+    {
+        world::init (Cfg);
+    }
+    
     return true;
 }
 
@@ -248,6 +255,7 @@ void app::cleanup () const
     if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();
+    if (Modules & WORLD) world::cleanup ();
 }
 
 // display a help message

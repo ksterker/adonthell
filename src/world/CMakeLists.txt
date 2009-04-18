@@ -19,6 +19,7 @@ set(adonthell_world_SRCS
 	schedule_data.cc
     shadow.cc
     triangle3.cc
+    world.cc
 )
 
 set(adonthell_world_HEADERS
@@ -52,6 +53,7 @@ set(adonthell_world_HEADERS
     shadow_info.h
     triangle3.h
     vector3.h
+    world.h
 )
 
 

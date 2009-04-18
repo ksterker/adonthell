@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.cc,v 1.1 2009/04/09 14:43:19 fr3dc3rv Exp $
+  $Id: pathfinding_manager.cc,v 1.2 2009/04/18 21:54:59 ksterker Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -49,10 +49,23 @@ static const u_int8 PHASE_MOVING = 2;
 static const u_int8 PHASE_FINISHED = 4;
 static const u_int8 PHASE_PAUSED = 128;
 
-pathfinding_manager::pathfinding_manager()
-{
-    m_taskCount = 0;
+/// A vector with the tasks
+std::vector<world::pathfinding_task> pathfinding_manager::m_task;
 
+/// Task slot
+s_int16 pathfinding_manager::m_taskCount = 0;
+
+/// A vector that quickly tells when a slot is locked(under use), or unlocked(free to be used)
+std::vector<bool> pathfinding_manager::m_locked;
+
+/// A list containing all the characters in movement
+slist<world::character *> pathfinding_manager::m_chars;
+
+/// Executes the searchs
+world::pathfinding pathfinding_manager::m_pathfinding;
+
+void pathfinding_manager::init()
+{
     m_task.reserve(MAX_TASKS);
     m_locked.reserve(MAX_TASKS);
 
@@ -65,7 +78,7 @@ pathfinding_manager::pathfinding_manager()
     m_locked.assign(MAX_TASKS, false);
 }
 
-pathfinding_manager::~pathfinding_manager()
+void pathfinding_manager::cleanup()
 {
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
@@ -213,7 +226,7 @@ void pathfinding_manager::update()
     }
 }
 
-u_int8 pathfinding_manager::calc_distance(const world::coordinates & node, const world::character * chr) const
+u_int8 pathfinding_manager::calc_distance(const world::coordinates & node, const world::character * chr)
 {
     u_int32 x_diff = abs(chr->x() - node.x());
     u_int32 y_diff = abs(chr->y() - node.y());

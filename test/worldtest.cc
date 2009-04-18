@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.35 2009/04/16 21:06:10 ksterker Exp $
+   $Id: worldtest.cc,v 1.36 2009/04/18 21:54:59 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -33,6 +33,7 @@
 #include "world/character.h"
 #include "world/object.h"
 #include "world/mapview.h"
+#include "world/pathfinding_manager.h"
 
 class game_client
 {
@@ -110,7 +111,7 @@ public:
 	int main () 
 	{
         // Initialize the gfx and input systems
-    	init_modules (GFX | INPUT | PYTHON);
+    	init_modules (GFX | INPUT | PYTHON | WORLD);
     
     	// Set video mode
     	gfx::screen::set_video_mode(640, 480);
@@ -143,6 +144,16 @@ public:
         // ... and enable its controls
         world::schedule *controls = mchar->get_schedule();
         controls->set_manager ("player", NULL);
+
+        // position and speed of a NPC
+        mchar = (world::character *) (gc.world.get_entity ("NPC"));
+        mchar->set_speed (1.75);
+        mchar->set_position (210, 190);
+        mchar->set_z (0);
+        
+        // ... and let it walk randomly
+        controls = mchar->get_schedule();
+        controls->set_manager ("walk_random", NULL);
         
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
@@ -163,6 +174,7 @@ public:
 	        // {
             input::manager::update();
             events::date::update();
+            world::pathfinding_manager::update();
             gc.world.update();
             mv.update();
 	        //}

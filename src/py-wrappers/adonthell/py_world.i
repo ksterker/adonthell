@@ -8,6 +8,7 @@
 #include "world/character.h"
 #include "world/mapview.h"
 #include "world/schedule.h"
+#include "world/pathfinding_manager.h"
 
 using namespace world;
 
@@ -35,6 +36,7 @@ using namespace world;
 %include "world/character.h"
 %include "world/chunk.h"
 %include "world/area.h"
+%include "world/pathfinding_manager.h"
 %include "world/placeable_shape.h"
 %include "world/renderer.h"
 %include "world/mapview.h"

@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.8 2009/03/29 12:22:06 ksterker Exp $
+ $Id: chunk_info.h,v 1.9 2009/04/18 21:54:59 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -112,15 +112,20 @@ namespace world
          * @name Object shadow
          *
          * Handling of shadow cast onto this placeable by another object.
-         * For now, only one shadow can be cast onto placeable. Possibly,
-         * this needs to be extented to multiple shadows. 
          */
         //@{
         /**
          * Add a shadow to this placeable.
          * @param shadow the shadow to add.
          */
-        void add_shadow ( const shadow_info & s) { Shadow.push_back (s); }
+        void add_shadow ( const shadow_info & s) 
+        {
+            // cast shadow on scenery only
+            if (get_object()->type() == world::OBJECT)
+            {
+                Shadow.push_back (s); 
+            }
+        }
         
         /**
          * Remove shadow from the placeable.

@@ -33,7 +33,8 @@ pkgincludeworld_HEADERS = \
     shadow.h \
     shadow_info.h \
     triangle3.h \
-    vector3.h
+    vector3.h \
+    world.h
 
 ## World library
 lib_LTLIBRARIES = libadonthell_world.la
@@ -58,7 +59,8 @@ libadonthell_world_la_SOURCES = \
     schedule.cc \
     schedule_data.cc \
     shadow.cc \
-    triangle3.cc
+    triangle3.cc \
+    world.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \

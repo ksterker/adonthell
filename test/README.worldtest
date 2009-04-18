@@ -1,5 +1,5 @@
-Adonthell - Dun Barethsol v0.40 aka Worldtest
-=============================================
+Adonthell - Dun Barethsol v0.4 aka Worldtest
+============================================
 
 Purpose
 =======
@@ -23,7 +23,7 @@ Character Movement:
 CapsLock- Toggle Always Run
 Left 	- Go West
 Right	- Go East
-Up 	- Go North
+Up 	    - Go North
 Down 	- Go South
 Shift	- Toggle Walk/Run
 Space	- Jump		
@@ -32,9 +32,8 @@ Display Options:
 ----------------
 G	- Toggle Map Grid
 B 	- Toggle Object Borders
-W	- Toggle Collision Info
-O	- Display Number of Objects on each square
-S	- Take a screenshot
+D	- Delayed Rendering
+S	- Save a screenshot
 
 Other Options:
 --------------
@@ -61,4 +60,3 @@ something like:
 You may have to revert axis or juggle the buttons around a bit to get something
 that matches your specific controller. In the future, there will be a simpler
 in-game menu to configure input.
-

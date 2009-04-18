@@ -1,5 +1,5 @@
 #
-# $Id: player.py,v 1.1 2009/04/16 21:06:10 ksterker Exp $
+# $Id: player.py,v 1.2 2009/04/18 21:54:59 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -44,7 +44,6 @@ class player (object):
     def run (self):
         # -- set the actual schedule script
         self.schedule.set_schedule ("player")
-        self.schedule.set_running (1)
 
     """
      Called when the schedule is first assigned

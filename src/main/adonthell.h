@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.h,v 1.7 2007/01/08 07:51:23 ksterker Exp $
+   $Id: adonthell.h,v 1.8 2009/04/18 21:54:58 ksterker Exp $
 
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -56,7 +56,7 @@ namespace adonthell {
              * The different parts of the engine that can be initialized
              * seperately.
              */
-            enum { GFX = 1, INPUT = 2, EVENT = 4, PYTHON = 8, RPG = 16, GUI = 32, AUDIO = 64 };
+            enum { GFX = 1, INPUT = 2, EVENT = 4, PYTHON = 8, RPG = 16, GUI = 32, AUDIO = 64, WORLD = 128 };
 
 			/**
              * Constructor. Used to initialize the reference to the
