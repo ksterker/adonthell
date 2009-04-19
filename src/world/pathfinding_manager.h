@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.h,v 1.2 2009/04/18 21:54:59 ksterker Exp $
+  $Id: pathfinding_manager.h,v 1.3 2009/04/19 16:46:11 ksterker Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -67,16 +67,28 @@ namespace world
         //@}
         
         /// Various states a task can have
-        typedef enum { SUCCESS, FAILURE, ACTIVE } state;
+        typedef enum { SUCCESS = 1, FAILURE = 0, ACTIVE = -1 } state;
 
         /**
          * Adds a task
-         * @param the character to be moved, the target coordinates
+         * @param chr the character to be moved
+         * @param target the target coordinates
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
         static s_int16 add_task(character * chr, const world::vector3<s_int32> & target);
 
+        /**
+         * Adds a callback to the task that will return failure or success on completion
+         * of the task. Note that the callback will not be saved, so it will have to be
+         * reset after loading the entity that has an active pathfinding task.
+         *
+         * @param id the id of the task the callback is added to
+         * @param callback the callback to run on task completion or 
+         *        NULL to clear a previously set callback.
+         */
+        static void set_callback (const s_int16 id, base::functor_1<s_int32> * callback);
+        
         /**
          * Pauses a task
          * @param the id of the task to be paused
@@ -85,14 +97,14 @@ namespace world
 
         /**
          * Resumes a paused task
-         * @param the id of the paused task to be resumed
+         * @param id the id of the paused task to be resumed
          */
         static void resume_task(const s_int16 id);
 
         /**
          * Deletes a task. When deleting a task the slot it used will be freed and open to reuse,
          * whereas when pausing, the slot will remain intact and blocked.
-         * @param the id of the task to be deleted
+         * @param id the id of the task to be deleted
          * @return \b true on success, \b false otherwise
          */
         static bool delete_task(const s_int16 id);
@@ -100,7 +112,7 @@ namespace world
         /**
          * Returns the state of the task. Can be useful for knowing wether the target has been
          * reached or not.
-         * @param the id of the task
+         * @param id the id of the task
          * @return the state
          */
         static state return_state(const s_int16 id);
@@ -113,25 +125,27 @@ namespace world
 
         /**
          * Save state to stream
-         * @param stream to save to
+         * @param file stream to save to
          */
-        static void put_state(base::flat & out);
+        static void put_state(base::flat & file);
 
         /**
          * Load state from stream
-         * @param stream to load from, area where the character are supposed to exist (ie: actual map)
+         * @param file stream to load from
+         * @param map area where the character are supposed to exist (ie: actual map)
          */
-        static void get_state(base::flat & in, world::area & map);
+        static void get_state(base::flat & file, world::area & map);
 
         /**
          * Save state to file
-         * @param file to save to
+         * @param fname file to save to
+         * @param map area where the character are supposed to exist (ie: actual map)
          */
         static bool load(std::string & fname, world::area & map);
 
         /**
          * Load state from stream
-         * @param stream to load from, area where the character are supposed to exist (ie: actual map)
+         * @param fname stream to load from
          */
         static bool save(std::string & fname);
 

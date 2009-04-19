@@ -1,7 +1,7 @@
 /*
- $Id: schedule.h,v 1.1 2009/04/16 21:06:10 ksterker Exp $
+ $Id: schedule.h,v 1.2 2009/04/19 16:46:11 ksterker Exp $
  
- Copyright (C) 2004/2005/2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2004/2005/2006/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -158,7 +158,7 @@ namespace world
          *
          * @param file Filename of the script to load.
          * @param args Addional arguments to pass to the script constructor.
-         * @retrun \e true on success, \e false otherwise
+         * @return \e true on success, \e false otherwise
          */
         bool set_manager (const std::string & file, PyObject * args = NULL);
         //@}
@@ -176,7 +176,7 @@ namespace world
          * @param file Filename of the script to load.
          * @param args Addional arguments to pass to the script constructor.
          *
-         * @retrun \e true on success, \e false otherwise
+         * @return \e true on success, \e false otherwise
          * @sa queue_schedule ()
          */
         bool set_schedule (const std::string & file, PyObject * args = NULL);

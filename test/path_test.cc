@@ -1,6 +1,6 @@
 
  /*
-   $Id: path_test.cc,v 1.3 2009/04/09 18:37:19 ksterker Exp $
+   $Id: path_test.cc,v 1.4 2009/04/19 16:46:12 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -39,8 +39,6 @@
 #include "world/vector3.h"
 #include "world/coordinates.h"
 
-
-world::pathfinding_manager ptmgr;
 
 class game_client
 {
@@ -102,8 +100,8 @@ public:
                     //590 450
                     fprintf(stderr," TARGET: x:%d y:%d\n", options[random][0], options[random][1]);
                     //int id1 = ptmgr.add_task(mchar, target);
-                    int id2 = ptmgr.add_task(mchar2, target);
-                    int id3 = ptmgr.add_task(mchar3, target);
+                    int id2 = world::pathfinding_manager::add_task(mchar2, target);
+                    int id3 = world::pathfinding_manager::add_task(mchar3, target);
 
                     break;
 	            }
@@ -465,7 +463,7 @@ public:
 
             input::manager::update();
             events::date::update();
-            ptmgr.update();
+            world::pathfinding_manager::update();
             gc.world.update();
             mv.update();
 	        //}

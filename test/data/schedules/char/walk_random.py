@@ -1,5 +1,5 @@
 #
-# $Id: walk_random.py,v 1.1 2009/04/18 21:54:59 ksterker Exp $
+# $Id: walk_random.py,v 1.2 2009/04/19 16:46:12 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,26 +22,26 @@
 from adonthell import input, world
 import random
 
-"""
- Implements a NPC "schedule", that lets the character walk
- to random places on the map at random intervals.
-"""
 class walk_random (object):
+    """
+     Implements a NPC "schedule", that lets the character walk
+     to random places on the map at random intervals.
+    """
     
-    """
-     ctor
-    """
     def __init__ (self, schedule):
+        """
+         ctor
+        """
         # -- the map for this schedule
         self.schedule = schedule
         # -- The NPC map character instance ... 
         #    FIXME: shouldn't be hardcoded
         self.chr = schedule.get_map().get_character ("NPC")
     
-    """
-     Called once to start the schedule manager.
-    """
     def run (self):
+        """
+         Called once to start the schedule manager.
+        """
         # -- set the actual schedule script
         self.schedule.set_schedule ("walk_random")
         # -- create a gametime between 5 and 12 minutes
@@ -49,38 +49,53 @@ class walk_random (object):
         # -- set timer until next run of manager
         self.schedule.set_alarm (tm)
 
-    """
-     Called when the schedule is first assigned
-    """
     def start (self):
+        """
+         Called when the schedule is first assigned
+        """
         # -- get map assigned to this schedule
         map = self.schedule.get_map ()
         # -- get random x coordinate
-        x = random.randint (10, map.length () - 10)
+        x = random.randint (20, map.length () - 20)
         # -- get random y coordinate
-        y = random.randint (10, map.height () - 10)
+        y = random.randint (20, map.height () - 20)
         # -- create target vector
         target = world.vector3i (x, y, 0)
         # -- start path finding task
         self.task = world.pathfinding_manager.add_task (self.chr, target)
+        # -- get notification when goal has been reached
+        world.pathfinding_manager.set_callback (self.task, self.on_arrived)
     
-    """
-     called whenever the character needs to freeze
-    """
     def pause (self):
+        """
+         called whenever the character needs to freeze
+        """
         # -- stop following path while paused
         world.pathfinding_manager.pause_task (self.task)
         
-    """
-     Called when the schedule is first assigned
-    """
     def resume (self):
+        """
+         Called when the schedule is first assigned
+        """
         # -- continue following path
         world.pathfinding_manager.resume_task (self.task)
 
-    """ 
-     called before the schedule is removed
-    """
     def stop (self):
+        """ 
+         called before the schedule is removed
+        """
         # -- clean up
         world.pathfinding_manager.delete_task (self.task)
+
+    def on_arrived (self, goal_reached):
+        """ 
+         callback notifying that path finding is done
+        """
+        if goal_reached == 1:
+            # -- hooray!
+            self.chr.jump()
+            self.chr.walk()
+        else:
+            # -- now I need to hurry
+            self.chr.run()
+        

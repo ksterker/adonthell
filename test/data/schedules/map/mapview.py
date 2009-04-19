@@ -1,5 +1,5 @@
 #
-# $Id: mapview.py,v 1.4 2008/09/14 14:25:28 ksterker Exp $
+# $Id: mapview.py,v 1.5 2009/04/19 16:46:12 ksterker Exp $
 #   
 # Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,20 +21,20 @@
 
 from adonthell import world
 
-"""
- This is the class containing different map view schedules.
- They will determine which part of a map is visible and
- control camera movement on the map.
-"""
 class mapview (object):
+    """
+     This is the class containing different map view schedules.
+     They will determine which part of a map is visible and
+     control camera movement on the map.
+    """
 
-    """
-     This schedule keeps the focus centered on the given
-     character and will follow its movement across the map.
-    """
     def focus_on_character (self, view, char_name):
+        """
+         This schedule keeps the focus centered on the given
+         character and will follow its movement across the map.
+        """
         area = view.get_map ()
         char = area.get_character (char_name)
         view.center_on (char.x(), char.y())
-	if char.ground_pos() != view.get_z():
+        if char.ground_pos() != view.get_z():
             view.scroll_to_z (char.ground_pos(), 2) # abs(int(character.vz())))

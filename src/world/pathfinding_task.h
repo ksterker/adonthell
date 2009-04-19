@@ -1,6 +1,7 @@
 #ifndef PATHFINDING_TASK_H
 #define PATHFINDING_TASK_H
 
+#include "base/callback.h"
 #include "world/character.h"
 #include "world/coordinates.h"
 
@@ -11,6 +12,8 @@ namespace world
     public:
         /// The character being moved
         world::character * chr;
+        /// Callback to execute when task completes/fails
+        base::functor_1<s_int32> * callback;
         /// The target position (in pixels)
         world::vector3<s_int32> target;
 

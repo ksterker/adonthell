@@ -1,5 +1,5 @@
 /*
- $Id: shadow.cc,v 1.5 2009/03/21 11:59:47 ksterker Exp $
+ $Id: shadow.cc,v 1.6 2009/04/19 16:46:11 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -74,6 +74,9 @@ void shadow::cast_on (chunk_info* ci)
     if (Remaining.size() > 0)
     {
         const placeable *object = ci->get_object();
+        
+        // cast shadow on scenery only
+        if (object->type() != world::OBJECT) return;
         
         // distance between object and its shadow
         u_int32 distance = Pos->z() - ci->Max.z() + object->cur_z();

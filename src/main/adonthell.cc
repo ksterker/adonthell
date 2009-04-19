@@ -1,5 +1,5 @@
 /*
-   $Id: adonthell.cc,v 1.20 2009/04/18 21:54:58 ksterker Exp $
+   $Id: adonthell.cc,v 1.21 2009/04/19 16:46:11 ksterker Exp $
 
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -251,11 +251,11 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
+    if (Modules & WORLD) world::cleanup ();
     if (Modules & AUDIO) audio::cleanup ();
     if (Modules & INPUT) input::cleanup ();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();
-    if (Modules & WORLD) world::cleanup ();
 }
 
 // display a help message

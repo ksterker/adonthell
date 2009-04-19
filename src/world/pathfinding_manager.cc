@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.cc,v 1.2 2009/04/18 21:54:59 ksterker Exp $
+  $Id: pathfinding_manager.cc,v 1.3 2009/04/19 16:46:11 ksterker Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -72,6 +72,7 @@ void pathfinding_manager::init()
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
         std::vector<world::coordinates> * coor = new std::vector<world::coordinates>;
+        m_task[i].callback = NULL;
         m_task[i].path = coor;
     }
 
@@ -82,6 +83,9 @@ void pathfinding_manager::cleanup()
 {
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
+        delete m_task[i].callback;
+        m_task[i].callback = NULL;
+
         delete m_task[i].path;
         m_task[i].path = NULL;
     }
@@ -92,8 +96,12 @@ void pathfinding_manager::add_task_sp(const s_int16 id, character * chr,
                                       const u_int8 actualNode, const u_int8 actualDir,
                                       const u_int8 pixMoved, const u_int8 pixToMove)
 {
+    // delete any previously set callback
+    delete m_task[id].callback;
+    
     m_task[id].chr = chr;
     m_task[id].target = target;
+    m_task[id].callback = NULL;
     m_task[id].phase = phase;
     m_task[id].actualNode = actualNode;
     m_task[id].actualDir = static_cast<character::direction>(actualDir);
@@ -134,6 +142,13 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
     add_task_sp(m_taskCount, chr, target, PHASE_PATHFINDING, 0, character::NONE);
 
     return m_taskCount++;
+}
+
+void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<s_int32> * callback)
+{
+    // get rid of previously set callback, if any
+    delete m_task[id].callback;
+    m_task[id].callback = callback;
 }
 
 void pathfinding_manager::pause_task(const s_int16 id)
@@ -215,13 +230,17 @@ void pathfinding_manager::update()
                 }
                 case PHASE_FINISHED:
                 {
+                    if (m_task[id].callback != NULL)
+                    {
+                        (*m_task[id].callback)((s_int32) return_state(id));
+                    }
+                    
                     m_task[id].chr->stop();
                     m_task[id].chr->update_state();
                     delete_task(id);
                     break;
                 }
             }
-
         }
     }
 }
@@ -393,7 +412,7 @@ void pathfinding_manager::reset()
     m_locked.assign(MAX_TASKS, false);
 }
 
-void pathfinding_manager::put_state(base::flat & out)
+void pathfinding_manager::put_state(base::flat & file)
 {
     base::flat taskBlock;
 
@@ -432,7 +451,7 @@ void pathfinding_manager::put_state(base::flat & out)
                 a.clear();a.str("");
                 a << i;
 
-                out.put_flat(a.str(), taskBlock);
+                file.put_flat(a.str(), taskBlock);
                 taskBlock.clear();
             } else {
                 fprintf(stderr, "Can't find it!!\n");
@@ -442,7 +461,7 @@ void pathfinding_manager::put_state(base::flat & out)
 }
 
 
-void pathfinding_manager::get_state(base::flat & in, world::area & map)
+void pathfinding_manager::get_state(base::flat & file, world::area & map)
 {
     base::flat taskBlock;
 
@@ -455,7 +474,7 @@ void pathfinding_manager::get_state(base::flat & in, world::area & map)
 
         a << i;
 
-        taskBlock = in.get_flat(a.str());
+        taskBlock = file.get_flat(a.str());
 
         if (taskBlock.size() == 1)
             continue; // There isn't any data for this position

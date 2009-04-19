@@ -3,6 +3,7 @@
 
 %{
 #include "base/types.h"
+#include "python/callback.h"
 #include "world/area.h"
 #include "world/object.h"
 #include "world/character.h"
@@ -66,6 +67,13 @@ class coordinates (vector3i):
     {
         return dynamic_cast<world::character*> (self->get_entity (name));
     }
-    
-    
+};
+
+// class extension to handle Python callbacks
+%extend world::pathfinding_manager
+{
+    static void set_callback (const s_int16 id, PyObject * callback)
+    {
+        world::pathfinding_manager::set_callback (id, new python::functor_1<s_int32>(callback));
+    }
 };

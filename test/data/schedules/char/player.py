@@ -1,5 +1,5 @@
 #
-# $Id: player.py,v 1.2 2009/04/18 21:54:59 ksterker Exp $
+# $Id: player.py,v 1.3 2009/04/19 16:46:12 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,16 +21,16 @@
 
 from adonthell import input, world
 
-"""
- Implements the PC "schedule", which is being controlled
- by the player.
-"""
 class player (object):
+    """
+     Implements the PC "schedule", which is being controlled
+     by the player.
+    """
     
-    """
-     ctor
-    """
     def __init__ (self, schedule):
+        """
+         ctor
+        """
         # -- the map for this schedule
         self.schedule = schedule
         # -- Whether PC is always running
@@ -38,17 +38,17 @@ class player (object):
         # -- The PC map character instance
         self.pc = schedule.get_map().get_character ("Player")
     
-    """
-     Called once to start the schedule manager.
-    """
     def run (self):
+        """
+         Called once to start the schedule manager.
+        """
         # -- set the actual schedule script
         self.schedule.set_schedule ("player")
 
-    """
-     Called when the schedule is first assigned
-    """
     def start (self):
+        """
+         Called when the schedule is first assigned
+        """
         # -- Create our input_listener 
         self.il = input.listener()
 
@@ -59,36 +59,36 @@ class player (object):
         self.il.connect_control_function(self.handle_controls)
         self.il.connect_keyboard_function(self.handle_keys)
     
-    """
-     called whenever the character needs to freeze
-    """
     def pause (self):
+        """
+         called whenever the character needs to freeze
+        """
         # -- stop listening to events while paused
         self.il.disconnect_control_function ()
         self.il.disconnect_keyboard_function ()
         
-    """
-     Called when the schedule is first assigned
-    """
     def resume (self):
+        """
+         Called when the schedule is first assigned
+        """
         # -- start listening to key/control events again
         self.il.connect_control_function(self.handle_controls)
         self.il.connect_keyboard_function(self.handle_keys)
 
-    """ 
-     called before the schedule is removed
-    """
     def stop (self):
+        """ 
+         called before the schedule is removed
+        """
         # -- clean up
         input.manager.remove (self.il)
         self.il.disconnect_control_function ()
         self.il.disconnect_keyboard_function ()
         self.il = none
         
-    """
-     Called whenever a regular key has bee pushed.
-    """
     def handle_keys (self, kev):
+        """
+         Called whenever a regular key has bee pushed.
+        """
         # -- caps lock toggles running on or off
         if kev.key() == input.keyboard_event.CAPSLOCK_KEY:
             if kev.type() == input.keyboard_event.KEY_PUSHED:
@@ -97,13 +97,15 @@ class player (object):
             else:
                 self.always_run = 0
                 self.pc.walk ()
-                
-        return 1
+            # -- consume key event
+            return 1
+        
+        return 0
 
-    """
-     Called whenever a control key has bee pushed.
-    """
     def handle_controls (self, cev):
+        """
+         Called whenever a control key has bee pushed.
+        """
         btn = cev.button()
         if cev.type() == input.control_event.BUTTON_PUSHED:
             if btn == input.control_event.A_BUTTON:
