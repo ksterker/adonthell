@@ -22,6 +22,7 @@ target_link_libraries(adonthell_main
 	adonthell_audio
 	adonthell_input
 	adonthell_python
+	adonthell_world
 	)
 
 
