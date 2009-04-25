@@ -1,5 +1,5 @@
 /*
- $Id: surface_ext.cc,v 1.1 2009/03/06 22:53:29 ksterker Exp $
+ $Id: surface_ext.cc,v 1.2 2009/04/25 13:17:50 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2006 Tyler Nielsen
@@ -31,6 +31,7 @@
  * @brief  Implements backend independent surface extensions.
  */
 
+#include <cstdio>
 #include "gfx/surface_ext.h"
 #include "gfx/png_wrapper.h"
 

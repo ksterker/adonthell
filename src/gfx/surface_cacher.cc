@@ -1,5 +1,5 @@
 /*
- $Id: surface_cacher.cc,v 1.1 2008/07/10 20:19:38 ksterker Exp $
+ $Id: surface_cacher.cc,v 1.2 2009/04/25 13:17:50 ksterker Exp $
  
  Copyright (C) 2008 Rian Shelley <rians@cc.usu.edu>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
  *
  */
 
+#include <cstdio>
 #include "gfx/gfx.h"
 #include "surface_cacher.h"
 

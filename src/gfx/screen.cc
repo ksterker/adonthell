@@ -1,5 +1,5 @@
 /*
-   $Id: screen.cc,v 1.6 2009/02/16 10:32:32 ksterker Exp $
+   $Id: screen.cc,v 1.7 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
  */
 
 
+#include <cstdio>
 #include "gfx/screen.h"
 
 namespace gfx

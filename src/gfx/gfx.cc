@@ -1,5 +1,5 @@
 /*
-   $Id: gfx.cc,v 1.12 2009/02/16 10:32:32 ksterker Exp $
+   $Id: gfx.cc,v 1.13 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
  *
  */
 
+#include <cstdio>
 #include "base/paths.h"
 #include "gfx/gfx.h"
 #include "gfx/surface_cacher.h"

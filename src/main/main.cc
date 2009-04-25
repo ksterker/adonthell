@@ -1,5 +1,5 @@
 /*
-   $Id: main.cc,v 1.5 2007/10/13 22:36:42 ksterker Exp $
+   $Id: main.cc,v 1.6 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 2003 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,8 @@
  * 
  * 
  */
+
+#include <cstdio>
 
 #include "adonthell.h"
 

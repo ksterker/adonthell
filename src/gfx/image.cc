@@ -1,5 +1,5 @@
 /*
- $Id: image.cc,v 1.4 2008/05/22 12:59:42 ksterker Exp $
+ $Id: image.cc,v 1.5 2009/04/25 13:17:50 ksterker Exp $
  
  Copyright (C) 1999/2000/2001/2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
@@ -29,6 +29,7 @@
  *  
  */
 
+#include <cstdio>
 #include "gfx/image.h"
 
 using gfx::image;

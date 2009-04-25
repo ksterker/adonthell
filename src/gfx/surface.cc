@@ -1,5 +1,5 @@
 /*
-   $Id: surface.cc,v 1.20 2009/04/03 21:56:52 ksterker Exp $
+   $Id: surface.cc,v 1.21 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
@@ -30,6 +30,7 @@
  * @brief  Defines the surface global interface.
  */
 
+#include <cstdio>
 #include <stdlib.h>
 #include "base/base.h"
 #include "gfx/screen.h"

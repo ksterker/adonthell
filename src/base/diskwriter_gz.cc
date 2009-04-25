@@ -1,5 +1,5 @@
 /*
- $Id: diskwriter_gz.cc,v 1.4 2007/10/22 02:19:46 ksterker Exp $
+ $Id: diskwriter_gz.cc,v 1.5 2009/04/25 13:17:49 ksterker Exp $
  
  Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,6 +26,7 @@
  * @brief Read/write gz compressed data files.
  */
 
+#include <cstdio>
 #include "base/base.h"
 #include "base/file.h"
 #include "base/diskwriter_gz.h"

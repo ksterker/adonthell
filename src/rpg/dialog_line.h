@@ -1,5 +1,5 @@
 /*
-   $Id: dialog_line.h,v 1.1 2006/01/22 21:32:40 ksterker Exp $
+   $Id: dialog_line.h,v 1.2 2009/04/25 13:17:51 ksterker Exp $
    
    Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -29,6 +29,7 @@
 #ifndef RPG_DIALOG_LINE_H
 #define RPG_DIALOG_LINE_H
 
+#include <cstdio>
 #include <string>
 #include <vector>
 #include "base/types.h"

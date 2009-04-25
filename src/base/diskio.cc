@@ -1,5 +1,5 @@
 /*
-   $Id: diskio.cc,v 1.8 2009/03/21 11:59:46 ksterker Exp $
+   $Id: diskio.cc,v 1.9 2009/04/25 13:17:49 ksterker Exp $
 
    Copyright (C) 2004/2006 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,6 +26,7 @@
  * @brief More secure I/O classes for writing to/reading from file.
  */
 
+#include <cstdio>
 #include "base/diskio.h"
 #include "base/diskwriter_gz.h"
 #include "base/diskwriter_xml.h"

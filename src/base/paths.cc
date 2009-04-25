@@ -1,5 +1,5 @@
 /*
-   $Id: paths.cc,v 1.13 2008/04/14 11:03:09 ksterker Exp $
+   $Id: paths.cc,v 1.14 2009/04/25 13:17:49 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2005 Kai Sterker <kaisterker@linuxgames.com>
@@ -30,6 +30,7 @@
  *
  */
 
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
 #include <dirent.h>

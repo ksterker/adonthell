@@ -1,5 +1,5 @@
 /*
-   $Id: event.cc,v 1.9 2009/04/08 21:52:09 ksterker Exp $
+   $Id: event.cc,v 1.10 2009/04/25 13:17:49 ksterker Exp $
 
    Copyright (C) 2000/2001/2002/2003/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -26,6 +26,7 @@
  * @brief  	Defines the base event class.
  */
 
+#include <cstdio>
 #include "event/event.h"
 #include "event/types.h"
 

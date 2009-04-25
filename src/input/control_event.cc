@@ -1,5 +1,5 @@
 /*
-   $Id: control_event.cc,v 1.5 2007/07/15 22:01:54 ksterker Exp $
+   $Id: control_event.cc,v 1.6 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 2002/2006 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -28,6 +28,7 @@
  * 
  */
 
+#include <cstdio>
 #include "control_event.h"
 
 namespace input
