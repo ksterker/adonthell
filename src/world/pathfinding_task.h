@@ -37,6 +37,8 @@ namespace world
         u_int8 framesStuck;
         /// Number of consecutive times we've been stuck
         u_int8 timesStuck;
+        /// Final Direction to where a character points after finishing moving
+        u_int8 finalDir;
     };
 }
 

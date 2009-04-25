@@ -1,31 +1,31 @@
 /*
- $Id: chunk.h,v 1.16 2009/04/09 18:37:15 ksterker Exp $
- 
+ $Id: chunk.h,v 1.17 2009/04/25 22:23:38 fr3dc3rv Exp $
+
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
- 
+
  Adonthell is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  Adonthell is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
- along with Adonthell; if not, write to the Free Software 
+ along with Adonthell; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   world/chunk.h
  * @author Kai Sterker <kaisterker@linuxgames.com>
- * 
+ *
  * @brief  Declares the chunk class.
- * 
- * 
+ *
+ *
  */
 
 
@@ -39,7 +39,7 @@ namespace world
 {
     /**
      * An octree-like structure that keeps track of the location of map objects in
-     * 3D space. Unlike most octrees, it allows dynamic adding and removal of 
+     * 3D space. Unlike most octrees, it allows dynamic adding and removal of
      * objects to reflect changes in the game world.
      *
      * All objects in the tree of chunks is stored by axis aligned bounding boxes (AABB),
@@ -54,12 +54,12 @@ namespace world
          * Constructor.
          */
         chunk ();
-        
+
         /**
          * Destructor.
          */
         virtual ~chunk();
-        
+
         /**
          * @name Chunk population
          */
@@ -70,13 +70,13 @@ namespace world
          * @param coordinates location of the entity.
          */
         void add (entity * object, const coordinates & pos);
-        
+
         /**
          * Add object at given coordinates.
          * @param ci entity to add to the world.
-         */        
+         */
         void add (const chunk_info & ci);
-        
+
         /**
          * Remove object at given coordinates.
          * @param object entity to remove from the world.
@@ -85,16 +85,16 @@ namespace world
          *      such object existed.
          */
         entity * remove (entity * object, const coordinates & pos);
-        
+
         /**
          * Remove object from world.
          * @param ci entity to remove from world.
          * @return object that was removed, or NULL if no
          *      such object existed.
-         */                
+         */
         entity * remove (const chunk_info & ci);
         //@}
-        
+
         /**
          * @name Object retrieval
          */
@@ -111,7 +111,7 @@ namespace world
          * @return list of objects contained in view.
          */
         std::list<chunk_info*> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
-        
+
         /**
          * Collects a list of objects that are contained by the given bounding box.
          *
@@ -121,7 +121,7 @@ namespace world
          * @return list of objects contained in bbox.
          */
         std::list<chunk_info*> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-        
+
         /**
          * Collects a list of objects that are contained by the given bounding box and adds them to given list.
          *
@@ -131,7 +131,7 @@ namespace world
          */
         void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result) const;
         //@}
-        
+
         /**
          * @name Chunk attributes
          */
@@ -145,7 +145,7 @@ namespace world
             static vector3<s_int32> EMPTY;
             return Split == EMPTY;
         }
-        
+
         /**
          * Check whether the %chunk contains any objects.
          * @return true if it doesn't, false otherwise.
@@ -154,40 +154,47 @@ namespace world
         {
             return Objects.empty ();
         }
-        
+
         /**
          * Check whether the %chunk can be split or if it already has
          * minimum dimensions.
          * @return true if it can be split, false otherwise.
-         */        
+         */
         bool can_split () const;
-        
+
         /**
          * Return the extend of the %chunk in x direction.
          * @return extend of %chunk in x direction.
          */
         u_int32 length () const { return Max.x() - Min.x(); }
-        
+
         /**
          * Return the extend of the %chunk in y direction.
          * @return extend of %chunk in y direction.
          */
         u_int32 height () const { return Max.y() - Min.y(); }
-        //@}
-        
-        void debug () const;
 
-        /// the minimum of the chunks AABB
-        vector3<s_int32> Min;
-        /// the maximum of the chunks AABB
-        vector3<s_int32> Max;
+        /**
+         * Return a vector3 with the minimum point of the chunk
+         * @return the minimum point
+         */
+        vector3<s_int32> min() const { return Min; }
+
+        /**
+         * Return a vector3 with the maximum point of the chunk
+         * @return the maximum point
+         */
+        vector3<s_int32> max() const { return Max; }
+        //@}
+
+        void debug () const;
 
 #ifndef SWIG
         /**
          * Allow %chunk to be passed as python argument
          */
         GET_TYPE_NAME_VIRTUAL (world::chunk)
-            
+
     protected:
         /**
          * Organise entities by their type.
@@ -198,23 +205,23 @@ namespace world
             std::vector<chunk_info*> Shared;
             std::vector<chunk_info*> Unique;
         } collector_data;
-            
+
         /// container for gathering map objects when serializing chunk
         typedef std::map<std::string, collector_data> collector;
-        
+
         /**
          * Collect all chunk contents, so that they can be easily written
          * to a file.
          */
         void put_state (collector & objects) const;
 
-     
+
     private:
         /**
          * Find those children of the %chunk that overlap with the bbox
          * specified by its minumum and maximum coordinate triplets.
          *
-         * @param chunks this array will be filled with the indices of 
+         * @param chunks this array will be filled with the indices of
          *   the child %chunks that overlap with the given bbox.
          * @param min minimum coordinate triplet
          * @param max maximum coordinate triplet
@@ -222,7 +229,7 @@ namespace world
          * @return number of children that overlap.
          */
         const u_int8 find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-        
+
         /**
          * Collects a list of objects that are contained in the given mapview.
          *
@@ -246,7 +253,7 @@ namespace world
          * @return true if view and AABB overlap, false otherwise.
          */
         bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-        
+
         bool in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_max, const vector3<s_int32> & b_min, const vector3<s_int32> & b_max) const;
 
         /**
@@ -254,7 +261,7 @@ namespace world
          * the chunks lifetime, unless its children are merged together.
          */
         void split ();
-        
+
         /**
          * Generate a picture of the chunk (and its children) in .dot format, as
          * parsed by AT&Ts graphviz package.
@@ -262,14 +269,18 @@ namespace world
          * @param parent id of the parent %chunk
          */
         void debug (std::ofstream & graph, const int & parent) const;
-        
-        /// indicates that the chunk size has changed and needs to be recalculated 
+
+        /// indicates that the chunk size has changed and needs to be recalculated
         bool Resize;
         /// the children of the chunk
         chunk* Children[8];
         /// the objects contained in the chunk
         std::list<chunk_info> Objects;
-        
+
+        /// the minimum of the chunks AABB
+        vector3<s_int32> Min;
+        /// the maximum of the chunks AABB
+        vector3<s_int32> Max;
         /// the split planes of the chunk
         vector3<s_int32> Split;
 #endif // SWIG

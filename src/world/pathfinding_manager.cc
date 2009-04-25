@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.cc,v 1.3 2009/04/19 16:46:11 ksterker Exp $
+  $Id: pathfinding_manager.cc,v 1.4 2009/04/25 22:23:38 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -98,7 +98,7 @@ void pathfinding_manager::add_task_sp(const s_int16 id, character * chr,
 {
     // delete any previously set callback
     delete m_task[id].callback;
-    
+
     m_task[id].chr = chr;
     m_task[id].target = target;
     m_task[id].callback = NULL;
@@ -117,7 +117,7 @@ void pathfinding_manager::add_task_sp(const s_int16 id, character * chr,
     m_chars.push_front(chr);
 }
 
-s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target)
+s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target, const character::direction finalDir)
 {
     slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), chr);
     if (ichr != m_chars.end())
@@ -140,6 +140,7 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
     }
 
     add_task_sp(m_taskCount, chr, target, PHASE_PATHFINDING, 0, character::NONE);
+    set_final_direction(m_taskCount, finalDir);
 
     return m_taskCount++;
 }
@@ -149,6 +150,11 @@ void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<s_int3
     // get rid of previously set callback, if any
     delete m_task[id].callback;
     m_task[id].callback = callback;
+}
+
+void pathfinding_manager::set_final_direction(const s_int16 id, const character::direction finalDir)
+{
+    m_task[id].finalDir = static_cast<u_int8>(finalDir);
 }
 
 void pathfinding_manager::pause_task(const s_int16 id)
@@ -174,7 +180,7 @@ bool pathfinding_manager::delete_task(const s_int16 id)
 
     if (ichr == m_chars.end())
     {
-        fprintf(stderr, "Can't find chr in m_chars 'when deleting task!!\nThis is bad!\n");
+        fprintf(stderr, "*** Can't find chr in m_chars when deleting task!!\n");
         return false;
     }
 
@@ -234,7 +240,8 @@ void pathfinding_manager::update()
                     {
                         (*m_task[id].callback)((s_int32) return_state(id));
                     }
-                    
+
+                    m_task[id].chr->set_direction(m_task[id].finalDir);
                     m_task[id].chr->stop();
                     m_task[id].chr->update_state();
                     delete_task(id);
@@ -354,36 +361,30 @@ bool pathfinding_manager::move_chr(const s_int16 id)
             return false;
         }
 
-        //m_task[id].chr->clear_direction();
-		  m_task[id].chr->set_direction(character::NONE);
         m_task[id].actualDir = character::NONE;
 
         if (grid_y > target_grid_y)
         {
             // We have to move up
-				m_task[id].chr->add_direction(m_task[id].chr->NORTH);
             m_task[id].actualDir |= character::NORTH;
 
         } else if (grid_y < target_grid_y) {
             // We have to move down
-				m_task[id].chr->add_direction(m_task[id].chr->SOUTH);
             m_task[id].actualDir |= character::SOUTH;
         }
 
         if (grid_x > target_grid_x)
         {
             // We have to move to the left
-				m_task[id].chr->add_direction(m_task[id].chr->WEST);
             m_task[id].actualDir |= character::WEST;
 
         } else if (grid_x < target_grid_x) {
             // We have to move to the right
-				m_task[id].chr->add_direction(m_task[id].chr->EAST);
             m_task[id].actualDir |= character::EAST;
         }
 
         // Updates the direction
-        //m_task[id].chr->set_direction(m_task[id].actualDir);
+        m_task[id].chr->set_direction(m_task[id].actualDir);
 
         world::coordinates temp_coor(target_grid_x * 20, target_grid_y * 20, 0);
 
@@ -432,6 +433,7 @@ void pathfinding_manager::put_state(base::flat & file)
                 taskBlock.put_uint8("pixMoved", m_task[i].pixelsMoved);
                 taskBlock.put_uint8("aNode", m_task[i].actualNode);
                 taskBlock.put_uint8("aDir", m_task[i].actualDir);
+                taskBlock.put_uint8("finalDir", m_task[i].finalDir);
 
                 std::stringstream a;
 
@@ -496,11 +498,13 @@ void pathfinding_manager::get_state(base::flat & file, world::area & map)
         u_int8 pixMoved = taskBlock.get_uint8("pixMoved");
         u_int8 aNode = taskBlock.get_uint8("aNode");
         u_int8 aDir = taskBlock.get_uint8("aDir");
+        u_int8 finalDir = taskBlock.get_uint8("finalDir");
 
         world::vector3<s_int32> tempTarget(tX, tY, 0);
 
         // Creates a new task with all the info
         add_task_sp(i, tChr, tempTarget, phase, aNode, aDir, pixMoved, pixToMove);
+        set_final_direction(i, static_cast<character::direction>(finalDir));
 
         // Now let's load the path
         for (u_int16 c = 0; c < 65535; c++)

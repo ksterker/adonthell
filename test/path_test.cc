@@ -1,6 +1,6 @@
 
  /*
-   $Id: path_test.cc,v 1.4 2009/04/19 16:46:12 ksterker Exp $
+   $Id: path_test.cc,v 1.5 2009/04/25 22:23:39 fr3dc3rv Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -102,6 +102,7 @@ public:
                     //int id1 = ptmgr.add_task(mchar, target);
                     int id2 = world::pathfinding_manager::add_task(mchar2, target);
                     int id3 = world::pathfinding_manager::add_task(mchar3, target);
+                    world::pathfinding_manager::set_final_direction(id2, world::character::EAST);
 
                     break;
 	            }
@@ -415,7 +416,7 @@ public:
         srand(a);
 
         // Initialize the gfx and input systems
-    	init_modules (GFX | INPUT | PYTHON);
+    	init_modules (GFX | INPUT | PYTHON | WORLD);
 
     	// Set video mode
     	gfx::screen::set_fullscreen(false);
@@ -452,6 +453,9 @@ public:
         world::mapview mv (320, 240, &rndr);
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
+
+        // The pathfinding manager
+        world::pathfinding_manager::init();
 
 	    while (!gc.letsexit)
     	{
@@ -524,6 +528,8 @@ public:
 	        gfx::screen::clear ();
 	    }
 
+        // Cleanup the pathfinding manager
+        world::pathfinding_manager::cleanup();
 	    return 0;
 	}
 };

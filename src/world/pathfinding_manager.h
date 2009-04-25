@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.h,v 1.3 2009/04/19 16:46:11 ksterker Exp $
+  $Id: pathfinding_manager.h,v 1.4 2009/04/25 22:23:38 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -65,7 +65,7 @@ namespace world
          */
         static void cleanup();
         //@}
-        
+
         /// Various states a task can have
         typedef enum { SUCCESS = 1, FAILURE = 0, ACTIVE = -1 } state;
 
@@ -73,10 +73,12 @@ namespace world
          * Adds a task
          * @param chr the character to be moved
          * @param target the target coordinates
+         * @param finalDir the direction the character will have after finishing moving
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        static s_int16 add_task(character * chr, const world::vector3<s_int32> & target);
+        static s_int16 add_task(character * chr, const world::vector3<s_int32> & target,
+                                const character::direction finalDir = character::NONE);
 
         /**
          * Adds a callback to the task that will return failure or success on completion
@@ -84,11 +86,18 @@ namespace world
          * reset after loading the entity that has an active pathfinding task.
          *
          * @param id the id of the task the callback is added to
-         * @param callback the callback to run on task completion or 
+         * @param callback the callback to run on task completion or
          *        NULL to clear a previously set callback.
          */
         static void set_callback (const s_int16 id, base::functor_1<s_int32> * callback);
-        
+
+        /**
+         * Set the direction to where the character will point after finishing moving
+         * @param id the id of the task to be altered
+         * @param finalDir the direction the character will point after finishing moving
+         */
+        static void set_final_direction(const s_int16 id, const character::direction finalDir);
+
         /**
          * Pauses a task
          * @param the id of the task to be paused
@@ -152,7 +161,7 @@ namespace world
     private:
         /// forbid instantiation of static class
         pathfinding_manager () {}
-        
+
         /**
          * Cleans everything
          */

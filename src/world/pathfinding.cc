@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding.cc,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
+  $Id: pathfinding.cc,v 1.3 2009/04/25 22:23:38 fr3dc3rv Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -40,17 +40,7 @@ using world::coordinates;
 
 u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const
 {
-    return  (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y()));
-        /*return (sqrt(((actual.x() * 20 - goal.x()) * (actual.x() * 20 - goal.x())) +
-            ((actual.y() * 20 - goal.y()) * (actual.y() * 20 - goal.y()))
-    ));*/
-    /*u_int8 D = 20;
-    u_int8 D2 = 28;
-    u_int32 h_diagonal = min(abs(actual.x()-goal.x()), abs(actual.y()-goal.y()));
-    u_int32 h_straight = (abs(actual.x()-goal.x()) + abs(actual.y()-goal.y()));
-    return  (D2 * h_diagonal + D * (h_straight - 2*h_diagonal));*/
-
-
+    return  20 * (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y()));
 }
 
 
@@ -100,10 +90,10 @@ std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & ac
 bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal, std::vector<coordinates> * path)
 {
     // Verify pre condictions
-    if (!(((goal.x() >= chr->map().Min.x()) && (goal.x() <= chr->map().Max.x())) &&
-        (goal.y() >= chr->map().Min.y()) && (goal.y() <= chr->map().Max.y()))) {
+    if (!(((goal.x() >= chr->map().min().x()) && (goal.x() <= chr->map().max().x())) &&
+        (goal.y() >= chr->map().min().y()) && (goal.y() <= chr->map().max().y()))) {
 
-        fprintf(stderr, "Goal is out of the map scope\n");
+        fprintf(stderr, "*** Goal is out of the map scope\n");
         return false;
     }
 
@@ -180,7 +170,6 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
             // Resets the node cache, the open list and the node bank
             reset();
-            printf("Rev: %d\n", rev);
 
             return true;
         }
@@ -211,7 +200,6 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
                 if (temp_node2->listAssignedTo == OPEN_LIST) {
                     // It's in the Open List, let's see if the move cost is lower now
-                    //temp_move_cost = (*i).z() + temp_node2->parent->moveCost;
 
                     if (temp_node->total < temp_node2->total) {
                         // Updates the move cost and rebalances the Open List
@@ -219,8 +207,6 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                         temp_node2->moveCost = temp_node->moveCost;
                         temp_node2->total = temp_node->total;
                         temp_node2->parent = temp_node->parent;
-                        //temp_node2->total = calc_heuristics(temp_node2->pos, goal) + temp_node2->moveCost;
-
                         m_openList.rebalance_node(temp_node2);
 
                     }
@@ -242,22 +228,13 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                 // Check if there is an obstacle in this node
                 vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, 10);
                 vector3<s_int32> cmax(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20, chr->placeable::height());
-                /*int half_length = round(chr->placeable::length() / 2);
-                int half_width = round(chr->placeable::width() / 2);
-                vector3<s_int32> cmin(temp_node->pos.x() * 40 + half_length,
-                        temp_node->pos.y() * 40 + half_width, 20);
-                vector3<s_int32> cmax(temp_node->pos.x() * 40 + 40 - half_length,
-                        temp_node->pos.y() * 40 + 40 - half_width, 50);*/
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(cmin, cmax);
 
                 if (!collisions.empty()) {
 
-                    if ((collisions.size() == 1) && (temp_placeable == (*collisions.begin())->get_object()))
+                    if (!((collisions.size() == 1) && (temp_placeable == (*collisions.begin())->get_object())))
                     {
-
-                    } else {
-
                         ++i;
                         continue;
                     }
