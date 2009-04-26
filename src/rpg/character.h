@@ -1,5 +1,5 @@
 /*
-   $Id: character.h,v 1.9 2009/04/16 21:06:09 ksterker Exp $
+   $Id: character.h,v 1.10 2009/04/26 18:52:59 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -80,7 +80,14 @@ namespace rpg
              */
             bool create_instance (const std::string & templ, PyObject * args = NULL)
             {
-                return python::script::create_instance (CHARACTER_PACKAGE + templ, templ, args);
+                if (python::script::create_instance (CHARACTER_PACKAGE + templ, templ, args))
+                {
+                    // add reference to character
+                    set_attribute ("this", python::pass_instance (this));
+                    return true;                    
+                }
+                
+                return false;
             }
             
             /**

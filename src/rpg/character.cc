@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.6 2009/04/16 21:06:09 ksterker Exp $
+   $Id: character.cc,v 1.7 2009/04/26 18:52:59 ksterker Exp $
    
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -175,9 +175,6 @@ bool character::get_state (base::flat & file)
     // load actual character data
     call_method ("get_state", args);
     Py_DECREF (args);
-    
-    // add reference to character
-    set_attribute ("this", python::pass_instance (this));
     
     return file.success ();
 }

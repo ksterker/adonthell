@@ -1,5 +1,5 @@
 /*
-   $Id: character.cc,v 1.16 2009/04/16 21:06:09 ksterker Exp $
+   $Id: character.cc,v 1.17 2009/04/26 18:52:59 ksterker Exp $
 
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -47,6 +47,7 @@ character::character (area & mymap) : moving (mymap)
     IsRunning = false;
     ToggleRunning = false;
     CurrentDir = NONE;
+    Heading = NONE;
     Schedule.set_map (&mymap);
 }
 
@@ -138,6 +139,7 @@ void character::set_direction (const s_int32 & ndir)
     set_velocity(vx, vy);
     update_state();
     
+    Heading = ndir != 0 ? ndir : Heading;
     CurrentDir = ndir;    
 }
 

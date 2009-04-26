@@ -21,6 +21,22 @@ using namespace world;
 %import "base/types.h"
 %import "py_gfx.i"
 
+// typemap for returning a string pointer as python string
+%typemap(out) std::string * {
+    if ($1 == NULL) $result = Py_None;
+    else $result = PyString_FromString ($1->c_str ());
+}
+
+// typemap for returning a list<chunk_info*> as python list
+%typemap(out) std::list<chunk_info*> {
+    unsigned int index = 0;
+    $result = PyList_New ($1.size ());
+    for (std::list<chunk_info*>::const_iterator i = $1.begin (); i != $1.end (); i++)
+        PyList_SET_ITEM ($result, index++, python::pass_instance (*i));
+}
+
+%typemap(freearg) std::list<chunk_info*> "delete $1;"
+
 // object is an existing python class
 %rename(mapobject) world::object;
 
@@ -36,6 +52,8 @@ using namespace world;
 %include "world/moving.h"
 %include "world/character.h"
 %include "world/chunk.h"
+%include "world/chunk_info.h"
+%include "world/entity.h"
 %include "world/area.h"
 %include "world/pathfinding_manager.h"
 %include "world/placeable_shape.h"

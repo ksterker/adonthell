@@ -1,5 +1,5 @@
 /*
-  $Id: pathfinding_manager.cc,v 1.4 2009/04/25 22:23:38 fr3dc3rv Exp $
+  $Id: pathfinding_manager.cc,v 1.5 2009/04/26 18:52:59 ksterker Exp $
 
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -236,15 +236,18 @@ void pathfinding_manager::update()
                 }
                 case PHASE_FINISHED:
                 {
-                    if (m_task[id].callback != NULL)
-                    {
-                        (*m_task[id].callback)((s_int32) return_state(id));
-                    }
-
                     m_task[id].chr->set_direction(m_task[id].finalDir);
                     m_task[id].chr->stop();
                     m_task[id].chr->update_state();
                     delete_task(id);
+                    
+                    // needs to happen after task is unlocked, otherwise
+                    // return_state() will always report ACTIVE.
+                    if (m_task[id].callback != NULL)
+                    {
+                        (*m_task[id].callback)((s_int32) return_state(id));
+                    }
+                    
                     break;
                 }
             }
@@ -421,8 +424,8 @@ void pathfinding_manager::put_state(base::flat & file)
     {
         if (m_locked[i] == true)
         {
-            std::string t = *(m_task[i].chr->map().get_entity(dynamic_cast<world::placeable *>(m_task[i].chr)));
-
+            std::string t = m_task[i].chr->uid();
+            
             if (t.empty() == false)
             {
                 taskBlock.put_string("chrName", t);

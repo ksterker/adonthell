@@ -1,5 +1,5 @@
 #
-# $Id: player.py,v 1.3 2009/04/19 16:46:12 ksterker Exp $
+# $Id: player.py,v 1.4 2009/04/26 18:53:00 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -20,6 +20,7 @@
 #
 
 from adonthell import input, world
+import actions
 
 class player (object):
     """
@@ -37,6 +38,8 @@ class player (object):
         self.always_run = 0
         # -- The PC map character instance
         self.pc = schedule.get_map().get_character ("Player")
+        # -- The game "mode"
+        self.state = actions.ACTION_NORMAL
     
     def run (self):
         """
@@ -114,6 +117,9 @@ class player (object):
                 
             elif btn == input.control_event.B_BUTTON:
                 self.pc.jump();
+                
+            elif btn == input.control_event.C_BUTTON:
+                actions.perform_action (self.pc, self.state)
                 
             elif btn == input.control_event.LEFT_BUTTON:
                 self.pc.add_direction(self.pc.WEST);

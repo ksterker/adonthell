@@ -1,5 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.9 2009/04/18 21:54:59 ksterker Exp $
+ $Id: chunk_info.h,v 1.10 2009/04/26 18:52:59 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -74,7 +74,7 @@ namespace world
          * Get pointer to the map object instance.
          * @return pointer to the underlying placeable.
          */
-        placeable *get_object() const
+        world::placeable *get_object() const
         {
             return Entity->get_object();
         }
@@ -83,7 +83,7 @@ namespace world
          * Get pointer to the entity.
          * @return pointer to the underlying entity.
          */
-        entity *get_entity() const
+        world::entity *get_entity() const
         {
             return Entity;
         }
@@ -156,6 +156,13 @@ namespace world
         /// extend of the object
         vector3<s_int32> Max;
         
+#ifndef SWIG
+        /**
+         * Allow %chunk_info to be passed as python argument
+         */
+        GET_TYPE_NAME (world::chunk_info)
+#endif
+
     private:
         /// pointer to map object
         entity * Entity;

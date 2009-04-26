@@ -1,5 +1,5 @@
 /*
- $Id: area.cc,v 1.20 2009/04/09 18:37:13 ksterker Exp $
+ $Id: area.cc,v 1.21 2009/04/26 18:52:59 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -189,9 +189,8 @@ placeable * area::add_entity (placeable * object, const std::string & id)
     return object;    
 }
 
-const std::string * area::get_entity(placeable * object)
+const std::string * area::get_entity_name (const placeable * object) const
 {
-    //std::vector<world::entity *>::iterator ei = find_if(Entities.begin(), Entities.end(), );
     std::hash_map<std::string, world::named_entity *>::const_iterator ei = NamedEntities.begin();
     while (ei != NamedEntities.end())
     {

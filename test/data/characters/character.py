@@ -1,5 +1,5 @@
 #
-# $Id: character.py,v 1.1 2009/04/08 19:36:03 ksterker Exp $
+# $Id: character.py,v 1.2 2009/04/26 18:53:00 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -21,35 +21,48 @@
 
 from adonthell.base import flat
 
-"""
- This is the python counterpart to rpg/character.cc. It contains an
- character's most basic attributes. Any actual character should inherit
- from this class.
-"""
 class character (object):
+    """
+     This is the python counterpart to rpg/character.cc. It contains an
+     character's most basic attributes. Any actual character should inherit
+     from this class.
+    """
 
-    """ctor"""
     def __init__ (self):
+        """ctor"""
         # -- pointer to the underlying rpg.character instance
         self.this = None
 
-
-    """properly delete a character"""
     def destroy (self):
+        """properly delete a character"""
         if self.this != None:
             self.this.destroy ()
             
+    def get_area_of_effect (self, action):
+        """
+         get the area that is affected when this character
+         performs an action. Returns an arc and a radius.
+        """
+        return (120, 30)
+
+    def perform_action (self, action, initiator):
+        """
+         perform an action.
+         @param action the type of action to perform
+         @param initiator the character triggering the action
+        """
+        print initiator.uid(), "triggered action with", self.this.name()
     
-    """
-     save character to disk
-     record needs to be of type base.flat
-    """
     def put_state (self, record):
+        """
+         save character to disk
+         record needs to be of type base.flat
+        """
         pass
         
-    """
-     load character from disk
-     record needs to be of type base.flat
-    """
     def get_state (self, record):
+        """
+         load character from disk
+         record needs to be of type base.flat
+        """
         pass

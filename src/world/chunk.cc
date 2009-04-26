@@ -1,5 +1,5 @@
 /*
- $Id: chunk.cc,v 1.14 2009/04/09 18:37:13 ksterker Exp $
+ $Id: chunk.cc,v 1.15 2009/04/26 18:52:59 ksterker Exp $
  
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -307,14 +307,14 @@ bool chunk::in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32
     return true;
 }
 
-std::list<chunk_info*> chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const
+std::list<chunk_info*> chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, const u_int32 & type) const
 {
     std::list<chunk_info*> result;
-    objects_in_bbox (min, max, result);
+    objects_in_bbox (min, max, result, type);
     return result;
 }
 
-void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result) const
+void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result, const u_int32 & type) const
 {
     s_int8 chunks[8];
     
@@ -326,7 +326,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
         if (c != NULL)
         {
             // recurse
-            c->objects_in_bbox (min, max, result);
+            c->objects_in_bbox (min, max, result, type);
         }
     }
     
@@ -334,7 +334,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     std::list<chunk_info>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (in_bbox (min, max, i->real_min(), i->real_max()))
+        if (type & i->get_object()->type() && in_bbox (min, max, i->real_min(), i->real_max()))
         {
             result.push_back ((chunk_info*) &(*i));
         }

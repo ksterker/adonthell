@@ -1,5 +1,5 @@
 /*
- $Id: placeable.h,v 1.16 2009/03/29 12:22:07 ksterker Exp $
+ $Id: placeable.h,v 1.17 2009/04/26 18:53:00 ksterker Exp $
 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
@@ -42,15 +42,18 @@ namespace world
     /// allowed types of objects on the map
     typedef enum
         {
+            /// not of any specific type
             UNKNOWN = 0,
             /// scenery object
-            OBJECT,
+            OBJECT = 1,
             /// creature
-            CHARACTER,
+            CHARACTER = 2,
             /// something that can be picked up
-            ITEM
+            ITEM = 4,
+            /// any of the above
+            ANY = ITEM | CHARACTER | OBJECT
         } placeable_type;
-
+    
     /**
      * Class representing a placeable, i.e. something (character, object, ...)
      * that can be placed on a map and occupies some space on it. Each placeable
@@ -87,6 +90,13 @@ namespace world
             return Type;
         }
 
+        /**
+         * Get unique id of this placeable.
+         * @return the unique id, or the empty string if it 
+         * has none.
+         */
+        const std::string & uid () const;
+        
         /**
          * Update placeable each game cycle.
          * @return true on success, false otherwise.
@@ -180,9 +190,8 @@ namespace world
          * Get placeable's map
          * @return map where the placeable exists
          */
-
-         area & map() const { return Mymap; }
-
+        area & map() const { return Mymap; }
+        
         /**
          * @name Placeable state
          *

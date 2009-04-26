@@ -1,5 +1,5 @@
 /*
- $Id: placeable.cc,v 1.9 2009/03/21 14:29:10 ksterker Exp $
+ $Id: placeable.cc,v 1.10 2009/04/26 18:52:59 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -53,6 +53,15 @@ placeable::~placeable()
         delete *i;
     }
     Model.clear();
+}
+
+// get unique id of placeable
+const std::string & placeable::uid () const
+{
+    static std::string NO_ID ("");
+    const std::string *uid = Mymap.get_entity_name (this);
+    if (uid != NULL) return *uid;
+    return NO_ID;
 }
 
 // change state of placeable

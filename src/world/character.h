@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.10 2009/04/16 21:06:09 ksterker Exp $
+ $Id: character.h,v 1.11 2009/04/26 18:52:59 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -167,8 +167,21 @@ namespace world
          */
         //@{
         /**
-         * Get current direction(s) the %character is facing.
-         * @return a flag indication orientation.
+         * Get the character's orientation. Return the direction
+         * the character is currently facing, regardless of movement.
+         * @return character orientation.
+         */
+        s_int32 heading() const
+        {
+            return Heading;
+        }
+        
+        /**
+         * Get current direction(s) the %character is moving. Returns
+         * a direction or combination of directions indicating the
+         * current movement direction. Returns 0 if the character is
+         * standing still.
+         * @return direction of movement, 0 if character is not moving.
          */
         s_int32 current_dir() const
         {
@@ -248,8 +261,10 @@ namespace world
         bool IsRunning;
         /// whether character should be running once on the ground
         bool ToggleRunning;
-        /// current direction the character is facing
+        /// current direction the character is moving
         s_int32 CurrentDir;
+        /// direction the character is facing
+        s_int32 Heading;
         
     private:
         /// forbid passing by value

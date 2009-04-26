@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.36 2009/04/18 21:54:59 ksterker Exp $
+   $Id: worldtest.cc,v 1.37 2009/04/26 18:53:00 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -28,7 +28,7 @@
 #include "gfx/screen.h"
 #include "input/manager.h"
 #include "main/adonthell.h"
-#include "python/python.h"
+#include "rpg/character.h"
 #include "world/area.h"
 #include "world/character.h"
 #include "world/object.h"
@@ -150,6 +150,12 @@ public:
         mchar->set_speed (1.75);
         mchar->set_position (210, 190);
         mchar->set_z (0);
+        
+        // rpg character instances
+        rpg::character player("Player", "Player", rpg::PLAYER);
+        rpg::character npc("NPC", "NPC", rpg::NPC);
+        player.create_instance ("character");
+        npc.create_instance ("character");
         
         // ... and let it walk randomly
         controls = mchar->get_schedule();

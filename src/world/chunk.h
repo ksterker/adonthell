@@ -1,5 +1,5 @@
 /*
- $Id: chunk.h,v 1.17 2009/04/25 22:23:38 fr3dc3rv Exp $
+ $Id: chunk.h,v 1.18 2009/04/26 18:52:59 ksterker Exp $
 
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -117,19 +117,21 @@ namespace world
          *
          * @param min the lower coordinate triplet of the bbox.
          * @param max the upper coordinate triplet of the bbox.
+         * @param type the type of objects to retrieve.
          *
          * @return list of objects contained in bbox.
          */
-        std::list<chunk_info*> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max) const;
+        std::list<chunk_info*> objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, const u_int32 & type = world::ANY) const;
 
         /**
          * Collects a list of objects that are contained by the given bounding box and adds them to given list.
          *
          * @param min the lower coordinate triplet of the bbox.
          * @param max the upper coordinate triplet of the bbox.
-         * @param result list that will receive the objects contained in the bbox
+         * @param result list that will receive the objects contained in the bbox.
+         * @param type the type of objects to retrieve.
          */
-        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result) const;
+        void objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32> & max, std::list<chunk_info*> & result, const u_int32 & type = world::ANY) const;
         //@}
 
         /**
@@ -253,7 +255,16 @@ namespace world
          * @return true if view and AABB overlap, false otherwise.
          */
         bool in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-
+        
+        /**
+         * Checks whether two axis aligned bounding boxes overlap.
+         *
+         * @param a_min minimum corner of the first AABB
+         * @param a_max maximum corner of the first AABB
+         * @param b_min minimum corner of the second AABB
+         * @param b_max maximum corner of the second AABB
+         * @return true if the two AABB overlap, false otherwise.
+         */
         bool in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_max, const vector3<s_int32> & b_min, const vector3<s_int32> & b_max) const;
 
         /**
