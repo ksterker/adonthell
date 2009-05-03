@@ -3,8 +3,8 @@
 #define LINEHEIGHT 25 
 namespace gui
 {
-	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_1<void*>*e, void*a)
-	:widget(w, h),ct(w, h/2),dlg(c),speaker(w, LINEHEIGHT),end(e),arg(a)
+	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_0*e)
+	:widget(w, h),ct(w, h/2),dlg(c),speaker(w, LINEHEIGHT),end(e)
 	{
 		line = dlg.run(-1);
 		ct.multiline(true);
@@ -34,7 +34,7 @@ namespace gui
 		if (!line) //this is null if we hit the end of the conversation
 		{
 			if (end) {
-				(*end)(arg);
+				(*end)();
 				delete end;
 				end = NULL;
 			}

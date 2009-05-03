@@ -37,6 +37,8 @@ public:
 
 
 class DialogTest : public adonthell::app {
+  InputHandler ih;
+    
   static void changelabel(bool down, void* arg) {
     gui::label* l = (gui::label*)arg;
 	std::stringstream s; 
@@ -49,9 +51,8 @@ class DialogTest : public adonthell::app {
     char* s = (char*) arg;
 	std::cout << s << ":" << (down?"down":"up") << "\n";
   }
-  void shutdown(void* arg) {
-  	InputHandler *ih = (InputHandler*)arg;
-	ih->letsexit = true;
+  void shutdown() {
+	ih.letsexit = true;
   }
   int main () {
     // Initialize the gfx and input systems
@@ -67,8 +68,6 @@ class DialogTest : public adonthell::app {
 	rpg::character player("Player", "Player", rpg::PLAYER);
 	//rpg::dialog dlg(npc);
     
-	InputHandler ih;
-    
     // Create our input_listener and connect the callback
     // to handle keyboard events
     input::listener il;
@@ -81,7 +80,7 @@ class DialogTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
     /*************************************************************************/
-	gui::conversation conv(npc, 500, 300, base::make_functor(*this, &DialogTest::shutdown), &ih);
+	gui::conversation conv(npc, 500, 300, base::make_functor(*this, &DialogTest::shutdown));
 	conv.focus();	
 	ih.widgetbase = &conv;
     /*************************************************************************/

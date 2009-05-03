@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.37 2009/04/26 18:53:00 ksterker Exp $
+   $Id: worldtest.cc,v 1.38 2009/05/03 16:26:00 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -34,6 +34,7 @@
 #include "world/object.h"
 #include "world/mapview.h"
 #include "world/pathfinding_manager.h"
+#include "gui/window_manager.h"
 
 class game_client
 {
@@ -145,17 +146,22 @@ public:
         world::schedule *controls = mchar->get_schedule();
         controls->set_manager ("player", NULL);
 
+        // rpg character instance
+        rpg::character player("Player", "Player", rpg::PLAYER);
+        player.create_instance ("character");
+        player.set_attribute ("avatar", python::pass_instance (mchar));
+        
         // position and speed of a NPC
         mchar = (world::character *) (gc.world.get_entity ("NPC"));
         mchar->set_speed (1.75);
         mchar->set_position (210, 190);
         mchar->set_z (0);
         
-        // rpg character instances
-        rpg::character player("Player", "Player", rpg::PLAYER);
+        // rpg character instance
         rpg::character npc("NPC", "NPC", rpg::NPC);
-        player.create_instance ("character");
         npc.create_instance ("character");
+        npc.set_attribute ("avatar", python::pass_instance (mchar));
+        npc.set_dialogue("tech_preview");
         
         // ... and let it walk randomly
         controls = mchar->get_schedule();
@@ -237,6 +243,7 @@ public:
             gfx::screen::get_surface()->fillrect (320+160, 120, 1, 240, 0xFF8888); 
                         
 	        base::Timer.update (); 
+            gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 
 	    }

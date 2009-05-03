@@ -1,5 +1,5 @@
 /*
- $Id: character.h,v 1.11 2009/04/26 18:52:59 ksterker Exp $
+ $Id: character.h,v 1.12 2009/05/03 16:26:00 ksterker Exp $
  
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -155,7 +155,7 @@ namespace world
          *
          * @return the character's schedule.
          */
-        schedule* get_schedule ()
+        world::schedule* get_schedule ()
         {
             return &Schedule;
         }

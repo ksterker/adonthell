@@ -1,5 +1,5 @@
 /*
- $Id: schedule.cc,v 1.1 2009/04/16 21:06:09 ksterker Exp $
+ $Id: schedule.cc,v 1.2 2009/05/03 16:26:00 ksterker Exp $
  
  Copyright (C) 2004/2005/2006 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -87,7 +87,7 @@ void schedule::update ()
 // pause or resume schedule
 void schedule::set_active (const bool & a)
 {
-    if (a)
+    if (!a)
     {
         Paused++;
         if (Paused == 1)

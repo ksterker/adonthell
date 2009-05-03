@@ -1,5 +1,5 @@
 #
-# $Id: actions.py,v 1.1 2009/04/26 18:53:00 ksterker Exp $
+# $Id: actions.py,v 1.2 2009/05/03 16:26:01 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -65,6 +65,37 @@ def perform_action (chr, action):
         # -- execute the action
         py_rpg_obj.perform_action (action, chr)
 
+
+_opposite_direction = {
+    world.character.NONE  : world.character.NONE,
+    world.character.EAST  : world.character.WEST,
+    world.character.SOUTH : world.character.NORTH,
+    world.character.WEST  : world.character.EAST,
+    world.character.NORTH : world.character.SOUTH,
+    world.character.SOUTH | world.character.EAST : world.character.NORTH | world.character.WEST,
+    world.character.SOUTH | world.character.WEST : world.character.NORTH | world.character.EAST,
+    world.character.NORTH | world.character.EAST : world.character.SOUTH | world.character.WEST,
+    world.character.NORTH | world.character.WEST : world.character.SOUTH | world.character.EAST
+}
+"""
+ Mapping of direction a character is facing and the
+ opposite of that direction
+"""
+
+
+def face_character (myself, other):
+    """
+     Change the direction of myself to look at the other character
+     @param myself map character whose direction to change
+     @param other map character at whom to look
+    """
+    direction = _opposite_direction[other.heading ()]
+    # -- look towards other character
+    myself.set_direction (direction)
+    # -- FIXME: this is pretty awkward
+    myself.stop ()
+    myself.update_state ()
+    
 
 _angle_of_direction = {
     world.character.NONE  : 0,

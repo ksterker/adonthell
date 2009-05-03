@@ -31,11 +31,11 @@ namespace gui
 		void selectopt(bool down, void* arg);
 		int opty;
 		int optcount;
-		::base::functor_1<void*> * end;
+		::base::functor_0 * end;
 		void* arg;
 		unsigned int color;
 	public:
-		conversation(rpg::character & d, int w, int h, ::base::functor_1<void*>* e=NULL, void* a=NULL);
+		conversation(rpg::character & d, int w, int h, ::base::functor_0* e=NULL);
 
 		virtual void draw(int x, int y, gfx::surface* s) {objs.draw(x, y, s);}
 		virtual bool keyup(input::keyboard_event &k);

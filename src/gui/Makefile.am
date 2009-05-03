@@ -6,6 +6,7 @@ pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
 	base.h \
 	button.h \
+	conversation.h \
 	draw.h \
 	font.h \
 	gui.h \
@@ -13,19 +14,20 @@ pkgincludeinput_HEADERS = \
 	layout.h \
 	option.h \
 	widget.h \
-	conversation.h
+    window_manager.h
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
-	font.cpp \
-	widget.cpp \
-	label.cpp \
 	button.cpp \
+	conversation.cc \
+	font.cpp \
+	label.cpp \
 	layout.cc \
 	option.cpp \
 	textbox.cpp \
-	conversation.cc
+	widget.cpp \
+    window_manager.cc
 
 libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS) -D__BIG_ENDIAN__
 

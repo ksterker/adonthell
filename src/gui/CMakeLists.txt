@@ -8,6 +8,7 @@ set(adonthell_gui_SRCS
 	option.cpp
 	textbox.cpp
 	widget.cpp
+    window_manager.cc
 )
 
 set(adonthell_gui_HEADERS
@@ -21,6 +22,7 @@ set(adonthell_gui_HEADERS
 	layout.h
 	option.h
 	widget.h
+    window_manager.h
 )
 
 include_directories(${PYTHON_INCLUDE_PATH})

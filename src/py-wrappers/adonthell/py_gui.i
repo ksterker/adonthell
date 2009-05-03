@@ -4,7 +4,9 @@
 %{
 #include "base/types.h"
 #include "gui/gui.h"
-
+#include "gui/window_manager.h"
+#include "python/callback.h"
+    
 using namespace gui;
 %}
 
@@ -42,3 +44,17 @@ namespace gui {
 %include "gui/layout.h"
 %include "gui/option.h"
 %include "gui/textbox.h"
+%include "gui/conversation.h"
+%include "gui/window_manager.h"
+
+namespace gui
+{
+    // class extension to handle Python callbacks
+    %extend conversation
+    {
+        conversation(rpg::character & d, int w, int h, PyObject *callback)
+        {
+            return new gui::conversation(d, w, h, new python::functor_0 (callback));
+        }
+    };
+}
