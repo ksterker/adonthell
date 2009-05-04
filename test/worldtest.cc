@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.38 2009/05/03 16:26:00 ksterker Exp $
+   $Id: worldtest.cc,v 1.39 2009/05/04 19:40:39 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -173,7 +173,7 @@ public:
         
         // The renderer ...
         world::debug_renderer rndr;
-        world::mapview mv (320, 240, &rndr);
+        world::mapview mv (640, 480, &rndr);
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
         
@@ -209,7 +209,7 @@ public:
             }            
             
             // render mapview on screen
-            mv.draw (160, 120);
+            mv.draw (0, 0);
 
             // stop printing queue contents
             rndr.print_queue (false);
@@ -236,12 +236,6 @@ public:
             gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
-            // rectangle that should be filled with the mapview
-            gfx::screen::get_surface()->fillrect (160, 120, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (160, 240+120, 320, 1, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (160, 120, 1, 240, 0xFF8888); 
-            gfx::screen::get_surface()->fillrect (320+160, 120, 1, 240, 0xFF8888); 
-                        
 	        base::Timer.update (); 
             gui::window_manager::update();
 	        gfx::screen::update ();

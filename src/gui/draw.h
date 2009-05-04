@@ -45,15 +45,15 @@ namespace gui
 	inline void border(int x, int y, int w, int h, gfx::surface*s)
 	{
 		x-=5;y-=5;w+=10;h+=10;
-		box(x, y, w, h, 0xff000040, s);
+		box(x, y, w, h, 0xff685510, s);
 		x++;y++;w-=2;h-=2;
-		box(x, y, w, h, 0xff000080, s);
+		box(x, y, w, h, 0xffc0a539, s);
 		x++;y++;w-=2;h-=2;
-		box(x, y, w, h, 0xff0000b0, s);
+		box(x, y, w, h, 0xffeae091, s);
 		x++;y++;w-=2;h-=2;
-		box(x, y, w, h, 0xff000080, s);
+		box(x, y, w, h, 0xffe4d360, s);
 		x++;y++;w-=2;h-=2;
-		box(x, y, w, h, 0xff000040, s);
+		box(x, y, w, h, 0xffa48b28, s);
 	}
 
 };

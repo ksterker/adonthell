@@ -37,7 +37,7 @@ namespace gui
 	public:
 		conversation(rpg::character & d, int w, int h, ::base::functor_0* e=NULL);
 
-		virtual void draw(int x, int y, gfx::surface* s) {objs.draw(x, y, s);}
+		virtual void draw(int x, int y, gfx::surface* s) { widget::draw(x, y, s); objs.draw(x, y, s);}
 		virtual bool keyup(input::keyboard_event &k);
 		virtual bool keydown(input::keyboard_event &k);
 		virtual bool focus() {return objs.focus();}

@@ -1,5 +1,5 @@
 #
-# $Id: character.py,v 1.3 2009/05/03 16:26:01 ksterker Exp $
+# $Id: character.py,v 1.4 2009/05/04 19:40:40 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -42,14 +42,6 @@ class action_talk (object):
         self.dlg_wnd = gui.conversation (self.other.this, 600, 300, self.on_finished)
         # -- ... and add it to the gui manager
         gui.window_manager.add (self.dlg_wnd)
-
-
-    def handle_keys (self, kev):
-        if kev.type() == input.keyboard_event.KEY_PUSHED:
-            return self.dlg_wnd.keydown (kev)
-        else:
-            return self.dlg_wnd.keyup (kev)
-    
     
     def on_finished (self):
         """
@@ -91,7 +83,7 @@ class character (object):
          get the area that is affected when this character
          performs an action. Returns an arc and a radius.
         """
-        return (150, 30)
+        return (120, 30)
 
     def perform_action (self, action, initiator):
         """

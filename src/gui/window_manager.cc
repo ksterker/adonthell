@@ -1,5 +1,5 @@
 /*
- $Id: window_manager.cc,v 1.1 2009/05/03 16:26:00 ksterker Exp $
+ $Id: window_manager.cc,v 1.2 2009/05/04 19:40:39 ksterker Exp $
  
  Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -38,7 +38,7 @@ void window_manager::update()
 {
     for (std::list<gui::widget*>::reverse_iterator i = Windows.rbegin(); i != Windows.rend(); i++)
     {
-        (*i)->draw (0, 0, gfx::screen::get_surface());
+        (*i)->draw (20, 10, gfx::screen::get_surface());// FIXME: don't hardcode window pos
     }
 }
 

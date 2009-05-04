@@ -16,7 +16,7 @@ namespace gui
         input::listener * listener;
 	public:
 		widget(int width, int height):bg(NULL),listener(NULL) {setSize(width, height);}
-		widget(const char* bgfile) {bg = gfx::surfaces->get_surface_only(bgfile); w=bg->length(); h=bg->height();}
+		widget(const char* bgfile) {bg = gfx::surfaces->get_surface_only(bgfile); listener=NULL; w=bg->length(); h=bg->height();}
 		~widget(){gfx::surfaces->free_surface(bg);delete listener;};
 		virtual void draw(int x, int y, gfx::surface * s);
         
