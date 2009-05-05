@@ -1,5 +1,5 @@
 /*
-   $Id: surface_sdl.cc,v 1.3 2009/03/26 22:09:04 ksterker Exp $
+   $Id: surface_sdl.cc,v 1.4 2009/05/05 18:30:21 ksterker Exp $
 
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -59,7 +59,7 @@ namespace gfx
     {
         if ((t == 255) && (alpha_ != 255) && vis)
         {
-            SDL_SetSurfaceAlphaMod(vis, 0xFF);
+            SDL_SetSurfaceAlphaMod(vis, t);
             SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_NONE);
             SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
         }
@@ -93,7 +93,7 @@ namespace gfx
 
         if (alpha () != 255 || has_alpha_channel())
         {
-            SDL_SetSurfaceAlphaMod(vis, alpha_);
+            if (!has_alpha_channel()) SDL_SetSurfaceAlphaMod(vis, alpha_);
             SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_BLEND);
             SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
         }
@@ -120,7 +120,14 @@ namespace gfx
             dstrect.h = h;
         }
 
+        lock();
         SDL_FillRect (vis, &dstrect, col);
+        unlock();
+        
+        // --> crash with SDL 1.3.0-4444
+        // u_int8 r, g, b, a;
+        // SDL_GetRGBA (col, vis->format, &r, &g, &b, &a);
+        // SDL_BlendRect (vis,  &dstrect, SDL_BLENDMODE_NONE, r, g, b, a);
     }
 
     // convert RGBA color to surface format
