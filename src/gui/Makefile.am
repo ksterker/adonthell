@@ -34,4 +34,4 @@ libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAG
 libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
 	-L$(top_builddir)/src/input/ -ladonthell_input \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
-	-lstdc++ $(FT2_LIBS) -ladonthell_python $(PY_LIBS) -ladonthell_rpg 
+	-lstdc++ $(FT2_LIBS) -L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) -L$(top_builddir)/src/rpg/ -ladonthell_rpg 

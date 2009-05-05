@@ -1,4 +1,4 @@
-SUBDIRS = main base event gfx input audio gui python rpg world py-wrappers
+SUBDIRS = main base event gfx input audio python rpg gui world py-wrappers
 
 EXTRA_DIST = CMakeLists.txt
 

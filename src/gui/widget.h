@@ -29,13 +29,13 @@ namespace gui
          * previously set input listeners are deleted.
          * @param lstnr the input listener to set.
          */
-        void widget::set_listener (input::listener *lstnr);
+        void set_listener (input::listener *lstnr);
 
         /**
          * Get the input listener associated to that widget, if any.
          * @return this widgets input listener.
          */
-        input::listener * widget::get_listener () const;
+        input::listener * get_listener () const;
         
         /**
          * Callback executed whenever a key on the keyboard has been pushed.
