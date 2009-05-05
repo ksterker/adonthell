@@ -4,18 +4,18 @@
 namespace gui
 {
 	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_0*e)
-	:widget(w, h),ct(w-20, h/3),dlg(c),speaker(w-20, LINEHEIGHT),end(e)
+	:widget(w, h),ct(w-30, h/3),dlg(c),speaker(w-30, LINEHEIGHT),end(e)
 	{
-        font f (NULL, LINEHEIGHT);
+        font f (NULL, LINEHEIGHT - 1);
         ct.setFont(f);
         speaker.setFont(f);
         
         bg = gfx::surfaces->get_surface_only("data/gfx/gui/conversation.png");//FIXME
 		line = dlg.run(-1);
 		ct.multiline(true);
-		objs.addchild(speaker, 10, 0);
-		objs.addchild(ct, 10, LINEHEIGHT);
-		opty = ct.getHeight() + 30;
+		objs.addchild(speaker, 15, 10);
+		objs.addchild(ct, 15, LINEHEIGHT+10);
+		opty = ct.getHeight() + 40;
 		optcount = 0;
 		update();
 		color = c.color(); 
@@ -53,7 +53,10 @@ namespace gui
 		int i;
 		int y = opty;
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
-        font f (NULL, LINEHEIGHT);
+         
+        font f (NULL, LINEHEIGHT - 1);
+        f.setColor(rpg::character::get_player()->color());
+
 		for (i = 0; i < optcount; i++)
 		{
 			answers[i].which = i;
@@ -66,7 +69,7 @@ namespace gui
 			options[i]->setString(string(tmp)+line->answer(i));
 			options[i]->reheight();
 			options[i]->centerV(false);
-			objs.addchild(*options[i], 20, y);
+            objs.addchild(*options[i], 20, y);
 			y += options[i]->getHeight() +5;
 		}
 		if (optcount == 0) 
@@ -75,7 +78,7 @@ namespace gui
 			answers[0].which = -1;
 			answers[0].obj = this;
 			options[0] = new button(w-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i],2);
-			options[i]->setFont(f);
+			options[0]->setFont(f);
 			options[0]->multiline(true);
 			options[0]->setString("1) (continue)");
 			options[0]->reheight();

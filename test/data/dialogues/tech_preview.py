@@ -2,7 +2,7 @@ import dialogue
 from adonthell import rpg# -- pygettext support
 def _(message): return message
 
-class tech-preview (dialogue.base):
+class tech_preview (dialogue.base):
 	text = [None,\
 		_("Welcome to the Adonthell 0.4 Tech Preview. There isn't much to see yet, but as new features become available, they'll be demo'd here. Until then, maybe we can satisfy your curiosity by answering a few questions.   "),\
 		_("Nah, I've heard everything I need to know."),\
@@ -20,11 +20,11 @@ class tech-preview (dialogue.base):
 		_("What's involved with writing?"),\
 		_("No, I better leave that to somebody else."),\
 		_("If anything at all, I'd like to code."),\
-		_("Sure. A lot of different people contributed to Adonthell over the past years. We tried out best to make it easy for newcomers to pick up a task. And there's more besides programming: graphics and writing also have to be done."),\
-		_("Plot, characters and background are pretty much done, so it'll boild down mostly to dialogues like this. And we'll probably need lots of them. "),\
-		_("We'll be needing more detailed designs of the different locations described on our Wiki. Then we'll need tile sets for each of those. Another area where not much has been done yet are characters and creatures. We do have all character portraits, but none of the sprites to go with them."),\
+		_("Sure. A lot of different people contributed to Adonthell over the past years. We tried our best to make it easy for newcomers to pick up a task. And there's more besides programming: graphics and writing also have to be done."),\
+		_("Plot, characters and background are pretty much done, so it'll boil down mostly to dialogues like this. And we'll probably need lots of them. "),\
+		_("We'll be needing more detailed designs of the different locations described on our Wiki. Then we'll need tile sets for each of those. Another area where not much has been done yet are characters and creatures. We do have all NPC portraits, but none of the sprites to go with them."),\
 		_("Okay. But what could be done in such little time?"),\
-		_("Then you should probably start by reading the appropriate parts of the Wiki. The engine architecture description in particular. You might also find the Getting Started Guide helpful. Then see what tasks are still open. Just playing around with this demo might also give you some ideas for improvements or additional features."),\
+		_("Then you should probably start by browsing our Wiki. Have a look at the Engine Architecture documentation and the Getting Started Guide. Then check out the Roadmap and Open Tasks. Of course, just playing around with this demo might give you an idea what to do."),\
 		_("In any case, if you would like to help, you should subscribe to our development mailing list and come by the IRC channel #adonthell on irc.freenode.net from time to time."),\
 		_("Practically anything, with a bit of patience. There are tasks for programmers, artists and writers that could be tackled over the course of a couple months. Or just patch code up here or there, or paint a few graphics whenever you feel like it. Every small contribution counts!"),\
 		_("You'll probably find some of them answered on our Wiki, but since you're here already ..."),\
@@ -49,9 +49,9 @@ class tech-preview (dialogue.base):
 		_("Waste's Edge?! Why bother with the old crap? Didn't you have a new game planned?"),\
 		_("Game rules? Sounds interesting. Do you have more information about that?"),\
 		_("We're already spending time to keep Waste's Edge running as its dependencies evolve. In the future we might have to port the old engine to Python 3 and SDL 1.3. By porting Waste's Edge to the new engine instead, we actually save some work."),\
-		_("Besides, it's a nice test case. And more over, the next game -- Dun Barethsol -- will include Waste's Edge as a location, so recreating it for the new engine will required anyway."),\
+		_("Besides, it's a nice test case. And more over, the next game -- Dun Barethsol -- will include Waste's Edge as a location, so recreating it for the new engine will be neccessary anyway."),\
 		_("Of course. See the Role Playing System section on the Wiki. That's what has to be implemented (mostly in Python). The Scripting Guide (also on the Wiki) may have some more details about how to do that."),\
-		_("There we can discuss what needs to be done, pass around design ideas and in general answer questions that come up. "),\
+		_("There we can discuss what needs to be done, pass around design ideas and in general answer all the questions that may come up. "),\
 		_("Sounds good. Maybe I'll see you there."),\
 		_("Well, apart from generating interest into the project, this is also the testbed for all the new features that we implement. As such, it'll slowly evolve into the next demo game, Dun Barethsol."),\
 		_("Any estimate when it will be ready?"),\

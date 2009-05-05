@@ -1,5 +1,5 @@
 #
-# $Id: player.py,v 1.4 2009/04/26 18:53:00 ksterker Exp $
+# $Id: player.py,v 1.5 2009/05/05 18:31:53 ksterker Exp $
 #   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -116,10 +116,10 @@ class player (object):
                 else: self.pc.walk ();
                 
             elif btn == input.control_event.B_BUTTON:
-                self.pc.jump();
+                actions.perform_action (self.pc, self.state)
                 
             elif btn == input.control_event.C_BUTTON:
-                actions.perform_action (self.pc, self.state)
+                self.pc.jump();
                 
             elif btn == input.control_event.LEFT_BUTTON:
                 self.pc.add_direction(self.pc.WEST);

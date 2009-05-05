@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.39 2009/05/04 19:40:39 ksterker Exp $
+   $Id: worldtest.cc,v 1.40 2009/05/05 18:31:52 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -150,6 +150,7 @@ public:
         rpg::character player("Player", "Player", rpg::PLAYER);
         player.create_instance ("character");
         player.set_attribute ("avatar", python::pass_instance (mchar));
+        player.set_color (gfx::screen::get_surface()->map_color (255, 238, 123));
         
         // position and speed of a NPC
         mchar = (world::character *) (gc.world.get_entity ("NPC"));

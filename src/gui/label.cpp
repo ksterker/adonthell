@@ -95,7 +95,7 @@ namespace gui
 			}
 			if (!cached)
 				cout << "Unable to create label cache!\n";
-			cached->fillrect(0, 0, w, h, 0);
+			cached->fillrect(0, 0, w, h, cached->map_color (0, 0, 0, 0));
 			//compute where to render it
 			if (_multiline)
 				rx = 0;
@@ -113,6 +113,7 @@ namespace gui
 			//*
 			color old, n;
 			old.i = f.getColor();
+            
 #ifndef __BIG_ENDIAN__
 			float intensity = old.c[0]*.3 + old.c[1]*0.59 + old.c[2]*0.11;
 			if (intensity < 128.0)
@@ -133,6 +134,7 @@ namespace gui
 			}
 #endif
 			f.setColor(n.i);
+            
 			//render in a background color, to get contrast
 			if (_multiline)
 			{
