@@ -1,5 +1,5 @@
-#include "label.h"
-#include "gfx/gfx.h"
+#include "gui/label.h"
+#include "gfx/screen.h"
 #include <iostream>
 using std::cout;
 
@@ -79,7 +79,7 @@ namespace gui
 	{
 		if (!cachevalid) //do we need to regenerate the cached image?
 		{
-			//find the needed size of the cache
+            //find the needed size of the cache
 			int nw, nh;
 			f.getSize(txt, nw, nh);
 			int mw = nw, mh = nh;
@@ -111,29 +111,15 @@ namespace gui
 			//the idea is to make the text itself easier to read
 			//try to get a reasonable background color
 			//*
-			color old, n;
-			old.i = f.getColor();
+			u_int32 old, n;
+            u_int8 r, g, b, a;
+            old = f.getColor();
+            gfx::screen::get_surface()->unmap_color (old, r, g, b, a);
             
-#ifndef __BIG_ENDIAN__
-			float intensity = old.c[0]*.3 + old.c[1]*0.59 + old.c[2]*0.11;
-			if (intensity < 128.0)
-				n.c[0] = n.c[1] = n.c[2] = n.c[3] = 0xff;
-			else
-			{
-				n.c[0] = n.c[1] = n.c[2] = 0;
-				n.c[3] = 0xff; //opaque black
-			}
-#else
-			float intensity = old.c[1]*.3 + old.c[2]*0.59 + old.c[3]*0.11;
-			if (intensity < 128.0)
-				n.c[0] = n.c[1] = n.c[2] = n.c[3] = 0xff;
-			else
-			{
-				n.c[1] = n.c[2] = n.c[3] = 0;
-				n.c[0] = 0xff;
-			}
-#endif
-			f.setColor(n.i);
+            float intensity = r *.3 + g * .59 + b * .11;
+             if (intensity < 128.0) n = gfx::screen::get_surface()->map_color (0xff, 0xff, 0xff);
+            else n = gfx::screen::get_surface()->map_color (0x00, 0x00, 0x00);
+			f.setColor(n);
             
 			//render in a background color, to get contrast
 			if (_multiline)
@@ -153,7 +139,8 @@ namespace gui
 			}
 			else
 				f.render(txt, rx,ry, cached);
-			f.setColor(old.i);
+			
+            f.setColor(old);
 			//apply a gaussian blur to it
 			gaussianblur(cached);			
 			// */
