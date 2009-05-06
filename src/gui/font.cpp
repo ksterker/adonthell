@@ -103,26 +103,19 @@ namespace gui
 					u_int8 b[4];
 					u_int32 c;
 				} p1, p2;
-				p1.c = s->get_pix(x + i, y + j);
-				p2.c = color;
+				s->unmap_color(s->get_pix(x + i, y + j),p1.b[0], p1.b[1], p1.b[2], p1.b[3]);
+				s->unmap_color(color, p2.b[0],p2.b[1],p2.b[2],p2.b[3]);
 				
 				if (*data)
 				{
 					float a2 = *data/255.0;
 					//use an "over" compositing function
-#ifndef __BIG_ENDIAN__
 					p1.b[0] = (int)(p1.b[0]*(1-a2) + p2.b[0]*a2);
 					p1.b[1] = (int)(p1.b[1]*(1-a2) + p2.b[1]*a2);
 					p1.b[2] = (int)(p1.b[2]*(1-a2) + p2.b[2]*a2);
 					p1.b[3] = (int)(p1.b[3]*(1-a2) + *data*a2);
-#else
-					p1.b[1] = (int)(p1.b[1]*(1-a2) + p2.b[1]*a2);
-					p1.b[2] = (int)(p1.b[2]*(1-a2) + p2.b[2]*a2);
-					p1.b[3] = (int)(p1.b[3]*(1-a2) + p2.b[3]*a2);
-					p1.b[0] = (int)(p1.b[0]*(1-a2) + *data*a2);
-#endif
 				}
-				s->put_pix(x + i, y + j, p1.c);
+				s->put_pix(x + i, y + j, s->map_color(p1.b[0], p1.b[1], p1.b[2], p1.b[3]));
 				data++;
 			}
 			data += bmp->pitch;

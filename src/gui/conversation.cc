@@ -1,5 +1,6 @@
 #include "conversation.h"
-
+#include <iostream>
+#include <iomanip>
 #define LINEHEIGHT 20 
 namespace gui
 {
@@ -55,7 +56,10 @@ namespace gui
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
          
         font f (NULL, LINEHEIGHT - 1);
-        f.setColor(rpg::character::get_player()->color());
+		//the color from here doesnt work
+		unsigned int fc = rpg::character::get_player()->color();
+		std::cout << "color changed to 0x" << std::setw(8) << std::setfill('0') << std::hex << fc << std::endl;
+        f.setColor(fc);
 
 		for (i = 0; i < optcount; i++)
 		{
@@ -83,6 +87,7 @@ namespace gui
 			options[0]->setString("1) (continue)");
 			options[0]->reheight();
 			options[0]->centerV(false);
+			options[0]->setColor(0xffffffff);
 			objs.addchild(*options[0], 20, y);
 			y += options[0]->getHeight() +5;
 		}

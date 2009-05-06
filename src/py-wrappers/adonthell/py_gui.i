@@ -7,7 +7,6 @@
 #include "gui/window_manager.h"
 #include "python/callback.h"
     
-using namespace gui;
 %}
 
 %include "stdint.i"

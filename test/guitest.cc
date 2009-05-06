@@ -79,6 +79,7 @@ class GuiTest : public adonthell::app {
 	base::Paths.find_in_path(testbuttonup);
 
 	gui::font f;
+	gui::font red;
 	gui::label l(200, 30);
 	l.setString("This is a Label");
 	gui::label label_with_bg(testbg1.c_str());
@@ -87,7 +88,8 @@ class GuiTest : public adonthell::app {
 	gui::button b(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
 	b.setString("Click Me");
 	gui::button b2(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
-	b2.setString("Button 2");
+	
+	b2.setString("Red Button");
 	gui::button b3(300,30, base::make_functor(*this, &GuiTest::print), (void*)"button 3", 1);
 	b3.setString("Button 3");
 	gui::option o1(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
@@ -121,6 +123,7 @@ class GuiTest : public adonthell::app {
     // (that is, only the one we've connected) which will call the
     // callback function that has been connected to handle keyboard events.
 	gfx::surface * screen = gfx::screen::get_surface();
+	label_with_bg.setColor(screen->map_color(0xff,0,0,0xff));
 	std::cout << gfx::screen::info ();
     string ls = "I am typing a very long string that will not fit all the way within the alloted space";
 	while (!ih.letsexit) {
@@ -128,10 +131,14 @@ class GuiTest : public adonthell::app {
       ::input::manager::update();
 	  	
 		screen->fillrect(0, 0, screen->length(), screen->height(), 0);
-		f.render("Hello World", -10, 5, screen);
-		f.render("Hello World", -10, 520, screen);
-		f.render("Hello World", 470, 520, screen);
-		f.render("Hello World", 470, 5, screen);
+		f.setColor(screen->map_color(0xff, 0,0,0xff));
+		f.render("Red Red Red", -10, 5, screen);
+		f.setColor(screen->map_color(0, 0xff,0,0xff));
+		f.render("Green Green", -10, 520, screen);
+		f.setColor(screen->map_color(0, 0,0xff,0xff));
+		f.render("Blue Blue B", 470, 520, screen);
+		f.setColor(screen->map_color(0xff, 0xff,0xff,0xff));
+		f.render("White White", 470, 5, screen);
 		/*
 		std::vector<gui::textsize> ts;
 		int w = 0, h = 0;
