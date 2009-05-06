@@ -1,5 +1,5 @@
 #include "gui/label.h"
-#include "gfx/screen.h"
+#include "gfx/gfx.h"
 #include <iostream>
 using std::cout;
 
@@ -114,11 +114,11 @@ namespace gui
 			u_int32 old, n;
             u_int8 r, g, b, a;
             old = f.getColor();
-            gfx::screen::get_surface()->unmap_color (old, r, g, b, a);
+            cached->unmap_color (old, r, g, b, a);
             
             float intensity = r *.3 + g * .59 + b * .11;
-             if (intensity < 128.0) n = gfx::screen::get_surface()->map_color (0xff, 0xff, 0xff);
-            else n = gfx::screen::get_surface()->map_color (0x00, 0x00, 0x00);
+            if (intensity < 128.0) n = cached->map_color (0xff, 0xff, 0xff);
+            else n = cached->map_color (0x00, 0x00, 0x00);
 			f.setColor(n);
             
 			//render in a background color, to get contrast
