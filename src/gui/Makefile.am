@@ -13,6 +13,7 @@ pkgincludeinput_HEADERS = \
 	label.h \
 	layout.h \
 	option.h \
+	textbox.h \
 	widget.h \
     window_manager.h
 

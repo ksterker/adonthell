@@ -61,7 +61,6 @@ TARGET_LINK_LIBRARIES(dialogtest
 	adonthell_python
 	adonthell_py_runtime
 	${PYTHON_EXTRA_LIBRARIES}
-	${PYTHON_EXTRA_LIBRARIES}
 	)
 
 ###############################
@@ -78,9 +77,8 @@ TARGET_LINK_LIBRARIES(worldtest
 	adonthell_input
 	adonthell_main
 	adonthell_world
-
-#	adonthell_python
-#	adonthell_py_runtime
+	adonthell_rpg
+	adonthell_gui
 	${PYTHON_EXTRA_LIBRARIES}
 	)
 

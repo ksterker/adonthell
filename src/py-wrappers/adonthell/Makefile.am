@@ -1,5 +1,5 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
-EXTRA_DIST = py_base.i py_event.i py_gfx.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
+EXTRA_DIST = py_base.i py_event.i py_gfx.i py_gui.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
 
 ## Python wrapper files.
