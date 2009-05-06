@@ -1,5 +1,5 @@
  /*
-   $Id: worldtest.cc,v 1.40 2009/05/05 18:31:52 ksterker Exp $
+   $Id: worldtest.cc,v 1.41 2009/05/06 19:15:12 ksterker Exp $
 
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
@@ -131,6 +131,7 @@ public:
         gc.world.load ("data/test-world.xml");
 
         // we need to update the python search path to find our map view and character schedules 
+        python::add_search_path (base::Paths.game_data_dir() + "data/");
         python::add_search_path (base::Paths.user_data_dir() + "data/");
 
         // we need to load the world module before we can pass anything to python

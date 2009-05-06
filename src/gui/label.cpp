@@ -111,27 +111,15 @@ namespace gui
 			//the idea is to make the text itself easier to read
 			//try to get a reasonable background color
 			//*
-<<<<<<< label.cpp
 			color old, n;
 			old.i = f.getColor();
             s->unmap_color(old.i, n.c[0], n.c[1], n.c[2], n.c[3]); 
-			float intensity = old.c[0]*.3 + old.c[1]*0.59 + old.c[2]*0.11;
+			float intensity = n.c[0]*.3 + n.c[1]*0.59 + n.c[2]*0.11;
 			if (intensity < 128.0)
 				n.i = cached->map_color(0xff,0xff,0xff,0xff);
 			else
 				n.i = cached->map_color(0,0,0,0xff);
 			f.setColor(n.i);
-=======
-			u_int32 old, n;
-            u_int8 r, g, b, a;
-            old = f.getColor();
-            cached->unmap_color (old, r, g, b, a);
-            
-            float intensity = r *.3 + g * .59 + b * .11;
-            if (intensity < 128.0) n = cached->map_color (0xff, 0xff, 0xff);
-            else n = cached->map_color (0x00, 0x00, 0x00);
-			f.setColor(n);
->>>>>>> 1.6
             
 			//render in a background color, to get contrast
 			if (_multiline)
@@ -152,7 +140,7 @@ namespace gui
 			else
 				f.render(txt, rx,ry, cached);
 			
-            f.setColor(old);
+            f.setColor(old.i);
 			//apply a gaussian blur to it
 			gaussianblur(cached);			
 			// */

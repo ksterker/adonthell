@@ -11,6 +11,7 @@ bundle=$first${appname:1}.app
 fwdir=$bundle/Contents/Frameworks
 resdir=$bundle/Contents/Resources/games/$first${appname:1}
 plugindir=$bundle/Contents/PlugIns
+pythondir=$resdir/data/adonthell
 
 echo "Creating $bundle"
 
@@ -22,6 +23,7 @@ mkdir -p $bundle/Contents/MacOS
 mkdir -p $fwdir
 mkdir -p $resdir
 mkdir -p $plugindir
+mkdir -p $pythondir
 
 # -- populate bundle
 echo "APPL????" > $bundle/Contents/PkgInfo
@@ -51,7 +53,7 @@ cat > $bundle/Contents/Info.plist <<EOF
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>0.4.0 Alpha 2</string>
+        <string>0.4.0 Alpha 3</string>
         <key>NSMainNibFile</key>
         <string>MainMenu</string>
         <key>NSPrincipalClass</key>
@@ -82,11 +84,27 @@ function copyLibs
     done
 }
 
+function copyPyModules
+{
+    PYLIBVER=`python -c 'import sys; print sys.version[:3]'`
+    PY_SPDIR="/usr/local/lib/python$PYLIBVER/site-packages/adonthell"
+    
+    for i in `find $PY_SPDIR -name *.so` ; do 
+        cp $i $pythondir
+    done
+    for i in `find $PY_SPDIR -name *.py` ; do 
+        cp $i $pythondir
+    done
+}
+
 # -- copy shared libraries used by application and backend modules
 copyLibs $APP
 for i in `find $plugindir -name *.so` ; do 
     copyLibs "$i"
 done
+
+# -- copy python modules used by application
+copyPyModules
 
 function relocate
 {
@@ -124,5 +142,8 @@ for i in `find $fwdir -name *.dylib` ; do
     relocate "$i"
 done
 for i in `find $plugindir -name *.so` ; do 
+    relocate "$i"
+done
+for i in `find $pythondir -name *.so` ; do 
     relocate "$i"
 done

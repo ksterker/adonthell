@@ -6,6 +6,7 @@ EXTRA_DIST = \
 	dialogues/__init__.py \
 	dialogues/demo_intro_1.py \
 	dialogues/dialogue.py \
+    dialogues/tech_preview.py \
 	game_events/__init__.py \
 	game_events/audio_events.py \
 	game_events/item_events.py \
@@ -31,6 +32,7 @@ EXTRA_DIST = \
 	gfx/char/npc/ng/south_mov4.png \
 	gfx/char/npc/ng/south_mov5.png \
 	gfx/char/npc/ng/south_mov6.png \
+    gfx/gui/conversation.png \
 	gfx/gui/testbg1.png \
 	gfx/gui/testbuttondown.png \
 	gfx/gui/testbuttonup.png \
@@ -80,5 +82,8 @@ EXTRA_DIST = \
 	schedules/__init__.py \
 	schedules/map/__init__.py \
 	schedules/map/mapview.py \
+	schedules/char/__init__.py \
+    schedules/char/actions.py \
 	schedules/char/player.py \
+	schedules/char/walk_random.py \
 	test-world.xml

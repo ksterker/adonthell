@@ -55,10 +55,10 @@ The available options and their default values are:
   Run while this key is pressed.
 
   <b_button>space</b_button>
-  Jump.
+  Interact.
 
   <c_button>left control</c_button>
-  Unused
+  Jump.
 
   <d_button>escape</d_button>
   Unused
@@ -115,6 +115,7 @@ You can reach us in various ways:
 IRC Channel:   #adonthell at irc.freenode.net
 Mailing list:  adonthell-general@nongnu.org
 Web site:      http://adonthell.linuxgames.com
+Wiki:          http://adonthell.berlios.de/doc/
 Tech support:  http://savannah.gnu.org/support/?group_id=702
 
 There is a Message Board for user to user discussion at
