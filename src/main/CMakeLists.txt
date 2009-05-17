@@ -33,8 +33,7 @@ target_link_libraries(adonthell_main
 if(APPLE)
 	set(sdl_SRCS
 		sdl/osx.m)
-	set_source_files_properties (sdl/osx.m
-		PROPERTIES COMPILE_FLAGS -ObjC++)
+    set_source_files_properties (sdl/osx.m PROPERTIES COMPILE_FLAGS -ObjC++)
 else(APPLE)
 	if(WIN32)
 		set(sdl_SRCS
@@ -49,6 +48,9 @@ include_directories(${SDL_INCLUDE_DIR})
 
 add_library(main-backend-sdl MODULE ${sdl_SRCS})
 set_target_properties(main-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
+if(APPLE)
+set_target_properties(main-backend-sdl PROPERTIES LINK_FLAGS "-framework Cocoa")
+endif(APPLE)
 target_link_libraries(main-backend-sdl
 	${SDL_LIBRARY}
 	adonthell_main

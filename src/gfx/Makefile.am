@@ -38,7 +38,10 @@ libadonthell_gfx_la_SOURCES = \
 
 
 libadonthell_gfx_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_gfx_la_LIBADD = $(PY_LIBS) -L$(top_builddir)/src/base/ -ladonthell_base -lstdc++ -lpng
+libadonthell_gfx_la_LIBADD = $(PY_LIBS) \
+    -L$(top_builddir)/src/base/ -ladonthell_base \
+    -L$(top_builddir)/src/event/ -ladonthell_event \
+    -lstdc++ -lpng
 
 
 

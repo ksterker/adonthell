@@ -1,13 +1,13 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
-EXTRA_DIST = py_base.i py_event.i py_gfx.i py_gui.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
+EXTRA_DIST = py_debug.i py_base.i py_event.i py_gfx.i py_gui.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
 
 ## Python wrapper files.
-pkgpyexec_PYTHON = __init__.py base.py event.py gfx.py gui.py input.py audio.py main.py rpg.py world.py
-noinst_SCRIPTS = __init__.pyc base.pyc event.pyc gfx.pyc gui.pyc input.pyc audio.pyc main.pyc rpg.pyc world.pyc
+pkgpyexec_PYTHON = __init__.py debug.py base.py event.py gfx.py gui.py input.py audio.py main.py rpg.py world.py
+noinst_SCRIPTS = __init__.pyc debug.pyc base.pyc event.pyc gfx.pyc gui.pyc input.pyc audio.pyc main.pyc rpg.pyc world.pyc
 
 ## Python helper libraries
-pkgpyexec_LTLIBRARIES = _base.la _event.la _gfx.la _gui.la _input.la _audio.la  _main.la _rpg.la _world.la
+pkgpyexec_LTLIBRARIES = _debug.la _base.la _event.la _gfx.la _gui.la _input.la _audio.la  _main.la _rpg.la _world.la
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la
@@ -15,10 +15,10 @@ lib_LTLIBRARIES = libadonthell_py_main.la
 ## Rules to build libadonthell_py_main
 libadonthell_py_main_la_SOURCES = py_main.cc py_main.h
 libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_py_main_la_LIBADD = $(PY_LIBS)
+libadonthell_py_main_la_LIBADD = $(PY_LIBS)  -L$(top_builddir)/src/main/ -ladonthell_main
 
 PY_LIBADD = -L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)
-PY_RUNTIME = -L$(top_builddir)/src/py-wrappers/runtime/ -ladonthell_py_runtime
+PY_RUNTIME = -L$(top_builddir)/src/py-runtime/ -ladonthell_py_runtime
 
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
@@ -90,6 +90,14 @@ _world_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/event -ladonthell_event	\
 	$(PY_RUNTIME)
 
+## Rules to build libpydebug (helper for debugging the engine)
+_debug_la_SOURCES = py_debug_wrap.cc
+_debug_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
+_debug_la_LDFLAGS = -avoid-version -module
+_debug_la_LIBADD = $(PY_LIBADD) \
+    -L$(top_builddir)/src/python -ladonthell_python \
+	$(PY_RUNTIME)
+
 ## Swig arguments
 SWIG_ARGS = -python -modern -noexcept -I$(top_srcdir)/src
 
@@ -128,6 +136,10 @@ py_rpg_wrap.cc: py_rpg.i  $(top_srcdir)/src/rpg/*.h
 
 world.py: py_world_wrap.cc
 py_world_wrap.cc: py_world.i  $(top_srcdir)/src/world/*.h
+	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
+
+debug.py: py_debug_wrap.cc
+py_debug_wrap.cc: py_debug.i $(top_srcdir)/src/py-runtime/py_runtime.i
 	$(SWIG) $(SWIG_ARGS) -I$(srcdir)/$@ -o $(srcdir)/$@ $<
 
 __init__.py:

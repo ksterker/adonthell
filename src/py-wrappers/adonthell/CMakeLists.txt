@@ -3,6 +3,14 @@ include(${SWIG_USE_FILE})
 # Add specific include directory for this library.
 include_directories(${PYTHON_INCLUDE_PATH})
 
+# create debug module
+set_source_files_properties("py_debug.i" PROPERTIES CPLUSPLUS ON)
+set_source_files_properties("py_debug.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;debug")
+swig_add_module(debug python py_debug.i)
+swig_link_libraries(debug ${PYTHON_LIBRARIES} adonthell_py_runtime)
+set_target_properties (_debug PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
+adonthell_install_py (_debug "${CMAKE_CURRENT_BINARY_DIR}/debug.py")
+
 # Wrapper modules
 foreach(name audio base event gfx gui input main rpg world)
   set_source_files_properties("py_${name}.i" PROPERTIES CPLUSPLUS ON)

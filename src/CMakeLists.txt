@@ -49,4 +49,5 @@ foreach(lib ${ADONTHELL_MODULES})
   add_subdirectory(${lib})
 endforeach(lib)
 
+add_subdirectory(py-runtime)
 add_subdirectory(py-wrappers)

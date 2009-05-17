@@ -1,4 +1,4 @@
-SUBDIRS = runtime adonthell
+SUBDIRS = adonthell
 EXTRA_DIST = CMakeLists.txt
 
 install-data-hook:

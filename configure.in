@@ -58,6 +58,7 @@ AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AC_SUBST(LIBLTDL)
 CPPFLAGS="$CPPFLAGS $INCLTDL"
+LDFLAGS="$LDFLAGS -no-undefined"
 AC_CONFIG_SUBDIRS(libltdl)
 
 
@@ -110,7 +111,6 @@ if test x$gamedatadir = xnone; then
       *-*-cygwin* | *-*-mingw32*)
         gamedatadir="."
         backenddir="./lib/adonthell"
-        LDFLAGS="$LDFLAGS -no-undefined"
       ;;
       *-*-beos*)
         gamedatadir="/boot/home/config/share/adonthell"
@@ -351,9 +351,9 @@ src/gui/Makefile
 src/python/Makefile
 src/rpg/Makefile
 src/world/Makefile
+src/py-runtime/Makefile
 src/py-wrappers/Makefile
 src/py-wrappers/adonthell/Makefile
-src/py-wrappers/runtime/Makefile
 doc/Makefile
 test/Makefile
 test/data/Makefile

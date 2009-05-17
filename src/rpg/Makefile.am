@@ -38,4 +38,9 @@ libadonthell_rpg_la_SOURCES = \
     slot.cc
 
 libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_rpg_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++
+libadonthell_rpg_la_LIBADD = $(PY_LIBS) \
+    -L$(top_builddir)/src/base -ladonthell_base \
+    -L$(top_builddir)/src/event -ladonthell_event \
+    -L$(top_builddir)/src/python -ladonthell_python \
+    -L$(top_builddir)/src/py-runtime -ladonthell_py_runtime \
+    -lstdc++

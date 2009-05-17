@@ -2,8 +2,8 @@ from adonthell import base, gfx, main
 import os.path
 import sys
 
-""" convert v0.3.x raw image to png image """
 def convert_raw_image (img, name):
+    """ convert v0.3.x raw image to png image """
 
     # -- get length and height
     length = img.get_uint16 ()
@@ -28,14 +28,15 @@ def convert_raw_image (img, name):
     # -- for debugging
     png.draw (320 - length/2, 240 - height/2)
     gfx.screen.update()
-    base.Timer.sleep (5000)
+    base.Timer.sleep (500)
     
     # -- save image
     png.save_png (name + ".png")
     print "Saved %s.png" % name
 
-""" convert v0.3.x image to png image """
+
 def convert_image (img, name):
+    """ convert v0.3.x image to png image """
     
     # -- read mask and alpha value
     mask = img.get_uint8 ()
@@ -44,8 +45,8 @@ def convert_image (img, name):
     convert_raw_image (img, name)
 
 
-""" convert v0.3.x animation to png image """
 def convert_animation (anim, name):
+    """ convert v0.3.x animation to png image """
     # -- skip offset/length/height
     anim.get_uint32()
     anim.get_uint32()
@@ -62,8 +63,8 @@ def convert_animation (anim, name):
         anim.get_uint32()
         anim.get_uint32()
 
-""" convert v0.3.x mapobject to png image """
 def convert_mapobject (mobj, name):
+    """ convert v0.3.x mapobject to png image """
     # -- skip file version info
     mobj.get_uint8()
     mobj.get_uint16()
@@ -73,8 +74,22 @@ def convert_mapobject (mobj, name):
     for i in range(nbr):
         convert_animation (mobj, name + "_" + str(i))
 
-""" convert either animation or mapobject """
+def convert_character (mobj, name):
+    """ convert v0.3.x character sprite to png image """
+    # -- names of the individual animations
+    anim_name = ["north", "south", "west", "east", "north_mov", "south_mov", "west_mov", "east_mov"]
+    
+    # -- skip file version info
+    mobj.get_uint8()
+    mobj.get_uint16()
+    
+    # -- number of animations is fixed at 8
+    nbr = 8
+    for i in range(nbr):
+        convert_animation (mobj, name + "_" + anim_name[i])
+
 def convert():
+    """ convert either animation or mapobject """
     
     file = sys.argv[1]
     
@@ -102,7 +117,8 @@ def convert():
         convert_raw_image (old_gfx, filename)
     
     elif ext == ".mchar":
-        print "Character sprites not supported (yet)"
+        print "Character found"
+        convert_character (old_gfx, filename)
         
     else:
         print "File extension '%s' not recognized" % ext

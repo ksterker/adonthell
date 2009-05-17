@@ -1,4 +1,5 @@
-SUBDIRS = main base event gfx input audio python rpg gui world py-wrappers
+# -- this order is important, as we build with -no-undefined
+SUBDIRS = base python py-runtime event gfx input audio rpg gui world main py-wrappers
 
 EXTRA_DIST = CMakeLists.txt
 

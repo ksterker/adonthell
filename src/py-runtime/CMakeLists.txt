@@ -15,14 +15,6 @@ target_link_libraries(adonthell_py_runtime
 	${PYTHON_LIBRARIES}
 	)
 
-# create debug module
-set_source_files_properties("py_debug.i" PROPERTIES CPLUSPLUS ON)
-set_source_files_properties("py_debug.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;debug")
-swig_add_module(debug python py_debug.i)
-swig_link_libraries(debug ${PYTHON_LIBRARIES} adonthell_py_runtime)
-set_target_properties (_debug PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
-
-# install modules
-adonthell_install_py (_debug "${CMAKE_CURRENT_BINARY_DIR}/debug.py")
+# install libs
 adonthell_install_lib (adonthell_py_runtime)
 
