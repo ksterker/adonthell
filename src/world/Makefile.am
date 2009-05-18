@@ -63,5 +63,9 @@ libadonthell_world_la_SOURCES = \
     world.cc
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_world_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base \
-    -L../gfx -ladonthell_gfx $(SWIGRUNTIME_LIBS) -lstdc++
+libadonthell_world_la_LIBADD = $(PY_LIBS) \
+	-L$(top_builddir)/src/base -ladonthell_base \
+    -L$(top_builddir)/src/python -ladonthell_python \
+    -L$(top_builddir)/src/event -ladonthell_event \
+    -L$(top_builddir)/src/gfx -ladonthell_gfx \
+    -L$(top_builddir)/src/py-runtime -ladonthell_py_runtime -lstdc++

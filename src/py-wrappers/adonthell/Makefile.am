@@ -12,14 +12,16 @@ pkgpyexec_LTLIBRARIES = _debug.la _base.la _event.la _gfx.la _gui.la _input.la _
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_main.la
 
-## Rules to build libadonthell_py_main
-libadonthell_py_main_la_SOURCES = py_main.cc py_main.h
-libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_py_main_la_LIBADD = $(PY_LIBS)  -L$(top_builddir)/src/main/ -ladonthell_main
-
 PY_LIBADD = -L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)
 PY_RUNTIME = -L$(top_builddir)/src/py-runtime/ -ladonthell_py_runtime
 
+## Rules to build libadonthell_py_main
+libadonthell_py_main_la_SOURCES = py_main.cc py_main.h
+libadonthell_py_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
+libadonthell_py_main_la_LIBADD = $(PY_LIBADD) \
+	-L$(top_builddir)/src/main/ -ladonthell_main \
+	-L$(top_builddir)/src/base/ -ladonthell_base
+	
 ## Rules to build libpybase (libbase's Python wrapper)
 _base_la_SOURCES = py_base_wrap.cc
 _base_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
@@ -45,19 +47,31 @@ _gfx_la_LIBADD = $(PY_LIBADD) \
 _input_la_SOURCES = py_input_wrap.cc
 _input_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _input_la_LDFLAGS = -avoid-version -module
-_input_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/input/ -ladonthell_input $(PY_RUNTIME)
+_input_la_LIBADD =  $(PY_LIBADD) \
+	-L$(top_builddir)/src/base/ -ladonthell_base	\
+	-L$(top_builddir)/src/input/ -ladonthell_input	\
+	 $(PY_RUNTIME)
 
 ## Rules to build libpyaudio (libaudio's Python wrapper)
 _audio_la_SOURCES = py_audio_wrap.cc
 _audio_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _audio_la_LDFLAGS = -avoid-version -module
-_audio_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/audio/ -ladonthell_audio $(PY_RUNTIME)
+_audio_la_LIBADD =  $(PY_LIBADD) \
+	-L$(top_builddir)/src/audio/ -ladonthell_audio \
+	-L$(top_builddir)/src/event/ -ladonthell_event \
+	$(PY_RUNTIME)
 
 ## Rules to build libpygui (libgui's Python wrapper)
 _gui_la_SOURCES = py_gui_wrap.cc
 _gui_la_CXXFLAGS = $(PY_CFLAGS) $(FT2_CFLAGS) $(AM_CXXFLAGS)
 _gui_la_LDFLAGS = -avoid-version -module
-_gui_la_LIBADD =  $(PY_LIBADD) -L$(top_builddir)/src/gui/ -ladonthell_gui $(PY_RUNTIME) $(FT2_LIBS)
+_gui_la_LIBADD =  $(PY_LIBADD) \
+	-L$(top_builddir)/src/base/ -ladonthell_base	\
+	-L$(top_builddir)/src/gui/ -ladonthell_gui 		\
+	-L$(top_builddir)/src/gfx -ladonthell_gfx		\
+	-L$(top_builddir)/src/input -ladonthell_input	\
+	-L$(top_builddir)/src/rpg -ladonthell_rpg		\
+	$(PY_RUNTIME) $(FT2_LIBS)
 
 ## Rules to build libpymain (libmain's Python wrapper)
 _main_la_SOURCES = py_main_wrap.cc
@@ -86,6 +100,7 @@ _world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 _world_la_LDFLAGS = -avoid-version -module
 _world_la_LIBADD = $(PY_LIBADD)						\
 	-L$(top_builddir)/src/world -ladonthell_world	\
+	-L$(top_builddir)/src/base/ -ladonthell_base	\
 	-L$(top_builddir)/src/gfx -ladonthell_gfx		\
 	-L$(top_builddir)/src/event -ladonthell_event	\
 	$(PY_RUNTIME)

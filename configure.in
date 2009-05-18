@@ -111,6 +111,7 @@ if test x$gamedatadir = xnone; then
       *-*-cygwin* | *-*-mingw32*)
         gamedatadir="."
         backenddir="./lib/adonthell"
+	LDFLAGS="$LDFLAGS -Wl,--export-all-symbols"
       ;;
       *-*-beos*)
         gamedatadir="/boot/home/config/share/adonthell"
