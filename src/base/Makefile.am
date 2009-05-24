@@ -42,4 +42,4 @@ libadonthell_base_la_SOURCES = \
 	timer.cc
 
 libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
-libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz
+libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz -lltdl

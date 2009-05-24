@@ -51,18 +51,17 @@ esac
 
 AM_CONDITIONAL(OSX_COMPILE, test x$osx = xyes)
 
+
+dnl *******
+dnl libtool
+dnl *******
+
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
-AC_LIBLTDL_CONVENIENCE
-AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
-AC_SUBST(LIBLTDL)
-CPPFLAGS="$CPPFLAGS $INCLTDL"
 LDFLAGS="$LDFLAGS -no-undefined"
-AC_CONFIG_SUBDIRS(libltdl)
 
-
-
+AC_CHECK_LIB(ltdl, lt_dlinit,,echo "Adonthell requires libltdl. Exitting...";exit 1)
 
 dnl ********************
 dnl Additional arguments

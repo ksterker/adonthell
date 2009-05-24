@@ -28,8 +28,9 @@ guitest_LDADD = \
 	-L$(top_builddir)/src/event/ -ladonthell_event             \
 	-L$(top_builddir)/src/base/ -ladonthell_base               \
 	-L$(top_builddir)/src/main -ladonthell_main                \
+	-L$(top_builddir)/src/rpg/ -ladonthell_rpg			\
 	-L${top_builddir}/src/world/ -ladonthell_world             \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime \
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime \
 	$(FT2_LIBS)
     
 dialogtest_CXXFLAGS = $(FT2_CFLAGS) -I$(top_srcdir)/src $(PY_CFLAGS)
@@ -45,7 +46,7 @@ dialogtest_LDADD = \
 	-L$(top_builddir)/src/rpg/ -ladonthell_rpg			\
 	-L${top_builddir}/src/world/ -ladonthell_world             	\
 	-L$(top_builddir)/src/main/ -ladonthell_main			\
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime \
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime \
 	$(FT2_LIBS)
 
 inputtest_SOURCES = inputtest.cc
@@ -58,14 +59,14 @@ inputtest_LDADD = \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
 
 gfxtest_SOURCES = gfxtest.cc
 gfxtest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base        \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
 	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
 	-L$(top_builddir)/src/event/ -ladonthell_event              \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
 
 worldtest_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) 
 worldtest_SOURCES = worldtest.cc
@@ -80,7 +81,7 @@ worldtest_LDADD = $(PY_LIBS) \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L$(top_builddir)/src/rpg/ -ladonthell_rpg                  \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
 
 path_test_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) 
 path_test_SOURCES = path_test.cc
@@ -93,7 +94,7 @@ path_test_LDADD = $(PY_LIBS) \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
 
 imagetest_SOURCES = imagetest.cc
 imagetest_LDADD = $(PY_LIBS) \
@@ -105,4 +106,4 @@ imagetest_LDADD = $(PY_LIBS) \
 	-L$(top_builddir)/src/base/ -ladonthell_base                \
 	-L$(top_builddir)/src/main -ladonthell_main                 \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
-	-L$(top_builddir)/src/py-wrappers/runtime -ladonthell_py_runtime
+	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
