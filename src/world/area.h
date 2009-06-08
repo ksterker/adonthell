@@ -184,13 +184,14 @@ namespace world
          */
         GET_TYPE_NAME (world::area)
         
-    private:            
+protected:
         /// The individual objects on the map
         std::vector <world::entity *> Entities;
         
         /// Named objects on the map
         std::hash_map <std::string, world::named_entity *> NamedEntities;
-        
+
+private:           
         /// name of map
         std::string Filename;
 #endif // SWIG
