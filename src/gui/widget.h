@@ -8,6 +8,7 @@
 
 namespace gui
 {
+	//the base class for displayable elements
 	class widget:public base
 	{
 	protected:
