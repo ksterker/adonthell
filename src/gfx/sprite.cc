@@ -30,8 +30,8 @@
  */
 
 #include "gfx/sprite.h"
+#include "base/base.h"
 #include "base/diskio.h"
-#include "base/callback.h"
 #include "event/date.h"
 #include "event/time_event.h"
 
@@ -185,17 +185,33 @@ namespace gfx
     bool sprite::load (const std::string & filename)
     {
         const std::string & file = (filename.length() != 0) ? filename : m_filename;
+        bool retval; 
         
-        // load sprite from the file
-        base::diskio animation (base::diskio::XML_FILE);
-        if (!animation.get_record (file))
+        // load raw png as one animation, one frame sprite
+        if (file.find (".png", file.size() - 4) != std::string::npos)
         {
-            //Error loading the file (file not found?)
-            return false;
+            std::string full_path (file);
+            if (base::Paths.find_in_path (full_path))
+            {
+                animation_list cur_animation;
+                cur_animation.push_back (new animation_frame (surfaces->get_surface (full_path, false, false), 0));
+                m_states["default"] = cur_animation;
+            }
         }
+        else
+        {
+            // load sprite from the file
+            base::diskio animation (base::diskio::XML_FILE);
+            if (!animation.get_record (file))
+            {
+                //Error loading the file (file not found?)
+                return false;
+            }
         
-        //This will populate the sprite that we just created
-        bool retval = get_state (animation);
+            // This will populate the sprite that we just created
+            retval = get_state (animation);
+        }
+    
         if (retval)
         {
             m_animation = m_states.begin(); // TODO This should be part of the XML File, not hardcoded here
@@ -244,14 +260,18 @@ namespace gfx
     // save to XML file
     bool sprite::save (const std::string & filename) const
     {
-        // create container
-        base::diskio animation (base::diskio::XML_FILE);
+        // no need to save simple "sprites"
+        if (filename.find (".png", filename.size() - 4) == std::string::npos)
+        {
+            // create container
+            base::diskio animation (base::diskio::XML_FILE);
 
-        // dump to container
-        put_state (animation);
-        
-        // dump it out to a file
-        return animation.put_record (filename);
+            // dump to container
+            put_state (animation);
+            
+            // dump it out to a file
+            return animation.put_record (filename);
+        }
     }
     
     // get filename of sprite

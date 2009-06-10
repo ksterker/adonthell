@@ -1,3 +1,4 @@
+*.pyc
 .DS_Store
 .gdb_history
 Adonthell.xcodeproj
