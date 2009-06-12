@@ -33,7 +33,34 @@
 
 namespace world
 {
+
+// draw object and shadow on that object to screen
+void renderer_base::draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
+{
+    // render object
+    obj.Sprite->draw (x + obj.x () + obj.Shape->ox(), y + obj.y () + obj.Shape->oy() - obj.z() - obj.Shape->height(), &da, target);
     
+    if (obj.Shape->is_solid())
+    {
+        // render shadows cast onto the object
+        for (std::vector<shadow_info>::const_iterator shdw = obj.Shadow->begin(); shdw != obj.Shadow->end(); shdw++)
+        {
+            // set shadow opacity according to distance above ground
+            shdw->Image->set_alpha (192 - (shdw->Distance > 192 ? 32 : shdw->Distance));
+            // draw all pieces of the shadow
+            for (std::list<gfx::drawing_area>::const_iterator area = shdw->Area.begin(); area != shdw->Area.end(); area++)
+            {
+                // relocate area to mapview position
+                gfx::drawing_area part (x + area->x(), y + area->y() - (obj.z() + obj.Shape->height()), area->length(), area->height());
+                // clip with mapview ... just in case
+                part.assign_drawing_area (&da);
+                // render shadow
+                shdw->Image->draw (x + shdw->X, y + shdw->Y - (obj.z() + obj.Shape->height()), &part, target);
+            }
+        }
+    }
+}
+
 // default rendering
 void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const
 {
@@ -104,8 +131,7 @@ bool default_renderer::can_draw_object (render_info & obj, const_iterator & begi
 
         // objects do overlap, so we need to figure out position of objects 
         // relative to each other
-        if (is_object_below (*it, obj.x(), obj.y(), obj.z(), 
-                obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height())) 
+        if (is_object_below (*it, obj))
             return false;
     }
     
@@ -114,15 +140,22 @@ bool default_renderer::can_draw_object (render_info & obj, const_iterator & begi
 }
 
 // check object order
-bool default_renderer::is_object_below (const render_info & obj, const s_int32 & min_x, const s_int32 & min_y, const s_int32 & min_z, const s_int32 & max_x, const s_int32 & max_y, const s_int32 & max_z) const
+bool default_renderer::is_object_below (const render_info & obj, const render_info & obj2) const
 {
+    s_int32 min_x = obj2.x() + obj2.Shape->ox();
+    s_int32 min_y = obj2.y() + obj2.Shape->oy();
+    s_int32 min_z = obj2.z();
+    s_int32 max_x = min_x + obj2.Shape->length();
+    s_int32 max_y = min_y + obj2.Shape->width();
+    s_int32 max_z = min_z + obj2.Shape->height();
+    
     // 2 | 3 | 4   y           x | F | F
     // --+---+--   ^           --+---+--
     // 1 | 8 | 5   |           T | o | F
     // --+---+--   |           --+---+--
     // 0 | 7 | 6   +-----> z   T | T | x
 
-    if (obj.y() + obj.Shape->width() <= min_y)
+    if (obj.y() + obj.Shape->oy() + obj.Shape->width() <= min_y)
     {                 
         if (obj.z() + obj.Shape->height() <= min_z) // 0
         {
@@ -140,7 +173,7 @@ bool default_renderer::is_object_below (const render_info & obj, const s_int32 &
             return true;
         }
     }
-    else if (obj.y() >= max_y)
+    else if (obj.y() + obj.Shape->oy() >= max_y)
     {
         if(obj.z() + obj.Shape->height() <= min_z) // 2
         {
@@ -176,20 +209,38 @@ bool default_renderer::is_object_below (const render_info & obj, const s_int32 &
         // fprintf (stderr, "\n    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
         // fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
 
+        if (obj.Shape->is_flat() == obj2.Shape->is_flat())
+        {
+            if (obj.Shape->is_flat())
+            {
+                // both objects are floor tiles --> draw the one first that's below
+                return obj.z() + obj.Shape->height() < max_z;
+            }
+            else
+            {
+                // both objects are walls --> draw the one first that's behind
+                return obj.y() + obj.Shape->oy() < min_y;
+            }
+        }
+        
+        // TODO: here we'd need to cut non-solid flat objects that intersect with
+        // solid non-flat objects
+        return obj2.Shape->is_flat();
+        /*
         s_int32 oy = 0, oz = 0;
 
         // figure out area of least overlap
-        if (obj.y() + obj.Shape->width() >= min_y && obj.y() + obj.Shape->width() <= max_y)
-            oy = obj.y() + obj.Shape->width() - min_y;
-        else if (max_y >= obj.y() && max_y <= obj.y() + obj.Shape->width())
-            oy = obj.y() - max_y;
+        if (obj.y() + obj.Shape->oy() + obj.Shape->width() >= min_y && obj.y() + obj.Shape->oy() + obj.Shape->width() <= max_y)
+            oy = obj.y() + obj.Shape->oy() + obj.Shape->width() - min_y;
+        else if (max_y >= obj.y() + obj.Shape->oy() && max_y <= obj.y() + obj.Shape->oy() + obj.Shape->width())
+            oy = obj.y() + obj.Shape->oy() - max_y;
         
         if (obj.z() + obj.Shape->height() >= min_z && obj.z() + obj.Shape->height() <= max_z)
             oz = obj.z() + obj.Shape->height() - min_z;
         else if (max_z >= obj.z() && max_z <= obj.z() + obj.Shape->height())
             oz = obj.z() - max_z;
         
-        if (oy != 0 /* && abs (oy) != max_y - min_y */ && abs(oy) < abs(oz))
+        if (oy != 0 && abs(oy) < abs(oz))
         {
             // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n",  min_x, min_y + (oy > 0 ? oy : 0), min_z, max_x, max_y + (oy < 0 ? oy : 0), max_z);
             return is_object_below (obj, min_x, min_y + (oy > 0 ? oy : 0), min_z, max_x, max_y + (oy < 0 ? oy : 0), max_z);
@@ -199,6 +250,7 @@ bool default_renderer::is_object_below (const render_info & obj, const s_int32 &
             // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z + (oz > 0 ? oz : 0), max_x, max_y, max_z + (oz < 0 ? oz : 0));
             return is_object_below (obj, min_x, min_y, min_z + (oz > 0 ? oz : 0), max_x, max_y, max_z + (oz < 0 ? oz : 0));
         }
+        */
     }
 }
 

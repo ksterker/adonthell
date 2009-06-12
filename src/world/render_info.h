@@ -55,10 +55,10 @@ public:
     render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, const std::vector<shadow_info> *shdw) 
     : Pos (pos), Shape (shape), Sprite (sprite), Shadow (shdw)
     {
-        Projection[0] = x();
-        Projection[1] = y() - z() - shape->height();
-        Projection[2] = x() + shape->length();
-        Projection[3] = y() - z() + shape->width();
+        Projection[0] = x() + shape->ox();
+        Projection[1] = y() + shape->oy() - z() - shape->height();
+        Projection[2] = x() + shape->ox() + shape->length();
+        Projection[3] = y() + shape->oy() - z() + shape->width();
     }
     
     /**

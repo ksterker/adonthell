@@ -51,6 +51,7 @@ namespace world
          */
         placeable_shape()
         {
+            Solid = true;
         }
 
         /**
@@ -132,12 +133,48 @@ namespace world
         }
         
         /**
+         * @name Sprite position relative to shape.
+         */
+        //@{
+        /**
+         * Get sprites x-offset from shape's base point.
+         * @return sprites x-offset from of shape's base point.
+         */
+        s_int16 ox () const
+        {
+            return Offset.x();
+        }
+        
+        /**
+         * Get sprites y-offset from of shape's base point.
+         * @return sprites y-offset from shape's base point.
+         */
+        s_int16 oy () const
+        {
+            return Offset.y();
+        }        
+        //@}
+        
+        /**
+         * @name "Physical" shape properties.
+         */
+        //@{
+        /**
          * Return whether the shape if flat or vertical.
          * @return true if width >= height, false otherwise.
          */
         bool is_flat () const
         {
             return width() >= height();
+        }
+        
+        /**
+         * Return whether the shape is solid or not.
+         * @return true if solid, false otherwise.
+         */
+        bool is_solid () const
+        {
+            return Solid;
         }
         //@}
         
@@ -165,7 +202,11 @@ namespace world
         /// minimum of object bounding box
         vector3<s_int16> Min;
         /// maximum of object bounding box
-        vector3<s_int16> Max;        
+        vector3<s_int16> Max;
+        /// sprite offset
+        vector3<s_int16> Offset;
+        /// used to toggle collision on or off
+        bool Solid;
     }; 
 }
 

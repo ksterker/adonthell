@@ -67,7 +67,12 @@ void cube3::clear()
 // update bounding box
 void cube3::create_bounding_box ()
 {
-    for (int i = 0; i < NUM_CORNERS; i++)
+    // the minimum might be > 0, so we need to initialize it to something that is
+    // guaranteed to be equal or larger than the actual minimum. Same for max < 0.
+    Min = Corners[0];
+    Max = Corners[0];
+    
+    for (int i = 1; i < NUM_CORNERS; i++)
     {
         if (Corners[i].x() < Min.x()) Min.set_x (Corners[i].x());
         else if (Corners[i].x() > Max.x()) Max.set_x (Corners[i].x());

@@ -42,6 +42,7 @@ placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
 {
     MinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
+    Solid = true;
     State = "";
 }
 
@@ -66,14 +67,23 @@ const std::string & placeable::uid () const
 
 // change state of placeable
 void placeable::set_state (const std::string & state)
-{
+{   
+    // object becomes solid if there is at least one solid component
+    Solid = false;
+
     // reset current size and position
-    CurSize.set (0, 0, 0);
-    CurPos.set (MI16, MI16, MI16);
+    std::vector<world::placeable_model*>::iterator i = Model.begin();
+    (*i)->set_shape (state);
+    const placeable_shape *shape = (*i)->current_shape ();
+    if (shape != NULL)
+    {
+        CurSize.set (shape->length(), shape->width(), shape->height());
+        CurPos.set (shape->x(), shape->y(), shape->z());
+        if (shape->is_solid()) Solid = true;
+    }        
     
-    // update shape and size
-    std::vector<world::placeable_model*>::iterator i;
-    for (i = Model.begin(); i != Model.end(); i++)
+    // update shape and size of composite placeables
+    for (i++; i != Model.end(); i++)
     {
         (*i)->set_shape (state);
         const placeable_shape *shape = (*i)->current_shape ();
@@ -85,11 +95,30 @@ void placeable::set_state (const std::string & state)
             
             CurPos.set_x (std::min (CurPos.x(), shape->x()));
             CurPos.set_y (std::min (CurPos.y(), shape->y()));
-            CurPos.set_z (std::min (CurPos.z(), shape->z()));            
+            CurPos.set_z (std::min (CurPos.z(), shape->z()));
+            
+            if (shape->is_solid()) Solid = true;
+        }
+    }
+
+    State = state;
+}
+
+// get z position of the object's surface
+s_int32 placeable::get_surface_pos () const
+{
+    s_int32 surface = 0;
+    
+    for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        const placeable_shape *shape = (*i)->current_shape ();
+        if (shape != NULL && shape->is_solid())
+        {
+            surface = std::max (surface, shape->z() + shape->height());
         }
     }
     
-    State = state;
+    return surface;
 }
 
 // add model to placeable

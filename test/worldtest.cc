@@ -140,7 +140,7 @@ public:
         // set position and speed of player character ...
         world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
         mchar->set_speed (1.5);
-        mchar->set_position (398, 322);
+        mchar->set_position (518, 297);
         mchar->set_z (0);
 
         // ... and enable its controls

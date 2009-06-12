@@ -278,14 +278,15 @@ public:
     /**
      * Save the vector to a stream. Implemented for vector3<s_int16>.
      * @param file stream to save vector to.
+     * @param name name to save vector under.
      * @return \b true if saving successful, \b false otherwise.
      */
-    bool put_state (base::flat & file) const
+    bool put_state (base::flat & file, const std::string & name = "p3d") const
     {
         std::stringstream out (std::ios::out);
         out << "[" << X << ", " << Y << ", " << Z << "]";
         
-        file.put_string ("p3d", out.str());
+        file.put_string (name, out.str());
         
         return true;
     }

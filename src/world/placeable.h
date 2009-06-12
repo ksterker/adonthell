@@ -193,6 +193,25 @@ namespace world
         area & map() const { return Mymap; }
         
         /**
+         * @name Solid / non-solid
+         */
+        //@{
+        /**
+         * Return whether this object is solid in its current state.
+         * @return true if it is solid, false otherwise.
+         */
+        bool is_solid() const { return Solid; }
+        /**
+         * Return the surface of the object. Since it might be composed
+         * of solid and non-solid components, this needs to be calculated
+         * separately.
+         *
+         * @return the z-position of the object's solid components. 
+         */
+        s_int32 get_surface_pos() const;
+        //@}
+        
+        /**
          * @name Placeable state
          *
          * The state usually determines the representation
@@ -276,6 +295,8 @@ namespace world
         std::string State;
         /// whether placeable is character, scenery or item
         placeable_type Type;
+        /// whether the placeable in its current state is solid or not 
+        bool Solid;
         /// the map this placeable belongs to
         area & Mymap;
 

@@ -66,28 +66,7 @@ protected:
      * @param da clipping rectangle.
      * @param target surface to draw on, NULL for screen surface.
      */
-    virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
-    {
-        // render object
-        obj.Sprite->draw (x + obj.x (), y + obj.Pos.y () - obj.z() - obj.Shape->height(), &da, target);
-        
-        // render shadows cast onto the object
-        for (std::vector<shadow_info>::const_iterator shdw = obj.Shadow->begin(); shdw != obj.Shadow->end(); shdw++)
-        {
-            // set shadow opacity according to distance above ground
-            shdw->Image->set_alpha (192 - (shdw->Distance > 192 ? 32 : shdw->Distance));
-            // draw all pieces of the shadow
-            for (std::list<gfx::drawing_area>::const_iterator area = shdw->Area.begin(); area != shdw->Area.end(); area++)
-            {
-                // relocate area to mapview position
-                gfx::drawing_area part (x + area->x(), y + area->y() - (obj.z() + obj.Shape->height()), area->length(), area->height());
-                // clip with mapview ... just in case
-                part.assign_drawing_area (&da);
-                // render shadow
-                shdw->Image->draw (x + shdw->X, y + shdw->Y - (obj.z() + obj.Shape->height()), &part, target);
-            }
-        }
-    }
+    virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const;
 
 #ifndef SWIG
     /**
@@ -140,7 +119,7 @@ protected:
      * @return true if overlap occurs, false otherwise.
      */
     bool can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const;
-    bool is_object_below (const render_info & obj, const s_int32 & min_x, const s_int32 & min_y, const s_int32 & min_z, const s_int32 & max_x, const s_int32 & max_y, const s_int32 & max_z) const;
+    bool is_object_below (const render_info & obj1, const  render_info & obj2) const;
 };
 
 /**

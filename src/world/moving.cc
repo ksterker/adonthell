@@ -48,12 +48,12 @@ using world::chunk_info;
 using world::plane3;
 using world::vector3;
 
-/// sort chunk_info objects according to the z-position of their top
+/// sort chunk_info objects according to the z-position of their surface
 struct z_order : public std::binary_function<const chunk_info *, const chunk_info *, bool> 
 {
 	bool operator() (const chunk_info * a, const chunk_info * b) 
     {
-        return a->Max.z() > b->Max.z();
+        return a->Min.z() + a->get_object()->get_surface_pos () > b->Min.z() + b->get_object()->get_surface_pos ();
     }
 };
 
@@ -119,8 +119,8 @@ bool moving::collide_with_objects (collision *collisionData)
     // bbox around character and projected movement
     const vector3<s_int32> min (
         x() + (Velocity.x() < 0 ? static_cast<s_int32>(floor (Velocity.x())) : 0), 
-        y() - placeable::width()/2 + (Velocity.y() < 0 ? static_cast<s_int32>(floor (Velocity.y())) : 0), 
-        z() + (Velocity.z() < 0 ? static_cast<s_int32>( floor (Velocity.z()) ): 0));
+        y() + (Velocity.y() < 0 ? static_cast<s_int32>(floor (Velocity.y())) : 0), 
+        z() + (Velocity.z() < 0 ? static_cast<s_int32>(floor (Velocity.z())): 0));
                           
     const vector3<s_int32> max (
         min.x() + placeable::length() + (Velocity.x () > 0 ? static_cast<s_int32>(ceil (Velocity.x())) : 0),
@@ -227,7 +227,7 @@ void moving::update_position ()
     const vector3<float> eRadius (placeable::length() / 2.0f, width() / 2.0f, height() / 2.0f);
     
     // calculate position (= center of ellipse --> + 1) and velocity in eSpace 
-    vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y(), Position.z() / eRadius.z() + 1);
+    vector3<float> eSpacePosition (Position.x() / eRadius.x() + 1, Position.y() / eRadius.y() + 1, Position.z() / eRadius.z() + 1);
     vector3<float> eSpaceVelocity (Velocity.x() / eRadius.x(), Velocity.y() / eRadius.y(), Velocity.z() / eRadius.z());
 
 #if DEBUG_COLLISION
@@ -294,7 +294,7 @@ void moving::update_position ()
     
     // convert final result back to R3
     float x = (finalPosition.x() - 1) * eRadius.x();
-    float y = (finalPosition.y()) * eRadius.y();
+    float y = (finalPosition.y() - 1) * eRadius.y();
     float z = (finalPosition.z() - 1) * eRadius.z();
         
 #if DEBUG_COLLISION
@@ -324,19 +324,34 @@ void moving::update_position ()
 void moving::calculate_ground_pos ()
 {
     // bbox of everything below our character
-    const vector3<s_int32> min (x(), y() - placeable::width()/2, -10000);
+    const vector3<s_int32> min (x(), y(), Mymap.min().z());
     const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
         
     // get objects below us
     std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max);
+    
+    // discard all completely non-solid objects
+    std::list<chunk_info*>::iterator ci = ground_tiles.begin();
+    while (ci != ground_tiles.end())
+    {
+        if ((*ci)->get_object()->is_solid())
+        {
+            ci++;
+        }
+        else
+        {
+            ci = ground_tiles.erase (ci);
+        }
+    }
+    
     if (!ground_tiles.empty ())
     {
         // sort according to their z-Order
         ground_tiles.sort (z_order());
     
         // the topmost object will be our ground pos
-        std::list<chunk_info*>::iterator ci = ground_tiles.begin();
-        GroundPos = (*ci)->Max.z() + (*ci)->get_object()->cur_z();
+        ci = ground_tiles.begin();
+        GroundPos = (*ci)->Min.z() + (*ci)->get_object()->get_surface_pos ();
         
         // apply shadow
         for (; ci != ground_tiles.end(); ci++)

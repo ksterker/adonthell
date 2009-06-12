@@ -68,17 +68,30 @@ void placeable_shape::add_part (world::cube3 * part)
 // check for collision
 void placeable_shape::collide (collision * collisionData, const vector3<s_int16> & offset) const
 {
-    for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
-	{
-        // check each part of the shape
-        (*i)->collide (collisionData, offset);
-	}    
+    if (Solid)
+    {
+        for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
+        {
+            // check each part of the shape
+            (*i)->collide (collisionData, offset);
+        }
+    }
 }
 
 // save to stream
 bool placeable_shape::put_state (base::flat & file) const
 {
 	base::flat record;
+    
+    if (!Solid)
+    {
+        record.put_bool ("non_solid", true);
+    }
+    
+    if (ox() || oy())
+    {
+        Offset.put_state (record, "offset");
+    }
     
     record.put_uint16 ("num", Parts.size());
 	for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
@@ -96,6 +109,16 @@ bool placeable_shape::get_state (base::flat & file)
 	base::flat record = file.get_flat ("shape");
     if (!file.success ()) return false;
 
+    // optional non-solid flag, false if missing
+    Solid = !record.get_bool ("non_solid", true);
+    
+    // get optional sprite offset
+    std::string offset = record.get_string ("offset", true);
+    if (offset.size() > 0)
+    {
+        Offset.set_str (offset);
+    }
+        
     u_int16 size = record.get_uint16 ("num");
     for (u_int16 i = 0; i < size; i++)
     {
@@ -106,6 +129,7 @@ bool placeable_shape::get_state (base::flat & file)
         }
         else
         {
+            delete part;
             return false;
         }
     }
