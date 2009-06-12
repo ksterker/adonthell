@@ -15,8 +15,8 @@ set(adonthell_world_SRCS
 	 pathfinding_manager.cc
     plane3.cc
     renderer.cc
-	schedule.cc
-	schedule_data.cc
+	 schedule.cc
+	 schedule_data.cc
     shadow.cc
     triangle3.cc
     world.cc
@@ -47,13 +47,14 @@ set(adonthell_world_HEADERS
 	 pathfinding_task.h
     render_info.h
     renderer.h
-	schedule.h
-	schedule_data.h
+	 schedule.h
+	 schedule_data.h
     shadow.h
     shadow_info.h
     triangle3.h
     vector3.h
     world.h
+	 zonw.h
 )
 
 

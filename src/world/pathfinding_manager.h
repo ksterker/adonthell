@@ -1,6 +1,4 @@
 /*
-  $Id: pathfinding_manager.h,v 1.4 2009/04/25 22:23:38 fr3dc3rv Exp $
-
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -78,6 +76,39 @@ namespace world
          *         -1 on error
          */
         static s_int16 add_task(character * chr, const world::vector3<s_int32> & target,
+                                const character::direction finalDir = character::NONE);
+        /**
+         * Adds a task
+         * @param chr the character to be moved
+         * @param target1 the target area's top-rightmost coordinates
+         * @param target2 the target area's bottom-leftmost coordinates
+         * @param finalDir the direction the character will have after finishing moving
+         * @return the id of the task, which can then be used to pause, resume, etc it
+         *         -1 on error
+         */
+        static s_int16 add_task(character * chr, const world::vector3<s_int32> & target1,
+                                const world::vector3<s_int32> & target2,
+                                const character::direction finalDir = character::NONE);
+        /**
+         * Adds task
+         * @param chr the character to be moved
+         * @param target the character to where we will move
+         * @param finalDir the direction the character will have after finishing moving
+         * @return the id of the task, which can then be used to pause, resume, etc it
+         *         -1 on error
+         */
+        static s_int16 add_task(character * chr, character * target,
+                                const character::direction finalDir = character::NONE);
+
+        /**
+         * Adds task
+         * @param chr the character to be moved
+         * @param target the name of the zone to where we will move
+         * @param finalDir the direction the character will have after finishing moving
+         * @return the id of the task, which can then be used to pause, resume, etc it
+         *         -1 on error
+         */
+        static s_int16 add_task(character * chr, std::string & target,
                                 const character::direction finalDir = character::NONE);
 
         /**
@@ -171,9 +202,17 @@ namespace world
          * Handles the low-level stuff of adding tasks
          * @param all the necessary stuff
          */
-        static void add_task_sp(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
+        static void add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
+                         const world::vector3<s_int32> & target2,
                          const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir,
                          const u_int8 pixMoved = 0, const u_int8 pixToMove = 0);
+
+        /**
+         * Verify if we can add the task and in which slot
+         * @param chr the character
+         * @return a free slot where we can add the task
+         */
+        static s_int16 add_task_sec(const character * chr);
 
         /**
          * Handles the movement of the character

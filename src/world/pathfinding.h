@@ -1,6 +1,4 @@
 /*
-  $Id: pathfinding.h,v 1.2 2009/04/09 14:43:18 fr3dc3rv Exp $
-
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -47,10 +45,13 @@ namespace world
 
         /**
          * Finds the path, if possible, and adds it to the vector passed
-         * @param character to move, goal position, and (empty) vector to be filled with the path
+         * @param chr character to move
+         * @param goal goal position
+         * @param path (empty) vector to be filled with the path
          * @return \b true on success, \b false on failure
          */
-        bool find_path(const character * chr, const vector3<s_int32> & goal, std::vector<coordinates> * path);
+        bool find_path(const character * chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2,
+                       std::vector<coordinates> * path);
 
     private:
 
@@ -65,17 +66,27 @@ namespace world
         }
 
         /**
+         * Verifies if the goal has been completed
+         * @param actual coordinate with the actual position
+         * @param p1 vector3 representing the left-top-most point of the goal area
+         * @param p2 vector3 representing the right-bottom-most point of the goal area
+         * @return \b true if the goals has been completed, \b false otherwise
+         */
+         bool verify_goal(const coordinates & actual, const vector3<s_int32> & p1,
+                          const vector3<s_int32> & p2);
+
+        /**
          * Calculates the heuristics of two points
-         * @param a coordinate with the actual position and a
-         *        vector3 with the goal position
+         * @param actual coordinate with the actual position
+         * @param goal vector3 with the goal position
          * @return the heuristic
          */
         u_int32 calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const;
 
         /**
          * Returns the 8 adjacent nodes to the one given
-         * @param the coordinates of the central nodes
-         * @return a list with the coordinates of the adjacent nodes
+         * @param goal the coordinates of the central node
+         * @return a vector with the coordinates of the adjacent nodes
          */
         std::vector<coordinates> calc_adjacent_nodes(const coordinates & goal) const;
 

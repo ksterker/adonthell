@@ -1,22 +1,20 @@
 /*
- $Id: area.h,v 1.15 2009/04/26 18:52:59 ksterker Exp $
- 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
- 
+
  Adonthell is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
  (at your option) any later version.
- 
+
  Adonthell is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
- along with Adonthell; if not, write to the Free Software 
+ along with Adonthell; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -24,9 +22,9 @@
  * @file   world/area.h
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
  * @author Kai Sterker <kaisterker@linuxgames.com>
- * 
+ *
  * @brief  Declares the area class.
- * 
+ *
  */
 
 
@@ -37,35 +35,36 @@
 #include "base/diskio.h"
 
 #include "world/chunk.h"
+#include "world/zone.h"
 
 /**
  * The graphical representation of the game %world is implemented by this module.
  */
 namespace world
-{    
+{
     /**
-     * The plane of existance. It keeps track of all the scenery elements, characters 
-     * and items that are part of a map. Their actual locations are kept in the 
+     * The plane of existance. It keeps track of all the scenery elements, characters
+     * and items that are part of a map. Their actual locations are kept in the
      * underlying chunk, an octree-like structure.
      */
     class area : public chunk
-    {        
+    {
     public:
         /**
          * Create an empty map.
          */
         area () : chunk () { }
-        
+
         /**
          * Delete the map and everything on it.
          */
         ~area ();
-        
+
         /**
-         * Remove all objects and characters from the map.
+         * Remove all objects, characters and zones from the map.
          */
         void clear();
-        
+
         /**
          * Update state of all characters and objects on the map.
          * @todo decide if we need that, or if everything can be
@@ -79,7 +78,7 @@ namespace world
          * @param pos position to place object at.
          */
         bool put_entity (const u_int32& index, coordinates & pos);
-        
+
         /**
          * Get entity at given index
          * @param index index of object in the list of objects.
@@ -98,14 +97,14 @@ namespace world
          * Get the name of the entity that possess the placeable
          * @param the placeable
          * @return the name
-         */	
+         */
         const std::string * get_entity_name (const placeable * object) const;
-        
+
         /**
          * @name Map entity creation.
          */
         //@{
-        /** 
+        /**
          * Adds an object to this map. Creates a new, empty object and returns
          * it, so that it can be initialized by the caller of this method.
          * The map will take ownership of the object.
@@ -113,11 +112,11 @@ namespace world
          * @return pointer to the added object in case of success, \e NULL otherwise.
          */
         placeable * add_entity (const placeable_type & type);
-        
-        /** 
-         * Adds a new, named entity to the map. The enitiy of the specified type 
+
+        /**
+         * Adds a new, named entity to the map. The enitiy of the specified type
          * will be created and returned for further initialization.
-         *   
+         *
          * @return pointer to the added object in case of success, \e NULL otherwise.
          */
         placeable * add_entity (const placeable_type & type, const std::string & id);
@@ -133,48 +132,68 @@ namespace world
         //@}
 
         /**
+         * @name Zone Creation
+         */
+        //@{
+        /**
+         * Add a zone to this map
+         * @param zone a pointer to the zone
+         * @return \b true on success, \b false otherwise
+         */
+         bool add_zone(world::zone * zone);
+
+        /**
+         * Returns a zone given its name
+         * @param name the name of the zone
+         * @return a pointer to the zone, or NULL on error
+         * @note name is case-sensitive
+         */
+         zone * get_zone(std::string & name);
+        //@}
+
+        /**
          * Loading / Saving
          */
         //@{
         /**
-         * Save %area state to stream. 
+         * Save %area state to stream.
          * @param file stream to save %area to.
          * @return \b true if saving successful, \b false otherwise.
          */
         bool put_state (base::flat & file) const;
-        
+
         /**
-         * Load %area state from stream. 
+         * Load %area state from stream.
          * @param file stream to load %area from.
          * @return \b true if loading successful, \b false otherwise.
          */
         bool get_state (base::flat & file);
-        
+
         /**
          * Save %area state to file.
          * @param fname file name.
          * @param format type of file to create.
          * @return true on success, false otherwise.
          */
-        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;        
-        
+        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+
         /**
          * Load %area state from file.
          * @param fname file name.
          * @return true on success, false otherwise.
          */
         bool load (const std::string & fname);
-        
+
         /**
-         * Get the filename of this map. 
+         * Get the filename of this map.
          * @return the file this map was loaded from.
          */
         std::string filename () const
         {
             return Filename;
         }
-        //@}        
-        
+        //@}
+
         /// This class is allowed to change and move objects on the map.
         friend class moving;
 
@@ -183,19 +202,22 @@ namespace world
          * Allow %area to be passed as python argument
          */
         GET_TYPE_NAME (world::area)
-        
-protected:
+
+    protected:
         /// The individual objects on the map
         std::vector <world::entity *> Entities;
-        
+
         /// Named objects on the map
         std::hash_map <std::string, world::named_entity *> NamedEntities;
 
-private:           
+        /// Zones on the map
+        std::list <world::zone *> Zones;
+
+    private:
         /// name of map
         std::string Filename;
 #endif // SWIG
-    }; 
+    };
 }
 
 #endif // WORLD_AREA_H

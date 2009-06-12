@@ -1,6 +1,4 @@
 /*
-  $Id: pathfinding.cc,v 1.3 2009/04/25 22:23:38 fr3dc3rv Exp $
-
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -38,11 +36,21 @@ using world::character;
 using world::pathfinding;
 using world::coordinates;
 
+
+bool pathfinding::verify_goal(const coordinates & actual, const vector3<s_int32> & p1, const vector3<s_int32> & p2)
+{
+    vector3<s_int32> tP1(p1.x() / 20, p1.y() / 20, 0);
+    vector3<s_int32> tP2(p2.x() / 20, p2.y() / 20, 0);
+    if (((actual.x() >= tP1.x()) && (actual.x() <= tP2.x())) &&
+        ((actual.y() >= tP1.y()) && (actual.y() <= tP2.y())))
+        return true;
+    else return false;
+}
+
 u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const
 {
     return  20 * (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y()));
 }
-
 
 std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & actual) const
 {
@@ -87,11 +95,12 @@ std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & ac
     return temp;
 }
 
-bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal, std::vector<coordinates> * path)
+bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2,
+                            std::vector<coordinates> * path)
 {
     // Verify pre condictions
-    if (!(((goal.x() >= chr->map().min().x()) && (goal.x() <= chr->map().max().x())) &&
-        (goal.y() >= chr->map().min().y()) && (goal.y() <= chr->map().max().y()))) {
+    if (!(((goal1.x() >= chr->map().min().x()) && (goal1.x() <= chr->map().max().x())) &&
+        (goal1.y() >= chr->map().min().y()) && (goal1.y() <= chr->map().max().y()))) {
 
         fprintf(stderr, "*** Goal is out of the map scope\n");
         return false;
@@ -106,15 +115,14 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
     // The max revolutions(iterations) (may need fine tuning)
     const float rev_per_dist = 5;
-    const u_int16 max_rev = 1 + rev_per_dist * (abs(chr->x() - goal.x()) + abs(chr->y() - goal.y()));
+    const u_int16 max_rev = 1 + rev_per_dist * (abs(chr->x() - goal1.x()) + abs(chr->y() - goal1.y()));
 
     // Grid of the actual_node
     s_int32 grid_x = trunc(chr->x() / 20);
     s_int32 grid_y = trunc(chr->y() / 20);
 
-    // Grid of the goal
-    const s_int32 goal_grid_x = trunc(goal.x() / 20);
-    const s_int32 goal_grid_y = trunc(goal.y() / 20);
+    // Middle position of the goal area
+    vector3<s_int32> goal ((goal1.x() + goal2.x()) / 2, (goal1.y() + goal2.y()) / 2, 0);
 
     // Pos of the character
     const s_int32 init_chr_x = chr->x();
@@ -128,7 +136,6 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     u_int16 temp_move_cost;
     node * temp_node;
     node * temp_node2;
-    placeable * temp_placeable = dynamic_cast<placeable *>(const_cast<character *>(chr));
     /* -------------------------------------------------------- */
 
     // Creates and adds the base node to the open list
@@ -154,7 +161,7 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
         temp_pos.set(grid_x, grid_y, 0);
 
         // Check if we've arrived at the target
-        if ((grid_x == goal_grid_x) && (grid_y == goal_grid_y)) {
+        if (verify_goal(temp_pos, goal1, goal2) == true) {
 
             // Recurse through the nodes and find the path
             path->insert(path->begin(), actual_node->pos);
@@ -218,7 +225,7 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                 vector3<s_int32> max(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20,
                     chr->z());
 
-                std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max);
+                std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max, world::OBJECT);
 
                 if (check_hole.empty()) {
                     ++i;
@@ -231,9 +238,9 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(cmin, cmax);
 
-                if (!collisions.empty()) {
-
-                    if (!((collisions.size() == 1) && (temp_placeable == (*collisions.begin())->get_object())))
+                if (!collisions.empty())
+                {
+                    if (!((collisions.size() == 1) && (chr->uid() == (*collisions.begin())->get_object()->uid())))
                     {
                         ++i;
                         continue;

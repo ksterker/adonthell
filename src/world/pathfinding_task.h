@@ -1,3 +1,30 @@
+/*
+  Copyright (C) 2009   Frederico Cerveira
+  Part of the Adonthell Project http://adonthell.linuxgames.com
+
+  Adonthell is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  Adonthell is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Adonthell; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+*/
+
+/**
+ * @file   world/pathfinding_task.h
+ * @author Frederico Cerveira <frederico.cerveira@gmail.com>
+ *
+ * @brief  Declares the pathfinding_task class.
+ *
+ */
+
 #ifndef PATHFINDING_TASK_H
 #define PATHFINDING_TASK_H
 
@@ -7,6 +34,9 @@
 
 namespace world
 {
+    /**
+     * Holds the data about a current pathfinding task
+     */
     class pathfinding_task
     {
     public:
@@ -16,6 +46,7 @@ namespace world
         base::functor_1<s_int32> * callback;
         /// The target position (in pixels)
         world::vector3<s_int32> target;
+        world::vector3<s_int32> target2;
 
         /// The path to the target, as a group of nodes
         std::vector<coordinates> * path;

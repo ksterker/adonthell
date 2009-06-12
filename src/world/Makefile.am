@@ -34,7 +34,8 @@ pkgincludeworld_HEADERS = \
     shadow_info.h \
     triangle3.h \
     vector3.h \
-    world.h
+    world.h \
+	 zone.h
 
 ## World library
 lib_LTLIBRARIES = libadonthell_world.la
