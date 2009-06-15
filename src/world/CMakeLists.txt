@@ -54,7 +54,7 @@ set(adonthell_world_HEADERS
     triangle3.h
     vector3.h
     world.h
-	 zonw.h
+	 zone.h
 )
 
 

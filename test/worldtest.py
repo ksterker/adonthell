@@ -1,18 +1,43 @@
-from adonthell import world, gfx, event, base
+from adonthell import world, gfx, input, event, base
 import adonthell.main
 import sys
+
+## Our exit variable
+letsexit = 0
+
+def handle_keys (ev):
+    global letsexit
+    print("in handle keys")
+    if ev.type() == input.keyboard_event.KEY_PUSHED:
+        if ev.key() == input.keyboard_event.ESCAPE_KEY:
+            letsexit = 1
+            print "Escape pressed, leaving..."
+    return 1
 
 class App (adonthell.main.AdonthellApp):
 
     def worldtest (self):
+        global handle_keys
         # -- need gfx backend for graphics
-        self.init_modules (self.GFX)
+        self.init_modules (self.GFX| self.INPUT)
         
         # -- add data directory to python search path
         sys.path.insert (0, "data")
         
         # -- need this for SDL backend to work
-        gfx.screen.set_video_mode (640, 480)
+        #gfx.screen.set_video_mode (640, 480)
+        #gfx.screen.set_video_mode (1024, 768)
+        gfx.screen.set_video_mode (1280, 1024)
+
+    
+        ## Create our input_listener and connect the callback
+        ## to handle keyboard events
+        il = input.listener()
+        il.connect_keyboard_function(handle_keys)
+
+        ## Add the listener to the manager
+        input.manager.add(il)
+
 
         # -- create world
         wrld = world.area ()
@@ -55,7 +80,7 @@ class App (adonthell.main.AdonthellApp):
         cur_mov = 0        
 
         # -- main loop
-        while 1:
+        while not letsexit:
            if i in mov:
                # -- let character walk
                chr.remove_direction(cur_mov)
@@ -71,7 +96,10 @@ class App (adonthell.main.AdonthellApp):
            # -- process map view
            view.update ()
            view.draw (0, 0)
-           
+
+           # update keys
+           input.manager.update() 
+
            # -- debugging
            chr.debug_collision(0, 0)
            print chr.x(), chr.y(), chr.z()

@@ -185,7 +185,7 @@ namespace gfx
     bool sprite::load (const std::string & filename)
     {
         const std::string & file = (filename.length() != 0) ? filename : m_filename;
-        bool retval; 
+        bool retval = false;
         
         // load raw png as one animation, one frame sprite
         if (file.find (".png", file.size() - 4) != std::string::npos)
@@ -196,6 +196,7 @@ namespace gfx
                 animation_list cur_animation;
                 cur_animation.push_back (new animation_frame (surfaces->get_surface (full_path, false, false), 0));
                 m_states["default"] = cur_animation;
+                retval = true;
             }
         }
         else
