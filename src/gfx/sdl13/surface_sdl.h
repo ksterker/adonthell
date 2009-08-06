@@ -67,7 +67,7 @@ namespace gfx
 
         void * get_data (u_int8 bytes_per_pixel,
                          u_int32 red_mask, u_int32 green_mask,
-                         u_int32 blue_mask) const;
+                         u_int32 blue_mask, u_int32 alpha_mask) const;
 
         SDL_Surface *vis;
 

@@ -221,6 +221,14 @@ namespace gfx
             return;
         }
 
+#ifdef __BIG_ENDIAN__
+        if (alpha)
+        {
+            // write pixels in ARGB format instead of RGBA
+            png_set_swap_alpha(png_ptr);
+        }
+#endif
+        
         int idx = 0;
         row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
         for (int y=0; y<height; y++)

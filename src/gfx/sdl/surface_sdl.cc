@@ -322,22 +322,22 @@ namespace gfx
 
     void * surface_sdl::get_data (u_int8 bytes_per_pixel,
                                   u_int32 red_mask, u_int32 green_mask,
-                                  u_int32 blue_mask) const
+                                  u_int32 blue_mask, u_int32 alpha_mask) const
     {
         SDL_Surface * tmp = SDL_CreateRGBSurface(0, 10, 10,
                                                  bytes_per_pixel * 8,
-                                                 red_mask, green_mask, blue_mask, 0);
-
+                                                 red_mask, green_mask, blue_mask, alpha_mask);
+        
         SDL_Surface * tmp2 = SDL_ConvertSurface(vis, tmp->format, 0);
         SDL_FreeSurface(tmp);
-
+        
         void * ret = calloc(bytes_per_pixel, length() * height());
         memcpy(ret, tmp2->pixels, length() * height() * bytes_per_pixel);
         SDL_FreeSurface(tmp2);
-
+        
         return ret;
     }
-
+    
     void surface_sdl::setup_rects (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy,
                                    u_int16 sl, u_int16 sh, const drawing_area * draw_to) const
     {

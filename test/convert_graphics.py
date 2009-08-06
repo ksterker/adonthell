@@ -12,15 +12,18 @@ def convert_raw_image (img, name):
     print "Length = %i, Height = %i" % (length, height)
     
     png = gfx.create_surface ()
+    png.set_alpha (255, 1)
     png.resize (length, height)
     png.lock ()
 
     for y in range (height):
         for x in range (length):
+            a = 255
             r = img.get_uint8 ()
             g = img.get_uint8 ()
             b = img.get_uint8 ()
-            col = png.map_color (r, g, b)
+            if r == 255 and g == 0 and b == 255: a = 0
+            col = png.map_color (r, g, b, a)
             png.put_pix (x, y, col)
         
     png.unlock ()

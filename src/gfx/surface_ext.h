@@ -141,11 +141,12 @@ protected:
      * @param red_mask Red color mask.
      * @param green_mask Green color mask.
      * @param blue_mask Blue color mask.
+     * @param alpha_mask Alpha color mask.
      * @return Image data converted to the requested format.
      */
     virtual void * get_data (u_int8 bytes_per_pixel,
                              u_int32 red_mask, u_int32 green_mask,
-                             u_int32 blue_mask) const = 0;
+                             u_int32 blue_mask, u_int32 alpha_mask) const = 0;
         
 };
     

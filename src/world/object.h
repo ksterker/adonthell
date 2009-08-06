@@ -31,7 +31,7 @@
 #ifndef WORLD_OBJECT_H
 #define WORLD_OBJECT_H
 
-#include "base/file.h"
+#include "base/diskio.h"
 #include "world/placeable.h"
 
 namespace world

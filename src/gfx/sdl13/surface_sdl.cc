@@ -340,11 +340,11 @@ namespace gfx
 
     void * surface_sdl::get_data (u_int8 bytes_per_pixel,
                                   u_int32 red_mask, u_int32 green_mask,
-                                  u_int32 blue_mask) const
+                                  u_int32 blue_mask, u_int32 alpha_mask) const
     {
         SDL_Surface * tmp = SDL_CreateRGBSurface(0, 10, 10,
                                                  bytes_per_pixel * 8,
-                                                 red_mask, green_mask, blue_mask, 0);
+                                                 red_mask, green_mask, blue_mask, alpha_mask);
 
         SDL_Surface * tmp2 = SDL_ConvertSurface(vis, tmp->format, 0);
         SDL_FreeSurface(tmp);

@@ -56,11 +56,14 @@ void surface_ext::mirror (bool x, bool y)
 {
     if (x)
     {
-        u_int8 *rawdata = (u_int8 *)get_data(3, R_MASK, G_MASK, B_MASK);
+        u_int32 bpp = alpha_channel_ ? 4 : 3;
+        u_int32 alpha_mask = alpha_channel_ ? A_MASK : 0;
+
+        u_int8 *rawdata = (u_int8 *)get_data(bpp, R_MASK, G_MASK, B_MASK, alpha_mask);
         for(int idx = 0; idx < height(); idx++)
-            reverseArray(&rawdata[idx*length()*3], length()*3);
+            reverseArray(&rawdata[idx*length()*bpp], length()*bpp);
         //This is swapped (BGR) because we swapped at a byte level, not at a pixel level
-        set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK);
+        set_data(rawdata, length(), height(), bpp, B_MASK, G_MASK, R_MASK, alpha_mask);
         is_mirrored_x_ = !is_mirrored_x_;
     }
     
@@ -97,11 +100,11 @@ bool surface_ext::get_png (std::ifstream & file)
 // save image data as png
 bool surface_ext::put_png (std::ofstream & file) const
 {
-    void * rawdata = get_data(3, R_MASK, G_MASK, B_MASK);
+    void * rawdata = get_data(alpha_channel_ ? 4 : 3, R_MASK, G_MASK, B_MASK, alpha_channel_ ? A_MASK : 0);
     
     if (!rawdata) return false;
     
-    png::put (file, (const char *)rawdata, length (), height (), false);
+    png::put (file, (const char *)rawdata, length (), height (), alpha_channel_);
     
     free(rawdata);
     
