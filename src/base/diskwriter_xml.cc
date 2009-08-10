@@ -248,6 +248,16 @@ static void param_to_value (const data_sax_context *context)
 }
 
 /**
+ * Called when an xml entity such as &amp; is encountered.
+ * @param ctx the parser context
+ * @param name The entity name
+ */
+static xmlEntityPtr data_get_entity(void *ctx, const xmlChar *name)
+{
+    return xmlGetPredefinedEntity(name);
+}
+
+/**
  * Called when an opening tag has been processed.
  * @param ctx the parser context
  * @param name The element name
@@ -420,7 +430,7 @@ static void data_read_characters (void *ctx, const xmlChar *content, int len)
     {
         // store value first and assign when closing element, as
         // 'data_read_characters' is not called for empty elements.
-        context->Value = std::string ((char*) content, len);
+        context->Value += std::string ((char*) content, len);
     }
 }
 
@@ -449,7 +459,7 @@ xmlSAXHandler data_sax_handler = {
     NULL, /* hasInternalSubset */
     NULL, /* hasExternalSubset */
     NULL, /* resolveEntity */
-    NULL, /* getEntity */
+    data_get_entity,
     NULL, /* entityDecl */
     NULL, /* notationDecl */
     NULL, /* attributeDecl */
