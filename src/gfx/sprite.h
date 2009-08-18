@@ -41,13 +41,55 @@
 
 namespace gfx
 {
+#ifndef SWIG
+    /**
+     * Data representing one frame of animation
+     */
+    struct animation_frame
+    {
+        /**
+         * Create a new frame
+         * @param img the image data
+         * @param dly the delay before switching to the next frame
+         */
+        animation_frame(const surface_ref *img, u_int16 dly = 0):
+        image(img), delay(dly) { }
+        
+        /**
+         * Destroy frame and free reference to associated surface.
+         */
+        ~animation_frame()
+        {
+            delete image;
+        }
+
+        /// what image to draw for this frame
+        const surface_ref *image;
+        /// how long before we switch to the next frame
+        u_int16 delay;              
+    };
+#endif // SWIG
+    
     /**
      * Class to handle storing several surfaces in an sprite sequence.
-     *
+     * A sprite consists of one or more animations, each of which can
+     * contain one or more frames. Sprites usually represent a single
+     * object in all its possible states.
      */
     class sprite : public drawable
     {
     public:
+        /**
+         * @name Animation Storage
+         * Typedefs for the animation storage
+         */
+        //@{
+        /// The different frames in an animation
+        typedef std::deque<const animation_frame *> animation_list;
+        /// animation (one state of a sprite) by name
+        typedef std::map<std::string, animation_list> animation_map;
+        //@}        
+
         /**
          * Default constructor.
          */
@@ -74,6 +116,26 @@ namespace gfx
          * @return true if new_animation was found.
          */
         bool change_animation (const std::string & new_animation);
+        
+#ifndef SWIG
+        /**
+         * Return iterator to first animation of the %sprite.
+         * @return iterator pointing to first animation.
+         */
+        animation_map::const_iterator begin() const 
+        { 
+            return m_states.begin(); 
+        }
+        
+        /**
+         * Return iterator pointing after last animation of the %sprite.
+         * @return iterator pointing past last animation.
+         */
+        animation_map::const_iterator end() const 
+        { 
+            return m_states.end(); 
+        }
+#endif // SWIG
         
         /**
          * Whether all image data has been loaded for the sprite.
@@ -200,46 +262,7 @@ namespace gfx
         GET_TYPE_NAME_VIRTUAL(gfx::sprite)
 #endif // SWIG
 
-    protected:
-        /**
-         * data representing one frame of animation
-         *
-         */
-        struct animation_frame
-        {
-            /**
-             * Create a new frame
-             * @param img the image data
-             * @param dly the delay before switching to the next frame
-             */
-            animation_frame(const surface_ref *img, u_int16 dly = 0):
-            image(img), delay(dly) { }
-            
-            /**
-             * Destroy frame and free reference to associated surface.
-             */
-            ~animation_frame()
-            {
-                delete image;
-            }
-            
-            /// what image to draw for this frame
-            const surface_ref *image;
-            /// how long before we switch to the next frame
-            u_int16 delay;              
-        };
-
-        /**
-         * @name Animation Storage
-         * Typedefs for the animation storage
-         */
-        //@{
-        /// The different frames in an animation
-        typedef std::deque<const animation_frame *> animation_list;
-        /// A named animation sequence (one state of a sprite)
-        typedef std::map<std::string, animation_list> animation_map;
-        //@}
-        
+    protected:        
         /// states of the sprite
         animation_map m_states;
         /// an animation
