@@ -150,7 +150,7 @@ namespace world
         static bool delete_task(const s_int16 id);
 
         /**
-         * Returns the state of the task. Can be useful for knowing wether the target has been
+         * Returns the state of the task. Can be useful for knowing whether the target has been
          * reached or not.
          * @param id the id of the task
          * @return the state
@@ -201,8 +201,9 @@ namespace world
         /**
          * Handles the low-level stuff of adding tasks
          * @param all the necessary stuff
+         * @return \b false on error, \b true on success
          */
-        static void add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
+        static bool add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
                          const world::vector3<s_int32> & target2,
                          const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir,
                          const u_int8 pixMoved = 0, const u_int8 pixToMove = 0);

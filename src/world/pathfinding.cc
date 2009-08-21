@@ -30,7 +30,6 @@
 #include "world/vector3.h"
 #include "world/chunk_info.h"
 #include "world/coordinates.h"
-#include "world/character.h"
 
 using world::character;
 using world::pathfinding;

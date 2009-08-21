@@ -63,9 +63,11 @@ class DialogTest : public adonthell::app {
 	python::add_search_path(base::Paths.user_data_dir() + "data/");
   	python::import_module("adonthell.rpg");
 	/* try to load a dialog */
-	rpg::character npc("NPC", "Id", rpg::NPC);
+   // load rpg side
+   rpg::race::load("data/races/races.xml");
+	rpg::character npc("NPC", "Id", rpg::NPC, "Humans");
 	npc.set_dialogue("tech_preview");
-	rpg::character player("Player", "Player", rpg::PLAYER);
+	rpg::character player("Player", "Player", rpg::PLAYER, "Humans");
 	//rpg::dialog dlg(npc);
     
     // Create our input_listener and connect the callback
@@ -109,7 +111,7 @@ class DialogTest : public adonthell::app {
     }
     
     // Do some cleanup, and we're ready to exit!
-
+    rpg::race::cleanup();
     return 0;
   }
 } theApp;

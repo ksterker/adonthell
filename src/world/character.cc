@@ -8,29 +8,30 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    Adonthell is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
- 
+
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 /**
  * @file   world/character.cc
  * @author Alexandre Courbot <alexandrecourbot@linuxgames.com>
- * 
+ *
  * @brief  Defines the character class.
- * 
- * 
+ *
+ *
  */
 
 #include <math.h>
 
 #include "base/diskio.h"
+#include "rpg/character.h"
 #include "world/area.h"
 #include "world/character.h"
 #include "world/shadow.h"
@@ -39,7 +40,7 @@ using world::character;
 using world::area;
 
 // ctor
-character::character (area & mymap) : moving (mymap)
+character::character (area & mymap, rpg::character * mind) : moving (mymap)
 {
     Type = CHARACTER;
     Speed = 2;
@@ -49,6 +50,14 @@ character::character (area & mymap) : moving (mymap)
     CurrentDir = NONE;
     Heading = NONE;
     Schedule.set_map (&mymap);
+
+    // save the representation of this character on the world side
+    Mind = mind;
+    if (Mind != NULL)
+    {
+        // and do the reverse.
+        Mind->set_body(this);
+    }
 }
 
 // dtor
@@ -56,9 +65,69 @@ character::~character ()
 {
 }
 
+
+// get real speed
+float character::speed () const
+{
+    // We need the rpg side if we want to have variable speed
+    if (Mind == NULL) return base_speed();
+
+    // Obtain floor below character
+    world::vector3<s_int32> min(x(), y(), z() - 30);
+    world::vector3<s_int32> max(x(), y(), z());
+
+    std::list<chunk_info*> list = map().objects_in_bbox(min, max, OBJECT);
+    std::list<chunk_info*>::const_iterator i;
+
+    if (!list.empty())
+    {
+        float new_speed = -1;
+
+        // Search the list for the nearest object
+        placeable * closest = (*list.begin())->get_object();
+        u_int16 diff = abs(closest->cur_z() - z());
+
+        for (i = list.begin(); i != list.end(); i++)
+        {
+
+            u_int16 tmp_diff = abs((*i)->get_object()->cur_z() - z());
+
+            if (tmp_diff < diff)
+            {
+                closest = (*i)->get_object();
+                diff = tmp_diff;
+            }
+        }
+
+        // Search that object for a placeable_model with a valid terrain
+        for (placeable::iterator a = closest->begin(); a != closest->end(); a++)
+        {
+            std::string tmp = (*a)->terrain();
+
+            if (tmp != "None")
+            {
+                // Got a possibly valid terrain, let's see if it really exists
+                new_speed = mind()->get_speed_on_terrain(tmp);
+
+                if (new_speed != -1)
+                {
+                    printf("Base Speed is %f. Actual Speed is %f. We're walking over %s\n", base_speed(), new_speed, tmp.c_str());
+                    return new_speed;
+                }
+            }
+        }
+    }
+
+    // Failed. Let's return the default speed
+    return base_speed();
+}
+
 // jump
 void character::jump()
 {
+    // call speed() to update velocity when jumping over different terrains
+    speed();
+
     // only jump if resting on the ground
 	if (GroundPos == z())
 	{
@@ -69,19 +138,20 @@ void character::jump()
 // process character movement
 bool character::update ()
 {
+
     // character movement
     Schedule.update ();
-    
+
     // reset vertical velocity
     set_vertical_velocity (VSpeed);
-    
+
     // update character
     moving::update ();
-    
-    if (GroundPos == z()) 
+
+    if (GroundPos == z())
     {
         VSpeed = 0;
-        
+
     	// character no longer jumping or falling
     	if (IsRunning != ToggleRunning)
     	{
@@ -90,7 +160,12 @@ bool character::update ()
     	}
     }
     else if (VSpeed > 0) VSpeed -= 0.4;
-    
+
+    // Update speed over different terrains
+    // But only when character is moving
+    if (current_dir() != character::NONE)
+        speed();
+
     return true;
 }
 
@@ -115,7 +190,7 @@ void character::add_direction(direction ndir)
         default:
             break;
     }
-    
+
     set_direction(tstdir | ndir);
 }
 
@@ -123,46 +198,46 @@ void character::add_direction(direction ndir)
 void character::set_direction (const s_int32 & ndir)
 {
     float vx = 0.0, vy = 0.0;
-    
+
     if (ndir & WEST) vx = -speed() * (1 + is_running());
     if (ndir & EAST) vx = speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy = speed() * (1 + is_running());
-    
+
     if (vx && vy)
     {
         float s = 1/sqrt (vx*vx + vy*vy);
         vx = (vx * fabs (vx)) * s;
         vy = (vy * fabs (vy)) * s;
     }
-    
+
     set_velocity(vx, vy);
     update_state();
-    
+
     Heading = ndir != 0 ? ndir : Heading;
-    CurrentDir = ndir;    
+    CurrentDir = ndir;
 }
 
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
     std::string state;
-    float xvel = vx () > 0 ? vx () : -vx (); 
+    float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
-    
-    if (xvel || yvel) 
+
+    if (xvel || yvel)
     {
-        if (xvel > yvel) 
+        if (xvel > yvel)
         {
             if (vx () > 0) state = "e";
-            else if (vx () < 0) state = "w"; 
+            else if (vx () < 0) state = "w";
         }
-        else if (yvel > xvel) 
+        else if (yvel > xvel)
         {
             if (vy () > 0) state = "s";
-            else if (vy () < 0) state = "n"; 
+            else if (vy () < 0) state = "n";
         }
-        else 
+        else
         {
             if ((vx() > 0) && (CurrentDir & WEST))
                 state = "e";
@@ -181,7 +256,7 @@ void character::update_state()
         state = placeable::state()[0];
         state += "_stand";
     }
-    
+
     set_state (state);
 }
 
@@ -189,24 +264,24 @@ void character::update_state()
 bool character::put_state (base::flat & file) const
 {
     // FIXME: save movement and direction ...
-    
+
     return placeable::put_state (file);
 }
 
 // load from stream
 bool character::get_state (base::flat & file)
 {
-    base::flat entity = file.get_flat ("entity");    
+    base::flat entity = file.get_flat ("entity");
 
     // FIXME: load movement and direction ...
-    
+
     // load other parts of placeable
     placeable::get_state (entity);
 
     // load shadow
     std::string shadow_file = entity.get_string ("shadow");
     MyShadow = new shadow (shadow_file, this, CurPos);
-        
+
     return file.success ();
 }
 
@@ -217,10 +292,10 @@ bool character::save (const std::string & fname, const base::diskio::file_format
     base::diskio record (format);
     if (!put_state (record))
     {
-        fprintf (stderr, "*** character::save: saving '%s' failed!\n", fname.c_str ());        
+        fprintf (stderr, "*** character::save: saving '%s' failed!\n", fname.c_str ());
         return false;
     }
-    
+
     // write item to disk
     return record.put_record (fname);
 }
@@ -230,12 +305,12 @@ bool character::load(const std::string & fname)
 {
     // try to load character
     base::diskio record (base::diskio::BY_EXTENSION);
-    
+
     if (record.get_record (fname))
     {
         Filename = fname;
         return get_state (record);
     }
-    
+
     return false;
 }

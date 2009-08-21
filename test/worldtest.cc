@@ -35,6 +35,7 @@
 #include "world/mapview.h"
 #include "world/pathfinding_manager.h"
 #include "gui/window_manager.h"
+#include "rpg/race.h"
 
 class game_client
 {
@@ -120,6 +121,9 @@ public:
 		// Contains map and player controls
 	    game_client gc;
 
+      //load rpg side
+      rpg::race::load("data/races/races.xml");
+
 		// Add keyboard controls
 	    input::listener il;
     	input::manager::add(&il);
@@ -139,7 +143,7 @@ public:
         
         // set position and speed of player character ...
         world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
-        mchar->set_speed (1.5);
+        mchar->set_speed (3.1);
         mchar->set_position (518, 297);
         mchar->set_z (0);
 
@@ -148,19 +152,19 @@ public:
         controls->set_manager ("player", NULL);
 
         // rpg character instance
-        rpg::character player("Player", "Player", rpg::PLAYER);
+        rpg::character player("Player", "Player", rpg::PLAYER, "Humans", mchar);
         player.create_instance ("character");
         player.set_attribute ("avatar", python::pass_instance (mchar));
         player.set_color (gfx::screen::get_surface()->map_color (255, 238, 123));
         
         // position and speed of a NPC
         mchar = (world::character *) (gc.world.get_entity ("NPC"));
-        mchar->set_speed (1.75);
+        mchar->set_speed (2.75);
         mchar->set_position (210, 190);
         mchar->set_z (0);
         
         // rpg character instance
-        rpg::character npc("NPC", "NPC", rpg::NPC);
+        rpg::character npc("NPC", "NPC", rpg::NPC, "Elves");
         npc.create_instance ("character");
         npc.set_attribute ("avatar", python::pass_instance (mchar));
         npc.set_dialogue("tech_preview");
@@ -244,6 +248,8 @@ public:
 	        gfx::screen::clear (); 
 	    }
 	    
+       rpg::race::cleanup();
+
 	    return 0; 
 	}
 };

@@ -13,6 +13,8 @@ set(adonthell_rpg_SRCS
 	quest_event.cc
 	quest_event_manager.cc
 	slot.cc
+   race.cpp
+   terrain_effects.cpp
 )
 
 set(adonthell_rpg_HEADERS
@@ -29,6 +31,8 @@ set(adonthell_rpg_HEADERS
 	equipment.h
 	log_entry.h
 	quest.h
+   race.h
+   terrain_effects.h
 )
 
 

@@ -95,10 +95,6 @@ void pathfinding_manager::cleanup()
 
 s_int16 pathfinding_manager::add_task_sec(const character *chr)
 {
-    slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), chr);
-    if (ichr != m_chars.end())
-        return -1;
-
     s_int16 actualNode = m_taskCount - 1;
     while ((m_locked[m_taskCount] == true))
     {
@@ -117,14 +113,14 @@ s_int16 pathfinding_manager::add_task_sec(const character *chr)
     return m_taskCount;
 }
 
-void pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
+bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
                                       const world::vector3<s_int32> & target,
                                       const world::vector3<s_int32> & target2, const u_int8 phase,
                                       const u_int8 actualNode, const u_int8 actualDir,
                                       const u_int8 pixMoved, const u_int8 pixToMove)
 {
     // delete any previously set callback
-    delete m_task[id].callback;
+    delete m_task[m_taskCount].callback;
 
     m_task[id].chr = chr;
     m_task[id].target = target;
@@ -141,17 +137,28 @@ void pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
     m_task[id].startPos.set_y(m_task[id].chr->y());
     m_task[id].timesStuck = 0;
 
-    m_locked[id] = true;
-    m_chars.push_front(chr);
+    // Verify if we can indeed add this task, or if the character is already performing another task
+    // This should be in add_task_sec, however due to a bug it has to stay here
+    slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), chr);
+    if (ichr != m_chars.end())
+    {
+        // Reverse the m_taskCount as we're not going to use this task after all
+        --m_taskCount;
+        return false;
+    } else {
+
+        m_locked[id] = true;
+        m_chars.push_front(chr);
+        return true;
+    }
 }
 
 s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target, const character::direction finalDir)
 {
     const s_int16 id = add_task_sec(chr);
-    if (id == -1)
+    if ((id == -1) || (add_task_ll(id, chr, target, target, PHASE_PATHFINDING, 0, character::NONE) == -1))
         return -1;
 
-    add_task_ll(id, chr, target, target, PHASE_PATHFINDING, 0, character::NONE);
     set_final_direction(m_taskCount, finalDir);
 
     return m_taskCount++;
@@ -162,10 +169,9 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
                                       const character::direction finalDir)
 {
     const s_int16 id = add_task_sec(chr);
-    if (id == -1)
+    if ((id == -1) || (add_task_ll(id, chr, target1, target2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    add_task_ll(id, chr, target1, target2, PHASE_PATHFINDING, 0, character::NONE);
     set_final_direction(m_taskCount, finalDir);
 
     return m_taskCount++;
@@ -177,10 +183,9 @@ s_int16 pathfinding_manager::add_task(character * chr, character * target, const
     world::vector3<s_int32> tempTarget2(((target->x()/20)+1)*20, ((target->y()/20)+1)*20, 0);
 
     const s_int16 id = add_task_sec(chr);
-    if (id == -1)
+    if ((id == -1) || (add_task_ll(id, chr, tempTarget1, tempTarget2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    add_task_ll(id, chr, tempTarget1, tempTarget2, PHASE_PATHFINDING, 0, character::NONE);
     set_final_direction(m_taskCount, finalDir);
 
     return m_taskCount++;
@@ -194,10 +199,9 @@ s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const
         return -1;
 
     const s_int16 id = add_task_sec(chr);
-    if (id == -1)
+    if ((id == -1) || (add_task_ll(id, chr, tempZone->min(), tempZone->max(), PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    add_task_ll(id, chr, tempZone->min(), tempZone->max(), PHASE_PATHFINDING, 0, character::NONE);
     set_final_direction(m_taskCount, finalDir);
 
     return m_taskCount++;

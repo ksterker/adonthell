@@ -171,6 +171,7 @@
          </list>
        </list>
       <string id="sprite">data/gfx/map/ground/outside/meadow/grass_8.png</string>
+      <string id="terrain">Grass</string>
      </list>
    </list>
  </Data>
