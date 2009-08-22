@@ -201,6 +201,7 @@ namespace world
          * @return true if it is solid, false otherwise.
          */
         bool is_solid() const { return Solid; }
+        
         /**
          * Return the surface of the object. Since it might be composed
          * of solid and non-solid components, this needs to be calculated
@@ -209,6 +210,12 @@ namespace world
          * @return the z-position of the object's solid components. 
          */
         s_int32 get_surface_pos() const;
+        
+        /**
+         * Return the terrain type of this object.
+         * @return pointer to the terrain. Do not delete.
+         */
+        const std::string *get_terrain() const;
         //@}
         
         /**

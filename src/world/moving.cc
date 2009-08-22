@@ -63,6 +63,7 @@ moving::moving (world::area & mymap)
 {
     GroundPos = -10000;
     MyShadow = NULL;
+    Terrain = NULL;
 
 #if DEBUG_COLLISION
     Image = gfx::create_surface();
@@ -328,7 +329,7 @@ void moving::calculate_ground_pos ()
     const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
         
     // get objects below us
-    std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max);
+    std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max, OBJECT);
     
     // discard all completely non-solid objects
     std::list<chunk_info*>::iterator ci = ground_tiles.begin();
@@ -352,6 +353,9 @@ void moving::calculate_ground_pos ()
         // the topmost object will be our ground pos
         ci = ground_tiles.begin();
         GroundPos = (*ci)->Min.z() + (*ci)->get_object()->get_surface_pos ();
+        
+        // get the terrain, if any
+        Terrain = (*ci)->get_object()->get_terrain();
         
         // apply shadow
         for (; ci != ground_tiles.end(); ci++)

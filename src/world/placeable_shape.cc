@@ -65,6 +65,45 @@ void placeable_shape::add_part (world::cube3 * part)
     Parts.push_back (part);
 }
 
+// remove a part from object shape
+void placeable_shape::remove_part (world::cube3 * part)
+{
+    std::vector<cube3*>::iterator i;
+    for (i = Parts.begin(); i != Parts.end(); i++)
+    {
+        if (*i == part)
+        {
+            Parts.erase (i);
+            break;
+        }
+    }
+    
+    if (Parts.empty ())
+    {
+        // reset bounding box
+        Min.set (0, 0, 0);
+        Max.set (0, 0, 0);
+    }
+    else
+    {
+        // we swap min and max and go from there ...
+        vector3<s_int32> tmp = Min;
+        Min.set (Max.x (), Max.y (), Max.z ());
+        Max.set (tmp.x (), tmp.y (), tmp.z ());
+        
+        // update bounding box from remaining shapes
+        for (i = Parts.begin(); i != Parts.end(); i++)
+        {
+            if (Min.x () > (*i)->min_x ()) Min.set_x ((*i)->min_x ());
+            if (Max.x () < (*i)->max_x ()) Max.set_x ((*i)->max_x ());
+            if (Min.y () > (*i)->min_y ()) Min.set_y ((*i)->min_y ());
+            if (Max.y () < (*i)->max_y ()) Max.set_y ((*i)->max_y ());
+            if (Min.z () > (*i)->min_z ()) Min.set_z ((*i)->min_z ());
+            if (Max.z () < (*i)->max_z ()) Max.set_z ((*i)->max_z ());
+        }
+    }
+}
+
 // check for collision
 void placeable_shape::collide (collision * collisionData, const vector3<s_int16> & offset) const
 {

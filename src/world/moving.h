@@ -200,6 +200,9 @@ namespace world
         /// shadow cast by this object
         shadow *MyShadow;
 
+        /// the type of terrain this moveable sits on
+        const std::string *Terrain;
+        
     private:
         /// for debugging
         gfx::surface *Image;

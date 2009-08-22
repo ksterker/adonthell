@@ -290,7 +290,12 @@ namespace world
 #endif
 
     protected:
-
+        /**
+         * Update velocity based on current terrain.
+         * @param ndir direction(s) the character is moving in.
+         */
+        void update_velocity (const s_int32 & ndir);
+            
         /// horizontal speed for walking / running
         float Speed;
         /// vertical speed for jumping

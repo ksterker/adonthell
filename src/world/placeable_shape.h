@@ -60,10 +60,35 @@ namespace world
         ~placeable_shape();
         
         /**
+         * @name Parts of Shape
+         */
+        //@{
+        /**
          * Add a part to this shape.
          * @param part the part to add to the shape.
          */
         void add_part (cube3 * part);
+        
+        /**
+         * Remove a part from this shape.
+         * @param part the part to remove from the shape.
+         */
+        void remove_part (cube3 *part);
+
+#ifndef SWIG
+        /**
+         * Get iterator pointing to the first part of the shape.
+         * @return iterator into the shape list.
+         */
+        std::vector<cube3*>::const_iterator begin() const { return Parts.begin(); } 
+
+        /**
+         * Get iterator pointing past the end of the shape list.
+         * @return iterator to the shape list end.
+         */
+        std::vector<cube3*>::const_iterator end() const { return Parts.end(); }   
+#endif // SWIG
+        //@}
         
         /**
          * Perform collision against this object. Result is stored in

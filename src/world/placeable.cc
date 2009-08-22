@@ -121,6 +121,23 @@ s_int32 placeable::get_surface_pos () const
     return surface;
 }
 
+// get terrain type of placeable
+const std::string* placeable::get_terrain () const
+{
+    std::string tmp;
+    
+    for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        tmp = (*i)->terrain();
+        if (tmp != "None")
+        {
+            return &(*i)->terrain();
+        }
+    }
+    
+    return NULL;
+}
+
 // add model to placeable
 void placeable::add_model (world::placeable_model * model)
 {

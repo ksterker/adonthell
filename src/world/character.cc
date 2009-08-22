@@ -65,7 +65,6 @@ character::~character ()
 {
 }
 
-
 // get real speed
 float character::speed () const
 {
@@ -73,51 +72,18 @@ float character::speed () const
     if (Mind == NULL) return base_speed();
 
     // Obtain floor below character
-    world::vector3<s_int32> min(x(), y(), z() - 30);
-    world::vector3<s_int32> max(x(), y(), z());
-
-    std::list<chunk_info*> list = map().objects_in_bbox(min, max, OBJECT);
-    std::list<chunk_info*>::const_iterator i;
-
-    if (!list.empty())
+    if (Terrain != NULL)
     {
-        float new_speed = -1;
+        // Got a possibly valid terrain, let's see if it really exists
+        float new_speed = mind()->get_speed_on_terrain (*Terrain);
 
-        // Search the list for the nearest object
-        placeable * closest = (*list.begin())->get_object();
-        u_int16 diff = abs(closest->cur_z() - z());
-
-        for (i = list.begin(); i != list.end(); i++)
+        if (new_speed != -1)
         {
-
-            u_int16 tmp_diff = abs((*i)->get_object()->cur_z() - z());
-
-            if (tmp_diff < diff)
-            {
-                closest = (*i)->get_object();
-                diff = tmp_diff;
-            }
-        }
-
-        // Search that object for a placeable_model with a valid terrain
-        for (placeable::iterator a = closest->begin(); a != closest->end(); a++)
-        {
-            std::string tmp = (*a)->terrain();
-
-            if (tmp != "None")
-            {
-                // Got a possibly valid terrain, let's see if it really exists
-                new_speed = mind()->get_speed_on_terrain(tmp);
-
-                if (new_speed != -1)
-                {
-                    printf("Base Speed is %f. Actual Speed is %f. We're walking over %s\n", base_speed(), new_speed, tmp.c_str());
-                    return new_speed;
-                }
-            }
+            // printf("Base Speed is %f. Actual Speed is %f. We're walking over %s\n", base_speed(), new_speed, Terrain->c_str());
+            return new_speed;
         }
     }
-
+            
     // Failed. Let's return the default speed
     return base_speed();
 }
@@ -126,7 +92,7 @@ float character::speed () const
 void character::jump()
 {
     // call speed() to update velocity when jumping over different terrains
-    speed();
+    // speed(); ???
 
     // only jump if resting on the ground
 	if (GroundPos == z())
@@ -138,7 +104,6 @@ void character::jump()
 // process character movement
 bool character::update ()
 {
-
     // character movement
     Schedule.update ();
 
@@ -158,14 +123,18 @@ bool character::update ()
     		IsRunning = ToggleRunning;
     		set_direction (current_dir());
     	}
+        else
+        {
+            // Update speed over different terrains
+            // But only when character is moving
+            if (current_dir() != character::NONE)
+            {
+                update_velocity (current_dir());
+            }            
+        }
     }
     else if (VSpeed > 0) VSpeed -= 0.4;
-
-    // Update speed over different terrains
-    // But only when character is moving
-    if (current_dir() != character::NONE)
-        speed();
-
+    
     return true;
 }
 
@@ -197,25 +166,31 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
-    float vx = 0.0, vy = 0.0;
+    update_velocity(ndir);
+    update_state();
 
+    Heading = ndir != 0 ? ndir : Heading;
+    CurrentDir = ndir;
+}
+
+// recalculate the character's speed
+void character::update_velocity (const s_int32 & ndir)
+{
+    float vx = 0.0, vy = 0.0;
+    
     if (ndir & WEST) vx = -speed() * (1 + is_running());
     if (ndir & EAST) vx = speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy = speed() * (1 + is_running());
-
+    
     if (vx && vy)
     {
         float s = 1/sqrt (vx*vx + vy*vy);
         vx = (vx * fabs (vx)) * s;
         vy = (vy * fabs (vy)) * s;
     }
-
-    set_velocity(vx, vy);
-    update_state();
-
-    Heading = ndir != 0 ? ndir : Heading;
-    CurrentDir = ndir;
+    
+    set_velocity(vx, vy);    
 }
 
 // figure out name of character shape (and animation) to use
