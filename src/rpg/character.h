@@ -55,13 +55,6 @@ namespace rpg
 
     /**
      * The character base class, containing all rpg-related attributes of a character.
-     * @note All the methods that are intended to be used by the world module have to
-     *       be implemented in this file (.h) and not the implementation file(.cpp).
-     *       Also all other methods called by one method that is called in the world side,
-     *       have to be implemented in the correspondent header file.
-     *       see get_speed_on_terrain for a example, and race::name and terrain_effects::get_relation
-     *       for examples of methods not called directly by the world module, but indirectly by
-     *       a method (in this case get_speed_on_terrain), and therefore also have to be implemented in a .h .
      */
     class character : public python::script
     {

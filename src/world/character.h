@@ -1,6 +1,4 @@
 /*
- $Id: character.h,v 1.12 2009/05/03 16:26:00 ksterker Exp $
-
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -52,9 +50,6 @@ namespace world
      * on the map. It mostly defines some additionnal functions on moving
      * to set the correct representation according to the character movement
      * on the map, and limits its speed.
-     *
-     * @note methods that need to access rpg::character can't be implemented
-     *       in this file, and should therefore be implemented in the .cc file
      */
     class character : public moving
     {
@@ -114,10 +109,6 @@ namespace world
          * Get speed of %character.
          * Varies depending on the terrain he is walking over.
          * @return the %character's actual speed
-         * @todo maybe remember the type of terrain the character was over in
-         *       the last iteration, to increase performance when walking over
-         *       the same terrain. As of now this function is called every frame
-         *       a character is moving/jumping, so any improvement is a big improvement.
          */
         float speed () const;
 
@@ -295,7 +286,7 @@ namespace world
          * @param ndir direction(s) the character is moving in.
          */
         void update_velocity (const s_int32 & ndir);
-            
+
         /// horizontal speed for walking / running
         float Speed;
         /// vertical speed for jumping

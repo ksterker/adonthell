@@ -83,7 +83,7 @@ float character::speed () const
             return new_speed;
         }
     }
-            
+
     // Failed. Let's return the default speed
     return base_speed();
 }
@@ -91,9 +91,6 @@ float character::speed () const
 // jump
 void character::jump()
 {
-    // call speed() to update velocity when jumping over different terrains
-    // speed(); ???
-
     // only jump if resting on the ground
 	if (GroundPos == z())
 	{
@@ -130,11 +127,11 @@ bool character::update ()
             if (current_dir() != character::NONE)
             {
                 update_velocity (current_dir());
-            }            
+            }
         }
     }
     else if (VSpeed > 0) VSpeed -= 0.4;
-    
+
     return true;
 }
 
@@ -177,20 +174,20 @@ void character::set_direction (const s_int32 & ndir)
 void character::update_velocity (const s_int32 & ndir)
 {
     float vx = 0.0, vy = 0.0;
-    
+
     if (ndir & WEST) vx = -speed() * (1 + is_running());
     if (ndir & EAST) vx = speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy = speed() * (1 + is_running());
-    
+
     if (vx && vy)
     {
         float s = 1/sqrt (vx*vx + vy*vy);
         vx = (vx * fabs (vx)) * s;
         vy = (vy * fabs (vy)) * s;
     }
-    
-    set_velocity(vx, vy);    
+
+    set_velocity(vx, vy);
 }
 
 // figure out name of character shape (and animation) to use
