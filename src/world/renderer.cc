@@ -38,7 +38,7 @@ namespace world
 void renderer_base::draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const
 {
     // render object
-    obj.Sprite->draw (x + obj.x () + obj.Shape->ox(), y + obj.y () + obj.Shape->oy() - obj.z() - obj.Shape->height(), &da, target);
+    obj.Sprite->draw (x + obj.screen_x(), y + obj.screen_y(), &da, target);
     
     if (obj.Shape->is_solid())
     {

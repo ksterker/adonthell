@@ -107,6 +107,24 @@ public:
     {
         return Pos.z() + Shape->z();
     }
+    
+    /**
+     * Return screen position of sprite for drawing.
+     * @return x-coordinate projected to screen.
+     */
+    s_int32 screen_x () const
+    {
+        return x() + Shape->ox();
+    }
+    
+    /**
+     * Return screen position of sprite for drawing.
+     * @return y-coordinate projected to screen.
+     */
+    s_int32 screen_y () const
+    {
+        return y() + Shape->oy() - z() - Shape->height();
+    }
     ///@}
     
     /**

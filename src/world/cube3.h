@@ -72,6 +72,39 @@ public:
     ~cube3 ();
     
     /**
+     * @name Member access.
+     */
+    //@{
+    /**
+     * Move a corner of the cube to the given position. This does not
+     * automatically update the bounding box and mesh.
+     * @param point the corner to update.
+     * @param pos the new position.
+     */
+    void set_point (const u_int32 & point, const vector3<s_int16> & pos)
+    {
+        if (point < NUM_CORNERS)
+        {
+            Corners[point] = pos;
+        }
+    }
+    
+    /**
+     * Get the position of one of the cube's corner points.
+     * @return the position of the desired corner point.
+     */
+    vector3<s_int16> get_point (const u_int32 & point) const
+    {
+        if (point < NUM_CORNERS)
+        {
+            return Corners[point];
+        }
+        
+        return vector3<s_int16>();
+    }
+    //@}
+    
+    /**
      * @name Bounding Box
      */
     //@{
