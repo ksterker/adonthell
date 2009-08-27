@@ -1,6 +1,4 @@
 #
-# $Id: character.py,v 1.4 2009/05/04 19:40:40 ksterker Exp $
-#   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
 #
@@ -15,12 +13,12 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Adonthell; if not, write to the Free Software 
+# along with Adonthell; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
 from adonthell import input, gui
-from schedules.char import actions 
+from schedules.char import actions
 
 class action_talk (object):
     """
@@ -29,7 +27,7 @@ class action_talk (object):
     def __init__ (self, initiator, other):
         self.initiator = initiator
         self.other = other
-        
+
     def perform (self):
         # -- stop character schedules during conversation
         self.initiator.get_schedule().set_active(0)
@@ -42,22 +40,22 @@ class action_talk (object):
         self.dlg_wnd = gui.conversation (self.other.this, 600, 300, self.on_finished)
         # -- ... and add it to the gui manager
         gui.window_manager.add (self.dlg_wnd)
-    
+
     def on_finished (self):
         """
          called when a conversation has ended.
         """
         # -- close window
         gui.window_manager.remove (self.dlg_wnd)
-        
+
         # -- resume schedules
         self.initiator.get_schedule().set_active(1)
         self.other.avatar.get_schedule().set_active(1)
-        
+
         # -- cleanup
         del self.dlg_wnd
         del self
-    
+
 
 class character (object):
     """
@@ -77,7 +75,7 @@ class character (object):
         """properly delete a character"""
         if self.this != None:
             self.this.destroy ()
-            
+
     def get_area_of_effect (self, action):
         """
          get the area that is affected when this character
@@ -89,21 +87,39 @@ class character (object):
         """
          perform an action.
          @param action the type of action to perform
-         @param initiator world character instance of the character 
+         @param initiator world character instance of the character
                 triggering the action
         """
         # -- trigger a conversation
         if action == actions.ACTION_NORMAL:
             self.the_action = action_talk (initiator, self)
             self.the_action.perform ()
-            
+
+    def calc_speed (self, terrain):
+        """
+        calculates the speed of the character based on a variety
+        of factors
+        @param terrain a string with the type of terrain we're
+               walking over
+        """
+        if self.this != None:
+            actual_speed = self.this.base_speed()
+
+            # Takes the terrain into consideration
+            race_effects = self.this.race().terrain().get_relation(terrain)
+
+            if race_effects != 0:
+             actual_speed *= (race_effects * 0.01)
+
+            self.this.set_speed(actual_speed);
+
     def put_state (self, record):
         """
          save character to disk
          record needs to be of type base.flat
         """
         pass
-        
+
     def get_state (self, record):
         """
          load character from disk

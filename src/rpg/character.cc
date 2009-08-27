@@ -1,6 +1,4 @@
 /*
-   $Id: character.cc,v 1.7 2009/04/26 18:52:59 ksterker Exp $
-
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -29,7 +27,6 @@
 
 #include "rpg/character.h"
 #include "rpg/terrain_effects.h"
-#include "world/character.h"
 
 using rpg::character;
 
@@ -43,12 +40,14 @@ std::string character::PlayerCharacterId = "";
 
 // ctor
 character::character (const std::string & name, const std::string & id, const rpg::char_type & type,
-                      const std::string & race, world::character * body) : python::script()
+                      const std::string & race) : python::script()
 {
     Color = 0xFFFFFFFF;
     Dialogue = "";
     Name = name;
     Id = id;
+    Base_Speed = 2.5;
+    Speed = Base_Speed;
 
     // remember player character
     if (type == PLAYER)
@@ -79,14 +78,6 @@ character::character (const std::string & name, const std::string & id, const rp
     if (Race == NULL)
     {
         fprintf(stderr, "*** character: '%s' is not a valid race! The race is case sensitive.\n", race.c_str());
-    }
-
-    // save the representation of this character on the world side
-    Body = body;
-    if (body != NULL)
-    {
-        // and do the reverse.
-        Body->set_mind(this);
     }
 }
 

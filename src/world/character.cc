@@ -1,6 +1,4 @@
 /*
-   $Id: character.cc,v 1.17 2009/04/26 18:52:59 ksterker Exp $
-
    Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -29,7 +27,7 @@
  */
 
 #include <math.h>
-
+#include "python/script.h"
 #include "base/diskio.h"
 #include "rpg/character.h"
 #include "world/area.h"
@@ -43,21 +41,16 @@ using world::area;
 character::character (area & mymap, rpg::character * mind) : moving (mymap)
 {
     Type = CHARACTER;
-    Speed = 2;
     VSpeed = 0;
     IsRunning = false;
     ToggleRunning = false;
     CurrentDir = NONE;
     Heading = NONE;
+    Old_Terrain = NULL;
     Schedule.set_map (&mymap);
 
-    // save the representation of this character on the world side
+    // save the representation of this character on the rpg side
     Mind = mind;
-    if (Mind != NULL)
-    {
-        // and do the reverse.
-        Mind->set_body(this);
-    }
 }
 
 // dtor
@@ -66,26 +59,23 @@ character::~character ()
 }
 
 // get real speed
-float character::speed () const
+float character::speed ()
 {
-    // We need the rpg side if we want to have variable speed
-    if (Mind == NULL) return base_speed();
+    // We need the rpg side
+    if (Mind == NULL) return -1;
 
-    // Obtain floor below character
-    if (Terrain != NULL)
+    // Obtain floor below character and check if it is the same as the last frame
+    if ((Terrain != NULL) && (Terrain != Old_Terrain))
     {
-        // Got a possibly valid terrain, let's see if it really exists
-        float new_speed = mind()->get_speed_on_terrain (*Terrain);
+        // Update speed
+        PyObject *args = PyTuple_New (1);
+        PyTuple_SetItem (args, 0, python::pass_instance (Terrain->c_str()));
+        mind()->call_method("calc_speed", args);
 
-        if (new_speed != -1)
-        {
-            // printf("Base Speed is %f. Actual Speed is %f. We're walking over %s\n", base_speed(), new_speed, Terrain->c_str());
-            return new_speed;
-        }
+        Old_Terrain = Terrain;
     }
 
-    // Failed. Let's return the default speed
-    return base_speed();
+    return mind()->speed();
 }
 
 // jump

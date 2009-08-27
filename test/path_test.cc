@@ -1,7 +1,4 @@
-
- /*
-   $Id: path_test.cc,v 1.5 2009/04/25 22:23:39 fr3dc3rv Exp $
-
+/*
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,7 +19,7 @@
 */
 
 // #define DEBUG_COLLISION 1
-
+#ifdef CRAZY
 #include <time.h>
 #include "base/base.h"
 #include "event/date.h"
@@ -535,4 +532,5 @@ public:
 };
 
 world_test myApp;
+#endif
 

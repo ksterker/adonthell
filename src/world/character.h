@@ -34,11 +34,7 @@
 #include "base/diskio.h"
 #include "world/moving.h"
 #include "world/schedule.h"
-
-namespace rpg
-{
-    class character;
-}
+#include "rpg/character.h"
 
 namespace world
 {
@@ -87,30 +83,13 @@ namespace world
          * @name Character Movement
          */
         //@{
-        /**
-         * Set base speed of the character. Running will double the base speed.
-         * @param speed this %character's base speed.
-         */
-        void set_speed (float speed)
-        {
-            Speed = speed;
-        }
-
-        /**
-         * Get base speed of %character.
-         * @return the %character's base speed.
-         */
-        float base_speed () const
-        {
-            return Speed;
-        }
 
         /**
          * Get speed of %character.
-         * Varies depending on the terrain he is walking over.
+         * Varies depending on a number of factors.
          * @return the %character's actual speed
          */
-        float speed () const;
+        float speed ();
 
         /**
          * Toggle running off.
@@ -287,8 +266,6 @@ namespace world
          */
         void update_velocity (const s_int32 & ndir);
 
-        /// horizontal speed for walking / running
-        float Speed;
         /// vertical speed for jumping
         float VSpeed;
 
@@ -310,6 +287,9 @@ namespace world
 
         /// RPG side representation of this character
         rpg::character * Mind;
+
+        /// the type of terrain this character sitted on the last frame
+        const std::string * Old_Terrain;
     };
 }
 

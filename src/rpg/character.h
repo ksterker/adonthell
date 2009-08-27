@@ -32,7 +32,6 @@
 #include "base/hash_map.h"
 #include "python/script.h"
 #include "rpg/race.h"
-#include "world/character.h"
 
 namespace rpg
 {
@@ -68,7 +67,7 @@ namespace rpg
              * @param body representation of this character on the world side
              */
             character (const std::string & name, const std::string & id, const rpg::char_type & type,
-                       const std::string & race, world::character * body = NULL);
+                       const std::string & race);
 
             /**
              * Delete character and remove it from the global character storage.
@@ -154,28 +153,40 @@ namespace rpg
             }
 
            /**
-            * Returns the representation of this character in the world side.
-            * @return world::character that represents this rpg::character.
+            * Set speed of the character.
+            * @param speed this %character's speed.
             */
-            world::character * body() const
+            void set_speed (float speed)
             {
-                return Body;
+                Speed = speed;
             }
 
-            /**
-             * Set the world side representation
-             * @param body the world side representation
-             */
-            void set_body(world::character * body)
+           /**
+            * Set base speed of the character.
+            * @param base_speed this %character's base speed.
+            */
+            void set_base_speed (float base_speed)
             {
-                Body = body;
+                Base_Speed = base_speed;
             }
 
-            /**
-             * Takes into account the race, items, habilities, etc and calcs
-             * how quick this character moves in a certain terrain.
-             */
-             inline float get_speed_on_terrain(const std::string & terrain) const;
+           /**
+            * Return speed of the character.
+            * @return speed of this %character
+            */
+            float speed() const
+            {
+                return Speed;
+            }
+
+           /**
+            * Return base speed of the character.
+            * @return base speed this %character.
+            */
+            float base_speed() const
+            {
+                return Base_Speed;
+            }
 
             //@}
 
@@ -198,6 +209,7 @@ namespace rpg
             {
                 return get_character (PlayerCharacterId);
             }
+
             //@}
 
             /**
@@ -261,8 +273,11 @@ namespace rpg
             /// Race to which this character belongs
             rpg::race * Race;
 
-            /// RPG side representation of this character
-            world::character * Body;
+            /// Actual speed of this character
+            float Speed;
+
+            /// Default speed of this character
+            float Base_Speed;
 
             /// list of all characters currently instanciated
             static std::hash_map<std::string, character*> Characters;
@@ -270,32 +285,5 @@ namespace rpg
             /// id of the character currently controlled by the player
             static std::string PlayerCharacterId;
     };
-
-    float character::get_speed_on_terrain(const std::string & terrain) const
-    {
-        if (Body != NULL)
-        {
-            // Get the default speed from world::character
-            float speed = body()->base_speed();
-
-            // Apply the effects inherent to its race
-            rpg::terrain_affinity race_effects = Race->terrain()->get_relation(terrain);
-
-            if (race_effects == 0)
-            {
-                fprintf(stderr, "*** character: '%s' is not a valid terrain assigned to the race '%s'.\n", terrain.c_str(), Race->name().c_str());
-                return -1;
-            } else {
-                speed *= ((float)race_effects / 100);
-            }
-
-            // TODO: Take other possible effects into account
-
-            return speed;
-        } else return -1;
-    }
-
-
 }
-
 #endif // RPG_CHARACTER_H

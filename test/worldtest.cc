@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with Adonthell; if not, write to the Free Software 
+   along with Adonthell; if not, write to the Free Software
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
@@ -48,7 +48,7 @@ public:
     bool draw_delay;
     bool print_queue;
 	bool screenshot;
-	
+
     game_client()
     {
         letsexit = false;
@@ -110,14 +110,14 @@ public:
 class world_test : public adonthell::app
 {
 public:
-	int main () 
+	int main ()
 	{
         // Initialize the gfx and input systems
     	init_modules (GFX | INPUT | PYTHON | WORLD);
-    
+
     	// Set video mode
     	gfx::screen::set_video_mode(640, 480);
-        
+
 		// Contains map and player controls
 	    game_client gc;
 
@@ -134,16 +134,15 @@ public:
 		// Create game world
         gc.world.load ("data/test-world.xml");
 
-        // we need to update the python search path to find our map view and character schedules 
+        // we need to update the python search path to find our map view and character schedules
         python::add_search_path (base::Paths.game_data_dir() + "data/");
         python::add_search_path (base::Paths.user_data_dir() + "data/");
 
         // we need to load the world module before we can pass anything to python
-        if (python::import_module ("adonthell.world") == NULL) return 1;        
-        
+        if (python::import_module ("adonthell.world") == NULL) return 1;
+
         // set position and speed of player character ...
         world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
-        mchar->set_speed (3.1);
         mchar->set_position (518, 297);
         mchar->set_z (0);
 
@@ -152,43 +151,45 @@ public:
         controls->set_manager ("player", NULL);
 
         // rpg character instance
-        rpg::character player("Player", "Player", rpg::PLAYER, "Humans", mchar);
+        rpg::character player("Player", "Player", rpg::PLAYER, "Humans");
         player.create_instance ("character");
         player.set_attribute ("avatar", python::pass_instance (mchar));
         player.set_color (gfx::screen::get_surface()->map_color (255, 238, 123));
-        
+
+        mchar->set_mind(&player); // Associates the rpg and world counterparts of the Player
+
         // position and speed of a NPC
         mchar = (world::character *) (gc.world.get_entity ("NPC"));
-        mchar->set_speed (2.75);
         mchar->set_position (210, 190);
         mchar->set_z (0);
-        
+
         // rpg character instance
         rpg::character npc("NPC", "NPC", rpg::NPC, "Elves");
         npc.create_instance ("character");
         npc.set_attribute ("avatar", python::pass_instance (mchar));
         npc.set_dialogue("tech_preview");
-        
+        //npc.set_speed(2.75);
+
         // ... and let it walk randomly
         controls = mchar->get_schedule();
         controls->set_manager ("walk_random", NULL);
-        
+
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
-        
+
         // The renderer ...
         world::debug_renderer rndr;
         world::mapview mv (640, 480, &rndr);
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
-        
-	    while (!gc.letsexit) 
+
+	    while (!gc.letsexit)
     	{
         	u_int16 i;
-        
-        	// FIXME frames_missed is probably not what we want here 
-	        // for (int i = 0; i < base::Timer.frames_missed (); i++) 
+
+        	// FIXME frames_missed is probably not what we want here
+	        // for (int i = 0; i < base::Timer.frames_missed (); i++)
 	        // {
             input::manager::update();
             events::date::update();
@@ -196,10 +197,10 @@ public:
             gc.world.update();
             mv.update();
 	        //}
-            
+
             // whether to draw bbox or not
             rndr.set_draw_bbox (gc.draw_bounding_box);
-            
+
             // print queue contents
             if (gc.print_queue)
             {
@@ -212,24 +213,24 @@ public:
             {
                 rndr.set_delay (150);
                 gc.draw_delay = false;
-            }            
-            
+            }
+
             // render mapview on screen
             mv.draw (0, 0);
 
             // stop printing queue contents
             rndr.print_queue (false);
             rndr.set_delay (0);
-            
+
             // whether to render grid
 	        if (gc.draw_grid)
 	        {
-	            for (i = 0; i < gfx::screen::length (); i += 40) 
-	                gfx::screen::get_surface()->fillrect (i, 0, 1, gfx::screen::height (), 0xFFFF00); 
-	            for (i = 0; i < gfx::screen::height (); i += 40) 
-	                gfx::screen::get_surface()->fillrect (0, i, gfx::screen::length (), 1, 0xFFFF00); 
+	            for (i = 0; i < gfx::screen::length (); i += 40)
+	                gfx::screen::get_surface()->fillrect (i, 0, 1, gfx::screen::height (), 0xFFFF00);
+	            for (i = 0; i < gfx::screen::height (); i += 40)
+	                gfx::screen::get_surface()->fillrect (0, i, gfx::screen::length (), 1, 0xFFFF00);
 	        }
-			
+
             // take a screenshot
 			if (gc.screenshot)
 			{
@@ -237,20 +238,20 @@ public:
                 screen->save_png("screenshot.png");
                 gc.screenshot = false;
 			}
-            
+
 #if DEBUG_COLLISION
             gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
-	        base::Timer.update (); 
+	        base::Timer.update ();
             gui::window_manager::update();
 	        gfx::screen::update ();
-	        gfx::screen::clear (); 
+	        gfx::screen::clear ();
 	    }
-	    
+
        rpg::race::cleanup();
 
-	    return 0; 
+	    return 0;
 	}
 };
 
