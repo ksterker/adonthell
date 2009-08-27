@@ -188,6 +188,16 @@ namespace rpg
                 return Base_Speed;
             }
 
+            /**
+             * Wrapper to the python call that updates this %character speed.
+             * @param terrain a string with the type of terrain this character is over
+             */
+            void update_speed(const std::string & terrain)
+            {
+                PyObject *args = PyTuple_New (1);
+                PyTuple_SetItem (args, 0, python::pass_instance (terrain.c_str()));
+                call_method("calc_speed", args);
+            }
             //@}
 
             /**

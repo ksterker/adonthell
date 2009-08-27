@@ -27,7 +27,6 @@
  */
 
 #include <math.h>
-#include "python/script.h"
 #include "base/diskio.h"
 #include "rpg/character.h"
 #include "world/area.h"
@@ -68,9 +67,7 @@ float character::speed ()
     if ((Terrain != NULL) && (Terrain != Old_Terrain))
     {
         // Update speed
-        PyObject *args = PyTuple_New (1);
-        PyTuple_SetItem (args, 0, python::pass_instance (Terrain->c_str()));
-        mind()->call_method("calc_speed", args);
+        mind()->update_speed(*Terrain);
 
         Old_Terrain = Terrain;
     }
