@@ -222,7 +222,7 @@ namespace gfx
             set_height((*m_surface)->image->s->height());          
             
             m_valid = true;
-            m_filename = filename;
+            m_filename = file;
         }
         
         return retval;
