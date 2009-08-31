@@ -163,7 +163,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<int>(int arg, const ownership own)
+    PyObject * pass_instance<s_int32>(s_int32 arg, const ownership own)
     { 
         return PyInt_FromLong(arg);
         show_traceback();
@@ -181,7 +181,7 @@ namespace python
     template <> inline
     PyObject * pass_instance<bool>(bool arg, const ownership own)
     { 
-        return PyInt_FromLong((int)arg);
+        return PyInt_FromLong((s_int32)arg);
         show_traceback();
     }
     
@@ -266,9 +266,9 @@ namespace python
      * @return C++ value of pyinstance.
      */
     template <> inline
-    int retrieve_instance<int, int>(PyObject * pyinstance)
+    s_int32 retrieve_instance<s_int32, s_int32>(PyObject * pyinstance)
     { 
-        int retval =  PyInt_AsLong(pyinstance);
+        s_int32 retval =  PyInt_AsLong(pyinstance);
         show_traceback();
         return retval;
     }
