@@ -103,14 +103,20 @@ class character (object):
                walking over
         """
         if self.this != None:
-            actual_speed = self.this.base_speed()
+            base_speed = self.this.base_speed()
+            actual_speed = base_speed
+            
 
-            # Takes the terrain into consideration
-            race_effects = self.this.race().terrain().get_relation(terrain)
+            # -- Takes the specie into consideration
+            specie_effects = self.this.specie().estimate_speed(terrain)
 
-            if race_effects != 0:
-             actual_speed *= (race_effects * 0.01)
-
+            actual_speed += ((specie_effects * 0.01) * base_speed)
+            
+            # -- Takes the various factions into consideration
+            faction_effects = self.this.get_faction_estimate_speed(terrain)
+            
+            actual_speed += ((faction_effects * 0.01) * base_speed)
+            
             self.this.set_speed(actual_speed);
 
     def put_state (self, record):

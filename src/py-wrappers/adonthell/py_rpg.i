@@ -3,7 +3,6 @@
 
 %{
 #include "rpg/character.h"
-#include "rpg/terrain_effects.h"
 #include "rpg/dialog.h"
 #include "rpg/dialog_line.h"
 #include "rpg/equipment.h"
@@ -12,8 +11,10 @@
 #include "rpg/log_entry.h"
 #include "rpg/log_index.h"
 #include "rpg/quest_event.h"
+#include "rpg/group.h"
 #include "rpg/quest.h"
-#include "rpg/race.h"
+#include "rpg/specie.h"
+#include "rpg/faction.h"
 
 using rpg::slot;
 using rpg::quest_part;
@@ -75,10 +76,11 @@ namespace rpg {
 %include "rpg/dialog_line.h"
 %include "rpg/inventory.h"
 %include "rpg/equipment.h"
-%include "rpg/terrain_effects.h"
 %include "rpg/item_storage.h"
 %include "rpg/log_entry.h"
 %include "rpg/log_index.h"
 %include "rpg/quest.h"
 %include "rpg/quest_event.h"
-%include "rpg/race.h"
+%include "rpg/group.h"
+%include "rpg/specie.h"
+%include "rpg/faction.h"

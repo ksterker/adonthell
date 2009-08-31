@@ -26,9 +26,9 @@
  */
 
 #include "rpg/character.h"
-#include "rpg/terrain_effects.h"
 
 using rpg::character;
+using rpg::faction;
 
 /// global storage of all available character instances
 std::hash_map<std::string, character*> character::Characters;
@@ -40,7 +40,7 @@ std::string character::PlayerCharacterId = "";
 
 // ctor
 character::character (const std::string & name, const std::string & id, const rpg::char_type & type,
-                      const std::string & race) : python::script()
+                      const std::string & specie) : python::script()
 {
     Color = 0xFFFFFFFF;
     Dialogue = "";
@@ -73,12 +73,8 @@ character::character (const std::string & name, const std::string & id, const rp
         Characters[id] = this;
     }
 
-    // get race to which this character belongs
-    Race = rpg::race::get_race(race);
-    if (Race == NULL)
-    {
-        fprintf(stderr, "*** character: '%s' is not a valid race! The race is case sensitive.\n", race.c_str());
-    }
+    // set specie to which this character belongs
+    set_specie(specie);
 }
 
 
@@ -87,6 +83,64 @@ character::~character ()
 {
     Characters.erase (Id);
     python::script::clear();
+}
+
+std::vector<faction *>::const_iterator character::begin() const
+{
+    return Factions.begin();
+}
+
+std::vector<faction *>::const_iterator character::end() const
+{
+    return Factions.end();    
+}
+
+faction * character::get_faction(const std::string & name) const
+{
+    faction * tmp = faction::get_faction(name);
+    
+    return tmp;
+}
+
+bool character::add_faction(const std::string & name)
+{
+    faction * tmp = get_faction(name);
+    
+    if (tmp != NULL)
+    {
+        // Verify if this character conforms to the faction requirements
+        if (tmp->verify_requirements() == true)
+        {
+            Factions.push_back(tmp);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool character::remove_faction(const std::string & name)
+{
+    faction * tmp = get_faction(name);
+    
+    std::vector<faction *>::iterator i = find(Factions.begin(), Factions.end(), tmp);
+    
+    if (*i != NULL)
+    {
+        Factions.erase(i);
+        return true;
+    } else return false;
+}
+
+s_int32 character::get_faction_estimate_speed(const std::string & name) const
+{
+    std::vector<faction *>::const_iterator i;
+    s_int32 sum = 0;
+    
+    for (i = Factions.begin(); i != Factions.end(); i++)
+    {
+        sum += (*i)->estimate_speed(name);
+    }
 }
 
 // return character with given id

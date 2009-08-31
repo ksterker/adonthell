@@ -86,4 +86,12 @@ EXTRA_DIST = \
     schedules/char/actions.py \
 	schedules/char/player.py \
 	schedules/char/walk_random.py \
+	groups/__init__.py \
+	groups/group.py \
+	groups/species/human.py \
+	groups/species/specie.py \
+	groups/species/__init__.py \
+	groups/factions/noble.py \
+	groups/factions/faction.py \
+	groups/factions/__init__.py \
 	test-world.xml

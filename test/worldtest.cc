@@ -29,13 +29,14 @@
 #include "input/manager.h"
 #include "main/adonthell.h"
 #include "rpg/character.h"
+#include "rpg/specie.h"
+#include "rpg/faction.h"
 #include "world/area.h"
 #include "world/character.h"
 #include "world/object.h"
 #include "world/mapview.h"
 #include "world/pathfinding_manager.h"
 #include "gui/window_manager.h"
-#include "rpg/race.h"
 
 class game_client
 {
@@ -121,9 +122,6 @@ public:
 		// Contains map and player controls
 	    game_client gc;
 
-      //load rpg side
-      rpg::race::load("data/races/races.xml");
-
 		// Add keyboard controls
 	    input::listener il;
     	input::manager::add(&il);
@@ -149,14 +147,26 @@ public:
         // ... and enable its controls
         world::schedule *controls = mchar->get_schedule();
         controls->set_manager ("player", NULL);
-
+        
+        // create a specie
+        rpg::specie human("Human");
+        human.create_instance("human");
+        
+        // create a faction
+        rpg::faction noble("Noble");
+        noble.create_instance("noble");
+        
         // rpg character instance
-        rpg::character player("Player", "Player", rpg::PLAYER, "Humans");
+        rpg::character player("Player", "Player", rpg::PLAYER, "Human");
         player.create_instance ("character");
         player.set_attribute ("avatar", python::pass_instance (mchar));
         player.set_color (gfx::screen::get_surface()->map_color (255, 238, 123));
 
         mchar->set_mind(&player); // Associates the rpg and world counterparts of the Player
+        
+        // Add faction to character
+        player.add_faction("Noble");
+        
 
         // position and speed of a NPC
         mchar = (world::character *) (gc.world.get_entity ("NPC"));
@@ -249,8 +259,9 @@ public:
 	        gfx::screen::clear ();
 	    }
 
-       rpg::race::cleanup();
-
+        rpg::specie::cleanup();
+        rpg::faction::cleanup();
+        
 	    return 0;
 	}
 };

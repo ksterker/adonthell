@@ -31,7 +31,8 @@
 #include "base/diskio.h"
 #include "base/hash_map.h"
 #include "python/script.h"
-#include "rpg/race.h"
+#include "rpg/specie.h"
+#include "rpg/faction.h"
 
 namespace rpg
 {
@@ -67,7 +68,7 @@ namespace rpg
              * @param body representation of this character on the world side
              */
             character (const std::string & name, const std::string & id, const rpg::char_type & type,
-                       const std::string & race);
+                       const std::string & specie);
 
             /**
              * Delete character and remove it from the global character storage.
@@ -142,51 +143,110 @@ namespace rpg
             {
                 Dialogue = dialogue;
             }
-
+            //@}
+            
             /**
-             * Return pointer to race of this character
-             * @return race to which this character belongs
+             * Return pointer to specie of this %character
+             * @return specie to which this %character belongs
              */
-            rpg::race * race () const
+            rpg::specie * specie () const
             {
-                return Race;
+                return Specie;
+            }
+            
+            /**
+             * Sets the specie if this %character
+             * @param name the name of the new specie
+             */
+            void set_specie(const std::string & name)
+            {
+                Specie = rpg::specie::get_specie(name);
+                if (Specie == NULL)
+                {
+                    fprintf(stderr, "*** character: '%s' is not a valid specie!\n", name.c_str());
+                }
             }
 
+           /**
+            * @name Character's factions access
+            */
+           //@{
+           
+           ///Iterators
+           std::vector<rpg::faction *>::const_iterator begin() const;
+           std::vector<rpg::faction *>::const_iterator end() const;
+           
+           /**
+            * Add faction to this character's list
+            * @param name name of the faction to be added
+            * @return \b true on success, \b false otherwise
+            */ 
+            bool add_faction(const std::string & name);
+            
+           /**
+            * Remove faction from this character's list
+            * @param name name of the faction to be removed
+            * @return \b true on success, \b false otherwise
+            */
+            bool remove_faction(const std::string & name);
+             
+           /**
+            * Get faction by its name
+            * @param name name of the faction to be retrieved
+            * @return pointer to the faction
+            */
+            rpg::faction * get_faction(const std::string & name) const;
+             
+           /**
+            * Calls each faction's estimate_speed and sums the values
+            * This function is probably going to be called from calc_speed on the
+            * python side
+            * @param terrain the type of terrain this character is over
+            * @return sum of all the values
+            */
+            s_int32 get_faction_estimate_speed(const std::string & terrain) const;
+           
+           //@}
+           
+           /**
+            * @name Character speed
+            */
+           //@{
            /**
             * Set speed of the character.
             * @param speed this %character's speed.
             */
-            void set_speed (float speed)
-            {
-                Speed = speed;
-            }
+           void set_speed (float speed)
+           {
+               Speed = speed;
+           }
 
            /**
             * Set base speed of the character.
             * @param base_speed this %character's base speed.
             */
-            void set_base_speed (float base_speed)
-            {
-                Base_Speed = base_speed;
-            }
+           void set_base_speed (float base_speed)
+           {
+               Base_Speed = base_speed;
+           }
 
            /**
             * Return speed of the character.
             * @return speed of this %character
             */
-            float speed() const
-            {
-                return Speed;
-            }
+           float speed() const
+           {
+               return Speed;
+           }
 
            /**
             * Return base speed of the character.
             * @return base speed this %character.
             */
-            float base_speed() const
-            {
-                return Base_Speed;
-            }
+           float base_speed() const
+           {
+               return Base_Speed;
+           }
 
             /**
              * Wrapper to the python call that updates this %character speed.
@@ -280,8 +340,11 @@ namespace rpg
             /// Dialogue script assigned to this character
             std::string Dialogue;
 
-            /// Race to which this character belongs
-            rpg::race * Race;
+            /// Specie to which this character belongs
+            rpg::specie * Specie;
+            
+            /// Vector with the various factions to which this character belongs
+            std::vector<rpg::faction *> Factions;
 
             /// Actual speed of this character
             float Speed;

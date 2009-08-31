@@ -8,6 +8,7 @@ pkgincluderpg_HEADERS = \
     dialog.h \
     dialog_line.h \
     equipment.h \
+    faction.h \
     inventory.h \
     item_storage.h \
     item.h \
@@ -16,8 +17,8 @@ pkgincluderpg_HEADERS = \
     quest.h \
     quest_event.h \
     quest_event_manager.h \
-    race.h \
-    terrain_effects.h \
+    specie.h \
+    group.h \
     slot.h
     
 ## Rpg library
@@ -29,6 +30,7 @@ libadonthell_rpg_la_SOURCES = \
     dialog.cc \
     dialog_line.cc \
     equipment.cc \
+    faction.cc \
     inventory.cc \
     item_storage.cc \
     item.cc \
@@ -37,8 +39,8 @@ libadonthell_rpg_la_SOURCES = \
     quest.cc \
     quest_event.cc \
     quest_event_manager.cc \
-    race.cpp \
-    terrain_effects.cpp \
+    specie.cc \
+    group.cc \
     slot.cc
 
 libadonthell_rpg_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
