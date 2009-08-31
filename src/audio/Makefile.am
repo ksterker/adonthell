@@ -43,4 +43,4 @@ _sdl_la_LDFLAGS = -avoid-version -module
 _sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
 
 ## define dependencies in case of parallel build
-_sdl_la: libadonthell_audio_la
+_sdl.la: libadonthell_audio.la

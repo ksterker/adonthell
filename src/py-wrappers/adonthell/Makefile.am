@@ -163,5 +163,5 @@ __init__.py:
 ## The .pyc are generated so the Python modules are accessible even if
 ## we are using a separate builddir.
 %.pyc: %.py
-	$(PYTHON) -c "import py_compile; py_compile.compile(\"$<\", \"./$@\");"
+	$(PYTHON) -c "import py_compile; py_compile.compile(\"$(srcdir)/$<\", \"./$@\");"
 
