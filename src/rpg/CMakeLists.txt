@@ -4,6 +4,8 @@ set(adonthell_rpg_SRCS
 	dialog.cc
 	dialog_line.cc
 	equipment.cc
+	faction.cc
+	group.cc
 	inventory.cc
 	item_storage.cc
 	item.cc
@@ -13,26 +15,26 @@ set(adonthell_rpg_SRCS
 	quest_event.cc
 	quest_event_manager.cc
 	slot.cc
-   race.cpp
-   terrain_effects.cpp
+	specie.cc
 )
 
 set(adonthell_rpg_HEADERS
 	character.h
-	inventory.h
-	log_index.h
 	dialog.h
-	item.h
-	quest_event.h
 	dialog_line.h
+	equipment.h
+	faction.h
+	group.h
+	inventory.h
+	item.h
 	item_storage.h
+	log_entry.h
+	log_index.h
+	quest.h
+	quest_event.h
 	quest_event_manager.h
 	slot.h
-	equipment.h
-	log_entry.h
-	quest.h
-   race.h
-   terrain_effects.h
+	specie.h
 )
 
 

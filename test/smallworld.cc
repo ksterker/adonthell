@@ -43,7 +43,6 @@ public:
         // # -- set character attributes
         chr->set_position (160, 160);
         chr->set_altitude (5);
-        chr->set_speed (1.0);
 
         // # -- set character location in world
         wrld.put_entity (0, *chr);
