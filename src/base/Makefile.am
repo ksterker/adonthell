@@ -20,6 +20,7 @@ pkgincludebase_HEADERS = \
     hash_map.h \
     nls.h \
 	paths.h \
+    serializer.h \
 	timer.h \
 	types.h
 

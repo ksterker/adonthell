@@ -158,18 +158,18 @@ namespace python
         void run(P1 arg1, P2 arg2)
         {
             PyObject * pyarg1;
-	    PyObject * pyarg2;
+            PyObject * pyarg2;
             PyObject * pyres;
             
             PyObject * pyargs = PyTuple_New(2);
-            pyarg1 = pass_instance(arg1);
-	    pyarg2 = pass_instance(arg2);
+            pyarg1 = pass_instance<P1>(arg1);
+            pyarg2 = pass_instance<P2>(arg2);
             if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
-	    if (!pyarg2) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+            if (!pyarg2) std::cerr << "Warning! Argument not valid!\n" << std::endl;
             
             // The SetItem steals our reference to pyarg1
             PyTuple_SetItem(pyargs, 0, pyarg1);
-	    PyTuple_SetItem(pyargs, 1, pyarg2);
+            PyTuple_SetItem(pyargs, 1, pyarg2);
             
             // We can finally call our function
             pyres = PyObject_CallObject(callable, pyargs);
@@ -205,7 +205,7 @@ namespace python
             PyObject * pyres;
             
             PyObject * pyargs = PyTuple_New(1);
-            pyarg1 = pass_instance(arg1);
+            pyarg1 = pass_instance<P1>(arg1);
             if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
             
             // The SetItem steals our reference to pyarg1

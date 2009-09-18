@@ -32,6 +32,7 @@ set(adonthell_base_HEADERS
 	configuration.h
 	diskwriter_xml.h
 	gettext.h
+    serializer.h
 	timer.h
 )
 

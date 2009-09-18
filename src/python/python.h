@@ -195,7 +195,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<std::string &>(std::string & arg, const ownership own) 
+    PyObject * pass_instance<const std::string &>(const std::string & arg, const ownership own) 
     { 
         return PyString_FromString(arg.c_str());
         show_traceback();

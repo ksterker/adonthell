@@ -44,8 +44,7 @@ using std::string;
 namespace adonthell {
     /**
      * Subclass adonthell::app to create the entry point for any application
-     * using the Adonthell framework. The class you create must be named theApp
-     * in order to be found by the linker. Override the main() method. It will
+     * using the Adonthell framework. Override the main() method. It will
      * be called after all operating system dependend intialization has been
      * completed. You will find the command line args passed to your application
      * in the member variables argc and argv.

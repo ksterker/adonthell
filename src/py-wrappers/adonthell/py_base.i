@@ -9,6 +9,44 @@
 #include "base/types.h"
 #include "base/diskio.h"
 #include "base/configuration.h"
+#include "base/serializer.h"
+
+#include "python/callback.h"
+
+// partial specialization of base::serializer so it can be used from Python 
+namespace base
+{
+    template<>
+    serializer<PyObject>::serializer() : serializer_base()
+    {
+    }
+
+    template<>
+    serializer<PyObject>::serializer(PyObject *instance) : serializer_base()
+    {
+        PyObject *save = PyObject_GetAttrString (instance, "save");
+        if (PyCallable_Check (save))
+        {
+            Save = new python::functor_1ret<const std::string &, bool>(save);
+        }
+        else
+        {
+            fprintf (stderr, "*** serializer: '%s' has no method 'save'!\n", instance->ob_type->tp_name);
+        }
+        Py_XDECREF (save);
+
+        PyObject *load = PyObject_GetAttrString (instance, "load");
+        if (PyCallable_Check (load))
+        {
+            Load = new python::functor_0ret<bool>(load);
+        }
+        else
+        {
+            fprintf (stderr, "*** serializer: '%s' has no method 'load'!\n", instance->ob_type->tp_name);
+        }
+        Py_XDECREF (load);
+    }
+}
 %}
 
 %include "stdint.i"
@@ -118,6 +156,9 @@ namespace base {
 %include "base/diskio.h"
 %include "base/configuration.h"
 %include "base/paths.h"
+%include "base/serializer.h"
+
+%template(py_serializer) base::serializer<PyObject>;
 
 /* implement friend operators of igzstream */
 %extend base::igzstream {

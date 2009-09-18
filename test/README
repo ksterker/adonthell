@@ -19,8 +19,8 @@ Utility Scripts:
 
 * convert_graphics.py
 
-  Extracts images from v0.3 media files (.anim, .img, .mobj) and
-  converts them into PNG format.
+  Extracts images from v0.3 media files (.anim, .img, .mobj, .mchar) 
+  and converts them into PNG format.
   Run with 'python convert_graphics.py <filename>'
 
 * filereport.py
@@ -101,8 +101,12 @@ Test Scripts:
   enter a list of search terms and prints which texts in the library
   contain these terms. Run with 'python -i searchtest.py'
 
+* serializertest.py
+
+  Tests using the game data serialization for a Python class. Run
+  with 'python serializertest.py'.
+
 * worldtest.py
 
   Tests the world module. Requires the gfx module checked out from
   CVS. Run with 'python gfxtest.py -g <path to gfx module>'
-
