@@ -122,7 +122,7 @@ namespace python
                 case base::flat::T_SINT32:
                 {
                     // Stolen reference
-                    PyTuple_SetItem (tuple, i, pass_instance (*((int*) value), c_owns));
+                    PyTuple_SetItem (tuple, i, pass_instance<const s_int32> (*((s_int32*) value), c_owns));
                     break; 
                 }
                 default:

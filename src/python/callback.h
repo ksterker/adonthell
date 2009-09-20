@@ -122,7 +122,7 @@ namespace python
             PyObject * pyres;
             
             PyObject * pyargs = PyTuple_New(1);
-            pyarg1 = pass_instance(arg1);
+            pyarg1 = pass_instance<P1>(arg1);
             if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
             
             // The SetItem steals our reference to pyarg1

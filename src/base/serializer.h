@@ -26,9 +26,10 @@
  * 
  */
 
-#ifndef BASE_SAVEGAME_H
-#define BASE_SAVEGAME_H
+#ifndef BASE_SERIALIZER_H
+#define BASE_SERIALIZER_H
 
+#include "base/callback.h"
 #include "python/callback_support.h"
 
 namespace base

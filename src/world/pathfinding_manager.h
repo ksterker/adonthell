@@ -120,7 +120,7 @@ namespace world
          * @param callback the callback to run on task completion or
          *        NULL to clear a previously set callback.
          */
-        static void set_callback (const s_int16 id, base::functor_1<s_int32> * callback);
+        static void set_callback (const s_int16 id, base::functor_1<const s_int32> * callback);
 
         /**
          * Set the direction to where the character will point after finishing moving

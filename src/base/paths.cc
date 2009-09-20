@@ -119,7 +119,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     GameDataDir += game + "/";
 
     // make sure game data dir exists
-    return exists (GameDataDir);
+    return exists (GameDataDir) || IncludeUserDir;
 }
 
 // set path to saved game (before loading the game from that directory)

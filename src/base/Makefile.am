@@ -20,6 +20,7 @@ pkgincludebase_HEADERS = \
     hash_map.h \
     nls.h \
 	paths.h \
+    savegame.h \
     serializer.h \
 	timer.h \
 	types.h
@@ -40,6 +41,7 @@ libadonthell_base_la_SOURCES = \
 	flat.cc \
     nls.cc \
 	paths.cc \
+    savegame.cc \
 	timer.cc
 
 libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)

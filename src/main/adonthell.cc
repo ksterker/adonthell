@@ -38,6 +38,7 @@
 #include "gfx/gfx.h"
 #include "base/nls.h"
 #include "base/base.h"
+#include "base/savegame.h"
 #include "input/input.h"
 #include "audio/audio.h"
 #include "world/world.h"
@@ -190,8 +191,18 @@ bool app::init ()
     }
 
     // init base module (required for reading config file)
-    base::init (Game, Userdatadir);
+    if (!base::init (Game, Userdatadir))
+    {
+        cerr << "No valid data directory found (use -g switch)." << endl;
+        return false;
+    }
 
+    // read available saved games
+    if (Game != "")
+    {
+        base::savegame::init (Game);
+    }
+    
     // load engine configuration file
     if (!Cfg.read (Config))
     {

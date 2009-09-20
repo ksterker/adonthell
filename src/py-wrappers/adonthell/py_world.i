@@ -92,6 +92,6 @@ class coordinates (vector3i):
 {
     static void set_callback (const s_int16 id, PyObject * callback)
     {
-        world::pathfinding_manager::set_callback (id, new python::functor_1<s_int32>(callback));
+        world::pathfinding_manager::set_callback (id, new python::functor_1<const s_int32>(callback));
     }
 };

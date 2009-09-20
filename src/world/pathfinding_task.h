@@ -43,7 +43,7 @@ namespace world
         /// The character being moved
         world::character * chr;
         /// Callback to execute when task completes/fails
-        base::functor_1<s_int32> * callback;
+        base::functor_1<const s_int32> * callback;
         /// The target position (in pixels)
         world::vector3<s_int32> target;
         world::vector3<s_int32> target2;

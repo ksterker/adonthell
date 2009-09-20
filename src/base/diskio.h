@@ -54,7 +54,7 @@ namespace base {
              * Constructor.
              * @param format File format to use for disk i/o.
              */
-            diskio (const diskio::file_format & format);
+            diskio (const diskio::file_format & format = BY_EXTENSION);
 
             /**
              * Destructor.

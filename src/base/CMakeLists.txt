@@ -11,6 +11,7 @@ set(adonthell_base_SRCS
     flat.cc
 	nls.cc
     paths.cc
+    savegame.cc
     timer.cc
 )
 
@@ -32,6 +33,7 @@ set(adonthell_base_HEADERS
 	configuration.h
 	diskwriter_xml.h
 	gettext.h
+    savegame.h
     serializer.h
 	timer.h
 )

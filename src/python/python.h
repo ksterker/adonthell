@@ -146,10 +146,6 @@ namespace python
     template <class A> inline
     PyObject * pass_instance(A arg, const ownership own = c_owns)
     { 
-        // swig_type_info * tt = SWIG_Python_TypeQuery (arg->get_type_name ());
-        // if (tt) return SWIG_Python_NewPointerObj(arg, tt, own);
-        
-        // fprintf (stderr, "*** pass_instance: type '%s' unknown to SWIG\n", arg->get_type_name ());
         return cxx_to_py ((void *) arg, arg->get_type_name(), own);
     }
     
@@ -163,7 +159,7 @@ namespace python
      * @return a Python object representing \e arg.
      */
     template <> inline
-    PyObject * pass_instance<s_int32>(s_int32 arg, const ownership own)
+    PyObject * pass_instance<const s_int32>(const s_int32 arg, const ownership own)
     { 
         return PyInt_FromLong(arg);
         show_traceback();

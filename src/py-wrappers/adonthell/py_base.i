@@ -9,7 +9,7 @@
 #include "base/types.h"
 #include "base/diskio.h"
 #include "base/configuration.h"
-#include "base/serializer.h"
+#include "base/savegame.h"
 
 #include "python/callback.h"
 
@@ -156,9 +156,17 @@ namespace base {
 %include "base/diskio.h"
 %include "base/configuration.h"
 %include "base/paths.h"
+%include "base/savegame.h"
 %include "base/serializer.h"
 
 %template(py_serializer) base::serializer<PyObject>;
+
+%extend base::savegame {
+    savegame (PyObject* callback)
+    {
+        return new base::savegame (new python::functor_1<const s_int32>(callback));
+    }
+}
 
 /* implement friend operators of igzstream */
 %extend base::igzstream {

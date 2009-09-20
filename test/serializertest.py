@@ -9,7 +9,7 @@ class testserializer(main.AdonthellApp):
     def main (self):
 	s = base.py_serializer(self)
 	s.save ("test")
-	# s.load ()
+	s.load ()
         
         return 0
 

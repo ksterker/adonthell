@@ -207,7 +207,7 @@ s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const
     return m_taskCount++;
 }
 
-void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<s_int32> * callback)
+void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<const s_int32> * callback)
 {
     // get rid of previously set callback, if any
     delete m_task[id].callback;
