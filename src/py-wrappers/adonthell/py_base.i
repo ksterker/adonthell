@@ -42,6 +42,7 @@ namespace base
         }
         else
         {
+            Load = NULL;
             fprintf (stderr, "*** serializer: '%s' has no method 'load'!\n", instance->ob_type->tp_name);
         }
         Py_XDECREF (load);
@@ -128,6 +129,8 @@ namespace base {
 
     // typemap to let C++ have ownership of cfg_option* given to configuration::add_option ()
     %typemap(in) cfg_option *value "if ((SWIG_ConvertPtr ($input, (void **) &$1, $1_descriptor, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) SWIG_fail;"
+
+    %typemap(in) serializer_base *serializer "if ((SWIG_ConvertPtr ($input, (void **) &$1, $1_descriptor, SWIG_POINTER_EXCEPTION | SWIG_POINTER_DISOWN)) == -1) SWIG_fail;"
 }
 
 // typemap for passing a FILE* from Python

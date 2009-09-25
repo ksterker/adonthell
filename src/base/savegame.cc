@@ -139,16 +139,6 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
             return false;
         }
 
-#ifdef WIN32
-        if (mkdir (filepath.c_str()))
-#else
-        if (mkdir (filepath.c_str(), 0700))
-#endif
-        {
-            fprintf (stderr, "*** savegame::save: failed to create directory\n    %s\n", filepath.c_str ());
-            return false;
-        }
-        
         // we'll need a new gamedata record
         data = new savegame_data (filepath, desc, gametime);
         Games.push_back (data);
@@ -157,9 +147,10 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
     {
         // we have to update the gamedata record
         data->update (desc, gametime);
-        // and clean the directory before saving
-        cleanup (data->directory());
     }
+
+    // prepare the directory before saving
+    cleanup (data->directory());
 
     // save game data
     u_int32 current = 1;
@@ -167,11 +158,11 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
     std::list<base::serializer_base*>::iterator i;
     for (i = Serializer().begin(); i != Serializer().end(); i++)
     {
-        // if (!(*i)->save (data->directory()))
-        // {
+        if (!(*i)->save (data->directory()))
+        {
             // TODO: cleanup
-        //     return false;
-        // }
+            return false;
+        }
         
         if (ProgressCallback != NULL)
         {
@@ -257,6 +248,17 @@ void savegame::cleanup (const std::string & name)
         
         closedir (dir);
     }
+    else
+    {
+#ifdef WIN32
+        if (mkdir (name.c_str()))
+#else
+        if (mkdir (name.c_str(), 0700))
+#endif
+        {
+            fprintf (stderr, "*** savegame::save: failed to create directory\n    %s\n", name.c_str ());
+        }
+    }
 }
 
 // get game at given slot
@@ -266,10 +268,10 @@ savegame_data *savegame::get (const s_int32 & slot)
     if (slot == NEW_SAVE) return NULL;
     
     s_int32 real_slot = slot + SPECIAL_SLOT_COUNT;
-    if (slot < 0 || slot >= count())
+    if (real_slot < 0 || real_slot >= Games.size())
     {
         fprintf (stderr, "*** savegame::get: slot %i out of range [%i, %i[\n", 
-                 slot, -SPECIAL_SLOT_COUNT, count()-SPECIAL_SLOT_COUNT);
+                 slot, -SPECIAL_SLOT_COUNT, count());
         return NULL;
     }
     
@@ -335,3 +337,4 @@ std::list<base::serializer_base*>& savegame::Serializer ()
     static std::list<base::serializer_base*> *Serializer = new std::list<base::serializer_base*>();
     return *Serializer;
 }
+
