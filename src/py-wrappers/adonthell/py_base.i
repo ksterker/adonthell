@@ -156,6 +156,7 @@ namespace base {
 %include "base/diskio.h"
 %include "base/configuration.h"
 %include "base/paths.h"
+typedef long time_t;
 %include "base/savegame.h"
 %include "base/serializer.h"
 

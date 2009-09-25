@@ -38,7 +38,7 @@ using base::savegame;
 using base::savegame_data;
 
 /// list of saved games
-std::vector<savegame_data> savegame::Games;
+std::vector<savegame_data*> savegame::Games;
 
 // ctor
 savegame_data::savegame_data (const std::string & dir, const std::string & desc, const u_int32 & time)
@@ -150,8 +150,8 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
         }
         
         // we'll need a new gamedata record
-        Games.push_back (savegame_data (filepath, desc, gametime));
-        data = &Games.back();
+        data = new savegame_data (filepath, desc, gametime);
+        Games.push_back (data);
     }
     else
     {
@@ -163,19 +163,19 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
 
     // save game data
     u_int32 current = 1;
-    u_int32 count = Serializer().size();
+    u_int32 size = Serializer().size();
     std::list<base::serializer_base*>::iterator i;
     for (i = Serializer().begin(); i != Serializer().end(); i++)
     {
-        if (!(*i)->save (data->directory()))
-        {
+        // if (!(*i)->save (data->directory()))
+        // {
             // TODO: cleanup
-            return false;
-        }
+        //     return false;
+        // }
         
         if (ProgressCallback != NULL)
         {
-            (*ProgressCallback)((s_int32)((current * 100.0) / count));
+            (*ProgressCallback)((s_int32)((current * 100.0) / size));
         }
         
         current++;
@@ -200,19 +200,19 @@ void savegame::init (const std::string & name)
     DIR *dir;
 
     // create initial saved game
-    Games.push_back (savegame_data ("", "Start New Game", 0));
+    Games.push_back (new savegame_data ("", "Start New Game", 0));
     
     // create auto save slot
     std::string save_dir = base::Paths.cfg_data_dir() + "/" + name;
     if (!load_meta_data (save_dir + "-auto-save"))
     {
-        Games.push_back (savegame_data (save_dir + "-auto-save", "Autosave", 0));
+        Games.push_back (new savegame_data (save_dir + "-auto-save", "Autosave", 0));
     }
     
     // create quick save slot
     if (!load_meta_data (save_dir + "-quick-save"))
     {
-        Games.push_back (savegame_data (save_dir + "-quick-save", "Quicksave", 0));
+        Games.push_back (new savegame_data (save_dir + "-quick-save", "Quicksave", 0));
     }
     
     // Read the user's saved games (if any) - they'll be located in
@@ -262,6 +262,9 @@ void savegame::cleanup (const std::string & name)
 // get game at given slot
 savegame_data *savegame::get (const s_int32 & slot)
 {
+    // avoid error message
+    if (slot == NEW_SAVE) return NULL;
+    
     s_int32 real_slot = slot + SPECIAL_SLOT_COUNT;
     if (slot < 0 || slot >= count())
     {
@@ -270,7 +273,7 @@ savegame_data *savegame::get (const s_int32 & slot)
         return NULL;
     }
     
-    return &Games[real_slot];
+    return Games[real_slot];
 }
 
 // save meta data
@@ -300,11 +303,11 @@ bool savegame::load_meta_data (const std::string & filepath)
             std::string desc = file.get_string("desc");
             u_int32 time = file.get_uint32("time");
             
-            savegame_data data (filepath, desc, time);
+            savegame_data *data = new savegame_data (filepath, desc, time);
             
             // get modification time of this game
             time_t mod_time = statbuf.st_mtimespec.tv_sec;
-            data.set_last_modified(mod_time);
+            data->set_last_modified(mod_time);
             
             Games.push_back (data);
             return true;
@@ -312,6 +315,18 @@ bool savegame::load_meta_data (const std::string & filepath)
     }
     
     return false;
+}
+
+// register serializer
+void savegame::add (base::serializer_base* serializer)
+{
+    Serializer ().push_back (serializer);
+}
+
+// remove serializer
+void savegame::remove (base::serializer_base* serializer)
+{
+    Serializer ().remove (serializer);
 }
 
 // factories for loading/saving game data

@@ -221,6 +221,18 @@ namespace base
          */
         static void init (const std::string & name);
 
+        /**
+         * Register a serializer for saving/loading game data.
+         * @param serializer the serializer to add.
+         */
+        static void add (base::serializer_base* serializer);
+        
+        /**
+         * Remove an existing serializer.
+         * @param serializer the serializer to remove.
+         */
+        static void remove (base::serializer_base* serializer);
+        
     protected:
         /**
          * Delete all regular files in the given directory.
@@ -247,7 +259,7 @@ namespace base
         
     private:
         /// list of available saved games
-        static std::vector<savegame_data> Games;
+        static std::vector<savegame_data*> Games;
         /// classes that read write game data
         static std::list<base::serializer_base*>& Serializer();
         /// notify about load/save progress
