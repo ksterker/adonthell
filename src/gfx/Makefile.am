@@ -69,7 +69,7 @@ _sdl_la_LDFLAGS = -module -avoid-version
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_gfx
 
 ## define dependencies in case of parallel build
-_sdl.la: libadonthell_gfx.la
+_sdl_la_DEPENDENCIES = libadonthell_gfx.la
 
 ### SDLGL backend
 

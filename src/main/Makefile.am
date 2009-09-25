@@ -47,5 +47,5 @@ _sdl_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++
 
 ## define dependencies in case of parallel build
-_sdl.la: libadonthell_main.la
+_sdl_la_DEPENDENCIES = libadonthell_main.la
 
