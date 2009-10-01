@@ -42,7 +42,6 @@ namespace base
         }
         else
         {
-            Load = NULL;
             fprintf (stderr, "*** serializer: '%s' has no method 'load'!\n", instance->ob_type->tp_name);
         }
         Py_XDECREF (load);

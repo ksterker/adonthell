@@ -26,6 +26,7 @@
  * 
  */
 
+#include <algorithm>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -308,7 +309,7 @@ bool savegame::load_meta_data (const std::string & filepath)
             savegame_data *data = new savegame_data (filepath, desc, time);
             
             // get modification time of this game
-            time_t mod_time = statbuf.st_mtimespec.tv_sec;
+            time_t mod_time = statbuf.st_mtime;
             data->set_last_modified(mod_time);
             
             Games.push_back (data);

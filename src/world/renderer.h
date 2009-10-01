@@ -57,6 +57,16 @@ public:
      */
     virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const = 0;
     
+    /**
+     * Draw objects in the given list on screen.
+     * @param x offset on the x-axis.
+     * @param y offset on the y-axis.
+     * @param render_queue list of objects to draw on screen.
+     * @param da clipping rectangle.
+     * @param target surface to draw on, NULL for screen surface.
+     */
+    virtual void render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const = 0;    
+    
 protected:
     /**
      * Draw a single object to the screen.
@@ -67,7 +77,7 @@ protected:
      * @param target surface to draw on, NULL for screen surface.
      */
     virtual void draw (const s_int16 & x, const s_int16 & y, const render_info & obj, const gfx::drawing_area & da, gfx::surface * target) const;
-
+    
 #ifndef SWIG
     /**
      * Allow %renderer_base to be passed as python argument
@@ -97,6 +107,16 @@ public:
      * @param target surface to draw on, NULL for screen surface.
      */
     virtual void render (const s_int16 & x, const s_int16 & y, const std::list <world::chunk_info*> & objectlist, const gfx::drawing_area & da, gfx::surface * target) const;
+
+    /**
+     * Draw objects in the given list on screen.
+     * @param x offset on the x-axis.
+     * @param y offset on the y-axis.
+     * @param render_queue list of objects to draw on screen.
+     * @param da clipping rectangle.
+     * @param target surface to draw on, NULL for screen surface.
+     */
+    virtual void render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const;
     
 #ifndef SWIG
     /**

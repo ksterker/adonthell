@@ -77,6 +77,12 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::
         }
     }
     
+    render (x, y, render_queue, da, target);
+}
+
+// default rendering
+void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const
+{        
     // paint while object remain in the queue
     while (!render_queue.empty())
     {

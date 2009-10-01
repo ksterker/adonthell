@@ -7,7 +7,7 @@ class testserializer(main.AdonthellApp):
         return 1
 
     def progress (self, current):
-        print ".",
+        print "+",
         
     def main (self):
         # -- register serializer
@@ -15,11 +15,10 @@ class testserializer(main.AdonthellApp):
         
         # -- create savegame instance
         sg = base.savegame (self.progress)
-        print sg
         
         # -- save
-        sg.load (-3)
-        sg.save (-2, "Test", 0)
+        sg.load (base.savegame.INITIAL_SAVE)
+        sg.save (base.savegame.QUICK_SAVE, "Test", 0)
         
         # -- list existing save games
         for index in range (0, sg.count()):

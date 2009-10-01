@@ -176,7 +176,7 @@ bool placeable_model::get_state (base::flat & file)
     Sprite.set_filename (sprite);
 
     // get associated terrain
-    std::string tmp_terr = record.get_string("terrain");
+    std::string tmp_terr = record.get_string("terrain", true);
 
     if (!tmp_terr.empty())
     {
