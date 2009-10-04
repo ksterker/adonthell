@@ -1,6 +1,4 @@
 /*
- $Id: placeable_shape.h,v 1.9 2009/03/21 14:29:11 ksterker Exp $
- 
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -204,18 +202,45 @@ namespace world
         //@}
         
         /**
+         * @name Shape editing.
+         */
+        //@{
+        /**
+         * Set offset of sprite in respect to the shape.
+         * @param ox offset in x direction.
+         * @param oy offset in y direction.
+         */
+        void set_offset (const s_int16 & ox, const s_int16 & oy)
+        {
+            Offset.set (ox, oy, 0);
+        }
+        
+        /**
+         * Set whether shape is solid or not. Non-solid shapes
+         * are ignored by collision detection, but still used for
+         * rendering.
+         * @param solid true to make shape solid, false otherwise.
+         */
+        void set_solid (const bool & solid)
+        {
+            Solid = solid;
+        }
+        //@}
+        
+        /**
          * @name Loading / Saving
          */
         //@{
         /**
-         * Save %area state to stream. 
-         * @param file stream to save %area to.
+         * Save shape state to stream. 
+         * @param file stream to save shape to.
          * @return \b true if saving successful, \b false otherwise.
          */
         bool put_state (base::flat & file) const;
+        
         /**
-         * Load %area state from stream. 
-         * @param file stream to load %area from.
+         * Load shape state from stream. 
+         * @param file stream to load shape from.
          * @return \b true if loading successful, \b false otherwise.
          */        
         bool get_state (base::flat & file);
