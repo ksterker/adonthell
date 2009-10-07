@@ -16,6 +16,7 @@
 # along with Adonthell; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
+from adonthell.base import flat
 
 class group (object):
     """
@@ -28,6 +29,14 @@ class group (object):
         """ctor"""
         # -- reference to the underlying rpg.group instance
         self.this = None
+        
+        # -- Group Name
+        self.Name = ""
+        
+        # -- Dictionary with relation between the terrain and respective
+        # -- imapct in speed
+        self.Dic = {}
+
 
     def destroy (self):
         """properly delete a group"""
@@ -35,17 +44,31 @@ class group (object):
             self.this.destroy ()
     
     def estimate_speed (self, terrain):
-        """ returns a percentage depending on how nicely this group
-            and the terrain interact.
-            @param terrain the type of terrain we want to interact with
-        """
-        return 0 # -- there's no effect
+        try:
+            return self.Dic[terrain]
+        except: return 0
         
-    def estimate_speed_for_pathfinding (self, terrain):
-        """ similar to estimate_speed but now the result is going to
-            be used in all the pathfinding searchs. Therefore adding
-            special cases here can mold the behaviour of a NPC.
-            For example a noble NPC won't cross a swamp unless he is under attack
-            @param terrain the type of terrain we want to interact with
-        """
-        return self.estimate_speed(terrain)
+    # -- save item to disk
+    #    record needs to be of type base.flat
+    def put_state (self, record):
+        record.put_string("pgpn", self.Name) 
+        
+        terrains = flat()
+        for terrain in self.Dic: 
+            terrains.put_sint8(terrain, self.Dic[terrain])
+            
+        record.put_flat ("gTerr", terrains)
+        
+    # -- load item from disk
+    #    record needs to be of type base.flat
+    def get_state (self, record):
+        self.Name = record.get_string("pgpn")
+        
+        terrains = record.get_flat ("gTerr")
+
+        type, value, unused, key = terrains.next ()
+        while type == flat.T_SINT8:
+            self.Dic[key] = value
+            type, value, unused, key = terrains.next ()
+        
+        

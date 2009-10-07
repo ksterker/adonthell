@@ -28,7 +28,7 @@
 #ifndef FACTION_H
 #define FACTION_H
 
-#include <set>
+#include <vector>
 #include "rpg/group.h"
 
 namespace rpg
@@ -46,7 +46,7 @@ namespace rpg
             // Update the path to the python modules
             set_group_package("groups.factions.");
             
-            Factions.insert(this);
+            Factions.push_back(this);
         }
         
         /**
@@ -71,7 +71,7 @@ namespace rpg
     private:
 
         /// List of all available factions
-        static std::set<faction *, order_by_name> Factions;
+        static std::vector<faction *> Factions;
     };
 }
 #endif

@@ -64,3 +64,82 @@ s_int32 group::estimate_speed(const std::string & terrain) const
 
     return ret_int;
 }
+
+bool group::put_state (const string & file, const base::diskio::file_format & format) const
+{
+    // try to save group
+    base::diskio record (format);
+    if (!put_state (record))
+    {
+        fprintf (stderr, "*** group::put_state: saving '%s' failed!\n", file.c_str ());        
+        return false;
+    }
+    
+    // write group to disk
+    return record.put_record (file);
+}
+
+
+bool group::put_state (base::flat & file) const
+{
+    base::flat record;
+    
+    // save the attributes
+    record.put_string ("gnm", Name);
+
+    // save the template this group uses
+    record.put_string ("gcn", class_name ());
+
+    // pass record
+    PyObject *args = PyTuple_New (1);
+    PyTuple_SetItem (args, 0, python::pass_instance ((base::flat*) &record));
+
+    // save the actual group data
+    call_method ("put_state", args);
+    Py_DECREF (args);
+
+
+    file.put_flat ("grp", record);
+    return true;
+}
+
+// load a single group from file
+bool group::get_state(const string & file)
+{
+    // try to load group
+    base::diskio record (base::diskio::BY_EXTENSION);
+    
+    if (record.get_record (file)) 
+        return get_state (record);
+    
+    return false;
+}
+
+bool group::get_state(base::flat & file)
+{
+    base::flat record = file.get_flat ("grp");
+    if (!file.success ()) return false;
+
+    
+    // get attributes
+    set_name(record.get_string("gnm"));
+    
+    // get template to use for group
+    std::string tmpl = record.get_string("gcn");
+    
+    // instanciate
+    if (!create_instance (tmpl)) return false;
+
+    // pass file
+    PyObject *args = PyTuple_New (1);
+    PyTuple_SetItem (args, 0, python::pass_instance (&record));
+    
+    // load actual group data
+    call_method ("get_state", args);
+    Py_DECREF (args);
+    
+    // add reference to item
+    set_attribute ("this", python::pass_instance (this));
+    
+    return record.success ();
+}

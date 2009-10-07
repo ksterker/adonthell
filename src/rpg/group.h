@@ -28,17 +28,10 @@
 #define GROUP_H
 
 #include "python/script.h"
+#include "base/diskio.h"
 
 namespace rpg
 {
-    struct order_by_name
-    {
-        template <class T>
-        bool operator()(T * i, T * a) const
-        {
-            return (i->name() < a->name());
-        }
-    };
     
     /**
      * This class is the base for every other class that represents a group of
@@ -103,6 +96,55 @@ namespace rpg
         {
             Group_Package = group_package;
         }
+        
+        /**
+         * @name Loading/Saving
+         */
+        //@{
+        /**
+         * Load group from named file. This will first load the %group template
+         * to instanciate the underlying Python group class. Then it will
+         * restore the actual %group data. If an group is already instanciated,
+         * it will be replaced.
+         *
+         * @param file name of the file to load %group from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file); 
+        
+        /**
+         * Load %group from stream. This will first load the %group template
+         * to instanciate the underlying Python group class. Then it will
+         * restore the actual %group data. If an group is already instanciated,
+         * it will be replaced.
+         *
+         * @param file stream to load group from.
+         * @return \b true if loading successful, \b false otherwise. 
+         */
+        bool get_state (const std::string & file);
+        
+         /**
+         * Save %group to named file. This will save both the grou+ template
+         * plus the actual data to the given file. The file will be replaced
+         * if it already exists.
+         *
+         * @param file name of the file to save %group to.
+         * @param format whether to save as XML or compressed binary.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (const string & file, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+
+        /**
+         * Save %group to stream. This will save both the %group template
+         * plus the actual data to the given file. The file will be replaced
+         * if it already exists.
+         *
+         * @param file stream to save %group to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const;
+
+        
     private:
 
         /// The name of this group

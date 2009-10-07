@@ -21,7 +21,7 @@
 
 using namespace rpg;
 
-std::set<faction *, order_by_name> faction::Factions;
+std::vector<faction *> faction::Factions;
 
 bool faction::verify_requirements() const
 {
@@ -50,9 +50,13 @@ void faction::cleanup()
 
 faction * faction::get_faction(const std::string & name)
 {
-    faction tmp(name);
+    std::vector<faction *>::iterator i;
+    
+    for (i = Factions.begin(); i != Factions.end(); i++)
+    {
+        if ((*i)->name() == name)
+            return (*i);
+    }
 
-    std::set<faction *>::iterator i = Factions.find(&tmp);
-
-    return (i != Factions.end()) ? (*i) : NULL;
+    return NULL;
 }

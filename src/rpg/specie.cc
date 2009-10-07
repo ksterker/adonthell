@@ -21,7 +21,7 @@
 
 using namespace rpg;
 
-std::set<specie *, order_by_name> specie::Species;
+std::vector<specie *> specie::Species;
 
 s_int8 specie::alignment() const
 {
@@ -39,9 +39,12 @@ void specie::cleanup()
 
 specie * specie::get_specie(const std::string & name)
 {
-    specie tmp(name);
+    std::vector<specie *>::iterator i;
 
-    std::set<specie *>::iterator i = Species.find(&tmp);
-
-    return (i != Species.end()) ? (*i) : NULL;
+    for (i = Species.begin(); i != Species.end(); i++)
+    {
+        if ((*i)->name() == name)
+            return (*i);
+    }
+    return NULL;
 }

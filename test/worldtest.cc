@@ -150,11 +150,11 @@ public:
         
         // create a specie
         rpg::specie human("Human");
-        human.create_instance("human");
+        human.get_state("data/groups/human.specie");
         
         // create a faction
         rpg::faction noble("Noble");
-        noble.create_instance("noble");
+        noble.get_state("data/groups/noble.faction");
         
         // rpg character instance
         rpg::character player("Player", "Player", rpg::PLAYER, "Human");
@@ -174,7 +174,7 @@ public:
         mchar->set_z (0);
 
         // rpg character instance
-        rpg::character npc("NPC", "NPC", rpg::NPC, "Elves");
+        rpg::character npc("NPC", "NPC", rpg::NPC, "Human");
         npc.create_instance ("character");
         npc.set_attribute ("avatar", python::pass_instance (mchar));
         npc.set_dialogue("tech_preview");

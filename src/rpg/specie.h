@@ -28,7 +28,7 @@
 #ifndef SPECIE_H
 #define SPECIE_H
 
-#include <set>
+#include <vector>
 #include "rpg/group.h"
 
 namespace rpg
@@ -45,8 +45,10 @@ namespace rpg
         {
             // Update the path to the python modules
             set_group_package("groups.species.");
-            
-            Species.insert(this);
+
+            #ifndef SWIG
+                Species.push_back(this);
+            #endif
         }
         
         /**
@@ -79,7 +81,7 @@ namespace rpg
         s_int8 Alignment;
 
         /// List of all available species
-        static std::set<specie *, order_by_name> Species;
+        static std::vector<specie *> Species;
     };
 }
 #endif
