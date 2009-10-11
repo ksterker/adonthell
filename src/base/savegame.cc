@@ -38,6 +38,21 @@
 using base::savegame;
 using base::savegame_data;
 
+#ifdef WIN32
+/// mingw dirent struct does not have d_type
+static st_mode get_file_type (const std::string & path, const std::string & name)
+{
+    struct stat statbuf;
+    std::string file = path + "/" + name;
+    if (stat (file.c_str (), &statbuf) != -1)
+    {
+        return statbuf.st_mode;
+    } 
+    return 0;
+}
+#endif
+
+
 /// list of saved games
 std::vector<savegame_data*> savegame::Games;
 
@@ -161,7 +176,7 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
     {
         if (!(*i)->save (data->directory()))
         {
-            // TODO: cleanup
+            cleanup (data->directory());
             return false;
         }
         
@@ -240,7 +255,11 @@ void savegame::cleanup (const std::string & name)
     {
         while ((dirent = readdir (dir)) != NULL)
         {
+#ifdef WIN32
+            if (S_ISREG (get_file_type (name, dirent->d_name)))
+#else
             if (dirent->d_type == DT_REG)
+#endif
             {
                 std::string file = name + "/" + dirent->d_name;
                 unlink (file.c_str());

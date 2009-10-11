@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Data cs="23f915b9">
-  <list id="data/models/char/npc/ng.xml">
+  <list id="models/char/npc/ng.xml">
     <u_int8 id="type">2</u_int8>
     <list id="unique">
       <string id="id">Player</string>
@@ -9,14 +9,14 @@
       <string id="p3d">[210, 190, 0]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/long-grass-tile.xml">
+  <list id="models/map/ground/outside/long-grass-tile.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[0, 80, 0]</string>
       <string id="p3d">[0, 140, 0]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/meadow.xml">
+  <list id="models/map/ground/outside/meadow.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[0, 160, 0]</string>
@@ -56,7 +56,7 @@
       <string id="p3d">[600, 480, 0]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/short-grass-tile.xml">
+  <list id="models/map/ground/outside/short-grass-tile.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[0, 0, 80]</string>
@@ -121,7 +121,7 @@
       <string id="p3d">[680, 0, 80]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/wood-1.xml">
+  <list id="models/map/ground/outside/wood-1.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[120, 200, 0]</string>
@@ -150,7 +150,7 @@
       <string id="p3d">[220, 360, 35]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/wood-pole-l.xml">
+  <list id="models/map/ground/outside/wood-pole-l.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[400, 170, 0]</string>
@@ -162,7 +162,7 @@
       <string id="p3d">[350, 270, 0]</string>
     </list>
   </list>
-  <list id="data/models/map/ground/outside/wood-pole-r.xml">
+  <list id="models/map/ground/outside/wood-pole-r.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[470, 170, 0]</string>
@@ -172,7 +172,7 @@
       <string id="p3d">[280, 270, 40]</string>
     </list>
   </list>
-  <list id="data/models/map/wall/outside/cliff-s.xml">
+  <list id="models/map/wall/outside/cliff-s.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[160, 120, 0]</string>
@@ -184,7 +184,7 @@
       <string id="p3d">[640, 120, 0]</string>
     </list>
   </list>
-  <list id="data/models/map/wall/outside/cliff-se-top.xml">
+  <list id="models/map/wall/outside/cliff-se-top.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[80, 160, 80]</string>
@@ -193,7 +193,7 @@
       <string id="p3d">[40, 200, 80]</string>
     </list>
   </list>
-  <list id="data/models/map/wall/outside/cliff-se.xml">
+  <list id="models/map/wall/outside/cliff-se.xml">
     <u_int8 id="type">1</u_int8>
     <list id="anonym">
       <string id="p3d">[40, 200, 0]</string>

@@ -19,7 +19,7 @@
         </list>
       </list>
     </list>
-    <string id="sprite">data/gfx/map/ground/outside/wood/wood-pole.xml</string>
+    <string id="sprite">gfx/map/ground/outside/wood/wood-pole.xml</string>
   </list>
   </list>
 </Data>

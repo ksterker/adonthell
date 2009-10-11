@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <Data>
   <list id="e_stand">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">0</u_int32>
     </list>
   </list>
   <list id="n_stand">
-    <list id="data/gfx/char/npc/ng/north_mov1.png">
+    <list id="gfx/char/npc/ng/north_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">0</u_int32>
     </list>
   </list>
   <list id="s_stand">
-    <list id="data/gfx/char/npc/ng/south_mov1.png">
+    <list id="gfx/char/npc/ng/south_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">0</u_int32>
     </list>
   </list>
   <list id="w_stand">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">0</u_int32>
@@ -31,128 +31,128 @@
 
   <!-- walking -->
   <list id="e_walk">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov2.png">
+    <list id="gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov3.png">
+    <list id="gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov4.png">
+    <list id="gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov5.png">
+    <list id="gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov6.png">
+    <list id="gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="n_walk">
-    <list id="data/gfx/char/npc/ng/north_mov1.png">
+    <list id="gfx/char/npc/ng/north_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov2.png">
+    <list id="gfx/char/npc/ng/north_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov3.png">
+    <list id="gfx/char/npc/ng/north_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov4.png">
+    <list id="gfx/char/npc/ng/north_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov5.png">
+    <list id="gfx/char/npc/ng/north_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov6.png">
+    <list id="gfx/char/npc/ng/north_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="s_walk">
-    <list id="data/gfx/char/npc/ng/south_mov1.png">
+    <list id="gfx/char/npc/ng/south_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov2.png">
+    <list id="gfx/char/npc/ng/south_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov3.png">
+    <list id="gfx/char/npc/ng/south_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov4.png">
+    <list id="gfx/char/npc/ng/south_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov5.png">
+    <list id="gfx/char/npc/ng/south_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov6.png">
+    <list id="gfx/char/npc/ng/south_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
   </list>
   <list id="w_walk">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov2.png">
+    <list id="gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov3.png">
+    <list id="gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov4.png">
+    <list id="gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov5.png">
+    <list id="gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov6.png">
+    <list id="gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">250</u_int32>
@@ -161,128 +161,128 @@
 
   <!-- running -->
   <list id="e_run">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov2.png">
+    <list id="gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov3.png">
+    <list id="gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov4.png">
+    <list id="gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov5.png">
+    <list id="gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov6.png">
+    <list id="gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
   </list>
   <list id="n_run">
-    <list id="data/gfx/char/npc/ng/north_mov1.png">
+    <list id="gfx/char/npc/ng/north_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov2.png">
+    <list id="gfx/char/npc/ng/north_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov3.png">
+    <list id="gfx/char/npc/ng/north_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov4.png">
+    <list id="gfx/char/npc/ng/north_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov5.png">
+    <list id="gfx/char/npc/ng/north_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/north_mov6.png">
+    <list id="gfx/char/npc/ng/north_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
   </list>
   <list id="s_run">
-    <list id="data/gfx/char/npc/ng/south_mov1.png">
+    <list id="gfx/char/npc/ng/south_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov2.png">
+    <list id="gfx/char/npc/ng/south_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov3.png">
+    <list id="gfx/char/npc/ng/south_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov4.png">
+    <list id="gfx/char/npc/ng/south_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov5.png">
+    <list id="gfx/char/npc/ng/south_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/south_mov6.png">
+    <list id="gfx/char/npc/ng/south_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
   </list>
   <list id="w_run">
-    <list id="data/gfx/char/npc/ng/east_mov1.png">
+    <list id="gfx/char/npc/ng/east_mov1.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov2.png">
+    <list id="gfx/char/npc/ng/east_mov2.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov3.png">
+    <list id="gfx/char/npc/ng/east_mov3.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov4.png">
+    <list id="gfx/char/npc/ng/east_mov4.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov5.png">
+    <list id="gfx/char/npc/ng/east_mov5.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>
     </list>
-    <list id="data/gfx/char/npc/ng/east_mov6.png">
+    <list id="gfx/char/npc/ng/east_mov6.png">
       <bool id="mask">1</bool>
       <bool id="mirrored_x">1</bool>
       <u_int32 id="delay">125</u_int32>

@@ -26,13 +26,14 @@
  * @brief Implements the date class.
  */
 
-//#include <ctype.h>
-//#include <stdio.h>
-//#include <stdlib.h>
 #include "event/manager.h"
 #include "event/date.h"
 #include "event/time_event.h"
 #include "base/base.h"
+#include "base/diskio.h"
+
+/// filename of time data file
+#define TIME_DATA "time.data"
 
 using events::date;
 
@@ -71,7 +72,35 @@ void date::update ()
     }
 }
 
-// load state from disk
+// load date from disk
+bool date::load ()
+{
+    base::diskio file;
+    std::string filename (TIME_DATA);
+
+    // try to locate file in search path
+    if (!base::Paths.find_in_path (filename)) return false;
+    
+    // try to read file from disk
+    if (!file.get_record (filename)) return false;
+    
+    // read data from file
+    return date::get_state (file);
+}
+
+// save date to disk
+bool date::save (const std::string & path)
+{
+    base::diskio file;
+
+    // save data
+    date::put_state (file);
+    
+    // write file to disk
+    return file.put_record (path + "/" + TIME_DATA);
+}
+
+// load state from stream
 bool date::get_state (base::flat & file)
 {
     // read the current date as (gametime) minutes since start of the game
@@ -82,7 +111,7 @@ bool date::get_state (base::flat & file)
     return file.success();
 }
 
-// save state to disk
+// save state to stream
 void date::put_state (base::flat & file)
 {
     // write the time to disk

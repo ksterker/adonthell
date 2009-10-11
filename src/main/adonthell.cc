@@ -92,6 +92,10 @@ bool app::init_modules (const u_int16 & modules)
         {
             Modules -= PYTHON;
         }
+        
+        // update the python search path
+        python::add_search_path (base::Paths.game_data_dir());
+        python::add_search_path (base::Paths.user_data_dir());
     }
 
     // startup graphics

@@ -18,7 +18,7 @@
         </list>
       </list>
     </list>
-    <string id="sprite">data/gfx/map/ground/outside/grass/short-grass-tile.png</string>
+    <string id="sprite">gfx/map/ground/outside/grass/short-grass-tile.png</string>
     <string id="terrain">Grass</string>
   </list>
   </list>

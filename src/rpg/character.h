@@ -99,7 +99,7 @@ namespace rpg
              */
             //@{
             /**
-             * Return name of this character
+             * Return name of this %character
              * @return characters name.
              */
             std::string name () const
@@ -107,6 +107,16 @@ namespace rpg
                 return Name;
             }
 
+            /**
+             * Return id of this %character. Unlike the name,
+             * a characters id must be unique.
+             * @return characters id.
+             */
+            std::string id () const
+            {
+                return Id;
+            }
+            
             /**
              * Set the color to use for speech produced by that
              * character.
@@ -155,7 +165,7 @@ namespace rpg
             }
             
             /**
-             * Sets the specie if this %character
+             * Sets the specie of this %character
              * @param name the name of the new specie
              */
             void set_specie(const std::string & name)
@@ -287,26 +297,24 @@ namespace rpg
              */
             //@{
             /**
-             * Load character from named file. This will first load the %character
-             * template to instanciate the underlying Python item class. Then it will
-             * restore the actual %character data. If an item is already instanciated,
+             * Load %character data of all characters. This will first load the %character
+             * template to instanciate the underlying Python character class. Then it will
+             * restore the actual %character data. If the character is already instanciated,
              * it will be replaced.
              *
-             * @param file name of the file to load %item from.
              * @return \b true if loading successful, \b false otherwise.
              */
-             bool load (const string & file);
+            static bool load ();
 
             /**
-             * Save %character to named file. This will save both the item template
-             * plus the actual data to the given file. The file will be replaced
-             * if it already exists.
+             * Save all existing %characters to given directory. This will save 
+             * both the %character template plus the actual data to a file called
+             * 'character.data'. The file will be replaced if it already exists.
              *
-             * @param file name of the file to save %character to.
-             * @param format whether to save as XML or compressed binary.
+             * @param path name of the directory to save %character data to.
              * @return \b true if saving successful, \b false otherwise.
              */
-            bool save (const string & file, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+            static bool save (const string & path);
 
             /**
              * Loads the %character from a stream.
@@ -326,8 +334,17 @@ namespace rpg
 #ifndef SWIG
             GET_TYPE_NAME(rpg::character);
 #endif // SWIG
+            
+        protected:
+            /**
+             * Create a character instance when loading from file.
+             */
+            character () {}
+            
         private:
-
+            /// Type of the character
+            char_type Type;
+                
             /// Name of the character, not neccessarily unique
             std::string Name;
 

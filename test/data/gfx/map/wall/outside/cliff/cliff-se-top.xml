@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Data>
   <list id="default">
-    <list id="data/gfx/map/wall/outside/cliff/cliff-se-top.png">
+    <list id="gfx/map/wall/outside/cliff/cliff-se-top.png">
       <bool id="mask">0</bool>
       <bool id="mirrored_x">0</bool>
       <u_int32 id="delay">0</u_int32>

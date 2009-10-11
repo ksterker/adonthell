@@ -18,7 +18,7 @@
            </list>
          </list>
        </list>
-       <string id="sprite">data/gfx/map/ground/outside/meadow/earth.png</string>
+       <string id="sprite">gfx/map/ground/outside/meadow/earth.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -37,7 +37,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_1.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_1.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -56,7 +56,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_2.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_2.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -75,7 +75,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_3.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_3.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -94,7 +94,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_4.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_4.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -113,7 +113,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_5.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_5.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -132,7 +132,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_6.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_6.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -151,7 +151,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_7.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_7.png</string>
      </list>
      <list id="model">
        <list id="default">
@@ -170,7 +170,7 @@
            </list>
          </list>
        </list>
-      <string id="sprite">data/gfx/map/ground/outside/meadow/grass_8.png</string>
+      <string id="sprite">gfx/map/ground/outside/meadow/grass_8.png</string>
       <string id="terrain">Grass</string>
      </list>
    </list>

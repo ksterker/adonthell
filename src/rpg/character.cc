@@ -25,6 +25,7 @@
  * @brief  Base class for creatures, NPCs and Player characters.
  */
 
+#include "base/base.h"
 #include "rpg/character.h"
 
 using rpg::character;
@@ -36,7 +37,8 @@ std::hash_map<std::string, character*> character::Characters;
 /// id of character currently controlled by the player
 std::string character::PlayerCharacterId = "";
 
-///
+/// character data file name
+#define CHARACTER_DATA "character.data"
 
 // ctor
 character::character (const std::string & name, const std::string & id, const rpg::char_type & type,
@@ -46,6 +48,7 @@ character::character (const std::string & name, const std::string & id, const rp
     Dialogue = "";
     Name = name;
     Id = id;
+    Type = type;
     Base_Speed = 2.5;
     Speed = Base_Speed;
 
@@ -156,85 +159,129 @@ character *character::get_character (const std::string & id)
     return NULL;
 }
 
-// load character from file
-bool character::load (const string & file)
+// load characters from file
+bool character::load ()
 {
+    // cleanup first
+    std::hash_map<std::string, character*>::iterator i;
+    for (i = Characters.begin(); i != Characters.end(); i++)
+    {
+        delete i->second;
+        i->second = NULL;
+    }
+    Characters.clear();
+    
+    base::diskio file;
+    std::string filename (CHARACTER_DATA);
+    
+    // try to find character data in Adonthell's search path
+    if (!base::Paths.find_in_path (filename)) return false;
+    
     // try to load character
-    base::diskio record (base::diskio::BY_EXTENSION);
+    if (!file.get_record (filename)) return false;
+        
+    u_int32 size;
+    char *data;
+    char *id;
+    
+    character *c;
+    bool result = true;
+    
+    // iterate over all saved characters
+    while (file.next ((void**) &data, &size, &id) == base::flat::T_FLAT)
+    {
+        c = new character ();
+        base::flat record (data, size); 
+        if (c->get_state(record))
+        {
+            // loading successful
+            Characters[id] = c;
+            continue;
+        }
 
-    if (record.get_record (file))
-        return get_state (record);
-
-    return false;
+        fprintf (stderr, "*** character::load: loading character %s failed.\n", id);
+        result = false;
+        delete c;
+    }
+    
+    return result;
 }
 
-// save a single character to file
-bool character::save (const string & file, const base::diskio::file_format & format) const
+// save characters to file
+bool character::save (const string & path)
 {
-    // try to save character
-    base::diskio record (format);
-    if (!put_state (record))
+    // try to save characters
+    base::diskio file;
+    
+    std::hash_map<std::string, character*>::iterator i;
+    for (i = Characters.begin(); i != Characters.end(); i++)
     {
-        fprintf (stderr, "*** character::save: saving '%s' failed!\n", file.c_str ());
-        return false;
+        base::flat record;
+        if (!i->second->put_state (record))
+        {
+            fprintf (stderr, "*** character::save: saving character '%s' failed!\n", i->first.c_str ());
+            return false;
+        }
+        file.put_flat (i->first, record);
     }
 
     // write character to disk
-    return record.put_record (file);
+    return file.put_record (path + "/" + CHARACTER_DATA);
 }
 
 // save character to stream
 bool character::put_state (base::flat & file) const
 {
-    // name, id and type need to be saved outside the character
-    // as they are already required when a character is created
-
     // do we have a valid character?
     if (!Instance) return false;
 
-    base::flat record;
-
     // save the attributes
-    record.put_string ("cdlg", Dialogue);
-    record.put_uint32 ("ccol", Color);
+    file.put_uint8 ("ctyp", Type);
+    file.put_string ("cnam", Name);
+    file.put_string ("cid", Id);
+    file.put_string ("cdlg", Dialogue);
+    file.put_uint32 ("ccol", Color);
+    file.put_float ("cspd", Base_Speed);
 
-    // save the template this item uses
-    record.put_string ("ccls", class_name ());
+    // save the template this character uses
+    file.put_string ("ccls", class_name ());
 
     // pass record
     PyObject *args = PyTuple_New (1);
-    PyTuple_SetItem (args, 0, python::pass_instance ((base::flat*) &record));
+    PyTuple_SetItem (args, 0, python::pass_instance ((base::flat*) &file));
 
     // save the actual character data
     call_method ("put_state", args);
     Py_DECREF (args);
 
-    file.put_flat ("char", record);
     return true;
 }
 
 // load character from stream
 bool character::get_state (base::flat & file)
 {
-    base::flat record = file.get_flat ("char");
-    if (!file.success ()) return false;
-
     // clean up, if neccessary
     if (Instance) clear ();
 
     // get attributes
-    Dialogue = record.get_string ("cdlg");
-    Color = record.get_uint32 ("ccol");
+    Type = (char_type) file.get_uint8 ("ctyp");
+    Name = file.get_string ("cnam");
+    Id = file.get_string ("cid");
+    Dialogue = file.get_string ("cdlg");
+    Color = file.get_uint32 ("ccol");
+    Base_Speed = file.get_float ("cspd");
 
+    if (Type == PLAYER) PlayerCharacterId = Id;
+    
     // get template to use for character
-    std::string tmpl = record.get_string ("ccls");
+    std::string tmpl = file.get_string ("ccls");
 
     // instanciate
     if (!create_instance (tmpl)) return false;
 
     // pass file
     PyObject *args = PyTuple_New (1);
-    PyTuple_SetItem (args, 0, python::pass_instance (&record));
+    PyTuple_SetItem (args, 0, python::pass_instance (&file));
 
     // load actual character data
     call_method ("get_state", args);

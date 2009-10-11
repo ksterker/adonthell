@@ -23,6 +23,7 @@
 // #define DEBUG_COLLISION 1
 
 #include "base/base.h"
+#include "base/savegame.h"
 #include "event/date.h"
 #include "gfx/sprite.h"
 #include "gfx/screen.h"
@@ -44,7 +45,6 @@ public:
     world::area world;
     bool letsexit;
     bool draw_grid;
-	bool draw_walkable;
 	bool draw_bounding_box;
     bool draw_delay;
     bool print_queue;
@@ -54,11 +54,23 @@ public:
     {
         letsexit = false;
         draw_grid = false;
-        draw_walkable = false;
         draw_bounding_box = false;
         draw_delay = false;
         print_queue = false;
         screenshot = false;
+        
+        // prepare gamedata handling
+        // TODO: should probably be integrated directly into the engine,
+        // i.e. into module initialization (adonthell::init_modules),
+        // in which case we need to make sure to init modules in the proper
+        // order too.
+        
+        // note: order is important; load EVENT before RPG before WORLD
+        base::savegame::add (new base::serializer<events::date> ());
+        // todo: load species
+        // todo: load factions
+        base::savegame::add (new base::serializer<rpg::character> ());
+        // todo: load map
     }
 
     // callback for key event listener
@@ -81,12 +93,7 @@ public:
             {
                 draw_bounding_box = !draw_bounding_box;
             }
-            // toggle collision area on|off
-            if (kev->key() == input::keyboard_event::W_KEY)
-            {
-                draw_walkable = !draw_walkable;
-            }
-            // toggle collision area on|off
+            // render tile after tile
             if (kev->key() == input::keyboard_event::D_KEY)
             {
                 draw_delay = true;
@@ -129,12 +136,12 @@ public:
 		// Listen for keyboard events
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
+        // load initial game data
+        base::savegame game_mgr;
+        game_mgr.load (base::savegame::INITIAL_SAVE);
+                
 		// Create game world
-        gc.world.load ("data/test-world.xml");
-
-        // we need to update the python search path to find our map view and character schedules
-        python::add_search_path (base::Paths.game_data_dir() + "data/");
-        python::add_search_path (base::Paths.user_data_dir() + "data/");
+        gc.world.load ("test-world.xml");
 
         // we need to load the world module before we can pass anything to python
         if (python::import_module ("adonthell.world") == NULL) return 1;
@@ -150,40 +157,35 @@ public:
         
         // create a specie
         rpg::specie human("Human");
-        human.get_state("data/groups/human.specie");
+        human.get_state("groups/human.specie");
         
         // create a faction
         rpg::faction noble("Noble");
-        noble.get_state("data/groups/noble.faction");
+        noble.get_state("groups/noble.faction");
         
         // rpg character instance
-        rpg::character player("Player", "Player", rpg::PLAYER, "Human");
-        player.create_instance ("character");
-        player.set_attribute ("avatar", python::pass_instance (mchar));
-        player.set_color (gfx::screen::get_surface()->map_color (255, 238, 123));
-
-        mchar->set_mind(&player); // Associates the rpg and world counterparts of the Player
+        rpg::character *player = rpg::character::get_player();
+        player->set_attribute ("avatar", python::pass_instance (mchar));
+        player->set_specie ("Human");
+        mchar->set_mind (player);
         
         // Add faction to character
-        player.add_faction("Noble");
+        player->add_faction("Noble");
         
-
-        // position and speed of a NPC
+        // create a NPC ...
         mchar = (world::character *) (gc.world.get_entity ("NPC"));
         mchar->set_position (210, 190);
         mchar->set_z (0);
-
-        // rpg character instance
-        rpg::character npc("NPC", "NPC", rpg::NPC, "Human");
-        npc.create_instance ("character");
-        npc.set_attribute ("avatar", python::pass_instance (mchar));
-        npc.set_dialogue("tech_preview");
-        //npc.set_speed(2.75);
 
         // ... and let it walk randomly
         controls = mchar->get_schedule();
         controls->set_manager ("walk_random", NULL);
 
+        rpg::character *npc = rpg::character::get_character("NPC");
+        npc->set_attribute ("avatar", python::pass_instance (mchar));
+        npc->set_specie ("Human");
+        mchar->set_mind (npc);
+        
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));

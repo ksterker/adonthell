@@ -127,18 +127,36 @@ public:
     static u_int32 convert_millis (const u_int32 & millis);
     
     /**
-     * Load the state of the %gamedate class from disk
+     * @name Loading / Saving
+     */
+    //@{
+    /**
+     * Load the gametime date from a file called 'time.date'
+     * in Adonthell's search path.
+     * @return true on success, false otherwise.
+     */
+    static bool load ();
+    /**
+     * Save the gametime data to a file called 'time.data'
+     * in the given directory.
+     * @param path directory to save data to.
+     * @return true on success, false otherwise.
+     */
+    static bool save (const std::string & path);
+    /**
+     * Load the state of the %gamedate class from stream.
      * @param file stream to read the state from
      * @return \b true if the state was successfully retrieved,
      *      \b false otherwise.
      */
     static bool get_state (base::flat & file);
     /**
-     * Save the state of the %gamedate class to disk
+     * Save the state of the %gamedate class to stream.
      * @param file stream to write the state to
      */
     static void put_state (base::flat & file);
-
+    //@}
+    
 private:
 #ifndef SWIG
     // number of game time seconds before a time event will be raised
