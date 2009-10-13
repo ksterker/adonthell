@@ -62,7 +62,9 @@ s_int32 group::estimate_speed(const std::string & terrain) const
     // Convert it to an integer
     s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(&*ret);
 
-    return ret_int;
+    // If ret_int is -1 then the specie is not valid (doesn't exists or its files don't exists 
+    // or are corrupted) if that happens we fallback to a default value in order to prevent strange errors.
+    return (ret_int == -1) ? 2 : ret_int;
 }
 
 bool group::put_state (const string & file, const base::diskio::file_format & format) const

@@ -144,6 +144,8 @@ s_int32 character::get_faction_estimate_speed(const std::string & name) const
     {
         sum += (*i)->estimate_speed(name);
     }
+    
+    return sum;
 }
 
 // return character with given id
