@@ -38,7 +38,7 @@ namespace gui
 	font::font(const char* path, int size)
 	{
 		//check for the path
-		const char* defont = "data/gfx/gui/Vera.ttf";
+		const char* defont = "gfx/gui/Vera.ttf";
 		if (!path)
 			path = defont;
 		

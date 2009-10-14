@@ -11,7 +11,7 @@ namespace gui
         ct.setFont(f);
         speaker.setFont(f);
         
-        bg = gfx::surfaces->get_surface_only("data/gfx/gui/conversation.png");//FIXME
+        bg = gfx::surfaces->get_surface_only("gfx/gui/conversation.png");//FIXME
 		line = dlg.run(-1);
 		ct.multiline(true);
 		objs.addchild(speaker, 15, 10);

@@ -11,18 +11,23 @@ swig_link_libraries(debug ${PYTHON_LIBRARIES} adonthell_py_runtime)
 set_target_properties (_debug PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
 adonthell_install_py (_debug "${CMAKE_CURRENT_BINARY_DIR}/debug.py")
 
+
 # Wrapper modules
 foreach(name audio base event gfx gui input main rpg world)
   set_source_files_properties("py_${name}.i" PROPERTIES CPLUSPLUS ON)
   set_source_files_properties("py_${name}.i" PROPERTIES SWIG_FLAGS "-noexcept;-nocontract;-modern;-module;${name}")
-  
+
   if(${name} STREQUAL main)
     swig_add_module(${name} python "py_${name}.i" "py_main.h" "py_main.cc")
   else(${name} STREQUAL main)
     FILE (GLOB SWIG_MODULE_${name}_EXTRA_DEPS ${CMAKE_SOURCE_DIR}/src/${name}/*.h)
     swig_add_module(${name} python "py_${name}.i")
   endif(${name} STREQUAL main)
-  
+
+  if(${name} STREQUAL base)
+    swig_link_libraries(base ${PYTHON_LIBRARIES} adonthell_python)
+  endif(${name} STREQUAL base)
+
   swig_link_libraries(${name} ${PYTHON_LIBRARIES} adonthell_${name})
   set_target_properties (_${name} PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
   adonthell_install_py (_${name} "${CMAKE_CURRENT_BINARY_DIR}/${name}.py")

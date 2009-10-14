@@ -40,7 +40,7 @@ using base::savegame_data;
 
 #ifdef WIN32
 /// mingw dirent struct does not have d_type
-static st_mode get_file_type (const std::string & path, const std::string & name)
+static int get_file_type (const std::string & path, const std::string & name)
 {
     struct stat statbuf;
     std::string file = path + "/" + name;
