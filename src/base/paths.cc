@@ -125,9 +125,10 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 // set path to saved game (before loading the game from that directory)
 void paths::set_save_dir (const std::string & dir)
 {
-    if (dir != "" && exists (CfgDataDir + dir))
+    if (dir != "" && exists (dir))
     {
-        SaveDataDir = CfgDataDir + dir;
+        SaveDataDir = dir;
+        if (SaveDataDir[SaveDataDir.size () - 1] != '/') SaveDataDir += "/";
         IncludeSaveDir = true;
     }
     else
@@ -178,17 +179,17 @@ bool paths::find_in_path (std::string & path) const
     // try whether path exists in the search path
     if (IncludeSaveDir && stat ((SaveDataDir + path).c_str (), &statbuf) != -1)
     {
-        path.insert (0, SaveDataDir + "/");
+        path.insert (0, SaveDataDir);
         return true;
     }
     if (IncludeUserDir && stat ((UserDataDir + path).c_str (), &statbuf) != -1)
     {
-        path.insert (0, UserDataDir + "/");
+        path.insert (0, UserDataDir);
         return true;
     }
     if (stat ((GameDataDir + path).c_str (), &statbuf) != -1)
     {
-        path.insert (0, GameDataDir + "/");
+        path.insert (0, GameDataDir);
         return true;
     }
     

@@ -210,7 +210,7 @@ void savegame::init (const std::string & name)
     Games.push_back (new savegame_data ("", "Start New Game", 0));
     
     // create auto save slot
-    std::string save_dir = base::Paths.cfg_data_dir() + "/" + name;
+    std::string save_dir = base::Paths.cfg_data_dir() + name;
     if (!load_meta_data (save_dir + "-auto-save"))
     {
         Games.push_back (new savegame_data (save_dir + "-auto-save", "Autosave", 0));
@@ -230,8 +230,7 @@ void savegame::init (const std::string & name)
         
         while ((dirent = readdir (dir)) != NULL)
         {
-            std::string filepath = base::Paths.cfg_data_dir() + "/";
-            filepath += dirent->d_name; 
+            std::string filepath = base::Paths.cfg_data_dir() + dirent->d_name; 
             
             if (strncmp (name_save.c_str (), dirent->d_name, name_save.length ()) == 0)
             {

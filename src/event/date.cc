@@ -76,13 +76,9 @@ void date::update ()
 bool date::load ()
 {
     base::diskio file;
-    std::string filename (TIME_DATA);
 
-    // try to locate file in search path
-    if (!base::Paths.find_in_path (filename)) return false;
-    
     // try to read file from disk
-    if (!file.get_record (filename)) return false;
+    if (!file.get_record (TIME_DATA)) return false;
     
     // read data from file
     return date::get_state (file);

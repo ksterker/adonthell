@@ -174,13 +174,9 @@ bool character::load ()
     Characters.clear();
     
     base::diskio file;
-    std::string filename (CHARACTER_DATA);
-    
-    // try to find character data in Adonthell's search path
-    if (!base::Paths.find_in_path (filename)) return false;
     
     // try to load character
-    if (!file.get_record (filename)) return false;
+    if (!file.get_record (CHARACTER_DATA)) return false;
         
     u_int32 size;
     char *data;
