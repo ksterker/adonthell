@@ -54,16 +54,20 @@ def perform_action (chr, action):
     # -- any objects found at all?
     if len(object_list) > 0:
         # -- perform the action with the closest object
-        chunk_data = object_list[0]
+        entity = object_list[0].get_entity()
         # -- get object id
-        obj_name = chunk_data.get_entity().id()
-        # -- get associated rpg instance
+        obj_name = entity.id()
+        # -- get object ...
+        obj = entity.get_object()
+        # -- ... and cast it to a character
         #    FIXME in the future, obj might be an item too
-        rpg_obj = rpg.character.get_character (obj_name)
+        other_char = obj.map().get_character (obj_name)
+        # -- get associated rpg instance
+        rpg_obj = other_char.mind ()
         # -- get the Python character script
         py_rpg_obj = rpg_obj.get_instance ()
         # -- execute the action
-        py_rpg_obj.perform_action (action, chr)
+        py_rpg_obj.perform_action (action, chr, other_char)
 
 
 _opposite_direction = {

@@ -68,6 +68,7 @@ target_link_libraries(adonthell_world
 	adonthell_base
 	adonthell_gfx
     adonthell_python
+    adonthell_rpg
 )
 
 #############################################

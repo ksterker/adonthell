@@ -411,6 +411,21 @@ bool area::get_state (base::flat & file)
                     placeable *object = add_entity (type, entity_name);
                     object->load (entity_file);
 
+                    // associate world object with its rpg representation
+                    // TODO: maybe add this to add_entity() instead ...
+                    switch (type)
+                    {
+                    	case world::CHARACTER:
+                    	{
+                            rpg::character *npc = rpg::character::get_character(entity_name);
+                            ((world::character *) object)->set_mind (npc);
+                            if (npc == NULL)
+                            {
+                            	fprintf (stderr, "*** area::get_state: cannot find rpg instance for '%s'.\n", entity_name.c_str());
+                            }
+                    	}
+                    }
+                    
                     // get coordinate
                     record.next (&value, &size, &id);
                     pos.set_str (std::string ((const char*) value, size));

@@ -31,13 +31,13 @@ class action_talk (object):
     def perform (self):
         # -- stop character schedules during conversation
         self.initiator.get_schedule().set_active(0)
-        self.other.avatar.get_schedule().set_active(0)
+        self.other.get_schedule().set_active(0)
         # -- stop initiator, in case he has been walking
         self.initiator.set_direction(0)
         # -- look in the direction of the character that adressed us
-        actions.face_character(self.other.avatar, self.initiator)
+        actions.face_character(self.other, self.initiator)
         # -- create conversation widget ...
-        self.dlg_wnd = gui.conversation (self.other.this, 600, 300, self.on_finished)
+        self.dlg_wnd = gui.conversation (self.other.mind(), 600, 300, self.on_finished)
         # -- ... and add it to the gui manager
         gui.window_manager.add (self.dlg_wnd)
 
@@ -50,7 +50,7 @@ class action_talk (object):
 
         # -- resume schedules
         self.initiator.get_schedule().set_active(1)
-        self.other.avatar.get_schedule().set_active(1)
+        self.other.get_schedule().set_active(1)
 
         # -- cleanup
         del self.dlg_wnd
@@ -68,8 +68,6 @@ class character (object):
         """ctor"""
         # -- reference to the underlying rpg.character instance
         self.this = None
-        # -- reference to the underlying world.character instance
-        self.avatar = None
 
     def destroy (self):
         """properly delete a character"""
@@ -83,7 +81,7 @@ class character (object):
         """
         return (120, 30)
 
-    def perform_action (self, action, initiator):
+    def perform_action (self, action, initiator, myself):
         """
          perform an action.
          @param action the type of action to perform
@@ -92,7 +90,7 @@ class character (object):
         """
         # -- trigger a conversation
         if action == actions.ACTION_NORMAL:
-            self.the_action = action_talk (initiator, self)
+            self.the_action = action_talk (initiator, myself)
             self.the_action.perform ()
 
     def calc_speed (self, terrain):

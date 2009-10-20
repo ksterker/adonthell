@@ -165,9 +165,7 @@ public:
         
         // rpg character instance
         rpg::character *player = rpg::character::get_player();
-        player->set_attribute ("avatar", python::pass_instance (mchar));
         player->set_specie ("Human");
-        mchar->set_mind (player);
         
         // Add faction to character
         player->add_faction("Noble");
@@ -182,9 +180,7 @@ public:
         controls->set_manager ("walk_random", NULL);
 
         rpg::character *npc = rpg::character::get_character("NPC");
-        npc->set_attribute ("avatar", python::pass_instance (mchar));
         npc->set_specie ("Human");
-        mchar->set_mind (npc);
         
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
