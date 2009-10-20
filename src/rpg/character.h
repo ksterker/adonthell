@@ -215,59 +215,53 @@ namespace rpg
             * @return sum of all the values
             */
             s_int32 get_faction_estimate_speed(const std::string & terrain) const;
+            //@}
            
-           //@}
-           
-           /**
-            * @name Character speed
-            */
-           //@{
-           /**
-            * Set speed of the character.
-            * @param speed this %character's speed.
-            */
-           void set_speed (float speed)
-           {
-               Speed = speed;
-           }
-
-           /**
-            * Set base speed of the character.
-            * @param base_speed this %character's base speed.
-            */
-           void set_base_speed (float base_speed)
-           {
-               Base_Speed = base_speed;
-           }
-
-           /**
-            * Return speed of the character.
-            * @return speed of this %character
-            */
-           float speed() const
-           {
-               return Speed;
-           }
-
-           /**
-            * Return base speed of the character.
-            * @return base speed this %character.
-            */
-           float base_speed() const
-           {
-               return Base_Speed;
-           }
+            /**
+             * @name Character speed
+             */
+            //@{
+            /**
+             * Set speed of the character.
+             * @param speed this %character's speed.
+             */
+            void set_speed (float speed)
+            {
+                Speed = speed;
+            }
 
             /**
-             * Wrapper to the python call that updates this %character speed.
+             * Set base speed of the character.
+             * @param base_speed this %character's base speed.
+             */
+            void set_base_speed (float base_speed)
+            {
+                Base_Speed = base_speed;
+            }
+
+            /**
+             * Return speed of the character.
+             * @return speed of this %character
+             */
+            float speed() const
+            {
+                return Speed;
+            }
+
+            /**
+             * Return base speed of the character.
+             * @return base speed this %character.
+             */
+            float base_speed() const
+            {
+                return Base_Speed;
+            }
+
+            /**
+             * Updates this %character's speed based on the current terrain.
              * @param terrain a string with the type of terrain this character is over
              */
-            void update_speed(const std::string & terrain)
-            {
-                PyObject *args = PyTuple_New (1);
-                PyTuple_SetItem (args, 0, python::pass_instance (terrain.c_str()));
-                call_method("calc_speed", args);
-            }
+            void update_speed(const std::string & terrain);
             //@}
 
             /**

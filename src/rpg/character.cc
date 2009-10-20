@@ -148,6 +148,22 @@ s_int32 character::get_faction_estimate_speed(const std::string & name) const
     return sum;
 }
 
+// update speed base on terrain
+void character::update_speed(const std::string & terrain)
+{
+	float actual_speed = base_speed();
+
+	// take the specie into consideration
+	s_int32 specie_effects = specie()->estimate_speed(terrain);
+	actual_speed += ((specie_effects * 0.01) * base_speed());
+
+	// take the various factions into consideration
+	s_int32 faction_effects = get_faction_estimate_speed(terrain);
+	actual_speed += ((faction_effects * 0.01) * base_speed());
+
+	set_speed (actual_speed);
+}
+
 // return character with given id
 character *character::get_character (const std::string & id)
 {

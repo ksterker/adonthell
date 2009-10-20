@@ -93,27 +93,6 @@ class character (object):
             self.the_action = action_talk (initiator, myself)
             self.the_action.perform ()
 
-    def calc_speed (self, terrain):
-        """
-        calculates the speed of the character based on a variety
-        of factors
-        @param terrain a string with the type of terrain we're
-               walking over
-        """
-        if self.this != None:
-            base_speed = self.this.base_speed()
-            actual_speed = base_speed
-            
-            # -- Takes the specie into consideration
-            specie_effects = self.this.specie().estimate_speed(terrain)
-            actual_speed += ((specie_effects * 0.01) * base_speed)
-            
-            # -- Takes the various factions into consideration
-            faction_effects = self.this.get_faction_estimate_speed(terrain)
-            actual_speed += ((faction_effects * 0.01) * base_speed)
-            
-            self.this.set_speed(actual_speed);
-
     def put_state (self, record):
         """
          save character to disk
