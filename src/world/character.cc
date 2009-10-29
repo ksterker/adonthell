@@ -239,7 +239,7 @@ bool character::get_state (base::flat & file)
 
     // load shadow
     std::string shadow_file = entity.get_string ("shadow");
-    MyShadow = new shadow (shadow_file, this, CurPos);
+    MyShadow = new shadow (shadow_file, this, EntireCurPos);
 
     return file.success ();
 }

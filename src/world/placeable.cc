@@ -1,6 +1,4 @@
 /*
- $Id: placeable.cc,v 1.10 2009/04/26 18:52:59 ksterker Exp $
- 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -38,9 +36,9 @@ using world::placeable;
 #define MI16 32767
 
 // ctor
-placeable::placeable(world::area & mymap) : MaxSize(), Mymap(mymap)
+placeable::placeable(world::area & mymap) : SolidMaxSize(), Mymap(mymap)
 {
-    MinPos.set (MI16, MI16, MI16);
+    SolidMinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
     Solid = true;
     State = "";
@@ -77,9 +75,17 @@ void placeable::set_state (const std::string & state)
     const placeable_shape *shape = (*i)->current_shape ();
     if (shape != NULL)
     {
-        CurSize.set (shape->length(), shape->width(), shape->height());
-        CurPos.set (shape->x(), shape->y(), shape->z());
-        if (shape->is_solid()) Solid = true;
+        
+        if (shape->is_solid())
+        {
+            SolidCurSize.set (shape->length(), shape->width(), shape->height());
+            SolidCurPos.set (shape->x(), shape->y(), shape->z());
+            
+            Solid = true; // set this object as solid
+        }
+        
+        EntireCurSize.set (shape->length(), shape->width(), shape->height());
+        EntireCurPos.set (shape->x(), shape->y(), shape->z());
     }        
     
     // update shape and size of composite placeables
@@ -89,15 +95,26 @@ void placeable::set_state (const std::string & state)
         const placeable_shape *shape = (*i)->current_shape ();
         if (shape != NULL)
         {
-            CurSize.set_x (std::max (CurSize.x(), shape->length()));
-            CurSize.set_y (std::max (CurSize.y(), shape->width()));
-            CurSize.set_z (std::max (CurSize.z(), shape->height()));
+            if (shape->is_solid())
+            {
+                SolidCurSize.set_x (std::max (SolidCurSize.x(), shape->length()));
+                SolidCurSize.set_y (std::max (SolidCurSize.y(), shape->width()));
+                SolidCurSize.set_z (std::max (SolidCurSize.z(), shape->height()));
+                
+                SolidCurPos.set_x (std::min (SolidCurPos.x(), shape->x()));
+                SolidCurPos.set_y (std::min (SolidCurPos.y(), shape->y()));
+                SolidCurPos.set_z (std::min (SolidCurPos.z(), shape->z()));
+                
+                Solid = true;
+            }
             
-            CurPos.set_x (std::min (CurPos.x(), shape->x()));
-            CurPos.set_y (std::min (CurPos.y(), shape->y()));
-            CurPos.set_z (std::min (CurPos.z(), shape->z()));
-            
-            if (shape->is_solid()) Solid = true;
+            EntireCurSize.set_x (std::max (EntireCurSize.x(), shape->length()));
+            EntireCurSize.set_y (std::max (EntireCurSize.y(), shape->width()));
+            EntireCurSize.set_z (std::max (EntireCurSize.z(), shape->height()));
+                
+            EntireCurPos.set_x (std::min (EntireCurPos.x(), shape->x()));
+            EntireCurPos.set_y (std::min (EntireCurPos.y(), shape->y()));
+            EntireCurPos.set_z (std::min (EntireCurPos.z(), shape->z()));
         }
     }
 
@@ -106,19 +123,8 @@ void placeable::set_state (const std::string & state)
 
 // get z position of the object's surface
 s_int32 placeable::get_surface_pos () const
-{
-    s_int32 surface = 0;
-    
-    for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
-    {
-        const placeable_shape *shape = (*i)->current_shape ();
-        if (shape != NULL && shape->is_solid())
-        {
-            surface = std::max (surface, shape->z() + shape->height());
-        }
-    }
-    
-    return surface;
+{    
+    return SolidCurSize.z() + SolidCurPos.z();
 }
 
 // get terrain type of placeable
@@ -146,13 +152,27 @@ void placeable::add_model (world::placeable_model * model)
     // update bounding box, using the extend of the largest shape
     for (placeable_model::iterator shape = model->begin(); shape != model->end(); shape++)
     {
-        MaxSize.set_x (std::max (MaxSize.x(), shape->second.length()));
-        MaxSize.set_y (std::max (MaxSize.y(), shape->second.width()));
-        MaxSize.set_z (std::max (MaxSize.z(), shape->second.height()));
+        // only accounts for solid shapes
+        if ((*shape).second.is_solid()) {
+            SolidMaxSize.set_x (std::max (SolidMaxSize.x(), shape->second.length()));
+            SolidMaxSize.set_y (std::max (SolidMaxSize.y(), shape->second.width()));
+            SolidMaxSize.set_z (std::max (SolidMaxSize.z(), shape->second.height()));
+            
+            SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->second.x()));
+            SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->second.y()));
+            SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->second.z())); 
         
-        MinPos.set_x (std::min (MinPos.x(), shape->second.x()));
-        MinPos.set_y (std::min (MinPos.y(), shape->second.y()));
-        MinPos.set_z (std::min (MinPos.z(), shape->second.z()));        
+        }
+        
+        // add regardless of being solid or not
+        EntireMaxSize.set_x (std::max (EntireMaxSize.x(), shape->second.length()));
+        EntireMaxSize.set_y (std::max (EntireMaxSize.y(), shape->second.width()));
+        EntireMaxSize.set_z (std::max (EntireMaxSize.z(), shape->second.height()));
+        
+        EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->second.x()));
+        EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->second.y()));
+        EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z())); 
+        
     }
 }
 
