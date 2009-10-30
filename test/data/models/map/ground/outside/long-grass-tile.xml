@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <Data>
-  <list id="entity">
-    <string id="state">default</string>
   <list id="model">
     <list id="default">
       <list id="shape">
@@ -20,6 +18,5 @@
     </list>
     <string id="sprite">gfx/map/ground/outside/grass/long-grass-tile.png</string>
     <string id="terrain">Grass</string>
-  </list>
   </list>
 </Data>

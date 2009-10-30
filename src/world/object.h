@@ -67,40 +67,6 @@ namespace world
         {
             return true;
         }
-
-        /**
-         * Loading / Saving
-         */
-        //@{
-        /**
-         * Save %object state to stream. 
-         * @param file stream to save %object to.
-         * @return \b true if saving successful, \b false otherwise.
-         */
-        bool put_state (base::flat & file) const;
-        
-        /**
-         * Load %object state from stream. 
-         * @param file stream to load %object from.
-         * @return \b true if loading successful, \b false otherwise.
-         */
-        bool get_state (base::flat & file);
-        
-        /**
-         * Save %object state to file.
-         * @param fname file name.
-         * @param format type of file to create.
-         * @return true on success, false otherwise.
-         */
-        bool save (const std::string & fname, const base::diskio::file_format & format) const;
-        
-        /**
-         * Load %object state from file.
-         * @param fname file name.
-         * @return true on success, false otherwise.
-         */
-        bool load (const std::string & fname);
-        //@}
     };
 }
 

@@ -38,7 +38,7 @@ schedule::schedule ()
     Paused = 0;
     Running = false;
     QueuedSchedule = NULL;
-    Map = NULL;
+    Owner = NULL;
 }
 
 // destructor
@@ -232,14 +232,16 @@ void schedule::put_state (base::flat & file) const
     
     // save manager script
     base::flat record;
-    Manager.put_state (record);
+    record.put_string ("script", Manager.class_name());
+    python::put_tuple (Manager.get_args(), record, 1);
     file.put_flat ("mgr", record);
     
     // save schedule script, if any
     if (Schedule.get_instance() != NULL)
     {
         record.clear();
-        Schedule.put_state (record);
+        record.put_string ("script", Schedule.class_name());
+        python::put_tuple (Schedule.get_args(), record, 1);
         file.put_flat ("sdl", record);
     }
 
@@ -264,10 +266,14 @@ bool schedule::get_state (base::flat & file)
     Running = file.get_bool ("scr");
 
     // restore manager script
-    record = file.get_flat ("mgr");    
-    if (!Manager.get_state (record))
+    
+    record = file.get_flat ("mgr");
+    std::string script = record.get_string ("script");
+    PyObject *args = python::get_tuple (record, 1);
+    PyTuple_SET_ITEM (args, 0, python::pass_instance (this));
+    if (!Manager.create_instance (SCHEDULE_DIR + script, script, args))
     {
-        fprintf (stderr, "*** schedule::get_state: failed loading manager script\n");
+        fprintf (stderr, "*** schedule::get_state: failed loading manager script '%s'.\n", script.c_str());
         return false;
     }
     
@@ -275,15 +281,27 @@ bool schedule::get_state (base::flat & file)
     record = file.get_flat ("sdl", false);
     if (record.size() > 1)
     {
-        if (!Schedule.get_state (record))
+        script = record.get_string ("script");
+        args = python::get_tuple (record, 1);
+        PyTuple_SET_ITEM (args, 0, python::pass_instance (this));
+        if (!Schedule.create_instance (SCHEDULE_DIR + script, script, args))
         {
-            fprintf (stderr, "*** schedule::get_state: failed loading schedule script\n");
+            fprintf (stderr, "*** schedule::get_state: failed loading schedule script '%s'.\n", script.c_str());
             return false;
         }
+        
+        // restart schedule
+        Schedule.call_method ("start");
+        
+        // pause schedule, if required
+        if (Paused > 0)
+        {
+            Schedule.call_method ("pause");
+        }        
     }
         
     // restore queue
-    record = file.get_flat ("que", false);
+    record = file.get_flat ("que", true);
     if (record.size() > 1)
     {
         QueuedSchedule = new schedule_data;

@@ -113,89 +113,36 @@ placeable * area::get_entity (const std::string & id) const
     return entity->second->get_object();
 }
 
-// add anonymous entity
-placeable * area::add_entity (const placeable_type & type)
-{
-    return add_entity (type, "");
-}
-
-// add named entity that can be retrieved by its id
-placeable * area::add_entity (const placeable_type & type, const std::string & id)
-{
-    // check if entity is unique
-    if (id.length() > 0 && NamedEntities.find (id) != NamedEntities.end ())
-    {
-        fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
-        return NULL;
-    }
-
-    placeable *object = NULL;
-
-    // TODO: maybe generalize the event factory code (events::types) and use here as well
-    switch (type)
-    {
-        case world::OBJECT:
-        {
-            object = new world::object (*this);
-            break;
-        }
-        case world::CHARACTER:
-        {
-            object = new world::character (*this);
-            break;
-        }
-        default:
-        {
-            fprintf (stderr, "*** area::add_entity: unknown type %i\n", type);
-            break;
-        }
-    }
-
-    // entity has been created successfully
-    if (object != NULL)
-    {
-        world::entity *ety = NULL;
-
-        if (id.length() == 0)
-        {
-            // handle anonymous entities
-            ety = new world::entity (object);
-        }
-        else
-        {
-            // handle named entities
-            ety = new world::named_entity (object, id);
-            NamedEntities[id] = dynamic_cast<world::named_entity*> (ety);
-        }
-
-        // this list contains a copy of all entities, unique or not.
-        Entities.push_back (ety);
-    }
-
-    // we do return the object here, as that's what is really interesting
-    return object;
-}
-
 // add existing object as new entity
-placeable * area::add_entity (placeable * object, const std::string & id)
+s_int32 area::add_entity (entity * ety, coordinates & pos)
 {
-    // check that entity is unique
-    if (id.length() == 0 || NamedEntities.find (id) != NamedEntities.end ())
+    // handle named entities
+    if (ety->id() != NULL)
     {
-        fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
-        return NULL;
+        std::string id = *ety->id();
+        
+        // check that entity is unique
+        if (id.length() == 0 || NamedEntities.find (id) != NamedEntities.end ())
+        {
+            fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
+            return -1;
+        }
+        
+        // named entities are stored for later access
+        NamedEntities[id] = dynamic_cast<world::named_entity*> (ety);
     }
-
-    // create non-unique entity
-    world::named_entity *ety = new world::named_entity (object, id, false);
-
-    // store in area
+    
+    // this list contains a copy of all entities, named or not.
     Entities.push_back (ety);
-    NamedEntities[id] = ety;
-
-    return object;
+    
+    // add entity to map
+    chunk::add(ety, pos);
+    
+    // return index of newly added entity
+    return Entities.size() - 1;
 }
 
+// get name of entity associated to given object
 const std::string * area::get_entity_name (const placeable * object) const
 {
     std::hash_map<std::string, world::named_entity *>::const_iterator ei = NamedEntities.begin();
@@ -242,10 +189,31 @@ world::zone * area::get_zone (std::string & name)
 // save to stream
 bool area::put_state (base::flat & file) const
 {
+    u_int32 index = 0;
+    char buffer[128];
+    base::flat record;
+    
+    // gather all different placeables and their locations on the map
     collector objects;
     chunk::put_state (objects);
-    bool type_saved = false;
 
+    // first pass: save placeables
+    for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
+    {
+        base::flat entity;
+        const world::placeable * data = i->first;
+        data->put_state (entity);
+        
+        sprintf (buffer, "%d", index++);
+        record.put_flat (buffer, entity);
+    }
+    file.put_flat ("objects", record);
+
+    // reset
+    index = 0;
+    record.clear();
+
+    // second pass: save entities and their positions
     for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         base::flat entity;
@@ -253,14 +221,10 @@ bool area::put_state (base::flat & file) const
         std::vector<chunk_info*>::const_iterator j;
 
         // save anonymous objects
-        if (!data.Anonym.empty())
+        if (!data.Anonymous.empty())
         {
-            // save object type
-            entity.put_uint8 ("type", data.Anonym.back()->get_object()->type());
-            type_saved = true;
-
             base::flat anonym;
-            for (j = data.Anonym.begin(); j != data.Anonym.end(); j++)
+            for (j = data.Anonymous.begin(); j != data.Anonymous.end(); j++)
             {
                 (*j)->Min.put_state (anonym);
             }
@@ -268,74 +232,41 @@ bool area::put_state (base::flat & file) const
             entity.put_flat ("anonym", anonym);
         }
 
-        // save unique named objects
-        if (!data.Unique.empty())
+        // save named objects
+        if (!data.Named.empty())
         {
-            if (!type_saved)
+            base::flat named;
+            for (j = data.Named.begin(); j != data.Named.end(); j++)
             {
-                // save object type
-                entity.put_uint8 ("type", data.Unique.back()->get_object()->type());
-                type_saved = true;
+                named.put_string ("id", *((*j)->get_entity()->id()));
+                (*j)->Min.put_state (named);
             }
 
-            base::flat unique;
-            for (j = data.Unique.begin(); j != data.Unique.end(); j++)
-            {
-                unique.put_string ("id", *((*j)->get_entity()->id()));
-                (*j)->Min.put_state (unique);
-            }
-
-            entity.put_flat ("unique", unique);
+            entity.put_flat ("named", named);
         }
 
-        // save other named objects
-        if (!data.Shared.empty())
-        {
-            if (!type_saved)
-            {
-                // save object type
-                entity.put_uint8 ("type", data.Shared.back()->get_object()->type());
-            }
-
-            base::flat shared;
-            for (j = data.Shared.begin(); j != data.Shared.end(); j++)
-            {
-                shared.put_string ("id", *((*j)->get_entity()->id()));
-                (*j)->Min.put_state (shared);
-            }
-
-            entity.put_flat ("shared", shared);
-        }
-
-        type_saved = false;
-        file.put_flat (i->first, entity);
+        sprintf (buffer, "%d", index++);
+        record.put_flat (buffer, entity);
     }
+    file.put_flat ("entities", record);
 
-    // Save the zones
-    if (!Zones.empty())
+    // save the zones
+    std::list <world::zone *>::const_iterator zone_i = Zones.begin();
+    base::flat masterZones;
+    base::flat zones;
+
+    while (zone_i != Zones.end())
     {
-        std::list <world::zone *>::const_iterator zone_i = Zones.begin();
-        base::flat masterZones;
-        base::flat zones;
+        (*zone_i)->min().put_state (zones, "min");
+        (*zone_i)->max().put_state (zones, "max");
+        
+        masterZones.put_flat ((*zone_i)->name(), zones);
+        zones.clear ();
 
-        while (zone_i != Zones.end())
-        {
-            zones.put_sint32("MinX", (*zone_i)->min().x());
-            zones.put_sint32("MinY", (*zone_i)->min().y());
-            zones.put_sint32("MinZ", (*zone_i)->min().z());
-            zones.put_sint32("MaxX", (*zone_i)->max().x());
-            zones.put_sint32("MaxY", (*zone_i)->max().y());
-            zones.put_sint32("MaxZ", (*zone_i)->max().z());
-
-            masterZones.put_flat ((*zone_i)->name(), zones);
-            zones.clear ();
-
-            ++zone_i;
-        }
-
-        std::string temp ("Zones");
-        file.put_flat (temp, masterZones);
+        ++zone_i;
     }
+
+    file.put_flat ("zones", masterZones);
 
     return true;
 }
@@ -346,131 +277,132 @@ bool area::get_state (base::flat & file)
     u_int32 size;
     u_int32 index = 0;
     coordinates pos;
+    placeable *object = NULL;
     void *value;
     char *id;
 
+    // load placeables
+    std::vector<placeable*> tmp_objects;
+    base::flat record = file.get_flat ("objects");
+    
     // iterate over map objects
-    while (file.next (&value, &size, &id) == base::flat::T_FLAT)
+    while (record.next (&value, &size, &id) == base::flat::T_FLAT)
     {
-        base::flat entity = base::flat ((const char*) value, size);
-        const std::string entity_file = id;
+        base::flat entity ((const char*) value, size);
+        s_int8 type = entity.get_sint8("type");
 
-        if (strncmp(id, "Zones", 5) == 0) {
-
-            while (entity.next (&value, &size, &id) == base::flat::T_FLAT)
+        // TODO: maybe generalize the event factory code (events::types) and use here as well
+        object = NULL;
+        switch (type)
+        {
+            case world::OBJECT:
             {
-                base::flat zone_flat = base::flat ((const char*) value, size);
-
-                world::vector3<s_int32> temp_min (zone_flat.get_sint32("MinX"), zone_flat.get_sint32("MinY"),
-                    zone_flat.get_sint32("MinZ"));
-                world::vector3<s_int32> temp_max (zone_flat.get_sint32("MaxX"), zone_flat.get_sint32("MaxY"),
-                    zone_flat.get_sint32("MaxZ"));
-                std::string temp_str = id;
-
-                world::zone * temp_zone = new world::zone(temp_str, temp_min, temp_max);
-                add_zone (temp_zone);
-
+                object = new world::object (*this);
+                break;
             }
-        } else {
-
-            const placeable_type type = (placeable_type) entity.get_uint8 ("type");
-
-            // try loading anonymous objects
-            base::flat record = entity.get_flat ("anonym", true);
-            if (record.size() > 1)
+            case world::CHARACTER:
             {
-                // there are anonymous objects -> create instance
-                placeable *object = add_entity (type);
-                object->load (entity_file);
-
-                // iterate over object positions
-                while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
-                {
-                    // get coordinate
-                    pos.set_str (std::string ((const char*) value, size));
-
-                    // place entity at current index at given coordinate
-                    put_entity (index, pos);
-                }
-
-                // increase entity index
-                index++;
+                object = new world::character (*this);
+                break;
             }
-
-            // try loading unique objects
-            record = entity.get_flat ("unique", true);
-            if (record.size() > 1)
+            default:
             {
-                // iterate over object positions
-                while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+                fprintf (stderr, "*** area::get_state: unknown object type %i\n", type);
+                break;
+            }
+        }
+        
+        // entity has been created successfully
+        if (object != NULL)
+        {
+            // load its actual data
+            object->get_state (entity);
+        }
+        
+        // also store invalid objects, to not mess up the indices
+        tmp_objects.push_back (object);
+    }
+
+    // load entities
+    record = file.get_flat ("entities");
+    while (record.next (&value, &size, &id) == base::flat::T_FLAT)
+    {
+        object = tmp_objects[index];
+        if (object == NULL) continue;
+        
+        s_int32 ety_idx = -1;
+        base::flat entity ((const char*) value, size);
+        
+        // try loading anonymous entities
+        base::flat entity_data = entity.get_flat ("anonym", true);
+        
+        // iterate over entity positions
+        while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+        {
+            // get coordinate
+            pos.set_str (std::string ((const char*) value, size));
+            
+            if (ety_idx == -1)
+            {
+                // create entity ...
+                world::entity *ety = new world::entity (object);
+                // ... and place it on the map
+                ety_idx = add_entity (ety, pos);
+            }
+            else
+            {
+                // place entity at current index at given coordinate
+                put_entity (ety_idx, pos);
+            }
+        }
+
+        // try loading named entities
+        entity_data = entity.get_flat ("named", true);
+        // iterate over object positions
+        while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
+        {
+            // first get id of entity
+            std::string entity_name ((const char*) value);
+
+            // then get coordinate
+            entity_data.next (&value, &size, &id);
+            pos.set_str (std::string ((const char*) value, size));
+            
+            // create a named instance (that will be unique if it is the first) ...
+            world::entity *ety = new world::named_entity (object, entity_name, ety_idx == -1);
+            // ... and place it on the map
+            ety_idx = add_entity (ety, pos);
+            
+            // associate world object with its rpg representation
+            switch (object->type())
+            {
+                case world::CHARACTER:
                 {
-                    // first get id of entity
-                    std::string entity_name ((const char*) value);
-
-                    // create a unique instance for each object
-                    placeable *object = add_entity (type, entity_name);
-                    object->load (entity_file);
-
-                    // associate world object with its rpg representation
-                    // TODO: maybe add this to add_entity() instead ...
-                    switch (type)
+                    rpg::character *npc = rpg::character::get_character(entity_name);
+                    ((world::character *) object)->set_mind (npc);
+                    if (npc == NULL)
                     {
-                    	case world::CHARACTER:
-                    	{
-                            rpg::character *npc = rpg::character::get_character(entity_name);
-                            ((world::character *) object)->set_mind (npc);
-                            if (npc == NULL)
-                            {
-                            	fprintf (stderr, "*** area::get_state: cannot find rpg instance for '%s'.\n", entity_name.c_str());
-                            }
-                    	}
+                        fprintf (stderr, "*** area::get_state: cannot find rpg instance for '%s'.\n", entity_name.c_str());
                     }
-                    
-                    // get coordinate
-                    record.next (&value, &size, &id);
-                    pos.set_str (std::string ((const char*) value, size));
-
-                    // place entity at current index at given coordinate
-                    put_entity (index, pos);
-
-                    // increase entity index
-                    index++;
-                }
-            }
-
-            // try loading shared objects
-            record = entity.get_flat ("shared", true);
-            if (record.size() > 1)
-            {
-                // that's the instance that will be shared by all objects
-                // it won't be placed on the actual map
-                placeable *object = add_entity (type);
-                object->load (entity_file);
-
-                // increase entity index
-                index++;
-
-                // iterate over object positions
-                while (record.next (&value, &size, &id) != base::flat::T_UNKNOWN)
-                {
-                    // first get id of entity
-                    std::string entity_name ((const char*) value);
-
-                    // create shared instance
-                    add_entity (object, entity_name);
-
-                    // get coordinate
-                    record.next (&value, &size, &id);
-                    pos.set_str (std::string ((const char*) value, size));
-
-                    // place entity at current index at given coordinate
-                    put_entity (index, pos);
-
-                    // increase entity index
-                    index++;
                 }
             }
         }
+        
+        // increase object index
+        index++;
+    }
+    
+    // load zones
+    record = file.get_flat ("zones");
+    while (record.next (&value, &size, &id) == base::flat::T_FLAT)
+    {
+        world::vector3<s_int32> temp_min, temp_max;
+        base::flat zone_flat = base::flat ((const char*) value, size);
+        temp_min.set_str (zone_flat.get_string("min"));
+        temp_max.set_str (zone_flat.get_string("max"));
+        std::string zone_id(id);
+        world::zone * temp_zone = new world::zone(zone_id, temp_min, temp_max);
+        add_zone (temp_zone);
     }
 
     return file.success ();

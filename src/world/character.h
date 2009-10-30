@@ -227,29 +227,22 @@ namespace world
          * @param file stream to save %character to.
          * @return \b true if saving successful, \b false otherwise.
          */
-        bool put_state (base::flat & file) const;
+        virtual bool put_state (base::flat & file) const;
 
         /**
          * Load %character state from stream.
          * @param file stream to load %character from.
          * @return \b true if loading successful, \b false otherwise.
          */
-        bool get_state (base::flat & file);
+        virtual bool get_state (base::flat & file);
 
         /**
-         * Save character state to file.
-         * @param fname file name.
-         * @param format type of file to create.
-         * @return true on success, false otherwise.
+         * Load %character model from stream. This is static data
+         * that will never change throughout the game.
+         * @param model stream to load the model from.
+         * @return \b true on success, \b false otherwise.
          */
-        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
-
-        /**
-         * Load character state from file.
-         * @param fname file name.
-         * @return true on success, false otherwise.
-         */
-        bool load (const std::string & fname);
+        virtual bool load_model (base::flat & model);        
         //@}
 
 #ifndef SWIG
@@ -288,7 +281,7 @@ namespace world
         /// RPG side representation of this character
         rpg::character * Mind;
 
-        /// the type of terrain this character sitted on the last frame
+        /// the type of terrain this character sat on the last frame
         const std::string * Old_Terrain;
     };
 }

@@ -46,7 +46,7 @@ character::character (area & mymap, rpg::character * mind) : moving (mymap)
     CurrentDir = NONE;
     Heading = NONE;
     Old_Terrain = NULL;
-    Schedule.set_map (&mymap);
+    Schedule.set_owner (this);
 
     // save the representation of this character on the rpg side
     Mind = mind;
@@ -153,7 +153,6 @@ void character::set_direction (const s_int32 & ndir)
     update_velocity(ndir);
     update_state();
 
-    Heading = ndir != 0 ? ndir : Heading;
     CurrentDir = ndir;
 }
 
@@ -216,60 +215,56 @@ void character::update_state()
         state += "_stand";
     }
 
+    // set direction the character is actually facing now
+    if (state[0] == 'e') Heading = EAST;
+    else if (state[0] == 'w') Heading = WEST;
+    else if (state[0] == 's') Heading = SOUTH;
+    else Heading = NORTH;
+
+    // update sprite
     set_state (state);
 }
 
 // save to stream
 bool character::put_state (base::flat & file) const
 {
-    // FIXME: save movement and direction ...
+    // save base data
+    placeable::put_state (file);
 
-    return placeable::put_state (file);
+    // save movement and direction ...
+    Position.put_state (file, "pos");
+    file.put_sint32 ("dir", CurrentDir);
+    file.put_float ("vspeed", VSpeed);
+    
+    // save schedule
+    base::flat record;
+    Schedule.put_state (record);
+    file.put_flat ("schedule", record);    
 }
 
 // load from stream
 bool character::get_state (base::flat & file)
 {
-    base::flat entity = file.get_flat ("entity");
-
-    // FIXME: load movement and direction ...
-
     // load other parts of placeable
-    placeable::get_state (entity);
+    placeable::get_state (file);
 
-    // load shadow
-    std::string shadow_file = entity.get_string ("shadow");
-    MyShadow = new shadow (shadow_file, this, CurPos);
+    // load movement and direction
+    Position.set_str (file.get_string ("pos"));
+    set_direction (file.get_sint32 ("dir"));
+    VSpeed = file.get_float ("vspeed");
 
-    return file.success ();
+    // load schedule
+    base::flat record = file.get_flat ("schedule");
+    return Schedule.get_state (record);
 }
 
-// save to file
-bool character::save (const std::string & fname, const base::diskio::file_format & format) const
+// load placeable model
+bool character::load_model (base::flat & model)
 {
-    // try to save character
-    base::diskio record (format);
-    if (!put_state (record))
-    {
-        fprintf (stderr, "*** character::save: saving '%s' failed!\n", fname.c_str ());
-        return false;
-    }
-
-    // write item to disk
-    return record.put_record (fname);
-}
-
-// load from file
-bool character::load(const std::string & fname)
-{
-    // try to load character
-    base::diskio record (base::diskio::BY_EXTENSION);
-
-    if (record.get_record (fname))
-    {
-        Filename = fname;
-        return get_state (record);
-    }
-
-    return false;
+    // load (optional) shadow
+    std::string shadow_file = model.get_string ("shadow", true);
+    if (shadow_file.length() > 0) MyShadow = new shadow (shadow_file, this, CurPos);    
+    
+    // load shapes and sprites
+    return placeable::load_model (model);
 }

@@ -159,35 +159,44 @@ void placeable::add_model (world::placeable_model * model)
 // save to stream
 bool placeable::put_state (base::flat & file) const
 {
-    base::flat entity;
-
-    entity.put_string ("state", State);
-    for (iterator i = Model.begin(); i != Model.end(); i++)
-    {
-        (*i)->put_state (entity);
-    }
-    file.put_flat ("entity", entity);
-
+    file.put_sint8 ("type", Type);
+    file.put_string ("model", ModelFile);
+    file.put_string ("state", State);
+    
     return true;
 }
 
 // load from stream
 bool placeable::get_state (base::flat & file)
 {
-    std::string state = file.get_string ("state");
+    // Type is loaded outside of this class
     
+    // load static model definititon from file
+    ModelFile = file.get_string ("model");
+    
+    base::diskio static_model;
+    if (!static_model.get_record (ModelFile)) return false;
+    load_model(static_model);
+    
+    // load current state
+    set_state (file.get_string ("state"));
+    return file.success ();
+}
+
+// load placeable model
+bool placeable::load_model (base::flat & model)
+{
     char *name;
     void *value;
-    u_int32 size;
+    u_int32 size;    
     
-    // load actual models
-    while (file.next (&value, &size, &name) == base::flat::T_FLAT) 
+    // load shapes and sprites
+    while (model.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
-        placeable_model * model = new placeable_model ();
-        model->get_state (file);
-        add_model (model);
-    }    
+        placeable_model * mdl = new placeable_model ();
+        mdl->get_state (model);
+        add_model (mdl);
+    }
     
-    set_state (state);
-    return file.success ();
+    return model.success();
 }

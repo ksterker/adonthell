@@ -325,7 +325,7 @@ namespace python
      * @param start index from where to start filling the tuple.
      * @return a new tuple filled with the data read from stream.
      */
-    PyObject *get_tuple (base::flat & in, u_int16 start = 0);
+    PyObject *get_tuple (base::flat & in, const u_int16 & start = 0);
 
     /**
      * Write the contents of a tuple to given stream. Only supports integer and
@@ -334,7 +334,7 @@ namespace python
      * @param out flattener to store the tuple in.
      * @param start index from where to start flattening the tuple.
      */
-    void put_tuple (PyObject *tuple, base::flat & out, u_int16 start = 0);
+    void put_tuple (PyObject *tuple, base::flat & out, const u_int16 & start = 0);
     //@}
 }
 

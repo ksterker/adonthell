@@ -40,7 +40,7 @@
 
 namespace world
 {
-    class area;
+    class character;
     
     /**
      * This class manages %character schedules. Each %character has a
@@ -88,25 +88,25 @@ namespace world
         void update ();
 
         /**
-         * @name Map of Schedule.
+         * @name Owner of Schedule.
          */
         //@{
         /**
-         * Set the map the schedule operates on.
-         * @param map pointer to the map instance.
+         * Set the character the schedule is assigned to.
+         * @param owner pointer to the character instance.
          */
-        void set_map (area * map)
+        void set_owner (character * owner)
         {
-            Map = map;
+            Owner = owner;
         }
         
         /**
-         * Get the map this schedule is attached to.
-         * @return map this schedule is attached to.
+         * Get the owner this schedule is attached to.
+         * @return owner this schedule is attached to.
          */
-        area * get_map () const
+        character * get_owner () const
         {
-            return Map;
+            return Owner;
         }
         //@}
         
@@ -296,8 +296,8 @@ namespace world
         /// schedule to set instead of running manager script
         schedule_data *QueuedSchedule;
         
-        /// area for which this schedule is used
-        area *Map;
+        /// character to which this schedule is assigned
+        character *Owner;
     #endif // SWIG
     };
 

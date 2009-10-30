@@ -38,7 +38,7 @@
 namespace world
 {
     class area;
-
+    
     /// allowed types of objects on the map
     typedef enum
         {
@@ -251,31 +251,22 @@ namespace world
          * @param file stream to save %placeable to.
          * @return \b true if saving successful, \b false otherwise.
          */
-        bool put_state (base::flat & file) const;
+        virtual bool put_state (base::flat & file) const;
 
         /**
          * Load %placeable state from stream.
          * @param file stream to load %placeable from.
          * @return \b true if loading successful, \b false otherwise.
          */
-        bool get_state (base::flat & file);
+        virtual bool get_state (base::flat & file);
         
         /**
-         * Load %placeable from given file.
-         * @param fname file name.
-         * @return true on success, false otherwise.
+         * Load %placeable model from stream. This is static data
+         * that will never change throughout the game.
+         * @param model stream to load the model from.
+         * @return \b true on success, \b false otherwise.
          */
-        virtual bool load (const std::string & fname) 
-        {
-            Filename = fname;
-            return true;
-        }
-        
-        /**
-         * Return file this %object was loaded from.
-         * @return filename of this %object.
-         */
-        std::string filename () const { return Filename; }
+        virtual bool load_model (base::flat & model);
         //@}
 
 #ifndef SWIG
@@ -286,8 +277,8 @@ namespace world
 #endif
 
     protected:
-        /// file this placeable was loaded from
-        std::string Filename;
+        /// file this placeable's model was loaded from
+        std::string ModelFile;
         /// representation of the placeable
         std::vector<world::placeable_model*> Model;
         /// bounding box of this placeable. It's updated when adding shapes.

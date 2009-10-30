@@ -173,15 +173,6 @@ namespace world
          */
         //@{
         /**
-         * Get file from which this model was loaded.
-         * @return file name of this model.
-         */
-        const std::string & filename()
-        {
-            return Filename;
-        }
-
-        /**
          * Save %model state to stream.
          * @param file stream to save model to.
          * @return \b true if saving successful, \b false otherwise.
@@ -204,8 +195,6 @@ namespace world
 #endif
 
     protected:
-        /// filename of this object
-        mutable std::string Filename;
         /// possible states of this object
         mutable std::map <std::string, placeable_shape> Shapes;
         /// current state of this object

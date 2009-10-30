@@ -68,18 +68,6 @@ class coordinates (vector3i):
 
 /// no downcasting in python, so we have to improvise ...
 %extend world::area {
-    /// add an object to the map
-    world::object* add_object ()
-    {
-        return dynamic_cast<world::object*> (self->add_entity (world::OBJECT));
-    }
-
-    /// add a character to the map
-    world::character* add_character (const std::string & name)
-    {
-        return dynamic_cast<world::character*> (self->add_entity (world::CHARACTER, name));
-    }
-
     /// get a character from the map
     world::character* get_character (const std::string & name)
     {

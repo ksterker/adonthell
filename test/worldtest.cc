@@ -141,20 +141,8 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
                 
 		// Create game world
-        gc.world.load ("test-world.xml");
+        gc.world.load ("test-world-new.xml");
 
-        // we need to load the world module before we can pass anything to python
-        if (python::import_module ("adonthell.world") == NULL) return 1;
-
-        // set position and speed of player character ...
-        world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
-        mchar->set_position (518, 297);
-        mchar->set_z (0);
-
-        // ... and enable its controls
-        world::schedule *controls = mchar->get_schedule();
-        controls->set_manager ("player", NULL);
-        
         // create a specie
         rpg::specie human("Human");
         human.get_state("groups/human.specie");
@@ -169,15 +157,6 @@ public:
         
         // Add faction to character
         player->add_faction("Noble");
-        
-        // create a NPC ...
-        mchar = (world::character *) (gc.world.get_entity ("NPC"));
-        mchar->set_position (210, 190);
-        mchar->set_z (0);
-
-        // ... and let it walk randomly
-        controls = mchar->get_schedule();
-        controls->set_manager ("walk_random", NULL);
 
         rpg::character *npc = rpg::character::get_character("NPC");
         npc->set_specie ("Human");
@@ -257,6 +236,8 @@ public:
 	        gfx::screen::clear ();
 	    }
 
+        gc.world.save ("test-world-new.xml");
+        
         rpg::specie::cleanup();
         rpg::faction::cleanup();
         

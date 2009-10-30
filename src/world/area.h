@@ -73,9 +73,22 @@ namespace world
         void update();
 
         /**
+         * @name Map Object Handling.
+         */
+        //@{
+        /**
+         * Place given object at the given location.
+         * @param object the object to place on the map.
+         * @param pos position to place object at.
+         * @return index in list of objects or -1 on error.
+         */
+        s_int32 add_entity (entity * object, coordinates & pos);
+            
+        /**
          * Place object at a given index at the given location.
          * @param index index of object in the list of objects.
          * @param pos position to place object at.
+         * @return true on success, false otherwise.
          */
         bool put_entity (const u_int32& index, coordinates & pos);
 
@@ -95,40 +108,10 @@ namespace world
 
         /**
          * Get the name of the entity that possess the placeable
-         * @param the placeable
+         * @param object the placeable
          * @return the name
          */
         const std::string * get_entity_name (const placeable * object) const;
-
-        /**
-         * @name Map entity creation.
-         */
-        //@{
-        /**
-         * Adds an object to this map. Creates a new, empty object and returns
-         * it, so that it can be initialized by the caller of this method.
-         * The map will take ownership of the object.
-         *
-         * @return pointer to the added object in case of success, \e NULL otherwise.
-         */
-        placeable * add_entity (const placeable_type & type);
-
-        /**
-         * Adds a new, named entity to the map. The enitiy of the specified type
-         * will be created and returned for further initialization.
-         *
-         * @return pointer to the added object in case of success, \e NULL otherwise.
-         */
-        placeable * add_entity (const placeable_type & type, const std::string & id);
-
-        /**
-         * Adds an existing object as a new, named entity to the map. This is useful
-         * if different instances of an entity (identified by their unique id) can
-         * share the same graphical representation.
-         *
-         * @return pointer to the added object in case of success, \e NULL otherwise.
-         */
-        placeable * add_entity (placeable * object, const std::string & id);
         //@}
 
         /**

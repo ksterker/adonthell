@@ -36,8 +36,8 @@ class player (object):
         self.schedule = schedule
         # -- Whether PC is always running
         self.always_run = 0
-        # -- The PC map character instance
-        self.pc = schedule.get_map().get_character ("Player")
+        # -- The owner of the schedule
+        self.pc = self.schedule.get_owner()
         # -- The game "mode"
         self.state = actions.ACTION_NORMAL
     
@@ -102,7 +102,14 @@ class player (object):
                 self.pc.walk ()
             # -- consume key event
             return 1
-        
+            
+        if kev.type() == input.keyboard_event.KEY_PUSHED:
+            # -- F5: quick save
+            if kev.key() == input.keyboard_event.F5_KEY:
+                pass
+            # -- F6: quick load
+            elif kev.key() == input.keyboard_event.F6_KEY:
+                pass
         return 0
 
     def handle_controls (self, cev):

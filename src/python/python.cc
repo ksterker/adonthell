@@ -103,7 +103,7 @@ namespace python
     }
     
     // unflatten the contents of a tuple
-    PyObject *get_tuple (base::flat & in, u_int16 start)
+    PyObject *get_tuple (base::flat & in, const u_int16 & start)
     {
         u_int16 len = in.get_uint16 ("pln") + start;
         PyObject *tuple = PyTuple_New (len);
@@ -138,7 +138,7 @@ namespace python
     }
     
     // flatten the contents of a tuple
-    void put_tuple (PyObject * tuple, base::flat & out, u_int16 start)
+    void put_tuple (PyObject * tuple, base::flat & out, const u_int16 & start)
     {
         u_int16 len = tuple == NULL ? 0 : PyTuple_Size (tuple);
         out.put_uint16 ("pln", len - start);

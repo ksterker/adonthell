@@ -205,6 +205,16 @@ namespace python
         }
     
         /**
+         * Direct access to the constructor arguments. Does not increase
+         * the reference count and thus should not be called from Python.
+         * @return the arguments passed to the constructor.
+         */
+        PyObject *get_args () const
+        {
+            return Args;
+        }
+        
+        /**
          * Returns the class name of this object. This is the name of the
          * wrapped Python class.
          *

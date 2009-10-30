@@ -471,20 +471,17 @@ void chunk::put_state (collector & objects) const
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
         const entity *e = i->get_entity();
-        const std::string & name = e->get_object()->filename();
-        collector_data & data = objects[name];
+        collector_data & data = objects[e->get_object()];
 
         if (!e->has_name()) 
         {
             // anonymous objects
-            data.Anonym.push_back ((chunk_info*) &(*i));
+            data.Anonymous.push_back ((chunk_info*) &(*i));
         }
         else
         {
-            // named entities backed by same object instance
-            if (!((named_entity*)e)->is_unique()) data.Shared.push_back ((chunk_info*) &(*i));
-            // named entities backed by unique object
-            else data.Unique.push_back ((chunk_info*) &(*i));
+            // named entities
+            data.Named.push_back ((chunk_info*) &(*i));
         }
     }        
 }

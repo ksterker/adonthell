@@ -203,20 +203,18 @@ namespace world
          */
         typedef struct
         {
-            std::vector<chunk_info*> Anonym;
-            std::vector<chunk_info*> Shared;
-            std::vector<chunk_info*> Unique;
+            std::vector<chunk_info*> Named;
+            std::vector<chunk_info*> Anonymous;
         } collector_data;
 
         /// container for gathering map objects when serializing chunk
-        typedef std::map<std::string, collector_data> collector;
+        typedef std::map<world::placeable *, collector_data> collector;
 
         /**
          * Collect all chunk contents, so that they can be easily written
          * to a file.
          */
         void put_state (collector & objects) const;
-
 
     private:
         /**

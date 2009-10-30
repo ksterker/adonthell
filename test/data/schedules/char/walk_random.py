@@ -35,8 +35,7 @@ class walk_random (object):
         # -- the map for this schedule
         self.schedule = schedule
         # -- The NPC map character instance ... 
-        #    FIXME: shouldn't be hardcoded
-        self.chr = schedule.get_map().get_character ("NPC")
+        self.chr = schedule.get_owner()
     
     def run (self):
         """
@@ -54,7 +53,7 @@ class walk_random (object):
          Called when the schedule is first assigned
         """
         # -- get map assigned to this schedule
-        map = self.schedule.get_map ()
+        map = self.chr.map ()
         # -- get random x coordinate
         x = random.randint (20, map.length () - 20)
         # -- get random y coordinate
