@@ -53,6 +53,7 @@ namespace world
         chunk_info (entity *e, const vector3<s_int32> & min, const vector3<s_int32> & max) 
         : Min (min), Max (max), Entity (e)
         {
+            calc_solid_max();
         }
 
         /**
@@ -62,6 +63,7 @@ namespace world
         chunk_info (const chunk_info & ci) 
         : Min (ci.Min), Max (ci.Max), Entity (ci.Entity), Shadow (ci.Shadow)
         {
+            calc_solid_max();
         }
 
         /**
@@ -106,6 +108,26 @@ namespace world
         {
             const placeable *object = Entity->get_object(); 
             return Max + vector3<s_int32>(object->min_x(), object->min_y(), object->min_z());
+        }
+        
+        /**
+         * Return "real" position, taking only solid placeable shape offset into account.
+         * @return lower coordinate of bounding box
+         */
+        vector3<s_int32> solid_min () const
+        {
+            const placeable *object = Entity->get_object(); 
+            return Min + vector3<s_int32>(object->solid_min_x(), object->solid_min_y(), object->solid_min_z());
+        }
+
+        /**
+         * Return "real" position, taking only solid placeable shape offset into account.
+         * @return upper coordinate of bounding box
+         */
+        vector3<s_int32> solid_max () const
+        {
+            const placeable *object = Entity->get_object();
+            return  SolidMax + vector3<s_int32>(object->solid_min_x(), object->solid_min_y(), object->solid_min_z());
         }
         
         /**
@@ -164,10 +186,23 @@ namespace world
 #endif
 
     private:
+        /**
+         * Calculate constant SolidMax
+         */
+         void calc_solid_max()
+         {
+            const placeable *object = Entity->get_object();
+            SolidMax = vector3<s_int32>(Min.x() + object->solid_max_length(),
+                                        Min.y() + object->solid_max_width(),
+                                        Min.z() + object->solid_max_height());
+         }
+         
         /// pointer to map object
         entity * Entity;
         /// shadow cast on this object 
         std::vector<shadow_info> Shadow;
+        /// extend of the solid portion of the object
+        vector3<s_int32> SolidMax;
     };
 }
 

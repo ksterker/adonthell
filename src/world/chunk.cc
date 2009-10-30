@@ -334,7 +334,7 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     std::list<chunk_info>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (type & i->get_object()->type() && in_bbox (min, max, i->real_min(), i->real_max()))
+        if (type & i->get_object()->type() && in_bbox (min, max, i->solid_min(), i->solid_max()))
         {
             result.push_back ((chunk_info*) &(*i));
         }

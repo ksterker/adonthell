@@ -149,84 +149,84 @@ namespace world
          * Get maximum placeable length.
          * @return max extension of placeable in x direction.
          */
-        u_int16 max_length () const { return SolidMaxSize.x(); }
+        u_int16 max_length () const { return EntireMaxSize.x(); }
         /**
          * Get maximum placeable width.
          * @return max extension of placeable in y direction.
          */
-        u_int16 max_width () const { return SolidMaxSize.y(); }
+        u_int16 max_width () const { return EntireMaxSize.y(); }
         /**
          * Get maximum placeable height.
          * @return max extension of placeable in z direction.
          */
-        u_int16 max_height () const { return SolidMaxSize.z(); }
+        u_int16 max_height () const { return EntireMaxSize.z(); }
 
-        s_int16 min_x () const { return SolidMinPos.x(); }
-        s_int16 min_y () const { return SolidMinPos.y(); }
-        s_int16 min_z () const { return SolidMinPos.z(); }
+        s_int16 min_x () const { return EntireMinPos.x(); }
+        s_int16 min_y () const { return EntireMinPos.y(); }
+        s_int16 min_z () const { return EntireMinPos.z(); }
 
         /**
          * Get placeable's current length.
          * @return actual extension of placeable in x direction.
          */
-        u_int16 length () const { return SolidCurSize.x(); }
+        u_int16 length () const { return EntireCurSize.x(); }
         /**
          * Get placeable's current width.
          * @return actual extension of placeable in y direction.
          */
-        u_int16 width () const { return SolidCurSize.y(); }
+        u_int16 width () const { return EntireCurSize.y(); }
         /**
          * Get placeable's current height.
          * @return actual extension of placeable in z direction.
          */
-        u_int16 height () const { return SolidCurSize.z(); }
+        u_int16 height () const { return EntireCurSize.z(); }
         //@}
 
-        s_int16 cur_x () const { return SolidCurPos.x(); }
-        s_int16 cur_y () const { return SolidCurPos.y(); }
-        s_int16 cur_z () const { return SolidCurPos.z(); }
+        s_int16 cur_x () const { return EntireCurPos.x(); }
+        s_int16 cur_y () const { return EntireCurPos.y(); }
+        s_int16 cur_z () const { return EntireCurPos.z(); }
 
 
        /**
-         * Get maximum placeable length accounting for both solid and non-solid shapes.
+         * Get maximum placeable length only accounting for solid shapes.
          * @return max extension of placeable in x direction.
          */
-        u_int16 entire_max_length () const { return EntireMaxSize.x(); }
+        u_int16 solid_max_length () const { return SolidMaxSize.x(); }
         /**
-         * Get maximum placeable width accounting for both solid and non-solid shapes.
+         * Get maximum placeable width only accounting for solid shapes.
          * @return max extension of placeable in y direction.
          */
-        u_int16 entire_max_width () const { return EntireMaxSize.y(); }
+        u_int16 solid_max_width () const { return SolidMaxSize.y(); }
         /**
-         * Get maximum placeable height accounting for both solid and non-solid shapes.
+         * Get maximum placeable height only accounting for solid shapes.
          * @return max extension of placeable in z direction.
          */
-        u_int16 entire_max_height () const { return EntireMaxSize.z(); }
+        u_int16 solid_max_height () const { return SolidMaxSize.z(); }
 
-        s_int16 entire_min_x () const { return EntireMinPos.x(); }
-        s_int16 entire_min_y () const { return EntireMinPos.y(); }
-        s_int16 entire_min_z () const { return EntireMinPos.z(); }
+        s_int16 solid_min_x () const { return SolidMinPos.x(); }
+        s_int16 solid_min_y () const { return SolidMinPos.y(); }
+        s_int16 solid_min_z () const { return SolidMinPos.z(); }
 
         /**
-         * Get placeable's current length accounting for both solid and non-solid shapes.
+         * Get placeable's current length only accounting for solid shapes
          * @return actual extension of placeable in x direction.
          */
-        u_int16 entire_length () const { return EntireCurSize.x(); }
+        u_int16 solid_length () const { return SolidCurSize.x(); }
         /**
-         * Get placeable's current width accounting for both solid and non-solid shapes.
+         * Get placeable's current width only accounting for solid shapes
          * @return actual extension of placeable in y direction.
          */
-        u_int16 entire_width () const { return EntireCurSize.y(); }
+        u_int16 solid_width () const { return SolidCurSize.y(); }
         /**
-         * Get placeable's current height accounting for both solid and non-solid shapes.
+         * Get placeable's current height only accounting for solid shapes
          * @return actual extension of placeable in z direction.
          */
-        u_int16 entire_height () const { return EntireCurSize.z(); }
+        u_int16 solid_height () const { return SolidCurSize.z(); }
         //@}
 
-        s_int16 entire_cur_x () const { return EntireCurPos.x(); }
-        s_int16 entire_cur_y () const { return EntireCurPos.y(); }
-        s_int16 entire_cur_z () const { return EntireCurPos.z(); }
+        s_int16 solid_cur_x () const { return SolidCurPos.x(); }
+        s_int16 solid_cur_y () const { return SolidCurPos.y(); }
+        s_int16 solid_cur_z () const { return SolidCurPos.z(); }
         
         /**
          * Get placeable's map
