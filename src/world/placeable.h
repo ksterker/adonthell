@@ -149,43 +149,85 @@ namespace world
          * Get maximum placeable length.
          * @return max extension of placeable in x direction.
          */
-        u_int16 max_length () const { return MaxSize.x(); }
+        u_int16 max_length () const { return SolidMaxSize.x(); }
         /**
          * Get maximum placeable width.
          * @return max extension of placeable in y direction.
          */
-        u_int16 max_width () const { return MaxSize.y(); }
+        u_int16 max_width () const { return SolidMaxSize.y(); }
         /**
          * Get maximum placeable height.
          * @return max extension of placeable in z direction.
          */
-        u_int16 max_height () const { return MaxSize.z(); }
+        u_int16 max_height () const { return SolidMaxSize.z(); }
 
-        s_int16 min_x () const { return MinPos.x(); }
-        s_int16 min_y () const { return MinPos.y(); }
-        s_int16 min_z () const { return MinPos.z(); }
+        s_int16 min_x () const { return SolidMinPos.x(); }
+        s_int16 min_y () const { return SolidMinPos.y(); }
+        s_int16 min_z () const { return SolidMinPos.z(); }
 
         /**
          * Get placeable's current length.
          * @return actual extension of placeable in x direction.
          */
-        u_int16 length () const { return CurSize.x(); }
+        u_int16 length () const { return SolidCurSize.x(); }
         /**
          * Get placeable's current width.
          * @return actual extension of placeable in y direction.
          */
-        u_int16 width () const { return CurSize.y(); }
+        u_int16 width () const { return SolidCurSize.y(); }
         /**
          * Get placeable's current height.
          * @return actual extension of placeable in z direction.
          */
-        u_int16 height () const { return CurSize.z(); }
+        u_int16 height () const { return SolidCurSize.z(); }
         //@}
 
-        s_int16 cur_x () const { return CurPos.x(); }
-        s_int16 cur_y () const { return CurPos.y(); }
-        s_int16 cur_z () const { return CurPos.z(); }
+        s_int16 cur_x () const { return SolidCurPos.x(); }
+        s_int16 cur_y () const { return SolidCurPos.y(); }
+        s_int16 cur_z () const { return SolidCurPos.z(); }
 
+
+       /**
+         * Get maximum placeable length accounting for both solid and non-solid shapes.
+         * @return max extension of placeable in x direction.
+         */
+        u_int16 entire_max_length () const { return EntireMaxSize.x(); }
+        /**
+         * Get maximum placeable width accounting for both solid and non-solid shapes.
+         * @return max extension of placeable in y direction.
+         */
+        u_int16 entire_max_width () const { return EntireMaxSize.y(); }
+        /**
+         * Get maximum placeable height accounting for both solid and non-solid shapes.
+         * @return max extension of placeable in z direction.
+         */
+        u_int16 entire_max_height () const { return EntireMaxSize.z(); }
+
+        s_int16 entire_min_x () const { return EntireMinPos.x(); }
+        s_int16 entire_min_y () const { return EntireMinPos.y(); }
+        s_int16 entire_min_z () const { return EntireMinPos.z(); }
+
+        /**
+         * Get placeable's current length accounting for both solid and non-solid shapes.
+         * @return actual extension of placeable in x direction.
+         */
+        u_int16 entire_length () const { return EntireCurSize.x(); }
+        /**
+         * Get placeable's current width accounting for both solid and non-solid shapes.
+         * @return actual extension of placeable in y direction.
+         */
+        u_int16 entire_width () const { return EntireCurSize.y(); }
+        /**
+         * Get placeable's current height accounting for both solid and non-solid shapes.
+         * @return actual extension of placeable in z direction.
+         */
+        u_int16 entire_height () const { return EntireCurSize.z(); }
+        //@}
+
+        s_int16 entire_cur_x () const { return EntireCurPos.x(); }
+        s_int16 entire_cur_y () const { return EntireCurPos.y(); }
+        s_int16 entire_cur_z () const { return EntireCurPos.z(); }
+        
         /**
          * Get placeable's map
          * @return map where the placeable exists
@@ -281,14 +323,22 @@ namespace world
         std::string ModelFile;
         /// representation of the placeable
         std::vector<world::placeable_model*> Model;
-        /// bounding box of this placeable. It's updated when adding shapes.
-        vector3<u_int16> MaxSize;
+        /// bounding box of this placeable. It's updated when adding shapes. Only takes into account solid shapes.
+        vector3<u_int16> SolidMaxSize;
+        /// bounding box of this placeable. Takes into account both solid and non-solid shapes.
+        vector3<u_int16> EntireMaxSize;
         /// position of this placeable. It's calculated when adding shapes.
-        vector3<s_int16> MinPos;
-        /// bounding box of this placeable. It's calculated when the state changes.
-        vector3<u_int16> CurSize;
+        vector3<s_int16> SolidMinPos;
+        /// position of this placeable. It's calculated when adding shapes. 
+        vector3<s_int16> EntireMinPos;
+        /// bounding box of this placeable. It's calculated when the state changes only from the solid shapes.
+        vector3<u_int16> SolidCurSize;
+        /// bounding box of this placeable. It's calculated when the state changes from both solid and non-solid shapes.
+        vector3<u_int16> EntireCurSize;
         /// position of this placeable. It's calculated when the state changes.
-        vector3<s_int16> CurPos;
+        vector3<s_int16> SolidCurPos;
+        /// position of this placeable. It's calculated when the state changes.
+        vector3<s_int16> EntireCurPos;
         /// the placeables current state
         std::string State;
         /// whether placeable is character, scenery or item
