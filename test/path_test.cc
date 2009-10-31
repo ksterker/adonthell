@@ -1,4 +1,4 @@
-/*
+ /*
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -19,148 +19,58 @@
 */
 
 // #define DEBUG_COLLISION 1
-#ifdef CRAZY
-#include <time.h>
+
 #include "base/base.h"
+#include "base/savegame.h"
 #include "event/date.h"
 #include "gfx/sprite.h"
 #include "gfx/screen.h"
 #include "input/manager.h"
 #include "main/adonthell.h"
-#include "python/python.h"
+#include "rpg/character.h"
+#include "rpg/specie.h"
+#include "rpg/faction.h"
 #include "world/area.h"
 #include "world/character.h"
 #include "world/object.h"
 #include "world/mapview.h"
 #include "world/pathfinding_manager.h"
-#include "world/vector3.h"
-#include "world/coordinates.h"
-
+#include "gui/window_manager.h"
 
 class game_client
 {
 public:
-    world::area world;
+    world::character * path_char; // Character used for pathfinding
     world::character * mchar;
+    world::area world;
     bool letsexit;
     bool draw_grid;
-	bool draw_walkable;
-    world::character * mchar2;
 	bool draw_bounding_box;
     bool draw_delay;
     bool print_queue;
-    world::character * mchar3;
 	bool screenshot;
-	bool always_run;
 
     game_client()
     {
         letsexit = false;
         draw_grid = false;
-        draw_walkable = false;
         draw_bounding_box = false;
         draw_delay = false;
         print_queue = false;
         screenshot = false;
-        always_run = false;
-    }
 
-	// callback for control event listener
-    bool control_func(input::control_event * cev)
-    {
-        if (cev->type() == input::control_event::BUTTON_PUSHED)
-        {
-        	switch (cev->button())
-        	{
-	            case input::control_event::A_BUTTON:
-	            {
-	            	if (!always_run) mchar->run ();
-	            	else mchar->walk ();
-	                break;
-	            }
-	            /*case input::control_event::B_BUTTON:
-	            {
-	            	mchar->jump();
-	                break;
-	            }*/
-	            case input::control_event::B_BUTTON:
-	            {
+        // prepare gamedata handling
+        // TODO: should probably be integrated directly into the engine,
+        // i.e. into module ialization (adonthell::init_modules),
+        // in which case we need to make sure to init modules in the proper
+        // order too.
 
-                    const int options[3][2] = {{580, 450},
-                                {150, 250},
-                                {500, 450}};
-                    int random = rand() % 3;
-
-                    world::vector3<s_int32> target(options[random][0], options[random][1] ,0);
-                    //150 250
-                    //540 450
-                    //590 450
-                    fprintf(stderr," TARGET: x:%d y:%d\n", options[random][0], options[random][1]);
-                    //int id1 = ptmgr.add_task(mchar, target);
-                    int id2 = world::pathfinding_manager::add_task(mchar2, target);
-                    int id3 = world::pathfinding_manager::add_task(mchar3, target);
-                    world::pathfinding_manager::set_final_direction(id2, world::character::EAST);
-
-                    break;
-	            }
-	            case input::control_event::LEFT_BUTTON:
-	            {
-	                mchar->add_direction(mchar->WEST);
-	                break;
-	            }
-	            case input::control_event::RIGHT_BUTTON:
-	            {
-	                mchar->add_direction(mchar->EAST);
-	                break;
-	            }
-	            case input::control_event::UP_BUTTON:
-	            {
-	                mchar->add_direction(mchar->NORTH);
-	                break;
-	            }
-	            case input::control_event::DOWN_BUTTON:
-	            {
-	                mchar->add_direction(mchar->SOUTH);
-	                break;
-	            }
-	            default: break;
-        	}
-        }
-        else
-        {
-        	switch (cev->button())
-        	{
-	            case input::control_event::A_BUTTON:
-	            {
-	            	if (!always_run) mchar->walk();
-	            	else mchar->run ();
-	                break;
-	            }
-	            case input::control_event::LEFT_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->WEST);
-	                break;
-	            }
-	            case input::control_event::RIGHT_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->EAST);
-	                break;
-	            }
-	            case input::control_event::UP_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->NORTH);
-	                break;
-	            }
-	            case input::control_event::DOWN_BUTTON:
-	            {
-	                mchar->remove_direction(mchar->SOUTH);
-	                break;
-	            }
-	            default: break;
-        	}
-        }
-
-        return true;
+        // note: order is important; load EVENT before RPG before WORLD
+        base::savegame::add (new base::serializer<events::date> ());
+        // todo: load species
+        // todo: load factions
+        base::savegame::add (new base::serializer<rpg::character> ());
+        // todo: load map
     }
 
     // callback for key event listener
@@ -168,11 +78,6 @@ public:
     {
         if (kev->type() == input::keyboard_event::KEY_PUSHED)
         {
-        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
-        	{
-        		always_run = true;
-				mchar->run ();
-        	}
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
@@ -188,12 +93,7 @@ public:
             {
                 draw_bounding_box = !draw_bounding_box;
             }
-            // toggle collision area on|off
-            if (kev->key() == input::keyboard_event::W_KEY)
-            {
-                draw_walkable = !draw_walkable;
-            }
-            // toggle collision area on|off
+            // render tile after tile
             if (kev->key() == input::keyboard_event::D_KEY)
             {
                 draw_delay = true;
@@ -208,198 +108,19 @@ public:
             {
             	print_queue = true;
             }
-        }
-        else
-        {
-        	if (kev->key() == input::keyboard_event::CAPSLOCK_KEY)
-        	{
-        		always_run = false;
-        		mchar->walk ();
-        	}
-        }
-
-        return true;
-    }
-
-    void create_map ()
-    {
-        // Adding map objects
-        world::object * mobj;
-
-		// short grass, 1x1 at index 0
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/short-grass-tile.xml");
-
-        // long grass, 1.5x1.5 at index 1
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/long-grass-tile.xml");
-
-        // wooden planks, 1x1 at index 2
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-1.xml");
-
-        // wooden pole, left, height 40 at index 3
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-pole-l.xml");
-
-        // wooden pole, right, height 40 at index 4
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/ground/outside/wood-pole-r.xml");
-
-        // diagonal cliff, 40x45x75 at index 5
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-se.xml");
-
-        // diagonal cliff top, 40x45x5 at index 6
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-se-top.xml");
-
-        // cliff facing south, 80x5x80 at index 7
-        mobj = (world::object *) world.add_entity(world::OBJECT);
-        mobj->load("data/models/map/wall/outside/cliff-s.xml");
-
-        // Adding the map characters at index 8, 9 and 10
-        mchar2 = (world::character *) world.add_entity(world::CHARACTER, "NPC2");
-        mchar2->load ("data/models/char/npc/ng.xml");
-        mchar3 = (world::character *) world.add_entity(world::CHARACTER, "NPC3");
-        mchar3->load ("data/models/char/npc/ng.xml");
-        mchar = (world::character *) world.add_entity(world::CHARACTER, "Player");
-        mchar->load ("data/models/char/npc/ng.xml");
-
-        // set position and speed
-        mchar->set_speed (1.5);
-        mchar->set_position (395, 322);
-        mchar->set_z (0);
-        mchar2->set_speed (1.5);
-        mchar2->set_position (397, 353);
-        mchar2->set_z (0);
-        mchar3->set_speed (1.5);
-        mchar3->set_position (450, 422);
-        mchar3->set_z (0);
-
-        // put character on map
-        world.put_entity (8, *mchar2);
-        world.put_entity (9, *mchar3);
-        world.put_entity (10, *mchar);
-
-
-
-        world::coordinates mc;
-
-        /*
-        mc.set_position (4, 5);
-        world.put_entity (0, mc);
-
-        mc.set_z (80);
-        world.put_entity (2, mc);
-         */
-
-        // create ground (grass tiles are 40x40)
-        for (u_int16 i = 0; i < 16; i++)
-            for (u_int16 j = 0; j < 3; j++)
+            // start simple pathfinding search
+            if (kev->key() == input::keyboard_event::P_KEY)
             {
-                world::coordinates mc (i*40, j*40, 80);
-                world.put_entity (0, mc);
-            }
-
-        for (u_int16 j = 0; j < 3; j++)
-            for (u_int16 i = 0; i < 3-j; i++)
-            {
-                world::coordinates mc (i*40, (j+3)*40, 80);
-                world.put_entity (0, mc);
-            }
-
-
-		// 4 poles (left side)
-        mc.set_x(400);mc.set_y(170);
-        world.put_entity(3, mc);  // that one is actually invisible
-        mc.set_x(400);mc.set_y(240);
-        world.put_entity(3, mc);
-        // (right side)
-        mc.set_x(470);mc.set_y(170);  // that one is actually invisible
-        world.put_entity(4, mc);
-        mc.set_x(470);mc.set_y(240);
-        world.put_entity(4, mc);
-
-		// wooden platform
-        for (int i = 10; i < 12; i++)
-        {
-            for (int j = 4; j < 6; j++)
-            {
-                world::coordinates mc (i*40, j*40, 40);
-                world.put_entity (2, mc);
+                s_int32 tX = rand() % path_char->map().length();
+                s_int32 tY = rand() % path_char->map().height();
+                printf("Rand %d %d\n", tX, tY);
+                world::vector3<s_int32> target(tX, tY, 10);
+                world::pathfinding_manager::add_task(mchar, target);
             }
         }
 
-		// 4 wooden poles
-        mc.set_x(280);mc.set_y(280);
-        world.put_entity(3, mc);
-        mc.set_z(40);
-        world.put_entity(3, mc);
-        mc.set_x(280);mc.set_y(170);
-        mc.set_z(0);
-        world.put_entity(3, mc);
-        mc.set_z(40);
-        world.put_entity(3, mc);
-
-        mc.set_z(0);
-        mc.set_x(350);mc.set_y(280);
-        world.put_entity(4, mc);
-        mc.set_z(40);
-        world.put_entity(4, mc);
-        mc.set_x(350);mc.set_y(170);
-        mc.set_z(0);
-        world.put_entity(4, mc);
-        mc.set_z(40);
-        world.put_entity(4, mc);
-
-		// wooden platform
-        for (int i = 7; i < 9; i++)
-        {
-            for (int j = 4; j < 7; j++)
-            {
-                world::coordinates mc (i*40, j*40, 80);
-                world.put_entity (2, mc);
-            }
-        }
-
-		// "stair"
-        for (int i = 4; i < 17; i++)
-        {
-            world::coordinates mc ((i/2) * 40 + (i%2) * 20, 360, 5 * (i-4));
-            world.put_entity (2, mc);
-        }
-
-        world::coordinates mc2 (120, 200, 0);
-        world.put_entity (2, mc2);
-
-        // create ground (grass tiles are 60x60, but grid is 40x40)
-        for (float i = 0; i < 16; i += 1.5)
-            for (float j = 2; j < 12; j += 1.5)
-            {
-                u_int16 x = (u_int16) (40 * i);
-                u_int16 y = (u_int16) (40 * j);
-
-                world::coordinates mc (x, y, 0);
-                world.put_entity (1, mc);
-            }
-
-
-        // create diagonal wall
-        for (int i = 0; i < 4; i++)
-        {
-            world::coordinates mc (i*40, (6-i)*40, 0);
-            world.put_entity (5, mc);
-            mc.set_z (80);
-            world.put_entity (6, mc);
-        }
-
-        // create straight wall
-        for (int i = 4; i < 16; i+=2)
-        {
-            world::coordinates mc (i*40, 120, 0);
-            world.put_entity (7, mc);
-        }
+        // do not consume event
+        return false;
     }
 };
 
@@ -408,9 +129,7 @@ class world_test : public adonthell::app
 public:
 	int main ()
 	{
-        time_t a;
-        time(&a);
-        srand(a);
+	    srand(time(NULL));
 
         // Initialize the gfx and input systems
     	init_modules (GFX | INPUT | PYTHON | WORLD);
@@ -426,20 +145,50 @@ public:
 	    input::listener il;
     	input::manager::add(&il);
 
-		// Listen for control events
-    	il.connect_control_function (base::make_functor_ret(gc, &game_client::control_func));
-
 		// Listen for keyboard events
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
+        // load initial game data
+        base::savegame game_mgr;
+        game_mgr.load (base::savegame::INITIAL_SAVE);
+
 		// Create game world
-	    gc.create_map();
+        gc.world.load ("test-world.xml");
 
-        // we need to update the python search path to find our map view schedule
-        python::add_search_path (base::Paths.user_data_dir() + "/data/");
-
-        // we need to load the world module before we can pass the character object to python
+        // we need to load the world module before we can pass anything to python
         if (python::import_module ("adonthell.world") == NULL) return 1;
+
+        // set position and speed of player character ...
+        gc.mchar = (world::character *) (gc.world.get_entity ("Player"));
+        gc.mchar->set_position (518, 297);
+        gc.mchar->set_z (0);
+
+        // ... and enable its controls
+        world::schedule *controls = gc.mchar->get_schedule();
+        controls->set_manager ("player", NULL);
+
+        // create a specie
+        rpg::specie human("Human");
+        human.get_state("groups/human.specie");
+
+        // create a faction
+        rpg::faction noble("Noble");
+        noble.get_state("groups/noble.faction");
+
+        // rpg character instance
+        rpg::character *player = rpg::character::get_player();
+        player->set_specie ("Human");
+
+        // Add faction to character
+        player->add_faction("Noble");
+
+        // create a NPC ...
+        gc.path_char = (world::character *) (gc.world.get_entity ("NPC"));
+        gc.path_char->set_position (490, 330);
+        gc.path_char->set_z (0);
+
+        rpg::character *npc = rpg::character::get_character("NPC");
+        npc->set_specie ("Human");
 
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
@@ -447,11 +196,9 @@ public:
 
         // The renderer ...
         world::debug_renderer rndr;
-        world::mapview mv (320, 240, &rndr);
+        world::mapview mv (640, 480, &rndr);
         mv.set_map (&gc.world);
         mv.set_schedule ("focus_on_character", args);
-
-        // The pathfinding manager
         world::pathfinding_manager::init();
 
 	    while (!gc.letsexit)
@@ -461,7 +208,6 @@ public:
         	// FIXME frames_missed is probably not what we want here
 	        // for (int i = 0; i < base::Timer.frames_missed (); i++)
 	        // {
-
             input::manager::update();
             events::date::update();
             world::pathfinding_manager::update();
@@ -487,7 +233,7 @@ public:
             }
 
             // render mapview on screen
-            mv.draw (160, 120);
+            mv.draw (0, 0);
 
             // stop printing queue contents
             rndr.print_queue (false);
@@ -514,23 +260,18 @@ public:
             gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
             // gc.mchar->add_direction(gc.mchar->NORTH);
 #endif
-            // rectangle that should be filled with the mapview
-            gfx::screen::get_surface()->fillrect (160, 120, 320, 1, 0xFF8888);
-            gfx::screen::get_surface()->fillrect (160, 240+120, 320, 1, 0xFF8888);
-            gfx::screen::get_surface()->fillrect (160, 120, 1, 240, 0xFF8888);
-            gfx::screen::get_surface()->fillrect (320+160, 120, 1, 240, 0xFF8888);
-
 	        base::Timer.update ();
+            gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear ();
 	    }
 
-        // Cleanup the pathfinding manager
         world::pathfinding_manager::cleanup();
+        rpg::specie::cleanup();
+        rpg::faction::cleanup();
+
 	    return 0;
 	}
 };
 
 world_test myApp;
-#endif
-

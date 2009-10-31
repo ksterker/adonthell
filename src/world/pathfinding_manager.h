@@ -235,8 +235,8 @@ namespace world
         /// A vector with the tasks
         static std::vector<world::pathfinding_task> m_task;
 
-        /// Task slot
-        static s_int16 m_taskCount;
+        /// Highest slot in use
+        static s_int16 m_taskHighest;
 
         /// A vector that quickly tells when a slot is locked(under use), or unlocked(free to be used)
         static std::vector<bool> m_locked;
