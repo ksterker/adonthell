@@ -51,8 +51,8 @@ static const u_int8 PHASE_PAUSED = 128;
 /// A vector with the tasks
 std::vector<world::pathfinding_task> pathfinding_manager::m_task;
 
-/// Task slot
-s_int16 pathfinding_manager::m_taskCount = 0;
+/// Highest slot in use
+s_int16 pathfinding_manager::m_taskHighest = 0;
 
 /// A vector that quickly tells when a slot is locked(under use), or unlocked(free to be used)
 std::vector<bool> pathfinding_manager::m_locked;
@@ -95,22 +95,14 @@ void pathfinding_manager::cleanup()
 
 s_int16 pathfinding_manager::add_task_sec(const character *chr)
 {
-    s_int16 actualNode = m_taskCount - 1;
-    while ((m_locked[m_taskCount] == true))
+    s_int16 i = 0;
+    for (;i < MAX_TASKS; i++)
     {
-        if (m_taskCount > MAX_TASKS)
-        {
-            m_taskCount = 0;
-            continue;
-        }
-
-        if (m_taskCount == actualNode)
-            break;
-
-        ++m_taskCount;
+        if (m_locked[i] == false)
+            return i;
     }
 
-    return m_taskCount;
+    return -1;
 }
 
 bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
@@ -120,7 +112,7 @@ bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
                                       const u_int8 pixMoved, const u_int8 pixToMove)
 {
     // delete any previously set callback
-    delete m_task[m_taskCount].callback;
+    delete m_task[id].callback;
 
     m_task[id].chr = chr;
     m_task[id].target = target;
@@ -140,16 +132,16 @@ bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
     // Verify if we can indeed add this task, or if the character is already performing another task
     // This should be in add_task_sec, however due to a bug it has to stay here
     slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), chr);
-    if (ichr != m_chars.end())
+    if (ichr == m_chars.end())
     {
-        // Reverse the m_taskCount as we're not going to use this task after all
-        --m_taskCount;
-        return false;
-    } else {
-
         m_locked[id] = true;
         m_chars.push_front(chr);
+
+        m_taskHighest = std::max(id, m_taskHighest); // Keep track of highest slot in use
         return true;
+    } else {
+        fprintf(stderr, "*** character already exists in list\n");
+        return false;
     }
 }
 
@@ -159,9 +151,9 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
     if ((id == -1) || (add_task_ll(id, chr, target, target, PHASE_PATHFINDING, 0, character::NONE) == -1))
         return -1;
 
-    set_final_direction(m_taskCount, finalDir);
+    set_final_direction(id, finalDir);
 
-    return m_taskCount++;
+    return id;
 }
 
 s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target1,
@@ -172,9 +164,9 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
     if ((id == -1) || (add_task_ll(id, chr, target1, target2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    set_final_direction(m_taskCount, finalDir);
+    set_final_direction(id, finalDir);
 
-    return m_taskCount++;
+    return id;
 }
 
 s_int16 pathfinding_manager::add_task(character * chr, character * target, const character::direction finalDir)
@@ -186,9 +178,9 @@ s_int16 pathfinding_manager::add_task(character * chr, character * target, const
     if ((id == -1) || (add_task_ll(id, chr, tempTarget1, tempTarget2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    set_final_direction(m_taskCount, finalDir);
+    set_final_direction(id, finalDir);
 
-    return m_taskCount++;
+    return id;
 }
 
 s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const character::direction finalDir)
@@ -202,9 +194,9 @@ s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const
     if ((id == -1) || (add_task_ll(id, chr, tempZone->min(), tempZone->max(), PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
-    set_final_direction(m_taskCount, finalDir);
+    set_final_direction(id, finalDir);
 
-    return m_taskCount++;
+    return id;
 }
 
 void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<const s_int32> * callback)
@@ -248,6 +240,25 @@ bool pathfinding_manager::delete_task(const s_int16 id)
 
     m_chars.erase(ichr);
 
+    // Update highest slot in use
+    if (id == m_taskHighest)
+    {
+        // Verify if there are more tasks other than the one we just deleted
+        if (!m_task.empty())
+        {
+            s_int8 i;
+            for (i = m_taskHighest-1; i >= 0; i--)
+            {
+                if (m_locked[i] == true)
+                {
+                    // This task is the next highest slot in use. Let's update m_taskHighest
+                    m_taskHighest = i;
+                    break;
+                }
+            }
+        } else m_taskHighest = 0;
+    }
+
     return true;
 }
 
@@ -268,7 +279,7 @@ pathfinding_manager::state pathfinding_manager::return_state(const s_int16 id)
 
 void pathfinding_manager::update()
 {
-    for (s_int16 id = 0; id < m_taskCount; id++)
+    for (s_int16 id = 0; id <= m_taskHighest; id++)
     {
         if (m_locked[id] == true)
         {
@@ -286,14 +297,12 @@ void pathfinding_manager::update()
                     }
 
                     m_task[id].phase = PHASE_MOVING;
-
                     break;
                 }
                 case PHASE_MOVING:
                 {
                     if (move_chr(id) == true)
                         m_task[id].phase = PHASE_FINISHED;
-
                     break;
                 }
                 case PHASE_FINISHED:
@@ -470,7 +479,7 @@ bool pathfinding_manager::move_chr(const s_int16 id)
 
 void pathfinding_manager::reset()
 {
-    m_taskCount = 0;
+    m_taskHighest = 0;
 
     m_chars.clear();
     m_locked.clear();
@@ -483,7 +492,7 @@ void pathfinding_manager::put_state(base::flat & file)
 {
     base::flat taskBlock;
 
-    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    for (s_int16 i = 0; i <= m_taskHighest; i++)
     {
         if (m_locked[i] == true)
         {
@@ -597,7 +606,7 @@ void pathfinding_manager::get_state(base::flat & file, world::area & map)
 
         // Set the character in the correct direction
         tChr->set_direction((character::direction)aDir);
-        m_taskCount = i;
+        m_taskHighest = i;
     }
 }
 
