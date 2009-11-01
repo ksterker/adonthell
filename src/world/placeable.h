@@ -301,6 +301,21 @@ namespace world
          * @return \b true if loading successful, \b false otherwise.
          */
         virtual bool get_state (base::flat & file);
+
+        /**
+         * Save %placeable model name to stream. 
+         * @param file stream to save the model name to.
+         * @return \b true on success, \b false otherwise.
+         */
+        bool save_model (base::flat & file) const;
+
+        /**
+         * Load %placeable model from file. This is static data
+         * that will never change throughout the game.
+         * @param filename file to load the model from.
+         * @return \b true on success, \b false otherwise.
+         */
+        bool load_model (const std::string & filename);
         
         /**
          * Load %placeable model from stream. This is static data
