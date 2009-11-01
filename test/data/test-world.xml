@@ -1,205 +1,329 @@
 <?xml version="1.0"?>
-<Data cs="23f915b9">
-  <list id="models/char/npc/ng.xml">
-    <u_int8 id="type">2</u_int8>
-    <list id="unique">
-      <string id="id">Player</string>
-      <string id="p3d">[518, 297, 0]</string>
-      <string id="id">NPC</string>
-      <string id="p3d">[210, 190, 0]</string>
+<Data cs="5569e1fb">
+  <list id="objects">
+    <list id="0">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/wood-pole-r.xml</string>
+    </list>
+    <list id="1">
+      <s_int8 id="type">2</s_int8>
+      <string id="model">models/char/npc/ng.xml</string>
+    </list>
+    <list id="2">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/long-grass-tile.xml</string>
+    </list>
+    <list id="3">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/short-grass-tile.xml</string>
+    </list>
+    <list id="4">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/wood-1.xml</string>
+    </list>
+    <list id="5">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/wood-pole-l.xml</string>
+    </list>
+    <list id="6">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/wall/outside/cliff-se.xml</string>
+    </list>
+    <list id="7">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/wall/outside/cliff-s.xml</string>
+    </list>
+    <list id="8">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/wall/outside/cliff-se-top.xml</string>
+    </list>
+    <list id="9">
+      <s_int8 id="type">1</s_int8>
+      <string id="model">models/map/ground/outside/meadow.xml</string>
+    </list>
+    <list id="10">
+      <s_int8 id="type">2</s_int8>
+      <string id="model">models/char/npc/ng.xml</string>
     </list>
   </list>
-  <list id="models/map/ground/outside/long-grass-tile.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[0, 80, 0]</string>
-      <string id="p3d">[0, 140, 0]</string>
+  <list id="entities">
+    <list id="0">
+      <list id="anonym">
+        <string id="p3d">[470, 170, 0]</string>
+        <string id="p3d">[350, 170, 0]</string>
+        <string id="p3d">[350, 170, 40]</string>
+        <string id="p3d">[350, 270, 40]</string>
+        <string id="p3d">[280, 270, 40]</string>
+      </list>
+    </list>
+    <list id="1">
+      <list id="named">
+        <string id="id">Player</string>
+        <string id="p3d">[518, 297, 0]</string>
+      </list>
+    </list>
+    <list id="2">
+      <list id="anonym">
+        <string id="p3d">[0, 80, 0]</string>
+        <string id="p3d">[0, 140, 0]</string>
+      </list>
+    </list>
+    <list id="3">
+      <list id="anonym">
+        <string id="p3d">[0, 0, 80]</string>
+        <string id="p3d">[0, 40, 80]</string>
+        <string id="p3d">[0, 80, 80]</string>
+        <string id="p3d">[40, 0, 80]</string>
+        <string id="p3d">[40, 40, 80]</string>
+        <string id="p3d">[40, 80, 80]</string>
+        <string id="p3d">[80, 0, 80]</string>
+        <string id="p3d">[80, 40, 80]</string>
+        <string id="p3d">[80, 80, 80]</string>
+        <string id="p3d">[120, 0, 80]</string>
+        <string id="p3d">[120, 40, 80]</string>
+        <string id="p3d">[120, 80, 80]</string>
+        <string id="p3d">[160, 0, 80]</string>
+        <string id="p3d">[160, 40, 80]</string>
+        <string id="p3d">[160, 80, 80]</string>
+        <string id="p3d">[200, 0, 80]</string>
+        <string id="p3d">[200, 40, 80]</string>
+        <string id="p3d">[200, 80, 80]</string>
+        <string id="p3d">[0, 120, 80]</string>
+        <string id="p3d">[40, 120, 80]</string>
+        <string id="p3d">[80, 120, 80]</string>
+        <string id="p3d">[0, 160, 80]</string>
+        <string id="p3d">[40, 160, 80]</string>
+        <string id="p3d">[0, 200, 80]</string>
+        <string id="p3d">[240, 0, 80]</string>
+        <string id="p3d">[240, 40, 80]</string>
+        <string id="p3d">[240, 80, 80]</string>
+        <string id="p3d">[280, 0, 80]</string>
+        <string id="p3d">[280, 40, 80]</string>
+        <string id="p3d">[280, 80, 80]</string>
+        <string id="p3d">[320, 0, 80]</string>
+        <string id="p3d">[320, 40, 80]</string>
+        <string id="p3d">[320, 80, 80]</string>
+        <string id="p3d">[360, 0, 80]</string>
+        <string id="p3d">[360, 40, 80]</string>
+        <string id="p3d">[360, 80, 80]</string>
+        <string id="p3d">[400, 0, 80]</string>
+        <string id="p3d">[400, 40, 80]</string>
+        <string id="p3d">[400, 80, 80]</string>
+        <string id="p3d">[440, 0, 80]</string>
+        <string id="p3d">[440, 40, 80]</string>
+        <string id="p3d">[440, 80, 80]</string>
+        <string id="p3d">[480, 0, 80]</string>
+        <string id="p3d">[480, 40, 80]</string>
+        <string id="p3d">[480, 80, 80]</string>
+        <string id="p3d">[520, 0, 80]</string>
+        <string id="p3d">[520, 40, 80]</string>
+        <string id="p3d">[520, 80, 80]</string>
+        <string id="p3d">[560, 0, 80]</string>
+        <string id="p3d">[560, 40, 80]</string>
+        <string id="p3d">[560, 80, 80]</string>
+        <string id="p3d">[600, 0, 80]</string>
+        <string id="p3d">[600, 40, 80]</string>
+        <string id="p3d">[600, 80, 80]</string>
+        <string id="p3d">[640, 80, 80]</string>
+        <string id="p3d">[680, 80, 80]</string>
+        <string id="p3d">[680, 40, 80]</string>
+        <string id="p3d">[640, 40, 80]</string>
+        <string id="p3d">[640, 0, 80]</string>
+        <string id="p3d">[680, 0, 80]</string>
+      </list>
+    </list>
+    <list id="4">
+      <list id="anonym">
+        <string id="p3d">[120, 200, 0]</string>
+        <string id="p3d">[440, 160, 40]</string>
+        <string id="p3d">[280, 160, 80]</string>
+        <string id="p3d">[320, 200, 80]</string>
+        <string id="p3d">[400, 200, 40]</string>
+        <string id="p3d">[280, 200, 80]</string>
+        <string id="p3d">[320, 160, 80]</string>
+        <string id="p3d">[440, 200, 40]</string>
+        <string id="p3d">[400, 160, 40]</string>
+        <string id="p3d">[80, 360, 0]</string>
+        <string id="p3d">[100, 360, 5]</string>
+        <string id="p3d">[120, 360, 10]</string>
+        <string id="p3d">[140, 360, 15]</string>
+        <string id="p3d">[160, 360, 20]</string>
+        <string id="p3d">[180, 360, 25]</string>
+        <string id="p3d">[200, 360, 30]</string>
+        <string id="p3d">[280, 240, 80]</string>
+        <string id="p3d">[320, 240, 80]</string>
+        <string id="p3d">[240, 360, 40]</string>
+        <string id="p3d">[260, 360, 45]</string>
+        <string id="p3d">[280, 360, 50]</string>
+        <string id="p3d">[300, 360, 55]</string>
+        <string id="p3d">[320, 360, 60]</string>
+        <string id="p3d">[220, 360, 35]</string>
+      </list>
+    </list>
+    <list id="5">
+      <list id="anonym">
+        <string id="p3d">[400, 170, 0]</string>
+        <string id="p3d">[280, 170, 0]</string>
+        <string id="p3d">[280, 170, 40]</string>
+        <string id="p3d">[470, 230, 0]</string>
+        <string id="p3d">[400, 230, 0]</string>
+        <string id="p3d">[280, 270, 0]</string>
+        <string id="p3d">[350, 270, 0]</string>
+      </list>
+    </list>
+    <list id="6">
+      <list id="anonym">
+        <string id="p3d">[40, 200, 0]</string>
+        <string id="p3d">[80, 160, 0]</string>
+        <string id="p3d">[120, 120, 0]</string>
+        <string id="p3d">[0, 240, 0]</string>
+      </list>
+    </list>
+    <list id="7">
+      <list id="anonym">
+        <string id="p3d">[160, 120, 0]</string>
+        <string id="p3d">[240, 120, 0]</string>
+        <string id="p3d">[320, 120, 0]</string>
+        <string id="p3d">[400, 120, 0]</string>
+        <string id="p3d">[480, 120, 0]</string>
+        <string id="p3d">[560, 120, 0]</string>
+        <string id="p3d">[640, 120, 0]</string>
+      </list>
+    </list>
+    <list id="8">
+      <list id="anonym">
+        <string id="p3d">[80, 160, 80]</string>
+        <string id="p3d">[120, 120, 80]</string>
+        <string id="p3d">[0, 240, 80]</string>
+        <string id="p3d">[40, 200, 80]</string>
+      </list>
+    </list>
+    <list id="9">
+      <list id="anonym">
+        <string id="p3d">[0, 160, 0]</string>
+        <string id="p3d">[120, 160, 0]</string>
+        <string id="p3d">[120, 80, 0]</string>
+        <string id="p3d">[360, 160, 0]</string>
+        <string id="p3d">[360, 80, 0]</string>
+        <string id="p3d">[240, 80, 0]</string>
+        <string id="p3d">[240, 160, 0]</string>
+        <string id="p3d">[600, 160, 0]</string>
+        <string id="p3d">[480, 160, 0]</string>
+        <string id="p3d">[480, 80, 0]</string>
+        <string id="p3d">[600, 80, 0]</string>
+        <string id="p3d">[120, 480, 0]</string>
+        <string id="p3d">[120, 400, 0]</string>
+        <string id="p3d">[0, 400, 0]</string>
+        <string id="p3d">[0, 480, 0]</string>
+        <string id="p3d">[0, 320, 0]</string>
+        <string id="p3d">[0, 240, 0]</string>
+        <string id="p3d">[120, 240, 0]</string>
+        <string id="p3d">[120, 320, 0]</string>
+        <string id="p3d">[360, 400, 0]</string>
+        <string id="p3d">[360, 320, 0]</string>
+        <string id="p3d">[360, 240, 0]</string>
+        <string id="p3d">[240, 240, 0]</string>
+        <string id="p3d">[240, 320, 0]</string>
+        <string id="p3d">[240, 400, 0]</string>
+        <string id="p3d">[480, 320, 0]</string>
+        <string id="p3d">[600, 320, 0]</string>
+        <string id="p3d">[600, 400, 0]</string>
+        <string id="p3d">[480, 400, 0]</string>
+        <string id="p3d">[600, 240, 0]</string>
+        <string id="p3d">[480, 240, 0]</string>
+        <string id="p3d">[360, 480, 0]</string>
+        <string id="p3d">[240, 480, 0]</string>
+        <string id="p3d">[480, 480, 0]</string>
+        <string id="p3d">[600, 480, 0]</string>
+      </list>
+    </list>
+    <list id="10">
+      <list id="named">
+        <string id="id">NPC</string>
+        <string id="p3d">[210, 190, 0]</string>
+      </list>
     </list>
   </list>
-  <list id="models/map/ground/outside/meadow.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[0, 160, 0]</string>
-      <string id="p3d">[120, 160, 0]</string>
-      <string id="p3d">[120, 80, 0]</string>
-      <string id="p3d">[360, 160, 0]</string>
-      <string id="p3d">[360, 80, 0]</string>
-      <string id="p3d">[240, 80, 0]</string>
-      <string id="p3d">[240, 160, 0]</string>
-      <string id="p3d">[600, 160, 0]</string>
-      <string id="p3d">[480, 160, 0]</string>
-      <string id="p3d">[480, 80, 0]</string>
-      <string id="p3d">[600, 80, 0]</string>
-      <string id="p3d">[120, 480, 0]</string>
-      <string id="p3d">[120, 400, 0]</string>
-      <string id="p3d">[0, 400, 0]</string>
-      <string id="p3d">[0, 480, 0]</string>
-      <string id="p3d">[0, 320, 0]</string>
-      <string id="p3d">[0, 240, 0]</string>
-      <string id="p3d">[120, 240, 0]</string>
-      <string id="p3d">[120, 320, 0]</string>
-      <string id="p3d">[360, 400, 0]</string>
-      <string id="p3d">[360, 320, 0]</string>
-      <string id="p3d">[360, 240, 0]</string>
-      <string id="p3d">[240, 240, 0]</string>
-      <string id="p3d">[240, 320, 0]</string>
-      <string id="p3d">[240, 400, 0]</string>
-      <string id="p3d">[480, 320, 0]</string>
-      <string id="p3d">[600, 320, 0]</string>
-      <string id="p3d">[600, 400, 0]</string>
-      <string id="p3d">[480, 400, 0]</string>
-      <string id="p3d">[600, 240, 0]</string>
-      <string id="p3d">[480, 240, 0]</string>
-      <string id="p3d">[360, 480, 0]</string>
-      <string id="p3d">[240, 480, 0]</string>
-      <string id="p3d">[480, 480, 0]</string>
-      <string id="p3d">[600, 480, 0]</string>
+  <list id="states">
+    <list id="0">
+      <string id="state">default</string>
+    </list>
+    <list id="1">
+      <string id="state">s_stand</string>
+      <string id="pos">[518, 297, 0]</string>
+      <s_int32 id="dir">0</s_int32>
+      <float id="vspeed">0.000000000000</float>
+      <list id="schedule">
+        <u_int16 id="spa">0</u_int16>
+        <bool id="scr">1</bool>
+        <list id="mgr">
+          <string id="script">player</string>
+          <u_int16 id="pln">0</u_int16>
+        </list>
+        <list id="sdl">
+          <string id="script">player</string>
+          <u_int16 id="pln">0</u_int16>
+        </list>
+        <u_int16 id="fps">0</u_int16>
+        <list id="fls"/>
+      </list>
+    </list>
+    <list id="2">
+      <string id="state">default</string>
+    </list>
+    <list id="3">
+      <string id="state">default</string>
+    </list>
+    <list id="4">
+      <string id="state">default</string>
+    </list>
+    <list id="5">
+      <string id="state">default</string>
+    </list>
+    <list id="6">
+      <string id="state">default</string>
+    </list>
+    <list id="7">
+      <string id="state">default</string>
+    </list>
+    <list id="8">
+      <string id="state">default</string>
+    </list>
+    <list id="9">
+      <string id="state">default</string>
+    </list>
+    <list id="10">
+      <string id="state">s_stand</string>
+      <string id="pos">[210, 190, 0]</string>
+      <s_int32 id="dir">0</s_int32>
+      <float id="vspeed">0.000000000000</float>
+      <list id="schedule">
+        <u_int16 id="spa">0</u_int16>
+        <bool id="scr">1</bool>
+        <list id="mgr">
+          <string id="script">walk_random</string>
+          <u_int16 id="pln">0</u_int16>
+        </list>
+        <list id="sdl">
+          <string id="script">walk_random</string>
+          <u_int16 id="pln">0</u_int16>
+        </list>
+        <u_int16 id="fps">0</u_int16>
+        <list id="fls">
+          <list>
+            <u_int8 id="ltp">0</u_int8>
+            <string id="lid">alarm</string>
+            <u_int16 id="lps">0</u_int16>
+            <bool id="lev">1</bool>
+            <string id="etp">time_event</string>
+            <s_int32 id="erp">1</s_int32>
+            <u_int32 id="ttm">300</u_int32>
+            <u_int32 id="tin">0</u_int32>
+            <bool id="tab">0</bool>
+          </list>
+        </list>
+      </list>
     </list>
   </list>
-  <list id="models/map/ground/outside/short-grass-tile.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[0, 0, 80]</string>
-      <string id="p3d">[0, 40, 80]</string>
-      <string id="p3d">[0, 80, 80]</string>
-      <string id="p3d">[40, 0, 80]</string>
-      <string id="p3d">[40, 40, 80]</string>
-      <string id="p3d">[40, 80, 80]</string>
-      <string id="p3d">[80, 0, 80]</string>
-      <string id="p3d">[80, 40, 80]</string>
-      <string id="p3d">[80, 80, 80]</string>
-      <string id="p3d">[120, 0, 80]</string>
-      <string id="p3d">[120, 40, 80]</string>
-      <string id="p3d">[120, 80, 80]</string>
-      <string id="p3d">[160, 0, 80]</string>
-      <string id="p3d">[160, 40, 80]</string>
-      <string id="p3d">[160, 80, 80]</string>
-      <string id="p3d">[200, 0, 80]</string>
-      <string id="p3d">[200, 40, 80]</string>
-      <string id="p3d">[200, 80, 80]</string>
-      <string id="p3d">[0, 120, 80]</string>
-      <string id="p3d">[40, 120, 80]</string>
-      <string id="p3d">[80, 120, 80]</string>
-      <string id="p3d">[0, 160, 80]</string>
-      <string id="p3d">[40, 160, 80]</string>
-      <string id="p3d">[0, 200, 80]</string>
-      <string id="p3d">[240, 0, 80]</string>
-      <string id="p3d">[240, 40, 80]</string>
-      <string id="p3d">[240, 80, 80]</string>
-      <string id="p3d">[280, 0, 80]</string>
-      <string id="p3d">[280, 40, 80]</string>
-      <string id="p3d">[280, 80, 80]</string>
-      <string id="p3d">[320, 0, 80]</string>
-      <string id="p3d">[320, 40, 80]</string>
-      <string id="p3d">[320, 80, 80]</string>
-      <string id="p3d">[360, 0, 80]</string>
-      <string id="p3d">[360, 40, 80]</string>
-      <string id="p3d">[360, 80, 80]</string>
-      <string id="p3d">[400, 0, 80]</string>
-      <string id="p3d">[400, 40, 80]</string>
-      <string id="p3d">[400, 80, 80]</string>
-      <string id="p3d">[440, 0, 80]</string>
-      <string id="p3d">[440, 40, 80]</string>
-      <string id="p3d">[440, 80, 80]</string>
-      <string id="p3d">[480, 0, 80]</string>
-      <string id="p3d">[480, 40, 80]</string>
-      <string id="p3d">[480, 80, 80]</string>
-      <string id="p3d">[520, 0, 80]</string>
-      <string id="p3d">[520, 40, 80]</string>
-      <string id="p3d">[520, 80, 80]</string>
-      <string id="p3d">[560, 0, 80]</string>
-      <string id="p3d">[560, 40, 80]</string>
-      <string id="p3d">[560, 80, 80]</string>
-      <string id="p3d">[600, 0, 80]</string>
-      <string id="p3d">[600, 40, 80]</string>
-      <string id="p3d">[600, 80, 80]</string>
-      <string id="p3d">[640, 80, 80]</string>
-      <string id="p3d">[680, 80, 80]</string>
-      <string id="p3d">[680, 40, 80]</string>
-      <string id="p3d">[640, 40, 80]</string>
-      <string id="p3d">[640, 0, 80]</string>
-      <string id="p3d">[680, 0, 80]</string>
-    </list>
-  </list>
-  <list id="models/map/ground/outside/wood-1.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[120, 200, 0]</string>
-      <string id="p3d">[440, 160, 40]</string>
-      <string id="p3d">[280, 160, 80]</string>
-      <string id="p3d">[320, 200, 80]</string>
-      <string id="p3d">[400, 200, 40]</string>
-      <string id="p3d">[280, 200, 80]</string>
-      <string id="p3d">[320, 160, 80]</string>
-      <string id="p3d">[440, 200, 40]</string>
-      <string id="p3d">[400, 160, 40]</string>
-      <string id="p3d">[80, 360, 0]</string>
-      <string id="p3d">[100, 360, 5]</string>
-      <string id="p3d">[120, 360, 10]</string>
-      <string id="p3d">[140, 360, 15]</string>
-      <string id="p3d">[160, 360, 20]</string>
-      <string id="p3d">[180, 360, 25]</string>
-      <string id="p3d">[200, 360, 30]</string>
-      <string id="p3d">[280, 240, 80]</string>
-      <string id="p3d">[320, 240, 80]</string>
-      <string id="p3d">[240, 360, 40]</string>
-      <string id="p3d">[260, 360, 45]</string>
-      <string id="p3d">[280, 360, 50]</string>
-      <string id="p3d">[300, 360, 55]</string>
-      <string id="p3d">[320, 360, 60]</string>
-      <string id="p3d">[220, 360, 35]</string>
-    </list>
-  </list>
-  <list id="models/map/ground/outside/wood-pole-l.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[400, 170, 0]</string>
-      <string id="p3d">[280, 170, 0]</string>
-      <string id="p3d">[280, 170, 40]</string>
-      <string id="p3d">[470, 230, 0]</string>
-      <string id="p3d">[400, 230, 0]</string>
-      <string id="p3d">[280, 270, 0]</string>
-      <string id="p3d">[350, 270, 0]</string>
-    </list>
-  </list>
-  <list id="models/map/ground/outside/wood-pole-r.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[470, 170, 0]</string>
-      <string id="p3d">[350, 170, 0]</string>
-      <string id="p3d">[350, 170, 40]</string>
-      <string id="p3d">[350, 270, 40]</string>
-      <string id="p3d">[280, 270, 40]</string>
-    </list>
-  </list>
-  <list id="models/map/wall/outside/cliff-s.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[160, 120, 0]</string>
-      <string id="p3d">[240, 120, 0]</string>
-      <string id="p3d">[320, 120, 0]</string>
-      <string id="p3d">[400, 120, 0]</string>
-      <string id="p3d">[480, 120, 0]</string>
-      <string id="p3d">[560, 120, 0]</string>
-      <string id="p3d">[640, 120, 0]</string>
-    </list>
-  </list>
-  <list id="models/map/wall/outside/cliff-se-top.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[80, 160, 80]</string>
-      <string id="p3d">[120, 120, 80]</string>
-      <string id="p3d">[0, 240, 80]</string>
-      <string id="p3d">[40, 200, 80]</string>
-    </list>
-  </list>
-  <list id="models/map/wall/outside/cliff-se.xml">
-    <u_int8 id="type">1</u_int8>
-    <list id="anonym">
-      <string id="p3d">[40, 200, 0]</string>
-      <string id="p3d">[80, 160, 0]</string>
-      <string id="p3d">[120, 120, 0]</string>
-      <string id="p3d">[0, 240, 0]</string>
-    </list>
-  </list>
+  <list id="zones"/>
 </Data>

@@ -61,7 +61,7 @@ character::~character ()
 float character::speed ()
 {
     // We need the rpg side
-    if (Mind == NULL) return -1;
+    if (Mind == NULL) return 1.5f;
 
     // Obtain floor below character and check if it is the same as the last frame
     if ((Terrain != NULL) && (Terrain != Old_Terrain))
@@ -248,11 +248,16 @@ bool character::get_state (base::flat & file)
     // load other parts of placeable
     placeable::get_state (file);
 
-    // load movement and direction
+    // load movement
     Position.set_str (file.get_string ("pos"));
+    set_position (Position.x(), Position.y());
+    set_altitude (Position.z());
+    calculate_ground_pos ();
+    
+    // update direction
     set_direction (file.get_sint32 ("dir"));
     VSpeed = file.get_float ("vspeed");
-
+    
     // load schedule
     base::flat record = file.get_flat ("schedule");
     return Schedule.get_state (record);
@@ -263,7 +268,7 @@ bool character::load_model (base::flat & model)
 {
     // load (optional) shadow
     std::string shadow_file = model.get_string ("shadow", true);
-    if (shadow_file.length() > 0) MyShadow = new shadow (shadow_file, this, CurPos);    
+    if (shadow_file.length() > 0) MyShadow = new shadow (shadow_file, this, EntireCurPos);    
     
     // load shapes and sprites
     return placeable::load_model (model);

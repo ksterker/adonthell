@@ -63,7 +63,7 @@ bool chunk_info::operator == (const chunk_info & ci) const
 }
 
 // ctor
-chunk::chunk () : Split ()
+chunk::chunk () : Min(), Max(), Split()
 {
     // chunk does not have to be resized
     Resize = false;

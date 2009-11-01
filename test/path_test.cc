@@ -41,7 +41,6 @@ class game_client
 {
 public:
     world::character * path_char; // Character used for pathfinding
-    world::character * mchar;
     world::area world;
     bool letsexit;
     bool draw_grid;
@@ -115,7 +114,7 @@ public:
                 s_int32 tY = rand() % path_char->map().height();
                 printf("Rand %d %d\n", tX, tY);
                 world::vector3<s_int32> target(tX, tY, 10);
-                world::pathfinding_manager::add_task(mchar, target);
+                world::pathfinding_manager::add_task(path_char, target);
             }
         }
 
@@ -155,18 +154,6 @@ public:
 		// Create game world
         gc.world.load ("test-world.xml");
 
-        // we need to load the world module before we can pass anything to python
-        if (python::import_module ("adonthell.world") == NULL) return 1;
-
-        // set position and speed of player character ...
-        gc.mchar = (world::character *) (gc.world.get_entity ("Player"));
-        gc.mchar->set_position (518, 297);
-        gc.mchar->set_z (0);
-
-        // ... and enable its controls
-        world::schedule *controls = gc.mchar->get_schedule();
-        controls->set_manager ("player", NULL);
-
         // create a specie
         rpg::specie human("Human");
         human.get_state("groups/human.specie");
@@ -182,10 +169,10 @@ public:
         // Add faction to character
         player->add_faction("Noble");
 
-        // create a NPC ...
+        // get NPC ...
         gc.path_char = (world::character *) (gc.world.get_entity ("NPC"));
-        gc.path_char->set_position (490, 330);
-        gc.path_char->set_z (0);
+        // ... and remove its schedule so we get direct control over its pathfinding
+        gc.path_char->get_schedule()->clear_schedule();
 
         rpg::character *npc = rpg::character::get_character("NPC");
         npc->set_specie ("Human");
@@ -257,8 +244,9 @@ public:
 			}
 
 #if DEBUG_COLLISION
-            gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
-            // gc.mchar->add_direction(gc.mchar->NORTH);
+            world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
+            mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
+            // mchar->add_direction(gc.mchar->NORTH);
 #endif
 	        base::Timer.update ();
             gui::window_manager::update();

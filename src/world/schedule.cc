@@ -66,8 +66,7 @@ void schedule::update ()
         {
             // clearing the schedule before the manager runs
             // allows the manager to access the most recent data
-            Schedule.call_method ("stop");
-            Schedule.clear ();
+            clear_schedule ();
             
             // determine new schedule ...
             Manager.call_method ("run");

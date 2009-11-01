@@ -188,6 +188,7 @@ namespace world
          */
         void clear_schedule ()
         {
+            Schedule.call_method ("stop");
             Schedule.clear ();
         }
                 

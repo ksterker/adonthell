@@ -17,6 +17,7 @@
        </list>
      </list>
      <string id="sprite">gfx/map/ground/outside/meadow/earth.png</string>
+     <string id="terrain">Grass</string>
    </list>
    <list id="model">
      <list id="default">
@@ -169,6 +170,5 @@
        </list>
      </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_8.png</string>
-    <string id="terrain">Grass</string>
   </list>
 </Data>

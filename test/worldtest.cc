@@ -141,7 +141,7 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
                 
 		// Create game world
-        gc.world.load ("test-world-new.xml");
+        gc.world.load ("test-world.xml");
 
         // create a specie
         rpg::specie human("Human");
@@ -227,8 +227,9 @@ public:
 			}
 
 #if DEBUG_COLLISION
-            gc.mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
-            // gc.mchar->add_direction(gc.mchar->NORTH);
+            world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
+            mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
+            // mchar->add_direction(gc.mchar->NORTH);
 #endif
 	        base::Timer.update ();
             gui::window_manager::update();
@@ -236,7 +237,7 @@ public:
 	        gfx::screen::clear ();
 	    }
 
-        gc.world.save ("test-world-new.xml");
+        // gc.world.save ("test-world-new.xml");
         
         rpg::specie::cleanup();
         rpg::faction::cleanup();

@@ -78,6 +78,8 @@ bool area::put_entity (const u_int32 & index, coordinates & pos)
 // update state of map
 void area::update()
 {
+    // FIXME: this might update objects several times 
+    // if they are referred to by different entities
     std::vector<world::entity*>::const_iterator i;
     for (i = Entities.begin(); i != Entities.end(); i++)
     {
@@ -197,12 +199,12 @@ bool area::put_state (base::flat & file) const
     collector objects;
     chunk::put_state (objects);
 
-    // first pass: save placeables
+    // first pass: save placeable models
     for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         base::flat entity;
         const world::placeable * data = i->first;
-        data->put_state (entity);
+        data->save_model (entity);
         
         sprintf (buffer, "%d", index++);
         record.put_flat (buffer, entity);
@@ -250,6 +252,23 @@ bool area::put_state (base::flat & file) const
     }
     file.put_flat ("entities", record);
 
+    // reset
+    index = 0;
+    record.clear();
+    
+    // third pass: save placeable states
+    for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
+    {
+        base::flat entity;
+        const world::placeable * data = i->first;
+        data->put_state (entity);
+        
+        sprintf (buffer, "%d", index++);
+        record.put_flat (buffer, entity);
+    }
+    
+    file.put_flat ("states", record);
+    
     // save the zones
     std::list <world::zone *>::const_iterator zone_i = Zones.begin();
     base::flat masterZones;
@@ -281,7 +300,7 @@ bool area::get_state (base::flat & file)
     void *value;
     char *id;
 
-    // load placeables
+    // load placeable models
     std::vector<placeable*> tmp_objects;
     base::flat record = file.get_flat ("objects");
     
@@ -316,7 +335,8 @@ bool area::get_state (base::flat & file)
         if (object != NULL)
         {
             // load its actual data
-            object->get_state (entity);
+            std::string modelfile = entity.get_string("model");
+            object->load_model (modelfile);
         }
         
         // also store invalid objects, to not mess up the indices
@@ -387,6 +407,23 @@ bool area::get_state (base::flat & file)
                 }
             }
         }
+        
+        // increase object index
+        index++;
+    }
+
+    // reset
+    index = 0;
+    
+    // load placeable states
+    record = file.get_flat ("states");
+    while (record.next (&value, &size, &id) == base::flat::T_FLAT)
+    {
+        object = tmp_objects[index];
+        if (object == NULL) continue;
+        
+        base::flat entity ((const char*) value, size);
+        object->get_state (entity);
         
         // increase object index
         index++;

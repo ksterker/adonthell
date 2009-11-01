@@ -101,7 +101,9 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     if (!(((goal1.x() >= chr->map().min().x()) && (goal1.x() <= chr->map().max().x())) &&
         (goal1.y() >= chr->map().min().y()) && (goal1.y() <= chr->map().max().y()))) {
 
-        fprintf(stderr, "*** Goal is out of the map scope\n");
+        fprintf(stderr, "*** Goal (%i, %i) is out of the map scope (%i, %i) - (%i, %i)\n",
+                goal1.x(), goal1.y(), chr->map().min().x(), chr->map().min().y(),
+                chr->map().max().x(), chr->map().min().y());
         return false;
     }
 

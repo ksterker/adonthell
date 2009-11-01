@@ -75,7 +75,6 @@ void placeable::set_state (const std::string & state)
     const placeable_shape *shape = (*i)->current_shape ();
     if (shape != NULL)
     {
-        
         if (shape->is_solid())
         {
             SolidCurSize.set (shape->length(), shape->width(), shape->height());
@@ -172,15 +171,12 @@ void placeable::add_model (world::placeable_model * model)
         EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->second.x()));
         EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->second.y()));
         EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z())); 
-        
     }
 }
 
 // save to stream
 bool placeable::put_state (base::flat & file) const
 {
-    file.put_sint8 ("type", Type);
-    file.put_string ("model", ModelFile);
     file.put_string ("state", State);
     
     return true;
@@ -188,19 +184,29 @@ bool placeable::put_state (base::flat & file) const
 
 // load from stream
 bool placeable::get_state (base::flat & file)
-{
-    // Type is loaded outside of this class
-    
-    // load static model definititon from file
-    ModelFile = file.get_string ("model");
-    
-    base::diskio static_model;
-    if (!static_model.get_record (ModelFile)) return false;
-    load_model(static_model);
-    
+{    
     // load current state
     set_state (file.get_string ("state"));
     return file.success ();
+}
+
+// save placeable model name
+bool placeable::save_model (base::flat & file) const
+{
+    file.put_sint8 ("type", Type);
+    file.put_string ("model", ModelFile);
+    return true;
+}
+
+// load placeable model from file name
+bool placeable::load_model (const std::string & filename)
+{
+    // Type is loaded outside of this class
+    ModelFile = filename;
+    
+    base::diskio static_model;
+    if (!static_model.get_record (filename)) return false;
+    return load_model(static_model);
 }
 
 // load placeable model

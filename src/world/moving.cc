@@ -59,7 +59,7 @@ struct z_order : public std::binary_function<const chunk_info *, const chunk_inf
 
 // ctor
 moving::moving (world::area & mymap)
-    : placeable (mymap), coordinates ()
+    : placeable (mymap), coordinates (), Position(), Velocity()
 {
     GroundPos = -10000;
     MyShadow = NULL;
