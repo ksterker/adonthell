@@ -56,6 +56,9 @@ static int get_file_type (const std::string & path, const std::string & name)
 /// list of saved games
 std::vector<savegame_data*> savegame::Games;
 
+/// current slot
+s_int32 savegame::CurrentSlot = savegame::INITIAL_SAVE;
+
 // ctor
 savegame_data::savegame_data (const std::string & dir, const std::string & desc, const u_int32 & time)
 {
@@ -113,6 +116,7 @@ bool savegame::load (const s_int32 & slot)
         current++;
     }
     
+    CurrentSlot = slot;
     return true;
 }
 
@@ -197,6 +201,7 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
     // ... and re-sort
     std::sort (Games.begin()+SPECIAL_SLOT_COUNT, Games.end());
 
+    CurrentSlot = slot;
     return true;
 }
 
@@ -348,6 +353,12 @@ void savegame::add (base::serializer_base* serializer)
 void savegame::remove (base::serializer_base* serializer)
 {
     Serializer ().remove (serializer);
+}
+
+// get path to currently running game
+std::string savegame::current_path ()
+{
+    return Games[CurrentSlot+SPECIAL_SLOT_COUNT]->directory();
 }
 
 // factories for loading/saving game data

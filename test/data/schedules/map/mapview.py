@@ -33,7 +33,7 @@ class mapview (object):
          This schedule keeps the focus centered on the given
          character and will follow its movement across the map.
         """
-        area = view.get_map ()
+        area = world.area_manager.get_map ()
         char = area.get_character (char_name)
         view.center_on (char.x(), char.y())
         if char.ground_pos() != view.get_z():

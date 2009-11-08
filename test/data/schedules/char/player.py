@@ -19,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from adonthell import input, world
+from adonthell import base, input, world
 import actions
 
 class player (object):
@@ -106,7 +106,11 @@ class player (object):
         if kev.type() == input.keyboard_event.KEY_PUSHED:
             # -- F5: quick save
             if kev.key() == input.keyboard_event.F5_KEY:
-                pass
+                game_mgr = base.savegame()
+                game_mgr.save (base.savegame.QUICK_SAVE, "Quicksave", 0)
+                game_mgr = None
+                return 1
+                
             # -- F6: quick load
             elif kev.key() == input.keyboard_event.F6_KEY:
                 pass

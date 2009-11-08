@@ -27,16 +27,13 @@
  */
 
 #include "world/world.h"
-#include "world/pathfinding_manager.h"
 
 // start world module
 void world::init (base::configuration & cfg)
 {
-    world::pathfinding_manager::init ();
 }
 
 // shutdown world module
 void world::cleanup ()
 {
-    world::pathfinding_manager::cleanup ();
 }

@@ -53,38 +53,40 @@ class walk_random (object):
          Called when the schedule is first assigned
         """
         # -- get map assigned to this schedule
-        map = self.chr.map ()
+        map = world.area_manager.get_map ()
         # -- get random x coordinate
         x = random.randint (20, map.length () - 20)
         # -- get random y coordinate
         y = random.randint (20, map.height () - 20)
         # -- create target vector
         target = world.vector3i (x, y, 0)
+        # -- get pathfinder instance
+        pathfinder = world.area_manager.get_pathfinder()
         # -- start path finding task
-        self.task = world.pathfinding_manager.add_task (self.chr, target)
+        self.task = pathfinder.add_task (self.chr, target)
         # -- get notification when goal has been reached
-        world.pathfinding_manager.set_callback (self.task, self.on_arrived)
+        pathfinder.set_callback (self.task, self.on_arrived)
     
     def pause (self):
         """
          called whenever the character needs to freeze
         """
         # -- stop following path while paused
-        world.pathfinding_manager.pause_task (self.task)
+        world.area_manager.get_pathfinder().pause_task (self.task)
         
     def resume (self):
         """
          Called when the schedule is first assigned
         """
         # -- continue following path
-        world.pathfinding_manager.resume_task (self.task)
+        world.area_manager.get_pathfinder().resume_task (self.task)
 
     def stop (self):
         """ 
          called before the schedule is removed
         """
         # -- clean up
-        world.pathfinding_manager.delete_task (self.task)
+        world.area_manager.get_pathfinder().delete_task (self.task)
 
     def on_arrived (self, goal_reached):
         """ 

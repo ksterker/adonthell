@@ -60,6 +60,8 @@ void area::clear()
     }
 
     Zones.clear();
+    
+    // TODO: chunk::clear();
 }
 
 // convenience method for adding object at a known index
@@ -448,7 +450,7 @@ bool area::get_state (base::flat & file)
 // save to file
 bool area::save (const std::string & fname, const base::diskio::file_format & format) const
 {
-    // try to save character
+    // try to save map
     base::diskio record (format);
     if (!put_state (record))
     {
@@ -456,7 +458,7 @@ bool area::save (const std::string & fname, const base::diskio::file_format & fo
         return false;
     }
 
-    // write item to disk
+    // write map to disk
     return record.put_record (fname);
 }
 

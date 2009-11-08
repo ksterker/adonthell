@@ -5,6 +5,7 @@ EXTRA_DIST = CMakeLists.txt
 pkgincludeworlddir = $(pkgincludedir)/world
 pkgincludeworld_HEADERS = \
     area.h \
+    area_manager.h \
     character.h \
     chunk.h \
     chunk_info.h \
@@ -35,7 +36,7 @@ pkgincludeworld_HEADERS = \
     triangle3.h \
     vector3.h \
     world.h \
-	 zone.h
+    zone.h
 
 ## World library
 lib_LTLIBRARIES = libadonthell_world.la
@@ -43,6 +44,7 @@ lib_LTLIBRARIES = libadonthell_world.la
 ## Rules to build libworld
 libadonthell_world_la_SOURCES = \
     area.cc \
+    area_manager.cc \
     character.cc \
     chunk.cc \
     collision.cc \

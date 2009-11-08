@@ -1,6 +1,7 @@
 # Define the adonthell_world_SRCS variable containing all required files.
 set(adonthell_world_SRCS
     area.cc
+    area_manager.cc
     character.cc
     collision.cc
     cube3.cc
@@ -11,12 +12,12 @@ set(adonthell_world_SRCS
     placeable.cc
     placeable_model.cc
     placeable_shape.cc
-	 pathfinding.cc
-	 pathfinding_manager.cc
+    pathfinding.cc
+    pathfinding_manager.cc
     plane3.cc
     renderer.cc
-	 schedule.cc
-	 schedule_data.cc
+    schedule.cc
+    schedule_data.cc
     shadow.cc
     triangle3.cc
     world.cc
@@ -24,6 +25,7 @@ set(adonthell_world_SRCS
 
 set(adonthell_world_HEADERS
     area.h
+    area_manager.h
     character.h
     collision.h
     coordinates.h

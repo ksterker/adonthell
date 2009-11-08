@@ -4,12 +4,11 @@
 %{
 #include "base/types.h"
 #include "python/callback.h"
-#include "world/area.h"
+#include "world/area_manager.h"
 #include "world/object.h"
 #include "world/character.h"
 #include "world/mapview.h"
 #include "world/schedule.h"
-#include "world/pathfinding_manager.h"
 
 using namespace world;
 
@@ -55,6 +54,7 @@ using namespace world;
 %include "world/chunk_info.h"
 %include "world/entity.h"
 %include "world/area.h"
+%include "world/area_manager.h"
 %include "world/pathfinding_manager.h"
 %include "world/placeable_shape.h"
 %include "world/renderer.h"
@@ -78,8 +78,8 @@ class coordinates (vector3i):
 // class extension to handle Python callbacks
 %extend world::pathfinding_manager
 {
-    static void set_callback (const s_int16 id, PyObject * callback)
+    void set_callback (const s_int16 id, PyObject * callback)
     {
-        world::pathfinding_manager::set_callback (id, new python::functor_1<const s_int32>(callback));
+        self->set_callback (id, new python::functor_1<const s_int32>(callback));
     }
 };

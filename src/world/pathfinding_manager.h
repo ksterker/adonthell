@@ -44,7 +44,7 @@ namespace world
     /**
      * This is the class that ought to be called when you want to add a new pathfinding search.
      * It handles all the details. Executes the search, moves the character and handles unexpected
-     * collisions with other moving (and static) objects. It also gives you the possibility to
+     * collisions with other moving (and ) objects. It also gives you the possibility to
      * pause, resume, delete and return the state of an ongoing search(known as task).
      */
     class pathfinding_manager
@@ -57,16 +57,21 @@ namespace world
         /**
          * Init path finding manager.
          */
-        static void init();
+        pathfinding_manager ();
         /**
          * Shut down path finding manager.
          */
-        static void cleanup();
+        ~pathfinding_manager ();
         //@}
 
         /// Various states a task can have
         typedef enum { SUCCESS = 1, FAILURE = 0, ACTIVE = -1 } state;
 
+        /**
+         * Reset to initial state.
+         */
+        void clear ();
+        
         /**
          * Adds a task
          * @param chr the character to be moved
@@ -75,7 +80,7 @@ namespace world
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        static s_int16 add_task(character * chr, const world::vector3<s_int32> & target,
+        s_int16 add_task(character * chr, const world::vector3<s_int32> & target,
                                 const character::direction finalDir = character::NONE);
         /**
          * Adds a task
@@ -86,7 +91,7 @@ namespace world
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        static s_int16 add_task(character * chr, const world::vector3<s_int32> & target1,
+        s_int16 add_task(character * chr, const world::vector3<s_int32> & target1,
                                 const world::vector3<s_int32> & target2,
                                 const character::direction finalDir = character::NONE);
         /**
@@ -97,7 +102,7 @@ namespace world
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        static s_int16 add_task(character * chr, character * target,
+        s_int16 add_task(character * chr, character * target,
                                 const character::direction finalDir = character::NONE);
 
         /**
@@ -108,7 +113,7 @@ namespace world
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        static s_int16 add_task(character * chr, std::string & target,
+        s_int16 add_task(character * chr, std::string & target,
                                 const character::direction finalDir = character::NONE);
 
         /**
@@ -120,26 +125,26 @@ namespace world
          * @param callback the callback to run on task completion or
          *        NULL to clear a previously set callback.
          */
-        static void set_callback (const s_int16 id, base::functor_1<const s_int32> * callback);
+        void set_callback (const s_int16 id, base::functor_1<const s_int32> * callback);
 
         /**
          * Set the direction to where the character will point after finishing moving
          * @param id the id of the task to be altered
          * @param finalDir the direction the character will point after finishing moving
          */
-        static void set_final_direction(const s_int16 id, const character::direction finalDir);
+         void set_final_direction(const s_int16 id, const character::direction finalDir);
 
         /**
          * Pauses a task
          * @param the id of the task to be paused
          */
-        static void pause_task(const s_int16 id);
+        void pause_task(const s_int16 id);
 
         /**
          * Resumes a paused task
          * @param id the id of the paused task to be resumed
          */
-        static void resume_task(const s_int16 id);
+        void resume_task(const s_int16 id);
 
         /**
          * Deletes a task. When deleting a task the slot it used will be freed and open to reuse,
@@ -147,7 +152,7 @@ namespace world
          * @param id the id of the task to be deleted
          * @return \b true on success, \b false otherwise
          */
-        static bool delete_task(const s_int16 id);
+        bool delete_task(const s_int16 id);
 
         /**
          * Returns the state of the task. Can be useful for knowing whether the target has been
@@ -155,55 +160,45 @@ namespace world
          * @param id the id of the task
          * @return the state
          */
-        static state return_state(const s_int16 id);
+        state return_state(const s_int16 id);
 
         /**
          * Updates every task as needed.
          * HAS to be called every frame.
          */
-        static void update();
+        void update();
 
         /**
          * Save state to stream
          * @param file stream to save to
          */
-        static void put_state(base::flat & file);
+        void put_state(base::flat & file);
 
         /**
-         * Load state from stream
-         * @param file stream to load from
-         * @param map area where the character are supposed to exist (ie: actual map)
+         * Load state from stream.
+         * @param file stream to load from.
          */
-        static void get_state(base::flat & file, world::area & map);
+        void get_state(base::flat & file);
 
         /**
          * Save state to file
          * @param fname file to save to
-         * @param map area where the character are supposed to exist (ie: actual map)
          */
-        static bool load(std::string & fname, world::area & map);
+        bool load(std::string & fname);
 
         /**
          * Load state from stream
          * @param fname stream to load from
          */
-        static bool save(std::string & fname);
+        bool save(std::string & fname);
 
     private:
-        /// forbid instantiation of static class
-        pathfinding_manager () {}
-
-        /**
-         * Cleans everything
-         */
-        static void reset();
-
         /**
          * Handles the low-level stuff of adding tasks
          * @param all the necessary stuff
          * @return \b false on error, \b true on success
          */
-        static bool add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
+        bool add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
                          const world::vector3<s_int32> & target2,
                          const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir,
                          const u_int8 pixMoved = 0, const u_int8 pixToMove = 0);
@@ -213,7 +208,7 @@ namespace world
          * @param chr the character
          * @return a free slot where we can add the task
          */
-        static s_int16 add_task_sec(const character * chr);
+        s_int16 add_task_sec(const character * chr);
 
         /**
          * Handles the movement of the character
@@ -221,7 +216,7 @@ namespace world
          * @return \b true when all the movement has finished, \b false otherwise
          * @note when \b true the task has done everything and will delete itself
          */
-        static bool move_chr(const s_int16 id);
+        bool move_chr(const s_int16 id);
 
         /**
          * Calcs the 2D euclidean distance from 2 points
@@ -230,22 +225,22 @@ namespace world
          * @note the return value is of type u_int8 because the distance shouldn't
          * exceed 29 (on a 20x20 grid)
          */
-        static u_int8 calc_distance(const world::coordinates & node, const world::character * chr);
+        u_int8 calc_distance(const world::coordinates & node, const world::character * chr);
 
         /// A vector with the tasks
-        static std::vector<world::pathfinding_task> m_task;
+        std::vector<world::pathfinding_task> m_task;
 
         /// Highest slot in use
-        static s_int16 m_taskHighest;
+        s_int16 m_taskHighest;
 
         /// A vector that quickly tells when a slot is locked(under use), or unlocked(free to be used)
-        static std::vector<bool> m_locked;
+        std::vector<bool> m_locked;
 
         /// A list containing all the characters in movement
-        static slist<world::character *> m_chars;
+        slist<world::character *> m_chars;
 
         /// Executes the searchs
-        static world::pathfinding m_pathfinding;
+        world::pathfinding m_pathfinding;
     };
 }
 

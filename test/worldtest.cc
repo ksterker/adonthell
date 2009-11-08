@@ -32,17 +32,14 @@
 #include "rpg/character.h"
 #include "rpg/specie.h"
 #include "rpg/faction.h"
-#include "world/area.h"
 #include "world/character.h"
 #include "world/object.h"
-#include "world/mapview.h"
-#include "world/pathfinding_manager.h"
+#include "world/area_manager.h"
 #include "gui/window_manager.h"
 
 class game_client
 {
 public:
-    world::area world;
     bool letsexit;
     bool draw_grid;
 	bool draw_bounding_box;
@@ -70,7 +67,7 @@ public:
         // todo: load species
         // todo: load factions
         base::savegame::add (new base::serializer<rpg::character> ());
-        // todo: load map
+        base::savegame::add (new base::serializer<world::area_manager> ());
     }
 
     // callback for key event listener
@@ -141,7 +138,7 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
                 
 		// Create game world
-        gc.world.load ("test-world.xml");
+        world::area_manager::set_active_map ("test-world.xml");
 
         // create a specie
         rpg::specie human("Human");
@@ -167,10 +164,12 @@ public:
 
         // The renderer ...
         world::debug_renderer rndr;
-        world::mapview mv (640, 480, &rndr);
-        mv.set_map (&gc.world);
-        mv.set_schedule ("focus_on_character", args);
-
+        
+        world::mapview *mv = world::area_manager::get_mapview();
+        mv->set_renderer (&rndr);
+        mv->set_schedule ("focus_on_character", args);
+        mv->resize (640, 480);
+        
 	    while (!gc.letsexit)
     	{
         	u_int16 i;
@@ -180,9 +179,7 @@ public:
 	        // {
             input::manager::update();
             events::date::update();
-            world::pathfinding_manager::update();
-            gc.world.update();
-            mv.update();
+            world::area_manager::update();
 	        //}
 
             // whether to draw bbox or not
@@ -203,7 +200,7 @@ public:
             }
 
             // render mapview on screen
-            mv.draw (0, 0);
+            mv->draw (0, 0);
 
             // stop printing queue contents
             rndr.print_queue (false);

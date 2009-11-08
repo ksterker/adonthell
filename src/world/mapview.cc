@@ -27,9 +27,10 @@
  * 
  */
 
+#include "gfx/screen.h"
 #include "python/pool.h"
 #include "world/mapview.h"
-#include "world/area.h"
+#include "world/area_manager.h"
 
 using world::mapview;
 
@@ -38,6 +39,18 @@ using world::mapview;
 
 /// the fallback if no renderer is set explicitly
 world::default_renderer mapview::DefaultRenderer;
+
+// standard ctor
+mapview::mapview () : Z(0), FinalZ(0), Speed(0)
+{
+    set_length (gfx::screen::length());
+    set_height (gfx::screen::height());
+    
+    set_renderer (NULL);
+    
+    Schedule = NULL;
+    Args = NULL;
+}
 
 // ctor
 mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer) 
@@ -50,7 +63,6 @@ mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer
     
     Schedule = NULL;
     Args = NULL;
-    Map = NULL;
 }
 
 // set script called to position view on map
@@ -122,11 +134,12 @@ void mapview::set_renderer (const world::renderer_base * renderer)
 // update position of mapview
 void mapview::center_on (const s_int32 & x, const s_int32 & y)
 {
-    if (!Map) return;
+    area *map = world::area_manager::get_map();
+    if (!map) return;
     
     // get size of map in pixels
-    const u_int32 ml = ((chunk *)Map)->length();
-    const u_int32 mh = ((chunk *)Map)->height();
+    const u_int32 ml = ((chunk *)map)->length();
+    const u_int32 mh = ((chunk *)map)->height();
     
     // calculate start and offset of view (x-axis)
     if (length() >= ml) 
@@ -164,8 +177,10 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
 // render map
 void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da_opt, gfx::surface * target) const
 {
+    area *map = world::area_manager::get_map();
+    
     // is there something to draw at all?
-    if (!Map || !Map->length() || !Map->height()) return;
+    if (!map || !map->length() || !map->height()) return;
     
     // this is the area we need to draw
     gfx::drawing_area da (x + Ox, y + Oy, length() - Ox, height() - Oy);
@@ -176,7 +191,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     }
  
     // get objects we need to draw
-    const std::list<world::chunk_info*> & objectlist = Map->objects_in_view (Sx, Sy, Z, length(), height());
+    const std::list<world::chunk_info*> & objectlist = map->objects_in_view (Sx, Sy, Z, length(), height());
     
     // draw everything on screen
     Renderer->render (da.x() - Sx, da.y() - Sy + Z, objectlist, da, target);

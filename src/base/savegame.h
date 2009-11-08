@@ -233,6 +233,15 @@ namespace base
          */
         static void remove (base::serializer_base* serializer);
         
+        /**
+         * Return the path to the current slot the game is
+         * running from. The slot is updated every time a game 
+         * has been loaded or saved successfully.
+         *
+         * @return path to current saved game data directory.
+         */
+        static std::string current_path ();
+        
     protected:
         /**
          * Delete all regular files in the given directory.
@@ -258,6 +267,8 @@ namespace base
         static bool load_meta_data (const std::string & filepath);
         
     private:
+        /// the slot the current game is running from
+        static s_int32 CurrentSlot;
         /// list of available saved games
         static std::vector<savegame_data*> Games;
         /// classes that read write game data

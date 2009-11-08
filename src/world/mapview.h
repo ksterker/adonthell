@@ -27,6 +27,9 @@
  * 
  */
 
+#ifndef WORLD_MAPVIEW_H
+#define WORLD_MAPVIEW_H
+
 #include <cmath>
 #include <cstdlib>
 
@@ -35,8 +38,6 @@
 
 namespace world
 {
-    class area;
-    
     /**
      * Displays a part of a map on screen. Which part of a map
      * is displayed is determined by a python script that is
@@ -46,6 +47,12 @@ namespace world
     class mapview : public gfx::drawable
     {
     public:
+        /**
+         * Create a new view of the map with default renderer and length and height
+         * matching the screen length and height.
+         */
+        mapview ();
+        
         /**
          * Create a new view of the map with given length and height.
          * @param length extension of mapview along x axis in pixels.
@@ -58,24 +65,6 @@ namespace world
          * @name Member access.
          */
         //@{
-        /**
-         * Set the map being displayed by the mapview.
-         * @param map pointer to the map instance.
-         */
-        void set_map (area * map)
-        {
-            Map = map;
-        }
-        
-        /**
-         * Get the map this view is attached to.
-         * @return map this view is attached to.
-         */
-        area * get_map () const
-        {
-            return Map;
-        }
-        
         /**
          * Set the schedule script which will determine the position of the mapview.
          * It will be called once per game cycle with the mapview instance as its
@@ -236,9 +225,6 @@ namespace world
 #endif
         
     private:
-        /// the map displayed by this view.
-        area *Map;
-
         /**
          * @name Positioning script 
          */
@@ -287,3 +273,5 @@ namespace world
         //@}
     };
 }
+
+#endif

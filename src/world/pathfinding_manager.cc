@@ -26,8 +26,8 @@
 
 #include "base/diskio.h"
 #include "world/pathfinding_manager.h"
+#include "world/area_manager.h"
 #include "world/character.h"
-#include "world/area.h"
 #include "world/zone.h"
 
 using world::pathfinding_manager;
@@ -48,22 +48,8 @@ static const u_int8 PHASE_MOVING = 2;
 static const u_int8 PHASE_FINISHED = 4;
 static const u_int8 PHASE_PAUSED = 128;
 
-/// A vector with the tasks
-std::vector<world::pathfinding_task> pathfinding_manager::m_task;
-
-/// Highest slot in use
-s_int16 pathfinding_manager::m_taskHighest = 0;
-
-/// A vector that quickly tells when a slot is locked(under use), or unlocked(free to be used)
-std::vector<bool> pathfinding_manager::m_locked;
-
-/// A list containing all the characters in movement
-slist<world::character *> pathfinding_manager::m_chars;
-
-/// Executes the searchs
-world::pathfinding pathfinding_manager::m_pathfinding;
-
-void pathfinding_manager::init()
+// ctor
+pathfinding_manager::pathfinding_manager()
 {
     m_task.reserve(MAX_TASKS);
     m_locked.reserve(MAX_TASKS);
@@ -75,22 +61,31 @@ void pathfinding_manager::init()
         m_task[i].path = coor;
     }
 
+    m_taskHighest = 0;
     m_locked.assign(MAX_TASKS, false);
 }
 
-void pathfinding_manager::cleanup()
+// dtor
+pathfinding_manager::~pathfinding_manager()
+{
+    clear ();
+}
+
+// reset to inital state
+void pathfinding_manager::clear ()
 {
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
         delete m_task[i].callback;
         m_task[i].callback = NULL;
-
+        
         delete m_task[i].path;
         m_task[i].path = NULL;
-
     }
-
+    
+    m_taskHighest = 0;
     m_chars.clear();
+    m_locked.assign(MAX_TASKS, false);
 }
 
 s_int16 pathfinding_manager::add_task_sec(const character *chr)
@@ -477,17 +472,6 @@ bool pathfinding_manager::move_chr(const s_int16 id)
     return false;
 }
 
-void pathfinding_manager::reset()
-{
-    m_taskHighest = 0;
-
-    m_chars.clear();
-    m_locked.clear();
-    m_task.clear();
-
-    m_locked.assign(MAX_TASKS, false);
-}
-
 void pathfinding_manager::put_state(base::flat & file)
 {
     base::flat taskBlock;
@@ -540,7 +524,7 @@ void pathfinding_manager::put_state(base::flat & file)
 }
 
 
-void pathfinding_manager::get_state(base::flat & file, world::area & map)
+void pathfinding_manager::get_state(base::flat & file)
 {
     base::flat taskBlock;
 
@@ -558,7 +542,7 @@ void pathfinding_manager::get_state(base::flat & file, world::area & map)
         // Translates the character name into a pointer of a character existent
         // in the map given
         std::string chrName = taskBlock.get_string("chrName");
-        placeable * tPlac = map.get_entity(chrName);
+        placeable * tPlac = world::area_manager::get_map()->get_entity(chrName);
 
         if (tPlac == NULL)
             continue;
@@ -619,13 +603,13 @@ bool pathfinding_manager::save(std::string & fname)
     return record.put_record(fname);
 }
 
-bool pathfinding_manager::load(std::string & fname, world::area & map)
+bool pathfinding_manager::load(std::string & fname)
 {
     base::diskio record (base::diskio::XML_FILE);
 
     if (record.get_record(fname))
     {
-        get_state(record, map);
+        get_state(record);
         return true;
     } else return false;
 }
