@@ -37,24 +37,22 @@
 #include "world/area_manager.h"
 #include "gui/window_manager.h"
 
+static world::debug_renderer DEBUG_RENDERER;
+
 class game_client
 {
 public:
     bool letsexit;
     bool draw_grid;
-	bool draw_bounding_box;
-    bool draw_delay;
-    bool print_queue;
 	bool screenshot;
-
+    bool draw_bounding_box;
+    
     game_client()
     {
         letsexit = false;
         draw_grid = false;
-        draw_bounding_box = false;
-        draw_delay = false;
-        print_queue = false;
         screenshot = false;
+        draw_bounding_box = false;
         
         // prepare gamedata handling
         // TODO: should probably be integrated directly into the engine,
@@ -89,21 +87,22 @@ public:
             if (kev->key() == input::keyboard_event::B_KEY)
             {
                 draw_bounding_box = !draw_bounding_box;
+                DEBUG_RENDERER.set_draw_bbox (draw_bounding_box);
             }
             // render tile after tile
             if (kev->key() == input::keyboard_event::D_KEY)
             {
-                draw_delay = true;
+            	DEBUG_RENDERER.set_delay (150);
             }
             // save snapshot
             if (kev->key() == input::keyboard_event::S_KEY)
             {
-            	screenshot = true;
+                screenshot = true;
             }
             // print queue
             if (kev->key() == input::keyboard_event::Q_KEY)
             {
-            	print_queue = true;
+            	 DEBUG_RENDERER.print_queue (true);
             }
         }
 
@@ -136,9 +135,6 @@ public:
         // load initial game data
         base::savegame game_mgr;
         game_mgr.load (base::savegame::INITIAL_SAVE);
-                
-		// Create game world
-        world::area_manager::set_active_map ("test-world.xml");
 
         // create a specie
         rpg::specie human("Human");
@@ -161,14 +157,6 @@ public:
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
-
-        // The renderer ...
-        world::debug_renderer rndr;
-        
-        world::mapview *mv = world::area_manager::get_mapview();
-        mv->set_renderer (&rndr);
-        mv->set_schedule ("focus_on_character", args);
-        mv->resize (640, 480);
         
 	    while (!gc.letsexit)
     	{
@@ -183,28 +171,23 @@ public:
 	        //}
 
             // whether to draw bbox or not
-            rndr.set_draw_bbox (gc.draw_bounding_box);
-
-            // print queue contents
-            if (gc.print_queue)
+            world::mapview *mv = world::area_manager::get_mapview();
+            
+            if (gc.draw_bounding_box)
             {
-                rndr.print_queue (true);
-                gc.print_queue = false;
+                mv->set_renderer(&DEBUG_RENDERER);
             }
-
-            // draw with delay
-            if (gc.draw_delay)
+            else
             {
-                rndr.set_delay (150);
-                gc.draw_delay = false;
-            }
+                mv->set_renderer(NULL);
+            }            
 
             // render mapview on screen
             mv->draw (0, 0);
 
             // stop printing queue contents
-            rndr.print_queue (false);
-            rndr.set_delay (0);
+            DEBUG_RENDERER.print_queue (false);
+            DEBUG_RENDERER.set_delay (0);
 
             // whether to render grid
 	        if (gc.draw_grid)

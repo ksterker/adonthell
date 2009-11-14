@@ -206,11 +206,12 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
 }
 
 // read available games
-void savegame::init (const std::string & name)
+void savegame::init ()
 {
+    std::string name = base::Paths.game();
     struct dirent *dirent;
     DIR *dir;
-
+    
     // create initial saved game
     Games.push_back (new savegame_data ("", "Start New Game", 0));
     

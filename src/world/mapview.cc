@@ -202,6 +202,10 @@ bool mapview::put_state (base::flat & file) const
 {
     base::flat record;
     
+    // save size
+    record.put_uint16 ("vln", length());
+    record.put_uint16 ("vht", height());
+    
     // save current position
     record.put_uint16 ("vox", Ox);
     record.put_uint16 ("voy", Oy);
@@ -234,6 +238,10 @@ bool mapview::get_state (base::flat & file)
     if (!file.success()) return false;
     
     PyObject *extraArgs = NULL;
+
+    // get size
+    set_length (record.get_uint16 ("vln"));
+    set_height (record.get_uint16 ("vht"));
     
     // get coordinates
     Ox = record.get_uint16("vox"); 

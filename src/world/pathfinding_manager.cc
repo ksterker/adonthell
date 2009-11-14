@@ -474,6 +474,7 @@ bool pathfinding_manager::move_chr(const s_int16 id)
 
 void pathfinding_manager::put_state(base::flat & file)
 {
+    base::flat record;
     base::flat taskBlock;
 
     for (s_int16 i = 0; i <= m_taskHighest; i++)
@@ -514,27 +515,28 @@ void pathfinding_manager::put_state(base::flat & file)
                 a.clear();a.str("");
                 a << i;
 
-                file.put_flat(a.str(), taskBlock);
+                record.put_flat(a.str(), taskBlock);
                 taskBlock.clear();
             } else {
                 fprintf(stderr, "Can't find it!!\n");
             }
         }
     }
+    file.put_flat ("paths", record);
 }
-
 
 void pathfinding_manager::get_state(base::flat & file)
 {
+    base::flat record = file.get_flat ("paths");
     base::flat taskBlock;
-
+    
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
         std::stringstream a;
 
         a << i;
 
-        taskBlock = file.get_flat(a.str());
+        taskBlock = record.get_flat(a.str(), true);
 
         if (taskBlock.size() == 1)
             continue; // There isn't any data for this position

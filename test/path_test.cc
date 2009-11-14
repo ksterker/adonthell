@@ -148,9 +148,6 @@ public:
         base::savegame game_mgr;
         game_mgr.load (base::savegame::INITIAL_SAVE);
 
-		// Create game world
-        world::area_manager::set_active_map ("test-world.xml");
-
         // create a specie
         rpg::specie human("Human");
         human.get_state("groups/human.specie");
@@ -183,8 +180,6 @@ public:
         
         world::mapview *mv = world::area_manager::get_mapview();
         mv->set_renderer (&rndr);
-        mv->set_schedule ("focus_on_character", args);
-        mv->resize (640, 480);
         
 	    while (!gc.letsexit)
     	{

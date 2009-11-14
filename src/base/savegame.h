@@ -216,10 +216,9 @@ namespace base
         
         /**
          * Load information about existing saved games for
-         * the game with the given name.
-         * @param name the game whose saves to retrieve.
+         * the current game.
          */
-        static void init (const std::string & name);
+        static void init ();
 
         /**
          * Register a serializer for saving/loading game data.

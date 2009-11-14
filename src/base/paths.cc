@@ -84,6 +84,14 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 {
     Game = game;
     
+    // make sure game name doesn't contain directory seperators
+    std::string::iterator i = Game.begin();
+    while (i != Game.end())
+    {
+        if (*i == '/' || *i == '\\') i = Game.erase (i);
+        else i++;
+    }
+
     // no save game directory unless we actually load a game
     IncludeSaveDir = false;
     IncludeUserDir = false;
@@ -107,7 +115,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     if (UserDataDir != "")
     {
         if (UserDataDir[UserDataDir.size () - 1] != '/') UserDataDir += "/";
-        if (game != "") UserDataDir += game + "/";
+        if (Game != "") UserDataDir += Game + "/";
 
         // make sure the given user data dir is actually accessible
         if (exists (UserDataDir)) IncludeUserDir = true;
@@ -116,7 +124,7 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     // builtin data directory
     GameDataDir = DATA_DIR;
     GameDataDir += "/games/";
-    GameDataDir += game + "/";
+    GameDataDir += Game + "/";
 
     // make sure game data dir exists
     return exists (GameDataDir) || IncludeUserDir;

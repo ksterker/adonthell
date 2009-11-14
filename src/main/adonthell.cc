@@ -204,7 +204,7 @@ bool app::init ()
     // read available saved games
     if (Game != "")
     {
-        base::savegame::init (Game);
+        base::savegame::init ();
     }
     
     // load engine configuration file
