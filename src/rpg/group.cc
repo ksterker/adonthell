@@ -47,7 +47,7 @@ s_int32 group::estimate_speed_for_pathfinding(const std::string & terrain) const
     PyObject * ret = call_method_ret("estimate_speed_for_pathfinding", args);
 
     // Convert it to an integer
-    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(&*ret);
+    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
 
     return ret_int;
 }
@@ -60,9 +60,9 @@ s_int32 group::estimate_speed(const std::string & terrain) const
     PyObject * ret = call_method_ret("estimate_speed", args);
 
     // Convert it to an integer
-    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(&*ret);
+    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
 
-    // If ret_int is -1 then the specie is not valid (doesn't exists or its files don't exists 
+    // If ret_int is -1 then the specie is not valid (doesn't exists or its files don't exists
     // or are corrupted) if that happens we fallback to a default value in order to prevent strange errors.
     return (ret_int == -1) ? 2 : ret_int;
 }
@@ -73,10 +73,10 @@ bool group::put_state (const string & file, const base::diskio::file_format & fo
     base::diskio record (format);
     if (!put_state (record))
     {
-        fprintf (stderr, "*** group::put_state: saving '%s' failed!\n", file.c_str ());        
+        fprintf (stderr, "*** group::put_state: saving '%s' failed!\n", file.c_str ());
         return false;
     }
-    
+
     // write group to disk
     return record.put_record (file);
 }
@@ -85,9 +85,11 @@ bool group::put_state (const string & file, const base::diskio::file_format & fo
 bool group::put_state (base::flat & file) const
 {
     base::flat record;
-    
+
     // save the attributes
     record.put_string ("gnm", Name);
+
+    record.put_string ("pcp", Pathfinding_Costs_Path);
 
     // save the template this group uses
     record.put_string ("gcn", class_name ());
@@ -109,11 +111,11 @@ bool group::put_state (base::flat & file) const
 bool group::get_state(const string & file)
 {
     // try to load group
-    base::diskio record (base::diskio::BY_EXTENSION);
-    
-    if (record.get_record (file)) 
+    base::diskio record (base::diskio::XML_FILE);
+
+    if (record.get_record (file))
         return get_state (record);
-    
+
     return false;
 }
 
@@ -122,26 +124,29 @@ bool group::get_state(base::flat & file)
     base::flat record = file.get_flat ("grp");
     if (!file.success ()) return false;
 
-    
+
     // get attributes
     set_name(record.get_string("gnm"));
-    
+
+    // get the path to the %pathfinding_costs data
+    Pathfinding_Costs_Path = record.get_string("pcp");
+
     // get template to use for group
     std::string tmpl = record.get_string("gcn");
-    
+
     // instanciate
     if (!create_instance (tmpl)) return false;
 
     // pass file
     PyObject *args = PyTuple_New (1);
     PyTuple_SetItem (args, 0, python::pass_instance (&record));
-    
+
     // load actual group data
     call_method ("get_state", args);
     Py_DECREF (args);
-    
+
     // add reference to item
     set_attribute ("this", python::pass_instance (this));
-    
+
     return record.success ();
 }

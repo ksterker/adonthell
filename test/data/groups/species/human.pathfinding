@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Data cs="a3717e3">
+  <list id="Default">
+    <list id="Wood">
+        <s_int16 id="Cost">10</s_int16>
+    </list>
+    <list id="Swamp">
+        <s_int16 id="Cost">-5</s_int16>
+    </list>
+  </list>
+  <list id="Only_on_Wood">
+    <list id="Wood">
+        <s_int16 id="Cost">500</s_int16>
+    </list>
+  </list>
+</Data>

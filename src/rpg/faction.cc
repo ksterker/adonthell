@@ -25,23 +25,25 @@ std::vector<faction *> faction::Factions;
 
 bool faction::verify_requirements() const
 {
-    PyObject * ret = call_method_ret("requirements");
-        
-    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(&*ret);
-    
+    /*PyObject * ret = call_method_ret("requirements");
+
+    s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
+
     if (ret_int == 1)
     {
         // Success. Requirements fulfilled
         return true;
-            
+
     } else if (ret_int != 0) {
         // Invalid return code
         printf ("*** faction::verify_requirements. %s Faction. Invalid return code for the \"requirements\" python func.\n",
                 name().c_str());
     }
-    
+
     // Failed
-    return false;
+    return false;*/
+    // TODO: Fix problem with requirements
+    return true;
 }
 
 void faction::cleanup()
@@ -51,7 +53,7 @@ void faction::cleanup()
 faction * faction::get_faction(const std::string & name)
 {
     std::vector<faction *>::iterator i;
-    
+
     for (i = Factions.begin(); i != Factions.end(); i++)
     {
         if ((*i)->name() == name)

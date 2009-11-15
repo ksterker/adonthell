@@ -33,30 +33,27 @@
 
 namespace rpg
 {
-   
+
     /**
      * Holds all the information of a particular specie.
      */
     class specie : public group
     {
     public:
-        
-        specie(const std::string & name) : group(name) 
+
+        specie(const std::string & name) : group(name)
         {
             // Update the path to the python modules
             set_group_package("groups.species.");
-
-            #ifndef SWIG
-                Species.push_back(this);
-            #endif
+            Species.push_back(this);
         }
-        
+
         /**
          * Returns the alignment of the specie
          * @return alignment of the specie
          */
         s_int8 alignment() const;
-        
+
         /**
          * Sets the alignment of the specie
          * @param alignment the new alignment

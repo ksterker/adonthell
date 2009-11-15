@@ -21,14 +21,14 @@ import faction
 class noble (faction.faction):
     """
      This is an example implementation of the Noble Faction
-    """ 
-    
+    """
+
     def __init__ (self):
         """ctor"""
         faction.faction.__init__(self)
-        
 
-    
+
+
     def estimate_speed (self, terrain):
         """ returns a percentage depending on how nicely this group
             and the terrain interact.
@@ -36,13 +36,13 @@ class noble (faction.faction):
         """
         # -- Convert terrain to lowercase
         terrain = terrain.lower()
-        
+
         # -- Dictionary with the terrains and their respective impact
         dic = { "swamp" : -30 ,
                 "grass" : -5  ,
                 "water" : -20
               }
-        
+
         try:
             # -- correspondence found
             return dic[terrain]
@@ -50,7 +50,7 @@ class noble (faction.faction):
             # -- the terrain passed does not match any known one
             # -- return 0 by default
             return 0
-        
+
     def estimate_speed_for_pathfinding (self, terrain):
         """ similar to estimate_speed but now the result is going to
             be used in all the pathfinding searchs. Therefore adding
@@ -60,10 +60,10 @@ class noble (faction.faction):
         """
         # -- Convert terrain to lowercase
         terrain = terrain.lower()
-        
+
         # -- Verify for special cases
         if (terrain == "swamp") or (terrain == "water"):
             return -1000 # -- Do not cross
-            
+
         # -- Return the normal values
         return self.estimate_speed(terrain)

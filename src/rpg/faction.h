@@ -33,29 +33,28 @@
 
 namespace rpg
 {
-   
+
     /**
      * Holds all the information of a particular faction
      */
     class faction : public group
     {
     public:
-        
-        faction(const std::string & name) : group(name) 
+
+        faction(const std::string & name) : group(name)
         {
             // Update the path to the python modules
             set_group_package("groups.factions.");
-            
             Factions.push_back(this);
         }
-        
+
         /**
          * Wrapper call to python function that verifies if the faction
          * requirements are fulfilled
          * @return \b true on success, \b false otherwise
          */
         bool verify_requirements() const;
-        
+
         /**
          * Returns a faction with that name
          * @param name the name of the faction

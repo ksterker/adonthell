@@ -23,7 +23,7 @@
  *
  * @brief  Group class.
  */
- 
+
 #ifndef GROUP_H
 #define GROUP_H
 
@@ -32,7 +32,7 @@
 
 namespace rpg
 {
-    
+
     /**
      * This class is the base for every other class that represents a group of
      * people. Namely the species and faction classes.
@@ -50,14 +50,14 @@ namespace rpg
          * @return \b true if instanciated successful, \b false otherwise.
          */
         bool create_instance (const std::string & templ, PyObject * args = NULL);
-        
+
         /**
          * Wrapper to the python call that estimates the terrain impact
          * @param terrain the type of terrain to estimate for
          * @return a percentage representing how much the speed is going to be affected
          */
         s_int32 estimate_speed(const std::string & terrain) const;
-         
+
 
         /**
          * Wrapper to the python call that estimates the terrain impact when
@@ -75,7 +75,16 @@ namespace rpg
         {
             return Name;
         }
-        
+
+        /**
+         * Returns the path to the location that holds the pathfinding_costs data of this group
+         * @return the path of the pathfinding_costs file
+         */
+        std::string pathfinding_costs_path() const
+        {
+            return Pathfinding_Costs_Path;
+        }
+
         /**
          * Sets the name of the group
          * @param name new name
@@ -84,11 +93,11 @@ namespace rpg
         {
             Name = name;
         }
-        
+
         /**
          * Sets the path to the various python modules this group can
          * access. It can be used as a way to prevent unwanted use of templates
-         * that do not fully implement the class. Ex: a faction template should 
+         * that do not fully implement the class. Ex: a faction template should
          * not be used by a specie class.
          * @param group_package the path to the various python modules
          */
@@ -96,7 +105,7 @@ namespace rpg
         {
             Group_Package = group_package;
         }
-        
+
         /**
          * @name Loading/Saving
          */
@@ -110,8 +119,8 @@ namespace rpg
          * @param file name of the file to load %group from.
          * @return \b true if loading successful, \b false otherwise.
          */
-        bool get_state (base::flat & file); 
-        
+        bool get_state (base::flat & file);
+
         /**
          * Load %group from stream. This will first load the %group template
          * to instanciate the underlying Python group class. Then it will
@@ -119,12 +128,12 @@ namespace rpg
          * it will be replaced.
          *
          * @param file stream to load group from.
-         * @return \b true if loading successful, \b false otherwise. 
+         * @return \b true if loading successful, \b false otherwise.
          */
         bool get_state (const std::string & file);
-        
+
          /**
-         * Save %group to named file. This will save both the grou+ template
+         * Save %group to named file. This will save both the group template
          * plus the actual data to the given file. The file will be replaced
          * if it already exists.
          *
@@ -132,7 +141,7 @@ namespace rpg
          * @param format whether to save as XML or compressed binary.
          * @return \b true if saving successful, \b false otherwise.
          */
-        bool put_state (const string & file, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+        bool put_state (const string & file, const base::diskio::file_format & format = base::diskio::XML_FILE) const;
 
         /**
          * Save %group to stream. This will save both the %group template
@@ -144,14 +153,17 @@ namespace rpg
          */
         bool put_state (base::flat & file) const;
 
-        
+
     private:
 
         /// The name of this group
         std::string Name;
-        
+
         /// The Python package containing %group templates.
         std::string Group_Package;
+
+        /// Path to the xml file holding the %pathfinding_costs data for this %group.
+        std::string Pathfinding_Costs_Path;
 
     };
 }

@@ -23,52 +23,53 @@ class group (object):
      This is the python counterpart to rpg/group.h. It contains an
      group's most basic attributes. Any actual group should inherit
      from this class.
-    """ 
-        
+    """
+
     def __init__ (self):
         """ctor"""
         # -- reference to the underlying rpg.group instance
         self.this = None
-        
+
         # -- Group Name
         self.Name = ""
-        
+
         # -- Dictionary with relation between the terrain and respective
         # -- imapct in speed
         self.Dic = {}
 
+        self.Pathfinding_Costs_Path = self.Name + ".pathfinding"
 
     def destroy (self):
         """properly delete a group"""
         if self.this != None:
             self.this.destroy ()
-    
+
     def estimate_speed (self, terrain):
         try:
             return self.Dic[terrain]
         except: return 0
-        
+
     # -- save item to disk
     #    record needs to be of type base.flat
     def put_state (self, record):
-        record.put_string("pgpn", self.Name) 
-        
+        record.put_string("pgpn", self.Name)
+
         terrains = flat()
-        for terrain in self.Dic: 
+        for terrain in self.Dic:
             terrains.put_sint8(terrain, self.Dic[terrain])
-            
+
         record.put_flat ("gTerr", terrains)
-        
+
     # -- load item from disk
     #    record needs to be of type base.flat
     def get_state (self, record):
         self.Name = record.get_string("pgpn")
-        
+
         terrains = record.get_flat ("gTerr")
 
         type, value, unused, key = terrains.next ()
         while type == flat.T_SINT8:
             self.Dic[key] = value
             type, value, unused, key = terrains.next ()
-        
-        
+
+

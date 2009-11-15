@@ -14,6 +14,7 @@ pkgincluderpg_HEADERS = \
     item.h \
     log_entry.h \
     log_index.h \
+    pathfinding_costs.h \
     quest.h \
     quest_event.h \
     quest_event_manager.h \
@@ -36,6 +37,7 @@ libadonthell_rpg_la_SOURCES = \
     item.cc \
     log_entry.cc \
     log_index.cc \
+    pathfinding_costs.cc \
     quest.cc \
     quest_event.cc \
     quest_event_manager.cc \

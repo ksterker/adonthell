@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Data cs="a3717e3">
+  <list id="Noble">
+    <list id="Stone">
+        <s_int16 id="Cost">200</s_int16>
+    </list>
+  </list>
+</Data>
