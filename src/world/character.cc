@@ -266,10 +266,13 @@ bool character::get_state (base::flat & file)
 // load placeable model
 bool character::load_model (base::flat & model)
 {
-    // load (optional) shadow
-    std::string shadow_file = model.get_string ("shadow", true);
-    if (shadow_file.length() > 0) MyShadow = new shadow (shadow_file, this, EntireCurPos);    
-    
     // load shapes and sprites
-    return placeable::load_model (model);
+    if (placeable::load_model (model))
+    {
+        // load (optional) shadow
+        std::string shadow_file = model.get_string ("shadow", true);
+        if (shadow_file.length() > 0) MyShadow = new shadow (shadow_file, this, EntireCurPos);
+    }
+    
+    return model.success();
 }

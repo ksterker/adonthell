@@ -69,9 +69,10 @@ void placeable::set_state (const std::string & state)
     // object becomes solid if there is at least one solid component
     Solid = false;
 
-    // reset current size and position
     std::vector<world::placeable_model*>::iterator i = Model.begin();
-    (*i)->set_shape (state);
+    State = (*i)->set_shape (state);
+
+    // reset current size and position
     const placeable_shape *shape = (*i)->current_shape ();
     if (shape != NULL)
     {
@@ -90,7 +91,7 @@ void placeable::set_state (const std::string & state)
     // update shape and size of composite placeables
     for (i++; i != Model.end(); i++)
     {
-        (*i)->set_shape (state);
+        (*i)->set_shape (State);
         const placeable_shape *shape = (*i)->current_shape ();
         if (shape != NULL)
         {
@@ -116,8 +117,6 @@ void placeable::set_state (const std::string & state)
             EntireCurPos.set_z (std::min (EntireCurPos.z(), shape->z()));
         }
     }
-
-    State = state;
 }
 
 // get z position of the object's surface

@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <Data cs="f7302e25f">
-  <string id="shadow">gfx/char/npc/shadow-40x25.png</string>
   <list id="model">
     <list id="n_stand">
       <list id="shape">
@@ -196,4 +195,5 @@
     </list>
     <string id="sprite">gfx/char/npc/ng/naked_guy.xml</string>
   </list>
+  <string id="shadow">gfx/char/npc/shadow-40x25.png</string>
 </Data>

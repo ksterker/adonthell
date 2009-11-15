@@ -124,8 +124,9 @@ namespace world
          * Make shape with given name the current shape. If no such
          * shape exists, the current shape remains unchanged.
          * @param name name of the shape to activate.
+         * @return name of the shape actually activated.
          */
-        void set_shape (const std::string & name);
+        std::string set_shape (const std::string & name);
         //@}
 
         /**

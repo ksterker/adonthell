@@ -84,17 +84,26 @@ bool placeable_model::del_shape (const std::string & name)
 }
 
 // set the current shape
-void placeable_model::set_shape (const std::string & name)
+std::string placeable_model::set_shape (const std::string & name)
 {
     // shape is already set
     if (CurrentShape != Shapes.end() && CurrentShape->first == name)
-        return;
+        return name;
 
     // keep track of current shape in case we need to revert
     std::map <std::string, placeable_shape>::iterator prev_shape = CurrentShape;
 
-    // find new shape
-    CurrentShape = Shapes.find (name);
+    if (name == "")
+    {
+        // set default shape
+        CurrentShape = Shapes.begin ();
+    }
+    else
+    {
+        // find new shape
+        CurrentShape = Shapes.find (name);
+    }
+    
     if (CurrentShape == Shapes.end())
     {
         // shape not found
@@ -108,6 +117,8 @@ void placeable_model::set_shape (const std::string & name)
             Sprite.play ();
         }
     }
+    
+    return CurrentShape->first;
 }
 
 // set graphical representation of model
@@ -170,6 +181,9 @@ bool placeable_model::get_state (base::flat & file)
         placeable_shape * mpa = add_shape (std::string (name));
         mpa->get_state (shape);
     }
+
+    // no shape selected yet
+    CurrentShape = Shapes.end();
 
     // get associated sprite
     std::string sprite = record.get_string ("sprite");

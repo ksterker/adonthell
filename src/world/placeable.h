@@ -324,6 +324,12 @@ namespace world
          * @return \b true on success, \b false otherwise.
          */
         virtual bool load_model (base::flat & model);
+        
+        /**
+         * Get the file the placeable model was loaded from.
+         * @return the models file name.
+         */
+        std::string modelfile () const { return ModelFile; }
         //@}
 
 #ifndef SWIG

@@ -62,7 +62,7 @@ public:
      */
     static bool set_active_map (const std::string & name)
     {
-        set_active_map (name, true);
+        return set_active_map (name, true);
     }
     //@}
     
@@ -129,7 +129,7 @@ public:
     static bool save (const string & path);
     //@}
     
-private:
+protected:
     /**
      * Set the given map file as the current active map
      *
@@ -139,6 +139,14 @@ private:
      */
     static bool set_active_map (const std::string & name, const bool & auto_save);
     
+    /// the current map
+    static area *ActiveMap;
+    /// the class taking care of pathfinding
+    static pathfinding_manager PathFinder;
+    /// the main view on the active map 
+    static mapview MapView;
+    
+private:
     /**
      * Copy all tainted maps from the source directory to the target
      * directory, except the currently active map. 
@@ -151,13 +159,6 @@ private:
         
     /// forbid instantiation
     area_manager() {};
-    
-    /// the current map
-    static area *ActiveMap;
-    /// the class taking care of pathfinding
-    static pathfinding_manager PathFinder;
-    /// the main view on the active map 
-    static mapview MapView;
     
     /// list of maps that already have been in use
     static std::hash_set<std::string> TaintedMaps;
