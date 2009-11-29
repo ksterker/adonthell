@@ -38,7 +38,7 @@ namespace rpg
 {
 
 #ifndef SWIG
-    /** The Python package containing %item templates. */
+    /** The Python package containing %charcter templates. */
 #   define CHARACTER_PACKAGE "characters."
 #endif
 
@@ -115,6 +115,15 @@ namespace rpg
             std::string id () const
             {
                 return Id;
+            }
+            
+            /**
+             * Get the type of this %character.
+             * @return the character's type.
+             */
+            char_type type () const
+            {
+                return Type;
             }
             
             /**
@@ -283,7 +292,26 @@ namespace rpg
             {
                 return get_character (PlayerCharacterId);
             }
-
+#ifndef SWIG
+            /**
+             * Get iterator pointing to first loaded %character.
+             * @return iterator into the %character list.
+             */
+            static std::hash_map<std::string, rpg::character*>::const_iterator get_first()
+            {
+                return Characters.begin();
+            }
+            
+            /**
+             * Check whether the given iterator points to the last %character.
+             * @param i iterator into the %character list.
+             * @return true if i points to the end of the list.
+             */
+            static bool is_last (std::hash_map<std::string, rpg::character*>::const_iterator & i)
+            {
+                return i == Characters.end();
+            }
+#endif
             //@}
 
             /**
