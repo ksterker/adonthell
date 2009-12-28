@@ -103,7 +103,7 @@ bool quest_event::get_state (base::flat& file)
 // split given path into its parts
 void quest_event::set_pattern (const std::string & pattern)
 {
-	unsigned int idx, pos = 0;
+    unsigned long idx, pos = 0;
 
     // split pattern into its levels
     while ((idx = pattern.find (".", pos)) != pattern.npos)

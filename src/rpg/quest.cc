@@ -407,7 +407,7 @@ const quest_part* quest::get_part (const std::string & path)
 // split given path
 std::vector<std::string> quest::split (const std::string & path)
 {
-    unsigned int idx, pos = 0;
+    unsigned long idx, pos = 0;
     std::vector<std::string> result;
     
     // split
