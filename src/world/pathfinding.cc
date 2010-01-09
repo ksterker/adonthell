@@ -30,6 +30,7 @@
 #include "world/vector3.h"
 #include "world/chunk_info.h"
 #include "world/coordinates.h"
+#include "rpg/character.h"
 
 using world::character;
 using world::pathfinding;
@@ -48,7 +49,7 @@ bool pathfinding::verify_goal(const coordinates & actual, const vector3<s_int32>
 
 u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const
 {
-    return  20 * (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y()));
+    return  (20 * (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y())));
 }
 
 std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & actual) const
@@ -129,6 +130,10 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     const s_int32 init_chr_x = chr->x();
     const s_int32 init_chr_y = chr->y();
 
+    // Lenght of the character
+    const u_int8 chr_length = chr->placeable::length();
+    const u_int8 chr_width = chr->placeable::width();
+
     // The node that's been choosen (with the lowest total cost)
     node * actual_node;
 
@@ -198,8 +203,34 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
             temp_node->pos = *i;
 
             temp_node->parent = actual_node;
+
+            // Take the pathfinding_costs of the character into account
+            world::vector3<s_int32> min_pos((temp_node->pos.x())*20, (temp_node->pos.y())*20, 0);
+            world::vector3<s_int32> max_pos((temp_node->pos.x())*20 + chr_length, (temp_node->pos.y())*20 + chr_width, 0);
+
+            const std::list<chunk_info *> actual_chunk = chr->map().objects_in_bbox(min_pos, max_pos);
+
+            std::list<chunk_info *>::const_iterator g = actual_chunk.begin();
+
+            float temp_terrainCost = 0;
+            for (; g != actual_chunk.end(); g++)
+            {
+                if ((*g)->get_object()->get_terrain() != NULL)
+                {
+                    temp_terrainCost = chr->mind()->get_pathfinding_cost(*(*g)->get_object()->get_terrain());
+                    break;
+                }
+            }
+
+            // Check if we have to ignore this node
+            if ((temp_terrainCost == 0) && (chr->mind()->has_forced_impassable()))
+            {
+                ++i;
+                continue;
+            }
+
             temp_node->moveCost = (*i).z() + temp_node->parent->moveCost;
-            temp_node->total = calc_heuristics(temp_node->pos, goal) + temp_node->moveCost;
+            temp_node->total = calc_heuristics(temp_node->pos, goal) + temp_node->moveCost - temp_terrainCost;
 
             // Check if this node is already in the open or closed list
             temp_node2 = m_nodeCache.search_node(temp_node);
@@ -222,8 +253,8 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
             } else {
                 // Check if the tile is a hole
-                vector3<s_int32> min(temp_node->pos.x() * 20, temp_node->pos.y() * 20, chr->z() - 5);
-                vector3<s_int32> max(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20,
+                vector3<s_int32> min(temp_node->pos.x() * 20, temp_node->pos.y() * 20, chr->z() - 20);
+                vector3<s_int32> max(temp_node->pos.x() * 20 + chr_length, temp_node->pos.y() * 20 + chr_width,
                     chr->z());
 
                 std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max, world::OBJECT);
@@ -234,8 +265,8 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                 }
 
                 // Check if there is an obstacle in this node
-                vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, 10);
-                vector3<s_int32> cmax(temp_node->pos.x() * 20 + 20, temp_node->pos.y() * 20 + 20, chr->placeable::height());
+                vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, 20);
+                vector3<s_int32> cmax(temp_node->pos.x() * 20 + chr_length, temp_node->pos.y() * 20 + chr_width, chr->placeable::height());
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(cmin, cmax);
 

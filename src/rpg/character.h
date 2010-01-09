@@ -33,6 +33,7 @@
 #include "python/script.h"
 #include "rpg/specie.h"
 #include "rpg/faction.h"
+#include "rpg/pathfinding_costs.h"
 
 namespace rpg
 {
@@ -184,6 +185,8 @@ namespace rpg
                 {
                     fprintf(stderr, "*** character: '%s' is not a valid specie!\n", name.c_str());
                 }
+                
+                Pathfinding_Costs.update_costs(Factions, Specie);
             }
 
            /**
@@ -246,6 +249,43 @@ namespace rpg
             void set_base_speed (float base_speed)
             {
                 Base_Speed = base_speed;
+            }
+            
+            /**
+             * Get the cost of walking over the terrain, taking into account the actual
+             * pathfinding type, for pathfinding purposes.
+             * @param terrain the terrain that's being walked over
+             * @return the cost
+             */
+            s_int16 get_pathfinding_cost(const std::string & terrain) const
+            {
+                return Pathfinding_Costs.get_cost(terrain);
+            }
+
+            /**
+             * Set the actual pathfinding type
+             * @param type the new type
+             */
+            void set_pathfinding_type(const std::string & type)
+            {
+                Pathfinding_Costs.set_pathfinding_type(type);
+            }
+
+            /**
+             * Get the actual pathfinding type
+             * @return the actual pathfinding type
+             */
+            std::string get_pathfinding_type() const
+            {
+                return Pathfinding_Costs.get_pathfinding_type();
+            }
+
+            /**
+             * Returns if the actual pathfinding type has forced impassable
+             */
+            bool has_forced_impassable() const
+            {
+                return Pathfinding_Costs.has_forced_impassable();
             }
 
             /**
@@ -384,6 +424,9 @@ namespace rpg
             
             /// Vector with the various factions to which this character belongs
             std::vector<rpg::faction *> Factions;
+            
+            /// Pathfinding Costs of this %character
+            rpg::pathfinding_costs Pathfinding_Costs;
 
             /// Actual speed of this character
             float Speed;

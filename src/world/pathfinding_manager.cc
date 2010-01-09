@@ -78,11 +78,11 @@ void pathfinding_manager::clear ()
     {
         delete m_task[i].callback;
         m_task[i].callback = NULL;
-        
+
         delete m_task[i].path;
         m_task[i].path = NULL;
     }
-    
+
     m_taskHighest = 0;
     m_chars.clear();
     m_locked.assign(MAX_TASKS, false);
@@ -529,7 +529,7 @@ void pathfinding_manager::get_state(base::flat & file)
 {
     base::flat record = file.get_flat ("paths");
     base::flat taskBlock;
-    
+
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
         std::stringstream a;

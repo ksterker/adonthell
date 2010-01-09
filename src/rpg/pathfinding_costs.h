@@ -73,9 +73,12 @@ namespace rpg
         {
             if (Terrain_Cost.empty()) return;
             Terrain_Cost_Hash::const_iterator i = Terrain_Cost.begin();
+
             for (; i != Terrain_Cost.end(); i++)
             {
-                printf("%s %d\n", (*i).first.c_str(),(*i).second) ;
+                if (&i != NULL) {
+                    printf("%s %d\n", (*i).first.c_str(),(*i).second);
+                }
             }
         }
     private:
@@ -116,11 +119,25 @@ namespace rpg
         */
         costs_hash * get_costs_hash() const;
 
+       /**
+        * Check if this type forces the non-explicited terrains to be considered impassable.
+        * @return \b true if its enabled, \b false otherwise
+        */
+        bool has_forced_impassable() const;
+
+       /**
+        * Sets the forced impassable on/off.
+        * @param forced \b true for on, \b false for off
+        */
+        void set_forced_impassable(bool forced);
+
     private:
         /// The type of this class
         std::string Type;
         /// Pointer to the hash that has the terrain/costs relationships.
         costs_hash * Costs_Hash;
+        /// force only the explicited terrains to be walkable, all others will be impassable
+        bool Forced_Impassable;
     };
 
    /**
@@ -151,6 +168,11 @@ namespace rpg
         const std::string get_pathfinding_type() const;
 
        /**
+        * Return if forced impassable is enabled
+        */
+        bool has_forced_impassable() const;
+
+       /**
         * Updates the internal cost/terrain/type relationships. This can happen at the beginning or
         * when a faction is added/removed, specie altered, ...
         * @param Factions a vector with the factions
@@ -178,8 +200,10 @@ namespace rpg
             std::vector<type_costs *>::const_iterator i = Costs.begin();
             ++i;
             for (; i != Costs.end(); i++) {
-                printf("In Vector: Type:%s\n", (*i)->get_type().c_str());
-                (*i)->get_costs_hash()->show_all_data();
+                if (&i != NULL) {
+                    printf("In Vector: Type:%s\n", (*i)->get_type().c_str());
+                    (*i)->get_costs_hash()->show_all_data();
+                }
 
             }
         }

@@ -115,6 +115,9 @@ bool character::add_faction(const std::string & name)
         if (tmp->verify_requirements() == true)
         {
             Factions.push_back(tmp);
+            
+            Pathfinding_Costs.update_costs(Factions, Specie);
+            
             return true;
         }
     }
@@ -131,6 +134,8 @@ bool character::remove_faction(const std::string & name)
     if (*i != NULL)
     {
         Factions.erase(i);
+        
+        Pathfinding_Costs.update_costs(Factions, Specie);
         return true;
     } else return false;
 }
