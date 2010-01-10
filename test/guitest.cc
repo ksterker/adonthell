@@ -71,11 +71,11 @@ class GuiTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
 	//find the images we need
-	string testbg1 = "data/gfx/gui/testbg1.png";
+	string testbg1 = "gfx/gui/testbg1.png";
 	base::Paths.find_in_path(testbg1);
-	string testbuttondown = "data/gfx/gui/testbuttondown.png";
+	string testbuttondown = "gfx/gui/testbuttondown.png";
 	base::Paths.find_in_path(testbuttondown);
-	string testbuttonup = "data/gfx/gui/testbuttonup.png";
+	string testbuttonup = "gfx/gui/testbuttonup.png";
 	base::Paths.find_in_path(testbuttonup);
 
 	gui::font f;

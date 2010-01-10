@@ -135,6 +135,11 @@ gfx::sprite *placeable_model::get_sprite ()
     if (!Sprite.is_valid())
     {
         Sprite.load ();
+
+        if (CurrentShape != Shapes.end())
+        {
+            Sprite.change_animation (CurrentShape->first);
+        }
     }
 
     return &Sprite;
