@@ -204,29 +204,33 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
             temp_node->parent = actual_node;
 
-            // Take the pathfinding_costs of the character into account
-            world::vector3<s_int32> min_pos((temp_node->pos.x())*20, (temp_node->pos.y())*20, 0);
-            world::vector3<s_int32> max_pos((temp_node->pos.x())*20 + chr_length, (temp_node->pos.y())*20 + chr_width, 0);
-
-            const std::list<chunk_info *> actual_chunk = chr->map().objects_in_bbox(min_pos, max_pos);
-
-            std::list<chunk_info *>::const_iterator g = actual_chunk.begin();
-
             float temp_terrainCost = 0;
-            for (; g != actual_chunk.end(); g++)
+            
+            if (chr->mind()->get_pathfinding_type() != "Default")
             {
-                if ((*g)->get_object()->get_terrain() != NULL)
-                {
-                    temp_terrainCost = chr->mind()->get_pathfinding_cost(*(*g)->get_object()->get_terrain());
-                    break;
-                }
-            }
+                // Take the pathfinding_costs of the character into account
+                world::vector3<s_int32> min_pos((temp_node->pos.x())*20, (temp_node->pos.y())*20, 0);
+                world::vector3<s_int32> max_pos((temp_node->pos.x())*20 + chr_length, (temp_node->pos.y())*20 + chr_width, 0);
 
-            // Check if we have to ignore this node
-            if ((temp_terrainCost == 0) && (chr->mind()->has_forced_impassable()))
-            {
-                ++i;
-                continue;
+                const std::list<chunk_info *> actual_chunk = chr->map().objects_in_bbox(min_pos, max_pos);
+
+                std::list<chunk_info *>::const_iterator g = actual_chunk.begin();
+
+                for (; g != actual_chunk.end(); g++)
+                {
+                    if ((*g)->get_object()->get_terrain() != NULL)
+                    {
+                        temp_terrainCost = chr->mind()->get_pathfinding_cost(*(*g)->get_object()->get_terrain());
+                        break;
+                    }
+                }
+
+                // Check if we have to ignore this node
+                if ((temp_terrainCost == 0) && (chr->mind()->has_forced_impassable()))
+                {
+                    ++i;
+                    continue;
+                }
             }
 
             temp_node->moveCost = (*i).z() + temp_node->parent->moveCost;
