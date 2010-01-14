@@ -167,6 +167,8 @@ public:
         gc.path_char = (world::character *) (world::area_manager::get_map()->get_entity ("NPC"));
         // ... and remove its schedule so we get direct control over its pathfinding
         gc.path_char->get_schedule()->clear_schedule();
+        // set its pathfinding type so that the character will only walk over Wood
+        gc.path_char->mind()->set_pathfinding_type("Only_on_Wood");
 
         rpg::character *npc = rpg::character::get_character("NPC");
         npc->set_specie ("Human");
@@ -177,10 +179,10 @@ public:
 
         // The renderer ...
         world::debug_renderer rndr;
-        
+
         world::mapview *mv = world::area_manager::get_mapview();
         mv->set_renderer (&rndr);
-        
+
 	    while (!gc.letsexit)
     	{
         	u_int16 i;
