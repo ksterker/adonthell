@@ -161,6 +161,12 @@ namespace world
          * @return \e true on success, \e false otherwise
          */
         bool set_manager (const std::string & file, PyObject * args = NULL);
+
+        /**
+         * Return a pointer to the manager script object.
+         * @return pointer to manager script or NULL if not initialized yet.
+         */
+        const python::script *get_manager () const;
         //@}
 
         /**

@@ -150,6 +150,13 @@ bool schedule::set_manager (const string &file, PyObject *args)
     return Manager.create_instance (SCHEDULE_DIR + file, file, new_args);
 }
 
+// get manager script, if initialized
+const python::script *schedule::get_manager () const
+{
+    if (Manager.get_instance (false)) return &Manager;
+    return NULL;
+}
+
 // set the alarm
 void schedule::set_alarm (const string & time, const bool & absolute)
 {

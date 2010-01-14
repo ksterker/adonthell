@@ -15,7 +15,7 @@
     </list>
     <list id="3">
       <s_int8 id="type">1</s_int8>
-      <string id="model">/home/frederico/ad6/adonthell/test/path/models/map/ground/outside/short-grass-tile.xml</string>
+      <string id="model">models/map/ground/outside/short-grass-tile.xml</string>
     </list>
   </list>
   <list id="entities">
