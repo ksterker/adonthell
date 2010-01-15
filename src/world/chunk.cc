@@ -93,6 +93,19 @@ void chunk::add (entity * object, const coordinates & pos)
     add (chunk_info (object, pos, max));
 }
 
+// check if object exists at given position
+bool chunk::exists (entity *object, const coordinates & pos)
+{
+    // calculate axis-aligned bbox for object
+    const placeable *p = object->get_object();
+    vector3<s_int32> max (pos.x() + p->max_length(),
+                          pos.y() + p->max_width(),
+                          pos.z() + p->max_height());
+    
+    return exists (chunk_info (object, pos, max));
+}
+
+// remove object from chunk
 world::entity * chunk::remove (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
@@ -196,6 +209,30 @@ void chunk::add (const chunk_info & ci)
     }
 }
 
+// check if object exists at given position
+bool chunk::exists (const chunk_info & ci)
+{
+    if (!is_leaf())
+    {
+        s_int8 chunks[8];
+        const u_int8 num = find_chunks (chunks, ci.Min, ci.Max);
+        if (num == 1)
+        {
+            chunk *c = Children[chunks[0]];
+            if (c != NULL && c->exists (ci)) return true;
+        }
+    }
+    
+    std::list<chunk_info>::iterator it = find (Objects.begin(), Objects.end(), ci);
+    if (it != Objects.end())
+    {
+        return true;
+    }
+    
+    return false;
+}
+
+// remove object from chunk
 world::entity * chunk::remove (const chunk_info & ci)
 {
     entity *removed = NULL;

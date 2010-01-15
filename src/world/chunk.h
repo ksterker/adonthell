@@ -78,6 +78,19 @@ namespace world
         void add (const chunk_info & ci);
 
         /**
+         * Check if given object is present at given position.
+         * @param object entity which presence to check.
+         * @param coordinates location of the entity.
+         */
+        bool exists (entity * object, const coordinates & pos);
+
+        /**
+         * Check if given object is present at given position.
+         * @param object entity which presence to check.
+         */
+        bool exists (const chunk_info & ci);
+
+        /**
          * Remove object at given coordinates.
          * @param object entity to remove from the world.
          * @param coordinates location of the entity.

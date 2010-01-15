@@ -52,7 +52,6 @@
         <string id="p3d">[200, 80, 0]</string>
         <string id="p3d">[200, 40, 0]</string>
         <string id="p3d">[240, 200, 0]</string>
-        <string id="p3d">[240, 200, 0]</string>
         <string id="p3d">[240, 160, 0]</string>
         <string id="p3d">[240, 80, 0]</string>
         <string id="p3d">[240, 40, 0]</string>
@@ -65,7 +64,6 @@
         <string id="p3d">[360, 120, 0]</string>
         <string id="p3d">[320, 120, 0]</string>
         <string id="p3d">[320, 160, 0]</string>
-        <string id="p3d">[360, 160, 0]</string>
         <string id="p3d">[360, 160, 0]</string>
         <string id="p3d">[360, 200, 0]</string>
         <string id="p3d">[320, 200, 0]</string>
@@ -125,7 +123,6 @@
         <string id="p3d">[360, 240, 0]</string>
         <string id="p3d">[360, 280, 0]</string>
         <string id="p3d">[320, 280, 0]</string>
-        <string id="p3d">[320, 320, 0]</string>
         <string id="p3d">[320, 320, 0]</string>
         <string id="p3d">[360, 320, 0]</string>
         <string id="p3d">[400, 320, 0]</string>
