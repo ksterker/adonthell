@@ -91,28 +91,35 @@ namespace gui
 		case input::keyboard_event::TAB_KEY:
 			return false; //this key changes the focus. not for us
 		default:
-			if (isprint(k.unikey()))
-			{
-				/*
-				cout << (char)k.keysym.unicode << "\n";
-				if (k.keysym.mod & KMOD_SHIFT)
-					txt.insert(insertpos, 1, (char)(isalpha(k.keysym.sym)? k.keysym.sym - 32:k.keysym.sym));
-				else
-					txt.insert(insertpos, 1, (char)k.keysym.sym);
-				// */
-				txt.insert(insertpos, 1, (char)k.unikey());
-				
-				cachevalid = false;
-				insertpos++;
-				return true;
-			}
-			else
-				cout << k.unikey() << "\n";
-
 			break;
 		}
 		return false;
 	}
+    
+    bool textbox::input(input::keyboard_event&k)
+    {
+        // FIXME: unikey is actually encoded as UTF-8
+        if (isprint(k.unikey()[0]))
+        {
+            /*
+             cout << (char)k.keysym.unicode << "\n";
+             if (k.keysym.mod & KMOD_SHIFT)
+             txt.insert(insertpos, 1, (char)(isalpha(k.keysym.sym)? k.keysym.sym - 32:k.keysym.sym));
+             else
+             txt.insert(insertpos, 1, (char)k.keysym.sym);
+             // */
+             txt.insert(insertpos, 1, (char)k.unikey()[0]);
+             
+             cachevalid = false;
+             insertpos++;
+             return true;
+        }
+        else
+        {
+            cout << k.unikey() << "\n";      
+        }
+    }
+             
 	bool textbox::keyup(input::keyboard_event&k)
 	{
 		return false;

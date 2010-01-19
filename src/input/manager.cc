@@ -38,6 +38,7 @@ namespace input
 {
     std::list <listener *> manager::listeners;
     void (*manager::update_p)() = NULL;
+    void (*manager::textinput_p)(bool) = NULL;
 
 
     void manager::raise_event(event & ev)

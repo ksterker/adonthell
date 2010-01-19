@@ -267,7 +267,8 @@ namespace input
             "euro"
         };
 
-    keyboard_event::keyboard_event (event_type t, key_type k, u_int16 u) : event (KEYBOARD_EVENT), Type(t), Key(k), Unikey(u)
+    keyboard_event::keyboard_event (event_type t, key_type k, const std::string & u) 
+    : event (KEYBOARD_EVENT), Type(t), Key(k), Unikey(u)
     {
     }
 

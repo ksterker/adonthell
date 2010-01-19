@@ -82,6 +82,13 @@ namespace input
             goto bigerror;
         }
 
+        input::manager::textinput_p = (void(*)(bool)) lt_dlsym(dlhandle, "input_text");
+        if (!input::manager::textinput_p)
+        {
+            std::cerr << lt_dlerror() << std::endl;
+            goto bigerror;
+        }
+        
         input::manager::update_p = (void(*)()) lt_dlsym(dlhandle, "input_manager_update");
         if (!input::manager::update_p)
         {

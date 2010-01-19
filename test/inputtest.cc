@@ -27,10 +27,7 @@ public:
         else if (ev->type() == input::keyboard_event::KEY_PUSHED)
         {
             // Print some info about what happened
-            std::cout << "Key " << ev->key_symbol() << " has been pushed, unichar emitted is ";
-            if (!ev->unikey()) std::cout << "<none>" << std::endl;
-            else std::cout << (unsigned char) ev->unikey() << " (" << (unsigned int) ev->unikey() << ")" << std::endl;
-
+            std::cout << "Key " << ev->key_symbol() << " has been pushed." << std::endl;
             // On escape, the global variable letsexit will be set to 1
             if (ev->key() == input::keyboard_event::ESCAPE_KEY)
             {
@@ -38,6 +35,12 @@ public:
                 std::cout << "Escape pressed, leaving..." << std::endl;
             }
         }
+        
+        else
+        {
+            std::cout << "Unichar emitted is " << ev->unikey() << "." << std::endl;
+        }
+        
         return true;
     }
 };
@@ -61,6 +64,8 @@ class AdonthellApp : public adonthell::app
         
         // Add the listener to the manager
         input::manager::add(&il);
+        
+        input::manager::enable_unicode(true);
         
         // Run this loop until letsexit is set to 1 by the
         // callback function. Every time a key event is raised,

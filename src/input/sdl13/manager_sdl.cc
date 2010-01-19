@@ -417,30 +417,27 @@ void input_manager_update()
                     return;
                 }
                     
-                // FIXME event.key.keysym.unicode is obsolete
-                input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.scancode], 
-                                          event.key.keysym.unicode);
+                input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.scancode], "");
                 input::manager::raise_event (ke);
                 break;
             }
             case SDL_KEYUP:
             {
-                
                 // SDL 1.2 did not send keyup event when turning on caps lock
                 if (event.key.keysym.scancode == SDL_SCANCODE_CAPSLOCK && event.key.keysym.mod != 0)
                 {
                     return;
                 }
                 
-                // FIXME event.key.keysym.unicode is obsolete
-                input::keyboard_event ke (input::keyboard_event::KEY_RELEASED, input::sdl_key_trans[event.key.keysym.scancode], 
-                                          event.key.keysym.unicode);
+                input::keyboard_event ke (input::keyboard_event::KEY_RELEASED, input::sdl_key_trans[event.key.keysym.scancode], "");
                 input::manager::raise_event (ke);
                 break;
             }
             case SDL_TEXTINPUT:
             {
-                // event.text.text
+                input::keyboard_event ke (input::keyboard_event::TEXT_INPUT, input::keyboard_event::UNKNOWN_KEY, event.text.text);
+                input::manager::raise_event (ke);
+                break;
             }
             case SDL_MOUSEMOTION:
             {

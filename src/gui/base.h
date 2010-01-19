@@ -21,6 +21,7 @@ namespace gui
 		 */
 		virtual bool keyup(input::keyboard_event & k) { return false; }
 		virtual bool keydown(input::keyboard_event & k) { return false; }
+		virtual bool input(input::keyboard_event & k) { return false; }
 #if 0		
 		/*
 		 * called when a mouseevent happens, returns whether it was used

@@ -23,6 +23,7 @@
 /* exported names for libltdl */
 #define input_init _sdl_LTX_input_init
 #define input_cleanup _sdl_LTX_input_cleanup
+#define input_text _sdl_LTX_input_text
 #endif
 
 #include <iostream>
@@ -32,6 +33,7 @@ extern "C"
 {
     bool input_init();
     void input_cleanup();
+    void input_text(bool);
 }
 
 bool input_init()
@@ -44,7 +46,6 @@ bool input_init()
     int nbr_joy = SDL_NumJoysticks();
     for (int i = 0; i < nbr_joy; i++)
         input::joysticks.push_back(SDL_JoystickOpen(i));
-    SDL_EnableUNICODE(1);
     return true;
 }
 
@@ -54,5 +55,9 @@ void input_cleanup()
          i != input::joysticks.end(); i++)
         SDL_JoystickClose(*i);
     SDL_QuitSubSystem (SDL_INIT_JOYSTICK);
-    SDL_EnableUNICODE(0);
+}
+
+void input_text(bool enable)
+{
+    enable ? SDL_StartTextInput() : SDL_StopTextInput();
 }

@@ -516,15 +516,22 @@ void input_manager_update()
         {
             case SDL_KEYDOWN:
             {
-                input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.sym], 
-                                          event.key.keysym.unicode);
+                input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.sym], "");
                 input::manager::raise_event (ke);
+                
+                // FIXME: convert to UTF-8
+                if (event.key.keysym.unicode != 0)
+                {
+                    char text[2] = { (char) event.key.keysym.unicode, 0 };
+                    input::keyboard_event ti (input::keyboard_event::TEXT_INPUT, input::keyboard_event::UNKNOWN_KEY, text);
+                    input::manager::raise_event (ti);
+                }
+                
                 break;
             }
             case SDL_KEYUP:
             {
-                input::keyboard_event ke (input::keyboard_event::KEY_RELEASED, input::sdl_key_trans[event.key.keysym.sym], 
-                                          event.key.keysym.unicode);
+                input::keyboard_event ke (input::keyboard_event::KEY_RELEASED, input::sdl_key_trans[event.key.keysym.sym], "");
                 input::manager::raise_event (ke);
                 break;
             }

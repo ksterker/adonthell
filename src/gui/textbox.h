@@ -1,8 +1,10 @@
 #ifndef GUI_TEXTBOX_H
 #define GUI_TEXTBOX_H
 
-#include "label.h"
+#include "gui/label.h"
 #include "base/base.h"
+#include "input/manager.h"
+
 namespace gui
 {
 	class textbox:public label
@@ -18,13 +20,15 @@ namespace gui
 		virtual void draw(int x, int y, gfx::surface* s);
 		virtual bool keyup(input::keyboard_event & k);
 		virtual bool keydown(input::keyboard_event & k); 
+        virtual bool input(input::keyboard_event & k); 
+
 //Not till we can handle mouse events
 //		virtual bool mouseup(SDL_MouseButtonEvent & m);
 //		virtual bool mousedown(SDL_MouseButtonEvent & m);
 //		virtual bool mousemove(SDL_MouseMotionEvent & m) { return false; }
 		//accept the focus if it is given to us
-		virtual bool focus() {hasfocus = true; return true;}
-		virtual void unfocus() {hasfocus = false;}
+		virtual bool focus() {hasfocus = true; input::manager::enable_unicode(true); return true;}
+		virtual void unfocus() {hasfocus = false; input::manager::enable_unicode(false); }
 
 	};
 };

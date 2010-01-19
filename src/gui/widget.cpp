@@ -37,13 +37,20 @@ namespace gui
     // handle keyboard events
     bool widget::on_keyboard_event (input::keyboard_event * evt) 
     {
-        if (evt->type() == input::keyboard_event::KEY_PUSHED) 
+        switch (evt->type())
         {
-            return keydown (*evt);
-        } 
-        else 
-        {
-            return keyup (*evt);
+            case input::keyboard_event::KEY_PUSHED:
+            {
+                return keydown (*evt);
+            }
+            case input::keyboard_event::KEY_RELEASED:
+            {
+                return keyup (*evt);
+            }
+            case input::keyboard_event::TEXT_INPUT:
+            {
+                return input (*evt);
+            }
         }
         
         return false;

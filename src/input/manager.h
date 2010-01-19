@@ -62,6 +62,12 @@ namespace input
         static void update() { update_p(); }
 
         /**
+         * Turn on or off unicode text input mode.
+         * @param enable true to enable unicode mode, false to disable.
+         */
+        static void enable_unicode (const bool & enable) { textinput_p(enable); }
+        
+        /**
          * Raise an arbitrary event. This will simulate the event and
          * will behave as if it really occured.
          * 
@@ -100,7 +106,8 @@ namespace input
     private:
         static std::list <listener *> listeners;
         static void (*update_p)();
-
+        static void (*textinput_p)(bool);
+        
         friend bool input::init(const std::string &);
     }; 
 }

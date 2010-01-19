@@ -39,8 +39,11 @@ namespace input
 
     /**
      * Represents a keyboard event, that is a key identifier
-     * and a status (KEY_PUSHED or KEY_RELEASED).
-     * 
+     * and a status (KEY_PUSHED, KEY_RELEASED and TEXT_INPUT).
+     * TEXT_INPUT events are only generated while unicode mode
+     * is enabled in the input manager. Even while unicode mode
+     * is enabled, KEY_PUSHED and KEY_RELEASED events are generated.
+     * But only TEXT_INPUT events have the Unikey field set.
      */
     class keyboard_event : public event
     {
@@ -52,7 +55,7 @@ namespace input
          */
         typedef enum
             {
-                KEY_PUSHED, KEY_RELEASED
+                KEY_PUSHED, KEY_RELEASED, TEXT_INPUT
             } event_type; 
 
         /**
@@ -298,12 +301,11 @@ namespace input
         /** 
          * Constructor.
          * 
-         * @param t kind of keyboard event (KEY_PUSHED or KEY_RELEASED)
+         * @param t kind of keyboard event (KEY_PUSHED, KEY_RELEASED or TEXT_INPUT)
          * @param k key concerned by this event.
          * @param u unicode character this event produced.
-         *
          */
-        keyboard_event (event_type t, key_type k, u_int16 u);
+        keyboard_event (event_type t, key_type k, const std::string & u);
 
         /**
          * @name Member access
@@ -344,7 +346,7 @@ namespace input
          * Return the unicode value of the key concerned by this event.
          * @return unicode key code.
          */
-        u_int16 unikey () const
+        const std::string unikey () const
         {
             return Unikey;
         }
@@ -388,9 +390,9 @@ namespace input
         const event_type Type;
         /// key code (ASCII)
         const key_type Key; 
-        /// key code (Unicode)
-        const u_int16 Unikey;
-    }; 
+        /// key code (UTF-8)
+        const std::string Unikey;
+    };
 }
 
 #endif
