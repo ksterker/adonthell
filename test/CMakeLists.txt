@@ -25,6 +25,19 @@ TARGET_LINK_LIBRARIES(diskiotest
 	)
 
 ###############################
+# Try to build the inputtest
+ADD_EXECUTABLE(inputtest
+			inputtest.cc)
+
+TARGET_LINK_LIBRARIES(inputtest
+	ltdl
+	adonthell_base
+	adonthell_gfx
+	adonthell_input
+	adonthell_main
+	)
+	
+###############################
 # Try to build the guitest
 ADD_EXECUTABLE(guitest
 			guitest.cc)
