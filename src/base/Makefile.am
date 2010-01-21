@@ -23,7 +23,8 @@ pkgincludebase_HEADERS = \
     savegame.h \
     serializer.h \
 	timer.h \
-	types.h
+	types.h \
+    utf8.h
 
 ## Main library
 lib_LTLIBRARIES = libadonthell_base.la
@@ -42,7 +43,8 @@ libadonthell_base_la_SOURCES = \
     nls.cc \
 	paths.cc \
     savegame.cc \
-	timer.cc
+	timer.cc \
+    utf8.cc
 
 libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
 libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz -lltdl

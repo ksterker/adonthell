@@ -1,6 +1,7 @@
-#include "font.h"
+#include "gui/font.h"
 #include "base/base.h"
 #include "base/endians.h"
+#include "base/utf8.h"
 #include <string>
 using std::string;
 #include <iostream>
@@ -69,11 +70,11 @@ namespace gui
 	{
 		surf->lock();
 		string::const_iterator i;
-		for (i = s.begin(); i != s.end(); i++)
+		for (i = s.begin(); i != s.end(); /* nothing */)
 		{
-			int glyph_index = FT_Get_Char_Index(face, *i);
-			if (error = FT_Load_Char(face, *i, FT_LOAD_RENDER))
-				cout << "Unable to load the glyph for character '" << *i << "'\n";
+            u_int32 chr = base::utf8::to_utf32 (s, i);
+			if (error = FT_Load_Char(face, chr, FT_LOAD_RENDER))
+				cout << "Unable to load the glyph for character '" << chr << "'\n";
 			else
 			{
 				draw_glyph(x+face->glyph->bitmap_left, 
@@ -133,11 +134,11 @@ namespace gui
 		w = 0;
 		h = fontsize << 6;
 		int maxdrop = 0;
-		for (i = s.begin(); i != s.end(); i++)
-		{
-			int glyph_index = FT_Get_Char_Index(face, *i);
-			if (error = FT_Load_Char(face, *i, FT_LOAD_DEFAULT))
-				cout << "Unable to load the glyph for character '" << *i << "'\n";
+        for (i = s.begin(); i != s.end(); /* nothing */)
+        {
+            u_int32 chr = base::utf8::to_utf32 (s, i);
+            if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
+                cout << "Unable to load the glyph for character '" << chr << "'\n";
 			else
 			{
 				if (isspace(*i))
@@ -177,11 +178,11 @@ namespace gui
 		w = 0;
 		h = fontsize << 6;
 		int maxdrop = 0;
-		for (i = s.begin(); i != s.end(); i++)
-		{
-			int glyph_index = FT_Get_Char_Index(face, *i);
-			if (error = FT_Load_Char(face, *i, FT_LOAD_DEFAULT))
-				cout << "Unable to load the glyph for character '" << *i << "'\n";
+        for (i = s.begin(); i != s.end(); /* nothing */)
+        {
+            u_int32 chr = base::utf8::to_utf32 (s, i);
+            if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
+                cout << "Unable to load the glyph for character '" << chr << "'\n";
 			else
 			{
 				w += face->glyph->advance.x;

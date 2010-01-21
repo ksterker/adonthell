@@ -264,6 +264,18 @@ namespace gui
 		}
 		return false;
 	}
+	bool layout::input(input::keyboard_event&k)
+    {
+		if (!visible)
+			return false;
+		if (children.size())
+		{
+			//see if the whiched child wants it. 
+			if (children[which].c->input(k))
+				return true;
+		}
+		return false;
+    }
 #if 0
 	bool layout::mousedown(SDL_MouseButtonEvent &m)
 	{

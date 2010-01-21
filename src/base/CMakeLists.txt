@@ -13,6 +13,7 @@ set(adonthell_base_SRCS
     paths.cc
     savegame.cc
     timer.cc
+    utf8.cc
 )
 
 
@@ -36,6 +37,7 @@ set(adonthell_base_HEADERS
     savegame.h
     serializer.h
 	timer.h
+    utf8.h
 )
 
 

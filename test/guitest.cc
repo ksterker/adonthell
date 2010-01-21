@@ -28,6 +28,8 @@ public:
 		if (widgetbase) widgetbase->keydown(*ev);
 	} else if (ev->type() == input::keyboard_event::KEY_RELEASED) {
 		if (widgetbase) widgetbase->keyup(*ev);
+	} else if (ev->type() == input::keyboard_event::TEXT_INPUT) {
+		if (widgetbase) widgetbase->input(*ev);
 	}
     return false;
   }

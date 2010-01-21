@@ -48,6 +48,7 @@ namespace gui
 		virtual void draw(int x, int y, gfx::surface* s);
 		virtual bool keyup(input::keyboard_event & k);
 		virtual bool keydown(input::keyboard_event & k);
+		virtual bool input(input::keyboard_event & k);
 //pending mouse support
 //		virtual bool mouseup(SDL_MouseButtonEvent & m);
 //		virtual bool mousedown(SDL_MouseButtonEvent & m);

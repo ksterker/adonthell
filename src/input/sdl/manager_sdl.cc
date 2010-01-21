@@ -519,14 +519,15 @@ void input_manager_update()
                 input::keyboard_event ke (input::keyboard_event::KEY_PUSHED, input::sdl_key_trans[event.key.keysym.sym], "");
                 input::manager::raise_event (ke);
                 
-                // FIXME: convert to UTF-8
                 if (event.key.keysym.unicode != 0)
                 {
-                    char text[2] = { (char) event.key.keysym.unicode, 0 };
-                    input::keyboard_event ti (input::keyboard_event::TEXT_INPUT, input::keyboard_event::UNKNOWN_KEY, text);
-                    input::manager::raise_event (ti);
+                    std::string s = base::utf8::from_utf16 (event.key.keysym.unicode);
+                    if (s.length() > 0) // for surrogate pairs, might return "" for the first character
+                    {
+                        input::keyboard_event ti (input::keyboard_event::TEXT_INPUT, input::keyboard_event::UNKNOWN_KEY, s);
+                        input::manager::raise_event (ti);
+                    }
                 }
-                
                 break;
             }
             case SDL_KEYUP:
