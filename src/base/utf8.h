@@ -42,6 +42,10 @@ class utf8
 {
 public:
     /**
+     * @name Conversion
+     */
+    //@{
+    /**
      * Convert an UTF-16 character to UTF-8.
      * @param chr a character in UTF-16.
      * @return UTF-8 representation.
@@ -56,7 +60,28 @@ public:
      * @return UTF-32 representation.
      */
     static u_int32 to_utf32 (const std::string & source, std::string::const_iterator & iter);
-
+    //@}
+    
+    /**
+     * @name Iteration
+     */
+    //@{
+    /**
+     * Return the number of bytes the character before pos occupies.
+     * @param source the string in UTF-8 encoding.
+     * @param pos valid character index into the source string.
+     * @return size of character to the left, 0 at start of string.
+     */
+    static u_int32 left (const std::string & source, const u_int32 & pos);
+    
+    /**
+     * Return the number of bytes the character at pos occupies.
+     * @param source the string in UTF-8 encoding.
+     * @param pos valid character index into the source string.
+     * @return size of character to the right, 0 at end of string.
+     */
+    static u_int32 right (const std::string & source, const u_int32 & pos);    
+    //@}
 private:
     /// buffer for converting UTF-16 surrogate pair to UTF-8
     static u_int32 CodeHigh;

@@ -24,6 +24,7 @@
  * @brief Internal helper class for UTF-8 encoded strings.
  */
 
+#include <algorithm>
 #include "base/utf8.h"
 
 using base::utf8;
@@ -148,4 +149,71 @@ u_int32 utf8::to_utf32 (const std::string & source, std::string::const_iterator 
     while (count > 0 && iter != source.end());
     
     return code;
+}
+
+// backward iteration
+u_int32 utf8::left (const std::string & source, const u_int32 & pos)
+{
+    u_int32 count = 1;
+    
+    if (pos > 0 && (source[pos-1] & 0x80) == 0x00)
+    {
+        count = 1;
+    }
+    else if (pos > 1 && (source[pos-2] & 0xe0) == 0xc0)
+    {
+        count = 2;
+    }
+    else if (pos > 2 && (source[pos-3] & 0xf0) == 0xe0)
+    {
+        count = 3;
+    }
+    else if (pos > 3 && (source[pos-4] & 0xf8) == 0xf0)
+    {
+        count = 4;
+    }
+    else if (pos > 4 && (source[pos-5] & 0xfc) == 0xf8)
+    {
+        count = 5;
+    }
+    else if (pos > 5 && (source[pos-6] & 0xfe) == 0xfc)
+    {
+        count = 6;
+    }
+    
+    return std::min (count, pos);    
+}
+
+// forward iteration
+u_int32 utf8::right (const std::string & source, const u_int32 & pos)
+{
+    unsigned long count = 0;
+    u_int32 c = source[pos];
+    
+    if ((c & 0x80) == 0x00)
+    {
+        count = 1;
+    }
+    else if ((c & 0xe0) == 0xc0)
+    {
+        count = 2;
+    }
+    else if ((c & 0xf0) == 0xe0)
+    {
+        count = 3;
+    }
+    else if ((c & 0xf8) == 0xf0)
+    {
+        count = 4;
+    }
+    else if ((c & 0xfc) == 0xf8)
+    {
+        count = 5;
+    }
+    else if ((c & 0xfe) == 0xfc)
+    {
+        count = 6;
+    }
+    
+    return (u_int32) std::min (count, source.length() - pos);
 }

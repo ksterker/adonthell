@@ -2,9 +2,11 @@
  * implements a textbox
  */
 
-#include "textbox.h"
 #include <iostream>
-#include "draw.h"
+
+#include "base/utf8.h"
+#include "gui/textbox.h"
+#include "gui/draw.h"
 using std::cout;
 
 /* the rate of blinking in ms */
@@ -48,7 +50,7 @@ namespace gui
 				return false;
 			}
 			else
-				insertpos--;
+				insertpos -= ::base::utf8::left(txt, insertpos);
 			cachevalid = false;
 			return true;
 			break;
@@ -59,15 +61,16 @@ namespace gui
 				return false;
 			}
 			else
-				insertpos++;
+				insertpos += ::base::utf8::right(txt, insertpos);
 			cachevalid = false;
 			return true;
 			break;
 		case input::keyboard_event::BACKSPACE_KEY:
 			if (insertpos > 0)
 			{
-				insertpos--;
-				txt.erase(insertpos, 1);
+                u_int32 len = ::base::utf8::left(txt, insertpos);
+				insertpos -= len;
+				txt.erase(insertpos, len);
 				cachevalid = false;
 				return true;
 			}
@@ -75,7 +78,7 @@ namespace gui
 		case input::keyboard_event::DELETE_KEY:
 			if (insertpos < txt.size())
 			{
-				txt.erase(insertpos, 1);
+				txt.erase(insertpos, ::base::utf8::right(txt, insertpos));
 				cachevalid = false;
 				return true;
 			}
@@ -98,26 +101,11 @@ namespace gui
     
     bool textbox::input(input::keyboard_event&k)
     {
-        // FIXME: unikey is actually encoded as UTF-8
-        if (isprint(k.unikey()[0]))
-        {
-            /*
-             cout << (char)k.keysym.unicode << "\n";
-             if (k.keysym.mod & KMOD_SHIFT)
-             txt.insert(insertpos, 1, (char)(isalpha(k.keysym.sym)? k.keysym.sym - 32:k.keysym.sym));
-             else
-             txt.insert(insertpos, 1, (char)k.keysym.sym);
-             // */
-             txt.insert(insertpos, 1, (char)k.unikey()[0]);
-             
-             cachevalid = false;
-             insertpos++;
-             return true;
-        }
-        else
-        {
-            cout << k.unikey() << "\n";      
-        }
+         txt.insert(insertpos, k.unikey());
+         
+         cachevalid = false;
+         insertpos += k.unikey().length();
+         return true;
     }
              
 	bool textbox::keyup(input::keyboard_event&k)
