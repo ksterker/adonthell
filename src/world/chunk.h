@@ -124,7 +124,18 @@ namespace world
          * @return list of objects contained in view.
          */
         std::list<chunk_info*> objects_in_view (const s_int32 & x, const s_int32 & y, const s_int32 & z, const s_int32 & length, const s_int32 & width) const;
-
+        
+        /**
+         * Collects a list of objects that are contained in the given mapview.
+         *
+         * @param min_x  x-coordinate of the views origin
+         * @param max_x  x-coordinate of the views origin plus length of the view
+         * @param min_yz difference of y and z-coordinates of the views origin
+         * @param max_yz min_yz plus width of the view
+         * @param result vector to populate with contained objects.
+         */
+        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info*> & result) const;
+        
         /**
          * Collects a list of objects that are contained by the given bounding box.
          *
@@ -242,17 +253,6 @@ namespace world
          * @return number of children that overlap.
          */
         const u_int8 find_chunks (s_int8 chunks[8], const vector3<s_int32> & min, const vector3<s_int32> & max) const;
-
-        /**
-         * Collects a list of objects that are contained in the given mapview.
-         *
-         * @param min_x  x-coordinate of the views origin
-         * @param max_x  x-coordinate of the views origin plus length of the view
-         * @param min_yz difference of y and z-coordinates of the views origin
-         * @param max_yz min_yz plus width of the view
-         * @param result vector to populate with contained objects.
-         */
-        void objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const s_int32 & min_yz, const s_int32 & max_yz, std::list<chunk_info*> & result) const;
 
         /**
          * Checks whether a given mapview overlaps with an axis aligned bounding box.

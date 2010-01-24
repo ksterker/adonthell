@@ -27,6 +27,8 @@
  * 
  */
 
+#include <limits.h>
+
 #include "gfx/screen.h"
 #include "python/pool.h"
 #include "world/mapview.h"
@@ -41,28 +43,38 @@ using world::mapview;
 world::default_renderer mapview::DefaultRenderer;
 
 // standard ctor
-mapview::mapview () : Z(0), FinalZ(0), Speed(0)
+mapview::mapview () : FinalZ(0), Speed(0)
 {
     set_length (gfx::screen::length());
     set_height (gfx::screen::height());
     
     set_renderer (NULL);
     
+    RenderZone = NULL;
     Schedule = NULL;
     Args = NULL;
 }
 
 // ctor
 mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer) 
- : Z(0), FinalZ(0), Speed(0)
+ : FinalZ(0), Speed(0)
 {
     set_length (length);
     set_height (height);
     
     set_renderer (renderer);
     
+    RenderZone = NULL;
     Schedule = NULL;
     Args = NULL;
+}
+
+// dtor
+mapview::~mapview ()
+{
+    delete RenderZone;
+    delete Schedule;
+    Py_XDECREF (Args);
 }
 
 // set script called to position view on map
@@ -191,10 +203,93 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     }
  
     // get objects we need to draw
-    const std::list<world::chunk_info*> & objectlist = map->objects_in_view (Sx, Sy, Z, length(), height());
+    std::list<world::chunk_info*> objectlist;
+    map->objects_in_view (Sx, Sx + length(), Sy - Pos.z(), Sy - Pos.z() + height(), objectlist);
+    
+    // are there any zones limiting what we have to render?
+    std::vector<world::zone*> zones;
+    if (RenderZone == NULL)
+    {
+        zones = map->find_zones (Pos, world::zone::TYPE_RENDER);
+    }
+    else
+    {
+        zones.push_back (RenderZone);
+    }
+    
+    // filter list of objects to render by zones
+    switch (zones.size())
+    {
+        case 0: break; // nothing to do
+        case 1:
+        {
+            // check against a single zone
+            world::zone *zn = zones.front();
+            for (std::list<world::chunk_info*>::iterator i = objectlist.begin(); i != objectlist.end(); /* nothing */)
+            {
+                // above zone? --> candidate for removal
+                if ((*i)->Max.z() > zn->max().z())
+                {
+                    // object inside zone boundaries? --> discard
+                    if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x()) &&
+                        !((*i)->Max.y() < zn->min().y() || (*i)->Min.y() > zn->max().y()))
+                    {
+                        i = objectlist.erase (i);
+                        continue;
+                    }
+                }
+                i++;
+            }
+            break;
+        }
+        default:
+        {
+            // check against multiple zones
+            for (std::list<world::chunk_info*>::iterator i = objectlist.begin(); i != objectlist.end(); /* nothing */)
+            {
+                bool discard = true;
+                for (std::vector<world::zone*>::iterator zn = zones.begin(); zn != zones.end(); zn++)
+                {
+                    // above zone? --> candidate for removal
+                    if ((*i)->Max.z() > (*zn)->max().z())
+                    {
+                        // object inside zone boundaries? --> discard
+                        if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x()) &&
+                            !((*i)->Max.y() < (*zn)->min().y() || (*i)->Min.y() > (*zn)->max().y()))
+                        {
+                            continue;
+                        }
+                    }
+                    
+                    discard = false;
+                    break;
+                }
+                
+                discard ? i = objectlist.erase (i) : i++;
+            }
+            
+            break;
+        }
+    }
     
     // draw everything on screen
-    Renderer->render (da.x() - Sx, da.y() - Sy + Z, objectlist, da, target);
+    Renderer->render (da.x() - Sx, da.y() - Sy + Pos.z(), objectlist, da, target);
+}
+
+// update render limit
+void mapview::limit_z (const s_int32 & limit)
+{
+    if (RenderZone == NULL)
+    {
+        u_int32 type = world::zone::TYPE_RENDER;
+        world::vector3<s_int32> min (INT_MIN, INT_MIN, INT_MIN);
+        world::vector3<s_int32> max (INT_MAX, INT_MAX, limit);
+        RenderZone = new world::zone (type, min, max);
+    }
+    else
+    {
+        RenderZone->max().set_z(limit);
+    }
 }
 
 // save mapview state
@@ -212,8 +307,8 @@ bool mapview::put_state (base::flat & file) const
     record.put_uint16 ("vsx", Sx);
     record.put_uint16 ("vsy", Sy);
     
-    // save height related variables
-    record.put_sint32 ("vz", Z);
+    // save position related variables
+    Pos.put_state (record, "pos");
     record.put_sint32 ("vfz", FinalZ);
     record.put_sint16 ("vsp", Speed);
     
@@ -249,8 +344,8 @@ bool mapview::get_state (base::flat & file)
     Sx = record.get_uint16("vsx"); 
     Sy = record.get_uint16("vsy"); 
 
-    // get height related variables
-    Z = record.get_sint32("vz");
+    // get position related variables
+    Pos.set_str (record.get_string ("pos"));
     FinalZ = record.get_sint32("vfz");
     Speed = record.get_sint16("vsp");
     

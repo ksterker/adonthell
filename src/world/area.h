@@ -115,7 +115,7 @@ namespace world
         //@}
 
         /**
-         * @name Zone Creation
+         * @name Zone Markers,
          */
         //@{
         /**
@@ -123,7 +123,7 @@ namespace world
          * @param zone a pointer to the zone
          * @return \b true on success, \b false otherwise
          */
-         bool add_zone(world::zone * zone);
+        bool add_zone(world::zone * zone);
 
         /**
          * Returns a zone given its name
@@ -131,7 +131,15 @@ namespace world
          * @return a pointer to the zone, or NULL on error
          * @note name is case-sensitive
          */
-         zone * get_zone(std::string & name);
+        world::zone *get_zone(std::string & name);
+        
+        /**
+         * Return all zones that contain the given point of given type.
+         * @param point a location on the map.
+         * @param type a zone type.
+         * @return all matching zones.
+         */
+        std::vector<world::zone*> find_zones (const world::vector3<s_int32> & point, const u_int32 & type);
         //@}
 
         /**

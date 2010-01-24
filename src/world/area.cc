@@ -183,11 +183,33 @@ world::zone * area::get_zone (std::string & name)
 
     for (i = Zones.begin(); i != Zones.end(); i++)
     {
-        if ((*i)->name() == name)
-            return (*i);
+        if ((*i)->type() & world::zone::TYPE_META == world::zone::TYPE_META)
+            if ((*i)->name() == name)
+                return (*i);
     }
 
     return NULL;
+}
+
+// find zones of matching type at given position
+std::vector<world::zone*> area::find_zones (const world::vector3<s_int32> & point, const u_int32 & type)
+{
+    std::vector<world::zone*> result;
+    std::list<world::zone *>::const_iterator i;
+    
+    for (i = Zones.begin(); i != Zones.end(); i++)
+    {
+        if ((*i)->type() & type == type)
+        {
+            if ((*i)->min().x() > point.x() || (*i)->max().x() < point.x()) continue; 
+            if ((*i)->min().y() > point.y() || (*i)->max().y() < point.y()) continue; 
+            if ((*i)->min().z() > point.z() || (*i)->max().z() < point.z()) continue;
+            
+            result.push_back (*i);
+        }
+    }
+    
+    return result;
 }
 
 // save to stream

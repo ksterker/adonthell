@@ -35,6 +35,7 @@
 
 #include "python/method.h"
 #include "world/renderer.h"
+#include "world/zone.h"
 
 namespace world
 {
@@ -60,6 +61,11 @@ namespace world
          * @param renderer object that will perform the actual drawing to the screen.
          */
         mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer = NULL);
+        
+        /**
+         * Close mapview.
+         */
+        ~mapview ();
         
         /**
          * @name Member access.
@@ -91,10 +97,10 @@ namespace world
          */
         bool update ()
         {
-            if (Z != FinalZ)
+            if (Pos.z() != FinalZ)
             {
-                if (std::abs (FinalZ - Z) < std::abs (Speed)) Z = FinalZ;
-                else Z += Speed;
+                if (std::abs (FinalZ - Pos.z()) < std::abs (Speed)) Pos.set_z (FinalZ);
+                else Pos.set_z (Pos.z() + Speed);
             }
             
             if (Schedule)
@@ -126,6 +132,9 @@ namespace world
          */
         void set_position (const s_int32 & x, const s_int32 & y)
         {
+            Pos.set_x(x);
+            Pos.set_y(y);
+            
             Sx = x;
             Sy = y;
             Ox = 0;
@@ -149,7 +158,7 @@ namespace world
          */
         void set_z (const s_int32 & height)
         {
-            Z = height;
+            Pos.set_z (height);
             FinalZ = height;
         }
         
@@ -171,7 +180,7 @@ namespace world
         void scroll_to_z (const s_int32 & height, const u_int16 & speed)
         {
             FinalZ = height;
-            Speed = speed * (Z > FinalZ ? -1 : 1);
+            Speed = speed * (Pos.z() > FinalZ ? -1 : 1);
         }
         //@}
         
@@ -196,6 +205,12 @@ namespace world
          *               draw on the screen.
          */
         void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da_opt = NULL, gfx::surface * target = NULL) const;        
+        
+        /**
+         * Limit rendering to objects not extending the given z value.
+         * @param limit objects above this plane will not be rendered.
+         */
+        void limit_z (const s_int32 & limit);
         //@}
         
         /**
@@ -236,11 +251,11 @@ namespace world
         //@}
         
         /**
-         * @name Height related members
+         * @name Position related members
          */
         //@{
-        /// current height of the mapview
-        s_int32 Z;
+        /// actual position of map view
+        vector3<s_int32> Pos;
         /// the height to scroll mapview to
         s_int32 FinalZ; 
         /// nbr of pixels to scroll per update
@@ -256,6 +271,9 @@ namespace world
         
         /// fallback if no renderer is specified.
         static default_renderer DefaultRenderer;
+        
+        /// zone limiting rendering to a certain height.
+        zone *RenderZone;
         //@}
         
         /**
