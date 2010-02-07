@@ -255,7 +255,7 @@ if test "x$pylibs" = xnone; then
    if test "x$fw" != x && test "x$osx" = "xyes"; then
        PY_LIBS="-framework Python"
        PY_FWDIR=`$PYTHON -c 'import distutils.sysconfig; print distutils.sysconfig.get_python_lib()'`
-       PY_SPDIR="$libdir/python$PYLIBVER/site-packages"
+       PY_SPDIR="$pyexecdir"
        AC_SUBST(PY_FWDIR)
        AC_SUBST(PY_SPDIR)
        AC_MSG_RESULT(found)
@@ -311,7 +311,7 @@ else
    AC_SUBST(PY_LIBS)
 fi
 
-AM_CONDITIONAL(PY_FRAMEWORK, test x$fw != x$PYPREFIX)
+AM_CONDITIONAL(PY_FRAMEWORK, test x$PY_SPDIR != x$PY_FWDIR)
 
 dnl **************
 dnl Check for SWIG

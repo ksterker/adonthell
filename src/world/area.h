@@ -115,7 +115,7 @@ namespace world
         //@}
 
         /**
-         * @name Zone Markers,
+         * @name Zone Markers
          */
         //@{
         /**
@@ -125,6 +125,12 @@ namespace world
          */
         bool add_zone(world::zone * zone);
 
+        /**
+         * Remove a zone from this map
+         * @param zone a pointer to the zone
+         */
+        void remove_zone(world::zone *zone);
+        
         /**
          * Returns a zone given its name
          * @param name the name of the zone

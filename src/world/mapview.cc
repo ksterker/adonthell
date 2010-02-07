@@ -281,10 +281,9 @@ void mapview::limit_z (const s_int32 & limit)
 {
     if (RenderZone == NULL)
     {
-        u_int32 type = world::zone::TYPE_RENDER;
         world::vector3<s_int32> min (INT_MIN, INT_MIN, INT_MIN);
         world::vector3<s_int32> max (INT_MAX, INT_MAX, limit);
-        RenderZone = new world::zone (type, min, max);
+        RenderZone = new world::zone (world::zone::TYPE_RENDER, min, max);
     }
     else
     {

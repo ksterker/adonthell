@@ -54,7 +54,7 @@ namespace world
          * @param min the lower coordinates of the zone.
          * @param max the upper coordinates of the zone.
          */
-        zone(u_int32 & type, world::vector3<s_int32> min, world::vector3<s_int32> max)
+        zone(const u_int32 & type, world::vector3<s_int32> min, world::vector3<s_int32> max)
         {
             Type = type;
             Name = "";
@@ -105,6 +105,16 @@ namespace world
         }
         
         /**
+         * Update the type of a zone. Can be a combination 
+         * of valid zone types.
+         * @param type bitmask of zone types to set for this zone.         
+         */
+        void set_type (const u_int32 & type)
+        {
+            Type = type;
+        }
+        
+        /**
          * Return a vector3 with the minimum point of the zone
          * @return the minimum point
          */
@@ -139,7 +149,15 @@ namespace world
         {
             return Max.y() - Min.y();
         }
+
         
+#ifndef SWIG
+        /**
+         * Allow %zone to be passed as python argument
+         */
+        GET_TYPE_NAME (world::zone)
+#endif
+            
     private:
         /// The position and length of the zone
         world::vector3<s_int32> Min, Max;

@@ -164,7 +164,6 @@ const std::string * area::get_entity_name (const placeable * object) const
 bool area::add_zone (world::zone * zone)
 {
     std::list<world::zone *>::const_iterator i;
-
     for (i = Zones.begin(); i != Zones.end(); i++)
     {
         if ((*i)->name() == zone->name())
@@ -172,8 +171,13 @@ bool area::add_zone (world::zone * zone)
     }
 
     Zones.insert(Zones.begin(), zone);
-
     return true;
+}
+
+// remove a specific zone
+void area::remove_zone (world::zone * zone)
+{
+    Zones.remove (zone);
 }
 
 // retrieve zone with a certain name
