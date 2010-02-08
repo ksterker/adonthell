@@ -215,5 +215,5 @@ u_int32 utf8::right (const std::string & source, const u_int32 & pos)
         count = 6;
     }
     
-    return (u_int32) std::min (count, source.length() - pos);
+    return (u_int32) std::min (count, (unsigned long) source.length() - pos);
 }
