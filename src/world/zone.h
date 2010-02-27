@@ -48,34 +48,31 @@ namespace world
             TYPE_RENDER = 2
         };
 
-        /**
-         * Ctor for a zone.
-         * @param type any combination of zone types.
-         * @param min the lower coordinates of the zone.
-         * @param max the upper coordinates of the zone.
-         */
-        zone(const u_int32 & type, world::vector3<s_int32> min, world::vector3<s_int32> max)
-        {
-            Type = type;
-            Name = "";
-            Min = min; 
-            Max = max;
-        }
-        
         /** 
-         * Ctor for a meta zone used to name a certain location.
+         * Create an empty zone.
+         * @param name the (unique) name for a location.
+         */
+        zone(const std::string & name)
+        {
+            Type = 0;
+            Name = name; 
+        }
+
+        /**
+         * Full constructor for a zone.
+         * @param type any combination of zone types.
          * @param name the (unique) name for a location.
          * @param min the lower coordinates of the zone.
          * @param max the upper coordinates of the zone.
          */
-        zone(std::string & name, world::vector3<s_int32> min, world::vector3<s_int32> max)
+        zone(const u_int32 & type, const std::string & name, world::vector3<s_int32> min, world::vector3<s_int32> max)
         {
-            Type = TYPE_META;
-            Name = name; 
+            Type = type;
+            Name = name;
             Min = min; 
             Max = max;
         }
-
+        
         /**
          * Set the name of zone.
          * @param name the name of the zone.
@@ -150,6 +147,41 @@ namespace world
             return Max.y() - Min.y();
         }
 
+        /**
+         * Loading / Saving
+         */
+        //@{
+        /**
+         * Save %zone state to stream.
+         * @param file stream to save %zone to.
+         * @return \b true if saving successful, \b false otherwise.
+         */
+        bool put_state (base::flat & file) const
+        {
+            base::flat zone;
+            
+            zone.put_uint32 ("type", Type);
+            Min.put_state (zone, "min");
+            Max.put_state (zone, "max");
+
+            file.put_flat (Name, zone);
+            return true;
+        }
+        
+        /**
+         * Load %zone state from stream.
+         * @param file stream to load %zone from.
+         * @return \b true if loading successful, \b false otherwise.
+         */
+        bool get_state (base::flat & file)
+        {
+            Type = file.get_uint32 ("type");
+            Min.set_str (file.get_string("min"));
+            Max.set_str (file.get_string("max"));
+            
+            return file.success();
+        }
+        //@}        
         
 #ifndef SWIG
         /**

@@ -149,6 +149,10 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
     area *map = world::area_manager::get_map();
     if (!map) return;
     
+    // update position
+    Pos.set_x (x);
+    Pos.set_y (y);
+    
     // get size of map in pixels
     const u_int32 ml = ((chunk *)map)->length();
     const u_int32 mh = ((chunk *)map)->height();
@@ -231,8 +235,8 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
                 if ((*i)->Max.z() > zn->max().z())
                 {
                     // object inside zone boundaries? --> discard
-                    if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x()) &&
-                        !((*i)->Max.y() < zn->min().y() || (*i)->Min.y() > zn->max().y()))
+                    if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x() ||
+                          (*i)->Max.y() < zn->min().y() || (*i)->Min.y() > zn->max().y()))
                     {
                         i = objectlist.erase (i);
                         continue;
@@ -254,8 +258,8 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
                     if ((*i)->Max.z() > (*zn)->max().z())
                     {
                         // object inside zone boundaries? --> discard
-                        if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x()) &&
-                            !((*i)->Max.y() < (*zn)->min().y() || (*i)->Min.y() > (*zn)->max().y()))
+                        if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x() ||
+                              (*i)->Max.y() < (*zn)->min().y() || (*i)->Min.y() > (*zn)->max().y()))
                         {
                             continue;
                         }
@@ -283,7 +287,7 @@ void mapview::limit_z (const s_int32 & limit)
     {
         world::vector3<s_int32> min (INT_MIN, INT_MIN, INT_MIN);
         world::vector3<s_int32> max (INT_MAX, INT_MAX, limit);
-        RenderZone = new world::zone (world::zone::TYPE_RENDER, min, max);
+        RenderZone = new world::zone (world::zone::TYPE_RENDER, "", min, max);
     }
     else
     {

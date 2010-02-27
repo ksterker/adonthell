@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Data cs="5569e1fb">
+<Data cs="42e9eeb0">
   <list id="objects">
     <list id="0">
       <s_int8 id="type">1</s_int8>
@@ -19,23 +19,23 @@
     </list>
     <list id="4">
       <s_int8 id="type">1</s_int8>
-      <string id="model">models/map/ground/outside/wood-1.xml</string>
+      <string id="model">models/map/wall/outside/cliff-s.xml</string>
     </list>
     <list id="5">
       <s_int8 id="type">1</s_int8>
-      <string id="model">models/map/ground/outside/wood-pole-l.xml</string>
+      <string id="model">models/map/wall/outside/cliff-se.xml</string>
     </list>
     <list id="6">
       <s_int8 id="type">1</s_int8>
-      <string id="model">models/map/wall/outside/cliff-se.xml</string>
+      <string id="model">models/map/ground/outside/wood-1.xml</string>
     </list>
     <list id="7">
       <s_int8 id="type">1</s_int8>
-      <string id="model">models/map/wall/outside/cliff-s.xml</string>
+      <string id="model">models/map/wall/outside/cliff-se-top.xml</string>
     </list>
     <list id="8">
       <s_int8 id="type">1</s_int8>
-      <string id="model">models/map/wall/outside/cliff-se-top.xml</string>
+      <string id="model">models/map/ground/outside/wood-pole-l.xml</string>
     </list>
     <list id="9">
       <s_int8 id="type">1</s_int8>
@@ -134,6 +134,25 @@
     </list>
     <list id="4">
       <list id="anonym">
+        <string id="p3d">[160, 120, 0]</string>
+        <string id="p3d">[240, 120, 0]</string>
+        <string id="p3d">[320, 120, 0]</string>
+        <string id="p3d">[400, 120, 0]</string>
+        <string id="p3d">[480, 120, 0]</string>
+        <string id="p3d">[560, 120, 0]</string>
+        <string id="p3d">[640, 120, 0]</string>
+      </list>
+    </list>
+    <list id="5">
+      <list id="anonym">
+        <string id="p3d">[40, 200, 0]</string>
+        <string id="p3d">[80, 160, 0]</string>
+        <string id="p3d">[120, 120, 0]</string>
+        <string id="p3d">[0, 240, 0]</string>
+      </list>
+    </list>
+    <list id="6">
+      <list id="anonym">
         <string id="p3d">[120, 200, 0]</string>
         <string id="p3d">[440, 160, 40]</string>
         <string id="p3d">[280, 160, 80]</string>
@@ -160,7 +179,15 @@
         <string id="p3d">[220, 360, 35]</string>
       </list>
     </list>
-    <list id="5">
+    <list id="7">
+      <list id="anonym">
+        <string id="p3d">[80, 160, 80]</string>
+        <string id="p3d">[120, 120, 80]</string>
+        <string id="p3d">[0, 240, 80]</string>
+        <string id="p3d">[40, 200, 80]</string>
+      </list>
+    </list>
+    <list id="8">
       <list id="anonym">
         <string id="p3d">[400, 170, 0]</string>
         <string id="p3d">[280, 170, 0]</string>
@@ -169,33 +196,6 @@
         <string id="p3d">[400, 230, 0]</string>
         <string id="p3d">[280, 270, 0]</string>
         <string id="p3d">[350, 270, 0]</string>
-      </list>
-    </list>
-    <list id="6">
-      <list id="anonym">
-        <string id="p3d">[40, 200, 0]</string>
-        <string id="p3d">[80, 160, 0]</string>
-        <string id="p3d">[120, 120, 0]</string>
-        <string id="p3d">[0, 240, 0]</string>
-      </list>
-    </list>
-    <list id="7">
-      <list id="anonym">
-        <string id="p3d">[160, 120, 0]</string>
-        <string id="p3d">[240, 120, 0]</string>
-        <string id="p3d">[320, 120, 0]</string>
-        <string id="p3d">[400, 120, 0]</string>
-        <string id="p3d">[480, 120, 0]</string>
-        <string id="p3d">[560, 120, 0]</string>
-        <string id="p3d">[640, 120, 0]</string>
-      </list>
-    </list>
-    <list id="8">
-      <list id="anonym">
-        <string id="p3d">[80, 160, 80]</string>
-        <string id="p3d">[120, 120, 80]</string>
-        <string id="p3d">[0, 240, 80]</string>
-        <string id="p3d">[40, 200, 80]</string>
       </list>
     </list>
     <list id="9">
@@ -325,5 +325,11 @@
       </list>
     </list>
   </list>
-  <list id="zones"/>
+  <list id="zones">
+    <list id="test">
+      <u_int32 id="type">2</u_int32>
+      <string id="min">[280, 160, 0]</string>
+      <string id="max">[360, 280, 80]</string>
+    </list>
+  </list>
 </Data>

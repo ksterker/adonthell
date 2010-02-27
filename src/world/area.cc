@@ -187,7 +187,7 @@ world::zone * area::get_zone (std::string & name)
 
     for (i = Zones.begin(); i != Zones.end(); i++)
     {
-        if ((*i)->type() & world::zone::TYPE_META == world::zone::TYPE_META)
+        if (((*i)->type() & world::zone::TYPE_META) == world::zone::TYPE_META)
             if ((*i)->name() == name)
                 return (*i);
     }
@@ -203,7 +203,7 @@ std::vector<world::zone*> area::find_zones (const world::vector3<s_int32> & poin
     
     for (i = Zones.begin(); i != Zones.end(); i++)
     {
-        if ((*i)->type() & type == type)
+        if (((*i)->type() & type) == type)
         {
             if ((*i)->min().x() > point.x() || (*i)->max().x() < point.x()) continue; 
             if ((*i)->min().y() > point.y() || (*i)->max().y() < point.y()) continue; 
@@ -299,21 +299,15 @@ bool area::put_state (base::flat & file) const
     
     // save the zones
     std::list <world::zone *>::const_iterator zone_i = Zones.begin();
-    base::flat masterZones;
-    base::flat zones;
+    base::flat zone_list;
 
     while (zone_i != Zones.end())
     {
-        (*zone_i)->min().put_state (zones, "min");
-        (*zone_i)->max().put_state (zones, "max");
-        
-        masterZones.put_flat ((*zone_i)->name(), zones);
-        zones.clear ();
-
+        (*zone_i)->put_state (zone_list);
         ++zone_i;
     }
 
-    file.put_flat ("zones", masterZones);
+    file.put_flat ("zones", zone_list);
 
     return true;
 }
@@ -461,12 +455,9 @@ bool area::get_state (base::flat & file)
     record = file.get_flat ("zones");
     while (record.next (&value, &size, &id) == base::flat::T_FLAT)
     {
-        world::vector3<s_int32> temp_min, temp_max;
-        base::flat zone_flat = base::flat ((const char*) value, size);
-        temp_min.set_str (zone_flat.get_string("min"));
-        temp_max.set_str (zone_flat.get_string("max"));
-        std::string zone_id(id);
-        world::zone * temp_zone = new world::zone(zone_id, temp_min, temp_max);
+        base::flat zone = base::flat ((const char*) value, size);
+        world::zone * temp_zone = new world::zone(id);
+        temp_zone->get_state (zone);
         add_zone (temp_zone);
     }
 
