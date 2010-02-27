@@ -43,7 +43,7 @@ using world::mapview;
 world::default_renderer mapview::DefaultRenderer;
 
 // standard ctor
-mapview::mapview () : FinalZ(0), Speed(0)
+mapview::mapview () : CurZ(0), Speed(0)
 {
     set_length (gfx::screen::length());
     set_height (gfx::screen::height());
@@ -57,7 +57,7 @@ mapview::mapview () : FinalZ(0), Speed(0)
 
 // ctor
 mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer_base * renderer) 
- : FinalZ(0), Speed(0)
+ : CurZ(0), Speed(0)
 {
     set_length (length);
     set_height (height);
@@ -182,10 +182,10 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
     else 
     {
         Oy = 0;
-        Sy = y - height()/2;
+        Sy = y - CurZ - height()/2;
         
         // don't go past edge of map
-        if (Sy < 0) Sy = 0;
+        if (Sy < -CurZ) Sy = -CurZ;
         else if (Sy + height() > (s_int32) mh) Sy = mh - height();        
     }
 }
@@ -208,7 +208,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
  
     // get objects we need to draw
     std::list<world::chunk_info*> objectlist;
-    map->objects_in_view (Sx, Sx + length(), Sy - Pos.z(), Sy - Pos.z() + height(), objectlist);
+    map->objects_in_view (Sx, Sx + length(), Sy, Sy + height(), objectlist);
     
     // are there any zones limiting what we have to render?
     std::vector<world::zone*> zones;
@@ -277,7 +277,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
     }
     
     // draw everything on screen
-    Renderer->render (da.x() - Sx, da.y() - Sy + Pos.z(), objectlist, da, target);
+    Renderer->render (da.x() - Sx, da.y() - Sy, objectlist, da, target);
 }
 
 // update render limit
@@ -312,7 +312,7 @@ bool mapview::put_state (base::flat & file) const
     
     // save position related variables
     Pos.put_state (record, "pos");
-    record.put_sint32 ("vfz", FinalZ);
+    record.put_sint32 ("vfz", CurZ);
     record.put_sint16 ("vsp", Speed);
     
     // save schedule name
@@ -349,7 +349,7 @@ bool mapview::get_state (base::flat & file)
 
     // get position related variables
     Pos.set_str (record.get_string ("pos"));
-    FinalZ = record.get_sint32("vfz");
+    CurZ = record.get_sint32("vfz");
     Speed = record.get_sint16("vsp");
     
     // get schedule

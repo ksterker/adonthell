@@ -97,10 +97,10 @@ namespace world
          */
         bool update ()
         {
-            if (Pos.z() != FinalZ)
+            if (CurZ != Pos.z())
             {
-                if (std::abs (FinalZ - Pos.z()) < std::abs (Speed)) Pos.set_z (FinalZ);
-                else Pos.set_z (Pos.z() + Speed);
+                if (std::abs (Pos.z() - CurZ) < std::abs (Speed)) CurZ = Pos.z();
+                else CurZ += Speed;
             }
             
             if (Schedule)
@@ -130,13 +130,12 @@ namespace world
          * @param x position on the map in pixels
          * @param y position on the map in pixels
          */
-        void set_position (const s_int32 & x, const s_int32 & y)
+        void set_position (const s_int32 & x, const s_int32 & y, const s_int32 & z)
         {
-            Pos.set_x(x);
-            Pos.set_y(y);
-            
+            Pos.set (x, y, z);
+            CurZ = z;
             Sx = x;
-            Sy = y;
+            Sy = y - z;
             Ox = 0;
             Oy = 0;
         }
@@ -153,23 +152,13 @@ namespace world
         }
         
         /**
-         * Set the height of the mapview. 
-         * @param height the new height of the mapview.
-         */
-        void set_z (const s_int32 & height)
-        {
-            Pos.set_z (height);
-            FinalZ = height;
-        }
-        
-        /**
          * Return the height the mapview is going to display. It might 
          * currently be in process of scrolling to that height.
          * @return height of the mapview.
          */
         s_int32 get_z () const
         {
-            return FinalZ;
+            return Pos.z();
         }
         
         /**
@@ -179,8 +168,8 @@ namespace world
          */
         void scroll_to_z (const s_int32 & height, const u_int16 & speed)
         {
-            FinalZ = height;
-            Speed = speed * (Pos.z() > FinalZ ? -1 : 1);
+            Pos.set_z (height);
+            Speed = speed * (CurZ > Pos.z() ? -1 : 1);
         }
         //@}
         
@@ -256,8 +245,8 @@ namespace world
         //@{
         /// actual position of map view
         vector3<s_int32> Pos;
-        /// the height to scroll mapview to
-        s_int32 FinalZ; 
+        /// the current height for smooth transitions on z axis
+        s_int32 CurZ; 
         /// nbr of pixels to scroll per update
         s_int16 Speed;
         //@}
