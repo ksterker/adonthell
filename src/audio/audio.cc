@@ -154,6 +154,7 @@ namespace audio
     void setup (base::configuration & cfg)
     {
         // TODO: read options from configuration and use during initialization
+        
     }
     
     // shutdown audio

@@ -15,6 +15,7 @@ set(ADONTHELL_MODULES
 	rpg
 	main
     world
+    test
 )
 
 #
