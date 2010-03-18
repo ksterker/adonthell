@@ -29,9 +29,9 @@
  */
 
 
-#include <gtest/gtest.h>
+#include "audio/audio_manager.h"
 
-#include "audio/audio_manager"
+#include <gtest/gtest.h>
 
 namespace audio
 {
@@ -65,3 +65,10 @@ namespace audio
     }
 
 } // namespace{}
+
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+
+    return RUN_ALL_TESTS();
+}
