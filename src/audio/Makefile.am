@@ -8,6 +8,7 @@ pkgincludeaudio_HEADERS = \
 	audio.h \
 	audio_event.h \
 	audio_event_manager.h \
+	audio_manager.h \
 	sound.h
 
 ## Main library
@@ -17,7 +18,8 @@ libadonthell_audio_la_SOURCES = \
 	audio.cc \
 	sound.cc \
 	audio_event.cc \
-	audio_event_manager.cc
+	audio_event_manager.cc \
+	audio_manager.cc
 
 libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
 libadonthell_audio_la_LIBADD = $(PY_LIBS) -lltdl -lstdc++ \
