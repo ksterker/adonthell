@@ -48,8 +48,8 @@ _sdl_la_DEPENDENCIES = libadonthell_audio.la
 ## Unit tests
 noinst_PROGRAMS = test_audio_manager
 
-test_audio_manager_SOURCES = test_audio_manager.cc audio_manager.o
-
-test_audio_manager_LDADD = $(libadonthell_audio_la_LIBADD) -lgtest
+test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio_manager.cc
+test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)
+test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD) -lgtest
 
 TESTS = test_audio_manager
