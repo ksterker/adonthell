@@ -45,3 +45,11 @@ _sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
 ## define dependencies in case of parallel build
 _sdl_la_DEPENDENCIES = libadonthell_audio.la
 
+## Unit tests
+noinst_PROGRAMS = test_audio_manager
+
+test_audio_manager_SOURCES = test_audio_manager.cc audio_manager.o
+
+test_audio_manager_LDADD = $(libadonthell_audio_la_LIBADD) -lgtest
+
+TESTS = test_audio_manager
