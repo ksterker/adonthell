@@ -4,13 +4,13 @@ set(adonthell_audio_SRCS
 	sound.cc
 	audio_event.cc
 	audio_event_manager.cc
-    audio_manager.cc
+	audio_manager.cc
 )
 
 set(adonthell_audio_HEADERS
 	audio_event.h
 	audio_event_manager.h
-    audio_manager.h
+	audio_manager.h
 	audio.h
 	sound.h
 )

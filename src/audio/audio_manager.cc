@@ -33,6 +33,13 @@
 
 namespace audio
 {
+    // Static data must be initialised
+    int     audio_manager::audio_rate_;
+    u_int16 audio_manager::audio_format_;
+    int     audio_manager::audio_channels_;
+    int     audio_manager::audio_buffers_;
+    int     audio_manager::audio_mixchannels_;
+
     bool audio_manager::set_audio_rate(const int audio_rate) {
         audio_rate_ = audio_rate;
 
