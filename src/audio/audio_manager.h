@@ -46,6 +46,15 @@ namespace audio
      */
     static const u_int16 AUDIO_S16 = 16;
 
+    /**
+     * @name Default values for audio manager
+     */
+    static const int     DEFAULT_AUDIO_BUFFERS     =      4096;
+    static const int     DEFAULT_AUDIO_CHANNELS    =         2;
+    static const u_int16 DEFAULT_AUDIO_FORMAT      = AUDIO_S16;
+    static const int     DEFAULT_AUDIO_MIXCHANNELS =        16;
+    static const int     DEFAULT_AUDIO_RATE        =     44100;
+
     /** Audio access is made through this class.
      *  This static class manages audio system configuration.
      */
@@ -81,28 +90,28 @@ namespace audio
         /** Sets the audio rate (in Hz)
          *  @param audio_rate  audio rate in samples per second (Hz)
          */ 
-        static bool set_audio_rate(const int audio_rate = 44100);
+        static bool set_audio_rate(const int audio_rate = DEFAULT_AUDIO_RATE);
 
         /** Sets the audio format
          *  @param audio_format  audio format; see
          *                       http://www.libsdl.org/cgi/docwiki.cgi/SDL_AudioSpec
          */ 
-        static bool set_audio_format(const u_int16 audio_format = AUDIO_S16);
+        static bool set_audio_format(const u_int16 audio_format = DEFAULT_AUDIO_FORMAT);
 
         /** Sets the number of audio channels
          *  @param audio_channels  number of audio channels
          */ 
-        static bool set_audio_channels(const int audio_channels = 2);
+        static bool set_audio_channels(const int audio_channels = DEFAULT_AUDIO_CHANNELS);
         
         /** Sets the audio buffer size
          *  @param audio_buffers  size of audio buffer, in bytes
          */ 
-        static bool set_audio_buffers(const int audio_buffers = 4096);
+        static bool set_audio_buffers(const int audio_buffers = DEFAULT_AUDIO_BUFFERS);
         
         /** Sets the number of audio mixer channels
          *  @param audio_mixchannels  number of audio mixer channels
          */ 
-        static bool set_audio_mixchannels(const int audio_mixchannels = 16);
+        static bool set_audio_mixchannels(const int audio_mixchannels = DEFAULT_AUDIO_MIXCHANNELS);
 
     protected:
         static int     audio_rate_;
