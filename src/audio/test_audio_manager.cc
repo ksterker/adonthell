@@ -58,18 +58,6 @@ namespace audio
         }
     }; // class{}
 
-    TEST_F(audio_manager_Test, set_audio_rate_Default) {
-        audio_manager::set_audio_rate();
-
-        EXPECT_EQ(DEFAULT_AUDIO_RATE, audio_manager::get_audio_rate());
-    }
-
-    TEST_F(audio_manager_Test, set_audio_format_Default) {
-        audio_manager::set_audio_format();
-
-        EXPECT_EQ(DEFAULT_AUDIO_FORMAT, audio_manager::get_audio_format());
-    }
-
     TEST_F(audio_manager_Test, set_audio_channels_Default) {
         audio_manager::set_audio_channels();
 
@@ -82,28 +70,22 @@ namespace audio
         EXPECT_EQ(DEFAULT_AUDIO_BUFFERS, audio_manager::get_audio_buffers());
     }
 
+    TEST_F(audio_manager_Test, set_audio_format_Default) {
+        audio_manager::set_audio_format();
+
+        EXPECT_EQ(DEFAULT_AUDIO_FORMAT, audio_manager::get_audio_format());
+    }
+
     TEST_F(audio_manager_Test, set_audio_mixchannels_Default) {
         audio_manager::set_audio_mixchannels();
 
         EXPECT_EQ(DEFAULT_AUDIO_MIXCHANNELS, audio_manager::get_audio_mixchannels());
     }
 
-    TEST_F(audio_manager_Test, set_audio_rate) {
-        audio_manager::set_audio_rate(27);
+    TEST_F(audio_manager_Test, set_audio_rate_Default) {
+        audio_manager::set_audio_rate();
 
-        EXPECT_EQ(27, audio_manager::get_audio_rate());
-    }
-
-    TEST_F(audio_manager_Test, set_audio_format) {
-        audio_manager::set_audio_format(27);
-
-        EXPECT_EQ(27, audio_manager::get_audio_format());
-    }
-
-    TEST_F(audio_manager_Test, set_audio_channels) {
-        audio_manager::set_audio_channels(27);
-
-        EXPECT_EQ(27, audio_manager::get_audio_channels());
+        EXPECT_EQ(DEFAULT_AUDIO_RATE, audio_manager::get_audio_rate());
     }
 
     TEST_F(audio_manager_Test, set_audio_buffers) {
@@ -112,10 +94,28 @@ namespace audio
         EXPECT_EQ(27, audio_manager::get_audio_buffers());
     }
 
+    TEST_F(audio_manager_Test, set_audio_channels) {
+        audio_manager::set_audio_channels(27);
+
+        EXPECT_EQ(27, audio_manager::get_audio_channels());
+    }
+
+    TEST_F(audio_manager_Test, set_audio_format) {
+        audio_manager::set_audio_format(27);
+
+        EXPECT_EQ(27, audio_manager::get_audio_format());
+    }
+
     TEST_F(audio_manager_Test, set_audio_mixchannels) {
         audio_manager::set_audio_mixchannels(27);
 
         EXPECT_EQ(27, audio_manager::get_audio_mixchannels());
+    }
+
+    TEST_F(audio_manager_Test, set_audio_rate) {
+        audio_manager::set_audio_rate(27);
+
+        EXPECT_EQ(27, audio_manager::get_audio_rate());
     }
 
 } // namespace{}

@@ -61,57 +61,57 @@ namespace audio
     class audio_manager
     {
     public:
-        /** Gets the audio rate (in Hz)
-         *  @return audio_rate  audio rate in samples per second (Hz)
+        /** Gets the audio buffer size
+         *  @return audio_buffers  size of audio buffer, in bytes
          */ 
-        static const int get_audio_rate() { return audio_rate_; }
-
+        static const int get_audio_buffers() { return audio_buffers_; }
+        
+        /** Gets the number of audio channels
+         *  @return audio_channels  number of audio channels
+         */ 
+        static const int get_audio_channels() { return audio_channels_; }
+        
         /** Gets the audio format
          *  @return audio_format  audio format; see
          *                        http://www.libsdl.org/cgi/docwiki.cgi/SDL_AudioSpec
          */ 
         static const u_int16 get_audio_format() { return audio_format_; }
 
-        /** Gets the number of audio channels
-         *  @return audio_channels  number of audio channels
-         */ 
-        static const int get_audio_channels() { return audio_channels_; }
-        
-        /** Gets the audio buffer size
-         *  @return audio_buffers  size of audio buffer, in bytes
-         */ 
-        static const int get_audio_buffers() { return audio_buffers_; }
-        
         /** Gets the number of audio mixer channels
          *  @return audio_mixchannels  number of audio mixer channels
          */ 
         static const int get_audio_mixchannels() { return audio_mixchannels_; }
 
-        /** Sets the audio rate (in Hz)
-         *  @param audio_rate  audio rate in samples per second (Hz)
+        /** Gets the audio rate (in Hz)
+         *  @return audio_rate  audio rate in samples per second (Hz)
          */ 
-        static bool set_audio_rate(const int audio_rate = DEFAULT_AUDIO_RATE);
+        static const int get_audio_rate() { return audio_rate_; }
 
+        /** Sets the audio buffer size
+         *  @param audio_buffers  size of audio buffer, in bytes
+         */ 
+        static bool set_audio_buffers(const int audio_buffers = DEFAULT_AUDIO_BUFFERS);
+        
+        /** Sets the number of audio channels
+         *  @param audio_channels  number of audio channels
+         */ 
+        static bool set_audio_channels(const int audio_channels = DEFAULT_AUDIO_CHANNELS);
+        
         /** Sets the audio format
          *  @param audio_format  audio format; see
          *                       http://www.libsdl.org/cgi/docwiki.cgi/SDL_AudioSpec
          */ 
         static bool set_audio_format(const u_int16 audio_format = DEFAULT_AUDIO_FORMAT);
 
-        /** Sets the number of audio channels
-         *  @param audio_channels  number of audio channels
-         */ 
-        static bool set_audio_channels(const int audio_channels = DEFAULT_AUDIO_CHANNELS);
-        
-        /** Sets the audio buffer size
-         *  @param audio_buffers  size of audio buffer, in bytes
-         */ 
-        static bool set_audio_buffers(const int audio_buffers = DEFAULT_AUDIO_BUFFERS);
-        
         /** Sets the number of audio mixer channels
          *  @param audio_mixchannels  number of audio mixer channels
          */ 
         static bool set_audio_mixchannels(const int audio_mixchannels = DEFAULT_AUDIO_MIXCHANNELS);
+
+        /** Sets the audio rate (in Hz)
+         *  @param audio_rate  audio rate in samples per second (Hz)
+         */ 
+        static bool set_audio_rate(const int audio_rate = DEFAULT_AUDIO_RATE);
 
     protected:
         static int     audio_rate_;

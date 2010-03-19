@@ -1,5 +1,5 @@
 /*
-   $Id: screen.cc,v 1.7 2009/04/25 13:17:50 ksterker Exp $
+   $Id: audio_manager.cc,v 1.7 2009/04/25 13:17:50 ksterker Exp $
 
    Copyright (C) 2010 Josh Glover <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -34,20 +34,15 @@
 namespace audio
 {
     // Static data must be initialised
-    int     audio_manager::audio_rate_;
-    u_int16 audio_manager::audio_format_;
-    int     audio_manager::audio_channels_;
     int     audio_manager::audio_buffers_;
+    int     audio_manager::audio_channels_;
+    u_int16 audio_manager::audio_format_;
     int     audio_manager::audio_mixchannels_;
+    int     audio_manager::audio_rate_;
 
-    bool audio_manager::set_audio_rate(const int audio_rate) {
-        audio_rate_ = audio_rate;
 
-        return true;
-    }
-
-    bool audio_manager::set_audio_format(const u_int16 audio_format) {
-        audio_format_ = audio_format;
+    bool audio_manager::set_audio_buffers(const int audio_buffers) {
+        audio_buffers_ = audio_buffers;
 
         return true;
     }
@@ -60,8 +55,8 @@ namespace audio
     }
 
 
-    bool audio_manager::set_audio_buffers(const int audio_buffers) {
-        audio_buffers_ = audio_buffers;
+    bool audio_manager::set_audio_format(const u_int16 audio_format) {
+        audio_format_ = audio_format;
 
         return true;
     }
@@ -69,6 +64,13 @@ namespace audio
 
     bool audio_manager::set_audio_mixchannels(const int audio_mixchannels) {
         audio_mixchannels_ = audio_mixchannels;
+
+        return true;
+    }
+
+
+    bool audio_manager::set_audio_rate(const int audio_rate) {
+        audio_rate_ = audio_rate;
 
         return true;
     }
