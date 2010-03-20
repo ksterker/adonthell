@@ -30,6 +30,7 @@
 
 #include "event/manager.h"
 #include "audio/audio.h"
+#include "audio/audio_manager.h"
 #include "audio/sound.h"
 #include "audio/audio_event.h"
 #include "base/paths.h"
@@ -153,8 +154,21 @@ namespace audio
     // setup from configuration
     void setup (base::configuration & cfg)
     {
-        // TODO: read options from configuration and use during initialization
-        
+        audio_manager::set_audio_buffers (
+            cfg.get_int ("Audio", "BufferSize", DEFAULT_AUDIO_BUFFERS)
+        );
+        audio_manager::set_audio_channels (
+            cfg.get_int ("Audio", "Channels", DEFAULT_AUDIO_CHANNELS)
+        );
+        audio_manager::set_audio_format (
+            cfg.get_int ("Audio", "Format", DEFAULT_AUDIO_FORMAT)
+        );
+        audio_manager::set_audio_mixchannels (
+            cfg.get_int ("Audio", "Mixchannels", DEFAULT_AUDIO_MIXCHANNELS)
+        );
+        audio_manager::set_audio_rate (
+            cfg.get_int ("Audio", "Rate", DEFAULT_AUDIO_RATE)
+        );
     }
     
     // shutdown audio

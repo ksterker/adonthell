@@ -65,11 +65,11 @@ namespace audio
     TEST_F(audio_Test, setup_Default) {
         audio::setup(cfg);
 
-        EXPECT_EQ(44100,     audio_manager::get_audio_rate());
-        EXPECT_EQ(AUDIO_S16, audio_manager::get_audio_format());
-        EXPECT_EQ(2,         audio_manager::get_audio_channels());
-        EXPECT_EQ(4096,      audio_manager::get_audio_buffers());
-        EXPECT_EQ(16,        audio_manager::get_audio_mixchannels());
+        EXPECT_EQ(DEFAULT_AUDIO_BUFFERS,     audio_manager::get_audio_buffers()    );
+        EXPECT_EQ(DEFAULT_AUDIO_CHANNELS,    audio_manager::get_audio_channels()   );
+        EXPECT_EQ(DEFAULT_AUDIO_FORMAT,      audio_manager::get_audio_format()     );
+        EXPECT_EQ(DEFAULT_AUDIO_MIXCHANNELS, audio_manager::get_audio_mixchannels());
+        EXPECT_EQ(DEFAULT_AUDIO_RATE,        audio_manager::get_audio_rate()       );
     }
 
 } // namespace{}
