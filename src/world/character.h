@@ -252,6 +252,12 @@ namespace world
         GET_TYPE_NAME_VIRTUAL (world::character)
 #endif
 
+        /*** FIXME jmglov@jmglov.net 2010/03/21
+         *** Just necessary until we switch to glog
+         ***/
+        u_int8 LogOffset;
+        /*** /FIXME jmglov@jmglov.net 2010/03/21 ***/
+
     protected:
         /**
          * Update velocity based on current terrain.

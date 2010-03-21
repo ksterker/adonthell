@@ -42,6 +42,12 @@ using world::area;
 // ctor
 character::character (area & mymap, rpg::character * mind) : moving (mymap)
 {
+    /*** FIXME jmglov@jmglov.net 2010/03/21
+     *** Just necessary until we switch to glog
+     ***/
+    LogOffset = 0;
+    /*** /FIXME jmglov@jmglov.net 2010/03/21 ***/
+
     Type = CHARACTER;
     VSpeed = 0;
     IsRunning = false;
@@ -153,14 +159,27 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
-    std::cerr << "set_direction(" << ndir << ") called" << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "set_direction(" << ndir << ") called"
+        << std::endl;
+    LogOffset += 4;
 
     update_velocity(ndir);
     update_state();
 
-    std::cerr << "    CurrentDir was: " << CurrentDir << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "CurrentDir was: " << CurrentDir
+        << std::endl;
+
     CurrentDir = ndir;
-    std::cerr << "    CurrentDir is: "  << CurrentDir << std::endl;
+
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "    CurrentDir is: "  << CurrentDir
+        << std::endl;
+    LogOffset -= 4;
 }
 
 // recalculate the character's speed
@@ -169,15 +188,25 @@ void character::update_velocity (const s_int32 & ndir)
     float vx = 0.0;
     float vy = 0.0;
 
-    std::cerr << "update_velocity(" << ndir << ") called" << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "update_velocity(" << ndir << ") called"
+        << std::endl;
+    LogOffset += 4;
 
     if (ndir & WEST)  vx = -speed() * (1 + is_running());
     if (ndir & EAST)  vx =  speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy =  speed() * (1 + is_running());
 
-    std::cerr << "    vx: " << vx << std::endl;
-    std::cerr << "    vy: " << vy << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "vx: " << vx
+        << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "vy: " << vy
+        << std::endl;
 
     if (vx && vy && ! isnan(vx) && ! isnan(vy))
     {
@@ -186,25 +215,42 @@ void character::update_velocity (const s_int32 & ndir)
         vx = (vx * fabs (vx)) * s;
         vy = (vy * fabs (vy)) * s;
 
-        std::cerr << "    vx (adjusted): " << vx << std::endl;
-        std::cerr << "    vy (adjusted): " << vy << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "vx (adjusted): " << vx
+        << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "vy (adjusted): " << vy
+        << std::endl;
     }
 
     set_velocity(vx, vy);
+    LogOffset -= 4;
 }
 
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
-    std::cerr << "update_state() called" << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "update_state() called"
+        << std::endl;
+    LogOffset += 4;
 
     std::string state;
 
     float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
 
-    std::cerr << "    xvel: " << xvel << std::endl;
-    std::cerr << "    yvel: " << yvel << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "xvel: " << xvel
+        << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "yvel: " << yvel
+        << std::endl;
 
     if (xvel || yvel)
     {
@@ -238,7 +284,10 @@ void character::update_state()
         state += "_stand";
     }
 
-    std::cerr << "    state: '" << state << "'" << std::endl;
+    std::cerr
+        << std::string(LogOffset, ' ')
+        << "state: '" << state << "'"
+        << std::endl;
 
     // set direction the character is actually facing now
     if      (state[0] == 'e') Heading = EAST;
@@ -248,6 +297,7 @@ void character::update_state()
 
     // update sprite
     set_state (state);
+    LogOffset -= 4;
 }
 
 // save to stream
