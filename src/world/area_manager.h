@@ -53,6 +53,11 @@ public:
      */
     //@{
     /**
+     * Shutdown the area manager.
+     */
+    static void cleanup ();
+    
+    /**
      * Set the given map file as the current active map. This
      * will save the state of the current map (if any) and load
      * the state of the given map.

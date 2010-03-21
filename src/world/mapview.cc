@@ -72,9 +72,19 @@ mapview::mapview (const u_int32 & length, const u_int32 & height, const renderer
 // dtor
 mapview::~mapview ()
 {
+    clear ();
+}
+
+// reset to initial state
+void mapview::clear ()
+{
     delete RenderZone;
     delete Schedule;
-    Py_XDECREF (Args);
+    Py_XDECREF (Args);   
+    
+    RenderZone = NULL;
+    Schedule = NULL;
+    Args = NULL;    
 }
 
 // set script called to position view on map

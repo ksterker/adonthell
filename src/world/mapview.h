@@ -68,6 +68,11 @@ namespace world
         ~mapview ();
         
         /**
+         * Reset mapview to initial state
+         */
+        void clear ();
+        
+        /**
          * @name Member access.
          */
         //@{

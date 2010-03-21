@@ -27,6 +27,7 @@
  */
 
 #include "world/world.h"
+#include "world/area_manager.h"
 
 // start world module
 void world::init (base::configuration & cfg)
@@ -36,4 +37,5 @@ void world::init (base::configuration & cfg)
 // shutdown world module
 void world::cleanup ()
 {
+    area_manager::cleanup ();
 }
