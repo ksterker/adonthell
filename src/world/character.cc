@@ -26,7 +26,10 @@
  *
  */
 
+#include <iostream>
+
 #include <math.h>
+
 #include "base/diskio.h"
 #include "rpg/character.h"
 #include "world/area.h"
@@ -150,27 +153,41 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
+    std::cerr << "set_direction(" << ndir << ") called" << std::endl;
+
     update_velocity(ndir);
     update_state();
 
+    std::cerr << "    CurrentDir was: " << CurrentDir << std::endl;
     CurrentDir = ndir;
+    std::cerr << "    CurrentDir is: "  << CurrentDir << std::endl;
 }
 
 // recalculate the character's speed
 void character::update_velocity (const s_int32 & ndir)
 {
-    float vx = 0.0, vy = 0.0;
+    float vx = 0.0;
+    float vy = 0.0;
 
-    if (ndir & WEST) vx = -speed() * (1 + is_running());
-    if (ndir & EAST) vx = speed() * (1 + is_running());
+    std::cerr << "update_velocity(" << ndir << ") called" << std::endl;
+
+    if (ndir & WEST)  vx = -speed() * (1 + is_running());
+    if (ndir & EAST)  vx =  speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
-    if (ndir & SOUTH) vy = speed() * (1 + is_running());
+    if (ndir & SOUTH) vy =  speed() * (1 + is_running());
 
-    if (vx && vy)
+    std::cerr << "    vx: " << vx << std::endl;
+    std::cerr << "    vy: " << vy << std::endl;
+
+    if (vx && vy && ! isnan(vx) && ! isnan(vy))
     {
         float s = 1/sqrt (vx*vx + vy*vy);
+
         vx = (vx * fabs (vx)) * s;
         vy = (vy * fabs (vy)) * s;
+
+        std::cerr << "    vx (adjusted): " << vx << std::endl;
+        std::cerr << "    vy (adjusted): " << vy << std::endl;
     }
 
     set_velocity(vx, vy);
@@ -179,9 +196,15 @@ void character::update_velocity (const s_int32 & ndir)
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
+    std::cerr << "update_state() called" << std::endl;
+
     std::string state;
+
     float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
+
+    std::cerr << "    xvel: " << xvel << std::endl;
+    std::cerr << "    yvel: " << yvel << std::endl;
 
     if (xvel || yvel)
     {
@@ -215,11 +238,13 @@ void character::update_state()
         state += "_stand";
     }
 
+    std::cerr << "    state: '" << state << "'" << std::endl;
+
     // set direction the character is actually facing now
-    if (state[0] == 'e') Heading = EAST;
+    if      (state[0] == 'e') Heading = EAST;
     else if (state[0] == 'w') Heading = WEST;
     else if (state[0] == 's') Heading = SOUTH;
-    else Heading = NORTH;
+    else                      Heading = NORTH;
 
     // update sprite
     set_state (state);
