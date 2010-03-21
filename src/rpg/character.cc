@@ -289,6 +289,7 @@ bool character::get_state (base::flat & file)
     Dialogue = file.get_string ("cdlg");
     Color = file.get_uint32 ("ccol");
     Base_Speed = file.get_float ("cspd");
+    Speed = Base_Speed;
 
     if (Type == PLAYER) PlayerCharacterId = Id;
     
