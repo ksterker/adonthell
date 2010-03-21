@@ -52,7 +52,7 @@ noinst_PROGRAMS = test_audio test_audio_manager
 
 test_audio_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio.cc
 test_audio_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)
-test_audio_LDADD    = $(libadonthell_audio_la_LIBADD) -lgtest
+test_audio_LDADD    = $(libadonthell_audio_la_LIBADD) -lgmock -lgtest
 
 test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio_manager.cc
 test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)

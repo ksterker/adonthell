@@ -31,9 +31,14 @@
 
 #include "audio/audio.h"
 #include "audio/audio_manager.h"
-#include "base/configuration.h"
+#include "base/mock_configuration.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
+
+using ::testing::_;
+using ::testing::AtLeast;
+using ::testing::Return;
 
 namespace audio
 {
@@ -58,11 +63,20 @@ namespace audio
             // Code here will be called immediately after each test (right
             // before the destructor).
         }
-
-        base::configuration cfg;
     }; // class{}
 
     TEST_F(audio_Test, setup_Default) {
+        base::mock_configuration cfg;
+
+        /*** FIXME jmglov@jmglov.net 2010/03/21
+         *** This does not work as expected; configuration::option is never called
+         ***
+        EXPECT_CALL(cfg, option(_, _, _))
+            .Times(AtLeast(5))
+            .WillRepeatedly(Return((base::cfg_option *)NULL));
+         *** FIXME jmglov@jmglov.net 2010/03/21
+         ***/
+
         audio::setup(cfg);
 
         EXPECT_EQ(DEFAULT_AUDIO_BUFFERS,     audio_manager::get_audio_buffers()    );
