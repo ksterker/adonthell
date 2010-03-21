@@ -48,7 +48,7 @@ _sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
 _sdl_la_DEPENDENCIES = libadonthell_audio.la
 
 ## Unit tests
-noinst_PROGRAMS = test_audio_manager
+check_PROGRAMS = test_audio_manager
 
 test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio_manager.cc
 test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)
