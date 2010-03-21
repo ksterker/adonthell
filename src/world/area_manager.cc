@@ -48,6 +48,15 @@ world::pathfinding_manager area_manager::PathFinder;
 // list of maps that have been modified
 std::hash_set<std::string> area_manager::TaintedMaps;
 
+// reset area manager
+void area_manager::cleanup ()
+{
+    ActiveMap = NULL;
+    PathFinder.clear ();
+    MapView.clear ();
+    TaintedMaps.clear ();
+}
+
 // set active map
 bool area_manager::set_active_map (const std::string & name, const bool & auto_save)
 {
