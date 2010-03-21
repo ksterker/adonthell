@@ -179,7 +179,7 @@ void character::update_velocity (const s_int32 & ndir)
     std::cerr << "    vx: " << vx << std::endl;
     std::cerr << "    vy: " << vy << std::endl;
 
-    if (vx && vy)
+    if (vx && vy && ! isnan(vx) && ! isnan(vy))
     {
         float s = 1/sqrt (vx*vx + vy*vy);
 
