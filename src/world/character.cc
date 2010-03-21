@@ -28,7 +28,7 @@
 
 #include <iostream>
 
-#include <math.h>
+#include <cmath>
 
 #include "base/diskio.h"
 #include "rpg/character.h"
@@ -208,12 +208,12 @@ void character::update_velocity (const s_int32 & ndir)
         << "vy: " << vy
         << std::endl;
 
-    if (vx && vy && ! isnan(vx) && ! isnan(vy))
+    if (vx && vy && ! std::isnan(vx) && ! std::isnan(vy))
     {
         float s = 1/sqrt (vx*vx + vy*vy);
 
-        vx = (vx * fabs (vx)) * s;
-        vy = (vy * fabs (vy)) * s;
+        vx = (vx * std::fabs (vx)) * s;
+        vy = (vy * std::fabs (vy)) * s;
 
     std::cerr
         << std::string(LogOffset, ' ')
