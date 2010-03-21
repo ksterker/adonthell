@@ -1,6 +1,4 @@
 /*
-   $Id: audio_manager.h,v 1.4 2006/10/30 05:55:11 ksterker Exp $
-
    Copyright (C) 2010 Josh Glover <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
