@@ -218,8 +218,9 @@ bool placeable::load_model (base::flat & model)
     // load shapes and sprites
     while (model.next (&value, &size, &name) == base::flat::T_FLAT) 
     {
+        base::flat pm ((const char*) value, size);
         placeable_model * mdl = new placeable_model ();
-        mdl->get_state (model);
+        mdl->get_state (pm);
         add_model (mdl);
     }
     

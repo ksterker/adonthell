@@ -172,15 +172,12 @@ bool placeable_model::put_state (base::flat & file) const
 // load state from stream
 bool placeable_model::get_state (base::flat & file)
 {
-    base::flat record = file.get_flat ("model");
-    if (!file.success ()) return false;
-
     char *name;
     void *value;
     u_int32 size;
 
     // load actual shapes
-    while (record.next (&value, &size, &name) == base::flat::T_FLAT)
+    while (file.next (&value, &size, &name) == base::flat::T_FLAT)
     {
         base::flat shape ((const char*) value, size);
         placeable_shape * mpa = add_shape (std::string (name));
@@ -191,16 +188,16 @@ bool placeable_model::get_state (base::flat & file)
     CurrentShape = Shapes.end();
 
     // get associated sprite
-    std::string sprite = record.get_string ("sprite");
+    std::string sprite = file.get_string ("sprite");
     Sprite.set_filename (sprite);
 
     // get associated terrain
-    std::string tmp_terr = record.get_string("terrain", true);
+    std::string tmp_terr = file.get_string("terrain", true);
 
     if (!tmp_terr.empty())
     {
         Terrain = tmp_terr;
     }
 
-    return record.success ();
+    return file.success ();
 }
