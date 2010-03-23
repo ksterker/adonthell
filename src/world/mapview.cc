@@ -164,8 +164,12 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
     Pos.set_y (y);
     
     // get size of map in pixels
-    const u_int32 ml = ((chunk *)map)->length();
-    const u_int32 mh = ((chunk *)map)->height();
+    const u_int32 ml = map->length();
+    const u_int32 mh = map->height();
+
+    // get the start point of the map
+    const s_int32 start_x = map->min().x();
+    const s_int32 start_y = map->min().y();
     
     // calculate start and offset of view (x-axis)
     if (length() >= ml) 
@@ -179,8 +183,8 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
         Sx = x - length()/2;
 
         // don't go past edge of map
-        if (Sx < 0) Sx = 0;
-        else if (Sx + length() > (s_int32) ml) Sx = ml - length();
+        if (Sx < start_x) Sx = start_x;
+        else if (Sx + length() > (s_int32) start_x + ml) Sx = start_x + ml - length();
     }
     
     // calculate start and offset of view (y-axis)
@@ -195,8 +199,8 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
         Sy = y - CurZ - height()/2;
         
         // don't go past edge of map
-        if (Sy < -CurZ) Sy = -CurZ;
-        else if (Sy + height() > (s_int32) mh) Sy = mh - height();        
+        if (Sy < start_y - CurZ) Sy = start_y - CurZ;
+        else if (Sy + height() > (s_int32) start_y + mh) Sy = start_y + mh - height();
     }
 }
 
