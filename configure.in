@@ -320,6 +320,14 @@ SWIG_VERSION=1.3.24
 SWIG_PROG($SWIG_VERSION)
 SWIG_ENABLE_CXX()
 
+dnl *********************
+dnl Check for google-glog
+dnl *********************
+
+PKG_CHECK_MODULES(libglog, libglog >= 0.3.0)
+AC_SUBST(libglog_LIBS)
+AC_SUBST(libglog_CFLAGS)
+
 dnl ************
 dnl other checks
 dnl ************
