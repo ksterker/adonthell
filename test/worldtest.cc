@@ -37,6 +37,8 @@
 #include "world/area_manager.h"
 #include "gui/window_manager.h"
 
+#include <glog/logging.h>
+
 static world::debug_renderer DEBUG_RENDERER;
 
 class game_client
@@ -116,14 +118,25 @@ class world_test : public adonthell::app
 public:
 	int main ()
 	{
+        // Initialize Google's logging library.
+        google::InitGoogleLogging(Argv[0]);
+
+        LOG(INFO) << "worldtest starting up!";
+
         // Initialize the gfx and input systems
+        LOG(INFO) << "Initialising game modules... ";
     	init_modules (GFX | INPUT | PYTHON | WORLD);
+        LOG(INFO) << "done!";
 
     	// Set video mode
+        LOG(INFO) << "Setting video mode... ";
     	gfx::screen::set_video_mode(640, 480);
+        LOG(INFO) << "done!";
 
 		// Contains map and player controls
 	    game_client gc;
+
+        LOG(INFO) << "Adding keyboard manager and listener... ";
 
 		// Add keyboard controls
 	    input::listener il;
@@ -132,9 +145,13 @@ public:
 		// Listen for keyboard events
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
+        LOG(INFO) << "done!";
+
         // load initial game data
+        LOG(INFO) << "Loading game data... ";
         base::savegame game_mgr;
         game_mgr.load (base::savegame::INITIAL_SAVE);
+        LOG(INFO) << "done!";
 
         // create a specie
         rpg::specie human("Human");
