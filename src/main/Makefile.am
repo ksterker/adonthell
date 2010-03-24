@@ -5,7 +5,7 @@ EXTRA_DIST = CMakeLists.txt sdl/linux.cc sdl/winnt.cc sdl/osx.h sdl/osx.m
 pkgincludemaindir = $(pkgincludedir)/main/
 pkgincludemain_HEADERS = \
 	adonthell.h
-    
+
 ## Main library
 lib_LTLIBRARIES = libadonthell_main.la
 
