@@ -166,6 +166,17 @@ namespace world
         s_int16 min_z () const { return EntireMinPos.z(); }
 
         /**
+         * Get the minimum placement position
+         * @return min placement position as a vector3
+         */
+        vector3<s_int16> entire_min () const { return EntireMinPos; }
+        /**
+         * Get the maximum placement size
+         * @return max extension in all directions as a vector3
+         */
+        vector3<s_int16> entire_max () const { return EntireMaxSize; }
+
+        /**
          * Get placeable's current length.
          * @return actual extension of placeable in x direction.
          */
