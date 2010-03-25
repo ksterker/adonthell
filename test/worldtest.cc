@@ -126,12 +126,12 @@ public:
         // Initialize the gfx and input systems
         LOG(INFO) << "Initialising game modules... ";
     	init_modules (GFX | INPUT | PYTHON | WORLD);
-        LOG(INFO) << "done!";
+        LOG(INFO) << "  done!";
 
     	// Set video mode
         LOG(INFO) << "Setting video mode... ";
     	gfx::screen::set_video_mode(640, 480);
-        LOG(INFO) << "done!";
+        LOG(INFO) << "  done!";
 
 		// Contains map and player controls
 	    game_client gc;
@@ -145,35 +145,47 @@ public:
 		// Listen for keyboard events
     	il.connect_keyboard_function (base::make_functor_ret(gc, &game_client::callback_func));
 
-        LOG(INFO) << "done!";
+        LOG(INFO) << "  done!";
 
         // load initial game data
         LOG(INFO) << "Loading game data... ";
         base::savegame game_mgr;
         game_mgr.load (base::savegame::INITIAL_SAVE);
-        LOG(INFO) << "done!";
+        LOG(INFO) << "  done!";
 
         // create a specie
+        LOG(INFO) << "Creating 'Human' specie... ";
         rpg::specie human("Human");
         human.get_state("groups/human.specie");
+        LOG(INFO) << "  done!";
         
         // create a faction
+        LOG(INFO) << "Creating 'Noble' faction... ";
         rpg::faction noble("Noble");
         noble.get_state("groups/noble.faction");
+        LOG(INFO) << "  done!";
         
         // rpg character instance
+        LOG(INFO) << "Creating player character... ";
         rpg::character *player = rpg::character::get_player();
         player->set_specie ("Human");
+        LOG(INFO) << "  done!";
         
         // Add faction to character
+        LOG(INFO) << "Adding 'Noble' faction to player character... ";
         player->add_faction("Noble");
+        LOG(INFO) << "  done!";
 
+        LOG(INFO) << "Setting 'Human' specie in player character... ";
         rpg::character *npc = rpg::character::get_character("NPC");
         npc->set_specie ("Human");
+        LOG(INFO) << "  done!";
         
         // arguments to map view schedule
+        LOG(INFO) << "Adding player character to mapview schedule... ";
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
+        LOG(INFO) << "  done!";
         
 	    while (!gc.letsexit)
     	{
@@ -232,12 +244,17 @@ public:
             gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear ();
-	    }
+	    } // while (main loop)
 
         // gc.world.save ("test-world-new.xml");
         
+        LOG(INFO) << "Cleaning up specie... ";
         rpg::specie::cleanup();
+        LOG(INFO) << "  done!";
+
+        LOG(INFO) << "Cleaning up faction... ";
         rpg::faction::cleanup();
+        LOG(INFO) << "  done!";
         
 	    return 0;
 	}
