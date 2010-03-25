@@ -31,6 +31,8 @@
 
 #include <cstdio>
 
+#include <glog/logging.h>
+
 #include "adonthell.h"
 
 // class AdonthellApp;
@@ -39,6 +41,14 @@
 // initialize the engine and call the user's main method
 int main (int argc, char *argv[]) 
 {
+    // Initialize Google's logging library.
+    google::InitGoogleLogging(argv[0]);
+
+    LOG(INFO) << "Adonthell main() starting up!";
+    LOG(INFO) << "  Invoked as: " << argv[0];
+    for (int i = 1; i < argc; i++)
+        LOG(INFO) << "    " << argv[i];
+
 	int retval = 1;
 	
 	// does a main class exist?
