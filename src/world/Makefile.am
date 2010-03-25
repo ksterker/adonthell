@@ -65,8 +65,8 @@ libadonthell_world_la_SOURCES = \
     triangle3.cc \
     world.cc
 
-libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_world_la_LIBADD = $(PY_LIBS) \
+libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(libglog_CFLAGS) $(AM_CXXFLAGS)
+libadonthell_world_la_LIBADD = $(PY_LIBS) $(libglog_LIBS) \
 	-L$(top_builddir)/src/base -ladonthell_base \
     -L$(top_builddir)/src/python -ladonthell_python \
     -L$(top_builddir)/src/event -ladonthell_event \

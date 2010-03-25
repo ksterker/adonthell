@@ -26,8 +26,6 @@
  *
  */
 
-#include <iostream>
-
 #include <cmath>
 
 #include "base/diskio.h"
@@ -42,11 +40,7 @@ using world::area;
 // ctor
 character::character (area & mymap, rpg::character * mind) : moving (mymap)
 {
-    /*** FIXME jmglov@jmglov.net 2010/03/21
-     *** Just necessary until we switch to glog
-     ***/
-    LogOffset = 0;
-    /*** /FIXME jmglov@jmglov.net 2010/03/21 ***/
+    LogIndentLevel = 0;
 
     Type = CHARACTER;
     VSpeed = 0;
@@ -59,6 +53,8 @@ character::character (area & mymap, rpg::character * mind) : moving (mymap)
 
     // save the representation of this character on the rpg side
     Mind = mind;
+
+    std::cerr << "world::character::character() invoked" << std::endl;
 }
 
 // dtor
@@ -159,54 +155,35 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "set_direction(" << ndir << ") called"
-        << std::endl;
-    LogOffset += 4;
+    LOG(INFO) << get_log_indent_str() << "set_direction(" << ndir << ") called";
+    increment_log_indent_level();
 
     update_velocity(ndir);
     update_state();
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "CurrentDir was: " << CurrentDir
-        << std::endl;
-
+    LOG(INFO) << get_log_indent_str() << "CurrentDir was: " << CurrentDir;
     CurrentDir = ndir;
+    LOG(INFO) << get_log_indent_str() << "CurrentDir is: "  << CurrentDir;
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "    CurrentDir is: "  << CurrentDir
-        << std::endl;
-    LogOffset -= 4;
+    decrement_log_indent_level();
 }
 
 // recalculate the character's speed
 void character::update_velocity (const s_int32 & ndir)
 {
+    LOG(INFO) << get_log_indent_str() << "update_velocity(" << ndir << ") called";
+    increment_log_indent_level();
+
     float vx = 0.0;
     float vy = 0.0;
-
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "update_velocity(" << ndir << ") called"
-        << std::endl;
-    LogOffset += 4;
 
     if (ndir & WEST)  vx = -speed() * (1 + is_running());
     if (ndir & EAST)  vx =  speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy =  speed() * (1 + is_running());
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "vx: " << vx
-        << std::endl;
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "vy: " << vy
-        << std::endl;
+    LOG(INFO) << get_log_indent_str() << "vx: " << vx;
+    LOG(INFO) << get_log_indent_str() << "vy: " << vy;
 
     if (vx && vy && ! std::isnan(vx) && ! std::isnan(vy))
     {
@@ -215,42 +192,28 @@ void character::update_velocity (const s_int32 & ndir)
         vx = (vx * std::fabs (vx)) * s;
         vy = (vy * std::fabs (vy)) * s;
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "vx (adjusted): " << vx
-        << std::endl;
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "vy (adjusted): " << vy
-        << std::endl;
+        LOG(INFO) << get_log_indent_str() << "vx (adjusted): " << vx;
+        LOG(INFO) << get_log_indent_str() << "vy (adjusted): " << vy;
     }
 
     set_velocity(vx, vy);
-    LogOffset -= 4;
+
+    decrement_log_indent_level();
 }
 
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "update_state() called"
-        << std::endl;
-    LogOffset += 4;
+    LOG(INFO) << get_log_indent_str() << "update_state() called";
+    increment_log_indent_level();
 
     std::string state;
 
     float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "xvel: " << xvel
-        << std::endl;
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "yvel: " << yvel
-        << std::endl;
+    LOG(INFO) << get_log_indent_str() << "xvel: " << xvel;
+    LOG(INFO) << get_log_indent_str() << "yvel: " << yvel;
 
     if (xvel || yvel)
     {
@@ -284,10 +247,7 @@ void character::update_state()
         state += "_stand";
     }
 
-    std::cerr
-        << std::string(LogOffset, ' ')
-        << "state: '" << state << "'"
-        << std::endl;
+    LOG(INFO) << get_log_indent_str() << "state: " << state;
 
     // set direction the character is actually facing now
     if      (state[0] == 'e') Heading = EAST;
@@ -297,7 +257,8 @@ void character::update_state()
 
     // update sprite
     set_state (state);
-    LogOffset -= 4;
+
+    decrement_log_indent_level();
 }
 
 // save to stream
@@ -350,4 +311,29 @@ bool character::load_model (base::flat & model)
     }
     
     return model.success();
+}
+
+
+std::string character::get_log_indent_str() const {
+    return std::string(get_log_indent_level() * LOG_INDENT_NUM_COLUMNS, ' ');
+}
+
+
+const u_int8 character::decrement_log_indent_level() {
+    return set_log_indent_level(get_log_indent_level() - 1);
+}
+
+
+const u_int8 character::increment_log_indent_level() {
+    return set_log_indent_level(get_log_indent_level() + 1);
+}
+
+
+u_int8 character::get_log_indent_level() const {
+    return LogIndentLevel;
+}
+
+
+const u_int8 character::set_log_indent_level(const u_int8 level) {
+    return LogIndentLevel = level;
 }
