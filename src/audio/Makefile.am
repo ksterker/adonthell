@@ -23,8 +23,8 @@ libadonthell_audio_la_SOURCES = \
 
 libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
 libadonthell_audio_la_LIBADD = $(PY_LIBS) -lltdl -lstdc++ \
-		-L$(top_builddir)/src/base/ -ladonthell_base \
-		-L$(top_builddir)/src/event/ -ladonthell_event
+		$(top_builddir)/src/base/libadonthell_base.la \
+		$(top_builddir)/src/event/libadonthell_event.la
 
 
 

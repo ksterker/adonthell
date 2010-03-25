@@ -67,9 +67,9 @@ libadonthell_world_la_SOURCES = \
 
 libadonthell_world_la_CXXFLAGS = $(PY_CFLAGS) $(libglog_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_world_la_LIBADD = $(PY_LIBS) $(libglog_LIBS) \
-	-L$(top_builddir)/src/base -ladonthell_base \
-    -L$(top_builddir)/src/python -ladonthell_python \
-    -L$(top_builddir)/src/event -ladonthell_event \
-    -L$(top_builddir)/src/gfx -ladonthell_gfx \
-    -L$(top_builddir)/src/rpg -ladonthell_rpg \
-    -L$(top_builddir)/src/py-runtime -ladonthell_py_runtime -lstdc++
+    $(top_builddir)/src/base/libadonthell_base.la \
+    $(top_builddir)/src/python/libadonthell_python.la \
+    $(top_builddir)/src/event/libadonthell_event.la \
+    $(top_builddir)/src/gfx/libadonthell_gfx.la \
+    $(top_builddir)/src/rpg/libadonthell_rpg.la \
+    $(top_builddir)/src/py-runtime/libadonthell_py_runtime.la -lstdc++

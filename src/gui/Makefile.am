@@ -32,7 +32,10 @@ libadonthell_gui_la_SOURCES = \
 
 libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS) -D__BIG_ENDIAN__
 
-libadonthell_gui_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base \
-	-L$(top_builddir)/src/input/ -ladonthell_input \
-	-L$(top_builddir)/src/gfx/ -ladonthell_gfx \
-	-lstdc++ $(FT2_LIBS) -L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) -L$(top_builddir)/src/rpg/ -ladonthell_rpg 
+libadonthell_gui_la_LIBADD = $(PY_LIBS) \
+    $(top_builddir)/src/base/libadonthell_base.la \
+	$(top_builddir)/src/input/libadonthell_input.la \
+	$(top_builddir)/src/gfx/libadonthell_gfx.la \
+    $(top_builddir)/src/python/libadonthell_python.la \
+    $(top_builddir)/src/rpg/libadonthell_rpg.la \
+	-lstdc++ $(FT2_LIBS)

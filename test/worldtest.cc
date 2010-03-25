@@ -118,9 +118,6 @@ class world_test : public adonthell::app
 public:
 	int main ()
 	{
-        // Initialize Google's logging library.
-        google::InitGoogleLogging(Argv[0]);
-
         LOG(INFO) << "worldtest starting up!";
 
         // Initialize the gfx and input systems

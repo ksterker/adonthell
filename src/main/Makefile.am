@@ -16,12 +16,15 @@ libadonthell_main_la_SOURCES = \
 
 libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) 
 libadonthell_main_la_LIBADD = $(PY_LIBS) -lltdl \
-    -L$(top_builddir)/src/base -ladonthell_base \
-    -L$(top_builddir)/src/gfx -ladonthell_gfx \
-    -L$(top_builddir)/src/audio -ladonthell_audio \
-    -L$(top_builddir)/src/input -ladonthell_input \
-    -L$(top_builddir)/src/python -ladonthell_python \
-    -L$(top_builddir)/src/world -ladonthell_world
+    $(top_builddir)/src/base/libadonthell_base.la \
+    $(top_builddir)/src/gfx/libadonthell_gfx.la \
+    $(top_builddir)/src/audio/libadonthell_audio.la \
+    $(top_builddir)/src/input/libadonthell_input.la \
+    $(top_builddir)/src/python/libadonthell_python.la \
+    $(top_builddir)/src/world/libadonthell_world.la \
+    $(glog_LIBS) 
+ 
+
 
 
 ###### Following definitions are for the backends
@@ -48,4 +51,3 @@ _sdl_la_LIBADD = $(SDL_LIBS) -ladonthell_main -lstdc++
 
 ## define dependencies in case of parallel build
 _sdl_la_DEPENDENCIES = libadonthell_main.la
-

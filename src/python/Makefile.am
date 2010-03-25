@@ -24,4 +24,6 @@ libadonthell_python_la_SOURCES = \
 	script.cc
 
 libadonthell_python_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
-libadonthell_python_la_LIBADD = $(PY_LIBS) -L../base -ladonthell_base $(SWIGRUNTIME_LIBS) -lstdc++
+libadonthell_python_la_LIBADD = $(PY_LIBS) \
+    $(top_builddir)/src/base/libadonthell_base.la \
+    $(SWIGRUNTIME_LIBS) -lstdc++
