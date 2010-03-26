@@ -331,13 +331,13 @@ dnl ****************************************************************************
 if test x$devbuild = xyes; then
     CXXFLAGS="$CXXFLAGS -g"
 
-    PKG_CHECK_MODULES(libgmock, libgmock >= 0.4.0)
-    AC_SUBST(libgmock_LIBS)
-    AC_SUBST(libgmock_CFLAGS)
-
     PKG_CHECK_MODULES(libgtest, libgtest >= 0.4.0)
     AC_SUBST(libgtest_LIBS)
     AC_SUBST(libgtest_CFLAGS)
+
+    PKG_CHECK_MODULES(libgmock, libgmock >= 0.4.0)
+    AC_SUBST(libgmock_LIBS)
+    AC_SUBST(libgmock_CFLAGS)
 fi
 
 dnl *********************

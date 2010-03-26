@@ -21,8 +21,10 @@ libadonthell_audio_la_SOURCES = \
 	audio_event_manager.cc \
 	audio_manager.cc
 
-libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
-libadonthell_audio_la_LIBADD = $(PY_LIBS) -lltdl -lstdc++ \
+libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) $(libglog_CFLAGS) \
+        -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
+libadonthell_audio_la_LIBADD   = $(PY_LIBS)   $(libglog_LIBS)   \
+        -lltdl -lstdc++ \
 		$(top_builddir)/src/base/libadonthell_base.la \
 		$(top_builddir)/src/event/libadonthell_event.la
 
