@@ -312,6 +312,13 @@ protected:
 	T Z;
 };
 
+template <class PT>
+std::ostream& operator<< (std::ostream& out, const vector3<PT> & v )
+{
+    out << "[" << v.x() << ", " << v.y() << ", " << v.z() << "]";
+    return out;
+}
+
 }
 
 #endif /* WORLD_VECTOR_3_H */

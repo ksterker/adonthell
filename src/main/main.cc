@@ -33,9 +33,6 @@
 
 #include "adonthell.h"
 
-// class AdonthellApp;
-// extern "C" AdonthellApp theApp;
-
 // initialize the engine and call the user's main method
 int main (int argc, char *argv[]) 
 {

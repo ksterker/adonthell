@@ -31,7 +31,7 @@ libadonthell_input_la_SOURCES = \
 	manager.cc
 
 libadonthell_input_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
-libadonthell_input_la_LIBADD = -L$(top_builddir)/src/base/ -ladonthell_base -lltdl -lstdc++
+libadonthell_input_la_LIBADD = $(top_builddir)/src/base/libadonthell_base.la -lltdl -lstdc++
 
 
 

@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 EXTRA_DIST = adonthell.pc.in adonthell.pc.cmake autogen.sh README.Win32 \
     CMakeLists.txt config/FindLibxml2.cmake config/FindSWIG.cmake \
     config/UsePkgConfig.cmake config/PythonExtraLibs.cmake config.h.cmake \

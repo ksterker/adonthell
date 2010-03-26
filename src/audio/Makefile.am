@@ -23,8 +23,8 @@ libadonthell_audio_la_SOURCES = \
 
 libadonthell_audio_la_CXXFLAGS = $(PY_CFLAGS) -DPKGLIBDIR=\"$(pkglibdir)\" $(AM_CXXFLAGS)
 libadonthell_audio_la_LIBADD = $(PY_LIBS) -lltdl -lstdc++ \
-		-L$(top_builddir)/src/base/ -ladonthell_base \
-		-L$(top_builddir)/src/event/ -ladonthell_event
+		$(top_builddir)/src/base/libadonthell_base.la \
+		$(top_builddir)/src/event/libadonthell_event.la
 
 
 
@@ -48,14 +48,17 @@ _sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
 _sdl_la_DEPENDENCIES = libadonthell_audio.la
 
 ## Unit tests
-noinst_PROGRAMS = test_audio test_audio_manager
+test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS)
 
-test_audio_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio.cc
-test_audio_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)
-test_audio_LDADD    = $(libadonthell_audio_la_LIBADD) -lgmock -lgtest
+test_audio_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio.cc
+test_audio_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
+test_audio_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES) test_audio_manager.cc
-test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS)
-test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD) -lgtest
+test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_manager.cc
+test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
+test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-TESTS = test_audio test_audio_manager
+TESTS          = test_audio test_audio_manager
+check_PROGRAMS = $(TESTS)
+###noinst_PROGRAMS = test_audio test_audio_manager

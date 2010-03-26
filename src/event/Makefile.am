@@ -34,6 +34,6 @@ libadonthell_event_la_SOURCES = \
 
 libadonthell_event_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 libadonthell_event_la_LIBADD = $(PY_LIBS) \
-    -L$(top_builddir)/src/base -ladonthell_base \
-    -L$(top_builddir)/src/python -ladonthell_python \
-    -L$(top_builddir)/src/py-runtime -ladonthell_py_runtime -lstdc++
+    $(top_builddir)/src/base/libadonthell_base.la \
+    $(top_builddir)/src/python/libadonthell_python.la \
+    $(top_builddir)/src/py-runtime/libadonthell_py_runtime.la -lstdc++

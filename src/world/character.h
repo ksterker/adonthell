@@ -31,6 +31,10 @@
 #ifndef WORLD_CHARACTER_H
 #define WORLD_CHARACTER_H
 
+#include <iostream>
+
+#include <glog/logging.h>
+
 #include "base/diskio.h"
 #include "world/moving.h"
 #include "world/schedule.h"
@@ -38,6 +42,7 @@
 
 namespace world
 {
+    const u_int8 LOG_INDENT_NUM_COLUMNS = 2;
 
     /**
      * Map representation of a character.
@@ -259,6 +264,32 @@ namespace world
          */
         void update_velocity (const s_int32 & ndir);
 
+        /**
+         * @param Log message indentation, as a string
+         */
+        std::string get_log_indent_str() const;
+
+        /**
+         * @return New log message indent level
+         */
+        const u_int8 decrement_log_indent_level();
+
+        /**
+         * @return New log message indent level
+         */
+        const u_int8 increment_log_indent_level();
+
+        /**
+         * @return Current log message indent level
+         */
+        u_int8 get_log_indent_level() const;
+
+        /**
+         * @param New log message indent level
+         * @return New log message indent level
+         */
+        const u_int8 set_log_indent_level(const u_int8 level);
+
         /// vertical speed for jumping
         float VSpeed;
 
@@ -270,6 +301,10 @@ namespace world
         s_int32 CurrentDir;
         /// direction the character is facing
         s_int32 Heading;
+
+        /// Log statements are indented to show which method they are in;
+        /// see get_log_indent_str()
+        u_int8 LogIndentLevel;
 
     private:
         /// forbid passing by value

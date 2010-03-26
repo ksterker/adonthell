@@ -86,11 +86,10 @@ void chunk::add (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
     const placeable *p = object->get_object();
-    vector3<s_int32> max (pos.x() + p->max_length(),
-                          pos.y() + p->max_width(),
-                          pos.z() + p->max_height());
-    
-    add (chunk_info (object, pos, max));
+    vector3<s_int32> min = pos + p->entire_min();
+    vector3<s_int32> max = min + p->entire_max();
+
+    add (chunk_info (object, min, max));
 }
 
 // check if object exists at given position
@@ -98,11 +97,10 @@ bool chunk::exists (entity *object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
     const placeable *p = object->get_object();
-    vector3<s_int32> max (pos.x() + p->max_length(),
-                          pos.y() + p->max_width(),
-                          pos.z() + p->max_height());
+    vector3<s_int32> min = pos + p->entire_min();
+    vector3<s_int32> max = min + p->entire_max();
     
-    return exists (chunk_info (object, pos, max));
+    return exists (chunk_info (object, min, max));
 }
 
 // remove object from chunk
@@ -110,11 +108,10 @@ world::entity * chunk::remove (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
     const placeable *p = object->get_object();
-    vector3<s_int32> max (pos.x() + p->max_length(),
-                          pos.y() + p->max_width(),
-                          pos.z() + p->max_height());
+    vector3<s_int32> min = pos + p->entire_min();
+    vector3<s_int32> max = min + p->entire_max();
     
-    return remove (chunk_info (object, pos, max));
+    return remove (chunk_info (object, min, max));
 }
 
 // add an object to chunk
@@ -387,7 +384,7 @@ bool chunk::in_bbox (const vector3<s_int32> & a_min, const vector3<s_int32> & a_
     if (a_max.y() < b_min.y() || a_min.y() > b_max.y()) return false;
     // no overlap on z-axis
     if (a_max.z() < b_min.z() || a_min.z() > b_max.z()) return false;
-    
+
     return true;
 }
 

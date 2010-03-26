@@ -31,9 +31,7 @@
 #include <config.h>
 #endif
 
-#include "python/python.h"
 #include <iostream>
-//#include <unistd.h>
 
 #include "gfx/gfx.h"
 #include "base/nls.h"
@@ -41,8 +39,11 @@
 #include "base/savegame.h"
 #include "input/input.h"
 #include "audio/audio.h"
+#include "python/python.h"
 #include "world/world.h"
 #include "main/adonthell.h"
+
+#include <glog/logging.h>
 
 using adonthell::app;
 using std::cerr;
@@ -141,6 +142,16 @@ void app::parse_args (int & argc, char *argv[])
     Userdatadir = "";
     Config = "adonthell";
 
+    // Initialize Google's logging library.
+    google::InitGoogleLogging(argv[0]);
+
+    LOG(INFO) << "Adonthell starting up!";
+    LOG(INFO) << "  Invoked as: " << argv[0];
+    for (int i = 1; i < argc; i++)
+    {
+        LOG(INFO) << "    " << argv[i];
+    }
+    
     // Check for options
     while ((c = getopt (argc, argv, "b:c:g:hv")) != -1)
     {

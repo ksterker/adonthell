@@ -7,6 +7,9 @@ AC_INIT
 AC_CONFIG_SRCDIR([README])
 AC_CONFIG_AUX_DIR(.)
 
+dnl Keep the correct libtool macros in-tree
+AC_CONFIG_MACRO_DIR([m4])
+
 dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
@@ -328,32 +331,22 @@ dnl ****************************************************************************
 if test x$devbuild = xyes; then
     CXXFLAGS="$CXXFLAGS -g"
 
-    AC_CHECK_HEADER([gtest/gtest.h],,
-    	[AC_MSG_ERROR([*** Cannot find the gtest/gtest.h header
-    	go to http://code.google.com/p/googletest/ to download or
-    	check with your distibution.]
-    	); exit])
-    AC_CHECK_LIB([gtest],
-    	[_Jv_RegisterClasses],
-    	[:],
-    	[AC_MSG_ERROR([*** Cannot find the gtest library
-    	go to http://code.google.com/p/googletest/ to download or
-    	check with your distibution.]
-    	); exit])
+    PKG_CHECK_MODULES(libgmock, libgmock >= 0.4.0)
+    AC_SUBST(libgmock_LIBS)
+    AC_SUBST(libgmock_CFLAGS)
 
-    AC_CHECK_HEADER([gmock/gmock.h],,
-    	[AC_MSG_ERROR([*** Cannot find the gmock/gmock.h header
-    	go to http://code.google.com/p/googlemock/ to download or
-    	check with your distibution.]
-    	); exit])
-    AC_CHECK_LIB([gmock],
-    	[_Jv_RegisterClasses],
-    	[:],
-    	[AC_MSG_ERROR([*** Cannot find the gmock library
-    	go to http://code.google.com/p/googlemock/ to download or
-    	check with your distibution.]
-    	); exit])
+    PKG_CHECK_MODULES(libgtest, libgtest >= 0.4.0)
+    AC_SUBST(libgtest_LIBS)
+    AC_SUBST(libgtest_CFLAGS)
 fi
+
+dnl *********************
+dnl Check for google-glog
+dnl *********************
+
+PKG_CHECK_MODULES(libglog, libglog >= 0.3.0)
+AC_SUBST(libglog_LIBS)
+AC_SUBST(libglog_CFLAGS)
 
 dnl ************
 dnl other checks

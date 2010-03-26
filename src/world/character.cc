@@ -26,7 +26,8 @@
  *
  */
 
-#include <math.h>
+#include <cmath>
+
 #include "base/diskio.h"
 #include "rpg/character.h"
 #include "world/area.h"
@@ -39,6 +40,8 @@ using world::area;
 // ctor
 character::character (area & mymap, rpg::character * mind) : moving (mymap)
 {
+    LogIndentLevel = 0;
+
     Type = CHARACTER;
     VSpeed = 0;
     IsRunning = false;
@@ -50,6 +53,8 @@ character::character (area & mymap, rpg::character * mind) : moving (mymap)
 
     // save the representation of this character on the rpg side
     Mind = mind;
+
+    std::cerr << "world::character::character() invoked" << std::endl;
 }
 
 // dtor
@@ -150,38 +155,65 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
+    LOG(INFO) << get_log_indent_str() << "set_direction(" << ndir << ") called";
+    increment_log_indent_level();
+
     update_velocity(ndir);
     update_state();
 
+    LOG(INFO) << get_log_indent_str() << "CurrentDir was: " << CurrentDir;
     CurrentDir = ndir;
+    LOG(INFO) << get_log_indent_str() << "CurrentDir is: "  << CurrentDir;
+
+    decrement_log_indent_level();
 }
 
 // recalculate the character's speed
 void character::update_velocity (const s_int32 & ndir)
 {
-    float vx = 0.0, vy = 0.0;
+    LOG(INFO) << get_log_indent_str() << "update_velocity(" << ndir << ") called";
+    increment_log_indent_level();
 
-    if (ndir & WEST) vx = -speed() * (1 + is_running());
-    if (ndir & EAST) vx = speed() * (1 + is_running());
+    float vx = 0.0;
+    float vy = 0.0;
+
+    if (ndir & WEST)  vx = -speed() * (1 + is_running());
+    if (ndir & EAST)  vx =  speed() * (1 + is_running());
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
-    if (ndir & SOUTH) vy = speed() * (1 + is_running());
+    if (ndir & SOUTH) vy =  speed() * (1 + is_running());
 
-    if (vx && vy)
+    LOG(INFO) << get_log_indent_str() << "vx: " << vx;
+    LOG(INFO) << get_log_indent_str() << "vy: " << vy;
+
+    if (vx && vy && ! std::isnan(vx) && ! std::isnan(vy))
     {
         float s = 1/sqrt (vx*vx + vy*vy);
-        vx = (vx * fabs (vx)) * s;
-        vy = (vy * fabs (vy)) * s;
+
+        vx = (vx * std::fabs (vx)) * s;
+        vy = (vy * std::fabs (vy)) * s;
+
+        LOG(INFO) << get_log_indent_str() << "vx (adjusted): " << vx;
+        LOG(INFO) << get_log_indent_str() << "vy (adjusted): " << vy;
     }
 
     set_velocity(vx, vy);
+
+    decrement_log_indent_level();
 }
 
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
+    LOG(INFO) << get_log_indent_str() << "update_state() called";
+    increment_log_indent_level();
+
     std::string state;
+
     float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
+
+    LOG(INFO) << get_log_indent_str() << "xvel: " << xvel;
+    LOG(INFO) << get_log_indent_str() << "yvel: " << yvel;
 
     if (xvel || yvel)
     {
@@ -215,14 +247,18 @@ void character::update_state()
         state += "_stand";
     }
 
+    LOG(INFO) << get_log_indent_str() << "state: " << state;
+
     // set direction the character is actually facing now
-    if (state[0] == 'e') Heading = EAST;
+    if      (state[0] == 'e') Heading = EAST;
     else if (state[0] == 'w') Heading = WEST;
     else if (state[0] == 's') Heading = SOUTH;
-    else Heading = NORTH;
+    else                      Heading = NORTH;
 
     // update sprite
     set_state (state);
+
+    decrement_log_indent_level();
 }
 
 // save to stream
@@ -275,4 +311,29 @@ bool character::load_model (base::flat & model)
     }
     
     return model.success();
+}
+
+
+std::string character::get_log_indent_str() const {
+    return std::string(get_log_indent_level() * LOG_INDENT_NUM_COLUMNS, ' ');
+}
+
+
+const u_int8 character::decrement_log_indent_level() {
+    return set_log_indent_level(get_log_indent_level() - 1);
+}
+
+
+const u_int8 character::increment_log_indent_level() {
+    return set_log_indent_level(get_log_indent_level() + 1);
+}
+
+
+u_int8 character::get_log_indent_level() const {
+    return LogIndentLevel;
+}
+
+
+const u_int8 character::set_log_indent_level(const u_int8 level) {
+    return LogIndentLevel = level;
 }
