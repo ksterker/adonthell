@@ -151,7 +151,7 @@ bool moving::collide_with_objects (collision *collisionData)
 #endif
             
             // ... and check if collision occurs
-            shape->collide (collisionData, (*i)->Min);
+            shape->collide (collisionData, (*i)->Min-(*i)->get_object()->entire_min());
         }
     }
     
@@ -352,7 +352,7 @@ void moving::calculate_ground_pos ()
     
         // the topmost object will be our ground pos
         ci = ground_tiles.begin();
-        GroundPos = (*ci)->Min.z() + (*ci)->get_object()->get_surface_pos ();
+        GroundPos = (*ci)->Min.z() - (*ci)->get_object()->min_z() + (*ci)->get_object()->get_surface_pos ();
         
         // get the terrain, if any
         Terrain = (*ci)->get_object()->get_terrain();
