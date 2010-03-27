@@ -42,6 +42,9 @@ namespace audio
 
 
     bool audio_manager::set_audio_buffers(const int audio_buffers) {
+        LOG(INFO) << "set_audio_buffers(" << audio_buffers << "); was: "
+                  << audio_buffers_;
+
         audio_buffers_ = audio_buffers;
 
         return true;
@@ -49,6 +52,9 @@ namespace audio
 
 
     bool audio_manager::set_audio_channels(const int audio_channels) {
+        LOG(INFO) << "set_audio_channels(" << audio_channels << "); was: "
+                  << audio_channels_;
+
         audio_channels_ = audio_channels;
 
         return true;
@@ -56,6 +62,9 @@ namespace audio
 
 
     bool audio_manager::set_audio_format(const u_int16 audio_format) {
+        LOG(INFO) << "set_audio_format(" << audio_format << "); was: "
+                  << audio_format_;
+
         audio_format_ = audio_format;
 
         return true;
@@ -63,6 +72,9 @@ namespace audio
 
 
     bool audio_manager::set_audio_mixchannels(const int audio_mixchannels) {
+        LOG(INFO) << "set_audio_mixchannels(" << audio_mixchannels << "); was: "
+                  << audio_mixchannels_;
+
         audio_mixchannels_ = audio_mixchannels;
 
         return true;
@@ -70,6 +82,9 @@ namespace audio
 
 
     bool audio_manager::set_audio_rate(const int audio_rate) {
+        LOG(INFO) << "set_audio_rate(" << audio_rate << "); was: "
+                  << audio_rate_;
+
         audio_rate_ = audio_rate;
 
         return true;

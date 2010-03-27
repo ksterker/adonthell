@@ -2,12 +2,16 @@
 #include "audio/audio_manager.h"
 #include "base/configuration.h"
 
+#include <glog/logging.h>
+
 #include <iostream>
 
 using namespace audio;
 
 int main(int argc, char * argv[]) {
     base::configuration cfg;
+
+    google::InitGoogleLogging(argv[0]);
 
     setup(cfg);
 
