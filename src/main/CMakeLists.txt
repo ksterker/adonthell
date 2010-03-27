@@ -10,13 +10,14 @@ set(adonthell_main_HEADERS
 )
 
 # Add specific include directory for this library.
-include_directories(${PYTHON_INCLUDE_PATH})
+include_directories(${PYTHON_INCLUDE_PATH} ${LIBGLOG_INCLUDE_PATH})
 
 
 # Create a shared library
 add_library(adonthell_main SHARED ${adonthell_main_SRCS})
 target_link_libraries(adonthell_main
 	${PYTHON_LIBRARIES}
+  ${LIBGLOG_LIBRARIES}
 	adonthell_base
 	adonthell_gfx
 	adonthell_audio

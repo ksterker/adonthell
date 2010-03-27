@@ -278,6 +278,24 @@ else(LIBFREETYPE2_FOUND)
 		"LibFreetype2 is required.")
 endif(LIBFREETYPE2_FOUND)
 
+#######################
+# Freetype2
+#######################
+
+PKGCONFIG_FOUND(libglog LIBGLOG_FOUND)
+IF(LIBGLOG_FOUND)
+  PKGCONFIG(libglog LIBGLOG_INCLUDE_PATH LIBGLOG_LIBADD LIBGLOG_LIBRARIES LIBGLOG_CFLAGS)
+  PKGCONFIG_VERSION(libglog GLOG_VERSION)
+	message(STATUS
+		"libglog has been found:")
+	message(STATUS
+		"\tCFLAGS : ${LIBGLOG_CFLAGS}")
+	message(STATUS
+		"\tLDFLAGS: ${LIBGLOG_LIBRARIES}")
+ELSE(LIBGLOG_FOUND)
+  message(FATAL_ERROR
+    "libglog is required.")
+ENDIF(LIBGLOG_FOUND)
 
 ######################
 # Build the config.h file !
