@@ -297,6 +297,47 @@ ELSE(LIBGLOG_FOUND)
     "libglog is required.")
 ENDIF(LIBGLOG_FOUND)
 
+###################################################################################
+# If this is a developer build, turn on debug symbols and check for gtest and gmock
+###################################################################################
+
+if(DEVBUILD)
+  SET(CFLAGS "${CFLAGS} -g")
+  message(STATUS
+    "Developer build; CFLAGS='${CFLAGS}'")
+
+  PKGCONFIG_FOUND(libgtest LIBGTEST_FOUND)
+  IF(LIBGTEST_FOUND)
+    PKGCONFIG(libgtest LIBGTEST_INCLUDE_PATH LIBGTEST_LIBADD LIBGTEST_LIBRARIES LIBGTEST_CFLAGS)
+    PKGCONFIG_VERSION(libgtest GLOG_VERSION)
+	message(STATUS
+	  "libgtest has been found:")
+	message(STATUS
+	  "\tCFLAGS : ${LIBGTEST_CFLAGS}")
+	message(STATUS
+	  "\tLDFLAGS: ${LIBGTEST_LIBRARIES}")
+  ELSE(LIBGTEST_FOUND)
+    message(FATAL_ERROR
+      "libgtest is required.")
+  ENDIF(LIBGTEST_FOUND)
+
+  PKGCONFIG_FOUND(libgmock LIBGMOCK_FOUND)
+  IF(LIBGMOCK_FOUND)
+    PKGCONFIG(libgmock LIBGMOCK_INCLUDE_PATH LIBGMOCK_LIBADD LIBGMOCK_LIBRARIES LIBGMOCK_CFLAGS)
+    PKGCONFIG_VERSION(libgmock GLOG_VERSION)
+	message(STATUS
+	  "libgmock has been found:")
+	message(STATUS
+	  "\tCFLAGS : ${LIBGMOCK_CFLAGS}")
+	message(STATUS
+	  "\tLDFLAGS: ${LIBGMOCK_LIBRARIES}")
+  ELSE(LIBGMOCK_FOUND)
+    message(FATAL_ERROR
+      "libgmock is required.")
+  ENDIF(LIBGMOCK_FOUND)
+
+endif(DEVBUILD)
+
 ######################
 # Build the config.h file !
 ######################
