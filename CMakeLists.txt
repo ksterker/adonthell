@@ -279,7 +279,7 @@ else(LIBFREETYPE2_FOUND)
 endif(LIBFREETYPE2_FOUND)
 
 #######################
-# Freetype2
+# google-log
 #######################
 
 PKGCONFIG_FOUND(libglog LIBGLOG_FOUND)
