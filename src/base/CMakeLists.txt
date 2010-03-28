@@ -9,6 +9,7 @@ set(adonthell_base_SRCS
 	diskwriter_xml.cc
 	file.cc
     flat.cc
+	logging.cc
 	nls.cc
     paths.cc
     savegame.cc
@@ -26,6 +27,7 @@ set(adonthell_base_HEADERS
 	callback.h   
 	diskwriter_base.h
 	file.h
+	logging.h
 	nls.h
 	configio.h
 	diskwriter_gz.h

@@ -18,6 +18,7 @@ pkgincludebase_HEADERS = \
 	flat.h \
 	gettext.h \
     hash_map.h \
+    logging.h \
     nls.h \
 	paths.h \
     savegame.h \
@@ -40,11 +41,25 @@ libadonthell_base_la_SOURCES = \
     diskwriter_xml.cc \
 	file.cc \
 	flat.cc \
+    logging.cc \
     nls.cc \
 	paths.cc \
     savegame.cc \
 	timer.cc \
     utf8.cc
 
-libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
-libadonthell_base_la_LIBADD = $(XML_LIBS) $(LIBLTDL) -lz -lltdl
+libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) $(libgmock_CFLAGS) \
+        -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
+libadonthell_base_la_LIBADD = $(XML_LIBS) $(libglog_LIBS) \
+        $(LIBLTDL) -lz -lltdl
+
+## Unit tests
+test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS)
+
+test_logging_SOURCES  = $(libadonthell_base_la_SOURCES)  test_logging.cc
+test_logging_CXXFLAGS = $(libadonthell_base_la_CXXFLAGS) $(test_CXXFLAGS)
+test_logging_LDADD    = $(libadonthell_base_la_LIBADD)   $(test_LDADD)
+
+TESTS          = test_logging
+check_PROGRAMS = $(TESTS)
