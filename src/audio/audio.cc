@@ -66,12 +66,16 @@ namespace audio
     // initialize audio module
     bool init(const std::string & backend_name)
     {
+        LOG(INFO) << "audio::init() invoked";
+
+        LOG(INFO) << "  Initialising liblt...";
         if (lt_dlinit())
         {
-            std::cerr << lt_dlerror() << std::endl;
-            std::cerr << "Error initializing liblt!\n";
+            LOG(ERROR) << lt_dlerror();
+            LOG(ERROR) << "Error initializing liblt!";
             return false;
         }
+        LOG(INFO) << "  done!";
 
         dlhandle = base::get_module(std::string("/audio/_") + backend_name);
 

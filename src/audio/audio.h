@@ -31,6 +31,8 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
+#include <glog/logging.h>
+
 #include "base/configuration.h"
 #include "audio/sound.h"
 
