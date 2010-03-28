@@ -25,6 +25,18 @@ endif(COMMAND cmake_policy)
 # Set version
 set (VERSION "0.4.0" CACHE INTERNAL "")
 
+#Add Build types
+IF(NOT CMAKE_BUILD_TYPE)
+  SET(CMAKE_BUILD_TYPE Release CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+ENDIF(NOT CMAKE_BUILD_TYPE)
+IF(NOT DEVBUILD)
+  SET(DEVBUILD 0 CACHE STRING
+      "Enable developer build, this builds unit tests."
+      FORCE)
+ENDIF(NOT DEVBUILD)
+
 add_definitions(-DVERSION="${ESCAPE}${VERSION}${ESCAPE}" -DHAVE_CONFIG_H=1)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -297,15 +309,12 @@ ELSE(LIBGLOG_FOUND)
     "libglog is required.")
 ENDIF(LIBGLOG_FOUND)
 
-###################################################################################
-# If this is a developer build, turn on debug symbols and check for gtest and gmock
-###################################################################################
+#############################################################################
+# If this is a developer build, turn on testing and check for gtest and gmock
+#############################################################################
 
 if(DEVBUILD)
-  SET(CFLAGS "${CFLAGS} -g")
-  message(STATUS
-    "Developer build; CFLAGS='${CFLAGS}'")
-
+  ENABLE_TESTING()
   PKGCONFIG_FOUND(libgtest LIBGTEST_FOUND)
   IF(LIBGTEST_FOUND)
     PKGCONFIG(libgtest LIBGTEST_INCLUDE_PATH LIBGTEST_LIBADD LIBGTEST_LIBRARIES LIBGTEST_CFLAGS)
@@ -336,6 +345,7 @@ if(DEVBUILD)
       "libgmock is required.")
   ENDIF(LIBGMOCK_FOUND)
 
+  SET(TEST_LIBRARIES ${LIBGTEST_LIBRARIES} ${LIBGMOCK_LIBRARIES})
 endif(DEVBUILD)
 
 ######################
