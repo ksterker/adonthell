@@ -28,7 +28,7 @@ set (VERSION "0.4.0" CACHE INTERNAL "")
 add_definitions(-DVERSION="${ESCAPE}${VERSION}${ESCAPE}" -DHAVE_CONFIG_H=1)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-strict-aliasing" CACHE INTERNAL "")
+    add_definitions("-fno-strict-aliasing")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(APPLE)
