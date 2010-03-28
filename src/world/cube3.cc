@@ -48,6 +48,20 @@ cube3::cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & hei
     Max.set (length, width, height);
 }
 
+cube3::cube3 (const vector3<s_int16> &min, const vector3<s_int16> &max)
+{
+	Corners[BOTTOM_FRONT_LEFT].set  (min.x(), min.y(), min.z());
+	Corners[BOTTOM_FRONT_RIGHT].set (max.x(), min.y(), min.z());
+	Corners[BOTTOM_BACK_RIGHT].set  (max.x(), max.y(), min.z());
+	Corners[BOTTOM_BACK_LEFT].set   (min.x(), max.y(), min.z());
+	Corners[TOP_FRONT_LEFT].set     (min.x(), min.y(), max.z());
+	Corners[TOP_FRONT_RIGHT].set    (max.x(), min.y(), max.z());
+	Corners[TOP_BACK_RIGHT].set     (max.x(), max.y(), max.z());
+	Corners[TOP_BACK_LEFT].set      (min.x(), max.y(), max.z());
+    Min = min;
+    Max = max;
+}
+
 // dtor
 cube3::~cube3()
 {

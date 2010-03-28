@@ -58,14 +58,21 @@ public:
         NUM_CORNERS = 8
 	};
 	
-	/**
-	 * Create a new standard 3D cube.
-	 * @param length size along x axis in pixel
-	 * @param width size along y axis in pixel
-	 * @param height size along z axis in pixel
-	 */
-	cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & height);
+    /**
+     * Create a new standard 3D cube.
+     * @param length size along x axis in pixel
+     * @param width size along y axis in pixel
+     * @param height size along z axis in pixel
+     */
+    cube3 (const u_int16 & length, const u_int16 & width, const u_int16 & height);
 	
+    /**
+     * Create a new standard 3D cube.
+     * @param min Minimum point
+     * @param max Maximum point
+     */
+    cube3 (const vector3<s_int16> &min, const vector3<s_int16> &max);
+
     /**
      * Destructor.
      */
