@@ -25,6 +25,7 @@ target_link_libraries(adonthell_audio
 	${PYTHON_LIBRARIES}
 	adonthell_base
 	adonthell_event
+    ${LIBGLOG_LIBRARIES}
 	)
 
 ################################

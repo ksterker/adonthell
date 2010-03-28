@@ -53,7 +53,13 @@ add_library(adonthell_base SHARED ${adonthell_base_SRCS})
 target_link_libraries(adonthell_base
 	${LIBXML2_LIBRARIES} -lltdl ${ZLIB_LIBRARIES})
 
-
+################################
+# Unit tests
+IF(DEVBUILD)
+  add_executable(test_logging test_logging.cc)
+  target_link_libraries(test_logging ${TEST_LIBRARIES} adonthell_base ${LIBGLOG_LIBRARIES})
+  add_test(NAME BaseLogging COMMAND test_logging)
+ENDIF(DEVBUILD)
 
 #############################################
 # Install Stuff
