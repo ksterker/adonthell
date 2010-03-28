@@ -233,6 +233,17 @@ namespace world
          * @return actual extension of placeable in z direction.
          */
         u_int16 solid_height () const { return SolidCurSize.z(); }
+
+        /**
+         * Get the minimum placement position of the solid
+         * @return min placement position as a vector3
+         */
+        vector3<s_int16> solid_min () const { return SolidMinPos; }
+        /**
+         * Get the maximum size of the solid
+         * @return max extension in all directions as a vector3
+         */
+        vector3<s_int16> solid_max () const { return SolidMaxSize; }
         //@}
 
         s_int16 solid_cur_x () const { return SolidCurPos.x(); }
@@ -377,6 +388,10 @@ namespace world
         placeable_type Type;
         /// whether the placeable in its current state is solid or not 
         bool Solid;
+        /// whether there is a solid added to SolidMinPos/SolidMaxSize yet
+        bool HaveSolid;
+        /// whether anything has been added to EntireMinPos/EntireMaxSize yet
+        bool HaveEntire;
         /// the map this placeable belongs to
         area & Mymap;
 

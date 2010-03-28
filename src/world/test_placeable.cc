@@ -67,10 +67,11 @@ namespace world
         placeable object;
 
         //Helper function to make it easy to make cubes
-        void AddCube(s_int16 x1, s_int16 y1, s_int16 z1, s_int16 x2, s_int16 y2, s_int16 z2) {
+        void AddCube(s_int16 x1, s_int16 y1, s_int16 z1, s_int16 x2, s_int16 y2, s_int16 z2, bool solid = false) {
             placeable_model *model = new placeable_model;
             placeable_shape *shape = model->add_shape("default");
             shape->add_part(new cube3(vector3<s_int16>(x1,y1,z1), vector3<s_int16>(x2,y2,z2)));
+            shape->set_solid(solid);
             object.add_model(model);
         }
     }; // class{}
@@ -78,48 +79,64 @@ namespace world
     TEST_F(placeable_Test, blankObject) {
         EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
     TEST_F(placeable_Test, simpleObject) {
         AddCube(0,0,0,10,10,10);
         EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,10), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
     TEST_F(placeable_Test, oneNegativeObject) {
         AddCube(0,0,-10,10,10,0);
         EXPECT_EQ(vector3<s_int16>(0,0,-10), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,10), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
     TEST_F(placeable_Test, threeNegativeObject) {
         AddCube(-10,-10,-10, 0, 0, 0);
         EXPECT_EQ(vector3<s_int16>(-10,-10,-10), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,10), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
-    TEST_F(placeable_Test, DISABLED_oneOffsetObject) {
+    TEST_F(placeable_Test, oneOffsetObject) {
         AddCube(0,0,5,10,10,10);
         EXPECT_EQ(vector3<s_int16>(0,0,5), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,5), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
-    TEST_F(placeable_Test, DISABLED_threeOffsetObject) {
+    TEST_F(placeable_Test, threeOffsetObject) {
         AddCube(5,5,5,10,10,10);
         EXPECT_EQ(vector3<s_int16>(5,5,5), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(5,5,5), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
-    TEST_F(placeable_Test, DISABLED_oneMoreNegativeObject) {
+    TEST_F(placeable_Test, oneMoreNegativeObject) {
         AddCube(0,0,-10,10,10,-5);
         EXPECT_EQ(vector3<s_int16>(0,0,-10), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,5), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
-    TEST_F(placeable_Test, DISABLED_threeMoreNegativeObject) {
+    TEST_F(placeable_Test, threeMoreNegativeObject) {
         AddCube(-10,-10,-10, -5, -5, -5);
         EXPECT_EQ(vector3<s_int16>(-10,-10,-10), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(5,5,5), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
     TEST_F(placeable_Test, simpleCompoundObject) {
@@ -127,6 +144,8 @@ namespace world
         AddCube(5,5,5,10,10,10);
         EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(10,10,10), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
     }
 
     TEST_F(placeable_Test, stairCompoundObject) {
@@ -148,6 +167,25 @@ namespace world
         AddCube(0, 0, 120, 16, 48, 128);
         EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_min());
         EXPECT_EQ(vector3<s_int16>(136,48,128), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_max());
+    }
+
+    TEST_F(placeable_Test, simpleSolidObject) {
+        AddCube(0,0,0,10,10,10,true);
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.entire_min());
+        EXPECT_EQ(vector3<s_int16>(10,10,10), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(0,0,0), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(10,10,10), object.solid_max());
+    }
+
+    TEST_F(placeable_Test, simpleSolidPartialObject) {
+        AddCube(0,0,-5,40,40,5);
+        AddCube(10,10,5,20,20,20,true);
+        EXPECT_EQ(vector3<s_int16>(0,0,-5), object.entire_min());
+        EXPECT_EQ(vector3<s_int16>(40,40,25), object.entire_max());
+        EXPECT_EQ(vector3<s_int16>(10,10,5), object.solid_min());
+        EXPECT_EQ(vector3<s_int16>(10,10,15), object.solid_max());
     }
 
 } // namespace{}

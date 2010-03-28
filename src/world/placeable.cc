@@ -31,17 +31,18 @@
 #include "placeable.h"
 #include "world/area.h"
 
-using world::placeable;
+#include <glog/logging.h>
 
-#define MI16 32767
+using world::placeable;
 
 // ctor
 placeable::placeable(world::area & mymap) : SolidMaxSize(), Mymap(mymap)
 {
-    SolidMinPos.set (MI16, MI16, MI16);
     Type = UNKNOWN;
     Solid = true;
     State = "";
+    HaveSolid = false;
+    HaveEntire = false;
 }
 
 // dtor
@@ -158,29 +159,53 @@ void placeable::add_model (world::placeable_model * model)
     {
         // only accounts for solid shapes
         if ((*shape).second.is_solid()) {
-            vector3<s_int16> solidMaxPos = SolidMinPos + SolidMaxSize;
-            solidMaxPos.set_x (std::max (solidMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
-            solidMaxPos.set_y (std::max (solidMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
-            solidMaxPos.set_z (std::max (solidMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
+            if(!HaveSolid) {
+                HaveSolid = true;
+                SolidMaxSize.set_x (shape->second.length());
+                SolidMaxSize.set_y (shape->second.width());
+                SolidMaxSize.set_z (shape->second.height());
 
-            SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->second.x()));
-            SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->second.y()));
-            SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->second.z()));
+                SolidMinPos.set_x (shape->second.x());
+                SolidMinPos.set_y (shape->second.y());
+                SolidMinPos.set_z (shape->second.z());
+            }
+            else {
+                vector3<s_int16> solidMaxPos = SolidMinPos + SolidMaxSize;
+                solidMaxPos.set_x (std::max (solidMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
+                solidMaxPos.set_y (std::max (solidMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
+                solidMaxPos.set_z (std::max (solidMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
 
-            SolidMaxSize = solidMaxPos - SolidMinPos;
+                SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->second.x()));
+                SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->second.y()));
+                SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->second.z()));
+
+                SolidMaxSize = solidMaxPos - SolidMinPos;
+            }
         }
 
         // add regardless of being solid or not
-        vector3<s_int16> entireMaxPos = EntireMinPos + EntireMaxSize;
-        entireMaxPos.set_x (std::max (entireMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
-        entireMaxPos.set_y (std::max (entireMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
-        entireMaxPos.set_z (std::max (entireMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
+        if(!HaveEntire) {
+            HaveEntire = true;
+            EntireMaxSize.set_x (shape->second.length());
+            EntireMaxSize.set_y (shape->second.width());
+            EntireMaxSize.set_z (shape->second.height());
 
-        EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->second.x()));
-        EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->second.y()));
-        EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z()));
+            EntireMinPos.set_x (shape->second.x());
+            EntireMinPos.set_y (shape->second.y());
+            EntireMinPos.set_z (shape->second.z());
+        }
+        else {
+            vector3<s_int16> entireMaxPos = EntireMinPos + EntireMaxSize;
+            entireMaxPos.set_x (std::max (entireMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
+            entireMaxPos.set_y (std::max (entireMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
+            entireMaxPos.set_z (std::max (entireMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
 
-        EntireMaxSize = entireMaxPos - EntireMinPos;
+            EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->second.x()));
+            EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->second.y()));
+            EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z()));
+
+            EntireMaxSize = entireMaxPos - EntireMinPos;
+        }
     }
 }
 
