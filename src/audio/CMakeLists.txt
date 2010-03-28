@@ -45,6 +45,17 @@ target_link_libraries(audio-backend-sdl
 	)
 set_target_properties(audio-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
+################################
+# Unit tests
+IF(DEVBUILD)
+  add_executable(test_audio test_audio.cc)
+  target_link_libraries(test_audio ${TEST_LIBRARIES} adonthell_audio)
+  add_test(NAME Audio COMMAND test_audio)
+
+  add_executable(test_audio_manager test_audio_manager.cc)
+  target_link_libraries(test_audio_manager ${TEST_LIBRARIES} adonthell_audio)
+  add_test(NAME AudioManger COMMAND test_audio_manager)
+ENDIF(DEVBUILD)
 
 #############################################
 # Install Stuff

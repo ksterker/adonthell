@@ -67,11 +67,20 @@ include_directories(${PYTHON_INCLUDE_PATH})
 add_library(adonthell_world SHARED ${adonthell_world_SRCS})
 target_link_libraries(adonthell_world
 	${PYTHON_LIBRARIES}
+  ${LIBGLOG_LIBRARIES}
 	adonthell_base
 	adonthell_gfx
     adonthell_python
     adonthell_rpg
 )
+
+################################
+# Unit tests
+IF(DEVBUILD)
+  add_executable(test_placeable test_placeable.cc)
+  target_link_libraries(test_placeable ${TEST_LIBRARIES} adonthell_world)
+  add_test(NAME WorldPlaceable COMMAND test_placeable)
+ENDIF(DEVBUILD)
 
 #############################################
 # Install Stuff
