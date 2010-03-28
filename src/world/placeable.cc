@@ -97,24 +97,30 @@ void placeable::set_state (const std::string & state)
         {
             if (shape->is_solid())
             {
-                SolidCurSize.set_x (std::max (SolidCurSize.x(), shape->length()));
-                SolidCurSize.set_y (std::max (SolidCurSize.y(), shape->width()));
-                SolidCurSize.set_z (std::max (SolidCurSize.z(), shape->height()));
-                
-                SolidCurPos.set_x (std::min (SolidCurPos.x(), shape->x()));
-                SolidCurPos.set_y (std::min (SolidCurPos.y(), shape->y()));
-                SolidCurPos.set_z (std::min (SolidCurPos.z(), shape->z()));
-                
+                vector3<s_int16> solidMaxPos = SolidMinPos + SolidMaxSize;
+                solidMaxPos.set_x (std::max (solidMaxPos.x(), (s_int16) (shape->length() + shape->x())));
+                solidMaxPos.set_y (std::max (solidMaxPos.y(), (s_int16) (shape->width()  + shape->y())));
+                solidMaxPos.set_z (std::max (solidMaxPos.z(), (s_int16) (shape->height() + shape->z())));
+
+                SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->x()));
+                SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->y()));
+                SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->z()));
+
+                SolidMaxSize = solidMaxPos - SolidMinPos;
+
                 Solid = true;
             }
-            
-            EntireCurSize.set_x (std::max (EntireCurSize.x(), shape->length()));
-            EntireCurSize.set_y (std::max (EntireCurSize.y(), shape->width()));
-            EntireCurSize.set_z (std::max (EntireCurSize.z(), shape->height()));
-                
-            EntireCurPos.set_x (std::min (EntireCurPos.x(), shape->x()));
-            EntireCurPos.set_y (std::min (EntireCurPos.y(), shape->y()));
-            EntireCurPos.set_z (std::min (EntireCurPos.z(), shape->z()));
+
+            vector3<s_int16> entireMaxPos = EntireMinPos + EntireMaxSize;
+            entireMaxPos.set_x (std::max (entireMaxPos.x(), (s_int16) (shape->length() + shape->x())));
+            entireMaxPos.set_y (std::max (entireMaxPos.y(), (s_int16) (shape->width()  + shape->y())));
+            entireMaxPos.set_z (std::max (entireMaxPos.z(), (s_int16) (shape->height() + shape->z())));
+
+            EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->x()));
+            EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->y()));
+            EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->z()));
+
+            EntireMaxSize = entireMaxPos - EntireMinPos;
         }
     }
 }
@@ -152,24 +158,29 @@ void placeable::add_model (world::placeable_model * model)
     {
         // only accounts for solid shapes
         if ((*shape).second.is_solid()) {
-            SolidMaxSize.set_x (std::max (SolidMaxSize.x(), shape->second.length()));
-            SolidMaxSize.set_y (std::max (SolidMaxSize.y(), shape->second.width()));
-            SolidMaxSize.set_z (std::max (SolidMaxSize.z(), shape->second.height()));
-            
+            vector3<s_int16> solidMaxPos = SolidMinPos + SolidMaxSize;
+            solidMaxPos.set_x (std::max (solidMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
+            solidMaxPos.set_y (std::max (solidMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
+            solidMaxPos.set_z (std::max (solidMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
+
             SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->second.x()));
             SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->second.y()));
-            SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->second.z())); 
-        
+            SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->second.z()));
+
+            SolidMaxSize = solidMaxPos - SolidMinPos;
         }
-        
+
         // add regardless of being solid or not
-        EntireMaxSize.set_x (std::max (EntireMaxSize.x(), shape->second.length()));
-        EntireMaxSize.set_y (std::max (EntireMaxSize.y(), shape->second.width()));
-        EntireMaxSize.set_z (std::max (EntireMaxSize.z(), shape->second.height()));
-        
+        vector3<s_int16> entireMaxPos = EntireMinPos + EntireMaxSize;
+        entireMaxPos.set_x (std::max (entireMaxPos.x(), (s_int16) (shape->second.length() + shape->second.x())));
+        entireMaxPos.set_y (std::max (entireMaxPos.y(), (s_int16) (shape->second.width()  + shape->second.y())));
+        entireMaxPos.set_z (std::max (entireMaxPos.z(), (s_int16) (shape->second.height() + shape->second.z())));
+
         EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->second.x()));
         EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->second.y()));
-        EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z())); 
+        EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->second.z()));
+
+        EntireMaxSize = entireMaxPos - EntireMinPos;
     }
 }
 
@@ -224,5 +235,7 @@ bool placeable::load_model (base::flat & model)
         add_model (mdl);
     }
     
+    std::cout << this << " " << ModelFile << ": " << EntireMaxSize << std::endl;
+
     return model.success();
 }
