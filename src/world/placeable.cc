@@ -97,30 +97,30 @@ void placeable::set_state (const std::string & state)
         {
             if (shape->is_solid())
             {
-                vector3<s_int16> solidMaxPos = SolidMinPos + SolidMaxSize;
+                vector3<s_int16> solidMaxPos = SolidCurPos + SolidCurSize;
                 solidMaxPos.set_x (std::max (solidMaxPos.x(), (s_int16) (shape->length() + shape->x())));
                 solidMaxPos.set_y (std::max (solidMaxPos.y(), (s_int16) (shape->width()  + shape->y())));
                 solidMaxPos.set_z (std::max (solidMaxPos.z(), (s_int16) (shape->height() + shape->z())));
 
-                SolidMinPos.set_x (std::min (SolidMinPos.x(), shape->x()));
-                SolidMinPos.set_y (std::min (SolidMinPos.y(), shape->y()));
-                SolidMinPos.set_z (std::min (SolidMinPos.z(), shape->z()));
+                SolidCurPos.set_x (std::min (SolidCurPos.x(), shape->x()));
+                SolidCurPos.set_y (std::min (SolidCurPos.y(), shape->y()));
+                SolidCurPos.set_z (std::min (SolidCurPos.z(), shape->z()));
 
-                SolidMaxSize = solidMaxPos - SolidMinPos;
+                SolidCurSize = solidMaxPos - SolidCurPos;
 
                 Solid = true;
             }
 
-            vector3<s_int16> entireMaxPos = EntireMinPos + EntireMaxSize;
+            vector3<s_int16> entireMaxPos = EntireCurPos + EntireCurSize;
             entireMaxPos.set_x (std::max (entireMaxPos.x(), (s_int16) (shape->length() + shape->x())));
             entireMaxPos.set_y (std::max (entireMaxPos.y(), (s_int16) (shape->width()  + shape->y())));
             entireMaxPos.set_z (std::max (entireMaxPos.z(), (s_int16) (shape->height() + shape->z())));
 
-            EntireMinPos.set_x (std::min (EntireMinPos.x(), shape->x()));
-            EntireMinPos.set_y (std::min (EntireMinPos.y(), shape->y()));
-            EntireMinPos.set_z (std::min (EntireMinPos.z(), shape->z()));
+            EntireCurPos.set_x (std::min (EntireCurPos.x(), shape->x()));
+            EntireCurPos.set_y (std::min (EntireCurPos.y(), shape->y()));
+            EntireCurPos.set_z (std::min (EntireCurPos.z(), shape->z()));
 
-            EntireMaxSize = entireMaxPos - EntireMinPos;
+            EntireCurSize = entireMaxPos - EntireCurPos;
         }
     }
 }
