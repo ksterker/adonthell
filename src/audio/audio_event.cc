@@ -1,6 +1,4 @@
 /*
-   $Id: audio_event.cc,v 1.3 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -22,6 +20,7 @@
 /**
  * @file audio/audio_event.cc
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
+ * @author Josh Glover   <jmglov@jmglov.net>
  *
  * @brief Implements the audio_event class.
  */

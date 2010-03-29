@@ -1,6 +1,4 @@
 /*
-   $Id: audio_event.h,v 1.4 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 

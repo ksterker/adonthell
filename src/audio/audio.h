@@ -1,6 +1,4 @@
 /*
-   $Id: audio.h,v 1.4 2006/10/30 05:55:11 ksterker Exp $
-
    Copyright (C) 2005/2006 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
