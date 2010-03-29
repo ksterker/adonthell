@@ -61,6 +61,10 @@ test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_manag
 test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-TESTS          = test_audio test_audio_manager
+test_sound_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_sound.cc
+test_sound_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
+test_sound_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
+
+TESTS          = test_audio test_audio_manager test_sound
 check_PROGRAMS = $(TESTS)
 ###noinst_PROGRAMS = test_audio test_audio_manager
