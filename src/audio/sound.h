@@ -1,7 +1,6 @@
 /*
-   $Id: sound.h,v 1.3 2008/04/14 11:06:40 ksterker Exp $
-
    Copyright (C) 1999/2000/2001/2002   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2010                  Josh Glover       <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -22,6 +21,7 @@
 /**
  * @file   audio/sound.h
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
+ * @author Josh Glover   <jmglov@jmglov.net>
  *
  * @brief  The sound class for programs using audio.
  */
@@ -31,6 +31,8 @@
 
 #include <string>
 #include <vector>
+
+#include "base/flat.h"
 
 namespace audio {
 
@@ -104,6 +106,23 @@ namespace audio {
          */
         static void handle_channel_stop(int channel);
 #endif
+
+        /**
+         * Saves the basic %event %data (such as the type or script data)
+         * to a stream.
+         *
+         * @param file stream where to save the %event.
+         */
+        void put_state (base::flat& file) const;
+
+        /**
+         * Loads the basic %event %date from a stream.
+         *
+         * @param file stream to load the %event from.
+         * @return \e true if the %event could be loaded, \e false otherwise
+         */
+        bool get_state (base::flat& file);
+
     protected:
         /// the name of the file we loaded
         std::string m_filename; 

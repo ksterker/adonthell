@@ -78,6 +78,20 @@ namespace audio
         EXPECT_EQ("game_sounds/foo.ogg", s->getfilename());
     }
 
+    TEST_F(sound_Test, put_state_Filename) {
+        EXPECT_EQ("game_sounds/foo.ogg", s->getfilename());
+
+        base::flat f;
+        s->put_state(f);
+        delete s;
+
+        sound *s2 = new sound("bar.ogg");
+        EXPECT_EQ("game_sounds/bar.ogg", s2->getfilename());
+
+        s2->get_state(f);
+        EXPECT_EQ("game_sounds/foo.ogg", s2->getfilename());
+    }
+
 } // namespace{}
 
 

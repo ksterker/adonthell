@@ -126,3 +126,15 @@ bool sound::handle_channel_create (void)
     }
     return false;
 }
+
+void sound::put_state (base::flat & file) const
+{
+    file.put_string("filename", m_filename);
+}
+
+bool sound::get_state (base::flat & file)
+{
+    m_filename = file.get_string("filename");
+
+    return file.success ();
+}
