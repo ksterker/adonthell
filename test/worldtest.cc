@@ -120,12 +120,10 @@ public:
 	{
         LOG(INFO) << "worldtest starting up!";
 
-        // Initialize the gfx and input systems
         LOG(INFO) << "Initialising game modules... ";
     	init_modules (GFX | INPUT | PYTHON | WORLD);
         LOG(INFO) << "  done!";
 
-    	// Set video mode
         LOG(INFO) << "Setting video mode... ";
     	gfx::screen::set_video_mode(640, 480);
         LOG(INFO) << "  done!";
@@ -150,13 +148,11 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
         LOG(INFO) << "  done!";
 
-        // create a specie
         LOG(INFO) << "Creating 'Human' specie... ";
         rpg::specie human("Human");
         human.get_state("groups/human.specie");
         LOG(INFO) << "  done!";
         
-        // create a faction
         LOG(INFO) << "Creating 'Noble' faction... ";
         rpg::faction noble("Noble");
         noble.get_state("groups/noble.faction");
@@ -168,7 +164,6 @@ public:
         player->set_specie ("Human");
         LOG(INFO) << "  done!";
         
-        // Add faction to character
         LOG(INFO) << "Adding 'Noble' faction to player character... ";
         player->add_faction("Noble");
         LOG(INFO) << "  done!";
