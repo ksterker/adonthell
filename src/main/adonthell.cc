@@ -75,6 +75,9 @@ app::~app ()
 // initialize engine subsystems
 bool app::init_modules (const u_int16 & modules)
 {
+    LOG(INFO) << logging::indent() << "app::init_modules() called";
+    logging::increment_log_indent_level();
+
     // don't initialize previously loaded modules
     u_int16 m = Modules ^ modules;
     Modules |= m;
@@ -117,7 +120,18 @@ bool app::init_modules (const u_int16 & modules)
     if (m & AUDIO)
     {
         audio::setup (Cfg);
-        if (!audio::init (Backend)) return false;
+        audio::SOUND_DIR = Userdatadir + "/" + Game + "/audio/";
+
+        LOG(INFO) << logging::indent()
+                  << "audio::SOUND_DIR: '" << audio::SOUND_DIR << "'"
+            ;
+
+        if (!audio::init (Backend)) {
+            LOG(ERROR) << logging::indent() << "audio::init() failed";
+
+            logging::decrement_log_indent_level();
+            return false;
+        }
     }
 
     // init map stuff
@@ -126,6 +140,8 @@ bool app::init_modules (const u_int16 & modules)
         world::init (Cfg);
     }
     
+    logging::decrement_log_indent_level();
+
     return true;
 }
 

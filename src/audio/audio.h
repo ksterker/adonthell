@@ -44,7 +44,7 @@ namespace audio
     /**
      * Directory where sound files reside.
      */
-    const std::string SOUND_DIR = "game_sounds/";
+    static std::string SOUND_DIR = "game_sounds/";
 #endif // SWIG
 
     /**

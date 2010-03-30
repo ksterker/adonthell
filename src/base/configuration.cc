@@ -1,6 +1,4 @@
 /*
-   $Id: configuration.cc,v 1.4 2009/04/25 13:17:49 ksterker Exp $
-
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 

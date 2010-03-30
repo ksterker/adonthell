@@ -66,16 +66,17 @@ namespace audio
     // initialize audio module
     bool init(const std::string & backend_name)
     {
-        LOG(INFO) << "audio::init() invoked";
+        LOG(INFO) << logging::indent() << "audio::init() called";
+        logging::increment_log_indent_level();
 
-        LOG(INFO) << "  Initialising liblt...";
+        LOG(INFO) << logging::indent() << "Initialising liblt...";
         if (lt_dlinit())
         {
-            LOG(ERROR) << lt_dlerror();
-            LOG(ERROR) << "Error initializing liblt!";
+            LOG(ERROR) << logging::indent() << lt_dlerror();
+            LOG(ERROR) << logging::indent() << "Error initializing liblt!";
             return false;
         }
-        LOG(INFO) << "  done!";
+        LOG(INFO) << logging::indent() << "done!";
 
         dlhandle = base::get_module(std::string("/audio/_") + backend_name);
 
@@ -149,15 +150,20 @@ namespace audio
     bigerror:
         if (dlhandle) lt_dlclose(dlhandle);
         lt_dlexit();
+        logging::decrement_log_indent_level();
         return false;
 
     success:
+        logging::decrement_log_indent_level();
         return audioinit();
     }
 
     // setup from configuration
     void setup (base::configuration & cfg)
     {
+        LOG(INFO) << logging::indent() << "audio::setup() called";
+        logging::increment_log_indent_level();
+
         audio_manager::set_audio_buffers (
             cfg.get_int ("Audio", "BufferSize", DEFAULT_AUDIO_BUFFERS)
         );
@@ -173,6 +179,8 @@ namespace audio
         audio_manager::set_audio_rate (
             cfg.get_int ("Audio", "Rate", DEFAULT_AUDIO_RATE)
         );
+
+        logging::decrement_log_indent_level();
     }
     
     // shutdown audio

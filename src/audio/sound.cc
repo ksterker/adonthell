@@ -45,8 +45,15 @@ std::vector<sound *> sound::m_channels;
 
 sound::sound (const std::string &filename)
 {
+    LOG(INFO) << logging::indent() << "sound::sound(" << filename << ") called";
+    logging::increment_log_indent_level();
+
+    LOG(INFO) << logging::indent() << "SOUND_DIR: '" << SOUND_DIR << "'";
+
     m_filename = SOUND_DIR + filename;
     open_file();
+
+    logging::decrement_log_indent_level();
 }
 
 bool sound::play (int loops)
@@ -155,9 +162,16 @@ bool sound::get_state (base::flat & file)
 
 void sound::open_file (void)
 {
+    LOG(INFO) << logging::indent() << "sound::open_file() called";
+    logging::increment_log_indent_level();
+
+    LOG(INFO) << logging::indent() << "Opening sound file: '" << m_filename << "'...";
     m_sample     = m_open (m_filename.c_str());
     m_channel    = -1;
     m_forcedhalt = false;
+    LOG(INFO) << logging::indent() << "Done!";
+
+    logging::increment_log_indent_level();
 }
 
 void sound::log_state (void) const
