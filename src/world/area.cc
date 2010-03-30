@@ -256,7 +256,7 @@ bool area::put_state (base::flat & file) const
             base::flat anonym;
             for (j = data.Anonymous.begin(); j != data.Anonymous.end(); j++)
             {
-                (*j)->Min.put_state (anonym);
+                ((*j)->Min - (*j)->get_object()->entire_min()).put_state (anonym);
             }
 
             entity.put_flat ("anonym", anonym);
@@ -269,7 +269,7 @@ bool area::put_state (base::flat & file) const
             for (j = data.Named.begin(); j != data.Named.end(); j++)
             {
                 named.put_string ("id", *((*j)->get_entity()->id()));
-                (*j)->Min.put_state (named);
+                ((*j)->Min - (*j)->get_object()->entire_min()).put_state (named);
             }
 
             entity.put_flat ("named", named);
