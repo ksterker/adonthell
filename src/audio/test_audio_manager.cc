@@ -1,6 +1,4 @@
 /*
-   $Id: screen.cc,v 1.7 2009/04/25 13:17:50 ksterker Exp $
-
    Copyright (C) 2010 Josh Glover <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -123,7 +121,7 @@ namespace audio
 
 int main(int argc, char **argv) {
     google::InitGoogleLogging(argv[0]);
-    
+
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();
