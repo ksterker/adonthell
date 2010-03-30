@@ -1,5 +1,6 @@
 /*
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2010           Josh Glover <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -21,6 +22,7 @@
 /**
  * @file   main/adonthell.cc
  * @author Kai Sterker <kaisterker@linuxgames.com>
+ * @author Josh Glover <jmglov@jmglov.net>
  *
  * @brief  The main application class for programs using the Adonthell framework.
  */
@@ -130,6 +132,18 @@ bool app::init_modules (const u_int16 & modules)
 // read command line arguments
 void app::parse_args (int & argc, char *argv[])
 {
+    google::InitGoogleLogging(argv[0]);
+
+    LOG(INFO) << logging::indent() << "app::parse_args() called";
+    logging::increment_log_indent_level();
+
+    LOG(INFO) << logging::indent()
+              << "Program '" << argv[0] << "' has "
+              << argc << " args:"
+        ;
+    for (int i = 1; i < argc; i++)
+        LOG(INFO) << logging::indent() << "[" << i << "]: '" << argv[i] << "'";
+
     int c;
 
     Argc = argc;
@@ -140,16 +154,6 @@ void app::parse_args (int & argc, char *argv[])
     Userdatadir = "";
     Config = "adonthell";
 
-    // Initialize Google's logging library.
-    google::InitGoogleLogging(argv[0]);
-
-    LOG(INFO) << "Adonthell starting up!";
-    LOG(INFO) << "  Invoked as: " << argv[0];
-    for (int i = 1; i < argc; i++)
-    {
-        LOG(INFO) << "    " << argv[i];
-    }
-    
     // Check for options
     while ((c = getopt (argc, argv, "b:c:g:hv")) != -1)
     {
@@ -187,6 +191,13 @@ void app::parse_args (int & argc, char *argv[])
     {
         Game = argv[argc-1];
     }
+
+    LOG(INFO) << logging::indent() << "Game: '"        << Game        << "'";
+    LOG(INFO) << logging::indent() << "Backend: '"     << Backend     << "'";
+    LOG(INFO) << logging::indent() << "Userdatadir: '" << Userdatadir << "'";
+    LOG(INFO) << logging::indent() << "Config: '"      << Config      << "'";
+
+    logging::decrement_log_indent_level();
 }
 
 // initialize the Adonthell framework

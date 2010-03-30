@@ -1,6 +1,4 @@
 /*
-   $Id: adonthell.h,v 1.8 2009/04/18 21:54:58 ksterker Exp $
-
    Copyright (C) 2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -34,6 +32,7 @@
 
 #include "ltdl.h"
 #include "base/configuration.h"
+#include "base/logging.h"
 
 using std::string;
 
