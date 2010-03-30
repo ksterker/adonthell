@@ -83,7 +83,6 @@ namespace audio
 
         base::flat f;
         s->put_state(f);
-        delete s;
 
         sound *s2 = new sound("bar.ogg");
         EXPECT_EQ("game_sounds/bar.ogg", s2->getfilename());
