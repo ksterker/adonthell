@@ -1,6 +1,4 @@
 /*
-   $Id: base.cc,v 1.2 2004/10/18 07:40:22 ksterker Exp $
-
    Copyright (C) 2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 

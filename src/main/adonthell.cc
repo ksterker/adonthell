@@ -1,6 +1,4 @@
 /*
-   $Id: adonthell.cc,v 1.21 2009/04/19 16:46:11 ksterker Exp $
-
    Copyright (C) 2003/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
