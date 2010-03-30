@@ -33,6 +33,7 @@
 #include <vector>
 
 #include "base/flat.h"
+#include "base/logging.h"
 
 namespace audio {
 
@@ -44,8 +45,10 @@ namespace audio {
     {
     public:
         /**
-         * Constuctor
+         * Constuctors
          */
+        sound () {}
+
         sound (const std::string &filename);
 
         /**
@@ -148,6 +151,12 @@ namespace audio {
         bool handle_channel_create(void);
 
         friend bool audio::init(const std::string &);
+
+        /// Opens the sound file and sets up the object
+        void open_file(void);
+
+        /// Logs the internal state of the object
+        void log_state(void) const;
     };
 }
 

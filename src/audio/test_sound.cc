@@ -43,6 +43,13 @@ namespace audio
         static void init() {
             sound::m_open = audio_open;
         }
+
+        sound_noop(const std::string &filename) : sound(filename) {}
+        sound_noop() {}
+
+        void * get_sample()     { return m_sample;     }
+        int    get_channel()    { return m_channel;    }
+        bool   get_forcedhalt() { return m_forcedhalt; }
     };
 
     class sound_Test : public ::testing::Test {
@@ -51,7 +58,7 @@ namespace audio
         sound_Test() {
             sound_noop::init();
 
-            s = new sound("foo.ogg");
+            s = new sound_noop("foo.ogg");
         }
 
         virtual ~sound_Test() {
@@ -71,7 +78,7 @@ namespace audio
             // before the destructor).
         }
 
-        sound *s;
+        sound_noop *s;
     }; // class{}
 
     TEST_F(sound_Test, constructor_Default) {
@@ -84,17 +91,21 @@ namespace audio
         base::flat f;
         s->put_state(f);
 
-        sound *s2 = new sound("bar.ogg");
-        EXPECT_EQ("game_sounds/bar.ogg", s2->getfilename());
-
+        sound_noop *s2 = new sound_noop();
         s2->get_state(f);
+
         EXPECT_EQ("game_sounds/foo.ogg", s2->getfilename());
+        EXPECT_EQ(-1,                    s2->get_channel());
+
+        EXPECT_FALSE(s2->get_forcedhalt());
     }
 
 } // namespace{}
 
 
 int main(int argc, char **argv) {
+    google::InitGoogleLogging(argv[0]);
+
     ::testing::InitGoogleTest(&argc, argv);
 
     return RUN_ALL_TESTS();

@@ -1,7 +1,6 @@
 /*
-   $Id: sound.cc,v 1.4 2008/10/04 16:52:30 ksterker Exp $
-
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
+   Copyright (C) 2010 Josh Glover   <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -22,11 +21,13 @@
 /**
  * @file   audio/sound.cc
  * @author Tyler Nielsen <tyler.nielsen@gmail.com>
+ * @author Josh Glover   <jmglov@jmglov.net>
  *
  * @brief  The sound class for programs using audio.
  */
 
 #include <iostream>
+
 #include "audio/audio.h"
 #include "audio/sound.h"
 
@@ -45,9 +46,7 @@ std::vector<sound *> sound::m_channels;
 sound::sound (const std::string &filename)
 {
     m_filename = SOUND_DIR + filename;
-    m_sample = m_open (m_filename.c_str());
-    m_channel = -1;
-    m_forcedhalt = false;
+    open_file();
 }
 
 bool sound::play (int loops)
@@ -129,12 +128,42 @@ bool sound::handle_channel_create (void)
 
 void sound::put_state (base::flat & file) const
 {
+    LOG(INFO) << logging::indent() << "sound::put_state() called";
+    logging::increment_log_indent_level();
+
     file.put_string("filename", m_filename);
+
+    log_state();
+
+    logging::decrement_log_indent_level();
 }
 
 bool sound::get_state (base::flat & file)
 {
+    LOG(INFO) << logging::indent() << "sound::get_state() called";
+    logging::increment_log_indent_level();
+
     m_filename = file.get_string("filename");
 
+    open_file();
+    log_state();
+
+    logging::decrement_log_indent_level();
+
     return file.success ();
+}
+
+void sound::open_file (void)
+{
+    m_sample     = m_open (m_filename.c_str());
+    m_channel    = -1;
+    m_forcedhalt = false;
+}
+
+void sound::log_state (void) const
+{
+    LOG(INFO) << logging::indent() << "m_filename: "   << m_filename;
+    LOG(INFO) << logging::indent() << "m_sample: "     << m_sample;
+    LOG(INFO) << logging::indent() << "m_channel: "    << m_channel;
+    LOG(INFO) << logging::indent() << "m_forcedhalt: " << m_forcedhalt;
 }
