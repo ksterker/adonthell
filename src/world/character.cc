@@ -28,7 +28,6 @@
 
 #include <cmath>
 
-#include "base/diskio.h"
 #include "base/logging.h"
 #include "rpg/character.h"
 #include "world/area.h"
