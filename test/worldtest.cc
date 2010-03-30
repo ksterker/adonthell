@@ -1,6 +1,4 @@
  /*
-   $Id: worldtest.cc,v 1.41 2009/05/06 19:15:12 ksterker Exp $
-
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2007/2008 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -22,6 +20,7 @@
 
 // #define DEBUG_COLLISION 1
 
+#include "audio/sound.h"
 #include "base/base.h"
 #include "base/savegame.h"
 #include "event/date.h"
@@ -121,7 +120,7 @@ public:
         LOG(INFO) << "worldtest starting up!";
 
         LOG(INFO) << "Initialising game modules... ";
-    	init_modules (GFX | INPUT | PYTHON | WORLD);
+    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD);
         LOG(INFO) << "  done!";
 
         LOG(INFO) << "Setting video mode... ";
@@ -172,7 +171,16 @@ public:
         rpg::character *npc = rpg::character::get_character("NPC");
         npc->set_specie ("Human");
         LOG(INFO) << "  done!";
-        
+
+        std::string sound_filename = "at-demo-2.ogg";
+        LOG(INFO) << "Loading sound file '" << sound_filename << "'";
+        audio::sound *sound = new audio::sound(sound_filename);
+        LOG(INFO) << "  done!";
+
+        LOG(INFO) << "Fading sound in...";
+        sound->fadein(3, -1);
+        LOG(INFO) << "  done!";
+
         // arguments to map view schedule
         LOG(INFO) << "Adding player character to mapview schedule... ";
         PyObject *args = PyTuple_New (1);
