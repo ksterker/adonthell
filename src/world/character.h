@@ -33,8 +33,7 @@
 
 #include <iostream>
 
-#include <glog/logging.h>
-
+#include "base/logging.h"
 #include "base/diskio.h"
 #include "world/moving.h"
 #include "world/schedule.h"

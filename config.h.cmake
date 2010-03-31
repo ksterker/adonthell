@@ -9,6 +9,7 @@
 #cmakedefine HAVE_SYS_TYPES_H 1
 #cmakedefine HAVE_UNISTD_H 1
 #cmakedefine STDC_HEADERS 1
+#cmakedefine HAVE_GLOG_H 1
 
 #cmakedefine HAVE_NANOSLEEP 1
 

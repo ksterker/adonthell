@@ -29,8 +29,7 @@
 #ifndef AUDIO_MANAGER_H_
 #define AUDIO_MANAGER_H_
 
-#include <glog/logging.h>
-
+#include "base/logging.h"
 #include "base/configuration.h"
 #include "base/types.h"
 
