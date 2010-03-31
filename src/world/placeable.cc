@@ -30,8 +30,7 @@
 
 #include "placeable.h"
 #include "world/area.h"
-
-#include <glog/logging.h>
+#include "base/logging.h"
 
 using world::placeable;
 

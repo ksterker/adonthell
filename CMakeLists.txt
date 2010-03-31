@@ -304,9 +304,11 @@ IF(LIBGLOG_FOUND)
 		"\tCFLAGS : ${LIBGLOG_CFLAGS}")
 	message(STATUS
 		"\tLDFLAGS: ${LIBGLOG_LIBRARIES}")
+    include_directories(${LIBGLOG_INCLUDE_PATH})
+    SET(HAVE_GLOG_H 1)
 ELSE(LIBGLOG_FOUND)
-  message(FATAL_ERROR
-    "libglog is required.")
+    message(STATUS
+        "libglog not found.  Logging disabled")
 ENDIF(LIBGLOG_FOUND)
 
 #############################################################################

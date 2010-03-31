@@ -1,8 +1,7 @@
 #include "audio/audio.h"
 #include "audio/audio_manager.h"
 #include "base/configuration.h"
-
-#include <glog/logging.h>
+#include "base/logging.h"
 
 #include <iostream>
 

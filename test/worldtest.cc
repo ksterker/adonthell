@@ -35,8 +35,7 @@
 #include "world/object.h"
 #include "world/area_manager.h"
 #include "gui/window_manager.h"
-
-#include <glog/logging.h>
+#include "base/logging.h"
 
 static world::debug_renderer DEBUG_RENDERER;
 

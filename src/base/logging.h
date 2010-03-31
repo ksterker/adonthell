@@ -30,7 +30,27 @@
 
 #include <string>
 
+#if HAVE_GLOG_H
 #include <glog/logging.h>
+#else
+// Mock up glog...
+#include <iostream>
+namespace google
+{
+    inline void InitGoogleLogging(char *ignore) { }
+
+    class LogMessageVoidify {
+    public:
+        LogMessageVoidify() { }
+        // This has to be an operator with a precedence lower than << but
+        // higher than ?:
+        void operator&(std::ostream&) { }
+    };
+}
+
+#define LOG(x) true ? (void) 0 : google::LogMessageVoidify() & std::cout
+
+#endif
 
 #include "base/types.h"
 

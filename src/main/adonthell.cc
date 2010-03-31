@@ -42,8 +42,7 @@
 #include "python/python.h"
 #include "world/world.h"
 #include "main/adonthell.h"
-
-#include <glog/logging.h>
+#include "base/logging.h"
 
 using adonthell::app;
 using std::cerr;

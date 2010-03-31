@@ -34,6 +34,7 @@
 #include <iostream>
 
 #include "base/diskio.h"
+#include "base/logging.h"
 #include "world/moving.h"
 #include "world/schedule.h"
 #include "rpg/character.h"
