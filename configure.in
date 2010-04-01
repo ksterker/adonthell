@@ -31,7 +31,6 @@ dnl Endianess
 dnl *********
 
 AC_C_BIGENDIAN(CXXFLAGS="$CXXFLAGS -D__BIG_ENDIAN__", :, :)
-dnl AC_CHECK_HEADERS([asm/byteorder.h])
 
 dnl ************************************
 dnl set up Objective C compiler for OS X
@@ -344,7 +343,8 @@ dnl *********************
 dnl Check for google-glog
 dnl *********************
 
-PKG_CHECK_MODULES(libglog, libglog >= 0.3.0)
+PKG_CHECK_MODULES([libglog], [libglog >= 0.3.0], [
+    AC_DEFINE([HAVE_GLOG_H], [1], [Define to 1 if you have google-glog])], [:])
 AC_SUBST(libglog_LIBS)
 AC_SUBST(libglog_CFLAGS)
 
