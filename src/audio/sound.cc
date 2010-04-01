@@ -26,9 +26,10 @@
  * @brief  The sound class for programs using audio.
  */
 
-#include <iostream>
+#include <string>
 
 #include "audio/audio.h"
+#include "audio/audio_manager.h"
 #include "audio/sound.h"
 
 using namespace audio;
@@ -48,9 +49,10 @@ sound::sound (const std::string &filename)
     LOG(INFO) << logging::indent() << "sound::sound(" << filename << ") called";
     logging::increment_log_indent_level();
 
-    LOG(INFO) << logging::indent() << "SOUND_DIR: '" << SOUND_DIR << "'";
+    std::string sound_dir = audio_manager::get_sound_dir();
+    LOG(INFO) << logging::indent() << "sound_dir: '" << sound_dir << "'";
 
-    m_filename = SOUND_DIR + filename;
+    m_filename = sound_dir + filename;
     open_file();
 
     logging::decrement_log_indent_level();
