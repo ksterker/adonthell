@@ -86,6 +86,12 @@ namespace audio
         EXPECT_EQ(DEFAULT_AUDIO_RATE, audio_manager::get_audio_rate());
     }
 
+    TEST_F(audio_manager_Test, set_sound_dir_Default) {
+        audio_manager::set_sound_dir();
+
+        EXPECT_EQ(DEFAULT_SOUND_DIR, audio_manager::get_sound_dir());
+    }
+
     TEST_F(audio_manager_Test, set_audio_buffers) {
         audio_manager::set_audio_buffers(27);
 
@@ -114,6 +120,12 @@ namespace audio
         audio_manager::set_audio_rate(27);
 
         EXPECT_EQ(27, audio_manager::get_audio_rate());
+    }
+
+    TEST_F(audio_manager_Test, set_sound_dir) {
+        audio_manager::set_sound_dir("27");
+
+        EXPECT_EQ("27", audio_manager::get_sound_dir());
     }
 
 } // namespace{}

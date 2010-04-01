@@ -29,6 +29,8 @@
 #ifndef AUDIO_MANAGER_H_
 #define AUDIO_MANAGER_H_
 
+#include <string>
+
 #include "base/configuration.h"
 #include "base/logging.h"
 #include "base/types.h"
@@ -54,63 +56,82 @@ namespace audio
     static const int     DEFAULT_AUDIO_MIXCHANNELS =        16;
     static const int     DEFAULT_AUDIO_RATE        =     44100;
 
+    static const std::string DEFAULT_SOUND_DIR = "game_sounds/";
+
     /** Audio access is made through this class.
      *  This static class manages audio system configuration.
      */
     class audio_manager
     {
     public:
-        /** Gets the audio buffer size
-         *  @return audio_buffers  size of audio buffer, in bytes
+        /** @return audio_buffers  size of audio buffer, in bytes
          */ 
         static const int get_audio_buffers() { return audio_buffers_; }
         
-        /** Gets the number of audio channels
-         *  @return audio_channels  number of audio channels
+        /** @return audio_channels  number of audio channels
          */ 
         static const int get_audio_channels() { return audio_channels_; }
         
-        /** Gets the audio format
-         *  @return audio_format  audio format; see
+        /** @return audio_format  audio format; see
          *                        http://www.libsdl.org/cgi/docwiki.cgi/SDL_AudioSpec
          */ 
         static const u_int16 get_audio_format() { return audio_format_; }
 
-        /** Gets the number of audio mixer channels
-         *  @return audio_mixchannels  number of audio mixer channels
+        /** @return audio_mixchannels  number of audio mixer channels
          */ 
         static const int get_audio_mixchannels() { return audio_mixchannels_; }
 
-        /** Gets the audio rate (in Hz)
-         *  @return audio_rate  audio rate in samples per second (Hz)
+
+        /** @return audio_rate  audio rate in samples per second (Hz)
          */ 
         static const int get_audio_rate() { return audio_rate_; }
 
+        /** @return sound_dir  directory in which sound files reside
+         */ 
+        static const std::string get_sound_dir() { return sound_dir_; }
+
         /** Sets the audio buffer size
+         *
          *  @param audio_buffers  size of audio buffer, in bytes
+         *  @return  true on success, false otherwise
          */ 
         static bool set_audio_buffers(const int audio_buffers = DEFAULT_AUDIO_BUFFERS);
         
         /** Sets the number of audio channels
+         *
          *  @param audio_channels  number of audio channels
+         *  @return  true on success, false otherwise
          */ 
         static bool set_audio_channels(const int audio_channels = DEFAULT_AUDIO_CHANNELS);
         
         /** Sets the audio format
+         *
          *  @param audio_format  audio format; see
          *                       http://www.libsdl.org/cgi/docwiki.cgi/SDL_AudioSpec
+         *  @return  true on success, false otherwise
          */ 
         static bool set_audio_format(const u_int16 audio_format = DEFAULT_AUDIO_FORMAT);
 
         /** Sets the number of audio mixer channels
+         *
          *  @param audio_mixchannels  number of audio mixer channels
+         *  @return  true on success, false otherwise
          */ 
         static bool set_audio_mixchannels(const int audio_mixchannels = DEFAULT_AUDIO_MIXCHANNELS);
 
         /** Sets the audio rate (in Hz)
+         *
          *  @param audio_rate  audio rate in samples per second (Hz)
+         *  @return  true on success, false otherwise
          */ 
         static bool set_audio_rate(const int audio_rate = DEFAULT_AUDIO_RATE);
+
+        /** Sets the directory in which sound files reside
+         *
+         *  @param sound_dir  directory in which sound files reside
+         *  @return  true on success, false otherwise
+         */ 
+        static bool set_sound_dir(const std::string sound_dir = DEFAULT_SOUND_DIR);
 
     protected:
         static int     audio_rate_;
@@ -119,6 +140,7 @@ namespace audio
         static int     audio_buffers_;
         static int     audio_mixchannels_;
 
+        static std::string sound_dir_;
     }; // class{}
 
 } // namespace{}

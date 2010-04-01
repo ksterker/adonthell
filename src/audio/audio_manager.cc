@@ -38,6 +38,8 @@ namespace audio
     int     audio_manager::audio_mixchannels_;
     int     audio_manager::audio_rate_;
 
+    std::string audio_manager::sound_dir_;
+
 
     bool audio_manager::set_audio_buffers(const int audio_buffers) {
         LOG(INFO) << "set_audio_buffers(" << audio_buffers << "); was: "
@@ -84,6 +86,15 @@ namespace audio
                   << audio_rate_;
 
         audio_rate_ = audio_rate;
+
+        return true;
+    }
+
+    bool audio_manager::set_sound_dir(const std::string sound_dir) {
+        LOG(INFO) << "set_sound_dir(" << sound_dir << "); was: "
+                  << sound_dir_;
+
+        sound_dir_ = sound_dir;
 
         return true;
     }
