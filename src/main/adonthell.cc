@@ -39,6 +39,7 @@
 #include "base/savegame.h"
 #include "input/input.h"
 #include "audio/audio.h"
+#include "audio/audio_manager.h"
 #include "python/python.h"
 #include "world/world.h"
 #include "main/adonthell.h"
@@ -119,10 +120,12 @@ bool app::init_modules (const u_int16 & modules)
     if (m & AUDIO)
     {
         audio::setup (Cfg);
-        audio::SOUND_DIR = Userdatadir + "/" + Game + "/audio/";
+        audio::audio_manager::set_sound_dir(Userdatadir + "/" + Game + "/audio/");
 
         LOG(INFO) << logging::indent()
-                  << "audio::SOUND_DIR: '" << audio::SOUND_DIR << "'"
+                  << "audio::audio_manager::sound_dir: '"
+                  << audio::audio_manager::get_sound_dir()
+                  << "'"
             ;
 
         if (!audio::init (Backend)) {
