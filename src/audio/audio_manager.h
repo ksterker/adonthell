@@ -81,7 +81,6 @@ namespace audio
          */ 
         static const int get_audio_mixchannels() { return audio_mixchannels_; }
 
-
         /** @return audio_rate  audio rate in samples per second (Hz)
          */ 
         static const int get_audio_rate() { return audio_rate_; }
@@ -134,11 +133,11 @@ namespace audio
         static bool set_sound_dir(const std::string sound_dir = DEFAULT_SOUND_DIR);
 
     protected:
-        static int     audio_rate_;
-        static u_int16 audio_format_;
-        static int     audio_channels_;
         static int     audio_buffers_;
+        static int     audio_channels_;
+        static u_int16 audio_format_;
         static int     audio_mixchannels_;
+        static int     audio_rate_;
 
         static std::string sound_dir_;
     }; // class{}
