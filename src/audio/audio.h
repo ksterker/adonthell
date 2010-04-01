@@ -29,9 +29,9 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
+#include "audio/sound.h"
 #include "base/logging.h"
 #include "base/configuration.h"
-#include "audio/sound.h"
 
 /**
  * This module gives an interface to handle sound output
@@ -39,13 +39,6 @@
  */
 namespace audio
 {
-#ifndef SWIG
-    /**
-     * Directory where sound files reside.
-     */
-    static std::string SOUND_DIR = "game_sounds/";
-#endif // SWIG
-
     /**
      * Initialisation method. This function must be called
      * before any use of this class.
