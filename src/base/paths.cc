@@ -34,12 +34,11 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include "base/logging.h"
 #include "base/paths.h"
 
 #define MODULES_ENV "ADONTHELL_MODULES_PATH"
 
-using std::cerr;
-using std::endl;
 using base::paths;
 
 namespace base
@@ -65,7 +64,7 @@ namespace base
         ret = lt_dlopenext(mod_env.c_str());
         if (ret) return ret;
 
-        cerr << "Failed to load module " << mod_env << ": " << lt_dlerror() << endl;
+        LOG(ERROR) << logging::indent() << "Failed to load module " << mod_env << ": " << lt_dlerror();
 
         return NULL;
     }

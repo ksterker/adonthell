@@ -2,12 +2,10 @@
  * implements a textbox
  */
 
-#include <iostream>
-
+#include "base/logging.h"
 #include "base/utf8.h"
 #include "gui/textbox.h"
 #include "gui/draw.h"
-using std::cout;
 
 /* the rate of blinking in ms */
 #define BLINKRATE 500
@@ -139,20 +137,20 @@ namespace gui
 			char data[1024];
 			FILE* f = popen("xclip -o", "r");
 			if (!f)
-				cout << "install xclip if you want copy/paste to be functional\n";
+				LOG(INFO) << logging::indent() << "install xclip if you want copy/paste to be functional";
 			else
 			{
 				data[fread(data, 1, 1024, f)] = 0;
 				pclose(f);
 				txt = data;
-				cout << "Pasted '" << data << "'\n";
+				LOG(INFO) << logging::indent() << "Pasted '" << data << "'";
 				insertpos = 0;
 				cachevalid = false;
 				return true;
 			}
 		}
 		else
-			cout << "hello\n";
+			LOG(INFO) << logging::indent() << "hello";
 #endif
 
 

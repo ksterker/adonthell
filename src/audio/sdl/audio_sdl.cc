@@ -1,6 +1,4 @@
 /*
-   $Id: audio_sdl.cc,v 1.5 2007/05/28 22:28:36 ksterker Exp $
-
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -36,6 +34,7 @@
 
 #include "audio/sound.h"
 #include "audio/audio.h"
+#include "base/logging.h"
 
 //TODO These values should be gotten from a config file or something
 int audio_rate = 44100;
@@ -86,11 +85,11 @@ bool audio_init()
 {
     if (SDL_InitSubSystem (SDL_INIT_AUDIO) < 0)
     {
-        std::cerr << "Couldn't init audio: " << SDL_GetError () << std::endl;
+        LOG(ERROR) << logging::indent() << "Couldn't init audio: " << SDL_GetError ();
         return false;
     }
     if (Mix_OpenAudio (audio_rate, audio_format, audio_channels, audio_buffers) < 0) {
-        std::cerr << "Couldn't init audio: " << Mix_GetError () << std::endl;
+        LOG(ERROR) << logging::indent() << "Couldn't init audio: " << Mix_GetError ();
         return false;
     }
     Mix_ChannelFinished(channel_stopped);
@@ -116,7 +115,8 @@ void *audio_open(const char *filename)
         Mix_Chunk *sample = Mix_LoadWAV(filename);
         if (sample == NULL)
         {
-            std::cerr << "Couldn't open file '" << filename << "': " << Mix_GetError () << std::endl;
+            LOG(ERROR) << logging::indent() << "Couldn't open file '"
+                       << filename << "': " << Mix_GetError ();
             return NULL;
         }
         Audio_Chunk *audio = new Audio_Chunk(sample);
@@ -149,7 +149,8 @@ void audio_close(void *param)
                 return;
             }
         }
-        std::cerr << "Couldn't find audio_chunk: " << param << " in the map" << std::endl;
+        LOG(ERROR) << logging::indent()
+                   << "Couldn't find audio_chunk: " << param << " in the map";
     }
 }
 
@@ -164,7 +165,7 @@ int audio_play(void *param, int loops)
     {
         // may be critical error, or maybe just no channels were free.
         // you could allocated another channel in that case...
-        std::cerr << "Mix_PlayChannel: " << Mix_GetError() << std::endl;
+        LOG(ERROR) << logging::indent() << "Mix_PlayChannel: " << Mix_GetError();
     }
     return retval;
 }
@@ -181,7 +182,7 @@ int audio_fadein(void *param, double sec, int loops)
     {
         // may be critical error, or maybe just no channels were free.
         // you could allocated another channel in that case...
-        std::cerr << "Mix_FadeInChannel: " << Mix_GetError() << std::endl;
+        LOG(ERROR) << logging::indent() << "Mix_FadeInChannel: " << Mix_GetError();
     }
     return retval;
 }
@@ -207,7 +208,7 @@ bool audio_setposition(int channel, int angle, double distance)
     int retval = Mix_SetPosition(channel, angle, dist);
     if(retval == 0)
     {
-        std::cerr << "Mix_SetPosition: " << Mix_GetError() << std::endl;
+        LOG(ERROR) << logging::indent() << "Mix_SetPosition: " << Mix_GetError();
         return false;
     }
     return true;

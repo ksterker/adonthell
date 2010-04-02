@@ -1,6 +1,4 @@
 /*
-   $Id: surface.cc,v 1.21 2009/04/25 13:17:50 ksterker Exp $
-
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006 Tyler Nielsen
 
@@ -33,6 +31,7 @@
 #include <cstdio>
 #include <stdlib.h>
 #include "base/base.h"
+#include "base/logging.h"
 #include "gfx/screen.h"
 
 namespace gfx
@@ -234,7 +233,8 @@ namespace gfx
         std::ifstream file (path.c_str(), std::ifstream::binary);
         if (!file.is_open()) 
         {
-            std::cout << "*** surface::load_png: unable to open '" << path << "'" << std::endl;
+            LOG(ERROR) << logging::indent()
+                       << "*** surface::load_png: unable to open '" << path << "'";
             return false;
         }
         

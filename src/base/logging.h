@@ -28,6 +28,7 @@
 #ifndef LOGGING_H_
 #define LOGGING_H_
 
+#include <iostream>  // provide std::endl
 #include <string>
 
 #ifdef HAVE_CONFIG_H
@@ -38,7 +39,6 @@
 #include <glog/logging.h>
 #else
 // Mock up glog...
-#include <iostream>
 namespace google
 {
     inline void InitGoogleLogging(char *ignore) { }

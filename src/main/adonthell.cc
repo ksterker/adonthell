@@ -46,8 +46,6 @@
 #include "base/logging.h"
 
 using adonthell::app;
-using std::cerr;
-using std::endl;
 
 /// The handler of our library file.
 static lt_dlhandle dlhandle = 0;
@@ -196,7 +194,7 @@ void app::parse_args (int & argc, char *argv[])
                 break;
             // version number:
             case 'v':
-                std::cout << VERSION << endl;
+                std::cout << VERSION << std::endl;
                 exit (0);
                 break;
             default:
@@ -227,15 +225,16 @@ bool app::init ()
     // init libltdl
     if (lt_dlinit ())
     {
-        cerr << lt_dlerror() << endl;
-        cerr << "Error initializing liblt!" << endl;
+        LOG(ERROR) << logging::indent() << lt_dlerror();
+        LOG(ERROR) << logging::indent() << "Error initializing liblt!";
+
         return false;
     }
 
     // init base module (required for reading config file)
     if (!base::init (Game, Userdatadir))
     {
-        cerr << "No valid data directory found (use -g switch)." << endl;
+        LOG(ERROR) << logging::indent() << "No valid data directory found (use -g switch)";
         return false;
     }
 
@@ -249,7 +248,10 @@ bool app::init ()
     if (!Cfg.read (Config))
     {
         // print message if that fails, but don't panic yet ...
-        cerr << "Error reading engine configuration '" << Config << ".xml'" << endl;
+        LOG(ERROR) << logging::indent()
+                   << "Error reading engine configuration '"
+                   << Config << ".xml'"
+            ;
     }
 
 	/*
@@ -261,7 +263,7 @@ bool app::init ()
 	if (Game != "" && !Cfg.read (Game))
 	{
         // no big deal if that fails; being verbose just in case ...
-        cerr << "Cannot read application specific configuration '" << Game << ".xml'" << endl;
+        LOG(ERROR) << logging::indent() << "Cannot read application specific configuration '" << Game << ".xml'";
 	}
 	 */
 	
@@ -278,7 +280,7 @@ bool app::init ()
     dlhandle = base::get_module (string ("/main/_") + Backend);
     if (!dlhandle)
     {
-        cerr << lt_dlerror() << endl;
+        LOG(ERROR) << logging::indent() << lt_dlerror();
         return false;
     }
 
@@ -286,7 +288,7 @@ bool app::init ()
     init_p = (bool (*)(app*)) lt_dlsym (dlhandle, "main_init");
     if (!init_p)
     {
-        cerr << lt_dlerror() << endl;
+        LOG(ERROR) << logging::indent() << lt_dlerror();
         return false;
     }
     
@@ -314,12 +316,14 @@ void app::cleanup () const
 // display a help message
 void app::print_help () const
 {
-    std::cout << "Usage: " << Argv[0] << " [OPTIONS] [GAME]" << endl;
-    std::cout << endl;
-    std::cout << "Where [OPTIONS] can be:\n";
-    std::cout << "-b <backend>     specifiy the backend to use (default 'sdl')\n";
-    std::cout << "-c <config>      use given config file (default 'adonthell')\n";
-    std::cout << "-g <directory>   specify user game directory\n";
-    std::cout << "-h               print this message and exit\n";
-    std::cout << "-v               print engine version number and exit" << endl;
+    std::cout
+        << "Usage: " << Argv[0] << " [OPTIONS] [GAME]" << std::endl
+        << std::endl
+        << "Where [OPTIONS] can be:"                                      << std::endl
+        << "-b <backend>     specifiy the backend to use (default 'sdl')" << std::endl
+        << "-c <config>      use given config file (default 'adonthell')" << std::endl
+        << "-g <directory>   specify user game directory"                 << std::endl
+        << "-h               print this message and exit"                 << std::endl
+        << "-v               print engine version number and exit"        << std::endl
+        ;
 }

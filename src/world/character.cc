@@ -52,7 +52,7 @@ character::character (area & mymap, rpg::character * mind) : moving (mymap)
     // save the representation of this character on the rpg side
     Mind = mind;
 
-    std::cerr << "world::character::character() invoked" << std::endl;
+    LOG(INFO) << logging::indent() << "world::character::character() invoked";
 }
 
 // dtor

@@ -1,6 +1,4 @@
 /*
- $Id: surface_ext.cc,v 1.2 2009/04/25 13:17:50 ksterker Exp $
- 
  Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2006 Tyler Nielsen
  
@@ -32,6 +30,7 @@
  */
 
 #include <cstdio>
+#include "base/logging.h"
 #include "gfx/surface_ext.h"
 #include "gfx/png_wrapper.h"
 
@@ -69,7 +68,7 @@ void surface_ext::mirror (bool x, bool y)
     
     if (y)
     {
-        std::cout << "Mirroring in y is not supported yet." << std::endl;
+        LOG(INFO) << logging::indent() << "Mirroring in y is not supported yet.";
         is_mirrored_y_ = !is_mirrored_y_;
     }
 }

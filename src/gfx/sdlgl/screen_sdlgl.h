@@ -1,6 +1,4 @@
 /*
-   $Id: screen_sdlgl.h,v 1.5 2006/10/08 10:39:58 gnurou Exp $
-
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -24,6 +22,7 @@
 #define GFX_SDL_SCREEN_H_
 
 #include "SDL.h"
+#include "base/logging.h"
 #include "gfx/screen.h"
 #include "gfx/sdlgl/surface_sdlgl.h"
 
@@ -35,8 +34,8 @@ namespace gfx
     {
     public:
         ~screen_surface_sdlgl() { }
-        void resize (u_int16 l, u_int16 h) { std::cerr << "Invalid operation: Can't resize the screen surface!\n"; }
-        void clear () { std::cerr << "Invalid operation: Can't clear the screen surface!\n"; }
+        void resize (u_int16 l, u_int16 h) { LOG(ERROR) << logging::indent() << "Invalid operation: Can't resize the screen surface!"; }
+        void clear () { LOG(ERROR) << logging::indent() << "Invalid operation: Can't clear the screen surface!"; }
         bool set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth = 0);
 
         virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,

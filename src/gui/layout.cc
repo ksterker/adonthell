@@ -1,7 +1,6 @@
 #include "layout.h"
-#include <iostream>
-using std::cout;
 #include "draw.h"
+#include "base/logging.h"
 
 //the rate of movement for disappearing layouts
 //defined in pixels per millisecond
@@ -227,23 +226,23 @@ namespace gui
 			case input::keyboard_event::LEFT_KEY:
 				if (!moveleft())
 					return false;
-				cout << "which is now " << which << "\n";
+				LOG(INFO) << logging::indent() << "which is now '" << which << "'";
 				break;
 			case input::keyboard_event::RIGHT_KEY:
 			case input::keyboard_event::TAB_KEY:
 				if (!moveright())
 					return false;
-				cout << "which is now " << which << "\n";
+				LOG(INFO) << logging::indent() << "which is now '" << which << "'";
 				break;
 			case input::keyboard_event::DOWN_KEY:
 				if (!movedown())
 					return false;
-				cout << "which is now " << which << "\n";
+				LOG(INFO) << logging::indent() << "which is now '" << which << "'";
 				break;
 			case input::keyboard_event::UP_KEY:
 				if (!moveup())
 					return false;
-				cout << "which is now " << which << "\n";
+				LOG(INFO) << logging::indent() << "which is now '" << which << "'";
 				break;
 			default:
 				return false;

@@ -1,7 +1,6 @@
 #include "button.h"
+#include "base/logging.h"
 
-#include <iostream>
-using namespace std;
 
 namespace gui
 {
@@ -45,7 +44,7 @@ namespace gui
 /*
 	bool button::mousedown(SDL_MouseButtonEvent & m)
 	{
-		cout << "mouse down\n";
+		LOG(INFO) << logging::indent() << "mouse down";
 		if (m.button == SDL_BUTTON_LEFT)
 		{
 			clicked = true;
@@ -56,7 +55,7 @@ namespace gui
 	}
 	bool button::mouseup(SDL_MouseButtonEvent & m)
 	{
-		cout << "mouse up\n";
+		LOG(INFO) << logging::indent() << "mouse up";
 		if (m.button == SDL_BUTTON_LEFT && clicked)
 		{
 			clicked = false;

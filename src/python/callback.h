@@ -1,6 +1,4 @@
 /*
-   $Id: callback.h,v 1.8 2008/10/05 09:22:03 ksterker Exp $
-
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -34,6 +32,7 @@
 #define PYTHON_CALLBACK_H
 
 #include "base/callback.h"
+#include "base/logging.h"
 #include "python/python.h"
 
 #include <iostream>
@@ -123,7 +122,7 @@ namespace python
             
             PyObject * pyargs = PyTuple_New(1);
             pyarg1 = pass_instance<P1>(arg1);
-            if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+            if (!pyarg1) LOG(ERROR) << logging::indent() << "Warning! Argument not valid!\n";
             
             // The SetItem steals our reference to pyarg1
             PyTuple_SetItem(pyargs, 0, pyarg1);
@@ -164,8 +163,8 @@ namespace python
             PyObject * pyargs = PyTuple_New(2);
             pyarg1 = pass_instance<P1>(arg1);
             pyarg2 = pass_instance<P2>(arg2);
-            if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
-            if (!pyarg2) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+            if (!pyarg1) LOG(ERROR) << logging::indent() << "Warning! Argument not valid!\n";
+            if (!pyarg2) LOG(ERROR) << logging::indent() << "Warning! Argument not valid!\n";
             
             // The SetItem steals our reference to pyarg1
             PyTuple_SetItem(pyargs, 0, pyarg1);
@@ -206,7 +205,7 @@ namespace python
             
             PyObject * pyargs = PyTuple_New(1);
             pyarg1 = pass_instance<P1>(arg1);
-            if (!pyarg1) std::cerr << "Warning! Argument not valid!\n" << std::endl;
+            if (!pyarg1) LOG(ERROR) << logging::indent() << "Warning! Argument not valid!\n";
             
             // The SetItem steals our reference to pyarg1
             PyTuple_SetItem(pyargs, 0, pyarg1);

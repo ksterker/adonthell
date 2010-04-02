@@ -1,6 +1,4 @@
 /*
-   $Id: input_sdl.cc,v 1.5 2007/05/28 22:28:37 ksterker Exp $
-
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -28,6 +26,7 @@
 
 #include <iostream>
 #include "manager_sdl.h"
+#include "base/logging.h"
 
 extern "C"
 {
@@ -40,7 +39,7 @@ bool input_init()
 {
     if (SDL_InitSubSystem (SDL_INIT_JOYSTICK) < 0)
     {
-        std::cerr << "Couldn't init joysticks: " << SDL_GetError () << std::endl;
+        LOG(ERROR) << logging::indent() << "Couldn't init joysticks: " << SDL_GetError ();
         return false;
     }
     int nbr_joy = SDL_NumJoysticks();

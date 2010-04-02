@@ -1,6 +1,4 @@
 /*
-   $Id: gfx_sdl.cc,v 1.1 2009/02/23 20:22:18 ksterker Exp $
-
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -30,6 +28,7 @@
 #include "surface_sdl.h"
 #include "screen_sdl.h"
 #include "SDL.h"
+#include "base/logging.h"
 
 extern "C"
 {
@@ -45,7 +44,7 @@ bool gfx_init()
 {
     if (SDL_InitSubSystem (SDL_INIT_VIDEO) < 0)
     {
-        std::cerr << "Couldn't init display: " << SDL_GetError () << std::endl;
+        LOG(ERROR) << logging::indent() << "Couldn't init display: " << SDL_GetError ();
         return false;
     }
 

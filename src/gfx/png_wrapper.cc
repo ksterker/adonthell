@@ -1,6 +1,4 @@
 /*
-   $Id: png_wrapper.cc,v 1.8 2009/03/08 13:21:23 ksterker Exp $
-
    Copyright (C) 2006   Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -30,8 +28,8 @@
  */
 
 #include "png_wrapper.h"
+#include "base/logging.h"
 
-#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -74,7 +72,7 @@ namespace gfx
         file.read((char *)header, headerbytes);
         if (png_sig_cmp(header, 0, headerbytes))
         {
-            cout << "[read_png_file] File is not recognized as a PNG file" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] File is not recognized as a PNG file";
             return NULL;
         }
 
@@ -82,14 +80,14 @@ namespace gfx
         png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
         if (!png_ptr)
         {
-            cout << "[read_png_file] png_create_read_struct failed" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] png_create_read_struct failed";
             return NULL;
         }
 
         info_ptr = png_create_info_struct(png_ptr);
         if (!info_ptr)
         {
-            cout << "[read_png_file] png_create_info_struct failed" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] png_create_info_struct failed";
             png_destroy_read_struct(&png_ptr, NULL, NULL);
             return NULL;
         }
@@ -97,7 +95,7 @@ namespace gfx
         if (setjmp(png_jmpbuf(png_ptr)))
         {
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-            cout << "[read_png_file] Error during init_io" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] Error during init_io";
             return NULL;
         }
 
@@ -115,7 +113,7 @@ namespace gfx
         /* read file */
         if (setjmp(png_jmpbuf(png_ptr)))
         {
-            cout << "[read_png_file] Error during read_image" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] Error during read_image";
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
             return NULL;
         }
@@ -158,7 +156,7 @@ namespace gfx
             break; 
         }
         default:
-            cout << "[read_png_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (is " << info_ptr->color_type << ")" << endl;
+            LOG(ERROR) << logging::indent() << "[read_png_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (is " << info_ptr->color_type << ")";
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
             return NULL;
         }
@@ -177,21 +175,21 @@ namespace gfx
         png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
         if (!png_ptr)
         {
-            cout << "[write_png_file] png_create_write_struct failed" << endl;
+            LOG(ERROR) << logging::indent() << "[write_png_file] png_create_write_struct failed";
             return;
         }
 
         info_ptr = png_create_info_struct(png_ptr);
         if (!info_ptr)
         {
-            cout << "[write_png_file] png_create_info_struct failed" << endl;
+            LOG(ERROR) << logging::indent() << "[write_png_file] png_create_info_struct failed";
             png_destroy_write_struct(&png_ptr, NULL);
             return;
         }
 
         if (setjmp(png_jmpbuf(png_ptr)))
         {
-            cout << "[write_png_file] Error during init_io" << endl;
+            LOG(ERROR) << logging::indent() << "[write_png_file] Error during init_io";
             png_destroy_write_struct(&png_ptr, &info_ptr);
             return;
         }
@@ -201,7 +199,7 @@ namespace gfx
         /* write header */
         if (setjmp(png_jmpbuf(png_ptr)))
         {
-            cout << "[write_png_file] Error during writing header" << endl;
+            LOG(ERROR) << logging::indent() << "[write_png_file] Error during writing header";
             png_destroy_write_struct(&png_ptr, &info_ptr);
             return;
         }
@@ -216,7 +214,7 @@ namespace gfx
         /* write bytes */
         if (setjmp(png_jmpbuf(png_ptr)))
         {
-            cout << "[write_png_file] Error during writing bytes" << endl;
+            LOG(ERROR) << logging::indent() << "[write_png_file] Error during writing bytes";
             png_destroy_write_struct(&png_ptr, &info_ptr);
             return;
         }

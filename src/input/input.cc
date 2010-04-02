@@ -1,6 +1,4 @@
 /*
-   $Id: input.cc,v 1.6 2007/05/14 02:00:05 ksterker Exp $
-
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -33,6 +31,7 @@
 #include "ltdl.h"
 #include <iostream>
 
+#include "base/logging.h"
 #include "base/paths.h"
 
 /**
@@ -59,8 +58,8 @@ namespace input
     {
         if (lt_dlinit()) 
         { 
-            std::cerr << lt_dlerror() << std::endl;
-            std::cerr << "Error initializing liblt!\n"; 
+            LOG(ERROR) << logging::indent() << lt_dlerror();
+            LOG(ERROR) << logging::indent() << "Error initializing liblt!\n"; 
             return false;
         }
 
@@ -71,28 +70,28 @@ namespace input
         inputinit = (bool(*)()) lt_dlsym(dlhandle, "input_init");
         if (!inputinit)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
     
         inputcleanup = (void(*)()) lt_dlsym(dlhandle, "input_cleanup");
         if (!inputcleanup)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         input::manager::textinput_p = (void(*)(bool)) lt_dlsym(dlhandle, "input_text");
         if (!input::manager::textinput_p)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
         
         input::manager::update_p = (void(*)()) lt_dlsym(dlhandle, "input_manager_update");
         if (!input::manager::update_p)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 

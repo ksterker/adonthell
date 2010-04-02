@@ -1,6 +1,4 @@
 /*
- $Id: chunk.cc,v 1.15 2009/04/26 18:52:59 ksterker Exp $
- 
  Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  

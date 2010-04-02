@@ -137,7 +137,7 @@ namespace adonthell {
             
         private:
             /**
-             * Print short usage message to cout.
+             * Print short usage message to standard out
              */
             void print_help () const;
         

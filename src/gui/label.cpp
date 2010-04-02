@@ -1,7 +1,7 @@
+#include "base/logging.h"
 #include "gui/label.h"
 #include "gfx/gfx.h"
 #include <iostream>
-using std::cout;
 
 //const float sigma1[] = {.006,.061,.242,.383,.242,.061,.006};
 //const float kernel[] ={.16,.16,.16,0,.16,.16,.16};
@@ -94,7 +94,7 @@ namespace gui
 				cached->resize(w, h);
 			}
 			if (!cached)
-				cout << "Unable to create label cache!\n";
+				LOG(INFO) << logging::indent() << "Unable to create label cache!";
 			cached->fillrect(0, 0, w, h, cached->map_color (0, 0, 0, 0));
 			//compute where to render it
 			if (_multiline)

@@ -1,6 +1,4 @@
 /*
-   $Id: audio.cc,v 1.6 2007/05/14 02:00:04 ksterker Exp $
-
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -85,63 +83,63 @@ namespace audio
         audioinit = (bool(*)()) lt_dlsym(dlhandle, "audio_init");
         if (!audioinit)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audiocleanup = (void(*)()) lt_dlsym(dlhandle, "audio_cleanup");
         if (!audiocleanup)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_open = (void *(*)(const char *)) lt_dlsym(dlhandle, "audio_open");
         if (!audio::sound::m_open)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_close = (void(*)(void *)) lt_dlsym(dlhandle, "audio_close");
         if (!audio::sound::m_close)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_play = (int(*)(void *, int)) lt_dlsym(dlhandle, "audio_play");
         if (!audio::sound::m_play)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_fadein = (int(*)(void *, double, int)) lt_dlsym(dlhandle, "audio_fadein");
         if (!audio::sound::m_fadein)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_halt = (void (*)(int)) lt_dlsym(dlhandle, "audio_halt");
         if (!audio::sound::m_halt)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_fadeout = (void (*)(int, double)) lt_dlsym(dlhandle, "audio_fadeout");
         if (!audio::sound::m_fadeout)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         audio::sound::m_setpos = (bool (*)(int, int, double)) lt_dlsym(dlhandle, "audio_setposition");
         if (!audio::sound::m_setpos)
         {
-            std::cerr << lt_dlerror() << std::endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 

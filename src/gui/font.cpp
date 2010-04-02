@@ -1,12 +1,10 @@
 #include "gui/font.h"
 #include "base/base.h"
 #include "base/endians.h"
+#include "base/logging.h"
 #include "base/utf8.h"
 #include <string>
 using std::string;
-#include <iostream>
-using std::cout;
-#include "base/base.h"
 #include <ctype.h>
 
 namespace gui
@@ -21,7 +19,7 @@ namespace gui
 			if (!refcount)
 			{
 				if (error = FT_Init_FreeType(&library))
-					cout << "Unable to initialize the freetype library\n";
+					LOG(ERROR) << logging::indent() << "Unable to initialize the freetype library";
 				else
 					refcount++;
 			}
@@ -49,7 +47,7 @@ namespace gui
 		error = 0;
 		ref(true);
 		if (error = FT_New_Face(library, fullpath.c_str(), 0, &face))
-			cout << "Unable to load font " << path << "\n";
+			LOG(ERROR) << logging::indent() << "Unable to load font '" << path << "'";
 		else
 			setSize(size);
 		color = 0xffffffff; //set to white
@@ -63,7 +61,7 @@ namespace gui
 	{
 		fontsize = size;
 		if (error = FT_Set_Char_Size(face, 0, fontsize*64, 0, 0))
-			cout << "Unable to set the size of the font\n";
+			LOG(ERROR) << logging::indent() << "Unable to set the size of the font";
 	}
 
 	void font::render(const string& s, int x, int y, gfx::surface* surf)
@@ -74,7 +72,7 @@ namespace gui
 		{
             u_int32 chr = base::utf8::to_utf32 (s, i);
 			if (error = FT_Load_Char(face, chr, FT_LOAD_RENDER))
-				cout << "Unable to load the glyph for character '" << chr << "'\n";
+				LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
 			else
 			{
 				draw_glyph(x+face->glyph->bitmap_left, 
@@ -138,7 +136,7 @@ namespace gui
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
             if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
-                cout << "Unable to load the glyph for character '" << chr << "'\n";
+                LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
 			else
 			{
 				if (isspace(*i))
@@ -182,7 +180,7 @@ namespace gui
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
             if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
-                cout << "Unable to load the glyph for character '" << chr << "'\n";
+                LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
 			else
 			{
 				w += face->glyph->advance.x;

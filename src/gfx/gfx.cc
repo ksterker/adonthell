@@ -1,6 +1,4 @@
 /*
-   $Id: gfx.cc,v 1.13 2009/04/25 13:17:50 ksterker Exp $
-
    Copyright (C) 2003  Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -30,6 +28,7 @@
  */
 
 #include <cstdio>
+#include "base/logging.h"
 #include "base/paths.h"
 #include "gfx/gfx.h"
 #include "gfx/surface_cacher.h"
@@ -66,8 +65,8 @@ namespace gfx
     {
         if (lt_dlinit())
         {
-            cerr << lt_dlerror() << endl;
-            cerr << "Error initializing liblt!\n";
+            LOG(ERROR) << logging::indent() << lt_dlerror();
+            LOG(ERROR) << logging::indent() << "Error initializing liblt!";
             return false;
         }
 
@@ -78,63 +77,63 @@ namespace gfx
         gfxinit = (bool(*)()) lt_dlsym(dlhandle, "gfx_init");
         if (!gfxinit)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         gfxcleanup = (void(*)()) lt_dlsym(dlhandle, "gfx_cleanup");
         if (!gfxcleanup)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::set_video_mode_p = (bool(*)(u_int16, u_int16, u_int8)) lt_dlsym(dlhandle, "gfx_screen_set_video_mode");
         if (!screen::set_video_mode_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::update_p = (void(*)()) lt_dlsym(dlhandle, "gfx_screen_update");
         if (!screen::update_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::trans_color_p = (u_int32(*)()) lt_dlsym(dlhandle, "gfx_screen_trans_color");
         if (!screen::trans_color_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::clear_p = (void(*)()) lt_dlsym(dlhandle, "gfx_screen_clear");
         if (!screen::clear_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::get_surface_p = (surface * (*)()) lt_dlsym(dlhandle, "gfx_screen_get_surface");
         if (!screen::get_surface_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
         screen::info_p = (std::string (*)()) lt_dlsym(dlhandle, "gfx_screen_info");
         if (!screen::info_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
         
         create_surface_p = (surface *(*)()) lt_dlsym(dlhandle, "gfx_create_surface");
         if (!create_surface_p)
         {
-            cerr << lt_dlerror() << endl;
+            LOG(ERROR) << logging::indent() << lt_dlerror();
             goto bigerror;
         }
 
@@ -158,7 +157,7 @@ namespace gfx
         
         if (!(surfaces = new surface_cacher()))
         {
-            cerr << "Unable to create a surface cacher\n";
+            LOG(ERROR) << logging::indent() << "Unable to create a surface cacher";
             return;
         }
         surfaces->set_max_mem (cfg.get_int("Video", "CacheSize", DEFAULT_CACHE_SIZE));

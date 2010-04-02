@@ -1,7 +1,10 @@
 #include "conversation.h"
-#include <iostream>
+#include "base/logging.h"
 #include <iomanip>
+#include <iostream>
+
 #define LINEHEIGHT 20 
+
 namespace gui
 {
 	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_0*e)
@@ -58,7 +61,8 @@ namespace gui
         font f (NULL, LINEHEIGHT - 1);
 		//the color from here doesnt work
 		unsigned int fc = rpg::character::get_player()->color();
-		std::cout << "color changed to 0x" << std::setw(8) << std::setfill('0') << std::hex << fc << std::endl;
+		LOG(INFO) << logging::indent() << "color changed to 0x"
+                  << std::setw(8) << std::setfill('0') << std::hex << fc;
         f.setColor(fc);
 
 		for (i = 0; i < optcount; i++)

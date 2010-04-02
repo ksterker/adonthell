@@ -1,6 +1,4 @@
 /*
-   $Id: screen_sdl.cc,v 1.9 2009/02/16 10:32:32 ksterker Exp $
-
    Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -89,7 +87,7 @@ std::string gfx_screen_info()
     const int driver_name_length = 500;
     char drv_name[driver_name_length];
 
-    temp << "Video information: \n"
+    temp << "Video information: " << std::endl
          << "Video driver used:                   " << SDL_VideoDriverName(drv_name, driver_name_length) << std::endl
          << "Internal game depth:                 " << ((int) vi->vfmt->BitsPerPixel) << std::endl
          << "Can create hardware surfaces:        " << (vi->hw_available ? "Yes" : "No") << std::endl
