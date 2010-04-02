@@ -1,5 +1,6 @@
 /*
    Copyright (C) 2005 Tyler Nielsen <tyler.nielsen@gmail.com>
+   Copyright (C) 2010 Josh Glover   <jmglov@jmglov.net>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -32,12 +33,14 @@ using audio::audio_event;
 // Save time event to file
 void audio_event::put_state (base::flat & file) const
 {
-    //TODO Fill this in...
+    Sample->put_state(file);
 }
 
 // load time event from file
 bool audio_event::get_state (base::flat & file)
 {
-    //TODO Fill this in...
+    Sample = new sound();
+    Sample->get_state(file);
+
     return file.success ();
 }

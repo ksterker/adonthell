@@ -18,32 +18,32 @@
 */
 
 /**
- * @file   test/audio/sound.cc
+ * @file   test/audio/audio_event.cc
  * @author Josh Glover <jmglov@jmglov.net>
  * 
- * @brief  Unit tests for the sound class.
+ * @brief  Unit tests for the audio_event class.
  * 
  * 
  */
 
 
-#include "audio/sound.h"
+#include "audio/audio_event.h"
 #include "audio/test_sound.h"
 
 #include <gtest/gtest.h>
 
 namespace audio
 {
-    class sound_Test : public ::testing::Test {
+    class audio_event_Test : public ::testing::Test {
 
     protected:
-        sound_Test() {
-            sound_noop::init();
-
-            s = new sound_noop("foo.ogg");
+        audio_event_Test() {
+            s  = new sound_noop("foo.ogg");
+            ev = new audio_event(s);
         }
 
-        virtual ~sound_Test() {
+        virtual ~audio_event_Test() {
+            delete ev;
             delete s;
         }
 
@@ -60,26 +60,31 @@ namespace audio
             // before the destructor).
         }
 
-        sound_noop *s;
+        audio_event *ev;
+        sound_noop  *s;
     }; // class{}
 
-    TEST_F(sound_Test, constructor_Default) {
-        EXPECT_EQ("foo.ogg", s->getfilename());
+    TEST_F(audio_event_Test, constructor_Default) {
+        EXPECT_EQ("foo.ogg", ae->sample()->getfilename());
     }
 
-    TEST_F(sound_Test, put_state_Filename) {
-        EXPECT_EQ("foo.ogg", s->getfilename());
+    TEST_F(audio_event_Test, put_state_Filename) {
+        EXPECT_EQ("foo.ogg", ae->sample()->getfilename());
 
         base::flat f;
-        s->put_state(f);
+        ae->put_state(f);
 
-        sound_noop *s2 = new sound_noop();
-        s2->get_state(f);
+        sound_noop  *s2  = new sound_noop("bar.ogg");
+        audio_event *ae2 = new audio_event(s2);
 
-        EXPECT_EQ("foo.ogg", s2->getfilename());
-        EXPECT_EQ(-1,        s2->get_channel());
+        EXPECT_EQ("bar.ogg", ae2->sample()->getfilename());
 
-        EXPECT_FALSE(s2->get_forcedhalt());
+        ae2->get_state(f);
+
+        EXPECT_EQ("foo.ogg", ae2->sample()->getfilename());
+
+        delete ae2;
+        delete s2;
     }
 
 } // namespace{}

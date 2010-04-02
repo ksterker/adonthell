@@ -49,7 +49,7 @@ namespace audio
          *
          * @param sample The sample to trigger on
          */
-        audio_event (const sound *sample): event () 
+        audio_event (sound *sample): event () 
 		{ 
 			Sample = sample; 
 		}
@@ -132,7 +132,7 @@ namespace audio
 
     private:
         /// time when the event shall be triggered
-        const sound *Sample;
+        sound *Sample;
     };
 }
 
