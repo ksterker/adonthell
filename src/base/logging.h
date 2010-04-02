@@ -30,6 +30,10 @@
 
 #include <string>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #if HAVE_GLOG_H
 #include <glog/logging.h>
 #else

@@ -39,6 +39,10 @@ ENDIF(NOT DEVBUILD)
 
 add_definitions(-DVERSION="${ESCAPE}${VERSION}${ESCAPE}" -DHAVE_CONFIG_H=1)
 
+IF(CMAKE_BUILD_TYPE MATCHES "Release")
+    add_definitions(-DGOOGLE_STRIP_LOG=1)
+ENDIF(CMAKE_BUILD_TYPE MATCHES "Release")
+
 if(CMAKE_COMPILER_IS_GNUCXX)
     add_definitions("-fno-strict-aliasing")
 endif(CMAKE_COMPILER_IS_GNUCXX)
