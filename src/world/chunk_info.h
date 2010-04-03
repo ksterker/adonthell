@@ -117,7 +117,7 @@ namespace world
         vector3<s_int32> solid_min () const
         {
             const placeable *object = Entity->get_object(); 
-            return Min + vector3<s_int32>(object->solid_min_x(), object->solid_min_y(), object->solid_min_z());
+            return Min - object->entire_min() + object->solid_min();
         }
 
         /**
@@ -127,7 +127,7 @@ namespace world
         vector3<s_int32> solid_max () const
         {
             const placeable *object = Entity->get_object();
-            return  SolidMax + vector3<s_int32>(object->solid_min_x(), object->solid_min_y(), object->solid_min_z());
+            return  SolidMax - object->entire_min() + object->solid_min();
         }
         
         /**
