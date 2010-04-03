@@ -56,6 +56,14 @@ IF(DEVBUILD)
   add_executable(test_audio_manager test_audio_manager.cc)
   target_link_libraries(test_audio_manager ${TEST_LIBRARIES} adonthell_audio)
   add_test(NAME AudioManger COMMAND test_audio_manager)
+
+  add_executable(test_sound test_sound.cc)
+  target_link_libraries(test_sound ${TEST_LIBRARIES} adonthell_audio)
+  add_test(NAME AudioSound COMMAND test_sound)
+
+  add_executable(test_audio_event test_audio_event.cc)
+  target_link_libraries(test_audio_event ${TEST_LIBRARIES} adonthell_audio)
+  add_test(NAME AudioEvent COMMAND test_audio_event)
 ENDIF(DEVBUILD)
 
 #############################################
