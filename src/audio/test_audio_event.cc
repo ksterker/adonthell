@@ -38,6 +38,8 @@ namespace audio
 
     protected:
         audio_event_Test() {
+            sound_noop::init();
+
             s  = new sound_noop("foo.ogg");
             ev = new audio_event(s);
         }
@@ -65,25 +67,25 @@ namespace audio
     }; // class{}
 
     TEST_F(audio_event_Test, constructor_Default) {
-        EXPECT_EQ("foo.ogg", ae->sample()->getfilename());
+        EXPECT_EQ("foo.ogg", ev->sample().getfilename());
     }
 
     TEST_F(audio_event_Test, put_state_Filename) {
-        EXPECT_EQ("foo.ogg", ae->sample()->getfilename());
+        EXPECT_EQ("foo.ogg", ev->sample().getfilename());
 
         base::flat f;
-        ae->put_state(f);
+        ev->put_state(f);
 
         sound_noop  *s2  = new sound_noop("bar.ogg");
-        audio_event *ae2 = new audio_event(s2);
+        audio_event *ev2 = new audio_event(s2);
 
-        EXPECT_EQ("bar.ogg", ae2->sample()->getfilename());
+        EXPECT_EQ("bar.ogg", ev2->sample().getfilename());
 
-        ae2->get_state(f);
+        ev2->get_state(f);
 
-        EXPECT_EQ("foo.ogg", ae2->sample()->getfilename());
+        EXPECT_EQ("foo.ogg", ev2->sample().getfilename());
 
-        delete ae2;
+        delete ev2;
         delete s2;
     }
 

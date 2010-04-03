@@ -56,7 +56,7 @@ namespace audio {
          *
          * @return \e filename
          */
-        const std::string &getfilename(void) {return m_filename;}
+        const std::string &getfilename(void) const {return m_filename;}
 
         /**
          * Play this sound

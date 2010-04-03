@@ -57,6 +57,10 @@ test_audio_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio.cc
 test_audio_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
+test_audio_event_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_event.cc
+test_audio_event_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
+test_audio_event_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
+
 test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_manager.cc
 test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
@@ -65,6 +69,10 @@ test_sound_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_sound.cc
 test_sound_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_sound_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-TESTS          = test_audio test_audio_manager test_sound
+TESTS = \
+	test_audio         \
+	test_audio_event   \
+	test_audio_manager \
+	test_sound
+
 check_PROGRAMS = $(TESTS)
-###noinst_PROGRAMS = test_audio test_audio_manager
