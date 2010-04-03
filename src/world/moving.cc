@@ -393,7 +393,7 @@ bool moving::update ()
             Mymap.add (myEntity, *this);
         }
 
-        LOG(INFO) << "Moving to " << Position;
+        VLOG(1) << "Moving to " << Position;
     }
     
     return true; 
