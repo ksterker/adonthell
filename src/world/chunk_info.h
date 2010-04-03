@@ -97,7 +97,7 @@ namespace world
         vector3<s_int32> real_min () const
         {
             const placeable *object = Entity->get_object(); 
-            return Min + vector3<s_int32>(object->min_x(), object->min_y(), object->min_z());
+            return center_min() + object->entire_min();
         }
 
         /**
@@ -106,8 +106,10 @@ namespace world
          */
         vector3<s_int32> real_max () const
         {
-            const placeable *object = Entity->get_object(); 
-            return Max + vector3<s_int32>(object->min_x(), object->min_y(), object->min_z());
+            const placeable *object = Entity->get_object();
+            //Subtracting object->entire_min to get the [0, 0, 0] location
+            //I'm leaving the comment on the next line so it's obvious why it's not needed.
+            return Max/*- object->entire_min() + object->entire_min()*/;
         }
         
         /**
@@ -117,7 +119,7 @@ namespace world
         vector3<s_int32> solid_min () const
         {
             const placeable *object = Entity->get_object(); 
-            return Min - object->entire_min() + object->solid_min();
+            return center_min() + object->solid_min();
         }
 
         /**
@@ -127,7 +129,19 @@ namespace world
         vector3<s_int32> solid_max () const
         {
             const placeable *object = Entity->get_object();
+            //Subtracting object->entire_min to get the [0, 0, 0] location
             return  SolidMax - object->entire_min() + object->solid_min();
+        }
+
+        /**
+         * Return "real" position, but adjusted so it points to the [0, 0, 0] portion of the object.
+         * This is needed because SolidMinPos and EntireMinPos are relative to the [0, 0, 0] location, not the position.
+         * @return position of the [0, 0, 0] of the object
+         */
+        vector3<s_int32> center_min () const
+        {
+            const placeable *object = Entity->get_object();
+            return Min - object->entire_min();
         }
         
         /**
