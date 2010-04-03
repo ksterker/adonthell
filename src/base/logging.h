@@ -52,6 +52,7 @@ namespace google
     };
 }
 
+#define VLOG(x) LOG(x)
 #define LOG(x) true ? (void) 0 : google::LogMessageVoidify() & std::cout
 
 #endif

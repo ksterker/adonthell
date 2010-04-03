@@ -31,6 +31,7 @@
 
 #include <cstdio>
 #include "gfx/screen.h"
+#include "base/logging.h"
 
 namespace gfx
 {
@@ -63,6 +64,8 @@ namespace gfx
             height_ = nh;
             bytes_per_pixel_ = depth;
         }
+
+        LOG(INFO) << info();
         
         return res;
     }    

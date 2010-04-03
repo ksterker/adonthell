@@ -154,6 +154,24 @@ namespace world
         {
             return Max.z() - Min.z();
         }
+
+        /**
+         * Get min base point
+         * @return base point for the shape
+         */
+        vector3<s_int16> get_min() const
+        {
+            return Min;
+        }
+
+        /**
+         * Get extension of shape in all directions
+         * @return extension in all direction.
+         */
+        vector3<s_int16> get_max() const
+        {
+            return Max;
+        }
         
         /**
          * @name Sprite position relative to shape.

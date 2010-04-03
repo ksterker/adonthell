@@ -51,7 +51,7 @@ add_library(adonthell_base SHARED ${adonthell_base_SRCS})
 
 
 target_link_libraries(adonthell_base
-	${LIBXML2_LIBRARIES} -lltdl ${ZLIB_LIBRARIES})
+	${LIBXML2_LIBRARIES} -lltdl ${ZLIB_LIBRARIES} ${LIBGLOG_LIBRARIES})
 
 ################################
 # Unit tests

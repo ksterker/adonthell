@@ -33,6 +33,7 @@
 #include <libxml/tree.h>
 
 #include "base/configio.h"
+#include "base/logging.h"
 
 using base::config_io;
 using base::cfg_option;
@@ -246,6 +247,8 @@ xmlSAXHandler cfg_sax_handler = {
 bool config_io::read (const std::string & filename, configuration *config)
 {
     cfg_sax_context ctx (config);
+
+    LOG(INFO) << "reading " << filename;
     
 	if (xmlSAXUserParseFile (&cfg_sax_handler, &ctx, filename.c_str ()) != 0)
     {

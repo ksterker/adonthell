@@ -37,6 +37,7 @@
 #include "world/area.h"
 #include "world/plane3.h"
 #include "world/shadow.h"
+#include "base/logging.h"
 
 #if DEBUG_COLLISION
 #include "gfx/gfx.h"
@@ -128,9 +129,7 @@ bool moving::collide_with_objects (collision *collisionData)
         min.y() + placeable::width() + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
         min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0));
 
-#if DEBUG_COLLISION
-    printf ("   area [%i, %i, %i] - [%i, %i, %i]\n", min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
-#endif
+    VLOG(1) << "   area " << min << " - " << max;
 
     // get all objects in our path
     const std::list<chunk_info*> & objects = Mymap.objects_in_bbox (min, max);
@@ -146,9 +145,7 @@ bool moving::collide_with_objects (collision *collisionData)
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
 
-#if DEBUG_COLLISION
-            printf ("  shape [%i, %i, %i] - [%i, %i, %i]\n", (*i)->Min.x() + shape->x(), (*i)->Min.y() + shape->y(), (*i)->Min.z() + shape->z(), (*i)->Min.x() + shape->x() + shape->length(), (*i)->Min.y() + shape->y() + shape->width(), (*i)->Min.z() + shape->z() + shape->height());
-#endif
+            VLOG(1) << "  shape " << (*i)->Min-(*i)->get_object()->entire_min() + shape->get_min() << " - " << (*i)->Min-(*i)->get_object()->entire_min() + shape->get_max();
             
             // ... and check if collision occurs
             shape->collide (collisionData, (*i)->Min-(*i)->get_object()->entire_min());
@@ -395,6 +392,8 @@ bool moving::update ()
             update_position ();
             Mymap.add (myEntity, *this);
         }
+
+        LOG(INFO) << "Moving to " << Position;
     }
     
     return true; 
