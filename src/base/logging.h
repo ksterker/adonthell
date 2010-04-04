@@ -48,12 +48,13 @@ namespace google
         LogMessageVoidify() { }
         // This has to be an operator with a precedence lower than << but
         // higher than ?:
-        void operator&(std::ostream&) { }
+        void operator&(std::ostream& x ) { x << std::endl; }
     };
 }
 
+const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
 #define VLOG(x) LOG(x)
-#define LOG(x) true ? (void) 0 : google::LogMessageVoidify() & std::cout
+#define LOG(x) x < ERROR ? (void) 0 : google::LogMessageVoidify() & std::cerr
 
 #endif
 
