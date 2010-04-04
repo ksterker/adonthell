@@ -169,7 +169,7 @@ void character::set_direction (const s_int32 & ndir)
 // recalculate the character's speed
 void character::update_velocity (const s_int32 & ndir)
 {
-    LOG(INFO) << logging::indent() << "update_velocity(" << ndir << ") called";
+    VLOG(1) << logging::indent() << "update_velocity(" << ndir << ") called";
     logging::increment_log_indent_level();
 
     float vx = 0.0;
@@ -180,8 +180,8 @@ void character::update_velocity (const s_int32 & ndir)
     if (ndir & NORTH) vy = -speed() * (1 + is_running());
     if (ndir & SOUTH) vy =  speed() * (1 + is_running());
 
-    LOG(INFO) << logging::indent() << "vx: " << vx;
-    LOG(INFO) << logging::indent() << "vy: " << vy;
+    VLOG(1) << logging::indent() << "vx: " << vx;
+    VLOG(1) << logging::indent() << "vy: " << vy;
 
     if (vx && vy && ! std::isnan(vx) && ! std::isnan(vy))
     {
@@ -190,8 +190,8 @@ void character::update_velocity (const s_int32 & ndir)
         vx = (vx * std::fabs (vx)) * s;
         vy = (vy * std::fabs (vy)) * s;
 
-        LOG(INFO) << logging::indent() << "vx (adjusted): " << vx;
-        LOG(INFO) << logging::indent() << "vy (adjusted): " << vy;
+        VLOG(1) << logging::indent() << "vx (adjusted): " << vx;
+        VLOG(1) << logging::indent() << "vy (adjusted): " << vy;
     }
 
     set_velocity(vx, vy);

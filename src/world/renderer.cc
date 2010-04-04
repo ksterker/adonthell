@@ -73,7 +73,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::
         
         for (placeable::iterator obj = object->begin(); obj != object->end(); obj++)
         {
-            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->Min-object->entire_min(), (*i)->get_shadow()));
+            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->center_min(), (*i)->get_shadow()));
         }
     }
     

@@ -145,10 +145,10 @@ bool moving::collide_with_objects (collision *collisionData)
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
 
-            VLOG(1) << "  shape " << (*i)->Min-(*i)->get_object()->entire_min() + shape->get_min() << " - " << (*i)->Min-(*i)->get_object()->entire_min() + shape->get_max();
+            VLOG(1) << "  shape " << (*i)->center_min() + shape->get_min() << " - " << (*i)->center_min() + shape->get_max();
             
             // ... and check if collision occurs
-            shape->collide (collisionData, (*i)->Min-(*i)->get_object()->entire_min());
+            shape->collide (collisionData, (*i)->center_min());
         }
     }
     
@@ -349,7 +349,7 @@ void moving::calculate_ground_pos ()
     
         // the topmost object will be our ground pos
         ci = ground_tiles.begin();
-        GroundPos = (*ci)->Min.z() - (*ci)->get_object()->min_z() + (*ci)->get_object()->get_surface_pos ();
+        GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos ();
         
         // get the terrain, if any
         Terrain = (*ci)->get_object()->get_terrain();
@@ -393,7 +393,7 @@ bool moving::update ()
             Mymap.add (myEntity, *this);
         }
 
-        LOG(INFO) << "Moving to " << Position;
+        VLOG(1) << "Moving to " << Position;
     }
     
     return true; 
