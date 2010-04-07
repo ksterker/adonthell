@@ -246,7 +246,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
             for (std::list<world::chunk_info*>::iterator i = objectlist.begin(); i != objectlist.end(); /* nothing */)
             {
                 // above zone? --> candidate for removal
-                if ((*i)->Max.z() > zn->max().z())
+                if ((*i)->Min.z() > zn->max().z())
                 {
                     // object inside zone boundaries? --> discard
                     if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x() ||
@@ -269,7 +269,7 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
                 for (std::vector<world::zone*>::iterator zn = zones.begin(); zn != zones.end(); zn++)
                 {
                     // above zone? --> candidate for removal
-                    if ((*i)->Max.z() > (*zn)->max().z())
+                    if ((*i)->Min.z() > (*zn)->max().z())
                     {
                         // object inside zone boundaries? --> discard
                         if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x() ||

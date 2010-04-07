@@ -106,7 +106,7 @@ namespace world
          */
         vector3<s_int32> real_max () const
         {
-            const placeable *object = Entity->get_object();
+            //const placeable *object = Entity->get_object();
             //Subtracting object->entire_min to get the [0, 0, 0] location
             //I'm leaving the comment on the next line so it's obvious why it's not needed.
             return Max/*- object->entire_min() + object->entire_min()*/;
