@@ -54,7 +54,13 @@ struct z_order : public std::binary_function<const chunk_info *, const chunk_inf
 {
 	bool operator() (const chunk_info * a, const chunk_info * b) 
     {
-        return a->Min.z() + a->get_object()->get_surface_pos () > b->Min.z() + b->get_object()->get_surface_pos ();
+        //Here we want to sort by the top of each solid.  However, if they have the same top,
+        //then we want the one with the highest bottom (which is the smallest height).  The reason
+        //for this is we have tiles and walls with the same height, but we want to prefer to draw on
+        //the tile if the player is standing on it.
+        s_int32 atop = a->center_min().z() + a->get_object()->get_surface_pos ();
+        s_int32 btop = b->center_min().z() + b->get_object()->get_surface_pos ();
+        return (atop > btop) || (atop == btop && a->get_object()->solid_height () < b->get_object()->solid_height ());
     }
 };
 
