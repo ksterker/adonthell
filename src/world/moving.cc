@@ -309,7 +309,7 @@ void moving::update_position ()
     // update position on map, which must be in whole pixels     
     X = (s_int32) x;
     Y = (s_int32) y;
-    Z = (s_int32) z;
+    Z = (s_int32) floor(z);
 
     // calculate ground position and update shadow cast by ourself
     calculate_ground_pos ();
