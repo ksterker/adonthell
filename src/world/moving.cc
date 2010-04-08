@@ -129,7 +129,7 @@ bool moving::collide_with_objects (collision *collisionData)
         min.y() + placeable::width() + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
         min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0));
 
-    VLOG(1) << "   area " << min << " - " << max;
+    VLOG(3) << "   area " << min << " - " << max;
 
     // get all objects in our path
     const std::list<chunk_info*> & objects = Mymap.objects_in_bbox (min, max);
@@ -145,7 +145,7 @@ bool moving::collide_with_objects (collision *collisionData)
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
 
-            VLOG(1) << "  shape " << (*i)->center_min() + shape->get_min() << " - " << (*i)->center_min() + shape->get_max();
+            VLOG(3) << "  shape " << (*i)->center_min() + shape->get_min() << " - " << (*i)->center_min() + shape->get_max();
             
             // ... and check if collision occurs
             shape->collide (collisionData, (*i)->center_min());

@@ -30,6 +30,7 @@
 #include "gfx/surface_cacher.h"
 #include "world/shadow.h"
 #include "world/chunk_info.h"
+#include "base/logging.h"
 
 using gfx::drawing_area;
 using world::shadow;
@@ -70,6 +71,8 @@ void shadow::reset ()
 // cast shadow on a "floor" object
 void shadow::cast_on (chunk_info* ci)
 {
+    VLOG(1) << Remaining.size() << " " << ci << " " << ci->Min << "-" << ci->Max;
+
     // are there parts of the shadow remaining at all?
     if (Remaining.size() > 0)
     {
