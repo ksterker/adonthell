@@ -88,29 +88,7 @@ namespace world
         world::entity *get_entity() const
         {
             return Entity;
-        }
-        
-        /**
-         * Return "real" position, taking placeable shape offset into account.
-         * @return lower coordinate of bounding box
-         */
-        vector3<s_int32> real_min () const
-        {
-            const placeable *object = Entity->get_object(); 
-            return center_min() + object->entire_min();
-        }
-
-        /**
-         * Return "real" position, taking placeable shape offset into account.
-         * @return upper coordinate of bounding box
-         */
-        vector3<s_int32> real_max () const
-        {
-            //const placeable *object = Entity->get_object();
-            //Subtracting object->entire_min to get the [0, 0, 0] location
-            //I'm leaving the comment on the next line so it's obvious why it's not needed.
-            return Max/*- object->entire_min() + object->entire_min()*/;
-        }
+        }        
         
         /**
          * Return "real" position, taking only solid placeable shape offset into account.
