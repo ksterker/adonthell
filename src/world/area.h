@@ -77,12 +77,14 @@ namespace world
          */
         //@{
         /**
-         * Place given object at the given location.
-         * @param object the object to place on the map.
-         * @param pos position to place object at.
+         * Add given object to the map. The index returned
+         * can then be used to actually place instances of 
+         * the object onto the map.
+         * 
+         * @param object the object to add to the map.
          * @return index in list of objects or -1 on error.
          */
-        s_int32 add_entity (entity * object, coordinates & pos);
+        s_int32 add_entity (entity * object);
             
         /**
          * Place object at a given index at the given location.
@@ -90,7 +92,7 @@ namespace world
          * @param pos position to place object at.
          * @return true on success, false otherwise.
          */
-        bool put_entity (const u_int32& index, coordinates & pos);
+        bool place_entity (const s_int32& index, coordinates & pos);
 
         /**
          * Get entity at given index

@@ -65,15 +65,15 @@ void area::clear()
 }
 
 // convenience method for adding object at a known index
-bool area::put_entity (const u_int32 & index, coordinates & pos)
+bool area::place_entity (const s_int32 & index, coordinates & pos)
 {
-    if (index < Entities.size())
+    if (index >= 0 && index < Entities.size())
     {
         chunk::add(Entities[index], pos);
         return true;
     }
 
-    fprintf (stderr, "*** area::put_entity: not entity at index %i!\n", index);
+    fprintf (stderr, "*** area::place_entity: no entity at index %i!\n", index);
     return false;
 }
 
@@ -118,7 +118,7 @@ placeable * area::get_entity (const std::string & id) const
 }
 
 // add existing object as new entity
-s_int32 area::add_entity (entity * ety, coordinates & pos)
+s_int32 area::add_entity (entity * ety)
 {
     // handle named entities
     if (ety->id() != NULL)
@@ -138,9 +138,6 @@ s_int32 area::add_entity (entity * ety, coordinates & pos)
     
     // this list contains a copy of all entities, named or not.
     Entities.push_back (ety);
-    
-    // add entity to map
-    chunk::add(ety, pos);
     
     // return index of newly added entity
     return Entities.size() - 1;
@@ -388,14 +385,12 @@ bool area::get_state (base::flat & file)
             {
                 // create entity ...
                 world::entity *ety = new world::entity (object);
-                // ... and place it on the map
-                ety_idx = add_entity (ety, pos);
+                // ... and add it to the map
+                ety_idx = add_entity (ety);
             }
-            else
-            {
-                // place entity at current index at given coordinate
-                put_entity (ety_idx, pos);
-            }
+
+            // place entity at current index at given coordinate
+            place_entity (ety_idx, pos);
         }
 
         // try loading named entities
@@ -413,7 +408,7 @@ bool area::get_state (base::flat & file)
             // create a named instance (that will be unique if it is the first) ...
             world::entity *ety = new world::named_entity (object, entity_name, ety_idx == -1);
             // ... and place it on the map
-            ety_idx = add_entity (ety, pos);
+            place_entity (add_entity (ety), pos);
             
             // associate world object with its rpg representation
             switch (object->type())

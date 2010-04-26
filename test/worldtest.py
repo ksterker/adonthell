@@ -54,7 +54,7 @@ class App (adonthell.main.AdonthellApp):
         chr.set_speed (1.0);
 
         # -- set character location in world
-        wrld.put_entity (0, chr)
+        wrld.place_entity (0, chr)
 
         # -- create a ground tile
         tile = wrld.add_object ()
@@ -64,7 +64,7 @@ class App (adonthell.main.AdonthellApp):
         
         # -- place tile in world
         pos = world.coordinates (160, 160, 0)
-        wrld.put_entity (1, pos)
+        wrld.place_entity (1, pos)
 
         # -- create mapview
         view = world.mapview (640, 480)
