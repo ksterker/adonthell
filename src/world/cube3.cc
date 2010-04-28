@@ -141,7 +141,7 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     // draw bottom part
     for (int i = TOP_FRONT_LEFT; i <= TOP_BACK_LEFT; i++)
     {
-        j = (i + 1) % NUM_CORNERS;
+        j = (i + 1) < NUM_CORNERS ? i + 1 : TOP_FRONT_LEFT;
         target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
                            x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), color, da_opt);
     }
