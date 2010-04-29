@@ -81,8 +81,10 @@ float character::speed ()
 // jump
 void character::jump()
 {
-    // only jump if resting on the ground
-	if (GroundPos == z())
+    // only jump if resting on the ground. On sloped 
+    // surfaces, the ground might actually be higher
+    // than the characters z-position.
+	if (GroundPos >= z())
 	{
     	VSpeed = 10;
 	}
