@@ -52,6 +52,13 @@ namespace google
     };
 }
 
+#ifdef WIN32
+#undef INFO
+#undef WARNING
+#undef ERROR
+#undef FATAL
+#endif
+
 const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
 #define VLOG(x) LOG(x)
 #define LOG(x) x < ERROR ? (void) 0 : google::LogMessageVoidify() & std::cerr
