@@ -114,7 +114,7 @@ public:
      */
     s_int32 screen_x () const
     {
-        return x() + Shape->ox();
+        return Projection[0];
     }
     
     /**
@@ -123,7 +123,7 @@ public:
      */
     s_int32 screen_y () const
     {
-        return y() + Shape->oy() - z() - Shape->height();
+        return Projection[1];
     }
     ///@}
     
@@ -181,7 +181,7 @@ public:
     const std::vector<shadow_info> *Shadow;
     
 private:
-    /// the 2D projection of the object
+    /// the 2D projection of the object onto the drawing surface
     s_int32 Projection[4];
 };
 
