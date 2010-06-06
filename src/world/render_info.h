@@ -55,10 +55,10 @@ public:
     render_info (const placeable_shape *shape, const gfx::sprite *sprite, const vector3<s_int32> & pos, const std::vector<shadow_info> *shdw) 
     : Pos (pos), Shape (shape), Sprite (sprite), Shadow (shdw)
     {
-        Projection[0] = x() + shape->ox();
-        Projection[1] = y() + shape->oy() - z() - shape->height();
-        Projection[2] = x() + shape->ox() + shape->length();
-        Projection[3] = y() + shape->oy() - z() + shape->width();
+        Projection[0] = x() /*+ shape->ox()*/;
+        Projection[1] = y() /*+ shape->oy()*/ - z() - shape->height();
+        Projection[2] = x() /*+ shape->ox()*/ + shape->length();
+        Projection[3] = y() /*+ shape->oy()*/ - z() + shape->width();
     }
     
     /**
@@ -82,8 +82,8 @@ public:
      */
     ///@{
     /**
-     * Return real world space position of sprite.
-     * @return sprite x-coordinate. 
+     * Return real world space position of object.
+     * @return object x-coordinate. 
      */
     s_int32 x () const
     {
@@ -91,8 +91,8 @@ public:
     }
 
     /**
-     * Return real world space position of sprite.
-     * @return sprite y-coordinate. 
+     * Return real world space position of object.
+     * @return object y-coordinate. 
      */
     s_int32 y () const
     {
@@ -100,8 +100,8 @@ public:
     }
 
     /**
-     * Return real world space position of sprite.
-     * @return sprite z-coordinate. 
+     * Return real world space position of object.
+     * @return object z-coordinate. 
      */
     s_int32 z () const
     {
@@ -114,7 +114,7 @@ public:
      */
     s_int32 screen_x () const
     {
-        return Projection[0];
+        return Projection[0] + Shape->ox();
     }
     
     /**
@@ -123,7 +123,7 @@ public:
      */
     s_int32 screen_y () const
     {
-        return Projection[1];
+        return Projection[1] + Shape->oy();
     }
     ///@}
     

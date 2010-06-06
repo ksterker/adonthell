@@ -139,7 +139,17 @@ protected:
      * @return true if overlap occurs, false otherwise.
      */
     bool can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const;
+    
+    /**
+     * Check if obj1 is below obj2 in the view.
+     * @param obj1 an object
+     * @param obj2 another object
+     * @return true if obj1 is located beneath obj2 in the view, false otherwise.
+     */
     bool is_object_below (const render_info & obj1, const  render_info & obj2) const;
+    
+private:
+    void visualize_deadlock (std::list <world::render_info> & render_queue) const;
 };
 
 /**
