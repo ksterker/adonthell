@@ -272,20 +272,24 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
         //  |-|---     |     ___|___  ---|-|  ---|---
         //  | |        |     ---'---     | |     |
         
-        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() > max_z) // A
+        fprintf (stderr, "1. %i <= %i && %i >= %i && %i <= %i\n", obj.z() + obj.Shape->height(), max_z, obj.z() + obj.Shape->height(), min_z, obj.z(), min_z);
+        if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z) // D
         {
-            return false; // obj on top of obj2
+            return true; // obj on top obj2
         }
-        if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() > max_y) // C
+        fprintf (stderr, "2. %i >= %i && %i <= %i && %i >= %i\n", obj.z(), min_z, obj.z(), max_z, obj.z() + obj.Shape->height(), max_z);
+        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z) // A
+        {
+            return false; // obj below obj2
+        }
+
+        fprintf (stderr, "3. %i >= %i && %i <= %i && %i >= %i\n", obj.y(), min_y, obj.y(), max_y, obj.y() + obj.Shape->width(), max_y);
+        if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() >= max_y) // C
         {
             return false; // obj in front of obj2
         }
-        
-        if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() < min_z) // D
-        {
-            return true; // obj below obj2
-        }
-        if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() < min_y) // B
+        fprintf (stderr, "4. %i <= %i && %i >= %i && %i <= %i\n", obj.y() + obj.Shape->width(), max_y, obj.y() + obj.Shape->width(), min_y, obj.y(), min_y);
+        if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y) // B
         {
             return true; // obj behind obj2
         }
