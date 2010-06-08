@@ -437,24 +437,27 @@ bool pathfinding_manager::move_chr(const s_int16 id)
         {
             // We have to move up
             m_task[id].actualDir |= character::NORTH;
+	    m_task[id].chr->set_direction(m_task[id].actualDir);
 
         } else if (grid_y < target_grid_y) {
             // We have to move down
             m_task[id].actualDir |= character::SOUTH;
+	    m_task[id].chr->set_direction(m_task[id].actualDir);
         }
-
+	
         if (grid_x > target_grid_x)
         {
             // We have to move to the left
             m_task[id].actualDir |= character::WEST;
+	    m_task[id].chr->set_direction(m_task[id].actualDir);
 
         } else if (grid_x < target_grid_x) {
             // We have to move to the right
             m_task[id].actualDir |= character::EAST;
+	    m_task[id].chr->set_direction(m_task[id].actualDir);
         }
 
-        // Updates the direction
-        m_task[id].chr->set_direction(m_task[id].actualDir);
+
 
         world::coordinates temp_coor(target_grid_x * 20, target_grid_y * 20, 0);
 
