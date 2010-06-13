@@ -113,8 +113,8 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
             for (iterator it = render_queue.begin(); it != render_queue.end(); it++)
                 fprintf (stderr, "  - (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
 
-            visualize_deadlock (render_queue);
-            exit(1);
+            //visualize_deadlock (render_queue);
+            //exit(1);
             
             draw (x, y, render_queue.front(), da, target);
             render_queue.pop_front();
@@ -147,6 +147,11 @@ bool default_renderer::can_draw_object (render_info & obj, const_iterator & begi
     // there are no objects in the way, so we can draw
     return true;
 }
+
+#define YT 1
+#define YB 2
+#define ZT 4
+#define ZB 8
 
 // check object order (is obj2 below obj?)
 bool default_renderer::is_object_below (const render_info & obj, const render_info & obj2) const
@@ -247,7 +252,7 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
                 else
                 {
                     // equal position --> draw the thinner first
-                    return obj.Shape->height() < obj2.Shape->height();
+                    return obj.Shape->height() > obj2.Shape->height();
                 }
             }
             else
@@ -261,7 +266,7 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
                 else
                 {
                     // equal position --> draw the thinner first
-                    return obj.Shape->width() < obj2.Shape->width();
+                    return obj.Shape->width() > obj2.Shape->width();
                 }
             }
         }
@@ -271,35 +276,82 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
         //  | |     ---|---     |        | |     |
         //  |-|---     |     ___|___  ---|-|  ---|---
         //  | |        |     ---'---     | |     |
-        
-        fprintf (stderr, "1. %i <= %i && %i >= %i && %i <= %i\n", obj.z() + obj.Shape->height(), max_z, obj.z() + obj.Shape->height(), min_z, obj.z(), min_z);
-        if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z) // D
-        {
-            return true; // obj on top obj2
-        }
-        fprintf (stderr, "2. %i >= %i && %i <= %i && %i >= %i\n", obj.z(), min_z, obj.z(), max_z, obj.z() + obj.Shape->height(), max_z);
-        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z) // A
-        {
-            return false; // obj below obj2
-        }
 
-        fprintf (stderr, "3. %i >= %i && %i <= %i && %i >= %i\n", obj.y(), min_y, obj.y(), max_y, obj.y() + obj.Shape->width(), max_y);
+        int res = 0;
+        // fprintf (stderr, "3. %i >= %i && %i <= %i && %i >= %i\n", obj.y(), min_y, obj.y(), max_y, obj.y() + obj.Shape->width(), max_y);
         if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() >= max_y) // C
         {
-            return false; // obj in front of obj2
+            res += YT; // obj in front of obj2
         }
-        fprintf (stderr, "4. %i <= %i && %i >= %i && %i <= %i\n", obj.y() + obj.Shape->width(), max_y, obj.y() + obj.Shape->width(), min_y, obj.y(), min_y);
-        if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y) // B
+        // fprintf (stderr, "4. %i <= %i && %i >= %i && %i <= %i\n", obj.y() + obj.Shape->width(), max_y, obj.y() + obj.Shape->width(), min_y, obj.y(), min_y);
+        else if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y) // B
         {
-            return true; // obj behind obj2
+            res += YB; // obj behind obj2
         }
-                
-        fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
-        fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
-        fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+        
+        // fprintf (stderr, "2. %i >= %i && %i <= %i && %i >= %i\n", obj.z(), min_z, obj.z(), max_z, obj.z() + obj.Shape->height(), max_z);
+        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z) // A
+        {
+            res += ZT; // obj on top obj2
+        }
+        // fprintf (stderr, "1. %i <= %i && %i >= %i && %i <= %i\n", obj.z() + obj.Shape->height(), max_z, obj.z() + obj.Shape->height(), min_z, obj.z(), min_z);
+        else if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z) // D
+        {
+            res += ZB; // obj below obj2
+        }
+        
+        switch (res)
+        {
+            case 0:
+            {                
+                fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
+                fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
+                fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
 
-        // FIXME: this is a bad guess
-        return obj2.Shape->is_flat();
+                // FIXME: this is a bad guess
+                return obj2.Shape->is_flat();
+            }                
+            case YT:
+            {
+                return false;
+            }
+            case YB:
+            {
+                return true;
+            }
+            case ZT:
+            {
+                return false;
+            }
+            case ZB:
+            {
+                return true;
+            }
+            case YT|ZT:
+            {
+                return false;
+                // fprintf (stderr, "YT|ZT %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
+                // return obj2.Shape->is_flat();
+            }
+            case YT|ZB:
+            {
+                return false;
+                // fprintf (stderr, "YT|ZB %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
+                // return obj2.Shape->is_flat();
+            }
+            case YB|ZT:
+            {
+                return false;
+                // fprintf (stderr, "YB|ZT %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
+                // return obj2.Shape->is_flat();
+            }
+            case YB|ZB:
+            {
+                return true;
+                // fprintf (stderr, "YB|ZB %s!\n", obj.Shape->is_flat() ? "true" : "false"); // E
+                // return obj.Shape->is_flat();
+            }
+        }
     }
 }
 
