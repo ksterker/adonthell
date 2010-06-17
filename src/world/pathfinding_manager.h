@@ -200,8 +200,7 @@ namespace world
          */
         bool add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
                          const world::vector3<s_int32> & target2,
-                         const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir,
-                         const u_int8 pixMoved = 0, const u_int8 pixToMove = 0);
+                         const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir);
 
         /**
          * Verify if we can add the task and in which slot
