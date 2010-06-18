@@ -1,7 +1,7 @@
 /*
  $Id: renderer.cc,v 1.9 2009/03/21 11:59:47 ksterker Exp $
  
- Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009/2010 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -271,31 +271,27 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
             }
         }
 
-        //  A       B        C        D       E
+        //  ZT      YB       YT       ZB       0
         //          _______
         //  | |     ---|---     |        | |     |
         //  |-|---     |     ___|___  ---|-|  ---|---
         //  | |        |     ---'---     | |     |
 
         int res = 0;
-        // fprintf (stderr, "3. %i >= %i && %i <= %i && %i >= %i\n", obj.y(), min_y, obj.y(), max_y, obj.y() + obj.Shape->width(), max_y);
-        if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() >= max_y) // C
+        if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() >= max_y)
         {
             res += YT; // obj in front of obj2
         }
-        // fprintf (stderr, "4. %i <= %i && %i >= %i && %i <= %i\n", obj.y() + obj.Shape->width(), max_y, obj.y() + obj.Shape->width(), min_y, obj.y(), min_y);
-        else if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y) // B
+        else if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y)
         {
             res += YB; // obj behind obj2
         }
         
-        // fprintf (stderr, "2. %i >= %i && %i <= %i && %i >= %i\n", obj.z(), min_z, obj.z(), max_z, obj.z() + obj.Shape->height(), max_z);
-        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z) // A
+        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z)
         {
             res += ZT; // obj on top obj2
         }
-        // fprintf (stderr, "1. %i <= %i && %i >= %i && %i <= %i\n", obj.z() + obj.Shape->height(), max_z, obj.z() + obj.Shape->height(), min_z, obj.z(), min_z);
-        else if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z) // D
+        else if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z)
         {
             res += ZB; // obj below obj2
         }
@@ -330,26 +326,18 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
             case YT|ZT:
             {
                 return false;
-                // fprintf (stderr, "YT|ZT %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
-                // return obj2.Shape->is_flat();
             }
             case YT|ZB:
             {
-                return false;
-                // fprintf (stderr, "YT|ZB %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
-                // return obj2.Shape->is_flat();
+                return true;
             }
             case YB|ZT:
             {
                 return false;
-                // fprintf (stderr, "YB|ZT %s!\n", obj2.Shape->is_flat() ? "true" : "false"); // E
-                // return obj2.Shape->is_flat();
             }
             case YB|ZB:
             {
                 return true;
-                // fprintf (stderr, "YB|ZB %s!\n", obj.Shape->is_flat() ? "true" : "false"); // E
-                // return obj.Shape->is_flat();
             }
         }
     }

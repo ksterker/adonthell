@@ -40,84 +40,86 @@ namespace world
 
         virtual void SetUp() 
         {
-            // Code here will be called immediately after the constructor (right
-            // before each test).
+            cube3 *c1 = new cube3 (vector3<s_int16>(0, 0, -5), vector3<s_int16>(128, 96, 0));
+            cube3 *c2 = new cube3 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(128, 12, 100));
+            
+            s1.add_part (c1);
+            s2.add_part (c2);
         }
 
         virtual void TearDown() 
         {
             // Code here will be called immediately after each test (right
             // before the destructor).
-        }        
+        }
+        
+        placeable_shape s1;
+        placeable_shape s2;
     }; // class{}
 
     TEST_F(renderer_Test, is_object_below_1)
     {
-        cube3 c1 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(12, 43, 100));
-        cube3 c2 (vector3<s_int16>(0, 0, -5), vector3<s_int16>(128, 96, 0));
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 224, -100), NULL);
         
-        placeable_shape s1;
-        s1.add_part (&c1);
+        EXPECT_EQ(false, is_object_below (obj1, obj2));
+        EXPECT_EQ(true, is_object_below (obj2, obj1));
+    }
+
+    TEST_F(renderer_Test, is_object_below_2)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 280, -100), NULL);
         
-        placeable_shape s2;
-        s2.add_part (&c2);
+        EXPECT_EQ(false, is_object_below (obj1, obj2));
+        EXPECT_EQ(true, is_object_below (obj2, obj1));
+    }
+
+    TEST_F(renderer_Test, is_object_below_3)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 196, -100), NULL);
         
-        render_info obj1 (&s1, NULL, vector3<s_int32>(250, 341, -100), NULL);
-        render_info obj2 (&s2, NULL, vector3<s_int32>(256, 288, 0), NULL);
+        EXPECT_EQ(false, is_object_below (obj1, obj2));
+        EXPECT_EQ(true, is_object_below (obj2, obj1));
+    }
+
+    TEST_F(renderer_Test, is_object_below_4)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 182, -5), NULL);
         
         EXPECT_EQ(true, is_object_below (obj1, obj2));
         EXPECT_EQ(false, is_object_below (obj2, obj1));
     }
 
-    TEST_F(renderer_Test, is_object_below_2)
+    TEST_F(renderer_Test, is_object_below_5)
     {
-        cube3 c1 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(40, 25, 80));
-        cube3 c2 (vector3<s_int16>(0, 43, 0), vector3<s_int16>(70, 53, 100));
-        cube3 c3 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(128, 48, 12));
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 280, -5), NULL);
         
-        placeable_shape s1; s1.add_part (&c1);
-        placeable_shape s2; s2.add_part (&c2);
-        placeable_shape s3; s3.add_part (&c3);
-
-        render_info obj1 (&s1, NULL, vector3<s_int32>(1085, 522, 88), NULL);
-        render_info obj2 (&s2, NULL, vector3<s_int32>(1023, 430, 100), NULL);
-        render_info obj3 (&s3, NULL, vector3<s_int32>(1024, 478, 100), NULL);
-        
-        EXPECT_EQ(false, is_object_below (obj1, obj2));
-        EXPECT_EQ(true, is_object_below (obj2, obj1));
-        EXPECT_EQ(false, is_object_below (obj2, obj3));
-        EXPECT_EQ(true, is_object_below (obj3, obj2));
-        EXPECT_EQ(false, is_object_below (obj1, obj3));
-        EXPECT_EQ(true, is_object_below (obj3, obj1));
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
     }
 
-    TEST_F(renderer_Test, is_object_below_3)
+    TEST_F(renderer_Test, is_object_below_6)
     {
-        cube3 c1 (vector3<s_int16>(0, 0, -5), vector3<s_int16>(128, 96, 0));
-        cube3 c2 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(12, 43, 100));
-        cube3 c3 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(128, 53, 100));
-        cube3 c4 (vector3<s_int16>(0, 0, 0), vector3<s_int16>(40, 25, 80));
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 224, -5), NULL);
         
-        placeable_shape s1; s1.add_part (&c1);
-        placeable_shape s2; s2.add_part (&c2);
-        placeable_shape s3; s3.add_part (&c3);
-        placeable_shape s4; s4.add_part (&c4);
-        
-        render_info obj1 (&s1, NULL, vector3<s_int32>(384, 96, 0), NULL);
-        render_info obj2 (&s2, NULL, vector3<s_int32>(506, 149, -100), NULL);
-        render_info obj3 (&s3, NULL, vector3<s_int32>(448, 96, -100), NULL);
-        render_info obj4 (&s4, NULL, vector3<s_int32>(499, 121, -1), NULL);
-        
-        EXPECT_EQ(false, is_object_below (obj1, obj2));
-        EXPECT_EQ(true, is_object_below (obj2, obj1));
-        EXPECT_EQ(false, is_object_below (obj2, obj3));
-        EXPECT_EQ(true, is_object_below (obj3, obj2));
-        EXPECT_EQ(false, is_object_below (obj3, obj4));
-        EXPECT_EQ(true, is_object_below (obj4, obj3));
-        EXPECT_EQ(true, is_object_below (obj4, obj1));
-        EXPECT_EQ(false, is_object_below (obj1, obj4));
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
     }
-    
+/*
+    TEST_F(renderer_Test, is_object_below_7)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 192, 0), NULL);
+        render_info obj2 (&s2, NULL, vector3<s_int32>(-256, 224, -100), NULL);
+        
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
+    }
+*/    
 } // namespace{}
 
 
