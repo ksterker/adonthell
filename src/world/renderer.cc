@@ -350,8 +350,15 @@ void debug_renderer::draw (const s_int16 & x, const s_int16 & y, const render_in
     
     if (DrawBBox)
     {
-        cube3 bbox (obj.Shape->length(), obj.Shape->width(), obj.Shape->height());
-        bbox.draw (x + obj.x(), y + obj.y() - obj.z(), &da, target);
+        // draw detailed collision information
+        for (std::vector<world::cube3*>::const_iterator i = obj.Shape->begin(); i != obj.Shape->end(); i++)
+        {
+            (*i)->draw (x + obj.Pos.x(), y + obj.Pos.y() - obj.Pos.z(), &da, target);
+        }
+        
+        // draw complete bbox around placeable
+        // cube3 bbox (obj.Shape->length(), obj.Shape->width(), obj.Shape->height());
+        // bbox.draw (x + obj.x(), y + obj.y() - obj.z(), &da, target);
     }
     
     if (Print)
