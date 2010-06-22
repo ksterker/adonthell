@@ -274,6 +274,13 @@ namespace world
          * @return the z-position of the object's solid components. 
          */
         s_int32 get_surface_pos() const;
+
+        /**
+         * Return the surface of the object at the given coordinate. 
+         *
+         * @return the z-position of the object at the given coordinate. 
+         */
+        s_int32 get_surface_pos(const s_int32 & x, const s_int32 & y) const;
         
         /**
          * Return the terrain type of this object.

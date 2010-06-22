@@ -330,7 +330,7 @@ void moving::calculate_ground_pos ()
     // bbox of everything below our character
     const vector3<s_int32> min (x(), y(), Mymap.min().z());
     const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
-        
+    
     // get objects below us
     std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max, OBJECT);
     
@@ -353,15 +353,35 @@ void moving::calculate_ground_pos ()
         // sort according to their z-Order
         ground_tiles.sort (z_order());
     
-        // the topmost object will be our ground pos
-        ci = ground_tiles.begin();
-        GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos ();
+        // center of character
+        s_int32 cx = x() + placeable::length()/2;
+        s_int32 cy = y() + placeable::width()/2;
         
-        // get the terrain, if any
-        Terrain = (*ci)->get_object()->get_terrain();
+        // find object that will be our ground pos
+        for (ci = ground_tiles.begin(); ci != ground_tiles.end(); ci++)
+        {
+            // apply shadow
+            MyShadow->cast_on (*ci);
+            
+            // position of character relative to tile
+            s_int32 px = cx - (*ci)->center_min().x();
+            s_int32 py = cy - (*ci)->center_min().y();
+            
+            // is this really the object below character?
+            if (px >= 0 && px <= (*ci)->get_object()->length() &&
+                py >= 0 && py <= (*ci)->get_object()->width())
+            {
+                // get ground pos
+                GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+                
+                // get the terrain, if any
+                Terrain = (*ci)->get_object()->get_terrain();
+                break;
+            }
+        }
         
-        // apply shadow
-        for (; ci != ground_tiles.end(); ci++)
+        // apply remainder of shadow
+        for (ci++; ci != ground_tiles.end(); ci++)
         {
             MyShadow->cast_on (*ci);
         }

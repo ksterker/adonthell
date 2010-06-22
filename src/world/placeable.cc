@@ -131,6 +131,31 @@ s_int32 placeable::get_surface_pos () const
     return SolidCurSize.z() + SolidCurPos.z();
 }
 
+// get z position at the given coordinate
+s_int32 placeable::get_surface_pos(const s_int32 & x, const s_int32 & y) const
+{
+    for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        const placeable_shape *shape = (*i)->current_shape ();
+        if (shape != NULL && shape->is_solid())
+        {
+            if (x >= shape->x() && x <= shape->length() + shape->x() &&
+                y >= shape->y() && y <= shape->width() + shape->y())
+            {
+                return shape->height() + shape->z();
+            }
+        }
+    }
+    
+    // Fallback. We might end up here if the coordinates fall
+    // onto a non-solid part of the placeable. We should return
+    // a value indicating failure in that case (e.g. MAX_INT)
+    // and the caller would have to probe another placeable
+    // in turn. But we can probably live with this minor
+    // inaccuracy for now.
+    return get_surface_pos();
+}
+
 // get terrain type of placeable
 const std::string* placeable::get_terrain () const
 {
