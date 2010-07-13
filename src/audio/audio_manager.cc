@@ -90,13 +90,4 @@ namespace audio
         return true;
     }
 
-    bool audio_manager::set_sound_dir(const std::string sound_dir) {
-        LOG(INFO) << "set_sound_dir(" << sound_dir << "); was: "
-                  << sound_dir_;
-
-        sound_dir_ = sound_dir;
-
-        return true;
-    }
-
 } // namespace{}
