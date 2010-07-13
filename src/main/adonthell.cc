@@ -118,14 +118,6 @@ bool app::init_modules (const u_int16 & modules)
     if (m & AUDIO)
     {
         audio::setup (Cfg);
-        audio::audio_manager::set_sound_dir(Userdatadir + "/" + Game + "/audio/");
-
-        LOG(INFO) << logging::indent()
-                  << "audio::audio_manager::sound_dir: '"
-                  << audio::audio_manager::get_sound_dir()
-                  << "'"
-            ;
-
         if (!audio::init (Backend)) {
             LOG(ERROR) << logging::indent() << "audio::init() failed";
 
