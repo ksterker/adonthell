@@ -1,5 +1,6 @@
 # Define the adonthell_world_SRCS variable containing all required files.
 set(adonthell_world_SRCS
+    action.cc
     area.cc
     area_manager.cc
     character.cc
@@ -24,6 +25,7 @@ set(adonthell_world_SRCS
 )
 
 set(adonthell_world_HEADERS
+    action.h
     area.h
     area_manager.h
     character.h

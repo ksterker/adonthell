@@ -102,13 +102,46 @@ namespace python
         return ret;
     }
     
+    // pad tuple
+    PyObject *pad_tuple (PyObject *tuple, const u_int16 & len)
+    {
+        // make sure the given arguments are a tuple
+        if (tuple && !PyTuple_Check (tuple))
+        {
+            fprintf (stderr, "*** error: python::pad_tuple: argument must be a tuple!\n");
+            return NULL;
+        }
+        
+        // calculate size of argument tuple required
+        u_int16 size = tuple ? PyTuple_GET_SIZE (tuple) + len : len;
+        
+        // prepare callback arguments
+        PyObject *new_tuple = PyTuple_New (size);
+        
+        // pad with none object
+        for (u_int16 i = 0; i < len; i++)
+        {
+            PyTuple_SET_ITEM (new_tuple, i, Py_None);
+        }
+        
+        // copy remaining objects, if any
+        for (u_int16 i = len; i < size; i++)
+        {
+            PyObject *o =  PyTuple_GET_ITEM (tuple, i - len);
+            Py_INCREF (o);
+            PyTuple_SET_ITEM (new_tuple, i, o);
+        }
+        
+        return new_tuple;
+    }
+    
     // unflatten the contents of a tuple
     PyObject *get_tuple (base::flat & in, const u_int16 & start)
     {
         u_int16 len = in.get_uint16 ("pln") + start;
         PyObject *tuple = PyTuple_New (len);
         void *value;
-        
+
         for (u_int16 i = start; i < len; i++) 
         {
             switch (int type = in.next (&value)) 

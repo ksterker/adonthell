@@ -75,7 +75,7 @@ namespace world
          * Add object at given coordinates.
          * @param ci entity to add to the world.
          */
-        void add (const chunk_info & ci);
+        void add (chunk_info * ci);
 
         /**
          * Check if given object is present at given position.
@@ -297,7 +297,7 @@ namespace world
         /// the children of the chunk
         chunk* Children[8];
         /// the objects contained in the chunk
-        std::list<chunk_info> Objects;
+        std::list<chunk_info *> Objects;
 
         /// the minimum of the chunks AABB
         vector3<s_int32> Min;

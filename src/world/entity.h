@@ -27,6 +27,7 @@
  */
 
 #include "world/placeable.h"
+#include "world/action.h"
 
 #ifndef WORLD_ENTITY_H
 #define WORLD_ENTITY_H
@@ -47,7 +48,7 @@ public:
      * Create an anonymous entity.
      * @param object representation of the entity.
      */
-    entity (placeable *object) : Object (object) { }
+    entity (placeable *object) : Object (object), Action (NULL) { }
 
     /**
      * Delete entity and its associated object.
@@ -55,6 +56,7 @@ public:
     virtual ~entity ()
     {
         delete Object;
+        delete Action;
     }
     
     /**
@@ -64,6 +66,29 @@ public:
     placeable *get_object () const
     {
         return Object;
+    }
+    
+    /** 
+     * Attach an action to the entity.
+     * @return the newly attached action.
+     */
+    action *set_action ()
+    {
+        if (Action == NULL)
+        {
+            Action = new world::action();
+        }
+
+        return Action;
+    }
+    
+    /**
+     * Return associated action.
+     * @return associated action.
+     */
+    action *get_action () const
+    {
+        return Action;
     }
     
     /**
@@ -87,6 +112,8 @@ public:
 protected:
     /// an entity on a map
     placeable *Object;
+    /// action associated to the entity
+    action *Action;
 };
 
 /**

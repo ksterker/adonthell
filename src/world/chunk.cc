@@ -47,7 +47,7 @@ typedef enum
 #define MAX_OBJECTS 16
 /// minimum node size (in all 3 dimensions)
 #define MIN_SIZE 240
- 
+
 bool chunk_info::operator == (const chunk_info & ci) const
 {
     if (Entity->get_object() == ci.Entity->get_object())
@@ -59,6 +59,16 @@ bool chunk_info::operator == (const chunk_info & ci) const
     
     return false;
 }
+
+struct ci_ptr_equal
+{
+    const chunk_info *a;
+    
+    bool operator()(const chunk_info * b) const
+    {
+        return *a == *b;
+    }
+};
 
 // ctor
 chunk::chunk () : Min(), Max(), Split()
@@ -72,6 +82,11 @@ chunk::chunk () : Min(), Max(), Split()
 // dtor
 chunk::~chunk()
 {
+    std::list<chunk_info *>::const_iterator i;
+    for (i = Objects.begin (); i != Objects.end(); i++)
+    {
+        delete *i;
+    }
     Objects.clear();
     for (u_int8 i = 0; i < 8; i++)
     {
@@ -87,7 +102,7 @@ void chunk::add (entity * object, const coordinates & pos)
     vector3<s_int32> min = pos + p->entire_min();
     vector3<s_int32> max = min + p->entire_max();
 
-    add (chunk_info (object, min, max));
+    add (new chunk_info (object, min, max));
 }
 
 // check if object exists at given position
@@ -98,7 +113,8 @@ bool chunk::exists (entity *object, const coordinates & pos)
     vector3<s_int32> min = pos + p->entire_min();
     vector3<s_int32> max = min + p->entire_max();
     
-    return exists (chunk_info (object, min, max));
+    chunk_info ci(object, min, max);
+    return exists (ci);
 }
 
 // remove object from chunk
@@ -108,21 +124,22 @@ world::entity * chunk::remove (entity * object, const coordinates & pos)
     const placeable *p = object->get_object();
     vector3<s_int32> min = pos + p->entire_min();
     vector3<s_int32> max = min + p->entire_max();
-    
-    return remove (chunk_info (object, min, max));
+
+    chunk_info ci(object, min, max);
+    return remove (ci);
 }
 
 // add an object to chunk
-void chunk::add (const chunk_info & ci)
+void chunk::add (chunk_info * ci)
 {
     // update bounding box of chunk
-    Min.set_x (std::min (Min.x(), ci.Min.x()));
-    Min.set_y (std::min (Min.y(), ci.Min.y()));
-    Min.set_z (std::min (Min.z(), ci.Min.z()));
+    Min.set_x (std::min (Min.x(), ci->Min.x()));
+    Min.set_y (std::min (Min.y(), ci->Min.y()));
+    Min.set_z (std::min (Min.z(), ci->Min.z()));
 
-    Max.set_x (std::max (Max.x(), ci.Max.x()));
-    Max.set_y (std::max (Max.y(), ci.Max.y()));
-    Max.set_z (std::max (Max.z(), ci.Max.z()));
+    Max.set_x (std::max (Max.x(), ci->Max.x()));
+    Max.set_y (std::max (Max.y(), ci->Max.y()));
+    Max.set_z (std::max (Max.z(), ci->Max.z()));
 
     // we're in a leaf ...
     if (is_leaf())
@@ -142,10 +159,10 @@ void chunk::add (const chunk_info & ci)
             split ();
             
             s_int8 chunks[8];
-            std::list<chunk_info>::iterator i = Objects.begin();
+            std::list<chunk_info *>::iterator i = Objects.begin();
             while (i != Objects.end ())
             {
-                const u_int8 num = find_chunks (chunks, (*i).Min, (*i).Max);
+                const u_int8 num = find_chunks (chunks, (*i)->Min, (*i)->Max);
                 
                 // if objects would be split between children, we have to keep them
                 // in the current node
@@ -157,7 +174,7 @@ void chunk::add (const chunk_info & ci)
                     if (c == NULL)
                     {
                         c = new chunk;
-                        c->Min = (*i).Min;
+                        c->Min = (*i)->Min;
                         Children[chunks[0]] = c; 
                     }
                     
@@ -179,7 +196,7 @@ void chunk::add (const chunk_info & ci)
     // we're not (or no longer) in a leaf, so we need to find the chunk
     // to which we add the object to
     s_int8 chunks[8];
-    const u_int8 num = find_chunks (chunks, ci.Min, ci.Max);
+    const u_int8 num = find_chunks (chunks, ci->Min, ci->Max);
     if (num == 1)
     {
         chunk *c = Children[chunks[0]];
@@ -188,7 +205,7 @@ void chunk::add (const chunk_info & ci)
         if (c == NULL)
         {
             c = new chunk;
-            c->Min = ci.Min;
+            c->Min = ci->Min;
             Children[chunks[0]] = c; 
         }
         
@@ -218,7 +235,8 @@ bool chunk::exists (const chunk_info & ci)
         }
     }
     
-    std::list<chunk_info>::iterator it = find (Objects.begin(), Objects.end(), ci);
+    ci_ptr_equal eq = { &ci };
+    std::list<chunk_info *>::iterator it = std::find_if (Objects.begin(), Objects.end(), eq);
     if (it != Objects.end())
     {
         return true;
@@ -254,14 +272,15 @@ world::entity * chunk::remove (const chunk_info & ci)
         }
     }
     
-    std::list<chunk_info>::iterator it = find (Objects.begin(), Objects.end(), ci);
+    ci_ptr_equal eq = { &ci };
+    std::list<chunk_info *>::iterator it = std::find_if (Objects.begin(), Objects.end(), eq);
     if (it != Objects.end())
     {
-        removed = it->get_entity();
+        removed = (*it)->get_entity();
         
         if (!Resize || 
-            Min.x() == (*it).Min.x() || Min.y() == (*it).Min.y() || Min.z() == (*it).Min.z() ||
-            Max.x() == (*it).Max.x() || Max.y() == (*it).Max.y() || Max.z() == (*it).Max.z())
+            Min.x() == (*it)->Min.x() || Min.y() == (*it)->Min.y() || Min.z() == (*it)->Min.z() ||
+            Max.x() == (*it)->Max.x() || Max.y() == (*it)->Max.y() || Max.z() == (*it)->Max.z())
         {
             Resize = true;
         }
@@ -295,12 +314,12 @@ void chunk::objects_in_view (const s_int32 & min_x, const s_int32 & max_x, const
     }
 
     // process contained map objects
-    std::list<chunk_info>::const_iterator i;
+    std::list<chunk_info *>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (in_view (min_x, max_x, min_yz, max_yz, (*i).Min, (*i).Max))
+        if (in_view (min_x, max_x, min_yz, max_yz, (*i)->Min, (*i)->Max))
         {
-            result.push_back ((chunk_info*) &(*i));
+            result.push_back (*i);
         }
     }
     
@@ -363,12 +382,12 @@ void chunk::objects_in_bbox (const vector3<s_int32> & min, const vector3<s_int32
     }
     
     // process objects contained in chunk
-    std::list<chunk_info>::const_iterator i;
+    std::list<chunk_info *>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        if (type & i->get_object()->type() && in_bbox (min, max, i->solid_min(), i->solid_max()))
+        if (type & (*i)->get_object()->type() && in_bbox (min, max, (*i)->solid_min(), (*i)->solid_max()))
         {
-            result.push_back ((chunk_info*) &(*i));
+            result.push_back (*i);
         }
     }
 }
@@ -499,21 +518,21 @@ void chunk::put_state (collector & objects) const
     }
     
     // save objects contained in this chunk
-    std::list<chunk_info>::const_iterator i;
+    std::list<chunk_info *>::const_iterator i;
     for (i = Objects.begin (); i != Objects.end(); i++)
     {
-        const entity *e = i->get_entity();
+        const entity *e = (*i)->get_entity();
         collector_data & data = objects[e->get_object()];
 
         if (!e->has_name()) 
         {
             // anonymous objects
-            data.Anonymous.push_back ((chunk_info*) &(*i));
+            data.Anonymous.push_back (*i);
         }
         else
         {
             // named entities
-            data.Named.push_back ((chunk_info*) &(*i));
+            data.Named.push_back (*i);
         }
     }        
 }

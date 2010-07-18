@@ -316,9 +316,19 @@ namespace python
     //@}
 
     /**
-     * @name Loading / Saving
+     * @name Convenience functions.
      */
     //@{
+    /**
+     * Pads the front of the given tuple, moving the existing
+     * entries to the end of the tuple. If the given tuple is
+     * NULL, returns a new tuple of size len. Reference count
+     * of the contents of the given tuple is increased by one.
+     *
+     * @return a new tuple or NULL on error.
+     */
+    PyObject *pad_tuple (PyObject *tuple, const u_int16 & len);
+    
     /**
      * Read the contents of a tuple from given stream.
      * @param in flattener to read the tuple from.
