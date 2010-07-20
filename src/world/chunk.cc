@@ -95,14 +95,16 @@ chunk::~chunk()
 }
 
 // add an object to chunk
-void chunk::add (entity * object, const coordinates & pos)
+chunk_info * chunk::add (entity * object, const coordinates & pos)
 {
     // calculate axis-aligned bbox for object
     const placeable *p = object->get_object();
     vector3<s_int32> min = pos + p->entire_min();
     vector3<s_int32> max = min + p->entire_max();
 
-    add (new chunk_info (object, min, max));
+    chunk_info *ci = new chunk_info (object, min, max);
+    add (ci);
+    return ci;
 }
 
 // check if object exists at given position

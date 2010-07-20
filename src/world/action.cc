@@ -104,10 +104,8 @@ void action::put_state (base::flat& file) const
 {
     if (Action != NULL)
     {
-        base::flat record;
-        Action->put_state (record);
-        python::put_tuple (Args, record, 2);
-        file.put_flat ("action", record);
+        Action->put_state (file);
+        python::put_tuple (Args, file, 2);
     }
 }
 

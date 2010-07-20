@@ -90,9 +90,9 @@ namespace world
          * Place object at a given index at the given location.
          * @param index index of object in the list of objects.
          * @param pos position to place object at.
-         * @return true on success, false otherwise.
+         * @return newly placed chunk or NULL on failure.
          */
-        bool place_entity (const s_int32& index, coordinates & pos);
+        chunk_info * place_entity (const s_int32& index, coordinates & pos);
 
         /**
          * Get entity at given index
