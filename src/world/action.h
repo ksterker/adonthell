@@ -75,6 +75,20 @@ namespace world
          * @param target the object acted on.
          */
         void execute (world::character *actor, world::object *target);
+        
+        /**
+         * Get the method that implements the action. Might be
+         * NULL if the action is not initialized yet.
+         *
+         * @return the method that implements the action. 
+         */
+        python::method *get_method () const { return Action; }
+        
+        /**
+         * Get the arguments used to execute the action.
+         * @return the method arguments.
+         */
+        PyObject *get_args () const { return Args; }
 #endif
         
         /**

@@ -253,9 +253,7 @@ bool area::put_state (base::flat & file) const
         if (!data.Anonymous.empty())
         {
             base::flat anonym;
-            j = data.Anonymous.begin();
-            
-            for (; j != data.Anonymous.end(); j++)
+            for (j = data.Anonymous.begin(); j != data.Anonymous.end(); j++)
             {
                 // save location action
                 if ((*j)->has_action ())
@@ -309,10 +307,6 @@ bool area::put_state (base::flat & file) const
     
     file.put_flat ("states", record);
 
-    // reset
-    index = 0;
-    record.clear();
-        
     // save the zones
     std::list <world::zone *>::const_iterator zone_i = Zones.begin();
     base::flat zone_list;

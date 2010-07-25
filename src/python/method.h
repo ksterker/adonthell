@@ -68,6 +68,12 @@ namespace python
         std::string name () const;
         
         /**
+         * Return name of enclosing script.
+         * @return script name.
+         */
+        std::string script () const { return Script->class_name(); }
+        
+        /**
          * Execute the connected %method with the given arguments.
          * @param args a python tuple to be passed to the %method.
          */

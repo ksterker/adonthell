@@ -127,8 +127,8 @@ namespace python
         // copy remaining objects, if any
         for (u_int16 i = len; i < size; i++)
         {
-            PyObject *o =  PyTuple_GET_ITEM (tuple, i - len);
-            Py_INCREF (o);
+            PyObject *o = PyTuple_GET_ITEM (tuple, i - len);
+            Py_XINCREF (o);
             PyTuple_SET_ITEM (new_tuple, i, o);
         }
         
@@ -146,6 +146,11 @@ namespace python
         {
             switch (int type = in.next (&value)) 
             {
+                case base::flat::T_CHAR:
+                {
+                    PyTuple_SetItem (tuple, i, Py_None);
+                    break;
+                }
                 case base::flat::T_STRING:
                 {
                     // Stolen reference
@@ -180,10 +185,12 @@ namespace python
         {
             // Borrowed reference
             PyObject *item = PyTuple_GetItem (tuple, i);
+            if (item == NULL)
+                out.put_char ("n", ' ');
             
             // Check for the type of this object
             // String?
-            if (PyString_Check (item)) 
+            else if (PyString_Check (item)) 
                 out.put_string ("s", PyString_AsString (item));
             
             // Integer?
