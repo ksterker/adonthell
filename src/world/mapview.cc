@@ -249,12 +249,12 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
                 if ((*i)->Min.z() > zn->max().z())
                 {
                     // object inside zone boundaries? --> discard
-                    if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x() ||
-                          (*i)->Max.y() < zn->min().y() || (*i)->Min.y() > zn->max().y()))
-                    {
+                    // if (!((*i)->Max.x() < zn->min().x() || (*i)->Min.x() > zn->max().x() ||
+                    //       (*i)->Max.y() < zn->min().y() || (*i)->Min.y() > zn->max().y()))
+                    // {
                         i = objectlist.erase (i);
                         continue;
-                    }
+                    // }
                 }
                 i++;
             }
@@ -272,11 +272,11 @@ void mapview::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_are
                     if ((*i)->Min.z() > (*zn)->max().z())
                     {
                         // object inside zone boundaries? --> discard
-                        if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x() ||
-                              (*i)->Max.y() < (*zn)->min().y() || (*i)->Min.y() > (*zn)->max().y()))
-                        {
+                        // if (!((*i)->Max.x() < (*zn)->min().x() || (*i)->Min.x() > (*zn)->max().x() ||
+                        //       (*i)->Max.y() < (*zn)->min().y() || (*i)->Min.y() > (*zn)->max().y()))
+                        // {
                             continue;
-                        }
+                        // }
                     }
                     
                     discard = false;

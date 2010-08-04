@@ -4,6 +4,7 @@ EXTRA_DIST = CMakeLists.txt
 ## Our header files
 pkgincludeworlddir = $(pkgincludedir)/world
 pkgincludeworld_HEADERS = \
+    action.h \
     area.h \
     area_manager.h \
     character.h \
@@ -43,6 +44,7 @@ lib_LTLIBRARIES = libadonthell_world.la
 
 ## Rules to build libworld
 libadonthell_world_la_SOURCES = \
+    action.cc \
     area.cc \
     area_manager.cc \
     character.cc \
@@ -73,3 +75,17 @@ libadonthell_world_la_LIBADD = $(PY_LIBS) $(libglog_LIBS) \
     $(top_builddir)/src/gfx/libadonthell_gfx.la \
     $(top_builddir)/src/rpg/libadonthell_rpg.la \
     $(top_builddir)/src/py-runtime/libadonthell_py_runtime.la -lstdc++
+
+
+## Unit tests
+test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS) $(top_builddir)/src/world/libadonthell_world.la
+
+test_renderer_SOURCES  = test_renderer.cc
+test_renderer_CXXFLAGS = $(libadonthell_world_la_CXXFLAGS) $(test_CXXFLAGS)
+test_renderer_LDADD    = $(libadonthell_world_la_LIBADD)   $(test_LDADD)
+
+TESTS = \
+	test_renderer
+
+check_PROGRAMS = $(TESTS)

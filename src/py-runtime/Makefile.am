@@ -1,6 +1,6 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = py_runtime.i CMakeLists.txt
-CLEANFILES = $(top_srcdir)/src/py-wrappers/runtime/py_*_wrap.cc
+CLEANFILES = $(top_srcdir)/src/py-wrappers/runtime/py_runtime.cc
 
 ## SWIG runtime support
 lib_LTLIBRARIES = libadonthell_py_runtime.la

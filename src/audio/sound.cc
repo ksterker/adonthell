@@ -28,6 +28,7 @@
 
 #include <string>
 
+#include "base/base.h"
 #include "audio/audio.h"
 #include "audio/audio_manager.h"
 #include "audio/sound.h"
@@ -49,12 +50,17 @@ sound::sound (const std::string &filename)
     LOG(INFO) << logging::indent() << "sound::sound(" << filename << ") called";
     logging::increment_log_indent_level();
 
-    std::string sound_dir = audio_manager::get_sound_dir();
-    LOG(INFO) << logging::indent() << "sound_dir: '" << sound_dir << "'";
-
-    m_filename = sound_dir + filename;
-    open_file();
-
+    m_filename = "audio/" + filename;
+    if (base::Paths.find_in_path (m_filename))
+    {
+        open_file();
+    }
+    else
+    {
+        m_channel = -1;
+        m_sample = NULL;
+    }
+    
     logging::decrement_log_indent_level();
 }
 

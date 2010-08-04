@@ -1,7 +1,7 @@
 /*
  $Id: renderer.cc,v 1.9 2009/03/21 11:59:47 ksterker Exp $
  
- Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009/2010 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -113,6 +113,9 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
             for (iterator it = render_queue.begin(); it != render_queue.end(); it++)
                 fprintf (stderr, "  - (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
 
+            //visualize_deadlock (render_queue);
+            //exit(1);
+            
             draw (x, y, render_queue.front(), da, target);
             render_queue.pop_front();
         }
@@ -145,50 +148,72 @@ bool default_renderer::can_draw_object (render_info & obj, const_iterator & begi
     return true;
 }
 
-// check object order
+#define YT 1
+#define YB 2
+#define ZT 4
+#define ZB 8
+
+// check object order (is obj2 below obj?)
 bool default_renderer::is_object_below (const render_info & obj, const render_info & obj2) const
 {
-    s_int32 min_x = obj2.x() + obj2.Shape->ox();
-    s_int32 min_y = obj2.y() + obj2.Shape->oy();
+    s_int32 min_x = obj2.x();
+    s_int32 min_y = obj2.y();
     s_int32 min_z = obj2.z();
     s_int32 max_x = min_x + obj2.Shape->length();
     s_int32 max_y = min_y + obj2.Shape->width();
     s_int32 max_z = min_z + obj2.Shape->height();
     
-    // 2 | 3 | 4   y           x | F | F
-    // --+---+--   ^           --+---+--
-    // 1 | 8 | 5   |           T | o | F
-    // --+---+--   |           --+---+--
-    // 0 | 7 | 6   +-----> z   T | T | x
-
-    if (obj.y() + obj.Shape->oy() + obj.Shape->width() <= min_y)
+    // only comparing two objects by their y and z coordinate, we
+    // want to figure out if an object is in front of the other or
+    // not. For that purpose, we divide space into 9 segments, with
+    // object two as the center segement #8. We then check in which 
+    // segment the first object is located.
+    //
+    // segments    coordinates  is below?
+    // 2 | 3 | 4   y            x | F | F
+    // --+---+--   ^            --+---+-- max_y
+    // 1 | 8 | 5   |            T | o | F
+    // --+---+--   |            --+---+-- min_y
+    // 0 | 7 | 6   +-----> z    T | T | x
+    //                            \   \-- max_z
+    //                             \----- min_z
+    //
+    // If the first object falls completely into segment 0, 1 or 7
+    // it is below object two. In segment 3, 4 or 5 it is above.
+    // In segments 2 and 6, the two objects do not overlap, but
+    // since that is tested in advance, this case should not occur.
+    // Finally, if object one falls into segment 8, the two objects
+    // intersect and there is no easy answer which object is in front
+    // and which behind.
+    
+    if (obj.y() + obj.Shape->width() <= min_y)
     {                 
-        if (obj.z() + obj.Shape->height() <= min_z) // 0
+        if (obj.z() + obj.Shape->height() <= min_z) // segment 0
         {
             return true;
         }
-        else if (obj.z() >= max_z) // 6
+        else if (obj.z() >= max_z) // segment 6
         {
             fprintf (stderr, "*** default_renderer::is_object_below: objects do not overlap!\n");
             fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
             fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
             return false;
         }
-        else // 7
+        else // segment 7
         {
             return true;
         }
     }
-    else if (obj.y() + obj.Shape->oy() >= max_y)
+    else if (obj.y() >= max_y)
     {
-        if(obj.z() + obj.Shape->height() <= min_z) // 2
+        if(obj.z() + obj.Shape->height() <= min_z) // segment 2
         {
             fprintf (stderr, "*** default_renderer::is_object_below: objects do not overlap!\n");
             fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
             fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
             return false;
         }
-        else if(obj.z() >= max_z) // 4
+        else if(obj.z() >= max_z) // segment 4
         {
             return false;
         }
@@ -197,66 +222,124 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
             return false;
         }
     }
-    else if (obj.z() >= max_z) // 5
+    else if (obj.z() >= max_z) // segment 5
     {
         return false;
     }
-    else if (obj.z() + obj.Shape->height() <= min_z) // 1
+    else if (obj.z() + obj.Shape->height() <= min_z) // segment 1
     {
         return true;
     }
-    else // 8
+    else // segment 8
     {
+        // TODO: here we'd need to cut non-solid flat objects that intersect with
+        // solid non-flat objects
+        
         // this will be allowed for certain cases and needs code to split objects for correct rendering
         // in other cases, it cannot be avoided due to map structure or differences between collision
         // detection and the code utilized here.
-        
-        // fprintf (stderr, "*** default_renderer::is_object_below: object intersection!\n");
-        // fprintf (stderr, "\n    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
-        // fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
 
         if (obj.Shape->is_flat() == obj2.Shape->is_flat())
         {
             if (obj.Shape->is_flat())
             {
-                // both objects are floor tiles --> draw the one first that's below
-                return obj.z() + obj.Shape->height() < max_z;
+                // both objects are floor tiles 
+                if (obj.z() + obj.Shape->height() != max_z)
+                {
+                    // draw the one first that's below
+                    return obj.z() + obj.Shape->height() < max_z;
+                }
+                else
+                {
+                    // equal position --> draw the thinner first
+                    return obj.Shape->height() > obj2.Shape->height();
+                }
             }
             else
             {
-                // both objects are walls --> draw the one first that's behind
-                return obj.y() + obj.Shape->oy() < min_y;
+                // both objects are walls
+                if (obj.y() + obj.Shape->width() != max_y)
+                {
+                    // draw the one first that's behind
+                    return obj.y() + obj.Shape->width() < max_y;
+                }
+                else
+                {
+                    // equal position --> draw the thinner first
+                    return obj.Shape->width() > obj2.Shape->width();
+                }
             }
         }
-        
-        // TODO: here we'd need to cut non-solid flat objects that intersect with
-        // solid non-flat objects
-        return obj2.Shape->is_flat();
-        /*
-        s_int32 oy = 0, oz = 0;
 
-        // figure out area of least overlap
-        if (obj.y() + obj.Shape->oy() + obj.Shape->width() >= min_y && obj.y() + obj.Shape->oy() + obj.Shape->width() <= max_y)
-            oy = obj.y() + obj.Shape->oy() + obj.Shape->width() - min_y;
-        else if (max_y >= obj.y() + obj.Shape->oy() && max_y <= obj.y() + obj.Shape->oy() + obj.Shape->width())
-            oy = obj.y() + obj.Shape->oy() - max_y;
-        
-        if (obj.z() + obj.Shape->height() >= min_z && obj.z() + obj.Shape->height() <= max_z)
-            oz = obj.z() + obj.Shape->height() - min_z;
-        else if (max_z >= obj.z() && max_z <= obj.z() + obj.Shape->height())
-            oz = obj.z() - max_z;
-        
-        if (oy != 0 && abs(oy) < abs(oz))
+        //  ZT      YB       YT       ZB       0
+        //          _______
+        //  | |     ---|---     |        | |     |
+        //  |-|---     |     ___|___  ---|-|  ---|---
+        //  | |        |     ---'---     | |     |
+
+        int res = 0;
+        if (obj.y() >= min_y && obj.y() <= max_y && obj.y() + obj.Shape->width() >= max_y)
         {
-            // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n",  min_x, min_y + (oy > 0 ? oy : 0), min_z, max_x, max_y + (oy < 0 ? oy : 0), max_z);
-            return is_object_below (obj, min_x, min_y + (oy > 0 ? oy : 0), min_z, max_x, max_y + (oy < 0 ? oy : 0), max_z);
+            res += YT; // obj in front of obj2
         }
-        else
+        else if (obj.y() + obj.Shape->width() <= max_y && obj.y() + obj.Shape->width() >= min_y && obj.y() <= min_y)
         {
-            // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z + (oz > 0 ? oz : 0), max_x, max_y, max_z + (oz < 0 ? oz : 0));
-            return is_object_below (obj, min_x, min_y, min_z + (oz > 0 ? oz : 0), max_x, max_y, max_z + (oz < 0 ? oz : 0));
+            res += YB; // obj behind obj2
         }
-        */
+        
+        if (obj.z() >= min_z && obj.z() <= max_z && obj.z() + obj.Shape->height() >= max_z)
+        {
+            res += ZT; // obj on top obj2
+        }
+        else if (obj.z() + obj.Shape->height() <= max_z && obj.z() + obj.Shape->height() >= min_z && obj.z() <= min_z)
+        {
+            res += ZB; // obj below obj2
+        }
+        
+        switch (res)
+        {
+            case 0:
+            {                
+                fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
+                fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
+                fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+
+                // FIXME: this is a bad guess
+                return obj2.Shape->is_flat();
+            }                
+            case YT:
+            {
+                return false;
+            }
+            case YB:
+            {
+                return true;
+            }
+            case ZT:
+            {
+                return false;
+            }
+            case ZB:
+            {
+                return true;
+            }
+            case YT|ZT:
+            {
+                return false;
+            }
+            case YT|ZB:
+            {
+                return true;
+            }
+            case YB|ZT:
+            {
+                return false;
+            }
+            case YB|ZB:
+            {
+                return true;
+            }
+        }
     }
 }
 
@@ -267,8 +350,15 @@ void debug_renderer::draw (const s_int16 & x, const s_int16 & y, const render_in
     
     if (DrawBBox)
     {
-        cube3 bbox (obj.Shape->length(), obj.Shape->width(), obj.Shape->height());
-        bbox.draw (x + obj.x(), y + obj.y() - obj.z(), &da, target);
+        // draw detailed collision information
+        for (std::vector<world::cube3*>::const_iterator i = obj.Shape->begin(); i != obj.Shape->end(); i++)
+        {
+            (*i)->draw (x + obj.Pos.x(), y + obj.Pos.y() - obj.Pos.z(), &da, target);
+        }
+        
+        // draw complete bbox around placeable
+        // cube3 bbox (obj.Shape->length(), obj.Shape->width(), obj.Shape->height());
+        // bbox.draw (x + obj.x(), y + obj.y() - obj.z(), &da, target);
     }
     
     if (Print)
@@ -285,6 +375,55 @@ void debug_renderer::draw (const s_int16 & x, const s_int16 & y, const render_in
         base::timer::sleep (Delay);
         gfx::screen::update ();
     }
+}
+
+void default_renderer::visualize_deadlock (std::list <world::render_info> & render_queue) const
+{        
+    std::vector <world::render_info> queue (render_queue.begin(), render_queue.end());
+    
+    std::ofstream graph ("deadlock.dot");
+    graph << "digraph deadlock {" << std::endl;
+
+    // print all nodes
+    for (int i = 0; i < render_queue.size(); i++)
+    {
+        const render_info & ri = queue[i];
+        graph << "n" << i << " [label=\"" << ri.Pos << "\\n" << ri.Shape->get_min() << " - " << ri.Shape->get_max() << "\"];" << std::endl;  
+    }
+
+    graph << std::endl;
+
+    // check each object if it can be drawn
+    for (int j = 0; j < render_queue.size(); j++)
+    {
+        for (int i = 0; i < render_queue.size(); i++)
+        {
+            // ... but not with itself
+            if (i == j) continue;
+            
+            const render_info & ri = queue[i];
+            const render_info & rj = queue[j];
+            
+            // if objects don't overlap, we're still good
+            if (rj.min_x()  >= ri.max_x()  ||
+                rj.min_yz() >= ri.max_yz() ||
+                ri.min_x()  >= rj.max_x()  ||
+                ri.min_yz() >= rj.max_yz())
+                continue;
+            
+            // objects do overlap, so we need to figure out position of objects 
+            // relative to each other
+            if (is_object_below (ri, rj))
+            {
+                // draw and remove from queue
+                graph << "  n" << j << " -> n" << i << ";" << std::endl;
+                break;
+            }
+        }
+    }
+    
+    graph << "}" << std::endl;
+    graph.close();
 }
 
 }

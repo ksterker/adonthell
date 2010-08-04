@@ -68,14 +68,15 @@ namespace world
          * Add object at given coordinates.
          * @param object entity to add to the world.
          * @param coordinates location of the entity.
+         * @returns a pointer to the newly added chunk.
          */
-        void add (entity * object, const coordinates & pos);
+        chunk_info * add (entity * object, const coordinates & pos);
 
         /**
          * Add object at given coordinates.
          * @param ci entity to add to the world.
          */
-        void add (const chunk_info & ci);
+        void add (chunk_info * ci);
 
         /**
          * Check if given object is present at given position.
@@ -91,7 +92,10 @@ namespace world
         bool exists (const chunk_info & ci);
 
         /**
-         * Remove object at given coordinates.
+         * Remove object at given coordinates. Returns a pointer
+         * to the removed object, which must be deleted if it is
+         * no longer used.
+         *
          * @param object entity to remove from the world.
          * @param coordinates location of the entity.
          * @return object that was removed, or NULL if no
@@ -100,7 +104,10 @@ namespace world
         entity * remove (entity * object, const coordinates & pos);
 
         /**
-         * Remove object from world.
+         * Remove object from world.  Returns a pointer to
+         * the removed object, which must be deleted if it is
+         * no longer used.
+         *         
          * @param ci entity to remove from world.
          * @return object that was removed, or NULL if no
          *      such object existed.
@@ -297,7 +304,7 @@ namespace world
         /// the children of the chunk
         chunk* Children[8];
         /// the objects contained in the chunk
-        std::list<chunk_info> Objects;
+        std::list<chunk_info *> Objects;
 
         /// the minimum of the chunks AABB
         vector3<s_int32> Min;

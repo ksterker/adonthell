@@ -85,10 +85,6 @@ namespace audio
          */ 
         static const int get_audio_rate() { return audio_rate_; }
 
-        /** @return sound_dir  directory in which sound files reside
-         */ 
-        static const std::string get_sound_dir() { return sound_dir_; }
-
         /** Sets the audio buffer size
          *
          *  @param audio_buffers  size of audio buffer, in bytes
@@ -124,13 +120,6 @@ namespace audio
          *  @return  true on success, false otherwise
          */ 
         static bool set_audio_rate(const int audio_rate = DEFAULT_AUDIO_RATE);
-
-        /** Sets the directory in which sound files reside
-         *
-         *  @param sound_dir  directory in which sound files reside
-         *  @return  true on success, false otherwise
-         */ 
-        static bool set_sound_dir(const std::string sound_dir = DEFAULT_SOUND_DIR);
 
     protected:
         static int     audio_buffers_;

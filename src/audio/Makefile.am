@@ -51,21 +51,21 @@ _sdl_la_DEPENDENCIES = libadonthell_audio.la
 
 ## Unit tests
 test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
-test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS)
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS) $(top_builddir)/src/audio/libadonthell_audio.la
 
-test_audio_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio.cc
+test_audio_SOURCES  = test_audio.cc
 test_audio_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-test_audio_event_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_event.cc
+test_audio_event_SOURCES  = test_audio_event.cc
 test_audio_event_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_event_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-test_audio_manager_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_audio_manager.cc
+test_audio_manager_SOURCES  = test_audio_manager.cc
 test_audio_manager_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_audio_manager_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 
-test_sound_SOURCES  = $(libadonthell_audio_la_SOURCES)  test_sound.cc
+test_sound_SOURCES  = test_sound.cc
 test_sound_CXXFLAGS = $(libadonthell_audio_la_CXXFLAGS) $(test_CXXFLAGS)
 test_sound_LDADD    = $(libadonthell_audio_la_LIBADD)   $(test_LDADD)
 

@@ -65,16 +65,15 @@ void area::clear()
 }
 
 // convenience method for adding object at a known index
-bool area::place_entity (const s_int32 & index, coordinates & pos)
+world::chunk_info *area::place_entity (const s_int32 & index, coordinates & pos)
 {
     if (index >= 0 && index < Entities.size())
     {
-        chunk::add(Entities[index], pos);
-        return true;
+        return chunk::add(Entities[index], pos);
     }
 
     fprintf (stderr, "*** area::place_entity: no entity at index %i!\n", index);
-    return false;
+    return NULL;
 }
 
 // update state of map
@@ -216,9 +215,12 @@ std::vector<world::zone*> area::find_zones (const world::vector3<s_int32> & poin
 // save to stream
 bool area::put_state (base::flat & file) const
 {
-    u_int32 index = 0;
+    u_int32 index = 0, act_idx = 0;
     char buffer[128];
     base::flat record;
+    
+    // list of map(interactions)
+    base::flat action_list;
     
     // gather all different placeables and their locations on the map
     collector objects;
@@ -240,7 +242,7 @@ bool area::put_state (base::flat & file) const
     index = 0;
     record.clear();
 
-    // second pass: save entities and their positions
+    // second pass: save entities and their positions and actions
     for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         base::flat entity;
@@ -253,6 +255,16 @@ bool area::put_state (base::flat & file) const
             base::flat anonym;
             for (j = data.Anonymous.begin(); j != data.Anonymous.end(); j++)
             {
+                // save location action
+                if ((*j)->has_action ())
+                {
+                    sprintf (buffer, "%d", act_idx++);
+                    
+                    base::flat actn_data;
+                    (*j)->get_action()->put_state (actn_data);
+                    action_list.put_flat (buffer, actn_data);
+                    anonym.put_string ("action", buffer);
+                }
                 ((*j)->Min - (*j)->get_object()->entire_min()).put_state (anonym);
             }
 
@@ -275,6 +287,7 @@ bool area::put_state (base::flat & file) const
         sprintf (buffer, "%d", index++);
         record.put_flat (buffer, entity);
     }
+    file.put_flat ("actions", action_list);
     file.put_flat ("entities", record);
 
     // reset
@@ -293,7 +306,7 @@ bool area::put_state (base::flat & file) const
     }
     
     file.put_flat ("states", record);
-    
+
     // save the zones
     std::list <world::zone *>::const_iterator zone_i = Zones.begin();
     base::flat zone_list;
@@ -319,6 +332,9 @@ bool area::get_state (base::flat & file)
     void *value;
     char *id;
 
+    // map (inter)actions
+    std::string actn_id = "";
+    
     // load placeable models
     std::vector<placeable*> tmp_objects;
     base::flat record = file.get_flat ("objects");
@@ -362,6 +378,9 @@ bool area::get_state (base::flat & file)
         tmp_objects.push_back (object);
     }
 
+    // load actions, if any
+    base::flat action_list = file.get_flat ("actions");
+
     // load entities
     record = file.get_flat ("entities");
     while (record.next (&value, &size, &id) == base::flat::T_FLAT)
@@ -374,10 +393,20 @@ bool area::get_state (base::flat & file)
         
         // try loading anonymous entities
         base::flat entity_data = entity.get_flat ("anonym", true);
-        
+
         // iterate over entity positions
         while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
         {
+            // load action associated to location, if any
+            if ("action" == id)
+            {
+                // get action id
+                actn_id = *((const char*) value);
+                
+                // read next value
+                entity_data.next (&value, &size, &id);
+            }
+            
             // get coordinate
             pos.set_str (std::string ((const char*) value, size));
             
@@ -390,7 +419,16 @@ bool area::get_state (base::flat & file)
             }
 
             // place entity at current index at given coordinate
-            place_entity (ety_idx, pos);
+            chunk_info *ci = place_entity (ety_idx, pos);
+            
+            // location has an action assigned
+            if (actn_id != "")
+            {
+                base::flat actn_data = action_list.get_flat (actn_id);
+                world::action *actn = ci->set_action ();
+                actn->get_state (actn_data);
+                actn_id = "";
+            }
         }
 
         // try loading named entities
@@ -398,6 +436,16 @@ bool area::get_state (base::flat & file)
         // iterate over object positions
         while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
         {
+            // load action associated to location, if any
+            if ("action" == id)
+            {
+                // get action id
+                actn_id = *((const char*) value);
+                
+                // read next value
+                entity_data.next (&value, &size, &id);
+            }
+            
             // first get id of entity
             std::string entity_name ((const char*) value);
 
@@ -408,7 +456,16 @@ bool area::get_state (base::flat & file)
             // create a named instance (that will be unique if it is the first) ...
             world::entity *ety = new world::named_entity (object, entity_name, ety_idx == -1);
             // ... and place it on the map
-            place_entity (add_entity (ety), pos);
+            chunk_info *ci = place_entity (add_entity (ety), pos);
+            
+            // location has an action assigned
+            if (actn_id != "")
+            {
+                base::flat actn_data = action_list.get_flat (actn_id);
+                world::action *actn = ci->set_action ();
+                actn->get_state (actn_data);
+                actn_id = "";
+            }            
             
             // associate world object with its rpg representation
             switch (object->type())
@@ -421,6 +478,11 @@ bool area::get_state (base::flat & file)
                     {
                         fprintf (stderr, "*** area::get_state: cannot find rpg instance for '%s'.\n", entity_name.c_str());
                     }
+                    break;
+                }
+                default:
+                {
+                    break;
                 }
             }
         }

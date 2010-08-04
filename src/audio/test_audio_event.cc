@@ -67,11 +67,11 @@ namespace audio
     }; // class{}
 
     TEST_F(audio_event_Test, constructor_Default) {
-        EXPECT_EQ("foo.ogg", ev->sample().getfilename());
+        EXPECT_EQ("audio/foo.ogg", ev->sample().getfilename());
     }
 
     TEST_F(audio_event_Test, put_state_Filename) {
-        EXPECT_EQ("foo.ogg", ev->sample().getfilename());
+        EXPECT_EQ("audio/foo.ogg", ev->sample().getfilename());
 
         base::flat f;
         ev->put_state(f);
@@ -79,11 +79,11 @@ namespace audio
         sound_noop  *s2  = new sound_noop("bar.ogg");
         audio_event *ev2 = new audio_event(s2);
 
-        EXPECT_EQ("bar.ogg", ev2->sample().getfilename());
+        EXPECT_EQ("audio/bar.ogg", ev2->sample().getfilename());
 
         ev2->get_state(f);
 
-        EXPECT_EQ("foo.ogg", ev2->sample().getfilename());
+        EXPECT_EQ("audio/foo.ogg", ev2->sample().getfilename());
 
         delete ev2;
         delete s2;

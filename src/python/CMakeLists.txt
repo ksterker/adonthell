@@ -26,6 +26,15 @@ target_link_libraries(adonthell_python
     ${PYTHON_LIBRARIES}
     adonthell_base)
 
+################################
+# Unit tests
+IF(DEVBUILD)
+  add_executable(test_python test_python.cc)
+  target_link_libraries(test_python ${TEST_LIBRARIES} adonthell_python)
+  add_test(NAME Python COMMAND test_python)
+ENDIF(DEVBUILD)
+
+################################  
 # install
 adonthell_install_lib (adonthell_python)
 adonthell_install_include(python "${adonthell_python_HEADERS}") 

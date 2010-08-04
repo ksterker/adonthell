@@ -298,8 +298,8 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                 }
 
                 // Check if there is an obstacle in this node
-                vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, 20);
-                vector3<s_int32> cmax(temp_node->pos.x() * 20 , temp_node->pos.y() * 20 , chr->placeable::height());
+                vector3<s_int32> cmin(temp_node->pos.x() * 20, temp_node->pos.y() * 20, chr->z() + 1);
+                vector3<s_int32> cmax(temp_node->pos.x() * 20 + chr->placeable::length(), temp_node->pos.y() * 20 + chr->placeable::width() , chr->z() + chr->height() - 1);
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(cmin, cmax);
 

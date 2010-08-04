@@ -51,21 +51,19 @@ namespace world
          * @param max the extend of the object in world space
          */
         chunk_info (entity *e, const vector3<s_int32> & min, const vector3<s_int32> & max) 
-        : Min (min), Max (max), Entity (e)
+        : Min (min), Max (max), Entity (e), Action(NULL)
         {
             calc_solid_max();
         }
 
         /**
-         * Create a copy of another chunk_info. 
-         * @param ci object to copy.
+         * Cleanup.
          */
-        chunk_info (const chunk_info & ci) 
-        : Min (ci.Min), Max (ci.Max), Entity (ci.Entity), Shadow (ci.Shadow)
+        ~chunk_info ()
         {
-            calc_solid_max();
+            delete Action;
         }
-
+        
         /**
          * Compare if two chunk infos are the same.
          * @return True if both position and object contained are equal.
@@ -90,6 +88,54 @@ namespace world
             return Entity;
         }        
         
+        /**
+         * @name Object interaction
+         */
+        //@{
+        /**
+         * Assign an action to that location.
+         * @return an empty action that must be initialized.
+         */
+        world::action *set_action()
+        {
+            if (Action == NULL)
+            {
+                Action = new world::action();
+            }
+            return Action;
+        }
+        
+        /**
+         * Get pointer to action associated with
+         * the specific location or entity. If an action
+         * is set for the location, that is returned.
+         * Otherwise, the entity-specific action is returned.
+         * May return NULL if there is neither.
+         *
+         * @return an action or NULL, if none is assigned.
+         */
+        world::action *get_action() const
+        {
+            if (Action) return Action;
+            else return Entity->get_action();
+        }
+        
+        /**
+         * Check whether this location has a specific
+         * action assigned. Allows to distinguish between
+         * location and entity based action.
+         * @return true if this location has an action, false otherwise.
+         */
+        bool has_action () const
+        {
+            return Action != NULL;
+        }
+        //@}
+        
+        /**
+         * @name Position information
+         */
+        //@{
         /**
          * Return "real" position, taking only solid placeable shape offset into account.
          * @return lower coordinate of bounding box
@@ -121,6 +167,7 @@ namespace world
             const placeable *object = Entity->get_object();
             return Min - object->entire_min();
         }
+        //@}
         
         /**
          * @name Object shadow
@@ -178,19 +225,24 @@ namespace world
 #endif
 
     private:
+        /// Forbid copy construction
+        chunk_info (const chunk_info & ci); 
+
         /**
          * Calculate constant SolidMax
          */
-         void calc_solid_max()
-         {
+        void calc_solid_max()
+        {
             const placeable *object = Entity->get_object();
             SolidMax = vector3<s_int32>(Min.x() + object->solid_max_length(),
                                         Min.y() + object->solid_max_width(),
                                         Min.z() + object->solid_max_height());
-         }
+        }
          
         /// pointer to map object
         entity * Entity;
+        /// location specific action
+        action * Action;
         /// shadow cast on this object 
         std::vector<shadow_info> Shadow;
         /// extend of the solid portion of the object

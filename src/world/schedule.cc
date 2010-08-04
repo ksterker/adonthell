@@ -1,7 +1,5 @@
 /*
- $Id: schedule.cc,v 1.2 2009/05/03 16:26:00 ksterker Exp $
- 
- Copyright (C) 2004/2005/2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2004/2005/2006/2010 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -202,31 +200,16 @@ void schedule::queue_alarm (const string & time, const bool & absolute)
 // add the schedule object to the python argument tuple
 PyObject *schedule::add_schedule (PyObject* args) const
 {
-    // make sure the given arguments are a tuple
-    if (args && !PyTuple_Check (args))
+    // prepare callback arguments
+    PyObject *new_args = python::pad_tuple (args, 1);
+    if (new_args == NULL)
     {
-        fprintf (stderr, "*** warning: schedule::add_schedule: args must be a tuple!\n");
         return args;
     }
-    
-    // calculate size of argument tuple required
-    u_int16 size = args ? PyTuple_GET_SIZE (args) + 1 : 1;
-    
-    // prepare callback arguments
-    PyObject *new_args = PyTuple_New (size);
     
     // first argument is the schedule itself
     PyTuple_SET_ITEM (new_args, 0, python::pass_instance (this));
     
-    // prepare arguments
-    for (u_int16 i = 1; i < size; i++)
-    {
-        // copy remaining arguments, if any
-        PyObject *arg =  PyTuple_GET_ITEM (args, i - 1);
-        Py_INCREF (arg);
-        PyTuple_SET_ITEM (new_args, i, arg);
-    }
-
     return new_args;
 }
 

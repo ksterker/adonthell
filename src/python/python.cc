@@ -102,17 +102,55 @@ namespace python
         return ret;
     }
     
+    // pad tuple
+    PyObject *pad_tuple (PyObject *tuple, const u_int16 & len)
+    {
+        // make sure the given arguments are a tuple
+        if (tuple && !PyTuple_Check (tuple))
+        {
+            fprintf (stderr, "*** error: python::pad_tuple: argument must be a tuple!\n");
+            return NULL;
+        }
+        
+        // calculate size of argument tuple required
+        u_int16 size = tuple ? PyTuple_GET_SIZE (tuple) + len : len;
+        
+        // prepare callback arguments
+        PyObject *new_tuple = PyTuple_New (size);
+        
+        // pad with none object
+        for (u_int16 i = 0; i < len; i++)
+        {
+            PyTuple_SET_ITEM (new_tuple, i, Py_None);
+        }
+        
+        // copy remaining objects, if any
+        for (u_int16 i = len; i < size; i++)
+        {
+            PyObject *o = PyTuple_GET_ITEM (tuple, i - len);
+            Py_XINCREF (o);
+            PyTuple_SET_ITEM (new_tuple, i, o);
+        }
+        
+        return new_tuple;
+    }
+    
     // unflatten the contents of a tuple
     PyObject *get_tuple (base::flat & in, const u_int16 & start)
     {
         u_int16 len = in.get_uint16 ("pln") + start;
         PyObject *tuple = PyTuple_New (len);
         void *value;
-        
+
         for (u_int16 i = start; i < len; i++) 
         {
             switch (int type = in.next (&value)) 
             {
+                case base::flat::T_CHAR:
+                {
+                    PyTuple_SetItem (tuple, i, Py_None);
+                    break;
+                }
                 case base::flat::T_STRING:
                 {
                     // Stolen reference
@@ -147,10 +185,12 @@ namespace python
         {
             // Borrowed reference
             PyObject *item = PyTuple_GetItem (tuple, i);
+            if (item == NULL)
+                out.put_char ("n", ' ');
             
             // Check for the type of this object
             // String?
-            if (PyString_Check (item)) 
+            else if (PyString_Check (item)) 
                 out.put_string ("s", PyString_AsString (item));
             
             // Integer?
