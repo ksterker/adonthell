@@ -186,12 +186,15 @@ character *character::get_character (const std::string & id)
 bool character::load ()
 {
     // cleanup first
+    /*
     std::hash_map<std::string, character*>::iterator i;
-    for (i = Characters.begin(); i != Characters.end(); i++)
+    while (!Characters.empty())
     {
-        delete i->second;
-        i->second = NULL;
+        i = Characters.begin();
+        character *c = i->second;
+        delete c; // this removes c from Characters and invalidates i
     }
+    */
     Characters.clear();
     
     base::diskio file;
