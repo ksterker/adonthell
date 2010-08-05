@@ -398,7 +398,7 @@ bool area::get_state (base::flat & file)
         while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
         {
             // load action associated to location, if any
-            if ("action" == id)
+            if (strcmp ("action", id) == 0)
             {
                 // get action id
                 actn_id = *((const char*) value);
@@ -437,7 +437,7 @@ bool area::get_state (base::flat & file)
         while (entity_data.next (&value, &size, &id) != base::flat::T_UNKNOWN)
         {
             // load action associated to location, if any
-            if ("action" == id)
+            if (strcmp ("action", id) == 0)
             {
                 // get action id
                 actn_id = *((const char*) value);

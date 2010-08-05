@@ -49,6 +49,7 @@ using namespace world;
 %include "world/object.h"
 %include "world/coordinates.h"
 %include "world/moving.h"
+%include "world/action.h"
 %include "world/character.h"
 %include "world/chunk.h"
 %include "world/chunk_info.h"

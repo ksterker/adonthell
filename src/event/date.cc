@@ -246,7 +246,7 @@ std::string date::format_time (const std::string & format, const u_int32 & time)
 				// minutes of gametime
 				case 'm':
 				{
-					snprintf (str, 15, "%i", minute (time));
+					snprintf (str, 15, "%02i", minute (time));
 					break;
 				}
 				// no valid format code
