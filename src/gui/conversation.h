@@ -27,7 +27,7 @@ namespace gui
 		answer answers[MAX_OPTS];
 		rpg::dialog dlg;
 		const rpg::dialog_line* line;
-		void update();
+		bool update();
 		void selectopt(bool down, void* arg);
 		int opty;
 		int optcount;
@@ -37,7 +37,12 @@ namespace gui
 	public:
 		conversation(rpg::character & d, int w, int h, ::base::functor_0* e=NULL);
 
-		virtual void draw(int x, int y, gfx::surface* s) { widget::draw(x, y, s); objs.draw(x, y, s);}
+        virtual void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da = NULL, gfx::surface * s = NULL) const
+        { 
+            widget::draw(x, y, da, s); 
+            objs.draw(x, y, da, s);
+        }
+        
 		virtual bool keyup(input::keyboard_event &k);
 		virtual bool keydown(input::keyboard_event &k);
 		virtual bool focus() {return objs.focus();}

@@ -1,5 +1,5 @@
-#include "layout.h"
-#include "draw.h"
+#include "gui/layout.h"
+#include "gui/draw.h"
 #include "base/logging.h"
 
 //the rate of movement for disappearing layouts
@@ -111,7 +111,7 @@ namespace gui
 				if (dx + x + w < 0)
 				{
 					fading = NONE;
-					visible = false;
+					Visible = false;
 				}
 			}
 			break;
@@ -131,7 +131,7 @@ namespace gui
 				if (dx + x > s->w)
 				{
 					fading = NONE;
-					visible = false;
+					Visible = false;
 				}
 			}
 			break;
@@ -151,7 +151,7 @@ namespace gui
 				if (dy + y + h < 0)
 				{
 					fading = NONE;
-					visible = false;
+					Visible = false;
 				}
 			}
 			break;
@@ -171,7 +171,7 @@ namespace gui
 				if (dy + y > s->h)
 				{
 					fading = NONE;
-					visible = false;
+					Visible = false;
 				}
 			}
 			break;
@@ -180,21 +180,23 @@ namespace gui
 	}
 #endif
 
-	void layout::draw(int x, int y, gfx::surface* s)
+    void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da, gfx::surface * target) const
 	{
 		//process the fading routines
 		//dofade(x, y, s);
-		if (!visible)
+		if (!Visible)
 			return;
 		
-		x += dx;
-		y += dy;
+        u_int16 ox = dx + x;
+        u_int16 oy = dy + y;
+
 		if (hasborder)
 		{
-			border(x,y,w,h, s);
+			border(ox, oy, length(), height(), target);
 		}
+        
 		typedef vector<layoutchild> vector_layoutchild; ///me growls at visual studio
-		vector_layoutchild::iterator i;
+		vector_layoutchild::const_iterator i;
 		int c=0;
 		for (i = children.begin(); i != children.end(); ++i, c++)
 		{
@@ -202,18 +204,17 @@ namespace gui
 			if (c == which && focused && (*i).c->highlightEnabled())
 			{
 				guirect r = (*i).pos;
-				r.x += x;
-				r.y += y;
-				border(r.x,r.y,r.w,r.h, s);
+				r.x += ox;
+				r.y += oy;
+				border(r.x, r.y, r.w, r.h, target);
 			}
-			(*i).c->draw((*i).pos.x + x, (*i).pos.y+y, s);
-			
+			(*i).c->draw((*i).pos.x + ox, (*i).pos.y + oy, da, target);
 		}
 	}
 
 	bool layout::keydown(input::keyboard_event&k)
 	{
-		if (!visible)
+		if (!Visible)
 			return false;
 		if (children.size())
 		{
@@ -253,7 +254,7 @@ namespace gui
 	}
 	bool layout::keyup(input::keyboard_event&k)
 	{
-		if (!visible)
+		if (!Visible)
 			return false;
 		if (children.size())
 		{
@@ -265,7 +266,7 @@ namespace gui
 	}
 	bool layout::input(input::keyboard_event&k)
     {
-		if (!visible)
+		if (!Visible)
 			return false;
 		if (children.size())
 		{
@@ -278,7 +279,7 @@ namespace gui
 #if 0
 	bool layout::mousedown(SDL_MouseButtonEvent &m)
 	{
-		if (!visible)
+		if (!Visible)
 			return false;
 		if (m.button == SDL_BUTTON_LEFT || m.button == SDL_BUTTON_MIDDLE)
 		{
@@ -318,7 +319,7 @@ namespace gui
 	}
 	bool layout::mouseup(SDL_MouseButtonEvent &m)
 	{
-		if (!visible)
+		if (!Visible)
 			return false;
 		//don't process it unless we saw it go down
 		if (m.button == SDL_BUTTON_LEFT && mousestate[0])
@@ -341,7 +342,7 @@ namespace gui
 #endif
 	bool layout::focus()
 	{
-		if (visible && children.size())
+		if (Visible && children.size())
 		{
 			//find a child willing to accept which
 			int old = which;
@@ -361,7 +362,7 @@ namespace gui
 	}
 	void layout::hide(fadetype f)
 	{
-		if (visible && fading == NONE)
+		if (Visible && fading == NONE)
 		{
 /*
 			switch (f)
@@ -377,16 +378,16 @@ namespace gui
 				break;
 			default:
 // */
-				visible = false;
+				Visible = false;
 //			}
 		}
 	}
 	void layout::show(fadetype f)
 	{
 
-		if(!visible && fading == NONE)
+		if(!Visible && fading == NONE)
 		{
-			visible = true;
+			Visible = true;
 /*			switch (f)
 			{
 			case TOP:
@@ -403,12 +404,13 @@ namespace gui
 	}
 	void layout::addchild(base& c, int x, int y) 
 	{
-		guirect p = {x, y, c.getWidth(), c.getHeight()};
+		guirect p = {x, y, c.length(), c.height()};
 		/* if the width is too small, change it to fit */
-		if (x + c.getWidth() > w)
-			w = x + c.getWidth();
-		if (y + c.getHeight() > h)
-			h = y + c.getHeight();
+		if (x + c.length() > length())
+			set_length(x + c.length());
+		if (y + c.height() > height())
+			set_height(y + c.height());
+        // FIXME: resize Look too
 		children.push_back(layoutchild(&c, p));
 	}
 	void layout::removechild(base& c)

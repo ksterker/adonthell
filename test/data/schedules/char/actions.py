@@ -59,15 +59,16 @@ def perform_action (chr, action):
         obj_name = entity.id()
         # -- get object ...
         obj = entity.get_object()
-        # -- ... and cast it to a character
-        #    FIXME in the future, obj might be an item too
-        other_char = obj.map().get_character (obj_name)
-        # -- get associated rpg instance
-        rpg_obj = other_char.mind ()
-        # -- get the Python character script
-        py_rpg_obj = rpg_obj.get_instance ()
-        # -- execute the action
-        py_rpg_obj.perform_action (action, chr, other_char)
+        # -- ... and cast it ...
+        if obj.type() == world.CHARACTER:
+            # -- ... to a character
+            other_char = obj.map().get_character (obj_name)
+            # -- get associated rpg instance
+            rpg_obj = rpg.character.get_character (obj_name)
+            # -- get the Python character script
+            py_rpg_obj = rpg_obj.get_instance ()
+            # -- execute the action
+            py_rpg_obj.perform_action (action, chr, other_char)
 
 
 _opposite_direction = {
@@ -140,7 +141,7 @@ def get_objects (chr, radius, arc, type):
     min = world.vector3i (chr_x - radius, chr_y - radius, chr.z())
     max = world.vector3i (chr_x + radius, chr_y + radius, chr.z() + chr.height())
         
-    # -- get list of characters and items enclosed be bbox
+    # -- get list of characters and items enclosed by bbox
     object_list = chr.map().objects_in_bbox (min, max, type)
 
     # -- get start and end of the area of effect

@@ -56,7 +56,6 @@ namespace gfx
         int Dx,Dy;
         int Err;
         int inc1,inc2;
-        int offset;
 
         drawing_area da;
 
@@ -111,7 +110,6 @@ namespace gfx
                     Err+=inc2;
 
                 x+=IncX;
-                offset+=IncX;
             }
         }
         else
@@ -139,6 +137,19 @@ namespace gfx
         }
         
         unlock();
+    }
+
+    // tile the given surface onto this one
+    void surface::tile (const surface& src, const drawing_area *da_opt)
+    {
+        drawing_area da;
+        
+        if (da_opt) da = da_opt->setup_rects();
+        else da.resize (length(), height());
+        
+        for (u_int16 posy = 0; posy < height(); posy += src.height ())
+            for (u_int16 posx = 0; posx < length(); posx += src.length ())
+                src.draw (da.x() + posx, da.y() + posy, &da, this); 
     }
 
     // adjust brightness

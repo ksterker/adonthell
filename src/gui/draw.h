@@ -11,36 +11,13 @@
 
 namespace gui
 {
-	inline void vertLine(int x, int y1, int y2, u_int32 c, gfx::surface*s)
-	{
-		if (x > 0 && x < s->length())
-		{
-			int ymin = y1 < 0 ? 0 : y1;
-			int ymax = y2 > s->height() ? s->height() : y2;
-			s->lock();
-			for(;ymin < ymax;ymin++)
-				s->put_pix(x, ymin, c);
-			s->unlock();
-		}
-	}
-	inline void horizLine(int x1, int x2, int y, u_int32 c, gfx::surface*s)
-	{
-		if (y > 0 && y < s->height())
-		{
-			int xmin = x1 < 0 ? 0 : x1;
-			int xmax = x2 > s->length() ? s->length() : x2;
-			s->lock();
-			for(;xmin < xmax;xmin++)
-				s->put_pix(xmin, y, c);
-			s->lock();
-		}
-	}
 	inline void box(int x, int y, int w, int h, u_int32 c, gfx::surface*s)
 	{
-		vertLine(x, y, y + h, c, s);
-		vertLine(x+w-1, y, y + h, c, s);
-		horizLine(x, x + w, y, c, s);
-		horizLine(x, x + w, y+ h-1, c, s);
+        gfx::drawing_area da (0, 0, s->length(), s->height());
+        s->draw_line (x, y, x, y + h, c, &da);
+        s->draw_line (x + w, y, x + w, y + h, c, &da);
+        s->draw_line (x, y, x + w, y, c, &da);
+        s->draw_line (x, y + h, x + w, y + h, c, &da);
 	}
 	inline void border(int x, int y, int w, int h, gfx::surface*s)
 	{

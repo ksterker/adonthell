@@ -263,6 +263,16 @@ namespace gfx
         virtual void mirror (bool x, bool y) = 0;
 
         /**
+         * Tile the given %surface onto this %surface. The location
+         * tiled can be constrained by an optional drawing_area. If
+         * omitted, the complete surface will be filled.
+         * 
+         * @param src the source image.
+         * @param da_opt clipping rectangle.
+         */
+        void tile (const surface& src, const drawing_area *da_opt = NULL);
+        
+        /**
          * Adjust image brightness. Values < 127 will darken
          * the image, values > 127 brighten the image.
          *

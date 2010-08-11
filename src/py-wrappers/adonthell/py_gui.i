@@ -4,6 +4,7 @@
 %{
 #include "base/types.h"
 #include "gui/gui.h"
+#include "gui/conversation.h"
 #include "gui/window_manager.h"
 #include "python/callback.h"
     
@@ -35,6 +36,8 @@ namespace gui {
 }
 
 %import "base/types.h"
+%import(module="gfx") "gfx/drawable.h"
+
 %include "gui/base.h"
 %include "gui/widget.h"
 %include "gui/font.h"

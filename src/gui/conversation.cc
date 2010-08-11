@@ -8,18 +8,17 @@
 namespace gui
 {
 	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_0*e)
-	:widget(w, h),ct(w-30, h/3),dlg(c),speaker(w-30, LINEHEIGHT),end(e)
+	:widget("window.xml"),ct(w-30, h/3),dlg(c),speaker(w-30, LINEHEIGHT),end(e)
 	{
-        font f (NULL, LINEHEIGHT - 1);
-        ct.setFont(f);
-        speaker.setFont(f);
+        set_size (w, h);
+        ct.get_font()->setSize(LINEHEIGHT - 1);
+        speaker.get_font()->setSize(LINEHEIGHT - 1);
         
-        bg = gfx::surfaces->get_surface_only("gfx/gui/conversation.png");//FIXME
 		line = dlg.run(-1);
-		ct.multiline(true);
+		ct.set_multiline(true);
 		objs.addchild(speaker, 15, 10);
 		objs.addchild(ct, 15, LINEHEIGHT+10);
-		opty = ct.getHeight() + 40;
+		opty = ct.height() + 40;
 		optcount = 0;
 		update();
 		color = c.color(); 
@@ -31,7 +30,8 @@ namespace gui
 		self->obj->line = self->obj->dlg.run(self->which);
 		self->obj->update();
 	}
-	void conversation::update()
+    
+	bool conversation::update()
 	{
 		while (optcount)
 		{
@@ -49,10 +49,10 @@ namespace gui
 			}
 			//speaker.setString(string(""));
 			//ct.setString("(End)");
-			return;
+			return false;
 		}
-		speaker.setString(string(line->speaker()) + ":");
-		ct.setString(line->text());
+		speaker.set_string(string(line->speaker()) + ":");
+		ct.set_string(line->text());
 		//*
 		int i;
 		int y = opty;
@@ -69,34 +69,35 @@ namespace gui
 		{
 			answers[i].which = i;
 			answers[i].obj = this;
-			options[i] = new button(w-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i], 2);
-			options[i]->setFont(f);
-			options[i]->multiline(true);
+			options[i] = new button(length()-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i], 2);
+			options[i]->get_font()->setSize(LINEHEIGHT-1);
+			options[i]->set_multiline(true);
 			char tmp[16];
 			snprintf(tmp, 16, "%i)", i+1);
-			options[i]->setString(string(tmp)+line->answer(i));
+			options[i]->set_string(string(tmp)+line->answer(i));
 			options[i]->reheight();
-			options[i]->centerV(false);
+			options[i]->set_center(false, false);
             objs.addchild(*options[i], 20, y);
-			y += options[i]->getHeight() +5;
+			y += options[i]->height() +5;
 		}
 		if (optcount == 0) 
 		{
 			optcount = 1;
 			answers[0].which = -1;
 			answers[0].obj = this;
-			options[0] = new button(w-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i],2);
-			options[0]->setFont(f);
-			options[0]->multiline(true);
-			options[0]->setString("1) (continue)");
+			options[0] = new button(length()-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i],2);
+			options[0]->get_font()->setSize(LINEHEIGHT-1);
+			options[0]->set_multiline(true);
+			options[0]->set_string("1) (continue)");
 			options[0]->reheight();
-			options[0]->centerV(false);
+			options[0]->set_center(false, false);
 			options[0]->setColor(0xffffffff);
 			objs.addchild(*options[0], 20, y);
-			y += options[0]->getHeight() +5;
+			y += options[0]->height() +5;
 		}
 		objs.focus();
 		// */
+        return true;
 	}
 	bool conversation::keyup(input::keyboard_event &k) 
 	{

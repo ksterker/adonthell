@@ -8,6 +8,5 @@
 #include "gui/layout.h"
 #include "gui/option.h"
 #include "gui/textbox.h"
-#include "gui/conversation.h"
 
 #endif

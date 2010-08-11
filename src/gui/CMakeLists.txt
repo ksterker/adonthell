@@ -2,11 +2,13 @@
 set(adonthell_gui_SRCS
 	button.cpp
 	conversation.cc
+    decoration.cc
 	font.cpp
 	label.cpp
 	layout.cc
 	option.cpp
 	textbox.cpp
+    textcache.cc
 	widget.cpp
     window_manager.cc
 )
@@ -15,12 +17,15 @@ set(adonthell_gui_HEADERS
     base.h
 	button.h
 	conversation.h
+    decoration.h
 	draw.h
 	font.h
 	gui.h
 	label.h
 	layout.h
 	option.h
+    textbox.h
+    textcache.h
 	widget.h
     window_manager.h
 )

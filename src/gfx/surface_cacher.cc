@@ -125,7 +125,10 @@ namespace gfx
     // release reference
 	void surface_cacher::free_surface(const surface* surf)
 	{
-		free_by_name(SurfToString[surf]);
+        if (surf != NULL)
+        {
+            free_by_name(SurfToString[surf]);
+        }
 	}
     
     // get refcount for given surface

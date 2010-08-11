@@ -38,7 +38,7 @@ void window_manager::update()
 {
     for (std::list<gui::widget*>::reverse_iterator i = Windows.rbegin(); i != Windows.rend(); i++)
     {
-        (*i)->draw (20, 10, gfx::screen::get_surface());// FIXME: don't hardcode window pos
+        (*i)->draw (20, 10, NULL, gfx::screen::get_surface());// FIXME: don't hardcode window pos
     }
 }
 

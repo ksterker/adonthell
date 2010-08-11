@@ -6,7 +6,8 @@ pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
 	base.h \
 	button.h \
-	conversation.h \
+    conversation.h \
+    decoration.h \
 	draw.h \
 	font.h \
 	gui.h \
@@ -14,6 +15,7 @@ pkgincludeinput_HEADERS = \
 	layout.h \
 	option.h \
 	textbox.h \
+    textcache.h \
 	widget.h \
     window_manager.h
 
@@ -21,12 +23,14 @@ lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
 	button.cpp \
-	conversation.cc \
+    conversation.cc \
+    decoration.cc \
 	font.cpp \
 	label.cpp \
 	layout.cc \
 	option.cpp \
 	textbox.cpp \
+    textcache.cc \
 	widget.cpp \
     window_manager.cc
 

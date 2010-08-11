@@ -1,0 +1,6 @@
+<Data>
+  <list id="Default">
+   <string id="bg">testbg1.png</string>
+   <bool id="has_border">0</bool>
+  </list>
+</Data>

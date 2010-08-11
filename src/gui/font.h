@@ -39,16 +39,14 @@ namespace gui
 		void render(const string& s, int x, int y, gfx::surface* surf);
 		void render(const char* s, int x, int y, gfx::surface* surf) {render(string(s),x,y,surf);}
 		
-		bool isValid() { return !error; }
-		int getError() { return error; }
+		bool isValid() const { return !error; }
+		int getError() const { return error; }
 		void setSize(int size); 
-		int getSize() { return fontsize; }
-		void getSize(const string& s, int& w, int & h);
-		void getSize(const char* s, int&w, int&h) {getSize(string(s), w, h);}
-	//	void getMultilineSize(const char* s, int maxwidth, vector<int>& vpos, int & w, int & h)
-	//	{getMultilineSize(string(s), maxwidth, vpos, w, h);}
-		void getMultilineSize(const string& s, int maxwidth, vector<textsize>& ts, int & w, int & h);
-		u_int32 getColor() {return color;}
+		int getSize() const { return fontsize; }
+		void getSize(const string& s, u_int32& w, u_int32 & h);
+		void getSize(const char* s, u_int32&w, u_int32&h) {getSize(string(s), w, h);}
+		void getMultilineSize(const string& s, u_int16 maxwidth, vector<textsize>& ts, u_int16 & w, u_int16 & h);
+		u_int32 getColor() const {return color;}
 		void setColor(u_int32 c) {color = c;}
 	};
 };

@@ -115,8 +115,8 @@ namespace gfx
          * @param target pointer to the surface where to draw the drawable. If NULL,
          *               draw on the screen.
          */
-        virtual void draw (const s_int16 & x, const s_int16 & y, const drawing_area * da_opt = NULL,
-                           surface * target = NULL) const = 0;
+        virtual void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da_opt = NULL,
+                           gfx::surface * target = NULL) const = 0;
 
     protected:
     

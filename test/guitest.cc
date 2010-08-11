@@ -72,36 +72,28 @@ class GuiTest : public adonthell::app {
     /*************************************************************************/
     /*************************************************************************/
     /*************************************************************************/
-	//find the images we need
-	string testbg1 = "gfx/gui/testbg1.png";
-	base::Paths.find_in_path(testbg1);
-	string testbuttondown = "gfx/gui/testbuttondown.png";
-	base::Paths.find_in_path(testbuttondown);
-	string testbuttonup = "gfx/gui/testbuttonup.png";
-	base::Paths.find_in_path(testbuttonup);
-
 	gui::font f;
 	gui::font red;
 	gui::label l(200, 30);
 	l.setString("This is a Label");
-	gui::label label_with_bg(testbg1.c_str());
+	gui::label label_with_bg("label.xml");
 	label_with_bg.setString("Is this readable?");
 
-	gui::button b(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
+	gui::button b("button.xml", base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
 	b.setString("Click Me");
-	gui::button b2(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
+	gui::button b2("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
 	
 	b2.setString("Red Button");
 	gui::button b3(300,30, base::make_functor(*this, &GuiTest::print), (void*)"button 3", 1);
 	b3.setString("Button 3");
-	gui::option o1(testbuttonup.c_str(), testbuttondown.c_str(), base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
+	gui::option o1("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
 	o1.setString("Option 1");
 
 	gui::textbox t1(400, 30);
 	
 	gui::label multiline_test(400, 100);
 	multiline_test.setString("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
-	multiline_test.multiline(true);
+	multiline_test.set_multiline(true);
 	/* arrange them in a freeform layout object */
 	gui::layout widgets;
 	widgets.addchild( b, 10, 10);
@@ -156,35 +148,15 @@ class GuiTest : public adonthell::app {
 			p = ts[i].cpos +1;
 		}
 // */
-      	l.draw(10, 50, screen);
-		label_with_bg.draw(10, 80, screen);
-		widgets.draw(10, 120, screen);
-		multiline_test.draw(10, 350, screen);
+      	l.draw(10, 50, NULL, screen);
+		label_with_bg.draw(10, 80, NULL, screen);
+		widgets.draw(10, 120, NULL, screen);
+		multiline_test.draw(10, 350, NULL, screen);
 		gui::box(10, 350, 400, 100, 0xff0000b0, screen);
 
 		u_int32 c = 0xff0000b0;
 		gui::box(345, 5, 30, 50, c, screen);
 		gui::border(340, 5, 40, 55, screen);
-		gui::vertLine(350, 10, 50, c, screen);
-		gui::vertLine(351, 10, 50, c, screen);
-		gui::vertLine(352, 10, 50, c, screen);
-		gui::vertLine(353, 10, 50, c, screen);
-		gui::vertLine(354, 10, 50, c, screen);
-		gui::vertLine(355, 10, 50, c, screen);
-		gui::vertLine(356, 10, 50, c, screen);
-		gui::vertLine(357, 10, 50, c, screen);
-		gui::vertLine(358, 10, 50, c, screen);
-		gui::vertLine(359, 10, 50, c, screen);
-		gui::vertLine(360, 10, 50, c, screen);
-		gui::vertLine(361, 10, 50, c, screen);
-		gui::vertLine(362, 10, 50, c, screen);
-		gui::vertLine(363, 10, 50, c, screen);
-		gui::vertLine(364, 10, 50, c, screen);
-		gui::vertLine(365, 10, 50, c, screen);
-		gui::vertLine(366, 10, 50, c, screen);
-		gui::vertLine(367, 10, 50, c, screen);
-		gui::vertLine(368, 10, 50, c, screen);
-		gui::vertLine(369, 10, 50, c, screen);
 
 		gfx::screen::update ();
     }

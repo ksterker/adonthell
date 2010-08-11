@@ -10,8 +10,7 @@ namespace gui
 	private:
 		bool state;
 	public:
-		option(const char* upimg, const char* downimg, clickevent c, void* a=NULL, int o=5):button(upimg, downimg, c,a,o),state(false) {}
-
+		option(const std::string & name, clickevent c, void* a=NULL, int o=5):button(name, c,a,o),state(false) {}
 
 		virtual bool keyup(input::keyboard_event& k);
 		virtual bool keydown(input::keyboard_event&k);

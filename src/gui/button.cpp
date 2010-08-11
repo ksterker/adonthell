@@ -4,20 +4,19 @@
 
 namespace gui
 {
-	void button::draw(int x, int y, gfx::surface* s)
+    void button::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface *target) const
 	{
 		if (clicked) //have it drawn with the alternate image
 		{
-			const gfx::surface* old = bg;
-			bg = imgdown;
-			px = py = clickpush;
-			label::draw(x, y, s);
-			bg = old;
+			Cache->set_offset (clickpush, clickpush);
+            Look->set_state("Activated");
+			label::draw(x, y, da, target);
 		}
 		else
 		{
-			px = py = 0;
-			label::draw(x, y, s);
+			Cache->set_offset (0, 0);
+            Look->set_state("Default");
+			label::draw(x, y, da, target);
 		}
 	}
 	bool button::keydown(input::keyboard_event& k)

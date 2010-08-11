@@ -121,7 +121,7 @@ namespace gui
 			data -= maxx-minx;
 		}
 	}
-	void font::getMultilineSize(const string& s, int maxwidth, vector<textsize>& ts, int & w, int & h)
+	void font::getMultilineSize(const string& s, u_int16 maxwidth, vector<textsize>& ts, u_int16 & w, u_int16 & h)
 	{
 		maxwidth <<= 6;
 		int maxw;
@@ -170,7 +170,7 @@ namespace gui
 		
 	}
 	//TODO: make this call getMultilineSize
-	void font::getSize(const string& s, int& w, int& h)
+	void font::getSize(const string& s, u_int32 & w, u_int32 & h)
 	{
 		string::const_iterator i;
 		w = 0;
