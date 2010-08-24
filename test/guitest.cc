@@ -14,7 +14,7 @@ private:
 public:
   
   bool letsexit ;
-  gui::base* widgetbase;
+  gui::widget* widgetbase;
   
   InputHandler (gui::widget* wb = NULL) : letsexit (false), widgetbase(wb) {};
   
@@ -43,7 +43,7 @@ class GuiTest : public adonthell::app {
 	static int count = 0;
 	count++;
 	s << "Click " << count;
-	l->setString(s.str());
+	l->set_string(s.str());
   }
   void print(bool down, void* arg) {
     char* s = (char*) arg;
@@ -75,24 +75,24 @@ class GuiTest : public adonthell::app {
 	gui::font f;
 	gui::font red;
 	gui::label l(200, 30);
-	l.setString("This is a Label");
+	l.set_string("This is a Label");
 	gui::label label_with_bg("label.xml");
-	label_with_bg.setString("Is this readable?");
+	label_with_bg.set_string("Is this readable?");
 
 	gui::button b("button.xml", base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
-	b.setString("Click Me");
+	b.set_string("Click Me");
 	gui::button b2("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
 	
-	b2.setString("Red Button");
+	b2.set_string("Red Button");
 	gui::button b3(300,30, base::make_functor(*this, &GuiTest::print), (void*)"button 3", 1);
-	b3.setString("Button 3");
+	b3.set_string("Button 3");
 	gui::option o1("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
-	o1.setString("Option 1");
+	o1.set_string("Option 1");
 
 	gui::textbox t1(400, 30);
 	
 	gui::label multiline_test(400, 100);
-	multiline_test.setString("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
+	multiline_test.set_string("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
 	multiline_test.set_multiline(true);
 	/* arrange them in a freeform layout object */
 	gui::layout widgets;

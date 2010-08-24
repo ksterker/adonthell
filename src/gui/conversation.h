@@ -1,17 +1,17 @@
 #ifndef GUI_CONVERSATION_H
 #define GUI_CONVERSATION_H
 
-#include "widget.h"
-#include "layout.h"
-#include "label.h"
-#include "button.h"
+#include "gui/widget.h"
+#include "gui/layout.h"
+#include "gui/label.h"
+#include "gui/button.h"
 #include "rpg/dialog.h"
 #include "base/callback.h"
 #define MAX_OPTS 16
 
 namespace gui
 {
-	class conversation:public widget
+	class conversation:public layout
 	{
 	protected:
 		struct answer 
@@ -21,7 +21,6 @@ namespace gui
 			answer(int w=-1, conversation* o=NULL): which(w), obj(o) {}
 		};
 		label speaker;
-		layout objs;
 		label ct;
 		button* options[MAX_OPTS];
 		answer answers[MAX_OPTS];
@@ -35,18 +34,9 @@ namespace gui
 		void* arg;
 		unsigned int color;
 	public:
-		conversation(rpg::character & d, int w, int h, ::base::functor_0* e=NULL);
+		conversation(rpg::character & d, const u_int16 & w, const u_int16 & h, ::base::functor_0* e=NULL);
 
-        virtual void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da = NULL, gfx::surface * s = NULL) const
-        { 
-            widget::draw(x, y, da, s); 
-            objs.draw(x, y, da, s);
-        }
-        
 		virtual bool keyup(input::keyboard_event &k);
-		virtual bool keydown(input::keyboard_event &k);
-		virtual bool focus() {return objs.focus();}
-	
 	};
 };
 

@@ -32,49 +32,4 @@ namespace gui
 	{
 		Look->draw (x, y, da, target);
 	}
-    
-    // set input listener
-    void widget::set_listener (input::listener *lstnr) 
-    {
-        if (Listener) 
-        {
-            input::manager::remove (Listener);
-            delete Listener;
-        }
-        
-        Listener = lstnr;
-        
-        if (Listener) 
-        {
-            Listener->connect_keyboard_function (::base::make_functor_ret(*this, &widget::on_keyboard_event));
-        }
-    }
-    
-    // get input listener
-    input::listener * widget::get_listener () const 
-    {
-        return Listener;
-    }
-    
-    // handle keyboard events
-    bool widget::on_keyboard_event (input::keyboard_event * evt) 
-    {
-        switch (evt->type())
-        {
-            case input::keyboard_event::KEY_PUSHED:
-            {
-                return keydown (*evt);
-            }
-            case input::keyboard_event::KEY_RELEASED:
-            {
-                return keyup (*evt);
-            }
-            case input::keyboard_event::TEXT_INPUT:
-            {
-                return input (*evt);
-            }
-        }
-        
-        return false;
-    } 
 };

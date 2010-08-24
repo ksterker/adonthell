@@ -1,6 +1,15 @@
 <Data>
   <list id="Default">
-   <string id="bg">conversation.png</string>
-   <bool id="has_border">0</bool>
+   <string id="bg">window_bg.png</string>
+   <u_int8 id="bg_alpha">127</u_int8>
+   <bool id="has_border">1</bool>
+   <string id="border_tl">window_corner.png</string>
+   <string id="border_tr">window_corner.png</string>
+   <string id="border_bl">window_corner.png</string>
+   <string id="border_br">window_corner.png</string>
+   <string id="border_top">window_border_top.png</string>
+   <string id="border_bot">window_border_bot.png</string>
+   <string id="border_lft">window_border_lft.png</string>
+   <string id="border_rgt">window_border_rgt.png</string>
   </list>
 </Data>

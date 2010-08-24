@@ -39,7 +39,7 @@ class action_talk (object):
         # -- create conversation widget ...
         self.dlg_wnd = gui.conversation (self.other.mind(), 600, 300, self.on_finished)
         # -- ... and add it to the gui manager
-        gui.window_manager.add (self.dlg_wnd)
+        gui.window_manager.add (20, 20, self.dlg_wnd)
 
     def on_finished (self):
         """

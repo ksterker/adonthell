@@ -50,7 +50,7 @@ public:
     /**
      * Create an empty decoration for a certain state.
      */
-    decoration_info () : Length(0), Height(0), Cache(NULL)
+    decoration_info () : Length(0), Height(0), Alpha(255), Cache(NULL)
     {
     }
 
@@ -105,6 +105,8 @@ private:
     u_int16 Length;
     /// the height of the decoration
     u_int16 Height;
+    /// background alpha
+    u_int8 Alpha;
 
     /// the different elements as stored in the elements vector
     enum { BACKGROUND, 
@@ -189,9 +191,14 @@ public:
      * "Activated" and "Disabled" (and anything else defined in the
      * appropriated decoration data file).
      * @param state name of the current state.
+     */
+    void set_state (const std::string & state = "Default");
+    
+    /**
+     * Set whether the widget currently has the focus.
      * @param has_focus whether the widget currently has the focus. 
      */
-    void set_state (const std::string & state = "Default", const bool & has_focus = false);
+    void set_focused (const bool & has_focus = false);
 
     /**
      * Draw the given decoration at the given offset 

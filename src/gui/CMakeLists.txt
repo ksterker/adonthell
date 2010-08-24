@@ -14,7 +14,6 @@ set(adonthell_gui_SRCS
 )
 
 set(adonthell_gui_HEADERS
-    base.h
 	button.h
 	conversation.h
     decoration.h

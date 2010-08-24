@@ -1,7 +1,5 @@
 /*
- $Id: window_manager.h,v 1.1 2009/05/03 16:26:00 ksterker Exp $
- 
- Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2009/2010 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -30,10 +28,51 @@
 #define GUI_WINDOW_MANAGER_H
 
 #include <list>
-#include "gui/widget.h"
+#include "gui/layout.h"
 
 namespace gui
 {
+
+/// different fading styles for toplevel windows
+enum fadetype {NONE, PLAIN, FADE, LEFT, RIGHT, BOTTOM, TOP};    
+
+#ifndef SWIG
+/**
+ *
+ */
+class manager_child : public layoutchild
+{
+public:
+    manager_child (gui::layout *l, gfx::drawing_area da, const fadetype & f, const bool & s) 
+    : layoutchild (l, da)
+    {
+        Fading = f;
+        Showing = s;
+        Dx = 0;
+        Dy = 0;
+    }
+    
+    s_int32 x()
+    {
+        return Dx + Pos.x();
+    }
+
+    s_int32 y()
+    {
+        return Dx + Pos.x();
+    }
+
+    bool operator== (const gui::manager_child & c)
+    {
+        return Child == c.Child;
+    }
+    
+    s_int32 Dx; 
+    s_int32 Dy;
+    fadetype Fading;
+    bool Showing;
+};
+#endif // SWIG
 
 /**
  * The window manager is used to display GUI elements on the screen.
@@ -49,22 +88,28 @@ public:
     
     /**
      * Add a window at the topmost position of the window stack.
+     * @param x x coordinate.
+     * @param y y coordinate.
      * @param window the window to newly open.
+     * @param f whether fading in is required.
      */
-    static void add(gui::widget *window);
+    static void add(const u_int16 & x, const u_int16 & y, gui::layout *window, const gui::fadetype & f = NONE);
     
     /**
      * Remove the given window from the window stack.
      * @param window the window to close.
+     * @param f whether fading in is required.
      */
-    static void remove(gui::widget *window);
+    static void remove(gui::layout *window, const gui::fadetype & f = NONE);
     
 private:
     /// forbid instantiation
     window_manager ();
     
+    static void fade(gui::manager_child & c);
+    
     /// the list of open windows
-    static std::list<gui::widget*> Windows;
+    static std::list<manager_child> Windows;
 };
 
 } // namespace gui

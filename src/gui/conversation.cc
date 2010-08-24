@@ -7,23 +7,25 @@
 
 namespace gui
 {
-	conversation::conversation(rpg::character & c, int w, int h, ::base::functor_0*e)
-	:widget("window.xml"),ct(w-30, h/3),dlg(c),speaker(w-30, LINEHEIGHT),end(e)
+	conversation::conversation(rpg::character & c, const u_int16 & w, const u_int16 & h, ::base::functor_0*e)
+	: ct(w-30, h/3), dlg(c), speaker(w-30, LINEHEIGHT), end(e)
 	{
+        Look->init("window.xml");
         set_size (w, h);
         ct.get_font()->setSize(LINEHEIGHT - 1);
         speaker.get_font()->setSize(LINEHEIGHT - 1);
         
 		line = dlg.run(-1);
 		ct.set_multiline(true);
-		objs.addchild(speaker, 15, 10);
-		objs.addchild(ct, 15, LINEHEIGHT+10);
+		addchild(speaker, 15, 10);
+		addchild(ct, 15, LINEHEIGHT+10);
 		opty = ct.height() + 40;
 		optcount = 0;
 		update();
 		color = c.color(); 
 		ct.setColor(color);
 	}
+    
 	void conversation::selectopt(bool down, void* arg)
 	{
 		answer* self = (answer*)arg;
@@ -36,7 +38,7 @@ namespace gui
 		while (optcount)
 		{
 			optcount--;
-			objs.removechild(*options[optcount]);
+			removechild(*options[optcount]);
 			delete options[optcount];
 		}
 		optcount = 0;
@@ -53,17 +55,17 @@ namespace gui
 		}
 		speaker.set_string(string(line->speaker()) + ":");
 		ct.set_string(line->text());
-		//*
+
 		int i;
 		int y = opty;
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
          
-        font f (NULL, LINEHEIGHT - 1);
+        font *f = ct.get_font();
 		//the color from here doesnt work
 		unsigned int fc = rpg::character::get_player()->color();
 		LOG(INFO) << logging::indent() << "color changed to 0x"
                   << std::setw(8) << std::setfill('0') << std::hex << fc;
-        f.setColor(fc);
+        f->setColor(fc);
 
 		for (i = 0; i < optcount; i++)
 		{
@@ -77,7 +79,7 @@ namespace gui
 			options[i]->set_string(string(tmp)+line->answer(i));
 			options[i]->reheight();
 			options[i]->set_center(false, false);
-            objs.addchild(*options[i], 20, y);
+            addchild(*options[i], 20, y);
 			y += options[i]->height() +5;
 		}
 		if (optcount == 0) 
@@ -92,11 +94,11 @@ namespace gui
 			options[0]->reheight();
 			options[0]->set_center(false, false);
 			options[0]->setColor(0xffffffff);
-			objs.addchild(*options[0], 20, y);
+			addchild(*options[0], 20, y);
 			y += options[0]->height() +5;
 		}
-		objs.focus();
-		// */
+
+        focus();
         return true;
 	}
 	bool conversation::keyup(input::keyboard_event &k) 
@@ -140,12 +142,8 @@ namespace gui
 			if (optcount > 7) selectopt(true, &answers[8]);
 			break;
 		default:
-			return objs.keyup(k);
+			return layout::keyup(k);
 		}
 		return true;
-	}
-	bool conversation::keydown(input::keyboard_event &k) 
-	{
-		return objs.keydown(k);
 	}
 };

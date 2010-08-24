@@ -4,7 +4,6 @@ EXTRA_DIST = CMakeLists.txt
 
 pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
-	base.h \
 	button.h \
     conversation.h \
     decoration.h \

@@ -38,7 +38,6 @@ namespace gui {
 %import "base/types.h"
 %import(module="gfx") "gfx/drawable.h"
 
-%include "gui/base.h"
 %include "gui/widget.h"
 %include "gui/font.h"
 %include "gui/label.h"

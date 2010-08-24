@@ -59,6 +59,9 @@ bool decoration_info::init (base::flat & record)
     }
     else return false;
     
+    // get optional alpha of background
+    Alpha = 255 - record.get_uint8 ("bg_alpha", true);
+    
     // get border, if present
     bool result = record.success();
     if (record.get_bool ("has_border"))
@@ -110,12 +113,23 @@ gfx::surface *decoration_info::get_surface ()
     
     // recreate decoration
     Cache = gfx::create_surface ();
-    Cache->set_mask (true);
     Cache->set_alpha (255, true);
     Cache->resize (Length, Height);
     
     // the background
-    Cache->tile (*Elements[BACKGROUND]);
+    if (Alpha != 255)
+    {
+        gfx::surface *tmp = gfx::create_surface ();
+        tmp->resize (Elements[BACKGROUND]->length(), Elements[BACKGROUND]->height());
+        Elements[BACKGROUND]->draw (0, 0, NULL, tmp);
+        Cache->fillrect (0, 0, Length, Height, Cache->map_color (0, 0, 0, Alpha));
+        Cache->tile (*tmp);
+        delete tmp;
+    }
+    else
+    {
+        Cache->tile (*Elements[BACKGROUND]);
+    }
     
     // the border, if present
     if (Elements.size() > 1)
@@ -124,20 +138,36 @@ gfx::surface *decoration_info::get_surface ()
         gfx::drawing_area da;
         
         // the border
-        da = gfx::drawing_area (0, 0, Length, Elements[BORDER_TOP]->height());
+        da = gfx::drawing_area (Elements[BORDER_TOP_LEFT]->length(), 0, Length - Elements[BORDER_TOP_LEFT]->length() - Elements[BORDER_TOP_RIGHT]->length(), Elements[BORDER_TOP]->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
         Cache->tile (*Elements[BORDER_TOP], &da);
-        da = gfx::drawing_area (0, 0, Elements[BORDER_LEFT]->length(), Height);
+        da = gfx::drawing_area (0, Elements[BORDER_TOP_LEFT]->height(), Elements[BORDER_LEFT]->length(), Height - Elements[BORDER_TOP_LEFT]->height() - Elements[BORDER_BOTTOM_LEFT]->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
         Cache->tile (*Elements[BORDER_LEFT], &da);
-        da = gfx::drawing_area (0, Height - Elements[BORDER_BOTTOM]->height(), Length, Height);
+        da = gfx::drawing_area (Elements[BORDER_BOTTOM_LEFT]->length(), Height - Elements[BORDER_BOTTOM]->height(), Length - Elements[BORDER_BOTTOM_LEFT]->length() - Elements[BORDER_BOTTOM_RIGHT]->length(), Height);
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
         Cache->tile (*Elements[BORDER_BOTTOM], &da);
-        da = gfx::drawing_area (Length - Elements[BORDER_RIGHT]->length(), 0, Length, Height);
+        da = gfx::drawing_area (Length - Elements[BORDER_RIGHT]->length(), Elements[BORDER_TOP_RIGHT]->length(), Length, Height  - Elements[BORDER_TOP_RIGHT]->height() - Elements[BORDER_BOTTOM_RIGHT]->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
         Cache->tile (*Elements[BORDER_RIGHT], &da);
         
         // the corners
-        s = Elements[BORDER_TOP_LEFT]; s->draw (0, 0, NULL, Cache);
-        s = Elements[BORDER_TOP_RIGHT]; s->draw (Length - s->length(), 0, NULL, Cache);
-        s = Elements[BORDER_BOTTOM_LEFT]; s->draw (0, Height - s->height(), NULL, Cache);
-        s = Elements[BORDER_BOTTOM_RIGHT]; s->draw (Length - s->length(), Height - s->height(), NULL, Cache);
+        s = Elements[BORDER_TOP_LEFT]; 
+        da = gfx::drawing_area (0, 0, s->length(), s->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
+        s->draw (0, 0, NULL, Cache);
+        s = Elements[BORDER_TOP_RIGHT]; 
+        da = gfx::drawing_area (Length - s->length(), 0, s->length(), s->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
+        s->draw (Length - s->length(), 0, NULL, Cache);
+        s = Elements[BORDER_BOTTOM_LEFT]; 
+        da = gfx::drawing_area (0, Height - s->height(), s->length(), s->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
+        s->draw (0, Height - s->height(), NULL, Cache);
+        s = Elements[BORDER_BOTTOM_RIGHT]; 
+        da = gfx::drawing_area (Length - s->length(), Height - s->height(), s->length(), s->height());
+        Cache->fillrect (0, 0, 0, 0, 0, &da);
+        s->draw (Length - s->length(), Height - s->height(), NULL, Cache);
     }
     
     return Cache;
@@ -176,6 +206,7 @@ bool decoration::init (const std::string & name)
         }
     }
     
+    CurrentState = Decoration.begin();
     return file.success();
 }
 
@@ -203,7 +234,7 @@ void decoration::set_size (const u_int16 & length, const u_int16 & height)
 }
 
 // set decoration state
-void decoration::set_state (const std::string & state, const bool & has_focus)
+void decoration::set_state (const std::string & state)
 {
     if (Decoration.size() > 0)
     {
@@ -214,15 +245,22 @@ void decoration::set_state (const std::string & state, const bool & has_focus)
         }
         else
         {
-            LOG(ERROR) << logging::indent() << "decoration::set_state: unknown state '" << state << "'.";
+            LOG(WARNING) << logging::indent() << "decoration::set_state: unknown state '" << state << "'.";
         }
-        
+    }
+}
+
+// set focussed state
+void decoration::set_focused (const bool & has_focus)
+{
+    if (Decoration.size() > 0)
+    {
         if (has_focus)
         {
-            FocusOverlay = Decoration.find("Focussed");
+            FocusOverlay = Decoration.find("Focused");
             if (FocusOverlay == Decoration.end())
             {
-                LOG(ERROR) << logging::indent() << "decoration::set_state: unknown state 'Focussed'.";
+                LOG(WARNING) << logging::indent() << "decoration::set_state: unknown state 'Focused'.";
             }
         }
         else
