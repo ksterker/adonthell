@@ -9,7 +9,8 @@
   </list>
   <list id="Focused">
    <string id="bg">focused.png</string>
-   <u_int8 id="bg_alpha">96</u_int8>
+   <s_int8 id="highlight">32</s_int8>
    <bool id="has_border">0</bool>
   </list>
 </Data>
+

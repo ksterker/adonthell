@@ -50,7 +50,7 @@ public:
     /**
      * Create an empty decoration for a certain state.
      */
-    decoration_info () : Length(0), Height(0), Alpha(255), Cache(NULL)
+    decoration_info () : Length(0), Height(0), Alpha(255), Highlight(0), Cache(NULL)
     {
     }
 
@@ -87,6 +87,13 @@ public:
     u_int16 height () const { return Height; }
     
     /**
+     * Return amount by which the focused decoration
+     * should have its brightness level adjusted.
+     * @return brightness level adjustment. 
+     */
+    s_int8 highlight () const { return Highlight; }
+    
+    /**
      * Get the decoration image. If not cached yet, it
      * will be created first.
      * @return pointer to the rendered decoration.
@@ -107,6 +114,8 @@ private:
     u_int16 Height;
     /// background alpha
     u_int8 Alpha;
+    /// change of background brightness level
+    s_int8 Highlight;
 
     /// the different elements as stored in the elements vector
     enum { BACKGROUND, 

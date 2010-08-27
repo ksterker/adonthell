@@ -51,7 +51,7 @@ bool decoration_info::init (base::flat & record)
     std::string path = DECORATION_DIR + record.get_string ("bg");
     if (base::Paths.find_in_path (path))
     {
-        const gfx::surface *s = gfx::surfaces->get_surface_only (path, false, false);
+        const gfx::surface *s = gfx::surfaces->get_surface_only (path, false, false, gfx::surface_cacher::NONE);
         Elements.push_back (s);
         
         Length = s->length();
@@ -61,6 +61,10 @@ bool decoration_info::init (base::flat & record)
     
     // get optional alpha of background
     Alpha = 255 - record.get_uint8 ("bg_alpha", true);
+    
+    // get optional brightness adjustment for focus
+    Highlight = record.get_sint8 ("highlight", true);
+    if (Highlight == -1) Highlight = 0;
     
     // get border, if present
     bool result = record.success();
@@ -273,13 +277,42 @@ void decoration::set_focused (const bool & has_focus)
 // draw decoration
 void decoration::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da, gfx::surface * target) const
 {
-    if (CurrentState != Decoration.end())
-    {
-        CurrentState->second->get_surface()->draw (x, y, da, target);
-    }
-    
     if (FocusOverlay != Decoration.end())
     {
-        FocusOverlay->second->get_surface()->draw (x, y, da, target);        
+        // draw widget with focus overlay
+        gfx::surface *s = FocusOverlay->second->get_surface();        
+        gfx::surface *tmp = gfx::create_surface ();
+        tmp->resize (s->length(), s->height());
+
+        s_int16 ox = 0;
+        s_int16 oy = 0;
+        
+        if (CurrentState != Decoration.end())
+        {
+            gfx::surface *w = CurrentState->second->get_surface();
+            
+            // center widget in overlay (in case overlay is bigger than widget)
+            ox = (s->length() - w->length()) / 2;
+            oy = (s->height() - w->height()) / 2;
+            
+            w->draw (ox, oy, NULL, tmp);
+        }
+        
+        s->draw (0, 0, NULL, tmp);
+        if (FocusOverlay->second->highlight())
+        {
+            tmp->set_brightness (128 + FocusOverlay->second->highlight());
+        }
+        
+        tmp->draw (x - ox, y - oy, da, target);
+        delete tmp;
+    }
+    else
+    {
+        // draw plain widget
+        if (CurrentState != Decoration.end())
+        {
+            CurrentState->second->get_surface()->draw (x, y, da, target);
+        }
     }
 }
