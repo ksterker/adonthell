@@ -64,6 +64,12 @@ namespace gfx
             SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
         }
         
+        else if (!alpha_channel && alpha_channel_ && vis)
+        {
+            SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_NONE);
+            SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
+        }
+        
         alpha_ = t;
         alpha_channel_ = alpha_channel;
     }

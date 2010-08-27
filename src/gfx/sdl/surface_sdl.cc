@@ -55,11 +55,14 @@ namespace gfx
         }
     }
 
-
     void surface_sdl::set_alpha (const u_int8 & t, const bool & alpha_channel)
     {
         if ((t == 255) && (alpha_ != 255) && vis)
             SDL_SetAlpha (vis, 0, 0);
+        
+        else if (!alpha_channel && alpha_channel_ && vis)
+            SDL_SetAlpha (vis, 0, 0);
+
         alpha_ = t;
         alpha_channel_ = alpha_channel;
     }

@@ -30,6 +30,7 @@
  */
 
 #include <cstdio>
+#include <sstream>
 #include "gfx/gfx.h"
 #include "surface_cacher.h"
 
@@ -59,12 +60,13 @@ namespace gfx
 	}
     
     // return surface reference
-	const surface_ref* surface_cacher::get_surface(const string & file, bool set_mask, bool invert_x)
+	const surface_ref* surface_cacher::get_surface(const string & file, bool set_mask, bool invert_x, blend_mode alpha)
 	{
-		//Create a unique name based on all parameters
-		string cachename = file + "_" + (set_mask?"true":"false") + "_" + (invert_x?"true":"false");
+		// create a unique name based on all parameters
+        std::stringstream cache_name (std::ios::out);
+        cache_name << file << "_" << set_mask << "_" << invert_x << "_" << alpha;
 
-		map<string, surface_ref>::iterator idx = Cache.find(cachename);
+		map<string, surface_ref>::iterator idx = Cache.find(cache_name.str());
 		if (idx != Cache.end())
 		{
 			//We already found it in the cache. Increment the reference
@@ -77,15 +79,20 @@ namespace gfx
 		cur->load_png(file);
 		cur->set_mask(set_mask);
 		cur->mirror(invert_x, false);
-
+        
+        // either use alpha setting of image, or set to user specified value
+        if (alpha != AUTOMATIC)
+        {
+            cur->set_alpha(255, alpha == BLEND);
+        }
 		MemUsed += cur->size();
         
 		//Add it to the cache
 		surface_ref ret;
 		ret = surface_ref(cur);
 		ret.newref();
-		Cache[cachename] = ret;
-		SurfToString[cur] = cachename;
+		Cache[cache_name.str()] = ret;
+		SurfToString[cur] = cache_name.str();
 		ret.newref();
 		
         //Remove any extra surfaces we have
@@ -94,9 +101,9 @@ namespace gfx
 	}
     
     // return pointer to surface
-	const surface* surface_cacher::get_surface_only(const string& file, bool set_mask, bool invert_x)
+	const surface* surface_cacher::get_surface_only(const string& file, bool set_mask, bool invert_x, blend_mode alpha)
 	{
-		const surface_ref * sref = get_surface(file, set_mask, invert_x);
+		const surface_ref * sref = get_surface(file, set_mask, invert_x, alpha);
 		const surface* ret = sref->s;
 		Cache[SurfToString[ret]].newref();
 		delete sref;
@@ -116,10 +123,11 @@ namespace gfx
 	}
     
     // release reference
-	void surface_cacher::free_surface(const string & file, bool set_mask, bool invert_x)
+	void surface_cacher::free_surface(const string & file, bool set_mask, bool invert_x, blend_mode alpha)
 	{
-		string cachename = file + "_" + (set_mask?"true":"false") + "_" + (invert_x?"true":"false");
-		free_by_name(cachename);
+        std::stringstream cache_name (std::ios::out);
+        cache_name << file << "_" << set_mask << "_" << invert_x << "_" << alpha;
+		free_by_name(cache_name.str());
 	}
     
     // release reference
@@ -132,10 +140,11 @@ namespace gfx
 	}
     
     // get refcount for given surface
-	unsigned int surface_cacher::count_surface(const string & file, bool set_mask, bool invert_x)
+	unsigned int surface_cacher::count_surface(const string & file, bool set_mask, bool invert_x, blend_mode alpha)
 	{
-		string cachename = file + "_" + (set_mask?"true":"false") + "_" + (invert_x?"true":"false");
-		map<string, surface_ref>::iterator idx = Cache.find(cachename);
+        std::stringstream cache_name (std::ios::out);
+        cache_name << file << "_" << set_mask << "_" << invert_x << "_" << alpha;
+		map<string, surface_ref>::iterator idx = Cache.find(cache_name.str());
 		if (idx != Cache.end())
         {
             return idx->second.RefCount;

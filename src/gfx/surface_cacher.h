@@ -71,6 +71,9 @@ namespace gfx
 	class surface_cacher
 	{
 	public:
+        /** Blend mode of cached image */
+        typedef enum { AUTOMATIC, BLEND, NONE } blend_mode;
+        
         /**
          * Create surface cache with a maximum cache size.
          * @param max maximum cache size.
@@ -95,10 +98,11 @@ namespace gfx
 		 * @param file which file to return a cached version of
          * @param set_mask whether to enable image masking
          * @param invert_x whether to mirror image on vertical axis
+         * @param alpha whether to enable alpha blending or not
 		 *
 		 * @return a pointer to a drawable object
 		 */
-		const surface_ref* get_surface(const std::string & file, bool set_mask=true, bool invert_x = false);
+		const surface_ref* get_surface(const std::string & file, bool set_mask=true, bool invert_x = false, blend_mode alpha = AUTOMATIC);
 		
 		/**
          * Finds a surface object and increments the reference count, or loads and caches it if it can't. 
@@ -108,10 +112,11 @@ namespace gfx
 		 * @param file which file to return a cached version of
          * @param set_mask whether to enable image masking
          * @param invert_x whether to mirror image on vertical axis
+         * @param alpha whether to enable alpha blending or not
 		 *
 		 * @return a pointer to a drawable object
 		 */
-        const surface* get_surface_only(const std::string & file, bool set_mask=true, bool invert_x = false);
+        const surface* get_surface_only(const std::string & file, bool set_mask=true, bool invert_x = false, blend_mode alpha = AUTOMATIC);
 		
         /**
 		 * Decrements the reference count for the the surfaces. Does not deallocate surfaces
@@ -119,8 +124,9 @@ namespace gfx
 		 * @param file which file to find and decrement its reference
          * @param set_mask whether to enable image masking
          * @param invert_x whether to mirror image on vertical axis
+         * @param alpha whether to enable alpha blending or not
 		 */
-		void free_surface(const std::string & file, bool set_mask=true, bool invert_x = false);
+		void free_surface(const std::string & file, bool set_mask=true, bool invert_x = false, blend_mode alpha = AUTOMATIC);
 		
         /**
 		 * Decrements the reference count for the the surfaces. Does not deallocate surfaces
@@ -135,10 +141,11 @@ namespace gfx
          * @param file which file to find and decrement its reference
          * @param set_mask whether to enable image masking
          * @param invert_x whether to mirror image on vertical axis
+         * @param alpha whether to enable alpha blending or not
 		 *
          * @return the number of references there are to a surface
 		 */
-		u_int32 count_surface(const std::string & file, bool set_mask=true, bool invert_x = false);
+		u_int32 count_surface(const std::string & file, bool set_mask=true, bool invert_x = false, blend_mode alpha = AUTOMATIC);
 		//@}
         
         /**
