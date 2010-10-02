@@ -93,6 +93,12 @@ namespace rpg
     };
 }
 
+#if __GNUC_PREREQ(4,4)
+namespace tr1
+{
+
+}
+#else
 #if __GNUG__ > 2
 namespace __gnu_cxx
 #else
@@ -110,6 +116,7 @@ namespace std
         }
     };
 }
+#endif
 
 namespace rpg 
 {

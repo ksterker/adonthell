@@ -26,6 +26,8 @@
  * @brief 	Handle execution of quest events class.
  */
 
+#include <algorithm>
+
 #include "rpg/quest_event_manager.h"
 #include "rpg/quest_event.h"
 
@@ -107,7 +109,7 @@ void quest_event_manager::remove (listener *li)
 		std::vector<listener*>::iterator i;
 
 		// Search for the listener we want to remove
-		i = find ((*e).second.begin (), (*e).second.end (), li);
+		i = std::find ((*e).second.begin (), (*e).second.end (), li);
 
 		// found? -> get rid of it :)
 		if (i != (*e).second.end ())

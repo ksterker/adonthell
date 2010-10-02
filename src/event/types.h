@@ -30,6 +30,8 @@
 #ifndef EVENT_TYPES_H
 #define EVENT_TYPES_H
 
+#include <vector>
+
 #include "event/event.h"	
 #include <base/hash_map.h>
 

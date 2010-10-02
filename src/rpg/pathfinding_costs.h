@@ -27,28 +27,12 @@
 #ifndef PATHFINDING_COSTS_H
 #define PATHFINDING_COSTS_H
 
-#if __GNUG__ > 2
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-#else
-#include <hash_map>
-using namespace std;
-#endif
 #include "base/hash_map.h"
 #include "rpg/specie.h"
 #include "rpg/faction.h"
 
 namespace rpg
 {
-    /// Compares two string for equality
-    struct eqstr
-    {
-        bool operator()(std::string s1, std::string s2) const
-        {
-            return (s1 == s2);
-        }
-    };
-
    /**
     * The class with the terrain/cost hash_map.
     */
@@ -82,7 +66,7 @@ namespace rpg
             }
         }
     private:
-        typedef hash_map<std::string, s_int16, hash<std::string>, eqstr> Terrain_Cost_Hash;
+        typedef std::hash_map<std::string, s_int16> Terrain_Cost_Hash;
         /// The hash_map
         Terrain_Cost_Hash Terrain_Cost;
     };

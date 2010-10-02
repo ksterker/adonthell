@@ -26,7 +26,19 @@
 
 #ifndef BASE_HASHMAP_H
 #define BASE_HASHMAP_H
- 
+
+// gcc >= 4.4
+#if __GNUC__ >= 4 && __GNUC_MINOR__ >= 4
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
+
+#define hash_map unordered_map
+#define hash_set unordered_set
+
+namespace std { using namespace tr1; }
+
+#else
+// gcc < 4.4
 #if __GNUG__ > 2
 #include <ext/hash_map>
 #include <ext/hash_set>
@@ -56,6 +68,7 @@ namespace std
 
 #if __GNUG__ > 2
 namespace std { using namespace __gnu_cxx; }
+#endif
 #endif
 
 #endif // BASE_HASHMAP_H

@@ -26,6 +26,8 @@
  * @brief  Core of the dialogue system.
  */
 
+#include <algorithm>
+
 #include "rpg/dialog.h"
 #include "base/nls.h"
 
@@ -190,7 +192,7 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
         }
         
         // mark player text as used unless loops allowed
-        if (find (Loop.begin (), Loop.end (), successor) == Loop.end ())
+        if (std::find (Loop.begin (), Loop.end (), successor) == Loop.end ())
             Used.push_back (successor);
         
         do
@@ -210,7 +212,7 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
                 s_int32 s = PyInt_AsLong (PyList_GetItem (speech, i));
                 
                 // remove text that was already used and isn't allowed to loop
-                if (find (Used.begin (), Used.end (), s) != Used.end ())
+                if (std::find (Used.begin (), Used.end (), s) != Used.end ())
                 {
                     PySequence_DelItem (speakers, i);
                     PySequence_DelItem (speech, i--);
@@ -243,7 +245,7 @@ const rpg::dialog_line *dialog::run (const s_int32 & answer)
                 Py_XDECREF (arg);
                 
                 // mark the NPC text as used unless loops allowed
-                if (find (Loop.begin (), Loop.end (), successor) == Loop.end ())
+                if (std::find (Loop.begin (), Loop.end (), successor) == Loop.end ())
                     Used.push_back (successor);
                 
                 // remember successor to this line of text

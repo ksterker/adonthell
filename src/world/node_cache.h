@@ -30,14 +30,6 @@
 #ifndef WORLD_NODE_CACHE_H
 #define WORLD_NODE_CACHE_H
 
-#if __GNUG__ > 2
-#include <ext/hash_map>
-using namespace __gnu_cxx;
-#else
-#include <hash_map>
-using namespace std;
-#endif
-
 #include "world/node.h"
 #include "world/chunk_info.h"
 #include "world/coordinates.h"
@@ -45,14 +37,6 @@ using namespace std;
 
 namespace world
 {
-    struct eqstr
-    {
-        bool operator()(std::string s1, std::string s2) const
-        {
-            return (s1 == s2);
-        }
-    };
-
     /**
      * Keeps a hash map of every used node.
      */
@@ -107,7 +91,7 @@ namespace world
     private:
 
         /// The hash map
-        typedef hash_map<std::string, node *, hash<std::string>, eqstr> nodeHash;
+        typedef std::hash_map<std::string, node *> nodeHash;
         nodeHash m_usedNodes;
 
     };

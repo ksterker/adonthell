@@ -25,6 +25,8 @@
  * @brief  Base class for creatures, NPCs and Player characters.
  */
 
+#include <algorithm>
+
 #include "base/base.h"
 #include "rpg/character.h"
 
@@ -129,7 +131,7 @@ bool character::remove_faction(const std::string & name)
 {
     faction * tmp = get_faction(name);
     
-    std::vector<faction *>::iterator i = find(Factions.begin(), Factions.end(), tmp);
+    std::vector<faction *>::iterator i = std::find(Factions.begin(), Factions.end(), tmp);
     
     if (*i != NULL)
     {
