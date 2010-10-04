@@ -90,7 +90,7 @@ bool decoration_info::add_element (base::flat & record, const std::string &id)
     std::string path = DECORATION_DIR + record.get_string (id);
     if (base::Paths.find_in_path (path))
     {
-        Elements.push_back (gfx::surfaces->get_surface_only (path, false, false));
+        Elements.push_back (gfx::surfaces->get_surface_only (path, false, false, gfx::surface_cacher::NONE));
         return true;
     }
     
@@ -124,6 +124,7 @@ gfx::surface *decoration_info::get_surface ()
     if (Alpha != 255)
     {
         gfx::surface *tmp = gfx::create_surface ();
+        tmp->set_alpha(255, true); // SDL 1.2
         tmp->resize (Elements[BACKGROUND]->length(), Elements[BACKGROUND]->height());
         Elements[BACKGROUND]->draw (0, 0, NULL, tmp);
         Cache->fillrect (0, 0, Length, Height, Cache->map_color (0, 0, 0, Alpha));
@@ -134,7 +135,7 @@ gfx::surface *decoration_info::get_surface ()
     {
         Cache->tile (*Elements[BACKGROUND]);
     }
-    
+
     // the border, if present
     if (Elements.size() > 1)
     {
