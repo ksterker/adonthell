@@ -101,7 +101,9 @@ namespace gfx
         {
             if (!has_alpha_channel()) SDL_SetSurfaceAlphaMod(vis, alpha_);
             SDL_SetSurfaceBlendMode(vis, SDL_BLENDMODE_BLEND);
-            SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
+
+            // Enabling RLE will yield wrong results (Bug in SDL 1.3?)
+            // SDL_SetSurfaceRLE(vis, (SDL_RLEACCEL));
         }
 
         SDL_BlitSurface (vis, &srcrect, display_target, &dstrect); 
@@ -132,20 +134,39 @@ namespace gfx
         
         // --> crash with SDL 1.3.0-4444
         // u_int8 r, g, b, a;
-        // SDL_GetRGBA (col, vis->format, &r, &g, &b, &a);
-        // SDL_BlendRect (vis,  &dstrect, SDL_BLENDMODE_NONE, r, g, b, a);
+        // unmap_color (col, r, g, b, a);
+        // SDL_BlendFillRect (vis,  &dstrect, SDL_BLENDMODE_NONE, r, g, b, a);
     }
 
     // convert RGBA color to surface format
     u_int32 surface_sdl::map_color (const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a) const
     {
-        return SDL_MapRGBA(vis->format, r, g, b, a);
+    	if (alpha_channel_)
+    	{
+    		return SDL_MapRGBA(vis->format, r, g, b, a);
+    	}
+    	else
+    	{
+    		// this seems to be required as long as we're using
+    		// the SDL 1.2 compatibility mode
+    		return SDL_MapRGB(vis->format, b, g, r);
+    	}
     }
 
     // convert surface color format into RGBA
     void surface_sdl::unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const
     {
-        SDL_GetRGBA(col, vis->format, &r, &g, &b, &a);
+    	if (alpha_channel_)
+    	{
+    		SDL_GetRGBA(col, vis->format, &r, &g, &b, &a);
+    	}
+    	else
+    	{
+    		// this seems to be required as long as we're using
+    		// the SDL 1.2 compatibility mode
+    		SDL_GetRGB(col, vis->format, &b, &g, &r);
+    		a = 0xFF;
+    	}
     }
 
     void surface_sdl::lock () const
@@ -271,8 +292,7 @@ namespace gfx
             // create surface with per-pixel alpha?
             if (alpha_channel_)
             {
-                SDL_Surface *tmp = SDL_CreateRGBSurface (
-                    SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+                SDL_Surface *tmp = SDL_CreateRGBSurface (0,
                     length (), height (), BYTES_PER_PIXEL*8,
                     R_MASK, G_MASK, B_MASK, A_MASK);
                 
@@ -289,7 +309,7 @@ namespace gfx
             }
             else
             {
-                vis = SDL_CreateRGBSurface (SDL_HWSURFACE | SDL_SRCCOLORKEY | SDL_SRCALPHA | SDL_ASYNCBLIT,
+                vis = SDL_CreateRGBSurface (0,
                     length (), height (),
                     display->vis->format->BitsPerPixel,
                     display->vis->format->Rmask,

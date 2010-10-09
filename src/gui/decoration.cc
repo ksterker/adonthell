@@ -123,12 +123,22 @@ gfx::surface *decoration_info::get_surface ()
     // the background
     if (Alpha != 255)
     {
+    	// this is a hack to get an opaque onto the cache surface
+    	// with the alpha channel set to the transparency value.
+    	// Ideally, this should work with both the SDL 1.2 and 1.3
+    	// backends without resorting to toggling the surface alpha,
+    	// but it seems that there are differences in the blitting
+    	// or surface creation routines that require a workaround.
+
         gfx::surface *tmp = gfx::create_surface ();
-        tmp->set_alpha(255, true); // SDL 1.2
+        tmp->set_alpha(255, true); // SDL 1.2 backend needs this
         tmp->resize (Elements[BACKGROUND]->length(), Elements[BACKGROUND]->height());
+        tmp->set_alpha(254); 	   // SDL 1.3 backend needs this
+
         Elements[BACKGROUND]->draw (0, 0, NULL, tmp);
         Cache->fillrect (0, 0, Length, Height, Cache->map_color (0, 0, 0, Alpha));
         Cache->tile (*tmp);
+
         delete tmp;
     }
     else

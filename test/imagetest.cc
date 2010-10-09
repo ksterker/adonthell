@@ -35,23 +35,43 @@ public:
     	// Set video mode
     	gfx::screen::set_video_mode (640, 480);
         
-        // test image
-        gfx::surface *Image = gfx::create_surface();
-        Image->resize (gfx::screen::length(), gfx::screen::height());
-        Image->set_mask (true);
+        gfx::surface* images[4];
+        u_int8 psa[] = { 255, 127, 255, 127 };
+        u_int8 ppa[] = { false, false, true, true };
+        u_int8 col[] = { 0xff, 0x88, 0x00 };
         
-        for (int i = 0; i < 100; i++)
+        // test images
+        for (int i = 0; i < 4; i++)
+        {
+            images[i] = gfx::create_surface();
+            images[i]->set_alpha (psa[i], ppa[i]);
+            images[i]->resize (80, 80);
+            images[i]->fillrect (0, 0, i%2?40:80, i%2?80:40, images[i]->map_color(col[i%3], col[(i+1)%3], col[(i+2)%3]));
+            images[i]->fillrect (i%2?40:0, i%2?0:40, i%2?40:80, i%2?80:40, images[i]->map_color(col[(i+2)%3], col[(i+1)%3], col[i%3], 0x88));
+        }
+        
+        for (int i = 0; i < 1000; i++)
         {
             printf ("Iteration %i\n", i);
+            for (int j = 0; j < 4; j++)
+            {
+                images[j]->draw ((j+1)*80, 0);
+                images[j]->draw (0, (j+1)*80);
             
-            Image->fillrect (0, 0, Image->length() - 1, Image->height() - 1, gfx::screen::trans_color ());
-            
-            Image->draw_line (10, 25, 120, 250, Image->map_color (0, 0, 255));            
-            Image->draw_line (120, 250, 55, 300, Image->map_color (255, 0, 0));        
-            Image->draw_line (55, 300, 10, 25, Image->map_color (0, 0, 255));        
-            
-            Image->draw (0, 0);
+                for (int k = 0; k < 4; k++)
+                {
+                    gfx::surface *tmp = gfx::create_surface();
+                    tmp->set_alpha (psa[j], ppa[j]);
+                    tmp->resize (80, 80);
+                    tmp->fillrect (0, 0, j%2?40:80, j%2?80:40, tmp->map_color(col[j%3], col[(j+1)%3], col[(j+2)%3]));
+                    tmp->fillrect (j%2?40:0, j%2?0:40, j%2?40:80, j%2?80:40, tmp->map_color(col[(j+2)%3], col[(j+1)%3], col[j%3], 0x88));
 
+                    images[k]->draw (0, 0, NULL, tmp);
+                    tmp->draw ((k+1)*80, (j+1)*80);
+                    delete tmp;
+                }
+            }
+            
             base::Timer.update (); 
 	        gfx::screen::update ();
 	        gfx::screen::clear (); 
