@@ -30,6 +30,13 @@
 #ifndef EVENT_LISTENER_H
 #define EVENT_LISTENER_H
 
+#ifdef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
+#endif
+#ifdef _XOPEN_SOURCE
+#undef _XOPEN_SOURCE
+#endif
+
 #include <Python.h>
 #include "event/event.h"
 #include "base/callback.h"
