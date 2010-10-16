@@ -60,11 +60,8 @@ namespace input
         return Button_symbol[button()];
     }
 
-    // map controls from configuration
-    void control_event::map_controls (base::configuration & cfg)
+    const keyboard_event::key_type control_event::default_key (button_type btn)
     {
-        std::string key, value;
-        
         // TODO: change default controls once we know what each key does
         const keyboard_event::key_type defaultMapping[NBR_BUTTONS] = {
             keyboard_event::UNKNOWN_KEY,
@@ -78,14 +75,24 @@ namespace input
             keyboard_event::ESCAPE_KEY            
         };
         
+        return defaultMapping[btn];
+    }
+
+    // map controls from configuration
+    void control_event::map_controls (base::configuration & cfg)
+    {
+        std::string key, value;
+
         // read setting for each of our controls
-        for (u_int32 btn = control_event::UP_BUTTON; btn < control_event::NBR_BUTTONS; btn++)
+        for (u_int32 i = control_event::UP_BUTTON; i < control_event::NBR_BUTTONS; i++)
         {
+        	control_event::button_type btn = (control_event::button_type) i;
+
             // get name of control (= config option)
             key = control_event::name_for_button ((control_event::button_type) btn);
             
             // get mapped control, using given default if not set yet
-            value = cfg.get_string ("Input", key, keyboard_event::name_for_key (defaultMapping[btn]));
+            value = cfg.get_string ("Input", key, keyboard_event::name_for_key (default_key (btn)));
             
             // setup internal mapping tables
             keyboard_event::key_type kt = keyboard_event::key_for_name (value);
@@ -112,7 +119,7 @@ namespace input
             
             // invalid control value --> use default, but don't update configuration
             fprintf (stderr, "*** control_event::map_controls: unknown control '%s' for action '%s'!\n", value.c_str(), key.c_str());
-            kt = defaultMapping[btn];
+            kt = default_key (btn);
             fprintf (stderr, "    substituting default key '%s' instead!\n", keyboard_event::name_for_key (kt).c_str ());
             map_keyboard_key (kt, (control_event::button_type) btn);
         }

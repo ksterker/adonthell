@@ -31,8 +31,6 @@
 #include <config.h>
 #endif
 
-#include <iostream>
-
 #include "gfx/gfx.h"
 #include "base/nls.h"
 #include "base/base.h"
@@ -43,7 +41,6 @@
 #include "python/python.h"
 #include "world/world.h"
 #include "main/adonthell.h"
-#include "base/logging.h"
 
 using adonthell::app;
 

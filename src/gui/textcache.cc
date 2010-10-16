@@ -200,10 +200,10 @@ const gfx::surface * text_cache::render (const gui::label *lbl, gfx::surface *ta
 /// the rate of blinking in ms
 #define BLINKRATE 500
 
-bool text_cache::blink()
+bool text_cache::blink(const bool & reset)
 {
     int now = ::base::Timer.current_time();
-    if (LastBlink + BLINKRATE*2 < now)
+    if (reset || LastBlink + BLINKRATE*2 < now)
     {
         // turn on cursor every second
         LastBlink = ::base::Timer.current_time();

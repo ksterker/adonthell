@@ -27,17 +27,26 @@
 #define GUI_WIDGET_H
 
 #include "gfx/gfx.h"
-#include "gfx/drawable.h"
 #include "gfx/surface_cacher.h"
 
 #include "input/input.h"
 
 #include "gui/decoration.h"
 
+/**
+ * Components for the graphical user interface.
+ */
 namespace gui
 {
+	class layout;
+
 	/** 
-     * The base class for displayable elements
+     * The base class for displayable elements.
+     *
+     * It usually has a style that refers to a
+     * file in the gfx/gui/ directory, containing
+     * information about background and border
+     * graphics and a transparency setting.
      */
 	class widget : public gfx::drawable
 	{
@@ -57,15 +66,15 @@ namespace gui
         /**
          * Create widget from the given data file.
          * Size will be set to the background size.
-         * @param name filename of widget decoration.
+         * @param style filename of widget decoration.
          */
-		widget (const std::string & name)
+		widget (const std::string & style)
         : Visible(true), Selhilite(true)
         {
             u_int16 w = 0, h = 0;
 
             Look = new decoration();
-            if (Look->init (name))
+            if (Look->init (style))
             {
                 Look->set_state ();
                 Look->get_size (w, h);
@@ -94,6 +103,34 @@ namespace gui
          */		
         virtual void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da = NULL, gfx::surface * target = NULL) const;
         
+        /**
+         * Change the size of the widget
+         * @param width the new width
+         * @param height the new height
+         */
+		virtual void set_size(const u_int16 & width, const u_int16 & height)
+        {
+            set_length (width);
+            set_height (height);
+            Look->set_size (width, height);
+        }
+
+		/**
+		 * Set or change the style of the widget.
+		 * @param style the name of the new style.
+		 */
+		void set_style (const std::string & style)
+		{
+			Look->init (style);
+		}
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gui::widget);
+#endif
+
+    protected:
+        friend class gui::layout;
+
 		/** 
          * @name Keyboard Callbacks.
          *
@@ -142,7 +179,7 @@ namespace gui
 		virtual bool focus() { return false; }
 		
         /**
-         * Notification that the object will no longer recieve keyboard 
+         * Notification that the object will no longer receive keyboard
          * events
          */
 		virtual void unfocus() {}
@@ -160,24 +197,7 @@ namespace gui
             Look->set_focused (Selhilite && enable);
         }
         //@}
-        
-        /**
-         * Change the size of the widget 
-         * @param width the new width
-         * @param height the new height
-         */
-		virtual void set_size(const u_int16 & width, const u_int16 & height) 
-        {  
-            set_length (width);
-            set_height (height);
-            Look->set_size (width, height);
-        }
-        
-#ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(gui::widget);
-#endif
-        
-    protected:
+
         /// whether widget is visible
         bool Visible;
         /// whether widget indicates focus

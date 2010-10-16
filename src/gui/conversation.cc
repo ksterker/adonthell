@@ -19,11 +19,11 @@ namespace gui
 		ct.set_multiline(true);
 		addchild(speaker, 15, 10);
 		addchild(ct, 15, LINEHEIGHT+10);
-		opty = ct.height() + 40;
+		opty = 40;
 		optcount = 0;
 		update();
 		color = c.color(); 
-		ct.setColor(color);
+		ct.set_color(color);
 	}
     
 	void conversation::selectopt(bool down, void* arg)
@@ -57,7 +57,7 @@ namespace gui
 		ct.set_string(line->text());
 
 		int i;
-		int y = opty;
+		int y = opty + ct.height();
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
          
         font *f = ct.get_font();
@@ -71,13 +71,13 @@ namespace gui
 		{
 			answers[i].which = i;
 			answers[i].obj = this;
-			options[i] = new button(length()-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i], 2);
+			options[i] = new button(length()-40, LINEHEIGHT);
+			options[i]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[i]->get_font()->setSize(LINEHEIGHT-1);
 			options[i]->set_multiline(true);
 			char tmp[16];
 			snprintf(tmp, 16, "%i)", i+1);
 			options[i]->set_string(string(tmp)+line->answer(i));
-			options[i]->reheight();
 			options[i]->set_center(false, false);
             addchild(*options[i], 20, y);
 			y += options[i]->height() +5;
@@ -87,13 +87,13 @@ namespace gui
 			optcount = 1;
 			answers[0].which = -1;
 			answers[0].obj = this;
-			options[0] = new button(length()-40, LINEHEIGHT, ::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i],2);
+			options[0] = new button(length()-40, LINEHEIGHT);
+			options[0]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[0]->get_font()->setSize(LINEHEIGHT-1);
 			options[0]->set_multiline(true);
 			options[0]->set_string("1) (continue)");
-			options[0]->reheight();
 			options[0]->set_center(false, false);
-			options[0]->setColor(0xffffffff);
+			options[0]->set_color(0xffffffff);
 			addchild(*options[0], 20, y);
 			y += options[0]->height() +5;
 		}

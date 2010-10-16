@@ -234,7 +234,6 @@ void layout::removechild(gui::widget & c)
     }
 }
 
-
 // set input listener
 void layout::set_listener (input::listener *lstnr) 
 {
@@ -249,6 +248,7 @@ void layout::set_listener (input::listener *lstnr)
     if (Listener) 
     {
         Listener->connect_keyboard_function (::base::make_functor_ret(*this, &layout::on_keyboard_event));
+        Listener->connect_joystick_function (::base::make_functor_ret(*this, &layout::on_joystick_event));
     }
 }
 
@@ -279,6 +279,26 @@ bool layout::on_keyboard_event (input::keyboard_event * evt)
     
     return false;
 } 
+
+// handle joystick events
+bool layout::on_joystick_event (input::joystick_event *evt)
+{
+	// is button assigned to action?
+	input::control_event::button_type action = input::control_event::joystick_mapping(evt->button());
+	if (action != input::control_event::NO_BUTTON)
+	{
+		// map into default key for this action ...
+		input::keyboard_event ke (evt->type() == input::joystick_event::BUTTON_PUSHED ?
+				input::keyboard_event::KEY_PUSHED :
+				input::keyboard_event::KEY_RELEASED,
+				input::control_event::default_key(action), "");
+
+		// ... and raise matching keyboard event
+		return on_keyboard_event (&ke);
+	}
+
+	return false;
+}
 
 // FIXME: convert to Adonthell's mouse input API
 #if 0

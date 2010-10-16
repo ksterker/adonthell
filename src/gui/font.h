@@ -6,11 +6,10 @@
 #include FT_FREETYPE_H
 
 #include "gfx/gfx.h"
-#include <string>
-using std::string;
 #include <vector>
 #ifndef SWIG
 using std::vector;
+using std::string;
 #endif
 
 namespace gui

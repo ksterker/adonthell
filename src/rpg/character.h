@@ -28,11 +28,7 @@
 #ifndef RPG_CHARACTER_H
 #define RPG_CHARACTER_H
 
-#include "base/diskio.h"
-#include "base/hash_map.h"
-#include "python/script.h"
 #include "rpg/specie.h"
-#include "rpg/faction.h"
 #include "rpg/pathfinding_costs.h"
 
 namespace rpg

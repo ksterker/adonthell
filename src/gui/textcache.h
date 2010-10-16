@@ -60,7 +60,7 @@ public:
     u_int32 ox () const { return Ox; }
     u_int32 oy () const { return Oy; }
     
-    bool blink();
+    bool blink(const bool & reset = false);
     
 private:
     void render_text (const u_int32 & rx, const u_int32 & ry, const label *lbl);

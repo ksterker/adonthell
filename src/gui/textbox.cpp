@@ -1,12 +1,31 @@
 /*
- * implements a textbox
+ Copyright (C) 2008 Rian Shelley
+ Part of the Adonthell Project http://adonthell.linuxgames.com
+
+ Adonthell is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ Adonthell is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Adonthell; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/**
+ * @file   gui/textbox.cpp
+ * @author Rian Shelley
+ * @brief  Implements the textbox class.
  */
 
 #include "base/logging.h"
 #include "base/utf8.h"
 #include "gui/textbox.h"
-#include "gui/draw.h"
-
 
 namespace gui
 {
@@ -14,7 +33,7 @@ namespace gui
 	{
 		//we need to move the text over if the length is too long
 		u_int32 nw, h2, offset;
-		Font->getSize(txt.substr(0, insertpos), nw, h2);
+		Font->getSize(Text.substr(0, InsertPos), nw, h2);
 		if (nw > .8 * length())
 		{
             offset = nw - .8 * length();
@@ -27,7 +46,7 @@ namespace gui
         
         Cache->scroll (offset);
 		label::draw(x, y, da, target);
-		if (hasfocus && (Cache->blink()) && (x+nw > 0 && x+nw < target->length()))
+		if (HasFocus && (Cache->blink()) && (x+nw > 0 && x+nw < target->length()))
 		{
 			if (!offset)
 				target->draw_line (x + Cache->ox() + nw, y + Cache->oy() + 2, 
@@ -40,44 +59,44 @@ namespace gui
     
 	bool textbox::keydown(input::keyboard_event&k)
 	{
-		// lastblink = ::base::Timer.current_time();
+		Cache->blink(true);
 		switch (k.key())
 		{
             case input::keyboard_event::LEFT_KEY:
             {
-                if (insertpos <= 0)
+                if (InsertPos <= 0)
                 {	
-                    insertpos = 0;
+                    InsertPos = 0;
                     return false;
                 }
                 else
                 {
-                    insertpos -= ::base::utf8::left(txt, insertpos);
+                    InsertPos -= ::base::utf8::left(Text, InsertPos);
                     Cache->invalidate();
                     return true;
                 }
             }
             case input::keyboard_event::RIGHT_KEY:
             {
-                if (insertpos > txt.size())
+                if (InsertPos > Text.size())
                 {	
-                    insertpos = txt.size();
+                    InsertPos = Text.size();
                     return false;
                 }
                 else
                 {
-                    insertpos += ::base::utf8::right(txt, insertpos);
+                    InsertPos += ::base::utf8::right(Text, InsertPos);
                     Cache->invalidate();
                     return true;
                 }
             }
             case input::keyboard_event::BACKSPACE_KEY:
             {
-                if (insertpos > 0)
+                if (InsertPos > 0)
                 {
-                    u_int32 len = ::base::utf8::left(txt, insertpos);
-                    insertpos -= len;
-                    txt.erase(insertpos, len);
+                    u_int32 len = ::base::utf8::left(Text, InsertPos);
+                    InsertPos -= len;
+                    Text.erase(InsertPos, len);
                     Cache->invalidate();
                     return true;
                 }
@@ -85,9 +104,9 @@ namespace gui
             }
             case input::keyboard_event::DELETE_KEY:
             {
-                if (insertpos < txt.size())
+                if (InsertPos < Text.size())
                 {
-                    txt.erase(insertpos, ::base::utf8::right(txt, insertpos));
+                    Text.erase(InsertPos, ::base::utf8::right(Text, InsertPos));
                     Cache->invalidate();
                     return true;
                 }
@@ -95,13 +114,13 @@ namespace gui
             }
             case input::keyboard_event::END_KEY:
             {
-                insertpos = txt.size();
+                InsertPos = Text.size();
                 Cache->invalidate();
                 return true;
             }
             case input::keyboard_event::HOME_KEY:
             {
-                insertpos = 0;
+                InsertPos = 0;
                 Cache->invalidate();
                 return true;
             }
@@ -115,10 +134,10 @@ namespace gui
     
     bool textbox::input(input::keyboard_event&k)
     {
-         txt.insert(insertpos, k.unikey());
+         Text.insert(InsertPos, k.unikey());
          
          Cache->invalidate();
-         insertpos += k.unikey().length();
+         InsertPos += k.unikey().length();
          return true;
     }
              
@@ -134,16 +153,16 @@ namespace gui
 		{
 			//figure out where the cursor should go
 			int x, y;
-			for (insertpos = 1; insertpos <= txt.size(); insertpos++)
+			for (InsertPos = 1; InsertPos <= Text.size(); InsertPos++)
 			{
-				f.getSize(txt.substr(0, insertpos), x, y);
+				f.getSize(Text.substr(0, InsertPos), x, y);
 				if (x-offset > m.x)
 					break;
 			}
 			lastblink = ::base::Timer.current_time(); //turn the cursor on
-			if (insertpos == txt.size() && x-offset <= m.x);
+			if (InsertPos == Text.size() && x-offset <= m.x);
 			else
-				insertpos--; //position it before the character
+				InsertPos--; //position it before the character
 			cachevalid = false; //redraw the textbox
 			return true;
 		}
@@ -158,9 +177,9 @@ namespace gui
 			{
 				data[fread(data, 1, 1024, f)] = 0;
 				pclose(f);
-				txt = data;
+				Text = data;
 				LOG(INFO) << logging::indent() << "Pasted '" << data << "'";
-				insertpos = 0;
+				InsertPos = 0;
 				cachevalid = false;
 				return true;
 			}

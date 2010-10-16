@@ -141,8 +141,47 @@ namespace gui
          * @return whether the event was consumed or not.
          */
         bool on_keyboard_event (input::keyboard_event * evt);
+
+        /**
+         * Callback executed whenever a button on the joystick has been pushed.
+         * @param evt the button press event
+         * @return whether the event was consumed or not.
+         */
+        bool on_joystick_event (input::joystick_event *evt);
         //@}
-                
+
+        /**
+         * Visibility.
+         */
+        //@{
+		bool visible () const { return Visible; }
+        //@}
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gui::layout);
+#endif
+
+        /**
+         * Focus handling.
+         */
+        //@{
+        /**
+         * Called when the container recieves the focus.
+         * @return true when a child accepts the focus.
+         */
+		virtual bool focus();
+
+        /**
+         * Called when the container loses focus.
+         */
+		virtual void unfocus()
+        {
+            if (Children.size()) Children[Selected].Child->unfocus();
+            focused = false;
+        }
+        //@}
+
+    protected:
 		/** 
          * @name Keyboard Callbacks.
          *
@@ -176,38 +215,7 @@ namespace gui
 //		virtual bool mouseup(SDL_MouseButtonEvent & m);
 //		virtual bool mousedown(SDL_MouseButtonEvent & m);
 //		virtual bool mousemove(SDL_MouseMotionEvent & m) { return false; }
-
-        /**
-         * Focus handling.
-         */
-        //@{
-        /**
-         * Called when the container recieves the focus.
-         * @return true when a child accepts the focus.
-         */
-		virtual bool focus();
         
-        /**
-         * Called when the container loses focus.
-         */
-		virtual void unfocus() 
-        {
-            if (Children.size()) Children[Selected].Child->unfocus(); 
-            focused = false;
-        }
-        //@}
-
-        /**
-         * Visibility.
-         */
-        //@{
-		bool visible () const { return Visible; }
-        //@}
-        
-#ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(gui::layout);
-#endif
-    protected:
         /// widgets kept in the container
         std::vector<layoutchild> Children;
 		/// child which currently is selected

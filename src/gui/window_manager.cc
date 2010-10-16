@@ -56,6 +56,9 @@ void window_manager::add (const u_int16 & x, const u_int16 & y, gui::layout *win
     // assign listener to window
     window->set_listener (il);
 
+    // give focus to new window
+    window->focus();
+
     gfx::drawing_area pos (x, y, window->length(), window->height());
     Windows.push_back (manager_child (window, pos, f, true));
 }

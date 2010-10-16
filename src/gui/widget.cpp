@@ -23,7 +23,6 @@
  * @brief  Declares the widget class.
  */
 
-#include "input/manager.h"
 #include "gui/widget.h"
 
 namespace gui

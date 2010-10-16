@@ -155,6 +155,14 @@ namespace input
          */
         //@{
         /**
+         * Return the default keyboard key for the given
+         * control action.
+         * @param btn the control action.
+         * @return the default key assigned to the action.
+         */
+        static const keyboard_event::key_type default_key (button_type btn);
+
+        /**
          * Read control mappings from configuration
          * @param cfg configuration file.
          */

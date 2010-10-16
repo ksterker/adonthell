@@ -24,12 +24,6 @@ public:
       letsexit = true;
       std::cout << "Escape pressed, leaving..." << std::endl;
       return true;
-    } else if (ev->type() == input::keyboard_event::KEY_PUSHED) {
-		if (widgetbase) widgetbase->keydown(*ev);
-	} else if (ev->type() == input::keyboard_event::KEY_RELEASED) {
-		if (widgetbase) widgetbase->keyup(*ev);
-	} else if (ev->type() == input::keyboard_event::TEXT_INPUT) {
-		if (widgetbase) widgetbase->input(*ev);
 	}
     return false;
   }
@@ -79,14 +73,18 @@ class GuiTest : public adonthell::app {
 	gui::label label_with_bg("label.xml");
 	label_with_bg.set_string("Is this readable?");
 
-	gui::button b("button.xml", base::make_functor(*this, &GuiTest::changelabel) , &l, 2);
+	gui::button b("button.xml");
+	b.set_callback(base::make_functor(*this, &GuiTest::changelabel) , &l);
 	b.set_string("Click Me");
-	gui::button b2("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"button 2", 1);
-	
+	gui::button b2("button.xml");
+	b2.set_callback(base::make_functor(*this, &GuiTest::print), (void*)"button 2");
 	b2.set_string("Red Button");
-	gui::button b3(300,30, base::make_functor(*this, &GuiTest::print), (void*)"button 3", 1);
+	gui::button b3(300,30);
+	b3.set_callback(base::make_functor(*this, &GuiTest::print), (void*)"button 3");
 	b3.set_string("Button 3");
-	gui::option o1("button.xml", base::make_functor(*this, &GuiTest::print), (void*)"option 1", 1);
+	b3.set_style("button.xml");
+	gui::option o1("button.xml");
+	o1.set_callback (base::make_functor(*this, &GuiTest::print), (void*)"option 1");
 	o1.set_string("Option 1");
 
 	gui::textbox t1(400, 30);
@@ -101,7 +99,6 @@ class GuiTest : public adonthell::app {
 	widgets.addchild(b3, 10, 90);
 	widgets.addchild(o1, 10,130);
 	widgets.addchild(t1, 10,170);
-	widgets.focus();
 
 	ih.widgetbase = &widgets;
     /*************************************************************************/
@@ -117,12 +114,18 @@ class GuiTest : public adonthell::app {
     // (that is, only the one we've connected) which will call the
     // callback function that has been connected to handle keyboard events.
 	gfx::surface * screen = gfx::screen::get_surface();
-	label_with_bg.setColor(screen->map_color(0xff,0,0,0xff));
+	label_with_bg.set_color(screen->map_color(0xff,0,0,0xff));
+	b2.set_color(screen->map_color(0xff,0,0,0xff));
 	std::cout << gfx::screen::info ();
     string ls = "I am typing a very long string that will not fit all the way within the alloted space";
-	while (!ih.letsexit) {
-      ::base::Timer.update ();
-      ::input::manager::update();
+
+    ::gui::window_manager::add(0, 0, &widgets);
+
+    while (!ih.letsexit)
+    {
+        ::base::Timer.update ();
+        ::input::manager::update();
+      	::gui::window_manager::update();
 	  	
 		screen->fillrect(0, 0, screen->length(), screen->height(), 0);
 		f.setColor(screen->map_color(0xff, 0,0,0xff));
