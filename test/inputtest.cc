@@ -43,6 +43,19 @@ public:
         
         return true;
     }
+
+    bool handle_joystick(input::joystick_event * ev)
+    {
+        // Print some info about what happened
+        if (ev->type() == input::joystick_event::BUTTON_RELEASED)
+        {
+            std::cout << "Button " << ev->button_symbol() << " has been released." << std::endl;
+        }
+        else if (ev->type() == input::joystick_event::BUTTON_PUSHED)
+        {
+            std::cout << "Button " << ev->button_symbol() << " has been pushed." << std::endl;
+        }
+    }
 };
         
 class AdonthellApp : public adonthell::app
@@ -61,6 +74,7 @@ class AdonthellApp : public adonthell::app
         // to handle keyboard events
         input::listener il;
         il.connect_keyboard_function(base::make_functor_ret(myObject, &myClass::handle_keys));
+        il.connect_joystick_function(base::make_functor_ret(myObject, &myClass::handle_joystick));
         
         // Add the listener to the manager
         input::manager::add(&il);

@@ -269,6 +269,10 @@ bool configuration::read (const string & name)
 // write configuration to file
 void configuration::write (const string & name) const
 {
+	// do not override configuration if startup fails before
+	// the existing configuration was read
+	if (Sections.empty()) return;
+
     // try to write file
     if (!base::config_io::write (create_filename (name), this))
     {
