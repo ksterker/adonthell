@@ -323,6 +323,14 @@ namespace base
              * @return %configuration setting.
              */
             string get_string (const string & section, const string & option, const string & value);
+
+            /**
+             * Split a string of values into the individual tokens.
+             * @param values a string of values, delimited by a special character.
+             * @param separator the delimiting character. Default is a pipe ('|').
+             * @return list of individual values, with whitespace trimmed.
+             */
+            static vector<string> split_value (const string & values, const char & separator = '|');
             //@}
             
             /**

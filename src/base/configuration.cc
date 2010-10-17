@@ -403,3 +403,37 @@ string configuration::create_filename (const string & name) const
     // add file name to configuration data directory
     return base::Paths.cfg_data_dir () + name + ".xml";
 }    
+
+vector<string> configuration::split_value (const string & values, const char & separator)
+{
+    string::size_type i, idx, pos = 0;
+    vector<string> result;
+
+    // split pipe separated list of controls
+    do
+    {
+    	idx = values.find (separator, pos);
+    	string value = values.substr (pos, idx - pos);
+
+    	// trim whitespace
+    	if ((i = value.find_last_not_of(' ')) != string::npos)
+    	{
+    		// strip back
+    	    value.erase (i + 1);
+    	    if ((i = value.find_first_not_of(' ')) != string::npos)
+    	    {
+    	    	// strip front
+    	    	value.erase (0, i);
+    	    }
+
+    	    // found a possibly valid control
+    	    result.push_back (value);
+    	}
+    	// else: only whitespace, so we skip it
+
+    	pos = idx + 1;
+    }
+    while (idx != string::npos);
+
+    return result;
+}

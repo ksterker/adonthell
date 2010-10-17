@@ -69,8 +69,8 @@ namespace input
             keyboard_event::DOWN_KEY,
             keyboard_event::RIGHT_KEY,
             keyboard_event::LEFT_KEY,
-            keyboard_event::LSHIFT_KEY,	// run
-            keyboard_event::SPACE_KEY,	// jump
+            keyboard_event::LSHIFT_KEY,    // run
+            keyboard_event::SPACE_KEY,    // jump
             keyboard_event::LCTRL_KEY,
             keyboard_event::ESCAPE_KEY            
         };
@@ -86,42 +86,53 @@ namespace input
         // read setting for each of our controls
         for (u_int32 i = control_event::UP_BUTTON; i < control_event::NBR_BUTTONS; i++)
         {
-        	control_event::button_type btn = (control_event::button_type) i;
+            control_event::button_type btn = (control_event::button_type) i;
 
             // get name of control (= config option)
             key = control_event::name_for_button ((control_event::button_type) btn);
             
-            // get mapped control, using given default if not set yet
-            value = cfg.get_string ("Input", key, keyboard_event::name_for_key (default_key (btn)));
-            
-            // setup internal mapping tables
-            keyboard_event::key_type kt = keyboard_event::key_for_name (value);
-            if (kt != keyboard_event::UNKNOWN_KEY)
+            // get mapped controls, using given default if not set yet
+            std::string control_list = cfg.get_string ("Input", key, keyboard_event::name_for_key (default_key (btn)));
+
+            std::vector<std::string> controls = base::configuration::split_value (control_list);
+            if (controls.empty())
             {
+                // controls might be empty if there was a configuration error
+                controls.push_back (keyboard_event::name_for_key (default_key (btn)));
+            }
+
+            // we're guaranteed to get back at least one value (the default)
+            for (std::vector<std::string>::const_iterator value = controls.begin(); value != controls.end(); value++)
+            {
+                // setup internal mapping tables
+                keyboard_event::key_type kt = keyboard_event::key_for_name (*value);
+                if (kt != keyboard_event::UNKNOWN_KEY)
+                {
+                    map_keyboard_key (kt, (control_event::button_type) btn);
+                    continue;
+                }
+
+                mouse_event::button_type mb = mouse_event::button_for_name (*value);
+                if (mb != mouse_event::NO_BUTTON)
+                {
+                    map_mouse_button (mb, (control_event::button_type) btn);
+                    continue;
+                }
+
+                joystick_event::button_type jb = joystick_event::button_for_name (*value);
+                if (jb != joystick_event::NO_BUTTON)
+                {
+                    // TODO: get proper joystick number
+                    map_joystick_button (0, jb, (control_event::button_type) btn);
+                    continue;
+                }
+
+                // invalid control value --> use default, but don't update configuration
+                fprintf (stderr, "*** control_event::map_controls: unknown control '%s' for action '%s'!\n", value->c_str(), key.c_str());
+                kt = default_key (btn);
+                fprintf (stderr, "    substituting default key '%s' instead!\n", keyboard_event::name_for_key (kt).c_str ());
                 map_keyboard_key (kt, (control_event::button_type) btn);
-                continue;
             }
-            
-            mouse_event::button_type mb = mouse_event::button_for_name (value);
-            if (mb != mouse_event::NO_BUTTON)
-            {
-                map_mouse_button (mb, (control_event::button_type) btn);
-                continue;
-            }
-            
-            joystick_event::button_type jb = joystick_event::button_for_name (value);
-            if (jb != joystick_event::NO_BUTTON)
-            {
-                // TODO: get proper joystick number
-                map_joystick_button (0, jb, (control_event::button_type) btn);
-                continue;
-            }
-            
-            // invalid control value --> use default, but don't update configuration
-            fprintf (stderr, "*** control_event::map_controls: unknown control '%s' for action '%s'!\n", value.c_str(), key.c_str());
-            kt = default_key (btn);
-            fprintf (stderr, "    substituting default key '%s' instead!\n", keyboard_event::name_for_key (kt).c_str ());
-            map_keyboard_key (kt, (control_event::button_type) btn);
         }
     }
 
