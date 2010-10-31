@@ -44,10 +44,10 @@ namespace gfx
     const u_int8 screen::TRANS_BLUE = 0xff;    
     
     // All the static data for the screen.
-    u_int16 screen::length_, screen::height_;
+    u_int16 screen::length_ = 0, screen::height_ = 0;
     u_int8 screen::bytes_per_pixel_;
     bool screen::fullscreen_;
-    u_int8 screen::Scale;
+    u_int8 screen::Scale = 1;
     surface *screen::ShadowSurface;
     
     void (*screen::get_video_mode_p) (u_int16 *l, u_int16 *h, u_int8 *depth) = NULL;
@@ -120,8 +120,11 @@ namespace gfx
     	else
     	{
     		// use maximum allowed view size for windowed mode
-    		length_ = length = max_x;
-    		height_ = height = max_y;
+    		length_ = max_x;
+    		height_ = max_y;
+
+    		length = length_ * Scale;
+    		height = height_ * Scale;
     	}
 
     	if (!set_video_mode_p (length, height, bytes_per_pixel_*8))

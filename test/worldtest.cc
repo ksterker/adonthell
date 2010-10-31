@@ -146,6 +146,9 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
         LOG(INFO) << "  done!";
 
+        // set mapview to proper size
+        world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
+
         LOG(INFO) << "Creating 'Human' specie... ";
         rpg::specie human("Human");
         human.get_state("groups/human.specie");

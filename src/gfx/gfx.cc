@@ -89,7 +89,6 @@ namespace gfx
         }
 
         screen::ShadowSurface = NULL;
-        screen::Scale = 1;
 
         screen::get_video_mode_p = (void(*)(u_int16*, u_int16*, u_int8*)) lt_dlsym(dlhandle, "gfx_screen_get_video_mode");
         if (!screen::get_video_mode_p)
