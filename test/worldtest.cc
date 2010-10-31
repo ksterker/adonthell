@@ -123,7 +123,7 @@ public:
         LOG(INFO) << "  done!";
 
         LOG(INFO) << "Setting video mode... ";
-    	gfx::screen::set_video_mode(640, 480);
+    	gfx::screen::set_native_mode ();
         LOG(INFO) << "  done!";
 
 		// Contains map and player controls

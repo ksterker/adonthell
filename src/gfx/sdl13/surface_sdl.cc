@@ -80,7 +80,7 @@ namespace gfx
     { 
         SDL_Surface * display_target;
 
-        if (target == NULL) display_target = display->vis; 
+        if (target == NULL) display_target = ((surface_sdl *)screen::get_surface())->vis;
         else display_target = ((surface_sdl *)target)->vis;
 
         setup_rects (x, y, sx, sy, sl, sh, da_opt); 
@@ -259,6 +259,15 @@ namespace gfx
                 break;
         }
         return col;
+    }
+
+    void surface_sdl::scale(surface *target, const u_int32 & factor) const
+    {
+    	if (length() * factor > target->length() ||
+    		height() * factor > target->height())
+    		return;
+
+    	SDL_SoftStretch(vis, NULL, ((surface_sdl *)target)->vis, NULL);
     }
 
     surface & surface_sdl::operator = (const surface& src)

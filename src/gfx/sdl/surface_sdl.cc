@@ -73,7 +73,7 @@ namespace gfx
     { 
         SDL_Surface * display_target;
 
-        if (target == NULL) display_target = display->vis; 
+        if (target == NULL) display_target = ((surface_sdl *)screen::get_surface())->vis;
         else display_target = ((surface_sdl *)target)->vis;
 
         setup_rects (x, y, sx, sy, sl, sh, da_opt); 
@@ -217,6 +217,49 @@ namespace gfx
                 break;
         }
         return col;
+    }
+
+    void surface_sdl::scale(surface *target, const u_int32 & factor) const
+    {
+    	if (length() * factor > target->length() ||
+    		height() * factor > target->height())
+    		return;
+
+    	lock();
+    	target->lock();
+
+    	u_int8 *target_data = (u_int8*) ((surface_sdl *)target)->vis->pixels;
+    	s_int32 target_line_length = ((surface_sdl *)target)->vis->format->BytesPerPixel * target->length();
+
+		for (s_int32 src_y = 0; src_y < height(); ++src_y)
+		{
+			s_int32 target_x = 0;
+			s_int32 target_x_end = 0;
+
+			// we scale one line horizontally
+			for (s_int32 src_x = 0; src_x < length(); ++src_x)
+			{
+				u_int32 px = get_pix (src_x, src_y);
+				for (target_x_end += factor; target_x < target_x_end; ++target_x)
+				{
+					target->put_pix (target_x, src_y * factor, px);
+				}
+			}
+
+			// the next lines will be the same, so we just copy them
+			for (u_int32 i = 1; i < factor; i++)
+			{
+				u_int8 *target_next_line = target_data + ((surface_sdl *)target)->vis->pitch;
+				memcpy (target_next_line, target_data, target_line_length);
+				target_data = target_next_line;
+			}
+
+			// goto next line
+			target_data += ((surface_sdl *)target)->vis->pitch;
+		}
+
+        target->unlock();
+        unlock();
     }
 
     surface & surface_sdl::operator = (const surface& src)

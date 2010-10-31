@@ -31,7 +31,6 @@
 #ifndef GFX_H_
 #define GFX_H_
 
-#include "base/configuration.h"
 #include "gfx/screen.h"
 
 /**

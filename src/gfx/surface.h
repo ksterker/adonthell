@@ -273,6 +273,16 @@ namespace gfx
         void tile (const surface& src, const drawing_area *da_opt = NULL);
         
         /**
+         * Scale this image onto the target image with a given factor.
+         * The target image must be large enough to hold the scaled source
+         * image.
+         *
+         * @param target the target image.
+         * @param factor the scaling factor.
+         */
+        virtual void scale (surface *target, const u_int32 & factor) const = 0;
+
+        /**
          * Adjust image brightness. Values < 127 will darken
          * the image, values > 127 brighten the image.
          *

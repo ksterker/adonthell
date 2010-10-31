@@ -88,6 +88,16 @@ namespace gfx
             goto bigerror;
         }
 
+        screen::ShadowSurface = NULL;
+        screen::Scale = 1;
+
+        screen::get_video_mode_p = (void(*)(u_int16*, u_int16*, u_int8*)) lt_dlsym(dlhandle, "gfx_screen_get_video_mode");
+        if (!screen::get_video_mode_p)
+        {
+            LOG(ERROR) << logging::indent() << lt_dlerror();
+            goto bigerror;
+        }
+
         screen::set_video_mode_p = (bool(*)(u_int16, u_int16, u_int8)) lt_dlsym(dlhandle, "gfx_screen_set_video_mode");
         if (!screen::set_video_mode_p)
         {
@@ -151,15 +161,14 @@ namespace gfx
     // setup from configuration
     void setup (base::configuration & cfg)
     {
-    	// option to toggle fullscreen on/off
-        screen::set_fullscreen (cfg.get_int ("Video", "Fullscreen", 1) == 1);
-        cfg.option ("Video", "Fullscreen", base::cfg_option::BOOL);
+    	screen::setup(cfg);
         
         if (!(surfaces = new surface_cacher()))
         {
             LOG(ERROR) << logging::indent() << "Unable to create a surface cacher";
             return;
         }
+
         surfaces->set_max_mem (cfg.get_int("Video", "CacheSize", DEFAULT_CACHE_SIZE));
     }
 
@@ -168,6 +177,8 @@ namespace gfx
     {
     	delete surfaces;
         surfaces = NULL;
+
+        delete screen::ShadowSurface;
 
         if (gfxcleanup) gfxcleanup();
         gfxcleanup = NULL;

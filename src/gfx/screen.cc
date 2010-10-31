@@ -30,6 +30,7 @@
 
 
 #include <cstdio>
+#include "gfx/gfx.h"
 #include "gfx/screen.h"
 #include "base/logging.h"
 
@@ -46,7 +47,10 @@ namespace gfx
     u_int16 screen::length_, screen::height_;
     u_int8 screen::bytes_per_pixel_;
     bool screen::fullscreen_;
+    u_int8 screen::Scale;
+    surface *screen::ShadowSurface;
     
+    void (*screen::get_video_mode_p) (u_int16 *l, u_int16 *h, u_int8 *depth) = NULL;
     bool (*screen::set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth) = NULL;
     void (*screen::update_p)() = NULL;
     u_int32 (*screen::trans_color_p)() = NULL;
@@ -54,6 +58,90 @@ namespace gfx
     surface * (*screen::get_surface_p)() = NULL;
     std::string (*screen::info_p)() = NULL;
     
+    void screen::setup (base::configuration & cfg)
+    {
+        base::cfg_option *opt;
+
+        // option to toggle fullscreen on/off
+        screen::set_fullscreen (cfg.get_int ("Video", "Fullscreen", 1) == 1);
+        cfg.option ("Video", "Fullscreen", base::cfg_option::BOOL);
+
+        opt = cfg.option ("Video", "Scale", base::cfg_option::UNDEF);
+        if (opt != NULL)
+        {
+        	Scale = cfg.get_int ("Video", "Scale", 1);
+        }
+
+        opt = cfg.option ("Video", "Width", base::cfg_option::UNDEF);
+        if (opt != NULL)
+        {
+        	length_ = cfg.get_int ("Video", "Width", 0);
+        }
+
+        opt = cfg.option ("Video", "Height", base::cfg_option::UNDEF);
+        if (opt != NULL)
+        {
+        	height_ = cfg.get_int ("Video", "Height", 0);
+        }
+    }
+
+    bool screen::set_native_mode (const u_int16 & min_x, const u_int16 & max_x, const u_int16 & min_y, const u_int16 & max_y)
+    {
+    	u_int16 length, height;
+
+    	if (length_ != 0 && height_ != 0)
+    	{
+        	// configuration override
+    		length = length_ * Scale;
+    		height = height_ * Scale;
+    	}
+    	else if (is_fullscreen())
+    	{
+    		// scale to desktop size
+    		get_video_mode_p (&length, &height, &bytes_per_pixel_);
+    		for (int i = 1; true; i++)
+    		{
+    			length_ = length/i;
+    			height_ = height/i;
+
+    			if (length_ < min_x && height_ < min_y)
+    			{
+    				LOG(ERROR) << "*** error: Failed setting a valid video mode. Please configure your own!";
+    				return false;
+    			}
+
+    			if (length_ <= max_x && height_ <= max_y)
+    			{
+    				Scale = i;
+    				break;
+    			}
+    		}
+    	}
+    	else
+    	{
+    		// use maximum allowed view size for windowed mode
+    		length_ = length = max_x;
+    		height_ = height = max_y;
+    	}
+
+    	if (!set_video_mode_p (length, height, bytes_per_pixel_*8))
+    	{
+			LOG(ERROR) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
+			return false;
+    	}
+
+		if (Scale > 1)
+		{
+			ShadowSurface = gfx::create_surface();
+			ShadowSurface->set_alpha(255, 0);
+			ShadowSurface->resize (length_, height_);
+		}
+
+    	LOG(ERROR) << "*** info: Set internal view to " << length_ << " x " << height_ << ".";
+    	LOG(ERROR) << "*** info: Set display size to " << length << " x " << height << ".";
+    	return true;
+    }
+
     bool screen::set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
     {
         bool res = set_video_mode_p(nl, nh, depth); 
