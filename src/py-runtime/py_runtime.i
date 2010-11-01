@@ -46,7 +46,7 @@ PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership)
         
     fprintf (stderr, "*** cxx_to_py: '%s' not found in SWIGs typelist:\n", name);
 	print_type_info (typelist);
-    return NULL;
+    exit(1);
 }
 
 // pass a Python object to C++
@@ -60,6 +60,7 @@ void py_to_cxx (PyObject *instance, const char *name, void **retval)
     {
         fprintf (stderr, "*** py_to_cxx: '%s' not found in SWIGs typelist:", name);
 		print_type_info (typelist);
+        exit(1);
     }
 }
 
@@ -150,7 +151,7 @@ SWIGEXPORT PyObject *cxx_to_py (void *instance, const char *name, const bool & o
         fprintf (stderr, "*** cxx_to_py: no Python module imported!\n");
     }
     
-    return NULL;
+    exit(1);
 }
 
 // pass a Python object to C++
@@ -161,6 +162,7 @@ SWIGEXPORT void py_to_cxx (PyObject *instance, const char *name, void **retval)
     {
         fprintf (stderr, "*** py_to_cxx: '%s' not found. ", name);
         log_py_objects();
+        exit(1);
     }
 }
 

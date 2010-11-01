@@ -176,10 +176,23 @@ void CustomApplicationMain (adonthell::app *theApp)
 	ProcessSerialNumber psn = { 0, kCurrentProcess };    
 	SetFrontProcess (&psn);
     
-    int status = Application->main ();
-    Application->cleanup ();
-    // exit (status);
+    /* run application */
+    Application->main ();
+
+    /* quit */
     [NSApp stop:nil];
+    
+    /* we really mean it! */
+    NSEvent* event = [NSEvent otherEventWithType: NSApplicationDefined
+                                        location: NSMakePoint(0,0)
+                                   modifierFlags: 0
+                                       timestamp: 0.0
+                                    windowNumber: 0
+                                         context: nil
+                                         subtype: 0
+                                           data1: 0
+                                           data2: 0];
+    [NSApp postEvent: event atStart: true];    
 }
 @end
 
