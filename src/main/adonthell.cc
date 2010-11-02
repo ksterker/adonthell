@@ -209,6 +209,7 @@ void app::parse_args (int & argc, char *argv[])
 bool app::init ()
 {
     Modules = 0;
+    IsRunning = true;
     dlhandle = NULL;
 
     // init libltdl

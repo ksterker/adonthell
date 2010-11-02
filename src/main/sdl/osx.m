@@ -35,10 +35,8 @@
 /* Invoked from the Quit menu item */
 - (void)terminate:(id)sender
 {
-    /* Post a SDL_QUIT event */
-    SDL_Event event;
-    event.type = SDL_QUIT;
-    SDL_PushEvent(&event);
+    /* Stop the main loop */
+    adonthell::app::theApp->stop();
 }
 @end
 
