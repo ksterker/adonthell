@@ -32,6 +32,7 @@ namespace base
 {
     base::paths Paths;
     base::timer Timer;
+    u_int8 Scale = 1;
 }
 
 // init the base module

@@ -51,4 +51,7 @@ namespace base
     
     /// timer instance used by the engine
     extern base::timer Timer;
+
+    /// scale factor used by the display
+    extern u_int8 Scale;
 }
