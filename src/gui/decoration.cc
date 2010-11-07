@@ -221,7 +221,7 @@ bool decoration::init (const std::string & name)
         }
     }
     
-    CurrentState = Decoration.begin();
+    set_state ("Default");
     return file.success();
 }
 
@@ -265,7 +265,7 @@ void decoration::set_state (const std::string & state)
     }
 }
 
-// set focussed state
+// set focused state
 void decoration::set_focused (const bool & has_focus)
 {
     if (Decoration.size() > 0)

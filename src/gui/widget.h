@@ -204,6 +204,10 @@ namespace gui
 		bool Selhilite;
         /// graphical representation of the widget
         decoration *Look;
+
+    private:
+        /// forbid copy construction
+        widget (const widget &);
 	};
 };
 

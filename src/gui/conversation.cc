@@ -1,4 +1,4 @@
-#include "conversation.h"
+#include "gui/conversation.h"
 #include "base/logging.h"
 #include <iomanip>
 #include <iostream>
@@ -8,17 +8,17 @@
 namespace gui
 {
 	conversation::conversation(rpg::character & c, const u_int16 & w, const u_int16 & h, ::base::functor_0*e)
-	: ct(w-30, h/3), dlg(c), speaker(w-30, LINEHEIGHT), end(e)
+	: scrollview(w, h), ct(w-30, h/3), lo(w, h), dlg(c), speaker(w-30, LINEHEIGHT), end(e)
 	{
         Look->init("window.xml");
         set_size (w, h);
         ct.get_font()->setSize(LINEHEIGHT - 1);
         speaker.get_font()->setSize(LINEHEIGHT - 1);
-        
+        set_child(lo);
 		line = dlg.run(-1);
 		ct.set_multiline(true);
-		addchild(speaker, 15, 10);
-		addchild(ct, 15, LINEHEIGHT+10);
+		lo.add_child(speaker, 15, 10);
+		lo.add_child(ct, 15, LINEHEIGHT+10);
 		opty = 40;
 		optcount = 0;
 		update();
@@ -38,7 +38,7 @@ namespace gui
 		while (optcount)
 		{
 			optcount--;
-			removechild(*options[optcount]);
+			lo.remove_child(*options[optcount]);
 			delete options[optcount];
 		}
 		optcount = 0;
@@ -75,11 +75,12 @@ namespace gui
 			options[i]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[i]->get_font()->setSize(LINEHEIGHT-1);
 			options[i]->set_multiline(true);
+			options[i]->set_style("list_item.xml");
 			char tmp[16];
 			snprintf(tmp, 16, "%i)", i+1);
 			options[i]->set_string(string(tmp)+line->answer(i));
 			options[i]->set_center(false, false);
-            addchild(*options[i], 20, y);
+            lo.add_child(*options[i], 20, y);
 			y += options[i]->height() +5;
 		}
 		if (optcount == 0) 
@@ -91,14 +92,16 @@ namespace gui
 			options[0]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[0]->get_font()->setSize(LINEHEIGHT-1);
 			options[0]->set_multiline(true);
+			options[0]->set_style("list_item.xml");
 			options[0]->set_string("1) (continue)");
 			options[0]->set_center(false, false);
 			options[0]->set_color(0xffffffff);
-			addchild(*options[0], 20, y);
+			lo.add_child(*options[0], 20, y);
 			y += options[0]->height() +5;
 		}
 
         focus();
+        reset();
         return true;
 	}
 	bool conversation::keyup(input::keyboard_event &k) 

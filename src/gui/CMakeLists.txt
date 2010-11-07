@@ -7,6 +7,7 @@ set(adonthell_gui_SRCS
 	label.cpp
 	layout.cc
 	option.cpp
+	scrollview.cc
 	textbox.cpp
     textcache.cc
 	widget.cpp
@@ -23,6 +24,7 @@ set(adonthell_gui_HEADERS
 	label.h
 	layout.h
 	option.h
+    scrollview.h
     textbox.h
     textcache.h
 	widget.h

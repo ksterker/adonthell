@@ -2,7 +2,7 @@
 #define GUI_CONVERSATION_H
 
 #include "gui/widget.h"
-#include "gui/layout.h"
+#include "gui/scrollview.h"
 #include "gui/label.h"
 #include "gui/button.h"
 #include "rpg/dialog.h"
@@ -11,7 +11,7 @@
 
 namespace gui
 {
-	class conversation:public layout
+	class conversation : public scrollview
 	{
 	protected:
 		struct answer 
@@ -22,6 +22,7 @@ namespace gui
 		};
 		label speaker;
 		label ct;
+		layout lo;
 		button* options[MAX_OPTS];
 		answer answers[MAX_OPTS];
 		rpg::dialog dlg;

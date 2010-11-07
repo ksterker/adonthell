@@ -13,6 +13,7 @@ pkgincludeinput_HEADERS = \
 	label.h \
 	layout.h \
 	option.h \
+	scrollview.h \
 	textbox.h \
     textcache.h \
 	widget.h \
@@ -28,6 +29,7 @@ libadonthell_gui_la_SOURCES = \
 	label.cpp \
 	layout.cc \
 	option.cpp \
+    scrollview.cc \
 	textbox.cpp \
     textcache.cc \
 	widget.cpp \
