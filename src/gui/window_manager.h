@@ -27,7 +27,6 @@
 #ifndef GUI_WINDOW_MANAGER_H
 #define GUI_WINDOW_MANAGER_H
 
-#include <list>
 #include "gui/layout.h"
 
 namespace gui

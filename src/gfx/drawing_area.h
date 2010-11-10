@@ -116,7 +116,7 @@ namespace gfx
             return h_; 
         }
 
-        /** Move the drawing_area.
+        /** Relocate the drawing_area.
          *  @param nx new horizontal position.
          *  @param ny new vertical position.
          */  
@@ -134,6 +134,32 @@ namespace gfx
         {
             w_ = nl;
             h_ = nh; 
+        }
+
+        /**
+         * Expand the drawing area by the
+         * values specified in the given object.
+         * @param da amount to grow in each direction.
+         */
+        void grow (const gfx::drawing_area & da)
+        {
+        	x_ -= da.x();
+        	y_ -= da.y();
+        	w_ += da.x() + da.length();
+        	h_ += da.y() + da.height();
+        }
+
+        /**
+         * Shrink the drawing area by the
+         * values specified in the given object.
+         * @param da amount to shrink in each direction.
+         */
+        void shrink (const gfx::drawing_area & da)
+        {
+        	x_ += da.x();
+        	y_ += da.y();
+        	w_ = da.x() + da.length() < w_ ? w_ - da.x() - da.length() : 0;
+        	h_ = da.y() + da.height() < h_ ? h_ - da.y() - da.height() : 0;
         }
 
         /** Assign a drawing_area to this drawing_area.

@@ -27,7 +27,6 @@
 #define GUI_TEXTBOX_H
 
 #include "gui/label.h"
-#include "input/manager.h"
 
 namespace gui
 {

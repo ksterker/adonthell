@@ -26,11 +26,7 @@
 #ifndef GUI_LAYOUT_H
 #define GUI_LAYOUT_H
 
-#include <vector>
-
 #include "gui/widget.h"
-#include "input/input.h"
-#include "input/listener.h"
 
 namespace gui
 {

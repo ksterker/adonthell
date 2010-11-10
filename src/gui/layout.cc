@@ -115,8 +115,8 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
     widget::draw (x, y, da, target);
     
     // client area of the layout
-    // FIXME: take border into account
     gfx::drawing_area client_area (x, y, length(), height());
+    client_area.shrink (Look->border ());
     client_area.assign_drawing_area (da);
     
     vector_layoutchild::const_iterator i;

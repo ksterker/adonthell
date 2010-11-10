@@ -30,11 +30,11 @@
 
 #include "base/hash_map.h"
 #include "base/flat.h"
+#include "gfx/drawing_area.h"
 
 namespace gfx
 {
     class surface;
-    class drawing_area;
 }
 
 namespace gui
@@ -87,6 +87,12 @@ public:
     u_int16 height () const { return Height; }
     
     /**
+     * Get the current border.
+     * @return the current border.
+     */
+    const gfx::drawing_area & border () const { return Border; }
+
+    /**
      * Return amount by which the focused decoration
      * should have its brightness level adjusted.
      * @return brightness level adjustment. 
@@ -126,6 +132,8 @@ private:
     std::vector<const gfx::surface*> Elements;
     /// the rendered decoration
     gfx::surface *Cache;
+    /// client area, excluding border
+    gfx::drawing_area Border;
 };
     
 /**
@@ -196,6 +204,22 @@ public:
     }
     
     /**
+     * Return actually usable area inside the decorated
+     * widget.
+     * @param length default length.
+     * @param height default height.
+     * @return area excluding widget border.
+     */
+    const gfx::drawing_area & border () const
+    {
+    	if (CurrentState != Decoration.end())
+    	{
+    		return CurrentState->second->border();
+    	}
+    	return EMPTY_BORDER;
+    }
+
+    /**
      * Set state of decoration. Supported states are "Default", 
      * "Activated" and "Disabled" (and anything else defined in the
      * appropriated decoration data file).
@@ -234,6 +258,8 @@ private:
     decoration_map::const_iterator CurrentState;
     /// decoration by state
     decoration_map Decoration;
+    /// a border of thickness 0
+    static gfx::drawing_area EMPTY_BORDER;
 };
 
 }

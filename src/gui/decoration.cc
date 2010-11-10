@@ -24,7 +24,6 @@
  */
 
 #include "gui/decoration.h"
-#include "base/base.h"
 #include "base/logging.h"
 #include "base/diskio.h"
 #include "gfx/gfx.h"
@@ -79,6 +78,13 @@ bool decoration_info::init (base::flat & record)
         result &= add_element (record, "border_rgt");
         result &= add_element (record, "border_top");
         result &= add_element (record, "border_bot");
+
+        // calculate border size, if any
+        if (result)
+        {
+            Border.move (Elements[BORDER_LEFT]->length(), Elements[BORDER_TOP]->height());
+            Border.resize (Elements[BORDER_RIGHT]->length(), Elements[BORDER_BOTTOM]->height());
+        }
     }
     
     return result;
@@ -188,6 +194,9 @@ gfx::surface *decoration_info::get_surface ()
     return Cache;
 }
 
+// a border of size 0
+gfx::drawing_area decoration::EMPTY_BORDER;
+
 // initialize decoration
 bool decoration::init (const std::string & name)
 {
@@ -290,33 +299,30 @@ void decoration::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_
 {
     if (FocusOverlay != Decoration.end())
     {
-        // draw widget with focus overlay
-        gfx::surface *s = FocusOverlay->second->get_surface();        
-        gfx::surface *tmp = gfx::create_surface ();
-        tmp->resize (s->length(), s->height());
+    	gfx::surface *s = FocusOverlay->second->get_surface();
 
-        s_int16 ox = 0;
-        s_int16 oy = 0;
-        
         if (CurrentState != Decoration.end())
         {
             gfx::surface *w = CurrentState->second->get_surface();
             
             // center widget in overlay (in case overlay is bigger than widget)
-            ox = (s->length() - w->length()) / 2;
-            oy = (s->height() - w->height()) / 2;
-            
-            w->draw (ox, oy, NULL, tmp);
+            s_int16 ox = (s->length() - w->length()) / 2;
+            s_int16 oy = (s->height() - w->height()) / 2;
+
+            // apply highlight to widget, if required
+            if (FocusOverlay->second->highlight())
+            {
+            	gfx::surface *tmp = gfx::create_surface();
+            	tmp->copy(*w);
+                tmp->set_brightness (128 + FocusOverlay->second->highlight());
+                w = tmp;
+            }
+
+            w->draw (x + ox, y + oy, da, target);
         }
-        
-        s->draw (0, 0, NULL, tmp);
-        if (FocusOverlay->second->highlight())
-        {
-            tmp->set_brightness (128 + FocusOverlay->second->highlight());
-        }
-        
-        tmp->draw (x - ox, y - oy, da, target);
-        delete tmp;
+
+        // draw actual overlay
+        s->draw (x, y, da, target);
     }
     else
     {
