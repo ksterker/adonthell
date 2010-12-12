@@ -11,6 +11,7 @@ namespace gui
 	: scrollview(w, h), ct(w-30, h/3), lo(w, h), dlg(c), speaker(w-30, LINEHEIGHT), end(e)
 	{
         Look->init("window.xml");
+        set_scroll_style("scrollbar.xml");
         set_size (w, h);
         ct.get_font()->setSize(LINEHEIGHT - 1);
         speaker.get_font()->setSize(LINEHEIGHT - 1);

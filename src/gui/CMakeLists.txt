@@ -1,9 +1,11 @@
 # Define the adonthell_gui_SRCS variable containing all required files.
 set(adonthell_gui_SRCS
 	button.cpp
+	canvas.cc
 	conversation.cc
     decoration.cc
 	font.cpp
+	indicatorbar.cc
 	label.cpp
 	layout.cc
 	option.cpp
@@ -16,11 +18,13 @@ set(adonthell_gui_SRCS
 
 set(adonthell_gui_HEADERS
 	button.h
+	canvas.h
 	conversation.h
     decoration.h
 	draw.h
 	font.h
 	gui.h
+    indicatorbar.h
 	label.h
 	layout.h
 	option.h

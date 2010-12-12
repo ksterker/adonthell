@@ -42,6 +42,7 @@ namespace gui {
 %include "gui/label.h"
 %include "gui/button.h"
 %include "gui/layout.h"
+%include "gui/indicatorbar.h"
 %include "gui/scrollview.h"
 %include "gui/option.h"
 %include "gui/textbox.h"

@@ -111,8 +111,8 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
 {
     if (!Visible) return;
 
-    // draw layout itself
-    widget::draw (x, y, da, target);
+    // draw background
+    Look->draw (x, y, da, target, decoration::BACKGROUND);
     
     // client area of the layout
     gfx::drawing_area client_area (x, y, length(), height());
@@ -130,6 +130,9 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
         // draw widget at its position
         (*i).Child->draw((*i).Pos.x() + x, (*i).Pos.y() + y, &client_area, target);
     }
+
+    // draw border
+    Look->draw (x, y, da, target, decoration::BORDER);
 }
 
 // key pressed
@@ -256,7 +259,9 @@ void layout::remove_child(gui::widget & c)
                 //TODO: what happens if nobody takes focus?
                 Selected = 0;
                 focus();
-            }				
+            }
+
+            resize (ResizeMode);
             break;
         }
     }
@@ -343,6 +348,29 @@ bool layout::on_joystick_event (input::joystick_event *evt)
 	}
 
 	return false;
+}
+
+// resize layout
+void layout::resize (const gui::layout::resize_mode & mode)
+{
+	if (mode == NONE) return;
+    u_int16 nl = 0, nh = 0;
+
+    // calculate optimum widget size
+    vector<layoutchild>::const_iterator i;
+    for (i = Children.begin(); i != Children.end(); i++)
+    {
+        // if the width is too small, change it to fit
+        if (i->Pos.x() + i->Pos.length() > nl) nl = i->Pos.x() + i->Pos.length();
+        if (i->Pos.y() + i->Pos.height() > nh) nh = i->Pos.y() + i->Pos.height();
+    }
+
+
+    if ((mode & GROW_X) == 0) nl = length();
+    if ((mode & GROW_Y) == 0) nh = height();
+
+    // update widget size, if required
+    if (nl != length() || nh != height()) set_size (nl, nh);
 }
 
 // FIXME: convert to Adonthell's mouse input API

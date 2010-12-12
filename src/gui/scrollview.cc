@@ -32,19 +32,45 @@ void scrollview::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_a
 {
     if (!Visible) return;
 
-    // draw ourself
-    widget::draw (x, y, da, target);
+    // draw background
+    Look->draw (x, y, da, target, decoration::BACKGROUND);
 
     // draw scrolled widget
 	if (!Children.empty())
 	{
-	    gfx::drawing_area client_area (x, y, length(), height());
+		// space occupied by scroll bars
+		u_int16 xo = ((ScrollMode & SCROLL_Y) == SCROLL_Y) ? VScroll->length() : 0;
+		u_int16 yo = ((ScrollMode & SCROLL_X) == SCROLL_X) ? HScroll->height() : 0;
+
+		// space available for child
+	    gfx::drawing_area client_area (x, y, length() -xo, height() - yo);
 	    client_area.shrink (Look->border ());
 	    client_area.assign_drawing_area (da);
+
+	    // draw child
 	    Children[0].Child->draw (x - Ox, y - Oy, &client_area, target);
+
+	    // draw horizontal scroll bar
+	    if ((ScrollMode & SCROLL_X) == SCROLL_X)
+	    {
+	    	HScroll->set_max(Children[0].Child->length());
+   			HScroll->set_values(Ox, Ox + length());
+	    	HScroll->set_size (client_area.length(), HScroll->height());
+	    	HScroll->draw (client_area.x(), client_area.y() + client_area.height(), da, target);
+	    }
+
+	    // draw vertical scroll bar
+		if ((ScrollMode & SCROLL_Y) == SCROLL_Y)
+		{
+			VScroll->set_max(Children[0].Child->height());
+			VScroll->set_values(Oy, Oy + height());
+			VScroll->set_size (VScroll->length(), client_area.height());
+			VScroll->draw (client_area.x() + client_area.length(), client_area.y(), da, target);
+		}
 	}
 
-    // Todo: draw the scrollbars
+    // draw border
+    Look->draw (x, y, da, target, decoration::BORDER);
 }
 
 // set the container that should be scrolled
@@ -140,3 +166,4 @@ bool scrollview::keydown(input::keyboard_event & k)
 
 	return consumed;
 }
+

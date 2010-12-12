@@ -158,8 +158,8 @@ namespace gfx
         {
         	x_ += da.x();
         	y_ += da.y();
-        	w_ = da.x() + da.length() < w_ ? w_ - da.x() - da.length() : 0;
-        	h_ = da.y() + da.height() < h_ ? h_ - da.y() - da.height() : 0;
+        	w_ = da.x() + da.length() < w_ ? w_ - (da.x() + da.length()) : 0;
+        	h_ = da.y() + da.height() < h_ ? h_ - (da.y() + da.height()) : 0;
         }
 
         /** Assign a drawing_area to this drawing_area.

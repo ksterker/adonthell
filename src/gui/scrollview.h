@@ -28,9 +28,15 @@
 #define GUI_SCROLLVIEW_H
 
 #include "gui/layout.h"
+#include "gui/indicatorbar.h"
 
 namespace gui
 {
+
+#ifndef SWIG
+/// width of scrollbars in pixel
+#define SCROLLBAR_WIDTH 14
+#endif
 
 /**
  * This container has a single element which
@@ -54,9 +60,13 @@ public:
      * @param l layout length
      * @param h layout height
      */
-	scrollview(const u_int16 & l, const u_int16 & h)
-	: layout(l, h), Ox(0), Oy(0)
+	scrollview (const u_int16 & l, const u_int16 & h)
+	: layout(l, h), Ox(0), Oy(0), HScroll (NULL), VScroll (NULL)
     {
+		VScroll = new indicator_bar (SCROLLBAR_WIDTH, 0);
+		HScroll = new indicator_bar (0, SCROLLBAR_WIDTH);
+		HScroll->set_orientation (indicator_bar::HORIZONTAL);
+
 		ScrollMode = SCROLL_Y;
         ResizeMode = NONE;
     }
@@ -67,8 +77,12 @@ public:
      * @param style filename of widget decoration.
      */
 	scrollview (const std::string & style)
-	: layout(style), Ox(0), Oy(0)
+	: layout(style), Ox(0), Oy(0), HScroll (NULL), VScroll (NULL)
 	{
+		VScroll = new indicator_bar (SCROLLBAR_WIDTH, 0);
+		HScroll = new indicator_bar (0, SCROLLBAR_WIDTH);
+		HScroll->set_orientation (indicator_bar::HORIZONTAL);
+
 		ScrollMode = SCROLL_Y;
         ResizeMode = NONE;
 	}
@@ -76,7 +90,11 @@ public:
 	/**
 	 * Cleanup.
 	 */
-	virtual ~scrollview() { }
+	virtual ~scrollview()
+	{
+		delete HScroll;
+		delete VScroll;
+	}
 
 	/**
 	 * Set the widget to scroll.
@@ -117,6 +135,16 @@ public:
 	 * @param m behaviour of the scroll view.
 	 */
 	void set_scroll_mode (const scroll_mode & m);
+
+	/**
+	 * Sets the look of the scroll bars.
+	 * @param style filename of scroll bar decoration.
+	 */
+	void set_scroll_style (const std::string & style)
+	{
+		HScroll->set_style (style);
+		VScroll->set_style (style);
+	}
 	//@}
 
     /**
@@ -150,6 +178,11 @@ private:
     s_int32 Oy;
     /// directions it is possible to scroll
     scroll_mode ScrollMode;
+
+    /// horizontal scrollbar
+    indicator_bar *HScroll;
+    /// vertical scrollbar
+    indicator_bar *VScroll;
 
     /// hide from the public interface
 	using layout::add_child;

@@ -139,17 +139,19 @@ namespace gfx
         unlock();
     }
 
-    // tile the given surface onto this one
-    void surface::tile (const surface& src, const drawing_area *da_opt)
+    // tile this surface onto the given one
+    void surface::tile (const drawing_area *da_opt, surface *target) const
     {
         drawing_area da;
         
+        if (!target) target = gfx::screen::get_surface();
+
         if (da_opt) da = da_opt->setup_rects();
-        else da.resize (length(), height());
+        else da.resize (target->length(), target->height());
         
-        for (u_int16 posy = 0; posy < height(); posy += src.height ())
-            for (u_int16 posx = 0; posx < length(); posx += src.length ())
-                src.draw (da.x() + posx, da.y() + posy, &da, this); 
+        for (u_int16 posy = 0; posy < target->height(); posy += height ())
+            for (u_int16 posx = 0; posx < target->length(); posx += length ())
+                draw (da.x() + posx, da.y() + posy, &da, target);
     }
 
     // adjust brightness

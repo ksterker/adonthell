@@ -30,34 +30,43 @@
 #include "gfx/surface_cacher.h"
 
 using gui::decoration;
-using gui::decoration_info;
+using gui::std_decoration;
 
 #define DECORATION_DIR "gfx/gui/"
 
 // dtor
-decoration_info::~decoration_info ()
+std_decoration::~std_decoration ()
 {
     for (std::vector<const gfx::surface*>::iterator i = Elements.begin(); i != Elements.end(); i++)
     {
         gfx::surfaces->free_surface (*i);
     }
+
+    for (std::vector<const gfx::surface*>::iterator i = BrightElements.begin(); i != BrightElements.end(); i++)
+    {
+        delete *i;
+    }
 }
 
 // init from record
-bool decoration_info::init (base::flat & record)
+bool std_decoration::init (base::flat & record)
 {
-    // get background, which is mandatory
-    std::string path = DECORATION_DIR + record.get_string ("bg");
-    if (base::Paths.find_in_path (path))
+    // get optional background
+    std::string path = DECORATION_DIR + record.get_string("bg", true);
+    if (path != DECORATION_DIR)
     {
-        const gfx::surface *s = gfx::surfaces->get_surface_only (path, false, false, gfx::surface_cacher::NONE);
-        Elements.push_back (s);
-        
-        Length = s->length();
-        Height = s->height();
+        if (base::Paths.find_in_path(path))
+        {
+            const gfx::surface *s = gfx::surfaces->get_surface_only(path, false, false);
+            Elements.push_back(s);
+
+            Length = s->length();
+            Height = s->height();
+        }
+        else return false;
     }
-    else return false;
-    
+    else Elements.push_back (NULL);
+
     // get optional alpha of background
     Alpha = 255 - record.get_uint8 ("bg_alpha", true);
     
@@ -91,12 +100,12 @@ bool decoration_info::init (base::flat & record)
 }
 
 // load gfx element
-bool decoration_info::add_element (base::flat & record, const std::string &id)
+bool std_decoration::add_element (base::flat & record, const std::string &id)
 {
     std::string path = DECORATION_DIR + record.get_string (id);
     if (base::Paths.find_in_path (path))
     {
-        Elements.push_back (gfx::surfaces->get_surface_only (path, false, false, gfx::surface_cacher::NONE));
+        Elements.push_back (gfx::surfaces->get_surface_only (path, true, false));
         return true;
     }
     
@@ -104,95 +113,95 @@ bool decoration_info::add_element (base::flat & record, const std::string &id)
 }
 
 // resize the decoration
-void decoration_info::set_size (const u_int16 & length, const u_int16 & height)
+void std_decoration::set_size (const u_int16 & length, const u_int16 & height)
 {
-    if (Length != length || Height != height)
+    Length = length;
+    Height = height;
+}
+
+// create a brighter version of the widget
+void std_decoration::set_brightness (const s_int8 & level)
+{
+    // only do this once
+    if (!BrightElements.empty()) return;
+
+    for (std::vector<const gfx::surface*>::iterator i = Elements.begin(); i != Elements.end(); i++)
     {
-        delete Cache;
-        Cache = NULL;
-        
-        Length = length;
-        Height = height;
+        gfx::surface *brightElement = NULL;
+
+        if (*i != NULL)
+        {
+            brightElement = gfx::create_surface();
+            brightElement->copy(*(*i));
+            brightElement->set_brightness (level);
+        }
+
+        BrightElements.push_back (brightElement);
+    }
+
+    Highlight = level;
+}
+
+// draw decoration background
+void std_decoration::draw_background (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da_opt, gfx::surface * target, const bool & highlight)
+{
+    const std::vector<const gfx::surface*> & parts = highlight ? BrightElements : Elements;
+
+    if (parts[BACKGROUND] != NULL)
+    {
+        gfx::drawing_area da (x, y, Length, Height);
+        da.shrink(Border);
+        da.assign_drawing_area(da_opt);
+
+        if (Alpha != 255)
+        {
+            gfx::surface *tmp = gfx::create_surface ();
+            tmp->copy(*parts[BACKGROUND]);
+            tmp->set_alpha(Alpha);
+            tmp->tile(&da, target);
+
+            delete tmp;
+        }
+        else
+        {
+            parts[BACKGROUND]->tile(&da, target);
+        }
     }
 }
 
-// get decoration surface
-gfx::surface *decoration_info::get_surface ()
+// draw decoration border
+void std_decoration::draw_border (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da_opt, gfx::surface * target, const bool & highlight)
 {
-    if (Cache) return Cache;
-    
-    // recreate decoration
-    Cache = gfx::create_surface ();
-    Cache->set_alpha (255, true);
-    Cache->resize (Length, Height);
-    
-    // the background
-    if (Alpha != 255)
+    const std::vector<const gfx::surface*> & parts = highlight ? BrightElements : Elements;
+
+    if (parts.size() > 8)
     {
-    	// this is a hack to get an opaque onto the cache surface
-    	// with the alpha channel set to the transparency value.
-    	// Ideally, this should work with both the SDL 1.2 and 1.3
-    	// backends without resorting to toggling the surface alpha,
-    	// but it seems that there are differences in the blitting
-    	// or surface creation routines that require a workaround.
-
-        gfx::surface *tmp = gfx::create_surface ();
-        tmp->set_alpha(255, true); // SDL 1.2 backend needs this
-        tmp->resize (Elements[BACKGROUND]->length(), Elements[BACKGROUND]->height());
-        tmp->set_alpha(254); 	   // SDL 1.3 backend needs this
-
-        Elements[BACKGROUND]->draw (0, 0, NULL, tmp);
-        Cache->fillrect (0, 0, Length, Height, Cache->map_color (0, 0, 0, Alpha));
-        Cache->tile (*tmp);
-
-        delete tmp;
-    }
-    else
-    {
-        Cache->tile (*Elements[BACKGROUND]);
-    }
-
-    // the border, if present
-    if (Elements.size() > 1)
-    {
-        const gfx::surface *s;
         gfx::drawing_area da;
         
-        // the border
-        da = gfx::drawing_area (Elements[BORDER_TOP_LEFT]->length(), 0, Length - Elements[BORDER_TOP_LEFT]->length() - Elements[BORDER_TOP_RIGHT]->length(), Elements[BORDER_TOP]->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        Cache->tile (*Elements[BORDER_TOP], &da);
-        da = gfx::drawing_area (0, Elements[BORDER_TOP_LEFT]->height(), Elements[BORDER_LEFT]->length(), Height - Elements[BORDER_TOP_LEFT]->height() - Elements[BORDER_BOTTOM_LEFT]->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        Cache->tile (*Elements[BORDER_LEFT], &da);
-        da = gfx::drawing_area (Elements[BORDER_BOTTOM_LEFT]->length(), Height - Elements[BORDER_BOTTOM]->height(), Length - Elements[BORDER_BOTTOM_LEFT]->length() - Elements[BORDER_BOTTOM_RIGHT]->length(), Height);
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        Cache->tile (*Elements[BORDER_BOTTOM], &da);
-        da = gfx::drawing_area (Length - Elements[BORDER_RIGHT]->length(), Elements[BORDER_TOP_RIGHT]->length(), Length, Height  - Elements[BORDER_TOP_RIGHT]->height() - Elements[BORDER_BOTTOM_RIGHT]->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        Cache->tile (*Elements[BORDER_RIGHT], &da);
+        // the sides
+        da = gfx::drawing_area (x + parts[BORDER_TOP_LEFT]->length(), y, Length - parts[BORDER_TOP_LEFT]->length() - parts[BORDER_TOP_RIGHT]->length(), parts[BORDER_TOP]->height());
+        da.assign_drawing_area(da_opt);
+        parts[BORDER_TOP]->tile (&da, target);
+        da = gfx::drawing_area (x, y + parts[BORDER_TOP_LEFT]->height(), parts[BORDER_LEFT]->length(), Height - parts[BORDER_TOP_LEFT]->height() - parts[BORDER_BOTTOM_LEFT]->height());
+        da.assign_drawing_area(da_opt);
+        parts[BORDER_LEFT]->tile (&da, target);
+        da = gfx::drawing_area (x + parts[BORDER_BOTTOM_LEFT]->length(), y + Height - parts[BORDER_BOTTOM]->height(), Length - parts[BORDER_BOTTOM_LEFT]->length() - parts[BORDER_BOTTOM_RIGHT]->length(), parts[BORDER_BOTTOM]->height());
+        da.assign_drawing_area(da_opt);
+        parts[BORDER_BOTTOM]->tile (&da, target);
+        da = gfx::drawing_area (x + Length - parts[BORDER_RIGHT]->length(), y + parts[BORDER_TOP_RIGHT]->length(), parts[BORDER_RIGHT]->length(), Height  - parts[BORDER_TOP_RIGHT]->height() - parts[BORDER_BOTTOM_RIGHT]->height());
+        da.assign_drawing_area(da_opt);
+        parts[BORDER_RIGHT]->tile (&da, target);
         
         // the corners
-        s = Elements[BORDER_TOP_LEFT]; 
-        da = gfx::drawing_area (0, 0, s->length(), s->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        s->draw (0, 0, NULL, Cache);
-        s = Elements[BORDER_TOP_RIGHT]; 
-        da = gfx::drawing_area (Length - s->length(), 0, s->length(), s->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        s->draw (Length - s->length(), 0, NULL, Cache);
-        s = Elements[BORDER_BOTTOM_LEFT]; 
-        da = gfx::drawing_area (0, Height - s->height(), s->length(), s->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        s->draw (0, Height - s->height(), NULL, Cache);
-        s = Elements[BORDER_BOTTOM_RIGHT]; 
-        da = gfx::drawing_area (Length - s->length(), Height - s->height(), s->length(), s->height());
-        Cache->fillrect (0, 0, 0, 0, 0, &da);
-        s->draw (Length - s->length(), Height - s->height(), NULL, Cache);
+        parts[BORDER_TOP_LEFT]->draw (x, y, da_opt, target);
+        parts[BORDER_TOP_RIGHT]->draw (x + Length - parts[BORDER_TOP_RIGHT]->length(), y, da_opt, target);
+        parts[BORDER_BOTTOM_LEFT]->draw (x , y + Height - parts[BORDER_TOP_RIGHT]->height(), da_opt, target);
+        parts[BORDER_BOTTOM_RIGHT]->draw (x + Length - parts[BORDER_TOP_RIGHT]->length(), y + Height - parts[BORDER_TOP_RIGHT]->height(), da_opt, target);
     }
-    
-    return Cache;
 }
+
+// default decoration factory
+gui::decoration_factory gui::decoration_factory::DEFAULT;
 
 // a border of size 0
 gfx::drawing_area decoration::EMPTY_BORDER;
@@ -210,6 +219,8 @@ bool decoration::init (const std::string & name)
         return false;
     }
     
+    decoration_factory *factory = Factory ? Factory : &decoration_factory::DEFAULT;
+
     u_int32 size;
     void *value;
     char *id;
@@ -217,7 +228,7 @@ bool decoration::init (const std::string & name)
     while (file.next (&value, &size, &id) == base::flat::T_FLAT)
     {
         base::flat record = base::flat ((const char*) value, size);
-        decoration_info *di = new decoration_info ();
+        std_decoration *di = factory->create_decorator(id);
         
         if (di->init (record))
         {
@@ -295,41 +306,41 @@ void decoration::set_focused (const bool & has_focus)
 }
 
 // draw decoration
-void decoration::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da, gfx::surface * target) const
+void decoration::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da, gfx::surface * target, const u_int32 & parts) const
 {
     if (FocusOverlay != Decoration.end())
     {
-    	gfx::surface *s = FocusOverlay->second->get_surface();
+    	s_int16 ox = 0;
+    	s_int16 oy = 0;
 
         if (CurrentState != Decoration.end())
         {
-            gfx::surface *w = CurrentState->second->get_surface();
-            
             // center widget in overlay (in case overlay is bigger than widget)
-            s_int16 ox = (s->length() - w->length()) / 2;
-            s_int16 oy = (s->height() - w->height()) / 2;
+            ox = (FocusOverlay->second->length() - CurrentState->second->length()) / 2;
+            oy = (FocusOverlay->second->height() - CurrentState->second->height()) / 2;
 
             // apply highlight to widget, if required
             if (FocusOverlay->second->highlight())
             {
-            	gfx::surface *tmp = gfx::create_surface();
-            	tmp->copy(*w);
-                tmp->set_brightness (128 + FocusOverlay->second->highlight());
-                w = tmp;
+            	CurrentState->second->set_brightness (128 + FocusOverlay->second->highlight());
             }
 
-            w->draw (x + ox, y + oy, da, target);
+            // draw widget
+            if ((parts & BACKGROUND) == BACKGROUND) CurrentState->second->draw_background (x, y, da, target, FocusOverlay->second->highlight() != 0);
+            if ((parts & BORDER) == BORDER) CurrentState->second->draw_border (x, y, da, target, FocusOverlay->second->highlight() != 0);
         }
 
         // draw actual overlay
-        s->draw (x, y, da, target);
+        if ((parts & BACKGROUND) == BACKGROUND) FocusOverlay->second->draw_background (x, y, da, target);
+        if ((parts & BORDER) == BORDER) FocusOverlay->second->draw_border (x, y, da, target);
     }
     else
     {
         // draw plain widget
         if (CurrentState != Decoration.end())
         {
-            CurrentState->second->get_surface()->draw (x, y, da, target);
+            if ((parts & BACKGROUND) == BACKGROUND) CurrentState->second->draw_background (x, y, da, target);
+            if ((parts & BORDER) == BORDER) CurrentState->second->draw_border (x, y, da, target);
         }
     }
 }

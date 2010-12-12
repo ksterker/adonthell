@@ -193,12 +193,26 @@ namespace gui
         //@}
 
 		/**
-		 *
+		 * @name Size Handling
+		 */
+		//@{
+		/**
+		 * Set whether the layout can shrink or expand to
+		 * accommodate for its children.
+		 * @param mode the growth mode.
 		 */
 		void set_auto_grow (const gui::layout::resize_mode & mode)
 		{
 			ResizeMode = mode;
 		}
+
+		/**
+		 * Resize the layout to accommodate for its children.
+		 * May grow or shrink the layout so that all children fit.
+		 * @param mode the growth mode.
+		 */
+		void resize (const gui::layout::resize_mode & mode = GROW_BOTH);
+		//@}
 
         /**
          * Focus handling.

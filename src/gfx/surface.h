@@ -263,14 +263,14 @@ namespace gfx
         virtual void mirror (bool x, bool y) = 0;
 
         /**
-         * Tile the given %surface onto this %surface. The location
+         * Tile this %surface onto the given %surface. The location
          * tiled can be constrained by an optional drawing_area. If
          * omitted, the complete surface will be filled.
          * 
-         * @param src the source image.
          * @param da_opt clipping rectangle.
+         * @param target the target image.
          */
-        void tile (const surface& src, const drawing_area *da_opt = NULL);
+        void tile (const drawing_area *da_opt = NULL, surface *target = NULL) const;
         
         /**
          * Scale this image onto the target image with a given factor.

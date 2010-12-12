@@ -92,6 +92,11 @@ class GuiTest : public adonthell::app {
 	gui::label multiline_test(400, 100);
 	multiline_test.set_string("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
 	multiline_test.set_multiline(true);
+
+	gui::canvas cv(64, 64);
+	cv.set_style("label.xml");
+	cv.set_drawable(o1);
+
 	/* arrange them in a freeform layout object */
 	gui::layout widgets(0, 0);
 	widgets.add_child( b, 10, 10);
@@ -99,6 +104,7 @@ class GuiTest : public adonthell::app {
 	widgets.add_child(b3, 10, 90);
 	widgets.add_child(o1, 10,130);
 	widgets.add_child(t1, 10,170);
+    widgets.add_child(cv, 10,170);
 
 	ih.widgetbase = &widgets;
     /*************************************************************************/
