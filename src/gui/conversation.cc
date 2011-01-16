@@ -18,8 +18,8 @@ namespace gui
         set_child(lo);
 		line = dlg.run(-1);
 		ct.set_multiline(true);
-		lo.add_child(speaker, 15, 10);
-		lo.add_child(ct, 15, LINEHEIGHT+10);
+		lo.add_child(speaker);
+		lo.add_child(ct);
 		opty = 40;
 		optcount = 0;
 		update();
@@ -56,9 +56,9 @@ namespace gui
 		}
 		speaker.set_string(string(line->speaker()) + ":");
 		ct.set_string(line->text());
+		lo.resize(layout::GROW_Y);
 
 		int i;
-		int y = opty + ct.height();
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
          
         font *f = ct.get_font();
@@ -81,8 +81,7 @@ namespace gui
 			snprintf(tmp, 16, "%i)", i+1);
 			options[i]->set_string(string(tmp)+line->answer(i));
 			options[i]->set_center(false, false);
-            lo.add_child(*options[i], 20, y);
-			y += options[i]->height() +5;
+            lo.add_child(*options[i]);
 		}
 		if (optcount == 0) 
 		{
@@ -97,8 +96,7 @@ namespace gui
 			options[0]->set_string("1) (continue)");
 			options[0]->set_center(false, false);
 			options[0]->set_color(0xffffffff);
-			lo.add_child(*options[0], 20, y);
-			y += options[0]->height() +5;
+			lo.add_child(*options[0]);
 		}
 
         focus();

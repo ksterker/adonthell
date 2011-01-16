@@ -211,7 +211,7 @@ namespace gui
 		 * May grow or shrink the layout so that all children fit.
 		 * @param mode the growth mode.
 		 */
-		void resize (const gui::layout::resize_mode & mode = GROW_BOTH);
+		virtual void resize (const gui::layout::resize_mode & mode = GROW_BOTH);
 		//@}
 
         /**

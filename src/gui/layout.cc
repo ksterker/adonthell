@@ -34,76 +34,80 @@ typedef std::vector<gui::layoutchild> vector_layoutchild;
 // select next child
 bool layout::moveright()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected < Children.size()-1)
+    do
     {
-        Selected++;
+        Selected = (Selected + 1) % Children.size();
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
-    
-    Selected = old;
+    while (Selected != old);
+
     return false;
 }
 
 // select next child
 bool layout::movedown()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected < Children.size()-1)
+    do
     {
-        Selected++;
+        Selected = (Selected + 1) % Children.size();
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old;
     return false;
 }
 
 // select previous child
 bool layout::moveleft()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected > 0)
+    do
     {
-        Selected--;
+        Selected = Selected ? Selected - 1 : Children.size() - 1;
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old; 
     return false;
 }
 
 // select previous child
 bool layout::moveup()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected > 0)	
+    do
     {
-        Selected--;
+        Selected = Selected ? Selected - 1 : Children.size() - 1;
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old;
     return false;
 }
 
@@ -201,7 +205,7 @@ bool layout::input(input::keyboard_event&k)
     
     if (Children.size())
     {
-        // see if the Selecteded child wants it. 
+        // see if the selected child wants it.
         if (Children[Selected].Child->input(k))
             return true;
     }
@@ -357,14 +361,15 @@ void layout::resize (const gui::layout::resize_mode & mode)
     u_int16 nl = 0, nh = 0;
 
     // calculate optimum widget size
-    vector<layoutchild>::const_iterator i;
+    vector<layoutchild>::iterator i;
     for (i = Children.begin(); i != Children.end(); i++)
     {
+        i->Pos.resize(i->Child->length(), i->Child->height());
+
         // if the width is too small, change it to fit
         if (i->Pos.x() + i->Pos.length() > nl) nl = i->Pos.x() + i->Pos.length();
         if (i->Pos.y() + i->Pos.height() > nh) nh = i->Pos.y() + i->Pos.height();
     }
-
 
     if ((mode & GROW_X) == 0) nl = length();
     if ((mode & GROW_Y) == 0) nh = height();

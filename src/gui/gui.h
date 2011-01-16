@@ -8,7 +8,9 @@
 #include "gui/indicatorbar.h"
 #include "gui/label.h"
 #include "gui/layout.h"
+#include "gui/listlayout.h"
 #include "gui/option.h"
+#include "gui/scrollview.h"
 #include "gui/textbox.h"
 #include "gui/window_manager.h"
 

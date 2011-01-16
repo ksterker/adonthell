@@ -14,6 +14,7 @@ pkgincludeinput_HEADERS = \
 	indicatorbar.h \
 	label.h \
 	layout.h \
+	listlayout.h \
 	option.h \
 	scrollview.h \
 	textbox.h \
@@ -31,6 +32,7 @@ libadonthell_gui_la_SOURCES = \
 	font.cpp \
 	label.cpp \
 	layout.cc \
+    listlayout.cc \
 	indicatorbar.cc \
 	option.cpp \
     scrollview.cc \

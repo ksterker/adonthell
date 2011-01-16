@@ -8,6 +8,7 @@ set(adonthell_gui_SRCS
 	indicatorbar.cc
 	label.cpp
 	layout.cc
+    listlayout.cc
 	option.cpp
 	scrollview.cc
 	textbox.cpp
@@ -27,6 +28,7 @@ set(adonthell_gui_HEADERS
     indicatorbar.h
 	label.h
 	layout.h
+    listlayout.h
 	option.h
     scrollview.h
     textbox.h

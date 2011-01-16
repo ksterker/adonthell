@@ -48,13 +48,13 @@ void scrollview::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_a
 	    client_area.assign_drawing_area (da);
 
 	    // draw child
-	    Children[0].Child->draw (x - Ox, y - Oy, &client_area, target);
+	    Children[0].Child->draw (client_area.x() - Ox, client_area.y() - Oy, &client_area, target);
 
 	    // draw horizontal scroll bar
 	    if ((ScrollMode & SCROLL_X) == SCROLL_X)
 	    {
 	    	HScroll->set_max(Children[0].Child->length());
-   			HScroll->set_values(Ox, Ox + length());
+   			HScroll->set_values(Ox, Ox + client_area.length());
 	    	HScroll->set_size (client_area.length(), HScroll->height());
 	    	HScroll->draw (client_area.x(), client_area.y() + client_area.height(), da, target);
 	    }
@@ -63,7 +63,7 @@ void scrollview::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_a
 		if ((ScrollMode & SCROLL_Y) == SCROLL_Y)
 		{
 			VScroll->set_max(Children[0].Child->height());
-			VScroll->set_values(Oy, Oy + height());
+			VScroll->set_values(Oy, Oy + client_area.height());
 			VScroll->set_size (VScroll->length(), client_area.height());
 			VScroll->draw (client_area.x() + client_area.length(), client_area.y(), da, target);
 		}
@@ -102,7 +102,14 @@ void scrollview::show (const gui::widget & c)
 {
 	gui::layout *container = (gui::layout*) Children[0].Child;
 	gfx::drawing_area pos = container->get_location (c);
-	pos.grow (Look->border ());
+
+    // space occupied by scroll bars
+    u_int16 xo = ((ScrollMode & SCROLL_Y) == SCROLL_Y) ? VScroll->length() : 0;
+    u_int16 yo = ((ScrollMode & SCROLL_X) == SCROLL_X) ? HScroll->height() : 0;
+
+    // space available for child
+    gfx::drawing_area client_area (0, 0, length() -xo, height() - yo);
+    client_area.shrink (Look->border ());
 
 	if ((ScrollMode & SCROLL_X) == SCROLL_X)
 	{
@@ -110,9 +117,9 @@ void scrollview::show (const gui::widget & c)
 		{
 			Ox = pos.x();
 		}
-		else if (pos.x() + pos.length() > Ox + length())
+		else if (pos.x() + pos.length() > Ox + client_area.length())
 		{
-			Ox = pos.x() + pos.length() - length();
+			Ox = pos.x() + pos.length() - client_area.length();
 		}
 	}
 
@@ -120,11 +127,11 @@ void scrollview::show (const gui::widget & c)
 	{
 		if (pos.y() < Oy)
 		{
-			Oy = pos.y();
+            Oy = pos.y();
 		}
-		else if (pos.y() + pos.height() > Oy + height())
+		else if (pos.y() + pos.height() > Oy + client_area.height())
 		{
-			Oy = pos.y() + pos.height() - height();
+			Oy = pos.y() + pos.height() - client_area.height();
 		}
 	}
 }
@@ -134,16 +141,23 @@ void scrollview::center (const gui::widget & c)
 {
 	gui::layout *container = (gui::layout*) Children[0].Child;
 	gfx::drawing_area pos = container->get_location (c);
-	pos.grow (Look->border ());
+
+    // space occupied by scroll bars
+    u_int16 xo = ((ScrollMode & SCROLL_Y) == SCROLL_Y) ? VScroll->length() : 0;
+    u_int16 yo = ((ScrollMode & SCROLL_X) == SCROLL_X) ? HScroll->height() : 0;
+
+    // space available for child
+    gfx::drawing_area client_area (0, 0, length() -xo, height() - yo);
+    client_area.shrink (Look->border ());
 
 	if ((ScrollMode & SCROLL_X) == SCROLL_X)
 	{
-		Ox = pos.x() + (pos.length() - length()) / 2;
+		Ox = pos.x() + (pos.length() - client_area.length()) / 2;
 	}
 
 	if ((ScrollMode & SCROLL_Y) == SCROLL_Y)
 	{
-		Oy = pos.y() + (pos.height() - height()) / 2;
+		Oy = pos.y() + (pos.height() - client_area.height()) / 2;
 	}
 }
 
