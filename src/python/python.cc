@@ -38,6 +38,15 @@ namespace python
     {
         if (PyErr_Occurred ())
         {
+            // do not swallow events such as CTRL+C
+            if (PyErr_ExceptionMatches(PyExc_KeyboardInterrupt) ||
+                PyErr_ExceptionMatches(PyExc_SystemExit))
+            {
+                exit(0);
+            }
+
+            // PyErr_Print will clear the error state, so it must
+            // be called after the checks above.
             PyErr_Print ();
             fflush (stderr);
         }
