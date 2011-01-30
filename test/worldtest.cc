@@ -74,6 +74,7 @@ public:
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
+                LOG(INFO) << "worldtest is stopping!";
                 adonthell::app::theApp->stop();
             }
             // toggle grid on|off

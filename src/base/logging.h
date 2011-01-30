@@ -30,6 +30,7 @@
 
 #include <iostream>  // provide std::endl
 #include <string>
+#include <cstdlib>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -41,7 +42,18 @@
 // Mock up glog...
 namespace google
 {
-    inline void InitGoogleLogging(char *ignore) { }
+    extern int log_level;
+
+    inline void InstallFailureSignalHandler() { }
+
+    inline void InitGoogleLogging(char *ignore)
+    {
+        const char * log_level_str = getenv("GLOG_minloglevel");
+        if (log_level_str != NULL)
+        {
+            log_level = atoi (log_level_str);
+        }
+    }
 
     class LogMessageVoidify {
     public:
@@ -60,8 +72,8 @@ namespace google
 #endif
 
 const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
-#define VLOG(x) LOG(x)
-#define LOG(x) x < ERROR ? (void) 0 : google::LogMessageVoidify() & std::cerr
+#define VLOG(x) LOG(-x)
+#define LOG(x) x < google::log_level ? (void) 0 : google::LogMessageVoidify() & std::cerr
 
 #endif
 
