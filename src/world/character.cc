@@ -52,7 +52,7 @@ character::character (area & mymap, rpg::character * mind) : moving (mymap)
     // save the representation of this character on the rpg side
     Mind = mind;
 
-    LOG(INFO) << logging::indent() << "world::character::character() invoked";
+    VLOG(1) << logging::indent() << "world::character::character() invoked";
 }
 
 // dtor
@@ -155,15 +155,15 @@ void character::add_direction(direction ndir)
 // set character movement
 void character::set_direction (const s_int32 & ndir)
 {
-    LOG(INFO) << logging::indent() << "set_direction(" << ndir << ") called";
+    VLOG(1) << logging::indent() << "set_direction(" << ndir << ") called";
     logging::increment_log_indent_level();
 
     update_velocity(ndir);
     update_state();
 
-    LOG(INFO) << logging::indent() << "CurrentDir was: " << CurrentDir;
+    VLOG(1) << logging::indent() << "CurrentDir was: " << CurrentDir;
     CurrentDir = ndir;
-    LOG(INFO) << logging::indent() << "CurrentDir is: "  << CurrentDir;
+    VLOG(1) << logging::indent() << "CurrentDir is: "  << CurrentDir;
 
     logging::decrement_log_indent_level();
 }
@@ -204,7 +204,7 @@ void character::update_velocity (const s_int32 & ndir)
 // figure out name of character shape (and animation) to use
 void character::update_state()
 {
-    LOG(INFO) << logging::indent() << "update_state() called";
+    VLOG(1) << logging::indent() << "update_state() called";
     logging::increment_log_indent_level();
 
     std::string state;
@@ -212,8 +212,8 @@ void character::update_state()
     float xvel = vx () > 0 ? vx () : -vx ();
     float yvel = vy () > 0 ? vy () : -vy ();
 
-    LOG(INFO) << logging::indent() << "xvel: " << xvel;
-    LOG(INFO) << logging::indent() << "yvel: " << yvel;
+    VLOG(1) << logging::indent() << "xvel: " << xvel;
+    VLOG(1) << logging::indent() << "yvel: " << yvel;
 
     if (xvel || yvel)
     {
@@ -247,7 +247,7 @@ void character::update_state()
         state += "_stand";
     }
 
-    LOG(INFO) << logging::indent() << "state: " << state;
+    VLOG(1) << logging::indent() << "state: " << state;
 
     // set direction the character is actually facing now
     if      (state[0] == 'e') Heading = EAST;

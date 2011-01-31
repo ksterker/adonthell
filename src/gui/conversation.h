@@ -1,17 +1,14 @@
 #ifndef GUI_CONVERSATION_H
 #define GUI_CONVERSATION_H
 
-#include "gui/widget.h"
-#include "gui/layout.h"
-#include "gui/label.h"
-#include "gui/button.h"
+#include "gui/gui.h"
 #include "rpg/dialog.h"
 #include "base/callback.h"
 #define MAX_OPTS 16
 
 namespace gui
 {
-	class conversation:public layout
+	class conversation : public scrollview
 	{
 	protected:
 		struct answer 
@@ -22,6 +19,7 @@ namespace gui
 		};
 		label speaker;
 		label ct;
+		list_layout lo;
 		button* options[MAX_OPTS];
 		answer answers[MAX_OPTS];
 		rpg::dialog dlg;

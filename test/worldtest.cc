@@ -42,14 +42,12 @@ static world::debug_renderer DEBUG_RENDERER;
 class game_client
 {
 public:
-    bool letsexit;
     bool draw_grid;
 	bool screenshot;
     bool draw_bounding_box;
     
     game_client()
     {
-        letsexit = false;
         draw_grid = false;
         screenshot = false;
         draw_bounding_box = false;
@@ -76,7 +74,8 @@ public:
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
-                letsexit = true;
+                LOG(INFO) << "worldtest is stopping!";
+                adonthell::app::theApp->stop();
             }
             // toggle grid on|off
             if (kev->key() == input::keyboard_event::G_KEY)
@@ -189,7 +188,7 @@ public:
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
         LOG(INFO) << "  done!";
         
-	    while (!gc.letsexit)
+	    while (IsRunning)
     	{
         	u_int16 i;
 

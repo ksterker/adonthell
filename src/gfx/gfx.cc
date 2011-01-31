@@ -178,7 +178,8 @@ namespace gfx
         surfaces = NULL;
 
         delete screen::ShadowSurface;
-
+        screen::ShadowSurface = NULL;
+        
         if (gfxcleanup) gfxcleanup();
         gfxcleanup = NULL;
 

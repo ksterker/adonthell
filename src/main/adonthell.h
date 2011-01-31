@@ -116,6 +116,13 @@ namespace adonthell {
             void parse_args (int & argc, char *argv[]);
             
             /**
+             * Indicate that the main loop should stop. For that to work,
+             * the main loop needs to honor the IsRunning flag and exit
+             * once this is set to false.
+             */
+            void stop () { IsRunning = false; }
+            
+            /**
              * Called automatically on shutdown of the Adonthell engine. Frees
              * any resources aquired by init(). Don't call it manually. 
              */
@@ -134,6 +141,9 @@ namespace adonthell {
 
             /// Engine configuration
             base::configuration Cfg;
+            
+            /// Flag indicating state of main loop
+            bool IsRunning;
             
         private:
             /**

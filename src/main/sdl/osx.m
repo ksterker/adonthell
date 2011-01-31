@@ -35,10 +35,8 @@
 /* Invoked from the Quit menu item */
 - (void)terminate:(id)sender
 {
-    /* Post a SDL_QUIT event */
-    SDL_Event event;
-    event.type = SDL_QUIT;
-    SDL_PushEvent(&event);
+    /* Stop the main loop */
+    adonthell::app::theApp->stop();
 }
 @end
 
@@ -176,10 +174,23 @@ void CustomApplicationMain (adonthell::app *theApp)
 	ProcessSerialNumber psn = { 0, kCurrentProcess };    
 	SetFrontProcess (&psn);
     
-    int status = Application->main ();
-    Application->cleanup ();
-    // exit (status);
+    /* run application */
+    Application->main ();
+
+    /* quit */
     [NSApp stop:nil];
+    
+    /* we really mean it! */
+    NSEvent* event = [NSEvent otherEventWithType: NSApplicationDefined
+                                        location: NSMakePoint(0,0)
+                                   modifierFlags: 0
+                                       timestamp: 0.0
+                                    windowNumber: 0
+                                         context: nil
+                                         subtype: 0
+                                           data1: 0
+                                           data2: 0];
+    [NSApp postEvent: event atStart: true];    
 }
 @end
 

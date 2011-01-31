@@ -468,20 +468,29 @@ void input_manager_update()
                 int axisnbr = (event.jaxis.axis << 1) + (event.jaxis.value > 0);
                 
                 if (event.jaxis.axis >= input::joystick_event::NBR_BUTTONS - input::joystick_event::AXIS0_FORE) break;
-                
-                if (!pushed && !input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS
+
+                if (event.jaxis.value == 0)
+                {
+                	// might be either direction, so we need to check the state of both
+                    if (input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS + axisnbr] == 0)
+                    {
+                    	// first direction was already released, so try next
+                    	axisnbr++;
+                    }
+                }
+
+                // verify that the state has actually changed
+                if (pushed == input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS
                                                             + axisnbr]) break;
                 
-                if (pushed && input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS
-                                                          + axisnbr]) break;
-                
+                // update state
+                input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS + axisnbr] = pushed;
+
+                // fire event
                 input::joystick_event je(event.jaxis.which, pushed ?
                                          input::joystick_event::BUTTON_PUSHED : 
                                          input::joystick_event::BUTTON_RELEASED, 
                                          input::sdl_axis_trans[axisnbr]);
-
-                input::joystick_state_table[joynbr * input::joystick_event::NBR_BUTTONS + axisnbr] = pushed;
-
                 input::manager::raise_event(je);
                 break;
             }

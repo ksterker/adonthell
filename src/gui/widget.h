@@ -76,7 +76,6 @@ namespace gui
             Look = new decoration();
             if (Look->init (style))
             {
-                Look->set_state ();
                 Look->get_size (w, h);
             }
             
@@ -119,7 +118,7 @@ namespace gui
 		 * Set or change the style of the widget.
 		 * @param style the name of the new style.
 		 */
-		void set_style (const std::string & style)
+		virtual void set_style (const std::string & style)
 		{
 			Look->init (style);
 		}
@@ -130,6 +129,12 @@ namespace gui
 
     protected:
         friend class gui::layout;
+
+        /**
+         * Create an empty widget.
+         */
+        widget () : Visible(true), Selhilite(true), Look(NULL)
+        { }
 
 		/** 
          * @name Keyboard Callbacks.
@@ -204,6 +209,10 @@ namespace gui
 		bool Selhilite;
         /// graphical representation of the widget
         decoration *Look;
+
+    private:
+        /// forbid copy construction
+        widget (const widget &);
 	};
 };
 

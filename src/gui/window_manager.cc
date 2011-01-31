@@ -24,8 +24,6 @@
  * @brief Handles window order and input.
  */
 
-#include "gfx/screen.h"
-#include "input/manager.h"
 #include "gui/window_manager.h"
 
 /// the rate of movement for disappearing layouts in pixels

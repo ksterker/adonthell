@@ -5,14 +5,18 @@ EXTRA_DIST = CMakeLists.txt
 pkgincludeinputdir = $(pkgincludedir)/gui
 pkgincludeinput_HEADERS = \
 	button.h \
+	canvas.h \
     conversation.h \
     decoration.h \
 	draw.h \
 	font.h \
 	gui.h \
+	indicatorbar.h \
 	label.h \
 	layout.h \
+	listlayout.h \
 	option.h \
+	scrollview.h \
 	textbox.h \
     textcache.h \
 	widget.h \
@@ -22,12 +26,16 @@ lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
 	button.cpp \
+	canvas.cc \
     conversation.cc \
     decoration.cc \
 	font.cpp \
 	label.cpp \
 	layout.cc \
+    listlayout.cc \
+	indicatorbar.cc \
 	option.cpp \
+    scrollview.cc \
 	textbox.cpp \
     textcache.cc \
 	widget.cpp \

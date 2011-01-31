@@ -1,3 +1,28 @@
+/*
+ Copyright (C) 2008 Rian Shelley
+ Part of the Adonthell Project http://adonthell.linuxgames.com
+
+ Adonthell is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ Adonthell is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Adonthell; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/**
+ * @file   gui/layout.cc
+ * @author Rian Shelley
+ * @brief  Implements the layout class.
+ */
+
 #include "gui/layout.h"
 #include "gui/draw.h"
 #include "base/logging.h"
@@ -9,76 +34,80 @@ typedef std::vector<gui::layoutchild> vector_layoutchild;
 // select next child
 bool layout::moveright()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected < Children.size()-1)
+    do
     {
-        Selected++;
+        Selected = (Selected + 1) % Children.size();
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
-    
-    Selected = old;
+    while (Selected != old);
+
     return false;
 }
 
 // select next child
 bool layout::movedown()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected < Children.size()-1)
+    do
     {
-        Selected++;
+        Selected = (Selected + 1) % Children.size();
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old;
     return false;
 }
 
 // select previous child
 bool layout::moveleft()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected > 0)
+    do
     {
-        Selected--;
+        Selected = Selected ? Selected - 1 : Children.size() - 1;
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old; 
     return false;
 }
 
 // select previous child
 bool layout::moveup()
 {
-    // find a child willing to accept selection
     int old = Selected;
-    while (Selected > 0)	
+    do
     {
-        Selected--;
+        Selected = Selected ? Selected - 1 : Children.size() - 1;
+
+        // find a child willing to accept selection
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
             return true;
         }
     }
+    while (Selected != old);
     
-    Selected = old;
     return false;
 }
 
@@ -86,12 +115,12 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
 {
     if (!Visible) return;
 
-    // draw layout itself
-    widget::draw (x, y, da, target);
+    // draw background
+    Look->draw (x, y, da, target, decoration::BACKGROUND);
     
     // client area of the layout
-    // FIXME: take border and scrollbar into account
     gfx::drawing_area client_area (x, y, length(), height());
+    client_area.shrink (Look->border ());
     client_area.assign_drawing_area (da);
     
     vector_layoutchild::const_iterator i;
@@ -105,6 +134,9 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
         // draw widget at its position
         (*i).Child->draw((*i).Pos.x() + x, (*i).Pos.y() + y, &client_area, target);
     }
+
+    // draw border
+    Look->draw (x, y, da, target, decoration::BORDER);
 }
 
 // key pressed
@@ -114,7 +146,7 @@ bool layout::keydown(input::keyboard_event&k)
     
     if (Children.size())
     {
-        // see if the selecteded child wants it. 
+        // see if the selected child wants it.
         if (Children[Selected].Child->keydown(k)) return true;
 
         // see if the user wants to switch which widget is selected
@@ -173,7 +205,7 @@ bool layout::input(input::keyboard_event&k)
     
     if (Children.size())
     {
-        // see if the Selecteded child wants it. 
+        // see if the selected child wants it.
         if (Children[Selected].Child->input(k))
             return true;
     }
@@ -201,20 +233,23 @@ bool layout::focus()
     return false;
 }
 
-void layout::addchild(gui::widget & c, const s_int16 & x, const s_int16 & y) 
+void layout::add_child(gui::widget & c, const s_int16 & x, const s_int16 & y) 
 {
     gfx::drawing_area a (x, y, c.length(), c.height());
     u_int16 nl = length(), nw = height();
     
-    /* if the width is too small, change it to fit */
-    if (x + c.length() > length()) nl = x + c.length();
-    if (y + c.height() > height()) nw = y + c.height();
+    // if the width is too small, change it to fit
+    if ((ResizeMode & GROW_X) == GROW_X && x + c.length() > length()) nl = x + c.length();
+    if ((ResizeMode & GROW_Y) == GROW_Y && y + c.height() > height()) nw = y + c.height();
     
-    set_size (nl, nw);
+    // update widget size, if required
+    if (nl != length() || nw != height()) set_size (nl, nw);
+
+    // add new child
     Children.push_back(layoutchild(&c, a));
 }
 
-void layout::removechild(gui::widget & c)
+void layout::remove_child(gui::widget & c)
 {
     vector<layoutchild>::iterator i;
     for (i = Children.begin(); i != Children.end(); i++)
@@ -228,10 +263,29 @@ void layout::removechild(gui::widget & c)
                 //TODO: what happens if nobody takes focus?
                 Selected = 0;
                 focus();
-            }				
+            }
+
+            resize (ResizeMode);
             break;
         }
     }
+}
+
+// get location of child
+const gfx::drawing_area& layout::get_location (const gui::widget & c) const
+{
+	static gfx::drawing_area no_such_pos(-1, -1, 0, 0);
+
+    vector<layoutchild>::const_iterator i;
+    for (i = Children.begin(); i != Children.end(); i++)
+    {
+        if (&c == i->Child)
+        {
+        	return i->Pos;
+        }
+    }
+
+    return no_such_pos;
 }
 
 // set input listener
@@ -298,6 +352,30 @@ bool layout::on_joystick_event (input::joystick_event *evt)
 	}
 
 	return false;
+}
+
+// resize layout
+void layout::resize (const gui::layout::resize_mode & mode)
+{
+	if (mode == NONE) return;
+    u_int16 nl = 0, nh = 0;
+
+    // calculate optimum widget size
+    vector<layoutchild>::iterator i;
+    for (i = Children.begin(); i != Children.end(); i++)
+    {
+        i->Pos.resize(i->Child->length(), i->Child->height());
+
+        // if the width is too small, change it to fit
+        if (i->Pos.x() + i->Pos.length() > nl) nl = i->Pos.x() + i->Pos.length();
+        if (i->Pos.y() + i->Pos.height() > nh) nh = i->Pos.y() + i->Pos.height();
+    }
+
+    if ((mode & GROW_X) == 0) nl = length();
+    if ((mode & GROW_Y) == 0) nh = height();
+
+    // update widget size, if required
+    if (nl != length() || nh != height()) set_size (nl, nh);
 }
 
 // FIXME: convert to Adonthell's mouse input API

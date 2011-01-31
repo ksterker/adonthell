@@ -18,19 +18,15 @@
 */
 
 /**
- * @file   gui/widget.h
+ * @file   gui/layout.h
  * @author Rian Shelley
- * @brief  Defines the widget class.
+ * @brief  Defines the layout class.
  */
 
 #ifndef GUI_LAYOUT_H
 #define GUI_LAYOUT_H
 
-#include <vector>
-
 #include "gui/widget.h"
-#include "input/input.h"
-#include "input/listener.h"
 
 namespace gui
 {
@@ -57,21 +53,21 @@ namespace gui
 
     /**
      * Base class for containers that group multiple
-     * widgets in a specifc layout. This container allows
+     * widgets in a specific layout. This container allows
      * absolute positioning of its children.
      */
 	class layout : public widget
 	{
 	public:
-        /**
-         * Create a new, empty layout.
-         */
-		layout() : widget(0, 0), Selected(0), focused(false)
-        {
-            Selhilite = false;
-            Listener = NULL;
-        }
-        
+
+		typedef enum
+		{
+			NONE 		= 0,
+			GROW_X 		= 1,
+			GROW_Y 		= 2,
+			GROW_BOTH 	= GROW_X | GROW_Y
+		} resize_mode;
+
         /**
          * Create a new, empty layout with the given size.
          * @param l layout length
@@ -81,8 +77,25 @@ namespace gui
         {
             Selhilite = false;
             Listener = NULL;
+            ResizeMode = GROW_BOTH;
         }
 
+        /**
+         * Create layout widget from the given data file.
+         * Size will be set to the background size.
+         * @param style filename of widget decoration.
+         */
+		layout (const std::string & style)
+		: widget(style), Selected(0), focused(false)
+		{
+            Selhilite = false;
+            Listener = NULL;
+            ResizeMode = GROW_BOTH;
+		}
+
+		/**
+		 * Delete layout.
+		 */
         virtual ~layout()
         {
             delete Listener;
@@ -98,13 +111,35 @@ namespace gui
          * @param x the x-coordinate to place child at.
          * @param y the y-coordinate to place child at.
          */
-		void addchild (gui::widget & c, const s_int16 & x, const s_int16 & y); 
+		void add_child (gui::widget & c, const s_int16 & x, const s_int16 & y); 
         
         /** 
          * Remove UI element from the layout.
          * @param c previously added child.
          */
-		void removechild (gui::widget & c);
+		void remove_child (gui::widget & c);
+
+		/**
+		 * Get the child widget at the given index.
+		 * @param index the index of the child.
+		 * @return child at given index.
+		 */
+		const gui::widget& get_child (const u_int32 & index) const
+		{
+			return *Children[index].Child;
+		}
+
+		/**
+		 * Get the area covered by the given child.
+		 * @return position and area of the given child.
+		 */
+		const gfx::drawing_area& get_location (const gui::widget & c) const;
+
+		/**
+		 * Get the number of children in this container.
+		 * @return the number of children in the container.
+		 */
+		u_int32 num_children () const { return Children.size(); }
         //@}
         
         /** 
@@ -123,7 +158,7 @@ namespace gui
          */
         //@{
         /**
-         * Set an input listener so this widget can recieved keyboard input. Any
+         * Set an input listener so this widget can receive keyboard input. Any
          * previously set input listeners are deleted.
          * @param lstnr the input listener to set.
          */
@@ -157,16 +192,34 @@ namespace gui
 		bool visible () const { return Visible; }
         //@}
 
-#ifndef SWIG
-        GET_TYPE_NAME_VIRTUAL(gui::layout);
-#endif
+		/**
+		 * @name Size Handling
+		 */
+		//@{
+		/**
+		 * Set whether the layout can shrink or expand to
+		 * accommodate for its children.
+		 * @param mode the growth mode.
+		 */
+		void set_auto_grow (const gui::layout::resize_mode & mode)
+		{
+			ResizeMode = mode;
+		}
+
+		/**
+		 * Resize the layout to accommodate for its children.
+		 * May grow or shrink the layout so that all children fit.
+		 * @param mode the growth mode.
+		 */
+		virtual void resize (const gui::layout::resize_mode & mode = GROW_BOTH);
+		//@}
 
         /**
          * Focus handling.
          */
         //@{
         /**
-         * Called when the container recieves the focus.
+         * Called when the container receives the focus.
          * @return true when a child accepts the focus.
          */
 		virtual bool focus();
@@ -179,7 +232,18 @@ namespace gui
             if (Children.size()) Children[Selected].Child->unfocus();
             focused = false;
         }
+
+		/**
+		 * Index of UI element that currently has the focus
+		 * in this container.
+		 * @return index of selected element.
+		 */
+		u_int32 current () const { return Selected; }
         //@}
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(gui::layout);
+#endif
 
     protected:
 		/** 
@@ -224,25 +288,27 @@ namespace gui
 		bool focused;
         /// the input handler
         input::listener *Listener;
+        /// whether to resize the layout when children are added
+        resize_mode ResizeMode;
 
 		/**
          * Called when the user pressed the move right key.
-         * @return true if a child became the newly focussed element.
+         * @return true if a child became the newly focused element.
          */
         virtual bool moveright();
 		/**
          * Called when the user pressed the move left key.
-         * @return true if a child became the newly focussed element.
+         * @return true if a child became the newly focused element.
          */
 		virtual bool moveleft();
 		/**
          * Called when the user pressed the move up key.
-         * @return true if a child became the newly focussed element.
+         * @return true if a child became the newly focused element.
          */
 		virtual bool moveup();
 		/**
          * Called when the user pressed the move down key.
-         * @return true if a child became the newly focussed element.
+         * @return true if a child became the newly focused element.
          */
 		virtual bool movedown();
         

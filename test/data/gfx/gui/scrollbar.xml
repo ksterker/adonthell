@@ -1,0 +1,24 @@
+<Data>
+  <list id="Default">
+   <string id="bg">scrollbar_bg.png</string>
+
+   <bool id="has_border">1</bool>
+   <string id="border_tl">scrollbar_tl.png</string>
+   <string id="border_tr">scrollbar_tr.png</string>
+   <string id="border_bl">scrollbar_bl.png</string>
+   <string id="border_br">scrollbar_br.png</string>
+   <string id="border_top">scrollbar_top.png</string>
+   <string id="border_bot">scrollbar_bot.png</string>
+   <string id="border_lft">scrollbar_lft.png</string>
+   <string id="border_rgt">scrollbar_rgt.png</string>
+   
+   <string id="bar_h_start">scrollbar_h_start.png</string>
+   <string id="bar_h_mid">scrollbar_h_mid.png</string>
+   <string id="bar_h_end">scrollbar_h_end.png</string>
+   <string id="bar_h_handle">scrollbar_h_handle.png</string>
+   <string id="bar_v_start">scrollbar_v_start.png</string>
+   <string id="bar_v_mid">scrollbar_v_mid.png</string>
+   <string id="bar_v_end">scrollbar_v_end.png</string>
+   <string id="bar_v_handle">scrollbar_v_handle.png</string>
+  </list>
+</Data>
