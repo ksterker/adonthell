@@ -93,7 +93,7 @@ namespace rpg
     };
 }
 
-#if __GNUC_PREREQ(4,4)
+#if __GNUC_MAJOR >= 4 && __GNUC_MINOR >= 4
 namespace tr1
 {
 
