@@ -29,8 +29,7 @@
  */
 
 
-
-#include "mouse_event.h"
+#include "input/mouse_event.h"
 
 namespace input
 {
