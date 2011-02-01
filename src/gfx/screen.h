@@ -67,7 +67,7 @@ namespace gfx
     	 *
          * @return true on success, false otherwise.
     	 */
-        static bool set_native_mode (const u_int16 & min_x = 512, const u_int16 & max_x = 640, const u_int16 & min_y = 360, const u_int16 & max_y = 512);
+        static bool set_native_mode (const u_int16 & min_x = 512, const u_int16 & max_x = 720, const u_int16 & min_y = 360, const u_int16 & max_y = 512);
 
         /**
          * Sets the video mode to the given resolution and depth.

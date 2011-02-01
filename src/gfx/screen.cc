@@ -105,8 +105,7 @@ namespace gfx
 
     			if (length_ < min_x && height_ < min_y)
     			{
-    				LOG(ERROR) << "*** error: Failed setting a valid video mode. Please configure your own!";
-    				return false;
+    				LOG(FATAL) << "*** error: Failed setting a valid video mode. Please configure your own!";
     			}
 
     			if (length_ <= max_x && height_ <= max_y)
@@ -128,8 +127,7 @@ namespace gfx
 
     	if (!set_video_mode_p (length, height, bytes_per_pixel_*8))
     	{
-			LOG(ERROR) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
-			return false;
+			LOG(FATAL) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
     	}
 
 		if (base::Scale > 1)
