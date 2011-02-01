@@ -39,6 +39,16 @@
 #if HAVE_GLOG_H
 #include <glog/logging.h>
 #else
+
+#ifdef WIN32
+#undef INFO
+#undef WARNING
+#undef ERROR
+#undef FATAL
+#endif
+
+const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
+
 // Mock up glog...
 namespace google
 {
@@ -57,23 +67,30 @@ namespace google
 
     class LogMessageVoidify {
     public:
-        LogMessageVoidify() { }
+        LogMessageVoidify(const int & logLevel) 
+        {
+            LogLevel = logLevel;
+        }
+        
+        ~LogMessageVoidify()
+        {
+            if (LogLevel >= FATAL)
+            {
+                exit(1);
+            }
+        }
+        
         // This has to be an operator with a precedence lower than << but
         // higher than ?:
         void operator&(std::ostream& x ) { x << std::endl; }
+        
+    private:
+        int LogLevel;
     };
 }
 
-#ifdef WIN32
-#undef INFO
-#undef WARNING
-#undef ERROR
-#undef FATAL
-#endif
-
-const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
 #define VLOG(x) LOG(-x)
-#define LOG(x) x < google::log_level ? (void) 0 : google::LogMessageVoidify() & std::cerr
+#define LOG(x) x < google::log_level ? (void) 0 : google::LogMessageVoidify(x) & std::cerr
 
 #endif
 
