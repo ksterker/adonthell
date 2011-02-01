@@ -32,6 +32,7 @@
 
 #include "base/base.h"
 #include "base/diskwriter_xml.h"
+#include "base/logging.h"
 
 using base::disk_writer_xml;
 using base::flat;
@@ -112,14 +113,14 @@ static u_int32 string_to_uint (const char* value, const u_int32 & max)
         // in range?
         if (intval > max)
         {
-            fprintf(stderr, "*** string_to_uint: integer overflow: value '%i' > max '%i'!\n", intval, max);
+            LOG(ERROR) << "*** string_to_uint: integer overflow: value '" << intval << "' > max '" << max << "'!";
             return max;
         }
     }
     else 
     {
         // value is not an integer
-        fprintf (stderr, "*** string_to_uint: Can't convert '%s' to unsigned integer!\n", value);
+        LOG(ERROR) << "*** string_to_uint: Can't convert '" << value << "' to unsigned integer!";
         return 0;
     }    
     
@@ -138,20 +139,20 @@ static s_int32 string_to_sint (const char* value, const s_int32 & min, const s_i
         // in range?
         if (intval < min)
         {
-            fprintf(stderr, "*** string_to_sint: integer underflow: value '%i' < min '%i'!\n", intval, min);
+            LOG(ERROR) << "*** string_to_sint: integer underflow: value '" << intval << "' < min '" << min << "'!";
             return min;
         }
         
         if (intval > max)
         {
-            fprintf(stderr, "*** string_to_sint: integer overflow: value '%i' > max '%i'!\n", intval, max);
+            LOG(ERROR) << "*** string_to_sint: integer overflow: value '" << intval << "' > max '" << max << "'!";
             return max;
         }
     }
     else 
     {
         // value is not an integer
-        fprintf (stderr, "*** string_to_sint: Can't convert '%s' to signed integer!\n", value);
+        LOG(ERROR) << "*** string_to_sint: Can't convert '" << value << "' to signed integer!";
         return -1;
     }    
     
@@ -241,7 +242,7 @@ static void param_to_value (const data_sax_context *context)
         }
         default:
         {
-            fprintf (stderr, "*** param_to_value: invalid type for value '%s'!\n", value);				
+            LOG(ERROR) << "*** param_to_value: invalid type for value '" << value << "'!";				
             break;
         }
     }
@@ -292,7 +293,7 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
             }
             else
             {
-                fprintf (stderr, "*** data_start_element: expected <" XML_ROOT_NODE ">, but got <%s>!\n", (char*) name);
+                LOG(ERROR) << "*** data_start_element: expected <" XML_ROOT_NODE ">, but got <" << (char*) name << ">!";
             }
             break;
         }
@@ -356,7 +357,7 @@ static void data_start_element (void *ctx, const xmlChar *name, const xmlChar **
         // error
         default:
         {
-            fprintf (stderr, "*** data_start_element: entering <%s> with invalid state!\n", (char*) name);
+            LOG(ERROR) << "*** data_start_element: entering <" << (char*) name << "> with invalid state!";
             break;
         }
     }
@@ -409,7 +410,7 @@ static void data_end_element (void *ctx, const xmlChar *name)
         // error
         default:
         {
-            fprintf (stderr, "*** data_end_element: leaving </%s> with invalid state!\n", (char*) name);
+            LOG(ERROR) << "*** data_end_element: leaving </" << (char*) name << "> with invalid state!";
             break;
         }
     }
@@ -444,10 +445,12 @@ static void data_read_characters (void *ctx, const xmlChar *content, int len)
 static void data_parse_error (void *ctx, const char *msg, ...)
 {
     va_list args;
-    fprintf (stderr, "*** data_reader: ");
+    char buf[1024];
     va_start (args, msg);
-    vfprintf (stderr, msg, args);
+    vsprintf (buf, msg, args);
     va_end (args);
+    
+    LOG(ERROR) << "*** data_reader: " << buf;
 }
 
 /**
@@ -522,7 +525,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     std::string file = name;
     if (!base::Paths.find_in_path (file))
     {
-        fprintf (stderr, "*** disk_writer_xml::get_state: cannot open '%s' for reading!\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_xml::get_state: cannot open '" << name << "' for reading!";
         return false; 
     }
     
@@ -535,7 +538,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     // read data
 	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, file.c_str ()) != 0)
     {
-        fprintf (stderr, "*** disk_writer_xml::get_state: errors while parsing '%s'!\n", name.c_str ());
+        LOG(ERROR) << "*** disk_writer_xml::get_state: errors while parsing '" << name << "'!";
         return false;
     }
     
@@ -547,7 +550,8 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     checksum << (std::hex) << data.checksum ();
     if (checksum.str () != ctx.Checksum)
     {
-        fprintf (stderr, "*** disk_writer_xml::get_state: checksum mismatch in file '%s'.\n    Data might be corrupt.\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_xml::get_state: checksum mismatch in file '" << name << "'.";
+        LOG(ERROR) << "    Data might be corrupt.";
         return false;
     }
     */
@@ -689,7 +693,7 @@ xmlChar *disk_writer_xml::value_to_xmlChar (const flat::data_type & type, void *
 		// we should never get there
 		default:
 		{
-			fprintf (stderr, "*** diskwriter_xml::value_to_xmlChar: cannot convert '%s'\n", flat::name_for_type (type));
+			LOG(ERROR) << "*** diskwriter_xml::value_to_xmlChar: cannot convert '" << flat::name_for_type (type) << "'.";
 			break;
 		}
 	}

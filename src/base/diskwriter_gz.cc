@@ -30,6 +30,7 @@
 #include "base/base.h"
 #include "base/file.h"
 #include "base/diskwriter_gz.h"
+#include "base/logging.h"
 
 using base::disk_writer_gz;
 
@@ -40,7 +41,7 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
     base::ogzstream out (name);
     if (!out.is_open ())
     {
-        fprintf (stderr, "*** disk_writer_gz::put_state: cannot open '%s' for writing!\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_gz::put_state: cannot open '" << name << "' for writing!";
         return false; 
     }
     
@@ -72,13 +73,13 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // open file
     if (!base::Paths.open (in, name))
     {
-        fprintf (stderr, "*** disk_writer_gz::get_state: cannot open '%s' for reading!\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_gz::get_state: cannot open '" << name << "' for reading!";
         return false; 
     }
     
     // does file contain data
     if (in.eof ()) {
-        fprintf (stderr, "*** disk_writer_gz::get_state: file '%s' is empty!\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_gz::get_state: file '" << name << "' is empty!";
         return false;
     }
     
@@ -88,7 +89,7 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // check for correct format
     if (byte_order != 'L' && byte_order != 'B')
     {
-        fprintf (stderr, "*** disk_writer_gz::get_state: unknown byte order '%c'!\n", byte_order);
+        LOG(ERROR) << "*** disk_writer_gz::get_state: unknown byte order '" << byte_order << "'!";
         return false;
     }
     
@@ -98,8 +99,7 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // create buffer for reading data
     char *buffer = new char[length];
     if (!buffer) {
-        fprintf (stderr, "*** disk_writer_gz::get_state: failed to allocate %i bytes. Giving up ...\n", length);
-        return false;
+        LOG(FATAL) << "*** disk_writer_gz::get_state: failed to allocate " << length << " bytes. Giving up ...";
     }
     
     // read data
@@ -111,7 +111,8 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     
     // validate checksum
     if (checksum != data.checksum ()) {
-        fprintf (stderr, "*** disk_writer_gz::get_state: checksum error in file '%s'.\n    Data might be corrupt.\n", name.c_str());
+        LOG(ERROR) << "*** disk_writer_gz::get_state: checksum error in file '" << name << "'.";
+        LOG(ERROR) << "    Data might be corrupt.";
         return false;
     }
     

@@ -64,7 +64,7 @@ namespace base
         ret = lt_dlopenext(mod_env.c_str());
         if (ret) return ret;
 
-        LOG(ERROR) << logging::indent() << "Failed to load module " << mod_env << ": " << lt_dlerror();
+        LOG(FATAL) << logging::indent() << "Failed to load module " << mod_env << ": " << lt_dlerror();
 
         return NULL;
     }
@@ -157,15 +157,27 @@ bool paths::open (igzstream & file, const std::string & path) const
     if (file.is_open ()) file.close ();
     
     // otherwise try to prepend any of the build-in search paths
-    if (IncludeSaveDir && file.open (SaveDataDir + path)) return true;
-    if (IncludeUserDir && file.open (UserDataDir + path)) return true;
-    if (file.open (GameDataDir + path)) return true;
-
+    if (IncludeSaveDir && file.open (SaveDataDir + path)) 
+    {
+        VLOG(2) << "Found '" << path << "' in " << SaveDataDir;
+        return true;
+    }
+    if (IncludeUserDir && file.open (UserDataDir + path))
+    {
+        VLOG(2) << "Found '" << path << "' in " << UserDataDir;
+        return true;
+    }
+    if (file.open (GameDataDir + path))
+    {
+        VLOG(2) << "Found '" << path << "' in " << GameDataDir;
+        return true;
+    }
+    
     // print search paths on failure
-    fprintf (stderr, "*** paths::open: file '%s' does not exist in search path:\n", path.c_str ());
-    if (IncludeSaveDir) fprintf (stderr, "  - %s\n", SaveDataDir.c_str ());
-    if (IncludeUserDir) fprintf (stderr, "  - %s\n", UserDataDir.c_str ());
-    fprintf (stderr, "  - %s\n", GameDataDir.c_str ());
+    LOG(ERROR) << "*** paths::open: file '" << path << "' does not exist in search path:";
+    if (IncludeSaveDir) LOG(ERROR) << "  - " << SaveDataDir;
+    if (IncludeUserDir) LOG(ERROR) << "  - " << UserDataDir;
+    LOG(ERROR) << "  - " << GameDataDir;
 
     return false;
 }
@@ -184,16 +196,19 @@ bool paths::find_in_path (std::string & path) const
     // try whether path exists in the search path
     if (IncludeSaveDir && stat ((SaveDataDir + path).c_str (), &statbuf) != -1)
     {
+        VLOG(2) << "Found '" << path << "' in " << SaveDataDir;
         path.insert (0, SaveDataDir);
         return true;
     }
     if (IncludeUserDir && stat ((UserDataDir + path).c_str (), &statbuf) != -1)
     {
+        VLOG(2) << "Found '" << path << "' in " << UserDataDir;
         path.insert (0, UserDataDir);
         return true;
     }
     if (stat ((GameDataDir + path).c_str (), &statbuf) != -1)
     {
+        VLOG(2) << "Found '" << path << "' in " << GameDataDir;
         path.insert (0, GameDataDir);
         return true;
     }
@@ -205,13 +220,13 @@ bool paths::find_in_path (std::string & path) const
     }
     
     // print search paths on failure
-    fprintf (stderr, "*** paths::find_in_path: file '%s' does not exist in search path:\n", path.c_str ());
-    if (IncludeSaveDir) fprintf (stderr, "  - %s\n", SaveDataDir.c_str ());
-    if (IncludeUserDir) fprintf (stderr, "  - %s\n", UserDataDir.c_str ());
-    fprintf (stderr, "  - %s\n", GameDataDir.c_str ());
+    LOG(ERROR) << "*** paths::find_in_path: file '" << path << "' does not exist in search path:";
+    if (IncludeSaveDir) LOG(ERROR) << "  - " << SaveDataDir;
+    if (IncludeUserDir) LOG(ERROR) << "  - " << UserDataDir;
+    LOG(ERROR) << "  - " << GameDataDir;
 
     char *cwd = getcwd (NULL, 0); 
-    fprintf (stderr, "  - %s\n", cwd);
+    LOG(ERROR) << "  - " << cwd;
     free (cwd);
               
     return false;
@@ -228,6 +243,6 @@ bool paths::exists (const std::string & path) const
     }
 
     // dir doesn't exist or not enough privileges ...
-    fprintf (stderr, "*** warning: directory '%s' cannot be accessed!\n", path.c_str ());
+    LOG(WARNING) << "*** paths::exists: directory '" << path << "' cannot be accessed!";
     return false;
 }

@@ -29,6 +29,7 @@
 #include <cstdio>
 #include "base/flat.h"
 #include "base/endians.h"
+#include "base/logging.h"
 
 #include <zlib.h>
 
@@ -149,8 +150,8 @@ flat::data* flat::get (const string & name, const data_type & type, const bool &
         if (result->Type == type) {
             return result;
         } else {
-            fprintf (stderr, "*** warning: flat::get: retrieving '%s' with wrong type:\n", result->Name);
-            fprintf (stderr, "    Expected type was '%s', got '%s' instead!\n", TypeName[type], TypeName[result->Type]);
+            LOG(WARNING) << "*** warning: flat::get: retrieving '" << result->Name << "' with wrong type:";
+            LOG(WARNING) << "    Expected type was '" << TypeName[type] << "', got '" << TypeName[result->Type] << "' instead!";
             return result;
         }
     }
@@ -158,7 +159,7 @@ flat::data* flat::get (const string & name, const data_type & type, const bool &
     // still not found -> panic
     if (!optional)
     {
-        fprintf (stderr, "*** error: flat::get: parameter '%s' not available\n", name.c_str ());
+        LOG(WARNING) << "*** warning: flat::get: parameter '" << name << "' not available";
         Success = false;
     }
     
@@ -281,8 +282,7 @@ void flat::grow ()
     char *tmp = new char[Capacity];
     
     if (tmp == NULL) {
-        fprintf (stderr, "*** flat::grow: failed to allocate %i more bytes. Giving up ...\n", Capacity);
-        exit (1);
+        LOG(FATAL) << "*** flat::grow: failed to allocate " << Capacity << " more bytes. Giving up ...";
     }
     
     memcpy (tmp, Buffer, Size);
