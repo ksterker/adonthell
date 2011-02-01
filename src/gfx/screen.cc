@@ -47,7 +47,6 @@ namespace gfx
     u_int16 screen::length_ = 0, screen::height_ = 0;
     u_int8 screen::bytes_per_pixel_;
     bool screen::fullscreen_;
-    u_int8 screen::Scale = 1;
     surface *screen::ShadowSurface;
     
     void (*screen::get_video_mode_p) (u_int16 *l, u_int16 *h, u_int8 *depth) = NULL;
@@ -69,7 +68,7 @@ namespace gfx
         opt = cfg.option ("Video", "Scale", base::cfg_option::UNDEF);
         if (opt != NULL)
         {
-        	Scale = cfg.get_int ("Video", "Scale", 1);
+        	base::Scale = cfg.get_int ("Video", "Scale", 1);
         }
 
         opt = cfg.option ("Video", "Width", base::cfg_option::UNDEF);
@@ -92,8 +91,8 @@ namespace gfx
     	if (length_ != 0 && height_ != 0)
     	{
         	// configuration override
-    		length = length_ * Scale;
-    		height = height_ * Scale;
+    		length = length_ * base::Scale;
+    		height = height_ * base::Scale;
     	}
     	else if (is_fullscreen())
     	{
@@ -106,13 +105,12 @@ namespace gfx
 
     			if (length_ < min_x && height_ < min_y)
     			{
-    				LOG(ERROR) << "*** error: Failed setting a valid video mode. Please configure your own!";
-    				return false;
+    				LOG(FATAL) << "*** error: Failed setting a valid video mode. Please configure your own!";
     			}
 
     			if (length_ <= max_x && height_ <= max_y)
     			{
-    				Scale = i;
+    				base::Scale = i;
     				break;
     			}
     		}
@@ -123,17 +121,16 @@ namespace gfx
     		length_ = max_x;
     		height_ = max_y;
 
-    		length = length_ * Scale;
-    		height = height_ * Scale;
+    		length = length_ * base::Scale;
+    		height = height_ * base::Scale;
     	}
 
     	if (!set_video_mode_p (length, height, bytes_per_pixel_*8))
     	{
-			LOG(ERROR) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
-			return false;
+			LOG(FATAL) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
     	}
 
-		if (Scale > 1)
+		if (base::Scale > 1)
 		{
 			ShadowSurface = gfx::create_surface();
 			ShadowSurface->set_alpha(255, 0);

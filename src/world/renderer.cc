@@ -300,9 +300,9 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
         {
             case 0:
             {                
-                fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
-                fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
-                fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
+                // fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
+                // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
+                // fprintf (stderr, "    (%i, %i, %i) - (%i, %i, %i)\n", obj.x(), obj.y(), obj.z(), obj.x() + obj.Shape->length(), obj.y() + obj.Shape->width(), obj.z() + obj.Shape->height());
 
                 // FIXME: this is a bad guess
                 return obj2.Shape->is_flat();

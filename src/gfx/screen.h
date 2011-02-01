@@ -32,6 +32,7 @@
 #define SCREEN_H_
 
 #include "gfx/surface.h"
+#include "base/base.h"
 #include "base/configuration.h"
 
 namespace gfx
@@ -66,7 +67,7 @@ namespace gfx
     	 *
          * @return true on success, false otherwise.
     	 */
-        static bool set_native_mode (const u_int16 & min_x = 512, const u_int16 & max_x = 640, const u_int16 & min_y = 360, const u_int16 & max_y = 512);
+        static bool set_native_mode (const u_int16 & min_x = 512, const u_int16 & max_x = 720, const u_int16 & min_y = 360, const u_int16 & max_y = 512);
 
         /**
          * Sets the video mode to the given resolution and depth.
@@ -111,7 +112,7 @@ namespace gfx
          */
         static u_int8 scale ()
         {
-        	return Scale;
+        	return base::Scale;
         }
 
         /** 
@@ -120,9 +121,9 @@ namespace gfx
          */ 
         static void update ()
         {
-        	if (Scale > 1)
+        	if (base::Scale > 1)
         	{
-        		ShadowSurface->scale (get_surface_p(), Scale);
+        		ShadowSurface->scale (get_surface_p(), base::Scale);
         	}
         	update_p();
         }
@@ -145,7 +146,7 @@ namespace gfx
          */
         static surface * get_surface()
         {
-        	if (Scale > 1) return ShadowSurface;
+        	if (base::Scale > 1) return ShadowSurface;
         	return get_surface_p();
         }
 
@@ -165,7 +166,7 @@ namespace gfx
          */
         static void clear()
         {
-        	if (Scale > 1) ShadowSurface->fillrect(0, 0, length_, height_, 0);
+        	if (base::Scale > 1) ShadowSurface->fillrect(0, 0, length_, height_, 0);
         	clear_p();
         }
         
@@ -215,8 +216,6 @@ namespace gfx
         /// color depth
         static u_int8 bytes_per_pixel_; 
 
-        /// scale mode if scaling is active
-        static u_int8 Scale;
         /// surface to draw on when scaling is active
         static surface *ShadowSurface;
         

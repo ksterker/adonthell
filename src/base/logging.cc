@@ -29,6 +29,11 @@
 
 #include <string>
 
+namespace google
+{
+    int log_level = 3;
+}
+
 /**
  * Log indent level
  *

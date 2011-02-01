@@ -29,6 +29,8 @@
  */
 
 
+#include <cmath>
+#include "base/base.h"
 #include "input/mouse_event.h"
 
 namespace input
@@ -48,8 +50,8 @@ namespace input
     {
         Type = t;
         Button = b;
-        X = xpos;
-        Y = ypos;
+        X = floor (xpos / (double) base::Scale);
+        Y = floor (ypos / (double) base::Scale);
     }
 
     const std::string & mouse_event::button_symbol() const

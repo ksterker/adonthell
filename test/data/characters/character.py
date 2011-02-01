@@ -17,7 +17,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from adonthell import input, gui
+from adonthell import input, gui, gfx
 from schedules.char import actions
 
 class action_talk (object):
@@ -37,7 +37,7 @@ class action_talk (object):
         # -- look in the direction of the character that adressed us
         actions.face_character(self.other, self.initiator)
         # -- create conversation widget ...
-        self.dlg_wnd = gui.conversation (self.other.mind(), 600, 300, self.on_finished)
+        self.dlg_wnd = gui.conversation (self.other.mind(), gfx.screen.length()-40, 200, self.on_finished)
         # -- ... and add it to the gui manager
         gui.window_manager.add (20, 20, self.dlg_wnd)
 

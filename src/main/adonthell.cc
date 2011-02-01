@@ -56,6 +56,7 @@ app* app::theApp = NULL;
 // ctor
 app::app ()
 {
+    google::InstallFailureSignalHandler();
 	theApp = this;
 }
 

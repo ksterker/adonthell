@@ -284,7 +284,7 @@ bool placeable::load_model (base::flat & model)
         add_model (mdl);
     }
     
-    LOG(INFO) << ModelFile << ": " << EntireMaxSize << std::endl;
+    VLOG(1) << ModelFile << ": " << EntireMaxSize << std::endl;
 
     return model.success();
 }

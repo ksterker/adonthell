@@ -30,6 +30,7 @@
 
 #include <iostream>  // provide std::endl
 #include <string>
+#include <cstdlib>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -38,19 +39,6 @@
 #if HAVE_GLOG_H
 #include <glog/logging.h>
 #else
-// Mock up glog...
-namespace google
-{
-    inline void InitGoogleLogging(char *ignore) { }
-
-    class LogMessageVoidify {
-    public:
-        LogMessageVoidify() { }
-        // This has to be an operator with a precedence lower than << but
-        // higher than ?:
-        void operator&(std::ostream& x ) { x << std::endl; }
-    };
-}
 
 #ifdef WIN32
 #undef INFO
@@ -60,8 +48,49 @@ namespace google
 #endif
 
 const int INFO = 0, WARNING = 1, ERROR = 2, FATAL = 3;
-#define VLOG(x) LOG(x)
-#define LOG(x) x < ERROR ? (void) 0 : google::LogMessageVoidify() & std::cerr
+
+// Mock up glog...
+namespace google
+{
+    extern int log_level;
+
+    inline void InstallFailureSignalHandler() { }
+
+    inline void InitGoogleLogging(char *ignore)
+    {
+        const char * log_level_str = getenv("GLOG_minloglevel");
+        if (log_level_str != NULL)
+        {
+            log_level = atoi (log_level_str);
+        }
+    }
+
+    class LogMessageVoidify {
+    public:
+        LogMessageVoidify(const int & logLevel) 
+        {
+            LogLevel = logLevel;
+        }
+        
+        ~LogMessageVoidify()
+        {
+            if (LogLevel >= FATAL)
+            {
+                exit(1);
+            }
+        }
+        
+        // This has to be an operator with a precedence lower than << but
+        // higher than ?:
+        void operator&(std::ostream& x ) { x << std::endl; }
+        
+    private:
+        int LogLevel;
+    };
+}
+
+#define VLOG(x) LOG(-x)
+#define LOG(x) x < google::log_level ? (void) 0 : google::LogMessageVoidify(x) & std::cerr
 
 #endif
 
