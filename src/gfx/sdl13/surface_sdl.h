@@ -28,6 +28,24 @@
 
 namespace gfx
 {
+    class pixel_info
+    {
+    public:
+        pixel_info() : Pixels(NULL), Pitch(0), Format(0), BytesPerPixel(0), Rect(NULL)
+        { }
+
+        /// the pixel data of the locked Surface
+        void *Pixels;
+        /// the pitch of the locked Surface
+        int Pitch;
+        /// the format of the surface
+        u_int32 Format;
+        /// number of bytes used to represent the format
+        u_int32 BytesPerPixel;
+        /// rectangle used for locking
+        SDL_Rect* Rect;
+    };
+
     class surface_sdl : public surface_ext
     {
     public:
@@ -71,12 +89,15 @@ namespace gfx
                          u_int32 red_mask, u_int32 green_mask,
                          u_int32 blue_mask, u_int32 alpha_mask) const;
 
-        SDL_Surface *vis;
 
-        /// Data stored within 'vis', or NULL
-        void *vis_data; 
+        /// Create a software surface backed by the (streaming) texture data.
+        SDL_Surface *to_sw_surface() const;
 
-    private: 
+    private:
+        /// the surface
+        SDL_Texture *Surface;
+
+        pixel_info *Info;
 
         /// Has the mask setting changed?
         mutable bool mask_changed; 

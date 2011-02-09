@@ -56,24 +56,19 @@ void gfx_screen_get_video_mode(u_int16 *l, u_int16 *h, u_int8 *depth)
 
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
-    u_int32 SDL_flags = SDL_HWSURFACE | SDL_DOUBLEBUF;
-	if (gfx::screen::is_fullscreen()) SDL_flags |= SDL_FULLSCREEN;
+    u_int32 SDL_flags = SDL_WINDOW_SHOWN;
+	if (gfx::screen::is_fullscreen()) SDL_flags |= SDL_WINDOW_FULLSCREEN;
 
     if (!display->set_video_mode(nl, nh, depth, SDL_flags)) return false;
 
-    // Setting up the window title
-    SDL_WM_SetCaption ("Adonthell", NULL);
-
     // Setting up transparency color
-    trans_color = SDL_MapRGB (
-        display->get_vis()->format, gfx::screen::TRANS_RED, gfx::screen::TRANS_GREEN, gfx::screen::TRANS_BLUE);
-
+    trans_color = 0xFF00FF;
     return true;
 }
 
 void gfx_screen_update()
 {
-    SDL_Flip (display->get_vis());
+    SDL_RenderPresent(display->get_renderer());
 }
 
 u_int32 gfx_screen_trans_color()
@@ -83,7 +78,8 @@ u_int32 gfx_screen_trans_color()
 
 void gfx_screen_clear()
 {
-    SDL_FillRect(display->get_vis(), NULL, 0);
+    SDL_SetRenderDrawColor(display->get_renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(display->get_renderer());
 }
 
 gfx::surface * gfx_screen_get_surface()
@@ -93,27 +89,20 @@ gfx::surface * gfx_screen_get_surface()
 
 std::string gfx_screen_info()
 {
-    const SDL_VideoInfo * vi = SDL_GetVideoInfo ();
-    std::ostringstream temp; 
+    SDL_version version_info;
+    SDL_RendererInfo render_info;
+    std::ostringstream temp;
 
-    const int driver_name_length = 500;
-    char drv_name[driver_name_length];
-
+    SDL_GetVersion(&version_info);
+    SDL_GetRendererInfo(display->get_renderer(), &render_info);
     temp << "Video information: " << std::endl
-         << "Video driver used:                   " << SDL_VideoDriverName(drv_name, driver_name_length) << std::endl
-         << "Internal game depth:                 " << ((int) vi->vfmt->BitsPerPixel) << std::endl
-         << "Can create hardware surfaces:        " << (vi->hw_available ? "Yes" : "No") << std::endl
-         << "Window manager available:            " << (vi->wm_available ? "Yes" : "No") << std::endl
-         << "Hardware blits accelerated:          " << (vi->blit_hw ? "Yes" : "No") << std::endl
-         << "Colorkey hardware blits accelerated: " << (vi->blit_hw_CC ? "Yes" : "No") << std::endl
-         << "Alpha hardware blits accelerated:    " << (vi->blit_hw_A ? "Yes" : "No") << std::endl
-         << "Software blits accelerated:          " << (vi->blit_sw ? "Yes" : "No") << std::endl
-         << "Colorkey software blits accelerated: " << (vi->blit_sw_CC ? "Yes" : "No") << std::endl
-         << "Alpha software blits accelerated:    " << (vi->blit_sw_A ? "Yes" : "No") << std::endl
-         << "Color fill blits accelerated:        " << (vi->blit_fill ? "Yes" : "No") << std::endl
-         << "Total video memory available:        " << vi->video_mem << " Kb" << std::endl 
-         << "Fullscreen:                          " << (gfx::screen::is_fullscreen() ? "Yes" : "No") << std::endl
-         // << "Alpha value:                         " << ((int) vi->vfmt->alpha) << std::endl
+         << "Platform:          " << SDL_GetPlatform() << std::endl
+         << "Backend:           " << "SDL " <<(int) version_info.major << "." << (int) version_info.minor << "." << (int) version_info.patch << std::endl
+         << "Video driver used: " << SDL_GetCurrentVideoDriver() << std::endl
+         << "Renderer used:     " << render_info.name << std::endl
+         << "HW Accelerated:    " << ((render_info.flags & SDL_RENDERER_ACCELERATED) == SDL_RENDERER_ACCELERATED ? "Yes" : "No") << std::endl
+         << "Display Format:    " << SDL_GetPixelFormatName (display->format()) << std::endl
+         << "Fullscreen:        " << (gfx::screen::is_fullscreen() ? "Yes" : "No") << std::endl
          << std::ends;
 
     return temp.str ();

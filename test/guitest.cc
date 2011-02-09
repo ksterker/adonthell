@@ -53,7 +53,8 @@ class GuiTest : public adonthell::app {
     // Set us a nice window
 	gfx::screen::set_fullscreen(false);
     gfx::screen::set_video_mode(512,512);
-    
+    std::cout << gfx::screen::info ();
+
     // Create our input_listener and connect the callback
     // to handle keyboard events
     input::listener il;
@@ -122,7 +123,6 @@ class GuiTest : public adonthell::app {
 	gfx::surface * screen = gfx::screen::get_surface();
 	label_with_bg.set_color(screen->map_color(0xff,0,0,0xff));
 	b2.set_color(screen->map_color(0xff,0,0,0xff));
-	std::cout << gfx::screen::info ();
     string ls = "I am typing a very long string that will not fit all the way within the alloted space";
 
     ::gui::window_manager::add(0, 0, &widgets);

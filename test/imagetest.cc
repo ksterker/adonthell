@@ -68,13 +68,14 @@ public:
 
                     images[k]->draw (0, 0, NULL, tmp);
                     tmp->draw ((k+1)*80, (j+1)*80);
+                    // images[k]->draw ((k+1)*80, (j+1)*80);
                     delete tmp;
                 }
             }
             
             base::Timer.update (); 
 	        gfx::screen::update ();
-	        gfx::screen::clear (); 
+	        gfx::screen::clear ();
 	    }
 	    
 	    return 0;         
