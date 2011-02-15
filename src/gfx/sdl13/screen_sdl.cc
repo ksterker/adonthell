@@ -47,7 +47,7 @@ extern "C"
 void gfx_screen_get_video_mode(u_int16 *l, u_int16 *h, u_int8 *depth)
 {
 	SDL_DisplayMode mode;
-	SDL_GetDesktopDisplayMode (&mode);
+	SDL_GetDesktopDisplayMode (0, &mode);
 
 	*l = mode.w;
 	*h = mode.h;

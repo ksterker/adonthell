@@ -1,7 +1,6 @@
 /*
-   $Id: surface_sdl.cc,v 1.4 2009/05/05 18:30:21 ksterker Exp $
-
-   Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2011 Kai Sterker <kai.sterkerr@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -65,26 +64,27 @@ namespace gfx
         {
             SDL_SetTextureBlendMode(Surface, SDL_BLENDMODE_NONE);
         }
-        
+
         alpha_ = t;
         alpha_channel_ = alpha_channel;
     }
 
-    SDL_Surface *surface_sdl::to_sw_surface() const
+    SDL_Surface *surface_sdl::to_sw_surface(SDL_Rect *rect) const
     {
         int bpp;
         u_int32 rmask, gmask, bmask, amask;
 
-        lock();
+        lock(rect);
 
         SDL_PixelFormatEnumToMasks(Info->Format, &bpp, &rmask, &gmask, &bmask, &amask);
         SDL_Surface *s = SDL_CreateRGBSurfaceFrom(Info->Pixels, length(), height(),
-                bpp/8, Info->Pitch, rmask, gmask, bmask, amask);
+                bpp, Info->Pitch, rmask, gmask, bmask, amask);
 
         if (is_masked_) SDL_SetColorKey(s, SDL_SRCCOLORKEY, trans_color);
         if (alpha_channel_ || alpha_ != 255)
         {
-            SDL_SetSurfaceAlphaMod (s, alpha_);
+            if (!alpha_channel_) SDL_SetSurfaceAlphaMod (s, alpha_);
+            SDL_SetSurfaceBlendMode (s, SDL_BLENDMODE_BLEND);
         }
 
         return s;
@@ -99,17 +99,29 @@ namespace gfx
         if (!dstrect.w || !dstrect.h)
             return;
 
-        /*
-        TODO:
         if (mask_changed)
         {
             mask_changed = false;
+            /*
             if (is_masked ())
-                SDL_SetColorKey (vis, SDL_SRCCOLORKEY | SDL_RLEACCEL, trans_color);
-            else
-                SDL_SetColorKey (vis, 0, 0); 
+            {
+                SDL_Surface *s1 = to_sw_surface();
+                SDL_Texture *tmp = Surface;
+
+                Info->Format = SDL_PIXELFORMAT_ARGB8888;
+                ((surface_sdl*) this)->Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, length(), height());
+
+                SDL_Surface *s2 = to_sw_surface();
+                SDL_BlitSurface (s1, NULL, s2, NULL);
+
+                unlock();
+
+                SDL_FreeSurface(s1);
+                SDL_FreeSurface(s2);
+                SDL_DestroyTexture(tmp);
+            }
+            */
         }
-        */
 
         if (!target || target == display)
         {
@@ -125,8 +137,8 @@ namespace gfx
         else
         {
             // blit from one surface to another (--> needs to be in software)
-            SDL_Surface *source_surf = to_sw_surface();
-            SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface();
+            SDL_Surface *source_surf = to_sw_surface ();
+            SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface ();
 
             SDL_BlitSurface (source_surf, &srcrect, target_surf, &dstrect);
 
@@ -168,9 +180,7 @@ namespace gfx
         }
         else
         {
-            Info->Rect = &dstrect;
-            lock();
-            Info->Rect = NULL;
+            lock(&dstrect);
 
             u_int32 src[dstrect.w * dstrect.h];
             std::fill_n(src, dstrect.w * dstrect.h, col);
@@ -198,13 +208,13 @@ namespace gfx
         b = (col & 0x000000FF);
     }
 
-    void surface_sdl::lock () const
+    void surface_sdl::lock (SDL_Rect *rect) const
     {
         if (!length () || !height ()) return;
 
         if (this != display)
         {
-            SDL_LockTexture (Surface, Info->Rect, &Info->Pixels, &Info->Pitch);
+            SDL_LockTexture (Surface, rect, &Info->Pixels, &Info->Pitch);
             Info->BytesPerPixel = SDL_BYTESPERPIXEL(Info->Format);
         }
     }
@@ -227,6 +237,7 @@ namespace gfx
 
         if (this == display)
         {
+            SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
             SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
             SDL_RenderDrawPoint(display->get_renderer(), x, y);
             return;
@@ -244,9 +255,9 @@ namespace gfx
                 *(++offset) = b;
                 break;
 #ifdef __BIG_ENDIAN__
-           case SDL_PIXELFORMAT_BGR24:
-#else
            case SDL_PIXELFORMAT_RGB24:
+#else
+           case SDL_PIXELFORMAT_BGR24:
 #endif
                 *(offset) = r;
                 *(++offset) = g;
@@ -270,9 +281,9 @@ namespace gfx
                 *(++offset) = r;
                 break;
 #ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_RGB24:
-#else
             case SDL_PIXELFORMAT_BGR24:
+#else
+            case SDL_PIXELFORMAT_RGB24:
 #endif
                 *(offset) = b;
                 *(++offset) = g;
@@ -310,9 +321,9 @@ namespace gfx
                 b = *(++offset);
                 break;
 #ifdef __BIG_ENDIAN__
-           case SDL_PIXELFORMAT_BGR24:
+            case SDL_PIXELFORMAT_RGB24:
 #else
-           case SDL_PIXELFORMAT_RGB24:
+            case SDL_PIXELFORMAT_BGR24:
 #endif
                 r = *(offset);
                 g = *(++offset);
@@ -336,9 +347,9 @@ namespace gfx
                 r = *(++offset);
                 break;
 #ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_RGB24:
-#else
             case SDL_PIXELFORMAT_BGR24:
+#else
+            case SDL_PIXELFORMAT_RGB24:
 #endif
                 b = *(offset);
                 g = *(++offset);
@@ -421,7 +432,11 @@ namespace gfx
         // is screen surface initialized?
         if (display->get_renderer())
         {
-            Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : display->format();
+#ifdef __BIG_ENDIAN__
+            Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_RGB24;
+#else
+            Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
+#endif
             Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
         }
         else
@@ -454,22 +469,19 @@ namespace gfx
 
         alpha_channel_ = alpha_mask != 0;
 
-        Info->Format = SDL_MasksToPixelFormatEnum (bytes_per_pixel * 8, red_mask, green_mask, blue_mask, alpha_mask);
+#ifdef __BIG_ENDIAN__
+        Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_RGB24;
+#else
+        Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
+#endif
         Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
 
-        void *dst_pixels;
-        int dst_pitch;
-        SDL_LockTexture(Surface, NULL, &dst_pixels, &dst_pitch);
-        u_int8 *src = (u_int8*) data;
+        lock(NULL);
 
-        while (h-- > 0)
-        {
-            SDL_memcpy ((u_int8*) dst_pixels, src, bytes_per_pixel * l);
-            src = src + bytes_per_pixel * l;
-            dst_pixels = (u_int8*) dst_pixels + dst_pitch;
-        }
+        u_int32 format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_RGB24;
+        SDL_ConvertPixels (length(), height(), format, data, bytes_per_pixel * l, Info->Format, Info->Pixels, Info->Pitch);
 
-        SDL_UnlockTexture(Surface);
+        unlock();
 
         free (data);
     }
@@ -478,18 +490,15 @@ namespace gfx
                                   u_int32 red_mask, u_int32 green_mask,
                                   u_int32 blue_mask, u_int32 alpha_mask) const
     {
-        void *pixels;
-        int pitch;
+        lock(NULL);
 
-        SDL_LockTexture(Surface, NULL, &pixels, &pitch);
-
-        u_int32 dst_format = SDL_MasksToPixelFormatEnum(bytes_per_pixel*8, red_mask, green_mask, blue_mask, alpha_mask);
+        u_int32 dst_format = bytes_per_pixel == 4 ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
         void *dst_pixels = SDL_calloc (bytes_per_pixel, length() * height());
         int dst_pitch = length() * bytes_per_pixel;
 
         if (dst_format != Info->Format)
         {
-            SDL_ConvertPixels(length(), height(), Info->Format, pixels, pitch, dst_format, dst_pixels, dst_pitch);
+            SDL_ConvertPixels(length(), height(), Info->Format, Info->Pixels, Info->Pitch, dst_format, dst_pixels, dst_pitch);
         }
         else
         {
@@ -497,8 +506,8 @@ namespace gfx
              int h = height();
              while (h-- > 0)
              {
-                 SDL_memcpy (dest, (u_int8*) pixels, dst_pitch);
-                 pixels = (u_int8*) pixels + pitch;
+                 SDL_memcpy (dest, (u_int8*) Info->Pixels, dst_pitch);
+                 Info->Pixels = (u_int8*) Info->Pixels + Info->Pitch;
                  dest = dest + dst_pitch;
             }
         }

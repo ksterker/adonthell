@@ -31,7 +31,7 @@ namespace gfx
     class pixel_info
     {
     public:
-        pixel_info() : Pixels(NULL), Pitch(0), Format(0), BytesPerPixel(0), Rect(NULL)
+        pixel_info() : Pixels(NULL), Pitch(0), Format(0), BytesPerPixel(0)
         { }
 
         /// the pixel data of the locked Surface
@@ -42,8 +42,6 @@ namespace gfx
         u_int32 Format;
         /// number of bytes used to represent the format
         u_int32 BytesPerPixel;
-        /// rectangle used for locking
-        SDL_Rect* Rect;
     };
 
     class surface_sdl : public surface_ext
@@ -68,7 +66,7 @@ namespace gfx
 
         virtual u_int32 map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 255) const;
         virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const;
-        virtual void lock () const; 
+        virtual void lock () const { lock(NULL); };
         virtual void unlock () const;
         virtual void put_pix (u_int16 x, u_int16 y, u_int32 col); 
         virtual u_int32 get_pix (u_int16 x, u_int16 y) const; 
@@ -91,7 +89,9 @@ namespace gfx
 
 
         /// Create a software surface backed by the (streaming) texture data.
-        SDL_Surface *to_sw_surface() const;
+        SDL_Surface *to_sw_surface(SDL_Rect *rect = NULL) const;
+
+        void lock (SDL_Rect *rect) const;
 
     private:
         /// the surface
