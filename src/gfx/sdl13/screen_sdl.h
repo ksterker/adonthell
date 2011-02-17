@@ -43,6 +43,9 @@ namespace gfx
         {
             if (Renderer) SDL_DestroyRenderer(Renderer);
             if (Window) SDL_DestroyWindow(Window);
+
+            Renderer = NULL;
+            Window = NULL;
         }
 
         SDL_Renderer *get_renderer()

@@ -61,8 +61,16 @@ void surface_ext::mirror (bool x, bool y)
         u_int8 *rawdata = (u_int8 *)get_data(bpp, R_MASK, G_MASK, B_MASK, alpha_mask);
         for(int idx = 0; idx < height(); idx++)
             reverseArray(&rawdata[idx*length()*bpp], length()*bpp);
-        //This is swapped (BGR) because we swapped at a byte level, not at a pixel level
-        set_data(rawdata, length(), height(), bpp, B_MASK, G_MASK, R_MASK, alpha_mask);
+        if (bpp == 3)
+        {
+            // This is swapped (BGR) because we swapped at a byte level, not at a pixel level
+            set_data(rawdata, length(), height(), bpp, B_MASK, G_MASK, R_MASK, alpha_mask);
+        }
+        else
+        {
+            // This is swapped (BGRA) because we swapped at a byte level, not at a pixel level
+            set_data(rawdata, length(), height(), bpp, alpha_mask, B_MASK, G_MASK, R_MASK);
+        }
         is_mirrored_x_ = !is_mirrored_x_;
     }
     

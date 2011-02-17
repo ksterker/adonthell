@@ -47,10 +47,18 @@ public:
             images[i]->set_alpha (psa[i], ppa[i]);
             images[i]->resize (80, 80);
             images[i]->fillrect (0, 0, i%2?40:80, i%2?80:40, images[i]->map_color(col[i%3], col[(i+1)%3], col[(i+2)%3]));
+
+            images[i]->lock();
+            u_int8 r, g, b, a;
+            u_int32 color = images[i]->get_pix (0, 0);
+            images[i]->unmap_color(color, r, g, b, a);
+            printf ("Wrote: %3i, %3i, %3i\nRead:  %3i, %3i, %3i, %3i\n", col[i%3], col[(i+1)%3], col[(i+2)%3], r, g, b, a);
+            images[i]->unlock();
+
             images[i]->fillrect (i%2?40:0, i%2?0:40, i%2?40:80, i%2?80:40, images[i]->map_color(col[(i+2)%3], col[(i+1)%3], col[i%3], 0x88));
         }
         
-        for (int i = 0; i < 1000; i++)
+        for (int i = 0; i < 100; i++)
         {
             printf ("Iteration %i\n", i);
             for (int j = 0; j < 4; j++)

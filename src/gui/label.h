@@ -49,7 +49,7 @@ namespace gui
 		 * @param height the height of the label.
 		 */
 		label(const u_int16 & width, const u_int16 & height)
-		: widget (width, height), CenterX(false), CenterY(false), Multiline(false)
+		: widget (width, height), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false)
         { 
             Cache = new text_cache();
             Font = new font(); 
@@ -61,7 +61,7 @@ namespace gui
 		 * @param style the look of the label.
 		 */
 		label(const std::string & style)
-		: widget(style), CenterX(false), CenterY(false), Multiline(false)
+		: widget(style), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false)
         {
             Cache = new text_cache();
             Font = new font(); 

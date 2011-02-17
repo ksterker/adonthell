@@ -98,9 +98,8 @@ namespace gui
 		{
 			for (i = minx; i < maxx; i++)
 			{
-				union {
+				struct {
 					u_int8 b[4];
-					u_int32 c;
 				} p1, p2;
 				s->unmap_color(s->get_pix(x + i, y + j),p1.b[0], p1.b[1], p1.b[2], p1.b[3]);
 				s->unmap_color(color, p2.b[0],p2.b[1],p2.b[2],p2.b[3]);
