@@ -47,7 +47,6 @@ namespace gfx
     u_int16 screen::length_ = 0, screen::height_ = 0;
     u_int8 screen::bytes_per_pixel_;
     bool screen::fullscreen_;
-    surface *screen::ShadowSurface;
     
     void (*screen::get_video_mode_p) (u_int16 *l, u_int16 *h, u_int8 *depth) = NULL;
     bool (*screen::set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth) = NULL;
@@ -129,13 +128,6 @@ namespace gfx
     	{
 			LOG(FATAL) << "*** error: Failed setting video mode to " << length << " x " << height << " @ " << (int) bytes_per_pixel_*8 << " bpp!";
     	}
-
-		if (base::Scale > 1)
-		{
-			ShadowSurface = gfx::create_surface();
-			ShadowSurface->set_alpha(255, 0);
-			ShadowSurface->resize (length_, height_);
-		}
 
     	LOG(ERROR) << "*** info: Set internal view to " << length_ << " x " << height_ << ".";
     	LOG(ERROR) << "*** info: Set display size to " << length << " x " << height << ".";

@@ -31,6 +31,7 @@
 #include <sstream> 
 #include "gfx/sdl/screen_sdl.h"
 
+/// color mask for transparency
 u_int32 trans_color = 0;
 
 extern "C"
@@ -59,6 +60,14 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 
     if (!display->set_video_mode(nl, nh, depth, SDL_flags)) return false;
 
+    // Create shadow surface if scaling is used
+    if (gfx::screen::scale() > 1)
+    {
+        shadow_surface = new gfx::surface_sdl();
+        shadow_surface->set_alpha(255, 0);
+        shadow_surface->resize (nl / gfx::screen::scale(), nh / gfx::screen::scale());
+    }
+
     // Setting up the window title
     SDL_WM_SetCaption ("Adonthell", NULL);
 
@@ -71,6 +80,11 @@ bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 
 void gfx_screen_update()
 {
+    if (shadow_surface)
+    {
+        shadow_surface->scale (display, base::Scale);
+    }
+
     SDL_Flip (display->get_vis());
 }
 
@@ -81,12 +95,13 @@ u_int32 gfx_screen_trans_color()
 
 void gfx_screen_clear()
 {
-    SDL_FillRect(display->get_vis(), NULL, 0);
+    if (shadow_surface) shadow_surface->fillrect(0, 0, shadow_surface->length(), shadow_surface->height(), 0);
+    else SDL_FillRect(display->get_vis(), NULL, 0);
 }
 
 gfx::surface * gfx_screen_get_surface()
 {
-    return display;
+    return shadow_surface ? shadow_surface : display;
 }
 
 std::string gfx_screen_info()

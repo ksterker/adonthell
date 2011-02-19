@@ -88,8 +88,6 @@ namespace gfx
             goto bigerror;
         }
 
-        screen::ShadowSurface = NULL;
-
         screen::get_video_mode_p = (void(*)(u_int16*, u_int16*, u_int8*)) lt_dlsym(dlhandle, "gfx_screen_get_video_mode");
         if (!screen::get_video_mode_p)
         {
@@ -176,9 +174,6 @@ namespace gfx
     {
     	delete surfaces;
         surfaces = NULL;
-
-        delete screen::ShadowSurface;
-        screen::ShadowSurface = NULL;
         
         if (gfxcleanup) gfxcleanup();
         gfxcleanup = NULL;

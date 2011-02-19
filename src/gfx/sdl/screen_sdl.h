@@ -50,4 +50,6 @@ namespace gfx
 
 extern gfx::screen_surface_sdl *display;
 
+extern gfx::surface_sdl *shadow_surface;
+
 #endif // GFX_SDL_SCREEN_H_

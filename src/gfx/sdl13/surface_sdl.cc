@@ -45,6 +45,12 @@ namespace gfx
 
     void surface_sdl::set_mask (bool m)
     {
+        // since SDL textures do not support masking, we need to
+        // convert the masked image into the appropriate RGBA
+        // representation. This behavior is different than the
+        // SDL 1.2 backend, but with the current usage of set_mask,
+        // we can get away by doing this here.
+
         if (!Surface)
         {
             LOG(FATAL) << "surface::set_mask called before creating surface!";
@@ -74,7 +80,6 @@ namespace gfx
             SDL_DestroyTexture(Surface);
 
             Surface = tmp;
-            is_masked_ = false;
             alpha_channel_ = true;
         }
     }
@@ -115,7 +120,7 @@ namespace gfx
 
         if (alpha_channel_ || alpha_ != 255)
         {
-            if (!alpha_channel_) SDL_SetSurfaceAlphaMod (s, alpha_);
+            if (!alpha_channel_ || is_masked_) SDL_SetSurfaceAlphaMod (s, alpha_);
             SDL_SetSurfaceBlendMode (s, SDL_BLENDMODE_BLEND);
         }
 
@@ -136,8 +141,16 @@ namespace gfx
             // blit to screen surface (--> hardware accelerated)
             if (alpha_channel_ || alpha_ != 255)
             {
-                if (!alpha_channel_) SDL_SetTextureAlphaMod(Surface, alpha_);
+                if (!alpha_channel_ || is_masked_) SDL_SetTextureAlphaMod(Surface, alpha_);
                 SDL_SetTextureBlendMode(Surface, SDL_BLENDMODE_BLEND);
+            }
+
+            if (base::Scale > 1)
+            {
+                dstrect.x *= base::Scale;
+                dstrect.y *= base::Scale;
+                dstrect.w *= base::Scale;
+                dstrect.h *= base::Scale;
             }
 
             SDL_RenderCopy (display->get_renderer(), Surface, &srcrect, &dstrect);
@@ -384,10 +397,48 @@ namespace gfx
 
     void surface_sdl::scale(surface *target, const u_int32 & factor) const
     {
+        // scaling of the final result is handled in surface_sdl::draw
+        if (!target || target == display) return;
+
     	if (length() * factor > target->length() ||
     		height() * factor > target->height())
     		return;
-    	// TODO
+
+    	lock(NULL);
+        SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface ();
+
+        u_int8 *target_data = (u_int8*) target_surf->pixels;
+        s_int32 target_line_length = target_surf->format->BytesPerPixel * target->length();
+
+        for (s_int32 src_y = 0; src_y < height(); ++src_y)
+        {
+            s_int32 target_x = 0;
+            s_int32 target_x_end = 0;
+
+            // we scale one line horizontally
+            for (s_int32 src_x = 0; src_x < length(); ++src_x)
+            {
+                u_int32 px = get_pix (src_x, src_y);
+                for (target_x_end += factor; target_x < target_x_end; ++target_x)
+                {
+                    target->put_pix (target_x, src_y * factor, px);
+                }
+            }
+
+            // the next lines will be the same, so we just copy them
+            for (u_int32 i = 1; i < factor; i++)
+            {
+                u_int8 *target_next_line = target_data + target_surf->pitch;
+                memcpy (target_next_line, target_data, target_line_length);
+                target_data = target_next_line;
+            }
+
+            // goto next line
+            target_data += target_surf->pitch;
+        }
+
+        target->unlock();
+        SDL_FreeSurface(target_surf);
     }
 
     surface & surface_sdl::operator = (const surface& src)

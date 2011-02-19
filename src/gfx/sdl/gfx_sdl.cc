@@ -38,7 +38,11 @@ extern "C"
     gfx::surface * gfx_create_surface();
 }
 
+/// the screen surface
 gfx::screen_surface_sdl *display = NULL;
+
+/// surface to draw on when scaling is active
+gfx::surface_sdl *shadow_surface = NULL;
 
 bool gfx_init()
 {
@@ -55,6 +59,11 @@ bool gfx_init()
 void gfx_cleanup()
 {
     delete display;
+    delete shadow_surface;
+
+    display = NULL;
+    shadow_surface = NULL;
+
     //BUG  this function may cause problems because it will call destructors before python does.
     SDL_QuitSubSystem (SDL_INIT_VIDEO);
 }

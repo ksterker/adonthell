@@ -121,10 +121,6 @@ namespace gfx
          */ 
         static void update ()
         {
-        	if (base::Scale > 1)
-        	{
-        		ShadowSurface->scale (get_surface_p(), base::Scale);
-        	}
         	update_p();
         }
 
@@ -146,7 +142,6 @@ namespace gfx
          */
         static surface * get_surface()
         {
-        	if (base::Scale > 1) return ShadowSurface;
         	return get_surface_p();
         }
 
@@ -166,7 +161,6 @@ namespace gfx
          */
         static void clear()
         {
-        	if (base::Scale > 1) ShadowSurface->fillrect(0, 0, length_, height_, 0);
         	clear_p();
         }
         
@@ -216,9 +210,6 @@ namespace gfx
         /// color depth
         static u_int8 bytes_per_pixel_; 
 
-        /// surface to draw on when scaling is active
-        static surface *ShadowSurface;
-        
         static void (*get_video_mode_p) (u_int16 *l, u_int16 *h, u_int8 *depth);
         static bool (*set_video_mode_p) (u_int16 nl, u_int16 nh, u_int8 depth);
         static void (*update_p)();

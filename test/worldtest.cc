@@ -20,6 +20,8 @@
 
 // #define DEBUG_COLLISION 1
 
+#include <iomanip>
+
 #include "audio/sound.h"
 #include "base/base.h"
 #include "base/savegame.h"
@@ -188,8 +190,14 @@ public:
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
         LOG(INFO) << "  done!";
         
+        u_int32 totalFrames = 0;
+        u_int32 totalTime = 0;
+        u_int32 currentTime;
+
 	    while (IsRunning)
     	{
+	        currentTime = base::Timer.current_time();
+
         	u_int16 i;
 
         	// FIXME frames_missed is probably not what we want here
@@ -241,10 +249,15 @@ public:
             mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
             // mchar->add_direction(gc.mchar->NORTH);
 #endif
-	        base::Timer.update ();
+
             gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear ();
+
+            totalTime += base::Timer.current_time() - currentTime;
+            totalFrames++;
+
+	        base::Timer.update ();
 	    } // while (main loop)
 
         // gc.world.save ("test-world-new.xml");
@@ -257,6 +270,9 @@ public:
         rpg::faction::cleanup();
         LOG(INFO) << "  done!";
         
+        LOG(ERROR) << "Rendered " << totalFrames << " frames in " << totalTime << " ms.";
+        LOG(ERROR) << "Average time required per frame is " << std::setprecision(4) << (double) totalTime / totalFrames  << " ms.";
+
 	    return 0;
 	}
 };
