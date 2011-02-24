@@ -66,8 +66,10 @@ public:
     
     /**
      * Clear shadow object for rendering next frame.
+     * @param ox projected x position offset at end of move.
+     * @param ox projected y position offset at end of move.
      */
-    void reset ();
+    void reset (const s_int16 & ox = 0, const s_int16 & oy = 0);
     
     /**
      * Update offset of shadow.

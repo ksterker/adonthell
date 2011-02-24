@@ -44,12 +44,14 @@ static world::debug_renderer DEBUG_RENDERER;
 class game_client
 {
 public:
+    bool delay;
     bool draw_grid;
 	bool screenshot;
     bool draw_bounding_box;
     
     game_client()
     {
+        delay = false;
         draw_grid = false;
         screenshot = false;
         draw_bounding_box = false;
@@ -93,7 +95,8 @@ public:
             // render tile after tile
             if (kev->key() == input::keyboard_event::D_KEY)
             {
-            	DEBUG_RENDERER.set_delay (150);
+                delay = !delay;
+            	DEBUG_RENDERER.set_delay (delay ? 150 : 0);
             }
             // save snapshot
             if (kev->key() == input::keyboard_event::S_KEY)
@@ -211,7 +214,7 @@ public:
             // whether to draw bbox or not
             world::mapview *mv = world::area_manager::get_mapview();
             
-            if (gc.draw_bounding_box)
+            if (gc.draw_bounding_box || gc.delay)
             {
                 mv->set_renderer(&DEBUG_RENDERER);
             }
@@ -225,7 +228,6 @@ public:
 
             // stop printing queue contents
             DEBUG_RENDERER.print_queue (false);
-            DEBUG_RENDERER.set_delay (0);
 
             // whether to render grid
 	        if (gc.draw_grid)

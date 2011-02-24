@@ -53,19 +53,22 @@ shadow::~shadow ()
 }
 
 // cleanup at the beginning of each frame
-void shadow::reset ()
+void shadow::reset (const s_int16 & ox, const s_int16 & oy)
 {
     // prepare shadow for next frame
     Remaining.clear();
     drawing_area area (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow->length(), Shadow->height());
-    Remaining.push_back (area);
-    
+
     // clean tiles with shadow on them
-    for (std::vector<chunk_info*>::iterator i = TilesWithShadow.begin(); i != TilesWithShadow.end(); i++)
+    for (std::vector<chunk_info*>::const_iterator i = TilesWithShadow.begin(); i != TilesWithShadow.end(); i++)
     {
         (*i)->remove_shadow(area.x(), area.y());
     }
     TilesWithShadow.clear();
+
+    // adjust area to projected object position at end of frame
+    area.move (area.x() + ox, area.y() + oy);
+    Remaining.push_back (area);
 }
 
 // cast shadow on a "floor" object
@@ -82,48 +85,60 @@ void shadow::cast_on (chunk_info* ci)
         if (object->type() != world::OBJECT) return;
         
         // distance between object and its shadow
-        u_int32 distance = Pos->z() - ci->Max.z() + object->cur_z();
-        
-        // floor surface area
-        drawing_area obj_surface (ci->Min.x() + object->cur_x(),
-                                  ci->Min.y() + object->cur_y(),
-                                  object->length(), object->width());
-        
-        // data for rendering shadow later on
-        shadow_info si (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow, distance);
+        s_int32 distance = Pos->z() - ci->solid_max().z();
+        VLOG(3) << "Total distance " << distance;
 
-        // check remaining shadow areas for overlap with floor ...
-        for (shadow::parts::iterator area = Remaining.begin(); area != Remaining.end(); /* nothing */)
+        for (placeable::iterator i = object->begin(); i != object->end(); i++)
         {
-            bool no_overlap = 
-                    area->x() >= obj_surface.x() + obj_surface.length() ||
-                    area->y() >= obj_surface.y() + obj_surface.height() ||
-                    area->x() + area->length() <= obj_surface.x() ||
-                    area->y() + area->height() <= obj_surface.y();
+            const world::placeable_shape *shape = (*i)->current_shape();
+            if (!shape || !shape->is_solid()) continue;
 
-            if (no_overlap)
-            {
-                area++;
-            }
-            else
-            {
-                // store area for later rendering
-                area->assign_drawing_area (&obj_surface);
-                si.Area.push_back (area->setup_rects());
-                
-                // remove overlapping area from shadow
-                subtract_area (*area, obj_surface);
-                area = Remaining.erase (area);
-            }
-        }
+            s_int32 shape_distance = Pos->z() - ci->center_min().z() - shape->z() - shape->height();
+            VLOG(3) << "Shape distance " << shape_distance;
+
+            if (shape_distance < 0) continue;
+
+            // data for rendering shadow later on
+            shadow_info si (Pos->x() + Offset.x(), Pos->y() + Offset.y(), Shadow, shape_distance);
+
+            // floor surface area
+            drawing_area obj_surface (ci->Min.x() + shape->x(),
+                                      ci->Min.y() + shape->y(),
+                                      shape->length(), shape->width());
         
-        // is shadow cast on floor at all?
-        if (si.Area.size() > 0)
-        {
-            // assign shadow to floor ...
-            ci->add_shadow (si);
-            // ... and remember for later cleanup
-            TilesWithShadow.push_back (ci);
+            // check remaining shadow areas for overlap with floor ...
+            for (shadow::parts::iterator area = Remaining.begin(); area != Remaining.end(); /* nothing */)
+            {
+                bool no_overlap =
+                        area->x() >= obj_surface.x() + obj_surface.length() ||
+                        area->y() >= obj_surface.y() + obj_surface.height() ||
+                        area->x() + area->length() <= obj_surface.x() ||
+                        area->y() + area->height() <= obj_surface.y();
+
+                if (no_overlap)
+                {
+                    area++;
+                }
+                else
+                {
+                    // store area for later rendering
+                    area->assign_drawing_area (&obj_surface);
+                    si.Area.push_back (area->setup_rects());
+
+                    // remove overlapping area from shadow
+                    subtract_area (*area, obj_surface);
+                    area = Remaining.erase (area);
+                }
+            }
+        
+            // is shadow cast on floor at all?
+            if (si.Area.size() > 0)
+            {
+                // assign shadow to floor ...
+                ci->add_shadow (*i, si);
+                // ... and remember for later cleanup
+                TilesWithShadow.push_back (ci);
+            }
         }
     }
 }

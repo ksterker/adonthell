@@ -32,6 +32,7 @@
 #ifndef WORLD_CHUNK_INFO_H
 #define WORLD_CHUNK_INFO_H
 
+#include "base/hash_map.h"
 #include "world/entity.h"
 #include "world/shadow_info.h"
 
@@ -179,13 +180,9 @@ namespace world
          * Add a shadow to this placeable.
          * @param shadow the shadow to add.
          */
-        void add_shadow ( const shadow_info & s) 
+        void add_shadow (placeable_model* model, const shadow_info & s)
         {
-            // cast shadow on scenery only
-            if (get_object()->type() == world::OBJECT)
-            {
-                Shadow.push_back (s); 
-            }
+            Shadow[model].push_back (s);
         }
         
         /**
@@ -195,12 +192,18 @@ namespace world
          */
         void remove_shadow (const s_int32 & x, const s_int32 & y) 
         { 
-            for (std::vector<shadow_info>::iterator shdw = Shadow.begin(); shdw != Shadow.end(); shdw++)
+            std::hash_map<placeable_model*, std::vector<shadow_info> >::iterator i;
+            std::vector<shadow_info>::iterator shdw;
+
+            for (i = Shadow.begin(); i != Shadow.end(); i++)
             {
-                if (shdw->X == x && shdw->Y == y)
+                for (shdw = i->second.begin(); shdw != i->second.end(); shdw++)
                 {
-                    Shadow.erase (shdw);
-                    return;
+                    if (shdw->X == x && shdw->Y == y)
+                    {
+                        i->second.erase (shdw);
+                        return;
+                    }
                 }
             }
         }
@@ -209,7 +212,10 @@ namespace world
          * Get pointer to all shadows cast on this placeable.
          * @return the vector of shadows.
          */
-        const std::vector<shadow_info> *get_shadow () const { return &Shadow; }
+        const std::vector<shadow_info> *get_shadow (placeable_model* model)
+        {
+            return &Shadow[model];
+        }
         //@}
         
         /// position of the object
@@ -244,7 +250,7 @@ namespace world
         /// location specific action
         action * Action;
         /// shadow cast on this object 
-        std::vector<shadow_info> Shadow;
+        std::hash_map<placeable_model*, std::vector<shadow_info> > Shadow;
         /// extend of the solid portion of the object
         vector3<s_int32> SolidMax;
     };

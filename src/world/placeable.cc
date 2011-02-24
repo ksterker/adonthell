@@ -28,11 +28,30 @@
 
 #include <algorithm>
 
-#include "placeable.h"
+#include "world/placeable.h"
+#include "world/placeable_shape.h"
 #include "world/area.h"
 #include "base/logging.h"
 
 using world::placeable;
+
+/// sort placeable_models according to the z-position of their surface
+struct z_order : public std::binary_function<const world::placeable_model*, const world::placeable_model*, bool>
+{
+    bool operator() (const world::placeable_model* a, const world::placeable_model* b)
+    {
+        world::placeable_shape *as = a->current_shape();
+        world::placeable_shape *bs = b->current_shape();
+
+        //Here we want to sort by the top of each shape.  However, if they have the same top,
+        //then we want the one with the highest bottom (which is the smallest height).  The reason
+        //for this is we have tiles and walls with the same height, but we want to prefer to draw on
+        //the tile if the player is standing on it.
+        s_int32 atop = as->get_max().z();
+        s_int32 btop = bs->get_max().z();
+        return (atop > btop) || (atop == btop && as->z () < bs->z ());
+    }
+};
 
 // ctor
 placeable::placeable(world::area & mymap) : SolidMaxSize(), Mymap(mymap)
@@ -123,6 +142,9 @@ void placeable::set_state (const std::string & state)
             EntireCurSize = entireMaxPos - EntireCurPos;
         }
     }
+
+    // resort models according to their z order
+    std:sort (Model.begin(), Model.end(), z_order());
 }
 
 // get z position of the object's surface
@@ -177,7 +199,7 @@ const std::string* placeable::get_terrain () const
 void placeable::add_model (world::placeable_model * model)
 {
     Model.push_back (model);
-    
+
     // update bounding box, using the extend of the largest shape
     for (placeable_model::iterator shape = model->begin(); shape != model->end(); shape++)
     {

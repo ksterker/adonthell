@@ -46,7 +46,7 @@ placeable_model::~placeable_model()
 }
 
 // get current shape
-placeable_shape * placeable_model::current_shape ()
+placeable_shape * placeable_model::current_shape () const
 {
     if (CurrentShape != Shapes.end ())
         return &(CurrentShape->second);

@@ -353,10 +353,6 @@ void moving::calculate_ground_pos ()
         // sort according to their z-Order
         ground_tiles.sort (z_order());
     
-        // center of character
-        s_int32 cx = x() + placeable::length()/2;
-        s_int32 cy = y() + placeable::width()/2;
-        
         // find object that will be our ground pos
         for (ci = ground_tiles.begin(); ci != ground_tiles.end(); ci++)
         {
@@ -364,8 +360,8 @@ void moving::calculate_ground_pos ()
             MyShadow->cast_on (*ci);
             
             // position of character relative to tile
-            s_int32 px = cx - (*ci)->center_min().x();
-            s_int32 py = cy - (*ci)->center_min().y();
+            s_int32 px = x() - (*ci)->center_min().x();
+            s_int32 py = y() - (*ci)->center_min().y();
             
             // is this really the object below character?
             if (px >= 0 && px <= (*ci)->get_object()->length() &&
@@ -410,7 +406,7 @@ bool moving::update ()
     if (vx() != 0.0f || vy() != 0.0f || vz() != 0.0f || GroundPos != Z)
     {
         // reset shadow for next frame
-        MyShadow->reset ();
+        MyShadow->reset (vx(), vy());
                 
         entity *myEntity = Mymap.remove (&e, *this);
         if (myEntity != NULL)

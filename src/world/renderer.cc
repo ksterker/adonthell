@@ -73,7 +73,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::
         
         for (placeable::iterator obj = object->begin(); obj != object->end(); obj++)
         {
-            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->center_min(), (*i)->get_shadow()));
+            render_queue.push_back (render_info ((*obj)->current_shape(), (*obj)->get_sprite(), (*i)->center_min(), (*i)->get_shadow(*obj)));
         }
     }
     
@@ -109,9 +109,10 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
         // should not happen, but does lead to a deadlock
         if (size == render_queue.size())
         {
-            fprintf (stderr, "*** warning: deadlock during rendering detected!\n");
+            LOG(ERROR) << "*** warning: deadlock during rendering detected!";
             for (iterator it = render_queue.begin(); it != render_queue.end(); it++)
-                fprintf (stderr, "  - (%i, %i, %i) - (%i, %i, %i)\n", it->x(), it->y(), it->z(), it->x() + it->Shape->length(), it->y() + it->Shape->width(), it->z() + it->Shape->height());
+                VLOG(3) << "  - (" << it->x() << ", " << it->y() << "," << it->z()
+                        << ") - (" << it->x() + it->Shape->length() << ", " <<  it->y() + it->Shape->width() << ", " << it->z() + it->Shape->height() << ")";
 
             //visualize_deadlock (render_queue);
             //exit(1);

@@ -90,7 +90,7 @@ namespace world
          * being played for this object.
          * @return current shape.
          */
-        world::placeable_shape * current_shape ();
+        world::placeable_shape * current_shape () const;
 
         /**
          * Get name of current shape.
@@ -156,17 +156,24 @@ namespace world
          * Defines the type of terrain this object represents
          */
         //@{
-
+        /**
+         * Get the terrain type represented by this object.
+         * Valid for ground tiles.
+         * @return terrain type.
+         */
         const std::string & terrain() const
         {
             return Terrain;
         }
 
+        /*
+         * Set the terrain type represented by this object.
+         * @param terrain terrain type.
+         */
         void set_terrain(const std::string & terrain)
         {
             Terrain = terrain;
         }
-
         //@}
 
         /**

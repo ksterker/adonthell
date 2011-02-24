@@ -50,7 +50,7 @@ public:
      * @param image graphical representation of shadow.
      * @param distance distance between object and its shadow.
      */
-    shadow_info (const s_int32 & x, const s_int32 & y, const gfx::surface *image, const u_int32 & distance)
+    shadow_info (const s_int32 & x, const s_int32 & y, const gfx::surface *image, const s_int32 & distance)
     {
         X = x;
         Y = y;
