@@ -1,7 +1,5 @@
 /*
- $Id: chunk_info.h,v 1.10 2009/04/26 18:52:59 ksterker Exp $
- 
- Copyright (C) 2008/2009 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2008/2009/2011 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -21,7 +19,7 @@
 
 /**
  * @file   world/chunk_info.h
- * @author Kai Sterker <kaisterker@linuxgames.com>
+ * @author Kai Sterker <kai.sterker@gmail.com>
  * 
  * @brief  Declares the chunk_info class.
  * 
@@ -177,45 +175,25 @@ namespace world
          */
         //@{
         /**
-         * Add a shadow to this placeable.
+         * Add a shadow to a part of this placeable.
+         * @param model part of the model on which the shadow is cast.
          * @param shadow the shadow to add.
          */
-        void add_shadow (placeable_model* model, const shadow_info & s)
-        {
-            Shadow[model].push_back (s);
-        }
+        void add_shadow (placeable_model* model, const shadow_info & s);
         
         /**
          * Remove shadow from the placeable.
          * @param x x-coordinate of shadow to remove.
          * @param y y-coordinate of shadow to remove.
          */
-        void remove_shadow (const s_int32 & x, const s_int32 & y) 
-        { 
-            std::hash_map<placeable_model*, std::vector<shadow_info> >::iterator i;
-            std::vector<shadow_info>::iterator shdw;
-
-            for (i = Shadow.begin(); i != Shadow.end(); i++)
-            {
-                for (shdw = i->second.begin(); shdw != i->second.end(); shdw++)
-                {
-                    if (shdw->X == x && shdw->Y == y)
-                    {
-                        i->second.erase (shdw);
-                        return;
-                    }
-                }
-            }
-        }
+        void remove_shadow (const s_int32 & x, const s_int32 & y);
         
         /**
          * Get pointer to all shadows cast on this placeable.
+         * @param model part of the placeable for which to return the shadows.
          * @return the vector of shadows.
          */
-        const std::vector<shadow_info> *get_shadow (placeable_model* model)
-        {
-            return &Shadow[model];
-        }
+        const std::vector<shadow_info> *get_shadow (placeable_model* model);
         //@}
         
         /// position of the object

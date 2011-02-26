@@ -7,6 +7,7 @@ set(adonthell_world_SRCS
     collision.cc
     cube3.cc
     chunk.cc
+    chunk_info.cc
     mapview.cc
     moving.cc
     object.cc

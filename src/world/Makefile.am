@@ -49,6 +49,7 @@ libadonthell_world_la_SOURCES = \
     area_manager.cc \
     character.cc \
     chunk.cc \
+    chunk_info.cc \
     collision.cc \
     cube3.cc \
     mapview.cc \
