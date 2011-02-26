@@ -57,20 +57,22 @@ void surface_ext::mirror (bool x, bool y)
     {
         u_int32 bpp = alpha_channel_ ? 4 : 3;
         u_int32 alpha_mask = alpha_channel_ ? A_MASK : 0;
-
         u_int8 *rawdata = (u_int8 *)get_data(bpp, R_MASK, G_MASK, B_MASK, alpha_mask);
+        
         for(int idx = 0; idx < height(); idx++)
             reverseArray(&rawdata[idx*length()*bpp], length()*bpp);
-        if (bpp == 3)
+        
+        if (!alpha_channel_)
         {
             // This is swapped (BGR) because we swapped at a byte level, not at a pixel level
-            set_data(rawdata, length(), height(), bpp, B_MASK, G_MASK, R_MASK, alpha_mask);
+            set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK, 0);
         }
         else
         {
             // This is swapped (BGRA) because we swapped at a byte level, not at a pixel level
-            set_data(rawdata, length(), height(), bpp, alpha_mask, B_MASK, G_MASK, R_MASK);
+            set_data(rawdata, length(), height(), 4, G_MASK, R_MASK, A_MASK, B_MASK);
         }
+        
         is_mirrored_x_ = !is_mirrored_x_;
     }
     
