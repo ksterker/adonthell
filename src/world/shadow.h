@@ -1,7 +1,5 @@
 /*
- $Id: shadow.h,v 1.5 2009/02/11 17:17:00 rians Exp $
- 
- Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
+ Copyright (C) 2009/2011 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -17,7 +15,7 @@
  You should have received a copy of the GNU General Public License
  along with Adonthell; if not, write to the Free Software 
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+*/
 
 /**
  * @file   world/shadow.h
@@ -63,13 +61,16 @@ public:
      * Destroy shadow object.
      */
     ~shadow ();
+
+    /**
+     * Initialize shadow at the beginning of a frame.
+     */
+    void init();
     
     /**
-     * Clear shadow object for rendering next frame.
-     * @param ox projected x position offset at end of move.
-     * @param ox projected y position offset at end of move.
+     * Clear shadow object before rendering next frame.
      */
-    void reset (const s_int16 & ox = 0, const s_int16 & oy = 0);
+    void reset ();
     
     /**
      * Update offset of shadow.

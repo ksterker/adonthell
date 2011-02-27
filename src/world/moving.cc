@@ -350,6 +350,9 @@ void moving::calculate_ground_pos ()
     
     if (!ground_tiles.empty ())
     {
+        // prepare shadow
+        MyShadow->init ();
+
         // sort according to their z-Order
         ground_tiles.sort (z_order());
     
@@ -406,7 +409,7 @@ bool moving::update ()
     if (vx() != 0.0f || vy() != 0.0f || vz() != 0.0f || GroundPos != Z)
     {
         // reset shadow for next frame
-        MyShadow->reset (vx(), vy());
+        MyShadow->reset ();
                 
         entity *myEntity = Mymap.remove (&e, *this);
         if (myEntity != NULL)
