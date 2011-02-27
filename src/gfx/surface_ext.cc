@@ -70,9 +70,13 @@ void surface_ext::mirror (bool x, bool y)
         else
         {
             // This is swapped (BGRA) because we swapped at a byte level, not at a pixel level
+#ifdef __BIG_ENDIAN__
             set_data(rawdata, length(), height(), 4, G_MASK, R_MASK, A_MASK, B_MASK);
+#else
+            set_data(rawdata, length(), height(), 4, A_MASK, B_MASK, G_MASK, R_MASK);
+#endif
         }
-        
+
         is_mirrored_x_ = !is_mirrored_x_;
     }
     
