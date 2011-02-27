@@ -145,7 +145,22 @@ namespace gfx
         {
             return m_valid;
         }
-        
+
+        /**
+         * Whether the current frame of the sprite is opaque or not.
+         * @return true if the frame is completely opaque, false otherwise.
+         */
+        bool is_opaque () const
+        {
+            if (m_valid)
+            {
+                const surface *s = (*m_surface)->image->s;
+                return !(s->is_masked() || s->has_alpha_channel() || s->alpha() != 255);
+            }
+
+            return false;
+        }
+
         /**
          * Update sprite. Called once per game cycle to advance the
          * current frame of the current sprite, if neccessary.

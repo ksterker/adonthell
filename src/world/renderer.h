@@ -136,9 +136,9 @@ protected:
      * @param obj object to check.
      * @param begin begin of list of objects to check against
      * @param end end of list of objects to check against
-     * @return true if overlap occurs, false otherwise.
+     * @return whether to draw, remove or skip object.
      */
-    bool can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const;
+    u_int32 can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const;
     
     /**
      * Check if obj1 is below obj2 in the view.

@@ -34,6 +34,7 @@
 #define DRAWING_AREA_H_
 
 #include <iostream>
+#include <list>
 #include "base/types.h"
 
 #include "python/callback_support.h"
@@ -213,22 +214,6 @@ namespace gfx
 
         
 #ifndef SWIG        
-        /*
-         * rect_compare (A, B) returns X??|Y??.
-         */
-#define XLL (5 << 3) /* Bx1 <  Bx2 <  Ax1               <  Ax2              */
-#define XLM (4 << 3) /*        Bx1 <= Ax1 <= Bx2        <  Ax2              */
-#define XLR (3 << 3) /*        Bx1 <= Ax1               <  Ax2 <= Bx2       */
-#define XMM (2 << 3) /*               Ax1 <  Bx1 <  Bx2 <  Ax2              */
-#define XMR (1 << 3) /*               Ax1 <  Bx1        <= Ax2 <= Bx2       */
-#define XRR (0 << 3) /*               Ax1               <  Ax2 <  Bx1 < Bx2 */
-#define YOO (5 << 0) /* By1 <  By2 <  Ay1               <  Ay2              */
-#define YOM (4 << 0) /*        By1 <= Ay1 <= By2        <  Ay2              */
-#define YOU (3 << 0) /*        By1 <= Ay1               <  Ay2 <= By2       */
-#define YMM (2 << 0) /*               Ay1 <  By1 <  By2 <  Ay2              */
-#define YMU (1 << 0) /*               Ay1 <  By1        <= Ay2 <= By2       */
-#define YUU (0 << 0) /*               Ay1               <  Ay2 <  By1 < By2 */
-        
         /**
          * Compare positions of two drawing areas in relation to each other.
          * @param the drawing_area to compare.
@@ -236,6 +221,22 @@ namespace gfx
          */
         int compare (const drawing_area & da) const;
         
+        /**
+         * Subtract this area from all the areas in the given list.
+         * The list will be updated with new pieces that might be
+         * created in the process.
+         * @param parts list of rectangles.
+         */
+        void subtract_from (std::list<drawing_area> & parts) const;
+
+        /**
+         * Remove area a from area b and update parts on the way.
+         * @param parts parts of a left after the subtraction
+         * @param a current area of shadow
+         * @param b area to remove from shadow
+         */
+        static void subtract_area (std::list<drawing_area> & parts, const drawing_area & a, const drawing_area & b);
+
         GET_TYPE_NAME_VIRTUAL(gfx::drawing_area)
 #endif // SWIG
     

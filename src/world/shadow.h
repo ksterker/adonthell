@@ -84,18 +84,10 @@ public:
      */
     void cast_on (chunk_info* ci);
     
-protected:
-    /**
-     * Remove area a from area b and update #Remaining on the way.
-     * @param a current area of shadow
-     * @param b area to remove from shadow
-     */
-    void subtract_area (const gfx::drawing_area & a, const gfx::drawing_area & b);
-
+private:
     /// a list of shadow pieces
     typedef std::list<gfx::drawing_area> parts;
     
-private:
     /// current position of shadow casting object
     const coordinates *Pos;
     /// offset of shadow casting object

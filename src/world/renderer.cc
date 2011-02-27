@@ -80,6 +80,10 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, const std::
     render (x, y, render_queue, da, target);
 }
 
+#define CAN_SKIP 0
+#define CAN_DRAW 1
+#define CAN_DROP 2
+
 // default rendering
 void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const
 {        
@@ -95,15 +99,24 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
             const_iterator end = render_queue.end();
 
             // an object can be drawn if it cannot possibly collide with another object in the queue
-            if (can_draw_object (*it, begin, end))
+            switch (can_draw_object (*it, begin, end))
             {
-                // draw and remove from queue
-                draw (x, y, *it, da, target);
-                it = render_queue.erase (it);
-                continue;
+                case CAN_DRAW:
+                {
+                    // draw and remove from queue
+                    draw (x, y, *it, da, target);
+                    /* fallthrough */
+                }
+                case CAN_DROP:
+                {
+                    it = render_queue.erase (it);
+                    break;
+                }
+                default:
+                {
+                    it++;
+                }
             }
-            
-            it++;
         }
    
         // should not happen, but does lead to a deadlock
@@ -124,8 +137,18 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
 }
 
 // check if object can be rendered
-bool default_renderer::can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const
+u_int32 default_renderer::can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const
 {
+    // assume there are no objects in the way, so we can draw
+    u_int32 result = CAN_DRAW;
+
+    // the parts of obj that are visible on screen
+    std::list<gfx::drawing_area> visible_area;
+
+    // initially, the whole object is visible
+    gfx::drawing_area va (obj.screen_x(), obj.screen_y(), obj.Sprite->length(), obj.Sprite->height());
+    visible_area.push_back (va);
+
     // compare given object with all objects remaining in the draw queue
     for (const_iterator it = begin; it != end; it++)
     {
@@ -142,11 +165,25 @@ bool default_renderer::can_draw_object (render_info & obj, const_iterator & begi
         // objects do overlap, so we need to figure out position of objects 
         // relative to each other
         if (is_object_below (*it, obj))
-            return false;
+        {
+            // at that point, there's at least one object in the way
+            result = CAN_SKIP;
+            continue;
+        }
+        else if (it->Sprite->is_opaque())
+        {
+            gfx::drawing_area obj_surface (it->screen_x(), it->screen_y(), it->Sprite->length(), it->Sprite->height());
+            obj_surface.subtract_from (visible_area);
+
+            if (visible_area.empty())
+            {
+                // we're completely hidden behind other objects
+                return CAN_DROP;
+            }
+        }
     }
     
-    // there are no objects in the way, so we can draw
-    return true;
+    return result;
 }
 
 #define YT 1
