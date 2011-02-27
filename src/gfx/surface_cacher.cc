@@ -88,8 +88,7 @@ namespace gfx
 		MemUsed += cur->size();
         
 		//Add it to the cache
-		surface_ref ret;
-		ret = surface_ref(cur);
+		surface_ref ret = surface_ref(cur);
 		ret.newref();
 		Cache[cache_name.str()] = ret;
 		SurfToString[cur] = cache_name.str();
