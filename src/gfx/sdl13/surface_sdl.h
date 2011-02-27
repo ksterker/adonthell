@@ -1,7 +1,6 @@
 /*
-   $Id: surface_sdl.h,v 1.2 2009/03/06 22:53:30 ksterker Exp $
-
-   Copyright (C) 2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 2011 Kai Sterker <kai.sterker@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -91,16 +90,18 @@ namespace gfx
         /// Create a software surface backed by the (streaming) texture data.
         SDL_Surface *to_sw_surface(SDL_Rect *rect = NULL) const;
 
+        /// lock part of the surface specified by rect
         void lock (SDL_Rect *rect) const;
 
     private:
         /// the surface
         SDL_Texture *Surface;
 
+        /// some meta-information about the surface
         pixel_info *Info;
 
         /// Has the mask setting changed?
-        mutable bool mask_changed; 
+        bool mask_changed; 
 
         /// SDL_Rects used in every blitting function.
         static SDL_Rect srcrect, dstrect; 

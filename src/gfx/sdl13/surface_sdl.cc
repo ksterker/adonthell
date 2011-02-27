@@ -59,7 +59,7 @@ namespace gfx
         if (m && m != is_masked ())
         {
             is_masked_ = true;
-
+       
             SDL_Surface *s1 = to_sw_surface();
             SDL_Surface *s2 = SDL_CreateRGBSurfaceFrom(NULL, length(), height(),
                             32, 0, R_MASK, G_MASK, B_MASK, A_MASK);
@@ -67,6 +67,8 @@ namespace gfx
             Info->Format = s2->format->format;
 
             SDL_Texture *tmp = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, length(), height());
+            if (!tmp) LOG(ERROR) << "*** surface_sdl::set_mask: " << SDL_GetError();
+
             SDL_LockTexture(tmp, NULL, &s2->pixels, &s2->pitch);
 
             SDL_SetSurfaceAlphaMod (s1, SDL_ALPHA_OPAQUE);
@@ -194,7 +196,6 @@ namespace gfx
             u_int8 r, g, b, a;
             unmap_color(col, r, g, b, a);
 
-            // SDL_BlendMode mode = a != SDL_ALPHA_OPAQUE ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE;
             SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
             SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
             SDL_RenderFillRect(display->get_renderer(), &dstrect);
@@ -254,10 +255,11 @@ namespace gfx
     void surface_sdl::put_pix (u_int16 x, u_int16 y, u_int32 col) 
     {
         u_int8 r, g, b, a;
-        unmap_color(col, r, g, b, a);
 
         if (this == display)
         {
+            unmap_color(col, r, g, b, a);
+            
             SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
             SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
             SDL_RenderDrawPoint(display->get_renderer(), x, y);
@@ -268,19 +270,36 @@ namespace gfx
 
         u_int8 *offset = ((Uint8 *) Info->Pixels) + y * Info->Pitch + x * Info->BytesPerPixel;
 
+        if (!alpha_channel_)
+        {
+            unmap_color(col, r, g, b, a);
+            
+            switch (Info->Format)
+            {
+                case SDL_PIXELFORMAT_RGB24:
+                    *(offset) = r;
+                    *(++offset) = g;
+                    *(++offset) = b;
+                    break;
+                case SDL_PIXELFORMAT_BGR24:
+                    *(offset) = b;
+                    *(++offset) = g;
+                    *(++offset) = r;
+                    break;
+            }
+            return;
+        }
+
+#ifdef __BIG_ENDIAN__
+        unmap_color(col, b, a, g, r);
+#else
+        unmap_color(col, r, g, b, a);
+#endif
+                
         switch (Info->Format)
         {
             case SDL_PIXELFORMAT_BGR888:
                 *(++offset) = r;
-                *(++offset) = g;
-                *(++offset) = b;
-                break;
-#ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_BGR24:
-#else
-            case SDL_PIXELFORMAT_RGB24:
-#endif
-                *(offset) = r;
                 *(++offset) = g;
                 *(++offset) = b;
                 break;
@@ -298,15 +317,6 @@ namespace gfx
                 break;
             case SDL_PIXELFORMAT_RGB888:
                 *(++offset) = b;
-                *(++offset) = g;
-                *(++offset) = r;
-                break;
-#ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_RGB24:
-#else
-            case SDL_PIXELFORMAT_BGR24:
-#endif
-                *(offset) = b;
                 *(++offset) = g;
                 *(++offset) = r;
                 break;
@@ -334,22 +344,32 @@ namespace gfx
         u_int8 r, g, b, a = SDL_ALPHA_OPAQUE;
         u_int8 *offset = ((Uint8 *) Info->Pixels) + y * Info->Pitch + x * Info->BytesPerPixel;
 
+        if (!alpha_channel_)
+        {
+            switch (Info->Format)
+            {
+                case SDL_PIXELFORMAT_RGB24:
+                    r = *(offset);
+                    g = *(++offset);
+                    b = *(++offset);
+                    break;
+                case SDL_PIXELFORMAT_BGR24:
+                    b = *(offset);
+                    g = *(++offset);
+                    r = *(++offset);
+                    break;
+            }
+            
+            return map_color (r, g, b, a);
+        }
+        
         switch (Info->Format)
         {
             case SDL_PIXELFORMAT_BGR888:
                 r = *(++offset);
                 g = *(++offset);
                 b = *(++offset);
-                break;
-#ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_BGR24:
-#else
-            case SDL_PIXELFORMAT_RGB24:
-#endif
-                r = *(offset);
-                g = *(++offset);
-                b = *(++offset);
-                break;
+                break;                
             case SDL_PIXELFORMAT_BGRA8888:
                 a = *(offset);
                 r = *(++offset);
@@ -364,15 +384,6 @@ namespace gfx
                 break;
             case SDL_PIXELFORMAT_RGB888:
                 b = *(++offset);
-                g = *(++offset);
-                r = *(++offset);
-                break;
-#ifdef __BIG_ENDIAN__
-            case SDL_PIXELFORMAT_RGB24:
-#else
-            case SDL_PIXELFORMAT_BGR24:
-#endif
-                b = *(offset);
                 g = *(++offset);
                 r = *(++offset);
                 break;
@@ -392,7 +403,11 @@ namespace gfx
                 LOG(FATAL) << "sdl::get_pix: Unsupported format " << SDL_GetPixelFormatName(Info->Format);
         }
 
+#ifdef __BIG_ENDIAN__
+        return map_color (g, r, a, b);
+#else
         return map_color (r, g, b, a);
+#endif
     }
 
     void surface_sdl::scale(surface *target, const u_int32 & factor) const
@@ -497,6 +512,7 @@ namespace gfx
             Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
 #endif
             Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
+            if (!Surface) LOG(ERROR) << "*** surface::resize: " << SDL_GetError();
         }
         else
         {
@@ -530,6 +546,7 @@ namespace gfx
 
         Info->Format = SDL_MasksToPixelFormatEnum (bytes_per_pixel * 8, red_mask, green_mask, blue_mask, alpha_mask);
         Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
+        if (!Surface) LOG(ERROR) << "*** surface_sdl::set_data: " << SDL_GetError();
 
         lock(NULL);
 
@@ -564,13 +581,13 @@ namespace gfx
         }
         else
         {
-             u_int8 *dest = (u_int8*) dst_pixels;
-             int h = height();
-             while (h-- > 0)
-             {
-                 SDL_memcpy (dest, (u_int8*) Info->Pixels, dst_pitch);
-                 Info->Pixels = (u_int8*) Info->Pixels + Info->Pitch;
-                 dest = dest + dst_pitch;
+            u_int8 *dest = (u_int8*) dst_pixels;
+            int h = height();
+            while (h-- > 0)
+            {
+                SDL_memcpy (dest, (u_int8*) Info->Pixels, Info->Pitch);
+                Info->Pixels = (u_int8*) Info->Pixels + Info->Pitch;
+                dest = dest + dst_pitch;
             }
         }
 
