@@ -93,7 +93,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
         int size = render_queue.size();
 
         // check each object if it can be drawn
-        for (iterator it = render_queue.begin(); it != render_queue.end(); /* nothing */)
+        for (reverse_iterator it = render_queue.rbegin(); it != render_queue.rend(); /* nothing */)
         {
             const_iterator begin = render_queue.begin();
             const_iterator end = render_queue.end();
@@ -109,7 +109,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
                 }
                 case CAN_DROP:
                 {
-                    it = render_queue.erase (it);
+                    render_queue.erase (--it.base());
                     break;
                 }
                 default:
@@ -154,7 +154,7 @@ u_int32 default_renderer::can_draw_object (render_info & obj, const_iterator & b
     {
         // ... but not with itself
         if (&(*it) == &obj) continue;
-        
+
         // if objects don't overlap, we're still good
         if (obj.min_x()  >= it->max_x()  ||
             obj.min_yz() >= it->max_yz() ||

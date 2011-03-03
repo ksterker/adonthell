@@ -128,6 +128,8 @@ public:
 protected:
     /// short for a render-queue-iterator
     typedef std::list <world::render_info>::iterator iterator;
+    /// short for a render-queue backwards iterator
+    typedef std::list <world::render_info>::reverse_iterator reverse_iterator;
     /// short for a const render-queue-iterator
     typedef std::list <world::render_info>::const_iterator const_iterator;
     
