@@ -60,9 +60,7 @@ namespace rpg
 
             for (; i != Terrain_Cost.end(); i++)
             {
-                if (&i != NULL) {
-                    printf("%s %d\n", (*i).first.c_str(),(*i).second);
-                }
+                printf("%s %d\n", (*i).first.c_str(),(*i).second);
             }
         }
     private:
@@ -184,11 +182,8 @@ namespace rpg
             std::vector<type_costs *>::const_iterator i = Costs.begin();
             ++i;
             for (; i != Costs.end(); i++) {
-                if (&i != NULL) {
-                    printf("In Vector: Type:%s\n", (*i)->get_type().c_str());
-                    (*i)->get_costs_hash()->show_all_data();
-                }
-
+                printf("In Vector: Type:%s\n", (*i)->get_type().c_str());
+                (*i)->get_costs_hash()->show_all_data();
             }
         }
     private:
