@@ -196,6 +196,14 @@ namespace gfx
             u_int8 r, g, b, a;
             unmap_color(col, r, g, b, a);
 
+            if (base::Scale > 1)
+            {
+                dstrect.x *= base::Scale;
+                dstrect.y *= base::Scale;
+                dstrect.w *= base::Scale;
+                dstrect.h *= base::Scale;
+            }
+
             SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
             SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
             SDL_RenderFillRect(display->get_renderer(), &dstrect);
@@ -260,6 +268,12 @@ namespace gfx
         {
             unmap_color(col, r, g, b, a);
             
+            if (base::Scale > 1)
+            {
+                fillrect(x, y, 1, 1, col);
+                return;
+            }
+
             SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
             SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
             SDL_RenderDrawPoint(display->get_renderer(), x, y);
