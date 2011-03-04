@@ -1,6 +1,4 @@
 /*
- $Id: surface_ext.h,v 1.1 2009/03/06 22:53:29 ksterker Exp $
- 
  Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -58,11 +56,6 @@ public:
     
     /**
      * Swaps the pixels to make a mirror image
-     *
-     * \bug Mirror does not yet work on surfaces with alpha channel! 
-     *      I.e. alpha channel information is lost on mirroring.
-     *
-     * \bug Mirroring in y direction not implemented yet.
      *
      * @param x  Invert x axis
      * @param y  Invert y axis

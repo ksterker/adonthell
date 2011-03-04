@@ -53,37 +53,61 @@ void reverseArray (type *orig, size_t len)
 
 void surface_ext::mirror (bool x, bool y)
 {
-    if (x)
+    if (x || y)
     {
         u_int32 bpp = alpha_channel_ ? 4 : 3;
         u_int32 alpha_mask = alpha_channel_ ? A_MASK : 0;
         u_int8 *rawdata = (u_int8 *)get_data(bpp, R_MASK, G_MASK, B_MASK, alpha_mask);
-        
-        for(int idx = 0; idx < height(); idx++)
-            reverseArray(&rawdata[idx*length()*bpp], length()*bpp);
-        
-        if (!alpha_channel_)
+        u_int32 pitch = length() * bpp;
+
+        if (x)
         {
-            // This is swapped (BGR) because we swapped at a byte level, not at a pixel level
-            set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK, 0);
+            for (int idx = 0; idx < height(); idx++)
+            {
+                reverseArray (&rawdata[idx*pitch], pitch);
+            }
+
+            is_mirrored_x_ = !is_mirrored_x_;
+        }
+        
+        if (y)
+        {
+            int half_height = height() / 2;
+            u_int8* tmp = (u_int8*) malloc (pitch);
+
+            for (int i = 0; i < half_height; i++)
+            {
+                memcpy (tmp, rawdata + pitch * i, pitch);
+                memcpy (rawdata + pitch * i, rawdata + pitch * (height() - i - 1), pitch);
+                memcpy (rawdata + pitch * (height() - i - 1), tmp, pitch);
+            }
+
+            free (tmp);
+            is_mirrored_y_ = !is_mirrored_y_;
+        }
+
+        if (x)
+        {
+            if (!alpha_channel_)
+            {
+                // This is swapped (BGR) because we swapped at a byte level, not at a pixel level
+                set_data(rawdata, length(), height(), 3, B_MASK, G_MASK, R_MASK, 0);
+            }
+            else
+            {
+                // This is swapped (BGRA) because we swapped at a byte level, not at a pixel level
+#ifdef __BIG_ENDIAN__
+                set_data(rawdata, length(), height(), 4, G_MASK, R_MASK, A_MASK, B_MASK);
+#else
+                set_data(rawdata, length(), height(), 4, A_MASK, B_MASK, G_MASK, R_MASK);
+#endif
+            }
         }
         else
         {
-            // This is swapped (BGRA) because we swapped at a byte level, not at a pixel level
-#ifdef __BIG_ENDIAN__
-            set_data(rawdata, length(), height(), 4, G_MASK, R_MASK, A_MASK, B_MASK);
-#else
-            set_data(rawdata, length(), height(), 4, A_MASK, B_MASK, G_MASK, R_MASK);
-#endif
+            // swapping in y only does not change the format
+            set_data (rawdata, length(), height(), bpp, R_MASK, G_MASK, B_MASK, alpha_mask);
         }
-
-        is_mirrored_x_ = !is_mirrored_x_;
-    }
-    
-    if (y)
-    {
-        LOG(INFO) << logging::indent() << "Mirroring in y is not supported yet.";
-        is_mirrored_y_ = !is_mirrored_y_;
     }
 }
 

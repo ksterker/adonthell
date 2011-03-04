@@ -172,7 +172,7 @@ namespace gfx
             while (anim.next (&value, &size, &id) == base::flat::T_FLAT) 
             {
                 base::flat frame ((const char*) value, size);
-                cur_animation.push_back(new animation_frame(surfaces->get_surface(id, frame.get_bool("mask"), frame.get_bool("mirrored_x")), frame.get_uint32("delay")));
+                cur_animation.push_back(new animation_frame(surfaces->get_surface(id, frame.get_bool("mask"), frame.get_bool("mirrored_x"), frame.get_bool("mirrored_y")), frame.get_uint32("delay")));
             }
             
             m_states[animation_name] = cur_animation;
