@@ -58,25 +58,6 @@ TARGET_LINK_LIBRARIES(guitest
 	)
 
 ###############################
-# Try to build the dialogtest
-ADD_EXECUTABLE(dialogtest
-			dialogtest.cc)
-
-set_target_properties(dialogtest PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
-
-TARGET_LINK_LIBRARIES(dialogtest
-	ltdl
-	adonthell_base
-	adonthell_gfx
-	adonthell_gui
-	adonthell_input
-	adonthell_main
-	adonthell_python
-	adonthell_py_runtime
-	${PYTHON_EXTRA_LIBRARIES}
-	)
-
-###############################
 # Try to build the worldtest
 ADD_EXECUTABLE(worldtest
 			worldtest.cc)

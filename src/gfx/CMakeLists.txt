@@ -67,31 +67,9 @@ set_target_properties(gfx-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
 ###########################################################
 # Create the OpenGL Backend if OpenGL and SDL are available
-IF(OPENGL_FOUND)
-set(gfx_sdlgl_SRCS
-	sdlgl/gfx_sdlgl.cc
-        sdlgl/screen_sdlgl.cc
-        sdlgl/surface_sdlgl.cc
-)
-
-# Add specific include directory for this library.
-include_directories(${SDL_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
-
-add_library(gfx-backend-sdlgl MODULE ${gfx_sdlgl_SRCS})
-target_link_libraries(gfx-backend-sdlgl
-	${SDL_LIBRARY}
-	${OPENGL_LIBRARY}
-	adonthell_gfx
-	)
-set_target_properties(gfx-backend-sdlgl PROPERTIES PREFIX "_" OUTPUT_NAME "sdlgl")
-ENDIF(OPENGL_FOUND)
 
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_gfx)
 adonthell_install_include(gfx "${adonthell_gfx_HEADERS}")
 adonthell_install_backend(gfx gfx-backend-sdl)
-
-IF(OPENGL_FOUND)
-adonthell_install_backend(gfx gfx-backend-sdlgl)
-ENDIF(OPENGL_FOUND)
