@@ -30,9 +30,11 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 #include "base/logging.h"
 #include "base/paths.h"
@@ -104,7 +106,14 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 
 #ifndef WIN32
     // make sure configuration directory exists, otherwise create it
-    if (!exists (CfgDataDir)) mkdir (CfgDataDir.c_str (), 0700);
+    if (!exists (CfgDataDir))
+    {
+        if (mkdir (CfgDataDir.c_str (), 0700) == -1)
+        {
+            int ecd = errno;
+            LOG(FATAL) << "*** paths::init: " << strerror (ecd);
+        }
+    }
 #endif
 
     // user data dir might be optional
