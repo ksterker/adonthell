@@ -100,7 +100,8 @@ static void cfg_start_element (void *ctx, const xmlChar *name, const xmlChar **a
             if (strcmp ((char*) name, "Configuration") == 0)
                 context->State = config_io::START;        
             else
-                fprintf (stderr, "*** cfg_start_element: expected <Configuration>, but got <%s>!\n", (char*) name);
+                LOG(ERROR) << "cfg_start_element: expected <Configuration>, but got <"
+                           << (char*) name << ">";
             break;
         }
         // start reading section
@@ -121,7 +122,7 @@ static void cfg_start_element (void *ctx, const xmlChar *name, const xmlChar **a
         // error
         default:
         {
-            fprintf (stderr, "*** cfg_start_element: invalid state!\n");
+            LOG(ERROR) << "cfg_start_element: invalid state!";
             break;
         }
     }
@@ -160,7 +161,7 @@ static void cfg_end_element (void *ctx, const xmlChar *name)
         // error
         default:
         {
-            fprintf (stderr, "*** cfg_end_element: invalid state!\n");
+            LOG(ERROR) << "cfg_end_element: invalid state!";
             break;
         }
     }
@@ -198,10 +199,12 @@ static void cfg_read_characters (void *ctx, const xmlChar *content, int len)
 static void cfg_parse_error (void *ctx, const char *msg, ...)
 {
     va_list args;
-    fprintf (stderr, "*** config_reader: ");
     va_start (args, msg);
-    vfprintf (stderr, msg, args);
+    char err_msg[1024];
+    vsprintf (err_msg, msg, args);  /// will this work on a C++ string?
     va_end (args);
+
+    LOG(ERROR) << "config_reader: " << err_msg;
 }
 
 /**
@@ -252,7 +255,7 @@ bool config_io::read (const std::string & filename, configuration *config)
     
 	if (xmlSAXUserParseFile (&cfg_sax_handler, &ctx, filename.c_str ()) != 0)
     {
-        fprintf (stderr, "*** config_io::read: errors while parsing '%s'!\n", filename.c_str ());
+        LOG(ERROR) << "config_io::read: errors while parsing '" << filename.c_str () << "'";
         return false;
     }
     

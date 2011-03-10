@@ -30,6 +30,7 @@
 #include "base/configuration.h"
 #include "base/configio.h"
 #include "base/base.h"
+#include "base/logging.h"
 
 using base::configuration;
 using base::cfg_choice;
@@ -100,7 +101,7 @@ void cfg_range::validate ()
     else 
     {
         // value is not an integer
-        fprintf (stderr, "*** cfg_range::validate: Can't convert '%s' to int!\n", Value.c_str ());
+        LOG(WARNING) << "cfg_range::validate: Can't convert '" << Value << "' to int!";
         newval = Min;
     }
 
@@ -218,7 +219,8 @@ s_int32 configuration::get_int (const string & section, const string & option, c
         char *end = NULL;
         s_int32 retval = (s_int32) strtol (o->value ().c_str (), &end, 10);
         if (*end == '\0') return retval;
-        else fprintf (stderr, "*** configuration::get_int: Can't convert '%s' to int!\n", o->value ().c_str ());
+        else LOG(WARNING) << "configuration::get_int: Can't convert '" << o->value()
+                          << "' to int!";
     }
     
     char val[16];
@@ -237,8 +239,8 @@ double configuration::get_double (const string & section, const string & option,
         char *end = NULL;
         double retval = (double) strtod (o->value ().c_str (), &end);
         if (*end == '\0') return retval;
-        else fprintf (stderr, "*** configuration::get_double: Can't convert '%s' to double!\n", 
-            o->value ().c_str ());
+        else LOG(WARNING) << "configuration::get_double: Can't convert '" << o->value()
+                          << "' to double!";
     }
     
     char val[16];
@@ -276,7 +278,7 @@ void configuration::write (const string & name) const
     // try to write file
     if (!base::config_io::write (create_filename (name), this))
     {
-        fprintf (stderr, "*** configuration::write: failed to save configuration!\n");
+        LOG(ERROR) << "configuration::write: failed to save configuration!";
     }
 }
 
@@ -337,7 +339,8 @@ cfg_option *configuration::option (const string & section, const string & option
                 }
                 default:
                 {
-                    fprintf (stderr, "*** configuration::option: Unknown config option type %i", type);
+                    LOG(WARNING) << "configuration::option: Unknown config option type '"
+                                 << type << "'";
                     return NULL;
                 }
             }
@@ -347,11 +350,11 @@ cfg_option *configuration::option (const string & section, const string & option
 
             return new_option;
         }
-        else fprintf (stderr, "*** configuration::option: No option '%s' in section '%s'!\n", 
-            option.c_str(), section.c_str()); 
+        else LOG(WARNING) << "configuration::option: No option '" << option
+                          << "' in section '" << section << "'";
     }
-    else fprintf (stderr, "*** configuration::option: No section '%s' in configuration file!\n", 
-        section.c_str());
+    else LOG(WARNING) << "configuration::option: No section '" << section
+                      << "' in configuration file!";
     
     return NULL;
 }
