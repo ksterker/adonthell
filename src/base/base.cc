@@ -36,7 +36,7 @@ namespace base
 }
 
 // init the base module
-bool base::init (const std::string & userdatadir, const std::string & game)
+bool base::init (const std::string & game, const std::string & userdatadir)
 {
-    return base::Paths.init (userdatadir, game);
+    return base::Paths.init (game, userdatadir);
 }
