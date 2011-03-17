@@ -167,23 +167,31 @@ void app::parse_args (int & argc, char *argv[])
         {
             // backend:
             case 'b':
+                LOG(INFO) << "found option '" << c << "': setting Backend to '"
+                          << optarg << "'; was '" << Backend << "'";
                 Backend = optarg;
                 break;
             // configuration file:
             case 'c':
+                LOG(INFO) << "found option '" << c << "': setting Config to '"
+                          << optarg << "'; was '" << Config << "'";
                 Config = optarg;
                 break;
             // user supplied data directory:
             case 'g':
+                LOG(INFO) << "found option '" << c << "': setting Userdatadir to '"
+                          << optarg << "'; was '" << Userdatadir << "'";
                 Userdatadir = optarg;
                 break;
             // help message:
             case 'h':
+                LOG(INFO) << "found option '" << c << "': printing help";
                 print_help ();
                 exit (0);
                 break;
             // version number:
             case 'v':
+                LOG(INFO) << "found option '" << c << "': printing version";
                 std::cout << VERSION << std::endl;
                 exit (0);
                 break;
@@ -196,6 +204,7 @@ void app::parse_args (int & argc, char *argv[])
     if (argc - optind == 1)
     {
         Game = argv[argc-1];
+        LOG(INFO) << "found GAME parameter: '" << Game << "'";
     }
 
     LOG(INFO) << logging::indent() << "Game: '"        << Game        << "'";
