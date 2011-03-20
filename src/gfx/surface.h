@@ -1,7 +1,5 @@
 /*
-   $Id: surface.h,v 1.20 2009/04/04 19:10:40 ksterker Exp $
-
-   Copyright (C) 1999/2000/2001/2002/2003   Alexandre Courbot <alexandrecourbot@linuxgames.com>
+   Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -249,7 +247,7 @@ namespace gfx
         /**
          * @name Special FX Methods.
          * Allows you to put fantasy in your image manipulations! Can
-         * eventually even be usefull...
+         * eventually even be useful ...
          *
          */
         //@{
@@ -289,6 +287,11 @@ namespace gfx
          * @param level the new brightness adjustment value.
          */
         void set_brightness (const u_int8 & level);
+
+        /**
+         * Applies a gaussian blur to the surface.
+         */
+        void blur ();
         //@}
 
         /**

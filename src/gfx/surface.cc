@@ -208,7 +208,101 @@ namespace gfx
         
         unlock();        
     }
-    
+
+    /// values for blurring R, G and B channels
+    const float kernel_rgb[] = { .056, .126, .201, .235, .201, .126, .056 };
+    /// values for blurring alpha channel
+    const float kernel_a[]   = { .075, .18,  .3,   .35,  .3,   .18,  .075 };
+
+    // gaussian blur
+    void surface::blur ()
+    {
+        u_int8 r, g, b, a;
+        int i, j, k, l;
+
+        lock();
+
+        // make a copy of the data
+        u_int8* data = new u_int8[length() * height() * 4];
+        k = 0;
+        for (j = 0; j < height(); j++)
+        {
+            for (i = 0; i < length(); i++)
+            {
+                unmap_color (get_pix(i, j), r, g, b, a);
+
+                data[k++] = r;
+                data[k++] = g;
+                data[k++] = b;
+                data[k++] = a;
+            }
+        }
+
+        // smear horizontally
+        for (j = 0; j < height(); j++)
+        {
+            for (i = 0; i < length(); i++)
+            {
+                int kmin = i < 4 ? 3 - i : 0;
+                int kmax = i > length() - 4 ? length() - i + 3 : 7;
+
+                r = g = b = a = 0;
+                l = (j * length() + i) * 4;
+
+                for (k = kmin; k < kmax; k++)
+                {
+                    r += data[l + ((k - 3) << 2)]     * kernel_rgb[k];
+                    g += data[l + ((k - 3) << 2) + 1] * kernel_rgb[k];
+                    b += data[l + ((k - 3) << 2) + 2] * kernel_rgb[k];
+                    a = std::min ((int) (a + data[l + ((k - 3) << 2) + 3] * kernel_a[k]), 0xFF);
+                }
+
+                put_pix (i, j, map_color (r, g, b, a));
+            }
+        }
+
+        // make another copy
+        k = 0;
+        for (j = 0; j < height(); j++)
+        {
+            for (i = 0; i < length(); i++)
+            {
+                unmap_color (get_pix(i, j), r, g, b, a);
+
+                data[k++] = r;
+                data[k++] = g;
+                data[k++] = b;
+                data[k++] = a;
+            }
+        }
+
+        // smear vertically
+        for (j = 0; j < height(); j++)
+        {
+            for (i = 0; i < length(); i++)
+            {
+                int kmin = j < 4 ? 3 - j : 0;
+                int kmax = j > height() - 4 ? height() - j + 3 : 7;
+
+                r = g = b = a = 0;
+                l = (j * length() + i) * 4;
+
+                for (k = kmin; k < kmax; k++)
+                {
+                    r += data[l + (((k - 3) * length()) << 2)]     * kernel_rgb[k];
+                    g += data[l + (((k - 3) * length()) << 2) + 1] * kernel_rgb[k];
+                    b += data[l + (((k - 3) * length()) << 2) + 2] * kernel_rgb[k];
+                    a = std::min ((int) (a + data[l + (((k - 3) * length()) << 2) + 3] * kernel_a[k]), 0xFF);
+                }
+
+                put_pix (i, j, map_color (r, g, b, a));
+            }
+        }
+
+        delete[] data;
+        unlock();
+    }
+
     // save meta data to stream
     bool surface::put_state (base::flat & file) const
     {

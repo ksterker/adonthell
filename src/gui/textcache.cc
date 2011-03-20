@@ -31,75 +31,11 @@
 
 using gui::text_cache;
 
-//const float sigma1[] = {.006,.061,.242,.383,.242,.061,.006};
-//const float kernel[] ={.16,.16,.16,0,.16,.16,.16};
-const float kernel[] ={.1,.26,.42,0.1,.42,.26,.1};
-
-typedef union {
+typedef union
+{
 	u_int8 c[4];
 	u_int32 i;
 } color;
-
-void gaussianblur(gfx::surface* s)
-{
-	int i, j, k;
-	
-	s->lock();
-	//make a copy of the data
-	u_int32* data = new u_int32[s->length() * s->height()];
-	k = 0;
-	for (j = 0; j < s->height(); j++)
-		for (i = 0; i < s->length(); i++)
-			data[k++] = s->get_pix(i, j);
-    
-	//horizontal
-	for (j = 0; j < s->height(); j++)
-	{
-		for (i = 0; i < s->length(); i++)
-		{
-			int kmin = i < 4? 3 - i : 0;
-			int kmax = i > s->length() - 4? s->length() - i + 3 : 7;
-			color c, r;
-			r.i = 0;
-			for (k = kmin; k < kmax; k++)
-			{
-				c.i = data[j * s->length() + i + (k - 3)];
-				r.c[0] += c.c[0] * kernel[k];
-				r.c[1] += c.c[1] * kernel[k];
-				r.c[2] += c.c[2] * kernel[k];
-				r.c[3] += c.c[3] * kernel[k];
-			}
-			s->put_pix(i, j, r.i);
-		}
-	}
-	//another copy, smeared horizontally
-	k = 0;
-	for (j = 0; j < s->height(); j++)
-		for (i = 0; i < s->length(); i++)
-			data[k++] = s->get_pix(i, j);
-	//vertical
-	for (j = 0; j < s->height(); j++)
-	{
-		for (i = 0; i < s->length(); i++)
-		{
-			int kmin = j < 4? 3 - j : 0;
-			int kmax = j > s->height() - 4? s->height() - j + 3 : 7;
-			color c, r;
-			r.i = 0;
-			for (k = kmin; k < kmax; k++)
-			{
-				c.i = data[(j + (k - 3)) * s->length() + i];
-				r.c[0] += c.c[0] * kernel[k];
-				r.c[1] += c.c[1] * kernel[k];
-				r.c[2] += c.c[2] * kernel[k];
-				r.c[3] += c.c[3] * kernel[k];
-			}
-			s->put_pix(i, j, r.i);
-		}
-	}
-	delete [] data;
-	s->unlock();
-}
 
 // ctor
 text_cache::text_cache () : Cached(NULL), Valid(false), ScrollOffset(0), Ox(0), Oy(0) 
@@ -141,7 +77,7 @@ const gfx::surface * text_cache::render (const gui::label *lbl, gfx::surface *ta
         }
 
         // clear cache reset
-        Cached->fillrect(0, 0, lbl->length(), lbl->height(), Cached->map_color (0, 0, 0, 0));
+        // Cached->fillrect(0, 0, lbl->length(), lbl->height(), Cached->map_color (0, 0, 0, 0));
         
         // compute where to render it
         if (lbl->multiline())
@@ -177,13 +113,19 @@ const gfx::surface * text_cache::render (const gui::label *lbl, gfx::surface *ta
         // render in a background color, to get contrast
         float intensity = n.c[0]*.3 + n.c[1]*0.59 + n.c[2]*0.11;
         if (intensity < 128.0)
+        {
             f->setColor (Cached->map_color (0xff, 0xff, 0xff, 0xff));
+            Cached->fillrect(0, 0, lbl->length(), lbl->height(), Cached->map_color (0xff, 0xff, 0xff, 0));
+        }
         else
+        {
             f->setColor (Cached->map_color (0, 0, 0, 0xff));
+            Cached->fillrect(0, 0, lbl->length(), lbl->height(), Cached->map_color (0, 0, 0, 0));
+        }
         render_text (rx, ry, lbl);
 
         // apply a gaussian blur to it
-        gaussianblur (Cached);
+        Cached->blur();
 
         // render on top of the blur, with the normal color
         f->setColor(n.i);
