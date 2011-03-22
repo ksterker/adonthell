@@ -75,7 +75,10 @@ namespace base
 // ctor
 paths::paths ()
 {
+    /*** Josh Glover <jmglov@gmail.com> 2011/03/21
+     *** Prevent init with blank game and userdir
     init ("", ".");
+    ***/
 }
 
 // initialize data search paths
