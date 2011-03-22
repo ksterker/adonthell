@@ -90,6 +90,8 @@ bool area_manager::set_active_map (const std::string & name, const bool & auto_s
     
     // load the map
     ActiveMap->load (name);
+
+    return true;
 }
 
 // save to disk
