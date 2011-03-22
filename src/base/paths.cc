@@ -108,10 +108,12 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
     // make sure configuration directory exists, otherwise create it
     if (!exists (CfgDataDir))
     {
+        LOG(INFO) << "CfgDataDir '" << CfgDataDir << "' does not exist; creating";
         if (mkdir (CfgDataDir.c_str (), 0700) == -1)
         {
             int ecd = errno;
-            LOG(FATAL) << "*** paths::init: " << strerror (ecd);
+            LOG(FATAL) << "Creating CfgDataDir '" << CfgDataDir << "' failed: "
+                       << strerror (ecd);
         }
     }
 #endif
@@ -124,13 +126,18 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
         if (Game != "") UserDataDir += Game + "/";
 
         // make sure the given user data dir is actually accessible
-        if (exists (UserDataDir)) IncludeUserDir = true;
+        if (exists (UserDataDir))
+        {
+            LOG(INFO) << "UserDataDir '" << UserDataDir << "' exists; using";
+            IncludeUserDir = true;
+        }
     }
 
     // builtin data directory
     GameDataDir = DATA_DIR;
     GameDataDir += "/games/";
     GameDataDir += Game + "/";
+    LOG(INFO) << "GameDataDir: '" << GameDataDir << "'";
 
     // make sure game data dir exists
     return exists (GameDataDir) || IncludeUserDir;
