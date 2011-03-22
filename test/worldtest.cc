@@ -150,6 +150,12 @@ public:
         game_mgr.load (base::savegame::INITIAL_SAVE);
         LOG(INFO) << "  done!";
 
+        if (world::area_manager::get_map() == NULL)
+        {
+            LOG(ERROR) << "No map loaded, exiting";
+            return 1;
+        }
+
         // set mapview to proper size
         world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
 
