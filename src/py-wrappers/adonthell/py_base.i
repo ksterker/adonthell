@@ -263,5 +263,4 @@ typedef long time_t;
 
 %pythoncode %{
     Timer = cvar.Timer
-    Paths = cvar.Paths
 %}

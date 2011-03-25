@@ -30,7 +30,7 @@
 // global timer and path objects
 namespace base 
 {
-    base::paths Paths(void)
+    base::paths &Paths(void)
     {
         static base::paths * Paths = new base::paths();
         return *Paths;
