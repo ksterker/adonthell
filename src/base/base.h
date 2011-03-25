@@ -47,7 +47,7 @@ namespace base
     bool init (const std::string & userdatadir, const std::string & game);
 
     /// class to open files from given search paths
-    extern base::paths Paths;
+    extern base::paths Paths(void);
     
     /// timer instance used by the engine
     extern base::timer Timer;

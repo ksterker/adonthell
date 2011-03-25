@@ -191,7 +191,7 @@ namespace gfx
         if (file.find (".png", file.size() - 4) != std::string::npos)
         {
             std::string full_path (file);
-            if (base::Paths.find_in_path (full_path))
+            if (base::Paths().find_in_path (full_path))
             {
                 animation_list cur_animation;
                 cur_animation.push_back (new animation_frame (surfaces->get_surface (full_path, false, false), 0));

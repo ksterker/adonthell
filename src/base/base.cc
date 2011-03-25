@@ -30,7 +30,11 @@
 // global timer and path objects
 namespace base 
 {
-    base::paths Paths;
+    base::paths Paths(void)
+    {
+        static base::paths * Paths = new base::paths();
+        return *Paths;
+    }
     base::timer Timer;
     u_int8 Scale = 1;
 }
@@ -38,5 +42,5 @@ namespace base
 // init the base module
 bool base::init (const std::string & game, const std::string & userdatadir)
 {
-    return base::Paths.init (game, userdatadir);
+    return base::Paths().init (game, userdatadir);
 }

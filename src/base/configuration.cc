@@ -404,7 +404,7 @@ void configuration::remove_option (const string & section, const string & option
 string configuration::create_filename (const string & name) const
 {
     // add file name to configuration data directory
-    return base::Paths.cfg_data_dir () + name + ".xml";
+    return base::Paths().cfg_data_dir () + name + ".xml";
 }    
 
 vector<string> configuration::split_value (const string & values, const char & separator)

@@ -71,7 +71,7 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     base::igzstream in;
     
     // open file
-    if (!base::Paths.open (in, name))
+    if (!base::Paths().open (in, name))
     {
         LOG(ERROR) << "*** disk_writer_gz::get_state: cannot open '" << name << "' for reading!";
         return false; 

@@ -42,7 +42,7 @@ namespace gui
 			path = defont;
 		
 		std::string fullpath (path); 
-		base::Paths.find_in_path (fullpath);
+		base::Paths().find_in_path (fullpath);
 		//make sure the library is initialized
 		error = 0;
 		ref(true);

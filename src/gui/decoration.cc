@@ -55,7 +55,7 @@ bool std_decoration::init (base::flat & record)
     std::string path = DECORATION_DIR + record.get_string("bg", true);
     if (path != DECORATION_DIR)
     {
-        if (base::Paths.find_in_path(path))
+        if (base::Paths().find_in_path(path))
         {
             const gfx::surface *s = gfx::surfaces->get_surface_only(path, false, false);
             Elements.push_back(s);
@@ -103,7 +103,7 @@ bool std_decoration::init (base::flat & record)
 bool std_decoration::add_element (base::flat & record, const std::string &id)
 {
     std::string path = DECORATION_DIR + record.get_string (id);
-    if (base::Paths.find_in_path (path))
+    if (base::Paths().find_in_path (path))
     {
         Elements.push_back (gfx::surfaces->get_surface_only (path, true, false));
         return true;

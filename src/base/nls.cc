@@ -49,8 +49,8 @@ void nls::init (base::configuration & config)
         set_language (locale);
 
     // open the message catalogue
-    std::string location = base::Paths.game_data_dir () + "/locale";
-    const char *domain = base::Paths.game ().c_str ();
+    std::string location = base::Paths().game_data_dir () + "/locale";
+    const char *domain = base::Paths().game ().c_str ();
 
     bindtextdomain (domain, location.c_str ());
     textdomain (domain);

@@ -69,7 +69,9 @@ pathfinding_manager::~pathfinding_manager()
 // reset to inital state
 void pathfinding_manager::clear ()
 {
-    for (s_int16 i = 0; i < MAX_TASKS; i++)
+    /*** FIXME 2011/03/22 Josh Glover <jmglov@gmail.com>
+     *** Use an iterator to prevent double-freeing! ***/
+    for (s_int16 i = 0; i < (s_int16)m_task.size() && i < MAX_TASKS; i++)
     {
         delete m_task[i].callback;
         m_task[i].callback = NULL;
@@ -77,6 +79,7 @@ void pathfinding_manager::clear ()
         delete m_task[i].path;
         m_task[i].path = NULL;
     }
+    /*** /FIXME 2011/03/22 Josh Glover <jmglov@gmail.com> ***/
 
     m_taskHighest = 0;
     m_chars.clear();

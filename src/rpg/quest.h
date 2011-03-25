@@ -294,7 +294,7 @@ namespace rpg
             static bool get_state (base::flat & file);
             /**
              * Load all quests from %quest file. The file to load is
-             * determined through the search path defined in base::Paths.
+             * determined through the search path defined in base::Paths().
              * @return \b true if loading successful, \b false otherwise.
              */
             static bool get_state ();

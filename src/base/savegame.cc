@@ -98,7 +98,7 @@ bool savegame::load (const s_int32 & slot)
     u_int32 count = Serializer().size();
     
     // set the directory we're loading from
-    base::Paths.set_save_dir (data->directory());
+    base::Paths().set_save_dir (data->directory());
     
     // load
     std::list<base::serializer_base*>::iterator i;
@@ -138,8 +138,8 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
         {
             // that's the directory we're going to save to
             sprintf(t, "%03i", pos++);
-            filepath = base::Paths.cfg_data_dir();
-            filepath += "/" + base::Paths.game() + "-save-";
+            filepath = base::Paths().cfg_data_dir();
+            filepath += "/" + base::Paths().game() + "-save-";
             filepath += t;
             
             DIR *dir = opendir (filepath.c_str ());
@@ -156,7 +156,7 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
         if (pos == 1000)
         {
             LOG(ERROR) << "*** savegame::save: seems like you have no write permission in";
-            LOG(ERROR) << "    " << base::Paths.cfg_data_dir();
+            LOG(ERROR) << "    " << base::Paths().cfg_data_dir();
             return false;
         }
 
@@ -209,7 +209,7 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
 // read available games
 void savegame::init ()
 {
-    std::string name = base::Paths.game();
+    std::string name = base::Paths().game();
     struct dirent *dirent;
     DIR *dir;
     
@@ -217,7 +217,7 @@ void savegame::init ()
     Games.push_back (new savegame_data ("", "Start New Game", 0));
     
     // create auto save slot
-    std::string save_dir = base::Paths.cfg_data_dir() + name;
+    std::string save_dir = base::Paths().cfg_data_dir() + name;
     if (!load_meta_data (save_dir + "-auto-save"))
     {
         Games.push_back (new savegame_data (save_dir + "-auto-save", "Autosave", 0));
@@ -231,13 +231,13 @@ void savegame::init ()
     
     // Read the user's saved games (if any) - they'll be located in
     // the configuration directory and called <gamename>-save-<xxx>
-    if ((dir = opendir (base::Paths.cfg_data_dir().c_str ())) != NULL)
+    if ((dir = opendir (base::Paths().cfg_data_dir().c_str ())) != NULL)
     {
         std::string name_save = name + "-save-";
         
         while ((dirent = readdir (dir)) != NULL)
         {
-            std::string filepath = base::Paths.cfg_data_dir() + dirent->d_name; 
+            std::string filepath = base::Paths().cfg_data_dir() + dirent->d_name; 
             
             if (strncmp (name_save.c_str (), dirent->d_name, name_save.length ()) == 0)
             {

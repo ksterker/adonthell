@@ -523,7 +523,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
 {
     // find file
     std::string file = name;
-    if (!base::Paths.find_in_path (file))
+    if (!base::Paths().find_in_path (file))
     {
         LOG(ERROR) << "*** disk_writer_xml::get_state: cannot open '" << name << "' for reading!";
         return false; 

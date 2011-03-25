@@ -51,7 +51,7 @@ sound::sound (const std::string &filename)
     logging::increment_log_indent_level();
 
     m_filename = "audio/" + filename;
-    if (base::Paths.find_in_path (m_filename))
+    if (base::Paths().find_in_path (m_filename))
     {
         open_file();
     }

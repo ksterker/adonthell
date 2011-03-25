@@ -330,7 +330,7 @@ namespace gfx
     {
         // find file in adonthell's search path
         std::string path = fname;
-        if (!base::Paths.find_in_path (path))
+        if (!base::Paths().find_in_path (path))
         {
             fprintf (stderr, "*** surface::load_png: unable to open '%s'!\n", fname.c_str());
             return false; 
