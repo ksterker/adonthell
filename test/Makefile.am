@@ -83,24 +83,25 @@ worldtest_LDADD = $(PY_LIBS) $(libglog_LIBS) \
 	$(top_builddir)/src/audio/libadonthell_audio.la              \
 	$(top_builddir)/src/event/libadonthell_event.la              \
 	$(top_builddir)/src/base/libadonthell_base.la                \
-	$(top_builddir)/src/main/libadonthell_main.la                 \
+	$(top_builddir)/src/main/libadonthell_main.la                \
 	$(top_builddir)/src/rpg/libadonthell_rpg.la                  \
-	${top_builddir}/src/world/libadonthell_world.la             \
+	${top_builddir}/src/world/libadonthell_world.la              \
 	$(top_builddir)/src/py-runtime/libadonthell_py_runtime.la
 
 path_test_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS)
 path_test_SOURCES = path_test.cc
-path_test_LDADD = $(PY_LIBS) \
-	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
-	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
-	-L$(top_builddir)/src/gui/ -ladonthell_gui                  \
-	-L$(top_builddir)/src/input/ -ladonthell_input              \
-	-L$(top_builddir)/src/audio/ -ladonthell_audio              \
-	-L$(top_builddir)/src/event/ -ladonthell_event              \
-	-L$(top_builddir)/src/base/ -ladonthell_base                \
-	-L$(top_builddir)/src/main -ladonthell_main                 \
-	-L${top_builddir}/src/world/ -ladonthell_world              \
-	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
+path_test_LDADD = $(PY_LIBS) $(libglog_LIBS) \
+	$(top_builddir)/src/python/libadonthell_python.la         \
+	$(top_builddir)/src/gfx/libadonthell_gfx.la               \
+	$(top_builddir)/src/gui/libadonthell_gui.la               \
+	$(top_builddir)/src/input/libadonthell_input.la           \
+	$(top_builddir)/src/audio/libadonthell_audio.la           \
+	$(top_builddir)/src/event/libadonthell_event.la           \
+	$(top_builddir)/src/base/libadonthell_base.la             \
+	$(top_builddir)/src/main/libadonthell_main.la             \
+    $(top_builddir)/src/rpg/libadonthell_rpg.la               \
+	${top_builddir}/src/world/libadonthell_world.la           \
+	$(top_builddir)/src/py-runtime/libadonthell_py_runtime.la
 
 imagetest_SOURCES = imagetest.cc
 imagetest_LDADD = $(PY_LIBS) \
