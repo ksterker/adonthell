@@ -278,11 +278,6 @@ namespace gfx
     // get filename of sprite
     std::string sprite::filename() const
     {
-    	if (m_valid)
-    	{
-    		return m_filename;
-    	}
-        
-    	return "";
+  		return m_filename;
     }
 }

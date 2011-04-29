@@ -1,174 +1,174 @@
 <?xml version="1.0"?>
- <Data>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 0, -5]</string>
-           <string id="p3d">[120, 0, -5]</string>
-           <string id="p3d">[120, 80, -5]</string>
-           <string id="p3d">[0, 80, -5]</string>
-           <string id="p3d">[0, 0, 0]</string>
-           <string id="p3d">[120, 0, 0]</string>
-           <string id="p3d">[120, 80, 0]</string>
-           <string id="p3d">[0, 80, 0]</string>
-         </list>
-       </list>
-     </list>
-     <string id="sprite">gfx/map/ground/outside/meadow/earth.png</string>
-     <string id="terrain">Grass</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 0, 0]</string>
-           <string id="p3d">[120, 0, 0]</string>
-           <string id="p3d">[120, 10, 0]</string>
-           <string id="p3d">[0, 10, 0]</string>
-           <string id="p3d">[0, 0, 50]</string>
-           <string id="p3d">[120, 0, 50]</string>
-           <string id="p3d">[120, 10, 50]</string>
-           <string id="p3d">[0, 10, 50]</string>
-         </list>
-       </list>
-     </list>
+<Data cs="909e3ee4">
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, -5]</string>
+          <string id="p3d">[120, 0, -5]</string>
+          <string id="p3d">[0, 80, -5]</string>
+          <string id="p3d">[120, 80, -5]</string>
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[120, 0, 0]</string>
+          <string id="p3d">[0, 80, 0]</string>
+          <string id="p3d">[120, 80, 0]</string>
+        </list>
+      </list>
+    </list>
+    <string id="sprite">gfx/map/ground/outside/meadow/earth.png</string>
+    <string id="terrain">Grass</string>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[120, 0, 0]</string>
+          <string id="p3d">[0, 10, 0]</string>
+          <string id="p3d">[120, 10, 0]</string>
+          <string id="p3d">[0, 0, 50]</string>
+          <string id="p3d">[120, 0, 50]</string>
+          <string id="p3d">[0, 10, 50]</string>
+          <string id="p3d">[120, 10, 50]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_1.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 15, 0]</string>
-           <string id="p3d">[120, 15, 0]</string>
-           <string id="p3d">[120, 20, 0]</string>
-           <string id="p3d">[0, 20, 0]</string>
-           <string id="p3d">[0, 15, 35]</string>
-           <string id="p3d">[120, 15, 35]</string>
-           <string id="p3d">[120, 20, 35]</string>
-           <string id="p3d">[0, 20, 35]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 15, 0]</string>
+          <string id="p3d">[120, 15, 0]</string>
+          <string id="p3d">[0, 20, 0]</string>
+          <string id="p3d">[120, 20, 0]</string>
+          <string id="p3d">[0, 15, 35]</string>
+          <string id="p3d">[120, 15, 35]</string>
+          <string id="p3d">[0, 20, 35]</string>
+          <string id="p3d">[120, 20, 35]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_2.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 20, 0]</string>
-           <string id="p3d">[120, 20, 0]</string>
-           <string id="p3d">[120, 30, 0]</string>
-           <string id="p3d">[0, 30, 0]</string>
-           <string id="p3d">[0, 20, 50]</string>
-           <string id="p3d">[120, 20, 50]</string>
-           <string id="p3d">[120, 30, 50]</string>
-           <string id="p3d">[0, 30, 50]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 20, 0]</string>
+          <string id="p3d">[120, 20, 0]</string>
+          <string id="p3d">[0, 30, 0]</string>
+          <string id="p3d">[120, 30, 0]</string>
+          <string id="p3d">[0, 20, 50]</string>
+          <string id="p3d">[120, 20, 50]</string>
+          <string id="p3d">[0, 30, 50]</string>
+          <string id="p3d">[120, 30, 50]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_3.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 30, 0]</string>
-           <string id="p3d">[120, 30, 0]</string>
-           <string id="p3d">[120, 40, 0]</string>
-           <string id="p3d">[0, 40, 0]</string>
-           <string id="p3d">[0, 30, 45]</string>
-           <string id="p3d">[120, 30, 45]</string>
-           <string id="p3d">[120, 40, 45]</string>
-           <string id="p3d">[0, 40, 45]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 30, 0]</string>
+          <string id="p3d">[120, 30, 0]</string>
+          <string id="p3d">[0, 40, 0]</string>
+          <string id="p3d">[120, 40, 0]</string>
+          <string id="p3d">[0, 30, 45]</string>
+          <string id="p3d">[120, 30, 45]</string>
+          <string id="p3d">[0, 40, 45]</string>
+          <string id="p3d">[120, 40, 45]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_4.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 45, 0]</string>
-           <string id="p3d">[120, 45, 0]</string>
-           <string id="p3d">[120, 50, 0]</string>
-           <string id="p3d">[0, 50, 0]</string>
-           <string id="p3d">[0, 45, 32]</string>
-           <string id="p3d">[120, 45, 32]</string>
-           <string id="p3d">[120, 50, 32]</string>
-           <string id="p3d">[0, 50, 32]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 45, 0]</string>
+          <string id="p3d">[120, 45, 0]</string>
+          <string id="p3d">[0, 50, 0]</string>
+          <string id="p3d">[120, 50, 0]</string>
+          <string id="p3d">[0, 45, 32]</string>
+          <string id="p3d">[120, 45, 32]</string>
+          <string id="p3d">[0, 50, 32]</string>
+          <string id="p3d">[120, 50, 32]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_5.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 50, 0]</string>
-           <string id="p3d">[120, 50, 0]</string>
-           <string id="p3d">[120, 55, 0]</string>
-           <string id="p3d">[0, 55, 0]</string>
-           <string id="p3d">[0, 50, 40]</string>
-           <string id="p3d">[120, 50, 40]</string>
-           <string id="p3d">[120, 55, 40]</string>
-           <string id="p3d">[0, 55, 40]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 50, 0]</string>
+          <string id="p3d">[120, 50, 0]</string>
+          <string id="p3d">[0, 55, 0]</string>
+          <string id="p3d">[120, 55, 0]</string>
+          <string id="p3d">[0, 50, 40]</string>
+          <string id="p3d">[120, 50, 40]</string>
+          <string id="p3d">[0, 55, 40]</string>
+          <string id="p3d">[120, 55, 40]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_6.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 60, 0]</string>
-           <string id="p3d">[120, 60, 0]</string>
-           <string id="p3d">[120, 65, 0]</string>
-           <string id="p3d">[0, 65, 0]</string>
-           <string id="p3d">[0, 60, 40]</string>
-           <string id="p3d">[120, 60, 40]</string>
-           <string id="p3d">[120, 65, 40]</string>
-           <string id="p3d">[0, 65, 40]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 60, 0]</string>
+          <string id="p3d">[120, 60, 0]</string>
+          <string id="p3d">[0, 65, 0]</string>
+          <string id="p3d">[120, 65, 0]</string>
+          <string id="p3d">[0, 60, 40]</string>
+          <string id="p3d">[120, 60, 40]</string>
+          <string id="p3d">[0, 65, 40]</string>
+          <string id="p3d">[120, 65, 40]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_7.png</string>
-   </list>
-   <list id="model">
-     <list id="default">
-       <list id="shape">
-         <bool id="non_solid">1</bool>
-         <u_int16 id="num">1</u_int16>
-         <list id="cube">
-           <string id="p3d">[0, 70, 0]</string>
-           <string id="p3d">[120, 70, 0]</string>
-           <string id="p3d">[120, 75, 0]</string>
-           <string id="p3d">[0, 75, 0]</string>
-           <string id="p3d">[0, 70, 45]</string>
-           <string id="p3d">[120, 70, 45]</string>
-           <string id="p3d">[120, 75, 45]</string>
-           <string id="p3d">[0, 75, 45]</string>
-         </list>
-       </list>
-     </list>
+  </list>
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <bool id="non_solid">1</bool>
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 70, 0]</string>
+          <string id="p3d">[120, 70, 0]</string>
+          <string id="p3d">[0, 75, 0]</string>
+          <string id="p3d">[120, 75, 0]</string>
+          <string id="p3d">[0, 70, 45]</string>
+          <string id="p3d">[120, 70, 45]</string>
+          <string id="p3d">[0, 75, 45]</string>
+          <string id="p3d">[120, 75, 45]</string>
+        </list>
+      </list>
+    </list>
     <string id="sprite">gfx/map/ground/outside/meadow/grass_8.png</string>
   </list>
 </Data>

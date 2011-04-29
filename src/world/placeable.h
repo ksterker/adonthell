@@ -345,6 +345,14 @@ namespace world
          * @return \b true on success, \b false otherwise.
          */
         bool load_model (const std::string & filename);
+
+        /**
+         * Save static model data to file.
+         * @param filename file to save the model to.
+         * @return \b true on success, \b false otherwise.
+         * @todo override for character and save shadow.
+         */
+        virtual bool save_model (const std::string & filename) const;
         
         /**
          * Load %placeable model from stream. This is static data

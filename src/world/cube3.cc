@@ -139,15 +139,17 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     u_int32 color = target->map_color (255, 255, 255);
     
     // draw bottom part
-    for (int i = TOP_FRONT_LEFT; i <= TOP_BACK_LEFT; i++)
+    for (int i = 5; i <= 6; i++)
     {
-        j = (i + 1) < NUM_CORNERS ? i + 1 : TOP_FRONT_LEFT;
-        target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), color, da_opt);
+        for (j = 4; j <= 7; j += 3)
+        {
+            target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
+                               x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), color, da_opt);
+        }
     }
     
     // draw connection between top and bottom
-    for (int i = BOTTOM_FRONT_LEFT; i <= BOTTOM_BACK_LEFT; i++)
+    for (int i = BOTTOM_FRONT_LEFT; i <= BOTTOM_BACK_RIGHT; i++)
     {
         j = i + TOP_FRONT_LEFT;
         target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
@@ -155,12 +157,14 @@ void cube3::draw (const u_int16 & x, const u_int16 & y, const gfx::drawing_area 
     }
     
     // draw top part
-    for (int i = BOTTOM_FRONT_LEFT; i <= BOTTOM_BACK_LEFT; i++)
+    for (int i = 1; i <= 2; i++)
     {
-        j = (i + 1) % TOP_FRONT_LEFT;
-        target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
-                           x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), color, da_opt);
-    }    
+        for (j = 0; j <= 3; j += 3)
+        {
+            target->draw_line (x + Corners[i].x(), y + Corners[i].y() - Corners[i].z(),
+                               x + Corners[j].x(), y + Corners[j].y() - Corners[j].z(), color, da_opt);
+        }
+    }
 }
 
 // save cube

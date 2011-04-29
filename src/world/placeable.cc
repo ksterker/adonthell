@@ -290,6 +290,19 @@ bool placeable::load_model (const std::string & filename)
     return load_model(static_model);
 }
 
+// save static model data to file
+bool placeable::save_model (const std::string & filename) const
+{
+    base::diskio static_model;
+
+    for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
+    {
+        (*i)->put_state(static_model);
+    }
+
+    return static_model.put_record(filename);
+}
+
 // load placeable model
 bool placeable::load_model (base::flat & model)
 {
