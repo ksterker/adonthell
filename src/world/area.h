@@ -174,7 +174,7 @@ namespace world
          * @param format type of file to create.
          * @return true on success, false otherwise.
          */
-        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION) const;
+        bool save (const std::string & fname, const base::diskio::file_format & format = base::diskio::BY_EXTENSION);
 
         /**
          * Load %area state from file.
