@@ -522,18 +522,20 @@ bool area::get_state (base::flat & file)
 }
 
 // save to file
-bool area::save (const std::string & fname, const base::diskio::file_format & format) const
+bool area::save (const std::string & fname, const base::diskio::file_format & format)
 {
-    // try to save map
     base::diskio record (format);
-    if (!put_state (record))
+
+    // try to save map to disk
+    if (put_state (record) &&
+        record.put_record (fname))
     {
-        fprintf (stderr, "*** area::save: saving '%s' failed!\n", fname.c_str ());
-        return false;
+        Filename = fname;
+        return true;
     }
 
-    // write map to disk
-    return record.put_record (fname);
+    LOG(ERROR) << "*** area::save: saving '" << fname << "' failed!";
+    return false;
 }
 
 // load from file
