@@ -117,6 +117,26 @@ void placeable_shape::collide (collision * collisionData, const vector3<s_int16>
     }
 }
 
+// check for intersection
+bool placeable_shape::intersects (const placeable_shape *other, const vector3<s_int32> & offset) const
+{
+    for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
+    {
+        for (std::vector<cube3*>::const_iterator j = other->begin(); j != other->end (); j++)
+        {
+            // simple bbox check for now, but we might get fancier later ...
+            if (((*i)->min_x() + offset.x()) < (*j)->max_x() && ((*i)->max_x() + offset.x()) > (*j)->min_x() &&
+                ((*i)->min_y() + offset.y()) < (*j)->max_y() && ((*i)->max_y() + offset.y()) > (*j)->min_y() &&
+                ((*i)->min_z() + offset.z()) < (*j)->max_z() && ((*i)->max_z() + offset.z()) > (*j)->min_z())
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 // save to stream
 bool placeable_shape::put_state (base::flat & file) const
 {

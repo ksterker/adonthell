@@ -89,6 +89,10 @@ namespace world
         //@}
         
         /**
+         * @name Collision and Intersection
+         */
+        //@{
+        /**
          * Perform collision against this object. Result is stored in
          * given collisionData parameter.
          * @param collisionData information about the performed move.
@@ -96,6 +100,15 @@ namespace world
          */
         void collide (collision * collisionData, const vector3<s_int16> & offset) const;
         
+        /**
+         * Check for intersection of this shape with another.
+         * @param other the other shape.
+         * @param offset position relative to the other shape.
+         * @return true if intersection detected, false otherwise.
+         */
+        bool intersects (const placeable_shape *other, const vector3<s_int32> & offset) const;
+        //@}
+
         /**
          * @name Extension of Shape
          * Methods to query base point and size of the shape.
