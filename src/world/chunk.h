@@ -175,8 +175,12 @@ namespace world
          */
         bool is_leaf () const
         {
-            static vector3<s_int32> EMPTY;
-            return Split == EMPTY;
+            for (int i = 0; i < 8; i++)
+            {
+                if (Children[i] != NULL) return false;
+            }
+
+            return true;
         }
 
         /**
