@@ -49,6 +49,9 @@ case "$target" in
         osx="yes"
 	LDFLAGS="$LDFLAGS -headerpad_max_install_names"
         ;;
+    *-*-cygwin* | *-*-mingw32*)
+        LDFLAGS="$LDFLAGS -no-undefined"
+        ;;
 esac
 
 AM_CONDITIONAL(OSX_COMPILE, test x$osx = xyes)
@@ -61,7 +64,6 @@ dnl *******
 AC_LIBTOOL_WIN32_DLL
 AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL
-LDFLAGS="$LDFLAGS -no-undefined"
 
 AC_CHECK_LIB(ltdl, lt_dlinit,,echo "Adonthell requires libltdl. Exitting...";exit 1)
 
