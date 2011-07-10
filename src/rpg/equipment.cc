@@ -39,14 +39,12 @@ using rpg::item;
 /**
  * Mapping from %item categories to equipment slots.
  */
-std::hash_map<std::string, rpg::slot_definition*,
-    std::hash<std::string> > equipment::DefinedSlots;
+std::hash_map<std::string, rpg::slot_definition*> equipment::DefinedSlots;
 
 /**
  * Predefined %equipment for certain %character types
  */
-std::hash_map<std::string, std::vector<std::string>, 
-    std::hash<std::string> > equipment::EquipmentSets;
+std::hash_map<std::string, std::vector<std::string> > equipment::EquipmentSets;
 
 // ctor
 slot_definition::slot_definition (const std::string & name, const std::vector<std::string> & categories, const double & modifier)
@@ -111,7 +109,7 @@ bool slot_definition::get_state (base::flat & file)
 void equipment::cleanup ()
 {
     // delete all slot definitions
-    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::iterator s;
+    std::hash_map<std::string, rpg::slot_definition*>::iterator s;
     for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
     {
         delete (*s).second;
@@ -127,7 +125,7 @@ const rpg::slot_list equipment::available_slots (item *itm) const
     if (itm == NULL) return slot_list ();
     
     slot_list slots;
-    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::iterator s;
+    std::hash_map<std::string, rpg::slot_definition*>::iterator s;
 
     // find all slots that accept the given category
     for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
@@ -228,8 +226,7 @@ item *equipment::unequip (slot *target, u_int32 *count)
 // tell equipment that given slot accepts given category
 void equipment::define_slot (const std::string & name, const std::vector<std::string> & categories, const double & modifier)
 {
-    std::hash_map<std::string, rpg::slot_definition*,
-        std::hash<std::string> >::iterator s = DefinedSlots.find (name);
+    std::hash_map<std::string, rpg::slot_definition*>::iterator s = DefinedSlots.find (name);
     
     // does the given slot definition already exist?
     if (s != DefinedSlots.end ())
@@ -246,8 +243,7 @@ void equipment::define_slot (const std::string & name, const std::vector<std::st
 // define equipment for certain type of characters
 void equipment::define_set (const std::string & type, const std::vector<std::string> & slots)
 {
-    std::hash_map<std::string, std::vector<std::string>,
-        std::hash<std::string> >::iterator s = EquipmentSets.find (type);
+    std::hash_map<std::string, std::vector<std::string> >::iterator s = EquipmentSets.find (type);
     
     // does the given equipment set already exist?
     if (s != EquipmentSets.end ())
@@ -264,8 +260,7 @@ void equipment::define_set (const std::string & type, const std::vector<std::str
 // get modifier for given slot
 double equipment::get_modifier (const std::string & name)
 {
-    std::hash_map<std::string, rpg::slot_definition*,
-    std::hash<std::string> >::iterator s = DefinedSlots.find (name);
+    std::hash_map<std::string, rpg::slot_definition*>::iterator s = DefinedSlots.find (name);
     
     // does the given slot definition exist?
     if (s == DefinedSlots.end ())
@@ -284,8 +279,7 @@ double equipment::get_modifier (const std::string & name)
 double equipment::get_set_modifier (const std::string & name)
 {
     double modifier = 0.0;
-    std::hash_map<std::string, std::vector<std::string>,
-    std::hash<std::string> >::iterator s = EquipmentSets.find (name);
+    std::hash_map<std::string, std::vector<std::string> >::iterator s = EquipmentSets.find (name);
     
     // does the given equipment set exist?
     if (s == EquipmentSets.end ())
@@ -309,8 +303,7 @@ double equipment::get_set_modifier (const std::string & name)
 rpg::inventory *equipment::create_inventory (const std::string & type)
 {
     rpg::inventory *inv = new rpg::inventory ();
-    std::hash_map<std::string, std::vector<std::string>,
-        std::hash<std::string> >::iterator t = EquipmentSets.find (type);
+    std::hash_map<std::string, std::vector<std::string> >::iterator t = EquipmentSets.find (type);
     
     // does given type exist?
     if (t != EquipmentSets.end ())
@@ -336,7 +329,7 @@ void equipment::put_state (base::flat & file)
     base::flat record, slots;
     
     // save defined slots
-    std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> >::const_iterator s;
+    std::hash_map<std::string, rpg::slot_definition*>::const_iterator s;
     record.put_uint8 ("esl", (u_int8) DefinedSlots.size ());
     for (s = DefinedSlots.begin (); s != DefinedSlots.end (); s++)
     {
@@ -346,7 +339,7 @@ void equipment::put_state (base::flat & file)
     }
     
     // save equipment sets
-    std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> >::const_iterator t;
+    std::hash_map<std::string, std::vector<std::string> >::const_iterator t;
     record.put_uint8 ("est", (u_int8) EquipmentSets.size ());
     for (t = EquipmentSets.begin (); t != EquipmentSets.end (); t++)
     {

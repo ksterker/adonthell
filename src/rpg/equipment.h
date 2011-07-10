@@ -247,10 +247,10 @@ namespace rpg
         
     private:
         /// storage for item-category/equipment-slot mappings
-        static std::hash_map<std::string, rpg::slot_definition*, std::hash<std::string> > DefinedSlots;
+        static std::hash_map<std::string, rpg::slot_definition*> DefinedSlots;
 
         /// storage for character-based equipment sets
-        static std::hash_map<std::string, std::vector<std::string>, std::hash<std::string> > EquipmentSets;
+        static std::hash_map<std::string, std::vector<std::string> > EquipmentSets;
     };
 }
 #endif // RPG_EQUIPMENT_H
