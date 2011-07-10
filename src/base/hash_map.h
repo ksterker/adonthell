@@ -32,10 +32,10 @@
 #include <tr1/unordered_map>
 #include <tr1/unordered_set>
 
-#define hash_map unordered_map
-#define hash_set unordered_set
+#define hash_map tr1::unordered_map
+#define hash_set tr1::unordered_set
 
-namespace std { using namespace tr1; }
+// namespace std { using namespace tr1; }
 
 #else
 // gcc < 4.4
