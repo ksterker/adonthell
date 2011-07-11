@@ -138,7 +138,7 @@ namespace gfx
     void sprite::play ()
     {
         m_playing = true;
-        if (m_animation->second.size() > 1)
+        if (m_valid && m_animation->second.size() > 1)
             m_listener->resume ();
     }
     
@@ -146,14 +146,15 @@ namespace gfx
     void sprite::stop ()
     {
         m_playing = false;
-        if (m_animation->second.size() > 1 && !m_listener->is_paused ())
+        if (m_valid && m_animation->second.size() > 1 && !m_listener->is_paused ())
             m_listener->pause ();
     }
     
     // reset to first frame
     void sprite::rewind ()
     {
-        m_surface = m_animation->second.begin();
+        if (m_valid)
+            m_surface = m_animation->second.begin();
     }
     
     // load from stream
