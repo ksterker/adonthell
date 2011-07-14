@@ -521,14 +521,6 @@ bool disk_writer_xml::put_state (const std::string & name, base::flat & data) co
 // read record from XML file
 bool disk_writer_xml::get_state (const std::string & name, base::flat & data) const
 {
-    // find file
-    std::string file = name;
-    if (!base::Paths().find_in_path (file))
-    {
-        LOG(ERROR) << "*** disk_writer_xml::get_state: cannot open '" << name << "' for reading!";
-        return false; 
-    }
-    
     // clear contents of data
     data.clear ();
     
@@ -536,7 +528,7 @@ bool disk_writer_xml::get_state (const std::string & name, base::flat & data) co
     data_sax_context ctx (&data);
     
     // read data
-	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, file.c_str ()) != 0)
+	if (xmlSAXUserParseFile (&data_sax_handler, &ctx, name.c_str ()) != 0)
     {
         LOG(ERROR) << "*** disk_writer_xml::get_state: errors while parsing '" << name << "'!";
         return false;

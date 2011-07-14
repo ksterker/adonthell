@@ -27,7 +27,11 @@
  */
 
 #include <cstdio>
+#include <fstream>
+
+#include "base/base.h"
 #include "base/diskio.h"
+#include "base/logging.h"
 #include "base/diskwriter_gz.h"
 #include "base/diskwriter_xml.h"
 
@@ -72,14 +76,22 @@ diskio::~diskio ()
 // read record from file
 bool diskio::get_record (const std::string & filename)
 {
+    // find file
+    std::string fullpath = filename;
+    if (!base::Paths().find_in_path (fullpath))
+    {
+        LOG(ERROR) << "*** diskio: cannot open '" << filename << "' for reading!";
+        return "";
+    }
+
     if (Writer == NULL)
     {
-        get_writer_for_extension (filename);
+        get_writer_for_filemagic (fullpath);
     }
     
     if (Writer != NULL)
     {
-        return Writer->get_state (filename, *this);
+        return Writer->get_state (fullpath, *this);
     }
     
     return false;
@@ -104,8 +116,32 @@ bool diskio::put_record (const std::string & filename)
 // determine file format from file extension
 void diskio::get_writer_for_extension (const std::string & filename)
 {
-    // treat file names with '.xml' extension as XML, all others as binary
+    // treat file names with '.xml' extension as XML, for all others as binary
     if (filename.compare (filename.length() - 4, 4, ".xml"))
+    {
+        Writer = new base::disk_writer_gz ();
+    }
+    else
+    {
+        Writer = new base::disk_writer_xml ();
+    }
+}
+
+// determine file format by file content
+void diskio::get_writer_for_filemagic (const std::string & filename)
+{
+    static unsigned char GZ_MAGIC[2] = {0x1f, 0x8b};
+
+    char buffer[2] = { 0x00, 0x00 };
+    std::ifstream file (filename.c_str(), std::ios::binary);
+    if (file.is_open())
+    {
+        file.read(buffer, 2);
+        file.close();
+    }
+
+    // check for gz magic number, assume XML otherwise
+    if (!memcmp (buffer, GZ_MAGIC, 2))
     {
         Writer = new base::disk_writer_gz ();
     }

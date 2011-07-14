@@ -99,7 +99,14 @@ namespace base {
              */
             void get_writer_for_extension (const std::string & filename);
 
-                
+            /**
+             * Determine file format by file content. Files beginning with '1f 8b'
+             * are treated as GZ compressed files, all others as XML.
+             *
+             * @param filename file to load or save.
+             */
+            void get_writer_for_filemagic (const std::string & filename);
+
             /// writer to use for i/o operations
             base::disk_writer_base *Writer;
 #endif

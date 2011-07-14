@@ -35,8 +35,6 @@
 #define hash_map tr1::unordered_map
 #define hash_set tr1::unordered_set
 
-// namespace std { using namespace tr1; }
-
 #else
 // gcc < 4.4
 #if __GNUG__ > 2
