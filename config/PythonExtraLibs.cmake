@@ -53,8 +53,10 @@ sys.stdout.write(distutils.sysconfig.get_python_lib(0,0))")
   ENDIF(NOT ${PythonLibs_get_site_package_dir_result} EQUAL 0)
 ENDMACRO(PythonLibs_get_site_package_dir)
 
-SET(PYTHON_SITE_PACKAGE_DIR "")
-PythonLibs_get_site_package_dir (PYTHON_SITE_PACKAGE_DIR)
+IF(NOT DEFINED PYTHON_SITE_PACKAGE_DIR)
+ SET(PYTHON_SITE_PACKAGE_DIR "")
+ PythonLibs_get_site_package_dir (PYTHON_SITE_PACKAGE_DIR)
+ENDIF(NOT DEFINED PYTHON_SITE_PACKAGE_DIR)
 
 SET(PYTHON_EXTRA_LIBRARIES "")
 IF(NOT WIN32)
