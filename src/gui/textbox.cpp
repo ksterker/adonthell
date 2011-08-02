@@ -29,11 +29,33 @@
 
 namespace gui
 {
+    /// the rate of blinking in ms
+    #define BLINKRATE 500
+
+    // ctor
+    cursor::cursor ()
+    {
+        LastBlink = ::base::Timer.current_time();
+    }
+
+    bool cursor::blink(const bool & reset)
+    {
+        int now = ::base::Timer.current_time();
+        if (reset || LastBlink + BLINKRATE*2 < now)
+        {
+            // turn on cursor every second
+            LastBlink = ::base::Timer.current_time();
+        }
+
+        // show cursor for 500ms
+        return LastBlink + BLINKRATE > now;
+    }
+
     void textbox::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface *target) const
 	{
 		//we need to move the text over if the length is too long
 		u_int32 nw, h2, offset;
-		Font->getSize(Text.substr(0, InsertPos), nw, h2);
+		Font->get_text_size(Text.substr(0, InsertPos), nw, h2);
 		if (nw > .8 * length())
 		{
             offset = nw - .8 * length();
@@ -44,22 +66,22 @@ namespace gui
             offset = 0;
         }
         
-        Cache->scroll (offset);
+        // Cache->scroll (offset);
 		label::draw(x, y, da, target);
-		if (HasFocus && (Cache->blink()) && (x+nw > 0 && x+nw < target->length()))
+		if (HasFocus && (Cursor->blink()) && (x+nw > 0 && x+nw < target->length()))
 		{
 			if (!offset)
-				target->draw_line (x + Cache->ox() + nw, y + Cache->oy() + 2, 
-                                   x + Cache->ox() + nw, y + Cache->oy() + Font->getSize() + 2, Font->getColor());
+				target->draw_line (x + Ox + nw, y + Oy + 2,
+                                   x + Ox + nw, y + Oy + Font->size() + 2, Font->color());
 			else
-				target->draw_line (x + nw, y + Cache->oy() + 2, 
-                                   x + nw, y + Cache->oy() + Font->getSize() + 2, Font->getColor());
+				target->draw_line (x + nw, y + Oy + 2,
+                                   x + nw, y + Oy + Font->size() + 2, Font->color());
 		}	
 	}
     
 	bool textbox::keydown(input::keyboard_event&k)
 	{
-		Cache->blink(true);
+	    Cursor->blink(true);
 		switch (k.key())
 		{
             case input::keyboard_event::LEFT_KEY:
@@ -72,7 +94,6 @@ namespace gui
                 else
                 {
                     InsertPos -= ::base::utf8::left(Text, InsertPos);
-                    Cache->invalidate();
                     return true;
                 }
             }
@@ -86,7 +107,6 @@ namespace gui
                 else
                 {
                     InsertPos += ::base::utf8::right(Text, InsertPos);
-                    Cache->invalidate();
                     return true;
                 }
             }
@@ -97,7 +117,6 @@ namespace gui
                     u_int32 len = ::base::utf8::left(Text, InsertPos);
                     InsertPos -= len;
                     Text.erase(InsertPos, len);
-                    Cache->invalidate();
                     return true;
                 }
                 break;
@@ -107,7 +126,6 @@ namespace gui
                 if (InsertPos < Text.size())
                 {
                     Text.erase(InsertPos, ::base::utf8::right(Text, InsertPos));
-                    Cache->invalidate();
                     return true;
                 }
                 break;
@@ -115,13 +133,11 @@ namespace gui
             case input::keyboard_event::END_KEY:
             {
                 InsertPos = Text.size();
-                Cache->invalidate();
                 return true;
             }
             case input::keyboard_event::HOME_KEY:
             {
                 InsertPos = 0;
-                Cache->invalidate();
                 return true;
             }
             default:
@@ -136,7 +152,6 @@ namespace gui
     {
          Text.insert(InsertPos, k.unikey());
          
-         Cache->invalidate();
          InsertPos += k.unikey().length();
          return true;
     }
@@ -155,7 +170,7 @@ namespace gui
 			int x, y;
 			for (InsertPos = 1; InsertPos <= Text.size(); InsertPos++)
 			{
-				f.getSize(Text.substr(0, InsertPos), x, y);
+				f.get_text_size(Text.substr(0, InsertPos), x, y);
 				if (x-offset > m.x)
 					break;
 			}

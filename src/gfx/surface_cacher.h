@@ -92,8 +92,7 @@ namespace gfx
 		/**
 		 * Finds a surface object and increments the reference count, or loads and caches it if it can't. 
 		 * This method will free memory if it can to stay under the set memory limit
-		 * Delete the returned pointer to decrement the reference count, or 
-		 * call free_surface with the surface in the pointer. 
+		 * Delete the returned pointer to decrement the reference count.
 		 *
 		 * @param file which file to return a cached version of
          * @param set_mask whether to enable image masking
@@ -105,21 +104,43 @@ namespace gfx
 		 */
 		const surface_ref* get_surface(const std::string & file, bool set_mask=true, bool invert_x = false, bool invert_y = false, blend_mode alpha = AUTOMATIC);
 		
-		/**
-         * Finds a surface object and increments the reference count, or loads and caches it if it can't. 
-		 * This method will free memory if it can to stay under the set memory limit
-		 * Call free_surface with the surface pointer to decrease the reference count. 
-		 *
-		 * @param file which file to return a cached version of
+        /**
+         * Finds a surface object and increments the reference count, or loads and caches it if it can't.
+         * This method will free memory if it can to stay under the set memory limit
+         * Call free_surface with the surface pointer to decrease the reference count.
+         *
+         * @param file which file to return a cached version of
          * @param set_mask whether to enable image masking
          * @param invert_x whether to mirror image on vertical axis
          * @param invert_y whether to mirror image on horizontal axis
          * @param alpha whether to enable alpha blending or not
-		 *
-		 * @return a pointer to a drawable object
-		 */
+         *
+         * @return a pointer to a drawable object
+         */
         const surface* get_surface_only(const std::string & file, bool set_mask=true, bool invert_x = false, bool invert_y = false, blend_mode alpha = AUTOMATIC);
-		
+
+		/**
+		 * Finds a surface object and increments the reference count, or
+		 * returns NULL if no such surface exists in the cache. In that case,
+		 * it should be added to the cache by calling add_surface_mem.
+		 * Delete the returned pointer to decrement the reference count.
+         *
+         * @param name name of the surface to retrieve from the cache.
+         * @return a pointer to a drawable object
+		 */
+	    const surface_ref* get_surface_mem (const std::string & name);
+
+	    /**
+	     * Adds an existing surface to the cache using the given name. The
+	     * cache will take ownership of the surface, so do not delete it directly.
+         * This method will free memory if it can to stay under the set memory limit.
+         *
+         * @param name name of the surface to add to the cache.
+         * @param surf the surface to add to the cache.
+         * @return a pointer to a drawable object
+	     */
+	    const surface_ref* add_surface_mem (const std::string & name, gfx::surface *surf);
+
         /**
 		 * Decrements the reference count for the the surfaces. Does not deallocate surfaces
 		 *

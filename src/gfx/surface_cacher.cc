@@ -59,7 +59,36 @@ namespace gfx
 		}
 	}
     
-    // return surface reference
+	// return surface reference for a dynamic image
+	const surface_ref* surface_cacher::get_surface_mem (const string & name)
+	{
+        map<string, surface_ref>::iterator idx = Cache.find(name);
+        if (idx != Cache.end())
+        {
+            //We already found it in the cache. Increment the reference
+            idx->second.newref();
+            return new surface_ref(&(idx->second));
+        }
+
+        // that surface does not exist in the cache
+        return NULL;
+	}
+
+    // add existing surface to the cache
+	const surface_ref* surface_cacher::add_surface_mem (const string & name, gfx::surface *surf)
+    {
+        surface_ref ret = surface_ref(surf);
+        ret.newref();
+        Cache[name] = ret;
+        SurfToString[surf] = name;
+        ret.newref();
+
+        // remove any extra surfaces we have
+        conditional_purge();
+        return new surface_ref(&ret);
+    }
+
+    // return surface reference for a given file
 	const surface_ref* surface_cacher::get_surface(const string & file, bool set_mask, bool invert_x, bool invert_y, blend_mode alpha)
 	{
 		// create a unique name based on all parameters
@@ -89,26 +118,24 @@ namespace gfx
         
 		//Add it to the cache
 		surface_ref ret = surface_ref(cur);
-		ret.newref();
 		Cache[cache_name.str()] = ret;
 		SurfToString[cur] = cache_name.str();
-		ret.newref();
 		
         //Remove any extra surfaces we have
 		conditional_purge();
 		return new surface_ref(&ret);
 	}
-    
+
     // return pointer to surface
-	const surface* surface_cacher::get_surface_only(const string& file, bool set_mask, bool invert_x, bool invert_y, blend_mode alpha)
-	{
-		const surface_ref * sref = get_surface(file, set_mask, invert_x, invert_y, alpha);
-		const surface* ret = sref->s;
-		Cache[SurfToString[ret]].newref();
-		delete sref;
-		return ret;
-	}
-    
+    const surface* surface_cacher::get_surface_only(const string& file, bool set_mask, bool invert_x, bool invert_y, blend_mode alpha)
+    {
+        const surface_ref * sref = get_surface(file, set_mask, invert_x, invert_y, alpha);
+        const surface* ret = sref->s;
+        Cache[SurfToString[ret]].newref();
+        delete sref;
+        return ret;
+    }
+
     // release reference of named surface
 	void surface_cacher::free_by_name(const string & s)
 	{

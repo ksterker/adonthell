@@ -44,8 +44,11 @@ std_decoration::~std_decoration ()
 
     for (std::vector<const gfx::surface*>::iterator i = BrightElements.begin(); i != BrightElements.end(); i++)
     {
-        delete *i;
+        if (*i != NULL) delete *i;
     }
+
+    Elements.clear();
+    BrightElements.clear();
 }
 
 // init from record

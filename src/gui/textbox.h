@@ -31,6 +31,28 @@
 namespace gui
 {
     /**
+     * A cursor representing the position of text input.
+     */
+    class cursor
+    {
+    public:
+        /**
+         * Create the cursor.
+         */
+        cursor();
+
+        /**
+         * Update the state of the cursor. (Visible or not).
+         * @param reset true to force cursor visible.
+         */
+        bool blink(const bool & reset = false);
+
+    private:
+        /// timestamp for a blinking cursor
+        u_int32 LastBlink;
+    };
+
+    /**
      * A widget for text input. Text typed
      * by the user will be converted into
      * UTF-8 format.
@@ -45,7 +67,9 @@ namespace gui
 		 */
 		textbox(const u_int16 & width, const u_int16 & height)
 		: label(width, height), InsertPos(0), HasFocus(false)
-		{ }
+		{
+            Cursor = new cursor();
+		}
 
 		/**
 		 * Create a input field of the given style.
@@ -53,8 +77,18 @@ namespace gui
 		 */
 		textbox(const std::string & style)
 		: label(style), InsertPos(0), HasFocus(false)
-		{ }
+		{
+		    Cursor = new cursor();
+		}
 		
+		/**
+		 * Clean up.
+		 */
+		~textbox()
+		{
+		    delete Cursor;
+		}
+
         /** 
          * Draw the object on the %screen.
          * 
@@ -136,6 +170,8 @@ namespace gui
 		int InsertPos;
 		/// whether widget has the input focus
 		bool HasFocus;
+		/// the cursor for text input
+		cursor *Cursor;
 	};
 };
 

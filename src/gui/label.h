@@ -27,7 +27,6 @@
 #define GUI_LABEL_H
 
 #include "gui/widget.h"
-#include "gui/textcache.h"
 #include "gui/font.h"
 
 namespace gui
@@ -49,9 +48,8 @@ namespace gui
 		 * @param height the height of the label.
 		 */
 		label(const u_int16 & width, const u_int16 & height)
-		: widget (width, height), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false)
-        { 
-            Cache = new text_cache();
+		: widget (width, height), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false), Ox(0), Oy(0)
+        {
             Font = new font(); 
         }
 
@@ -61,9 +59,8 @@ namespace gui
 		 * @param style the look of the label.
 		 */
 		label(const std::string & style)
-		: widget(style), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false)
+		: widget(style), CenterX(false), CenterY(false), Multiline(false), AutoHeight(false), Ox(0), Oy(0)
         {
-            Cache = new text_cache();
             Font = new font(); 
         }
         
@@ -72,7 +69,6 @@ namespace gui
 		 */
         virtual ~label()
         {
-            delete Cache;
             delete Font;
         }
         
@@ -89,7 +85,6 @@ namespace gui
 		void set_string (const std::string & s)
         { 
             Text = s;
-            Cache->invalidate();
 
             reheight();
         }
@@ -117,17 +112,6 @@ namespace gui
          */		
         virtual void draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da = NULL, gfx::surface *target = NULL) const;
         
-        /**
-         * Set the size of the label.
-         * @param width new width.
-         * @param height new height.
-         */
-		virtual void set_size(const u_int16 & width, const u_int16 & height) 
-        { 
-            widget::set_size (width, height);
-            Cache->clear ();
-        }
-        
 		/**
          * @name Text attributes.
          *
@@ -144,7 +128,6 @@ namespace gui
         {
             CenterX = cx;
             CenterY = cy; 
-            Cache->invalidate (); 
         }
         
         /**
@@ -185,13 +168,13 @@ namespace gui
 		 * Set the current text color.
 		 * @param c the text color.
 		 */
-		void set_color(const u_int32 & c) { Font->setColor(c); Cache->invalidate (); }
+		void set_color(const u_int32 & c) { Font->set_color(c); }
 
 		/**
 		 * Get the current text color.
 		 * @return the text color.
 		 */
-		u_int32 get_color() const { return Font->getColor(); }
+		u_int32 get_color() const { return Font->color(); }
 		//@}
 
         font *get_font () const { return Font; }
@@ -206,8 +189,16 @@ namespace gui
 		 */
 		void reheight();
 
-        /// cache of the rendered label text
-        text_cache *Cache;
+		/**
+		 *
+		 */
+	    void set_offset (const u_int32 & x, const u_int32 & y) { Ox = x; Oy = y; }
+
+	    /**
+	     *
+	     */
+	    void draw_text (const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface *target) const;
+
         /// whether to center the text horizontally
         bool CenterX;
         /// whether to center the text vertically
@@ -220,6 +211,10 @@ namespace gui
         std::string Text;
         /// the font
 		font *Font;
+	    /// text draw offset x
+	    u_int32 Ox;
+	    /// text draw offset y
+	    u_int32 Oy;
 	};
 };
 

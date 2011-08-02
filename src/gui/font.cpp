@@ -1,198 +1,343 @@
+/*
+ Copyright (C) 2008 Rian Shelley
+ Part of the Adonthell Project http://adonthell.linuxgames.com
+
+ Adonthell is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ Adonthell is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Adonthell; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+/**
+ * @file   gui/font.cpp
+ * @author Rian Shelley
+ * @brief  Implements the font class.
+ */
+
+#include <string>
+#include <sstream>
+#include <ctype.h>
+
 #include "gui/font.h"
+#include "gui/fontcache.h"
+
 #include "base/base.h"
 #include "base/endians.h"
 #include "base/logging.h"
 #include "base/utf8.h"
-#include <string>
+#include "gfx/gfx.h"
+
 using std::string;
-#include <ctype.h>
 
 namespace gui
 {
 	FT_Library library;
 
-	void font::ref(bool addref)
-	{
-		static int refcount = 0;
-		if (addref)
-		{
-			if (!refcount)
-			{
-				if (error = FT_Init_FreeType(&library))
-					LOG(ERROR) << logging::indent() << "Unable to initialize the freetype library";
-				else
-					refcount++;
-			}
-			else
-				refcount++;
-		}
-		else
-		{
-			refcount--;
-			if (!refcount)
-				FT_Done_FreeType(library);
-		}
-	}
-			
+	font_cache font::FontCache;
+
+	// ctor
 	font::font(const char* path, int size)
 	{
 		//check for the path
 		const char* defont = "gfx/gui/Vera.ttf";
 		if (!path)
+		{
 			path = defont;
+		}
 		
 		std::string fullpath (path); 
-		base::Paths().find_in_path (fullpath);
-		//make sure the library is initialized
-		error = 0;
-		ref(true);
-		if (error = FT_New_Face(library, fullpath.c_str(), 0, &face))
+		if (!base::Paths().find_in_path (fullpath))
+		{
+		    Error = true;
+            LOG(ERROR) << logging::indent() << "Unable to find font '" << path << "'";
+            return;
+		}
+
+		// make sure the library is initialized
+		ref (true);
+
+		// load font
+		if (Error = FT_New_Face(library, fullpath.c_str(), 0, &Face))
+		{
 			LOG(ERROR) << logging::indent() << "Unable to load font '" << path << "'";
-		else
-			setSize(size);
-		color = 0xffffffff; //set to white
+		}
+        else
+		{
+			set_size (size);
+			Name = path;
+		}
+
+		Color = 0xffffffff; //set to white
 	}
+
 	font::~font()
 	{
 		ref(false);
 	}
 
-	void font::setSize(int size)
+    void font::ref(bool addref)
+    {
+        static int refcount = 0;
+        if (addref)
+        {
+            if (!refcount)
+            {
+                if (Error = FT_Init_FreeType(&library))
+                {
+                    LOG(ERROR) << logging::indent() << "Unable to initialize the freetype library";
+                    return;
+                }
+            }
+            refcount++;
+        }
+        else
+        {
+            refcount--;
+            if (!refcount)
+            {
+                FT_Done_FreeType(library);
+            }
+        }
+    }
+
+	void font::set_size(int size)
 	{
-		fontsize = size;
-		if (error = FT_Set_Char_Size(face, 0, fontsize*64, 0, 0))
+		FontSize = size;
+		if (Error = FT_Set_Char_Size(Face, 0, FontSize*64, 0, 0))
+		{
 			LOG(ERROR) << logging::indent() << "Unable to set the size of the font";
+		}
 	}
 
-	void font::render(const string& s, int x, int y, gfx::surface* surf)
+	void font::draw_text(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
 	{
-		surf->lock();
+	    s_int16 ox = x;
+
 		string::const_iterator i;
 		for (i = s.begin(); i != s.end(); /* nothing */)
 		{
             u_int32 chr = base::utf8::to_utf32 (s, i);
-			if (error = FT_Load_Char(face, chr, FT_LOAD_RENDER))
-				LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
-			else
-			{
-				draw_glyph(x+face->glyph->bitmap_left, 
-						   y-face->glyph->bitmap_top, 
-						   &face->glyph->bitmap, surf);	
-				x += face->glyph->advance.x >> 6;
-				y += face->glyph->advance.y >> 6;
-			}
+            const glyph_info *gi = FontCache.get (chr, this);
+
+            gi->Foreground->s->draw(ox + gi->x, y + gi->y - 3, da, target);
+            ox += gi->length;
 		}
-		surf->unlock();
 	}
 
-	void font::draw_glyph(int x, int y, FT_Bitmap* bmp, gfx::surface* s)
-	{
-		int i, j;
-		//crop it
-		int minx = x < 0 ? -x : 0;
-		int maxx = x + bmp->width > s->length() ? s->length() - x : bmp->width;
-		int miny = y < 0 ? -y : 0;
-		int maxy = y + bmp->rows > s->height() ? s->height() - y : bmp->rows;
-		unsigned char* data = bmp->buffer + miny*bmp->pitch + minx;
-		for (j = miny; j < maxy; j++)
-		{
-			for (i = minx; i < maxx; i++)
-			{
-				struct {
-					u_int8 b[4];
-				} p1, p2;
-				s->unmap_color(s->get_pix(x + i, y + j),p1.b[0], p1.b[1], p1.b[2], p1.b[3]);
-				s->unmap_color(color, p2.b[0],p2.b[1],p2.b[2],p2.b[3]);
-				
-				if (*data)
-				{
-					float a2 = *data/255.0;
-					//use an "over" compositing function
-					p1.b[0] = (int)(p1.b[0]*(1-a2) + p2.b[0]*a2);
-					p1.b[1] = (int)(p1.b[1]*(1-a2) + p2.b[1]*a2);
-					p1.b[2] = (int)(p1.b[2]*(1-a2) + p2.b[2]*a2);
-					p1.b[3] = (int)(p1.b[3]*(1-a2) + *data*a2);
-				}
-				s->put_pix(x + i, y + j, s->map_color(p1.b[0], p1.b[1], p1.b[2], p1.b[3]));
-				data++;
-			}
-			data += bmp->pitch;
-			data -= maxx-minx;
-		}
-	}
-	void font::getMultilineSize(const string& s, u_int16 maxwidth, vector<textsize>& ts, u_int16 & w, u_int16 & h)
-	{
-		maxwidth <<= 6;
-		int maxw;
-		int th = 0;
-		int tw = 0;
-		int sw = 0;
-		string::const_iterator i, lastspace = s.end();
-		w = 0;
-		h = fontsize << 6;
-		int maxdrop = 0;
+    void font::draw_shadow(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
+    {
+        s_int16 ox = x;
+
+        string::const_iterator i;
         for (i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
-                LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
-			else
-			{
-				if (isspace(*i))
-				{
-					tw = w;
-					lastspace = i;
-					sw = face->glyph->advance.x;
-				}
-				w += face->glyph->advance.x;
-				h += face->glyph->advance.y;
-				if (w > maxwidth)
-				{
-					ts.push_back(textsize(tw >> 6, h >> 6, lastspace - s.begin()));
-					if (maxwidth < tw)
-						maxwidth = tw;
-					w = w - tw - sw; //subtract the section, as well as the space
-					th += fontsize << 6;
-					maxdrop = 0; //only needs accounted for in the last line
-				}
+            const glyph_info *gi = FontCache.get (chr, this);
 
-				if (maxdrop < face->glyph->metrics.height - face->glyph->metrics.horiBearingY)
-					maxdrop = face->glyph->metrics.height - face->glyph->metrics.horiBearingY;
-			}
-		}
-		ts.push_back(textsize(tw >> 6, h >> 6, s.end() - s.begin()));
-		h += maxdrop;
-		h += th;
-		w = maxwidth;
-		h >>= 6;
-		w >>= 6;
-		
-	}
-	//TODO: make this call getMultilineSize
-	void font::getSize(const string& s, u_int32 & w, u_int32 & h)
+            gi->Background->s->draw(ox + gi->x, y + gi->y - 3, da, target);
+            ox += gi->length;
+        }
+    }
+
+    gui::glyph_info *font::create_glyph (const u_int32 & chr)
+    {
+        // new glyph structure
+        glyph_info *gi = new glyph_info();
+
+        if (Error = FT_Load_Char(Face, chr, FT_LOAD_RENDER))
+        {
+            LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
+
+            gi->length = 0;
+            gi->height = 0;
+            gi->drop = 0;
+            gi->x = 0;
+            gi->y = 0;
+        }
+        else
+        {
+            std::stringstream name (std::ios::out);
+            gui::color fg_color, bg_color;
+            bg_color.i = 0;
+
+            // the foreground glyph is always unique, so just create it
+            gfx::surface *foreground = gfx::create_surface();
+
+            foreground->set_alpha (255, true);
+            foreground->resize (Face->glyph->bitmap.width + 6, Face->glyph->bitmap.rows + 6);
+            foreground->unmap_color (Color, fg_color.b[2], fg_color.b[1], fg_color.b[0], fg_color.b[3]);
+            // TODO: big endian? foreground->unmap_color (Color, fg_color.b[0], fg_color.b[1], fg_color.b[2], fg_color.b[3]);
+            foreground->fillrect (0, 0, foreground->length(), foreground->height(), foreground->map_color (fg_color.b[0], fg_color.b[1], fg_color.b[2], 0));
+
+            // render foreground image
+            render_glyph(3, 3, &Face->glyph->bitmap, foreground, fg_color);
+
+            // add it to surface cache
+            name << std::hex << chr << "_" << fg_color.i << "_" << std::dec << Name << "_" << FontSize;
+            gi->Foreground = gfx::surfaces->add_surface_mem (name.str(), foreground);
+
+            // determine color to use for the background
+            float intensity = fg_color.b[0]*.3 + fg_color.b[1]*0.59 + fg_color.b[2]*0.11;
+            bg_color.b[0] = bg_color.b[1] = bg_color.b[2] = intensity < 128.0 ? 0xff : 0x00;
+
+            // a suitable background glyph may already exist, so try to get it
+            name.str("b_");
+            name << std::hex << chr << "_" << bg_color.i << "_" << std::dec << Name << "_" << FontSize;
+
+            gi->Background = gfx::surfaces->get_surface_mem (name.str());
+            if (gi->Background == NULL)
+            {
+                gfx::surface *background = gfx::create_surface();
+
+                background->set_alpha (255, true);
+                background->resize (Face->glyph->bitmap.width + 6, Face->glyph->bitmap.rows + 6);
+                background->fillrect(0, 0, background->length(), background->height(), background->map_color (bg_color.b[0], bg_color.b[1], bg_color.b[2], 0));
+
+                // render background image
+                render_glyph(3, 3, &Face->glyph->bitmap, background, bg_color);
+
+                // apply gaussian blur
+                background->blur();
+
+                // store in cache
+                gi->Background = gfx::surfaces->add_surface_mem (name.str(), background);
+            }
+
+            gi->length = Face->glyph->advance.x >> 6;
+            gi->height = Face->glyph->advance.y >> 6;
+            gi->drop = (Face->glyph->metrics.height - Face->glyph->metrics.horiBearingY) >> 6;
+            gi->x = Face->glyph->bitmap_left - 3;
+            gi->y = -Face->glyph->bitmap_top - 3;
+        }
+
+        return gi;
+    }
+
+    // render a single glyph to a surface
+    void font::render_glyph(int x, int y, FT_Bitmap* bmp, gfx::surface *surf, gui::color & col)
+    {
+        gui::color p1;
+
+        surf->lock();
+
+        unsigned char* data = bmp->buffer;
+        for (int j = 0; j < bmp->rows; j++)
+        {
+            for (int i = 0; i < bmp->width; i++)
+            {
+                if (*data)
+                {
+                    float a2 = *data / 255.0;
+
+                    p1.b[0] = (u_int8) (col.b[0] * a2);
+                    p1.b[1] = (u_int8) (col.b[1] * a2);
+                    p1.b[2] = (u_int8) (col.b[2] * a2);
+                    p1.b[3] = *data;
+
+                    surf->put_pix (x + i, y + j, surf->map_color (p1.b[0], p1.b[1], p1.b[2], p1.b[3]));
+                }
+
+                data++;
+            }
+
+            data += bmp->pitch;
+            data -= bmp->width;
+        }
+
+        surf->unlock();
+    }
+
+    // get text size with line wrapping enabled
+	void font::get_text_size(const string& s, const u_int16 & max_line_width, vector<textsize>& ts, u_int16 & w, u_int16 & h)
 	{
+        w = 0;
+        h = FontSize;
+
+		int line_width = 0;
+		int space_width = 0;
+        int max_width = 0;
+		int max_drop = 0;
+
+		string::const_iterator i, last_space = s.end();
+        for (i = s.begin(); i != s.end(); /* nothing */)
+        {
+            u_int32 chr = base::utf8::to_utf32 (s, i);
+            const glyph_info *gi = FontCache.get (chr, this);
+
+            if (isspace(*i))
+            {
+                line_width = w;
+                last_space = i;
+                space_width = gi->length;
+            }
+
+            w += gi->length;
+
+            // exceeding maximum line width?
+            if (w > max_line_width)
+            {
+                // wrap at last whitespace character
+                ts.push_back(textsize(line_width, FontSize, last_space - s.begin()));
+
+                // calculate line widths
+                if (max_width < line_width) max_width = line_width;
+
+                // subtract the section, as well as the space
+                w = w - line_width - space_width;
+
+                // update height
+                h += FontSize;
+
+                // only needs accounted for in the last line
+                max_drop = 0;
+            }
+
+            // find out how much the text extends into the next line
+            if (max_drop < gi->drop)
+                max_drop = gi->drop;
+		}
+
+        // add last line
+		ts.push_back(textsize(w, FontSize, s.end() - s.begin()));
+
+		// final text height
+		// TODO: why is max_drop sometimes negative? h += max_drop;
+
+		// final text width
+		w = max_width > w ? max_width : w;
+	}
+
+	//get text size without line wrapping
+	void font::get_text_size(const string& s, u_int32 & w, u_int32 & h)
+	{
+		w = 0;
+		h = FontSize;
+
+		int max_drop = 0;
 		string::const_iterator i;
-		w = 0;
-		h = fontsize << 6;
-		int maxdrop = 0;
+
         for (i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            if (error = FT_Load_Char(face, chr, FT_LOAD_DEFAULT))
-                LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
-			else
-			{
-				w += face->glyph->advance.x;
-				h += face->glyph->advance.y;
-				if (maxdrop < face->glyph->metrics.height - face->glyph->metrics.horiBearingY)
-					maxdrop = face->glyph->metrics.height - face->glyph->metrics.horiBearingY;
-			}
-		}
-		h += maxdrop;
-		h >>= 6;
-		w >>= 6;
+            const glyph_info *gi = FontCache.get (chr, this);
+
+            w += gi->length;
+
+            // find out how much the text extends into the next line
+            if (max_drop < gi->drop)
+                max_drop = gi->drop;
+        }
+
+        h += max_drop;
 	}
-
-
 };
 		

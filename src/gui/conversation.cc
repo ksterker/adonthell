@@ -13,8 +13,8 @@ namespace gui
         Look->init("window.xml");
         set_scroll_style("scrollbar.xml");
         set_size (w, h);
-        ct.get_font()->setSize(LINEHEIGHT - 1);
-        speaker.get_font()->setSize(LINEHEIGHT - 1);
+        ct.get_font()->set_size(LINEHEIGHT - 1);
+        speaker.get_font()->set_size(LINEHEIGHT - 1);
         set_child(lo);
 		line = dlg.run(-1);
 		ct.set_multiline(true);
@@ -66,7 +66,7 @@ namespace gui
 		unsigned int fc = rpg::character::get_player()->color();
 		LOG(INFO) << logging::indent() << "color changed to 0x"
                   << std::setw(8) << std::setfill('0') << std::hex << fc;
-        f->setColor(fc);
+        f->set_color(fc);
 
 		for (i = 0; i < optcount; i++)
 		{
@@ -74,7 +74,7 @@ namespace gui
 			answers[i].obj = this;
 			options[i] = new button(length()-40, LINEHEIGHT);
 			options[i]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
-			options[i]->get_font()->setSize(LINEHEIGHT-1);
+			options[i]->get_font()->set_size(LINEHEIGHT-1);
 			options[i]->set_multiline(true);
 			options[i]->set_style("list_item.xml");
 			char tmp[16];
@@ -90,7 +90,7 @@ namespace gui
 			answers[0].obj = this;
 			options[0] = new button(length()-40, LINEHEIGHT);
 			options[0]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
-			options[0]->get_font()->setSize(LINEHEIGHT-1);
+			options[0]->get_font()->set_size(LINEHEIGHT-1);
 			options[0]->set_multiline(true);
 			options[0]->set_style("list_item.xml");
 			options[0]->set_string("1) (continue)");

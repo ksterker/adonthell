@@ -34,10 +34,77 @@ namespace gui
 		widget::draw(x, y, da, target);
 
 		/// draw label text
-        const gfx::surface *txt = Cache->render (this, target);
-        if (txt) txt->draw (x + Cache->ox(), y + Cache->oy(), da, target);
+        if (!Text.empty()) draw_text (x + Ox, y + Oy, da, target);
 	}
     
+    void label::draw_text (const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface *target) const
+    {
+        if (!length() || !height()) return;
+
+        // render offset
+        s_int16 rx = x;
+        s_int16 ry = y + Font->size();
+
+        // compute where to render it
+        if (multiline())
+        {
+            // find the needed size of the line of text
+            u_int16 tw, th;
+            std::vector<gui::textsize> ts;
+            Font->get_text_size(Text, length(), ts, tw, th);
+
+            // if required, center text vertically
+            if (center_y())
+            {
+                ry = y + (height() + th)/2;
+            }
+
+            int p = 0;
+
+            for (int i = 0; i < ts.size(); i++)
+            {
+                // if required, center text horizontally
+                if (center_x())
+                {
+                    // center each line of multiline text
+                    rx = x + (length() - ts[i].w)/2;
+                }
+
+                Font->draw_shadow(Text.substr(p, ts[i].cpos-p), rx, ry, da, target);
+                Font->draw_text(Text.substr(p, ts[i].cpos-p), rx, ry, da, target);
+
+                ry += ts[i].h;
+                p = ts[i].cpos + 1;
+            }
+        }
+        else
+        {
+            // find the needed size of the line of text
+            u_int32 nw, nh;
+            Font->get_text_size(Text, nw, nh);
+
+            // if required, center text horizontally
+            if (/*!ScrollOffset &&*/ center_x())
+            {
+                // if a manual offset has been set, centering doesn't matter
+                rx = x + (length() - nw)/2;
+            }
+            // else
+            // {
+            //     rx = -ScrollOffset;
+            // }
+
+            // if required, center text vertically
+            if (center_y())
+            {
+                ry = y + (height() + Font->size())/2;
+            }
+
+            Font->draw_shadow(Text, rx, ry, da, target);
+            Font->draw_text(Text, rx, ry, da, target);
+        }
+    }
+
 	// change the height of the object based on the text
 	void label::reheight()
 	{
@@ -45,12 +112,8 @@ namespace gui
 		{
 			std::vector<textsize> ts;
 			u_int16 newwidth = 0, newheight = 0;
-			Font->getMultilineSize (Text, length(), ts, newwidth, newheight);
-
-			if (newheight != height())
-			{
-				set_size (length(), newheight);
-			}
+			Font->get_text_size (Text, length(), ts, newwidth, newheight);
+			set_size (length(), newheight);
 		}
 	}
 };

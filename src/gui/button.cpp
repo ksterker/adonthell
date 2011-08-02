@@ -36,13 +36,13 @@ namespace gui
 	{
 		if (Clicked) //have it drawn with the alternate image
 		{
-			Cache->set_offset (CLICK_OFFSET, CLICK_OFFSET);
+			// Font->set_offset (CLICK_OFFSET, CLICK_OFFSET);
             Look->set_state("Activated");
 			label::draw(x, y, da, target);
 		}
 		else
 		{
-			Cache->set_offset (0, 0);
+			// Font->set_offset (0, 0);
             Look->set_state("Default");
 			label::draw(x, y, da, target);
 		}
