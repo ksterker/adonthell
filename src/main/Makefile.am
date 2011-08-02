@@ -14,7 +14,7 @@ libadonthell_main_la_SOURCES = \
 	adonthell.cc \
 	main.cc
 
-libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS) $(AM_CXXFLAGS) 
+libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS) -DPYTHONSPDIR=\"$(pyexecdir)\" $(AM_CXXFLAGS)
 libadonthell_main_la_LIBADD = $(PY_LIBS) -lltdl \
     $(top_builddir)/src/base/libadonthell_base.la \
     $(top_builddir)/src/gfx/libadonthell_gfx.la \

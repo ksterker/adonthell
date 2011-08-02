@@ -86,6 +86,11 @@ bool app::init_modules (const u_int16 & modules)
         {
             python::init ();
             PySys_SetArgv (Argc, Argv);
+
+            // add location of adonthell modules,
+            // to allow not setting PYTHONPATH
+            // if we're called from Python, it's already too late for that
+            python::add_search_path (PYTHONSPDIR);
         }
         // avoid shutting down Python in that case
         else

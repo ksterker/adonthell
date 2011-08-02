@@ -12,6 +12,7 @@ set(adonthell_main_HEADERS
 # Add specific include directory for this library.
 include_directories(${PYTHON_INCLUDE_PATH} ${LIBGLOG_INCLUDE_PATH})
 
+add_definitions(-DPYTHONSPDIR="${ESCAPE}${PYTHON_SITE_PACKAGE_DIR}${ESCAPE}")
 
 # Create a shared library
 add_library(adonthell_main SHARED ${adonthell_main_SRCS})
