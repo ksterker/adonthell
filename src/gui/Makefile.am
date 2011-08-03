@@ -10,6 +10,7 @@ pkgincludeinput_HEADERS = \
     decoration.h \
 	draw.h \
 	font.h \
+	fontcache.h \
 	gui.h \
 	indicatorbar.h \
 	label.h \
@@ -18,7 +19,6 @@ pkgincludeinput_HEADERS = \
 	option.h \
 	scrollview.h \
 	textbox.h \
-    textcache.h \
 	widget.h \
     window_manager.h
 
@@ -30,6 +30,7 @@ libadonthell_gui_la_SOURCES = \
     conversation.cc \
     decoration.cc \
 	font.cpp \
+    fontcache.cc \
 	label.cpp \
 	layout.cc \
     listlayout.cc \
@@ -37,7 +38,6 @@ libadonthell_gui_la_SOURCES = \
 	option.cpp \
     scrollview.cc \
 	textbox.cpp \
-    textcache.cc \
 	widget.cpp \
     window_manager.cc
 

@@ -5,6 +5,7 @@ set(adonthell_gui_SRCS
 	conversation.cc
     decoration.cc
 	font.cpp
+	fontcache.cc
 	indicatorbar.cc
 	label.cpp
 	layout.cc
@@ -12,7 +13,6 @@ set(adonthell_gui_SRCS
 	option.cpp
 	scrollview.cc
 	textbox.cpp
-    textcache.cc
 	widget.cpp
     window_manager.cc
 )
@@ -24,6 +24,7 @@ set(adonthell_gui_HEADERS
     decoration.h
 	draw.h
 	font.h
+    fontcache.h
 	gui.h
     indicatorbar.h
 	label.h
@@ -32,7 +33,6 @@ set(adonthell_gui_HEADERS
 	option.h
     scrollview.h
     textbox.h
-    textcache.h
 	widget.h
     window_manager.h
 )
