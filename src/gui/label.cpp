@@ -56,7 +56,7 @@ namespace gui
             // if required, center text vertically
             if (center_y())
             {
-                ry = y + (height() + th)/2;
+                ry += (height() - th)/2;
             }
 
             int p = 0;
@@ -97,7 +97,7 @@ namespace gui
             // if required, center text vertically
             if (center_y())
             {
-                ry = y + (height() + Font->size())/2;
+                ry += (height() - nh)/2;
             }
 
             Font->draw_shadow(Text, rx, ry, da, target);

@@ -91,8 +91,9 @@ class GuiTest : public adonthell::app {
 	gui::textbox t1(400, 30);
 	
 	gui::label multiline_test(400, 100);
-	multiline_test.set_string("This is a test of the multiline label. In theory, once the text exceeds the width of the label, it should wrap to the next line.");
+	multiline_test.set_string("This is a test of the multiline label. In theory, once the text exceeds the width of the label,\nit should wrap to the next line.");
 	multiline_test.set_multiline(true);
+	multiline_test.set_center(true, true);
 
 	gui::canvas cv(64, 64);
 	cv.set_style("label.xml");

@@ -66,8 +66,12 @@ namespace gui
             offset = 0;
         }
         
-        // Cache->scroll (offset);
-		label::draw(x, y, da, target);
+        // draw label decoration
+        widget::draw(x, y, da, target);
+
+        /// draw label text
+        if (!Text.empty()) draw_text (x + Ox - offset, y + Oy, da, target);
+
 		if (HasFocus && (Cursor->blink()) && (x+nw > 0 && x+nw < target->length()))
 		{
 			if (!offset)

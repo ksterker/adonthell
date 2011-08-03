@@ -112,7 +112,7 @@ namespace gui
 	void font::set_size(int size)
 	{
 		FontSize = size;
-		if (Error = FT_Set_Char_Size(Face, 0, FontSize*64, 0, 0))
+		if (Error = FT_Set_Pixel_Sizes (Face, 0, FontSize))
 		{
 			LOG(ERROR) << logging::indent() << "Unable to set the size of the font";
 		}
@@ -128,7 +128,7 @@ namespace gui
             u_int32 chr = base::utf8::to_utf32 (s, i);
             const glyph_info *gi = FontCache.get (chr, this);
 
-            gi->Foreground->s->draw(ox + gi->x, y + gi->y - 3, da, target);
+            gi->Foreground->s->draw(ox + gi->x, y + gi->y, da, target);
             ox += gi->length;
 		}
 	}
@@ -143,7 +143,7 @@ namespace gui
             u_int32 chr = base::utf8::to_utf32 (s, i);
             const glyph_info *gi = FontCache.get (chr, this);
 
-            gi->Background->s->draw(ox + gi->x, y + gi->y - 3, da, target);
+            gi->Background->s->draw(ox + gi->x - 3, y + gi->y - 3, da, target);
             ox += gi->length;
         }
     }
@@ -173,13 +173,13 @@ namespace gui
             gfx::surface *foreground = gfx::create_surface();
 
             foreground->set_alpha (255, true);
-            foreground->resize (Face->glyph->bitmap.width + 6, Face->glyph->bitmap.rows + 6);
+            foreground->resize (Face->glyph->bitmap.width, Face->glyph->bitmap.rows);
             foreground->unmap_color (Color, fg_color.b[2], fg_color.b[1], fg_color.b[0], fg_color.b[3]);
             // TODO: big endian? foreground->unmap_color (Color, fg_color.b[0], fg_color.b[1], fg_color.b[2], fg_color.b[3]);
             foreground->fillrect (0, 0, foreground->length(), foreground->height(), foreground->map_color (fg_color.b[0], fg_color.b[1], fg_color.b[2], 0));
 
             // render foreground image
-            render_glyph(3, 3, &Face->glyph->bitmap, foreground, fg_color);
+            render_glyph(0, 0, &Face->glyph->bitmap, foreground, fg_color);
 
             // add it to surface cache
             name << std::hex << chr << "_" << fg_color.i << "_" << std::dec << Name << "_" << FontSize;
@@ -215,8 +215,8 @@ namespace gui
             gi->length = Face->glyph->advance.x >> 6;
             gi->height = Face->glyph->advance.y >> 6;
             gi->drop = (Face->glyph->metrics.height - Face->glyph->metrics.horiBearingY) >> 6;
-            gi->x = Face->glyph->bitmap_left - 3;
-            gi->y = -Face->glyph->bitmap_top - 3;
+            gi->x = Face->glyph->bitmap_left;
+            gi->y = -Face->glyph->bitmap_top;
         }
 
         return gi;
@@ -282,8 +282,8 @@ namespace gui
 
             w += gi->length;
 
-            // exceeding maximum line width?
-            if (w > max_line_width)
+            // exceeding maximum line width or manual line break?
+            if (w > max_line_width || *i == '\n')
             {
                 // wrap at last whitespace character
                 ts.push_back(textsize(line_width, FontSize, last_space - s.begin()));
@@ -309,8 +309,8 @@ namespace gui
         // add last line
 		ts.push_back(textsize(w, FontSize, s.end() - s.begin()));
 
-		// final text height
-		// TODO: why is max_drop sometimes negative? h += max_drop;
+		// final line height
+		h += max_drop;
 
 		// final text width
 		w = max_width > w ? max_width : w;

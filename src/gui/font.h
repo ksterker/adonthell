@@ -88,7 +88,7 @@ namespace gui
         /// size of the actual glyph
         u_int32 height;
         // overlap of glyph into next line
-        u_int32 drop;
+        s_int32 drop;
     };
 
     /**
