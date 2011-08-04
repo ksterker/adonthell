@@ -93,6 +93,10 @@ void character::jump()
 // process character movement
 bool character::update ()
 {
+    // saving the vertical position before movement
+    s_int32 prev_z = z ();
+    static u_int32 frames_stuck = 0;
+
     // character movement
     Schedule.update ();
 
@@ -105,6 +109,7 @@ bool character::update ()
     if (GroundPos == z())
     {
         VSpeed = 0;
+        frames_stuck = 0; // reset counter for next jump
 
     	// character no longer jumping or falling
     	if (IsRunning != ToggleRunning)
@@ -122,7 +127,15 @@ bool character::update ()
             }
         }
     }
-    else if (VSpeed > 0) VSpeed -= 0.4;
+    else if (VSpeed > 0)
+    {
+        // if vertical velocity is positive and we're not rising, we may have hit something
+        // but if we did eventually move, reset counter
+        frames_stuck = vz() > 0 && z () == prev_z ? frames_stuck + 1 : 0;
+
+        // if we're stuck for more then X frames in a row, assume we've hit the ceiling
+        VSpeed = frames_stuck > 2 ? 0 : VSpeed - 0.4;
+    }
 
     return true;
 }
@@ -275,7 +288,9 @@ bool character::put_state (base::flat & file) const
     // save schedule
     base::flat record;
     Schedule.put_state (record);
-    file.put_flat ("schedule", record);    
+    file.put_flat ("schedule", record);
+
+    return true;
 }
 
 // load from stream
