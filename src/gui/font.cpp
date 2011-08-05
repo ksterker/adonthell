@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Rian Shelley
+ Copyright (C) 2011 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
 
  Adonthell is free software; you can redistribute it and/or modify
@@ -20,6 +21,7 @@
 /**
  * @file   gui/font.cpp
  * @author Rian Shelley
+ * @author Kai Sterker
  * @brief  Implements the font class.
  */
 
@@ -121,6 +123,8 @@ namespace gui
 	void font::draw_text(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
 	{
 	    s_int16 ox = x;
+	    u_int32 current, prev = 0;
+	    FT_Vector kerning;
 
 		string::const_iterator i;
 		for (i = s.begin(); i != s.end(); /* nothing */)
@@ -128,14 +132,25 @@ namespace gui
             u_int32 chr = base::utf8::to_utf32 (s, i);
             const glyph_info *gi = FontCache.get (chr, this);
 
+            if (FT_HAS_KERNING (Face))
+            {
+                current = FT_Get_Char_Index (Face, chr);
+                FT_Get_Kerning(Face, prev, current, FT_KERNING_DEFAULT, &kerning);
+                ox += kerning.x >> 6;
+            }
+
             gi->Foreground->s->draw(ox + gi->x, y + gi->y, da, target);
             ox += gi->length;
+
+            prev = current;
 		}
 	}
 
     void font::draw_shadow(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
     {
         s_int16 ox = x;
+        u_int32 current, prev = 0;
+        FT_Vector kerning;
 
         string::const_iterator i;
         for (i = s.begin(); i != s.end(); /* nothing */)
@@ -143,8 +158,17 @@ namespace gui
             u_int32 chr = base::utf8::to_utf32 (s, i);
             const glyph_info *gi = FontCache.get (chr, this);
 
+            if (FT_HAS_KERNING (Face))
+            {
+                current = FT_Get_Char_Index (Face, chr);
+                FT_Get_Kerning(Face, prev, current, FT_KERNING_DEFAULT, &kerning);
+                ox += kerning.x >> 6;
+            }
+
             gi->Background->s->draw(ox + gi->x - 3, y + gi->y - 3, da, target);
             ox += gi->length;
+
+            prev = current;
         }
     }
 
@@ -159,7 +183,6 @@ namespace gui
 
             gi->length = 0;
             gi->height = 0;
-            gi->drop = 0;
             gi->x = 0;
             gi->y = 0;
         }
@@ -212,11 +235,13 @@ namespace gui
                 gi->Background = gfx::surfaces->add_surface_mem (name.str(), background);
             }
 
+            // make sure font is rendered on its proper  base line
+            int drop = (Face->size->metrics.height >> 6) - FontSize;
+
             gi->length = Face->glyph->advance.x >> 6;
             gi->height = Face->glyph->advance.y >> 6;
-            gi->drop = (Face->glyph->metrics.height - Face->glyph->metrics.horiBearingY) >> 6;
             gi->x = Face->glyph->bitmap_left;
-            gi->y = -Face->glyph->bitmap_top;
+            gi->y = -Face->glyph->bitmap_top - drop;
         }
 
         return gi;
@@ -265,7 +290,9 @@ namespace gui
 		int line_width = 0;
 		int space_width = 0;
         int max_width = 0;
-		int max_drop = 0;
+
+        // how much the font extends below the base line
+        int drop = (Face->size->metrics.height >> 6) - FontSize;
 
 		string::const_iterator i, last_space = s.end();
         for (i = s.begin(); i != s.end(); /* nothing */)
@@ -296,21 +323,14 @@ namespace gui
 
                 // update height
                 h += FontSize;
-
-                // only needs accounted for in the last line
-                max_drop = 0;
             }
-
-            // find out how much the text extends into the next line
-            if (max_drop < gi->drop)
-                max_drop = gi->drop;
 		}
 
         // add last line
 		ts.push_back(textsize(w, FontSize, s.end() - s.begin()));
 
 		// final line height
-		h += max_drop;
+		h += drop;
 
 		// final text width
 		w = max_width > w ? max_width : w;
@@ -322,22 +342,18 @@ namespace gui
 		w = 0;
 		h = FontSize;
 
-		int max_drop = 0;
-		string::const_iterator i;
+        // how much the font extends below the base line
+        int drop = (Face->size->metrics.height >> 6) - FontSize;
 
-        for (i = s.begin(); i != s.end(); /* nothing */)
+        for (string::const_iterator i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
             const glyph_info *gi = FontCache.get (chr, this);
 
             w += gi->length;
-
-            // find out how much the text extends into the next line
-            if (max_drop < gi->drop)
-                max_drop = gi->drop;
         }
 
-        h += max_drop;
+        h += drop;
 	}
 };
 		

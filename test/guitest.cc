@@ -136,13 +136,13 @@ class GuiTest : public adonthell::app {
 	  	
 		screen->fillrect(0, 0, screen->length(), screen->height(), 0);
 		f.set_color(screen->map_color(0xff, 0,0,0xff));
-		f.draw_text("Red Red Red", -10, 5);
+		f.draw_text("Red Red Red", -10, 10);
 		f.set_color(screen->map_color(0, 0xff,0,0xff));
 		f.draw_text("Green Green", -10, 520);
 		f.set_color(screen->map_color(0, 0,0xff,0xff));
 		f.draw_text("Blue Blue B", 470, 520);
 		f.set_color(screen->map_color(0xff, 0xff,0xff,0xff));
-		f.draw_text("White White", 470, 5);
+		f.draw_text("White White", 470, 10);
 		/*
 		std::vector<gui::textsize> ts;
 		int w = 0, h = 0;

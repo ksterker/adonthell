@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Rian Shelley
+ Copyright (C) 2011 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
 
  Adonthell is free software; you can redistribute it and/or modify
@@ -20,6 +21,7 @@
 /**
  * @file   gui/font.h
  * @author Rian Shelley
+ * @author Kai Sterker
  * @brief  Declares the font class.
  */
 
@@ -87,8 +89,6 @@ namespace gui
         u_int32 length;
         /// size of the actual glyph
         u_int32 height;
-        // overlap of glyph into next line
-        s_int32 drop;
     };
 
     /**
@@ -153,6 +153,15 @@ namespace gui
          * @param target the render target.
          */
 	    void draw_shadow (const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da = NULL, gfx::surface* target = NULL);
+
+	    /**
+	     * Get the distance from baseline to baseline for the current font.
+	     * @return the line height.
+	     */
+	    u_int32 get_line_height () const
+	    {
+	        return Face->size->metrics.height >> 6;
+	    }
 
 	    /**
 	     * Calculate size of the given string when drawn with
