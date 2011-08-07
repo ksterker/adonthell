@@ -118,8 +118,10 @@ namespace gfx
         
 		//Add it to the cache
 		surface_ref ret = surface_ref(cur);
+		ret.newref();
 		Cache[cache_name.str()] = ret;
 		SurfToString[cur] = cache_name.str();
+		ret.newref();
 		
         //Remove any extra surfaces we have
 		conditional_purge();
