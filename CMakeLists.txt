@@ -70,6 +70,12 @@ add_definitions(-DDATA_DIR="${ESCAPE}${ADONTHELL_DATADIR}${ESCAPE}")
 # FIXME: We need to manage the package lib directory for different plattforms!
 add_definitions(-DPKGLIBDIR="${ESCAPE}${CMAKE_INSTALL_PREFIX}/lib/adonthell${ESCAPE}")
 
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+	SET(LIB_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+
 
 ##########################
 # Endianness
