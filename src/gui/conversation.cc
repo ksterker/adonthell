@@ -22,9 +22,9 @@ namespace gui
 		lo.add_child(ct);
 		opty = 40;
 		optcount = 0;
-		update();
 		color = c.color(); 
 		ct.set_color(color);
+        update();
 	}
     
 	void conversation::selectopt(bool down, void* arg)

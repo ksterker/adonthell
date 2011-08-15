@@ -414,13 +414,14 @@ namespace gfx
         virtual void resize (u_int16 l, u_int16 h) = 0;
 
         /** 
-         * Get the size of this surface
+         * Get the size of this surface. This isn't the real
+         * size used by the surface, only an approximation.
          *
          * @return the size in bytes
          */
         u_int32 size() const 
         { 
-            return size_;
+            return length() * height() * (alpha_ ? 4 : 3);
         }
         
         /**
@@ -507,9 +508,6 @@ namespace gfx
 
         /// Filename
         std::string filename_;
-
-        /// Surface size in bytes
-        u_int32 size_;
         
     private:
         /**

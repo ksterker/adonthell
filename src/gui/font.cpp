@@ -49,6 +49,8 @@ namespace gui
 	// ctor
 	font::font(const char* path, int size)
 	{
+	    Face = NULL;
+
 		//check for the path
 		const char* defont = "gfx/gui/Vera.ttf";
 		if (!path)
@@ -83,6 +85,7 @@ namespace gui
 
 	font::~font()
 	{
+	    if (Face) FT_Done_Face (Face);
 		ref(false);
 	}
 
@@ -197,12 +200,16 @@ namespace gui
 
             foreground->set_alpha (255, true);
             foreground->resize (Face->glyph->bitmap.width, Face->glyph->bitmap.rows);
-            foreground->unmap_color (Color, fg_color.b[2], fg_color.b[1], fg_color.b[0], fg_color.b[3]);
-            // TODO: big endian? foreground->unmap_color (Color, fg_color.b[0], fg_color.b[1], fg_color.b[2], fg_color.b[3]);
-            foreground->fillrect (0, 0, foreground->length(), foreground->height(), foreground->map_color (fg_color.b[0], fg_color.b[1], fg_color.b[2], 0));
 
-            // render foreground image
-            render_glyph(0, 0, &Face->glyph->bitmap, foreground, fg_color);
+            if (foreground->length() > 0 && foreground->height() > 0)
+            {
+                foreground->unmap_color (Color, fg_color.b[2], fg_color.b[1], fg_color.b[0], fg_color.b[3]);
+                // TODO: big endian? foreground->unmap_color (Color, fg_color.b[0], fg_color.b[1], fg_color.b[2], fg_color.b[3]);
+                foreground->fillrect (0, 0, foreground->length(), foreground->height(), foreground->map_color (fg_color.b[0], fg_color.b[1], fg_color.b[2], 0));
+
+                // render foreground image
+                render_glyph(0, 0, &Face->glyph->bitmap, foreground, fg_color);
+            }
 
             // add it to surface cache
             name << std::hex << chr << "_" << fg_color.i << "_" << std::dec << Name << "_" << FontSize;

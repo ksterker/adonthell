@@ -48,7 +48,7 @@ namespace gfx
 	public:
 		const surface* s;
 		surface_ref(surface* surf=NULL):s(surf),RefCount(1),TimeStamp(0) {}
-		surface_ref(surface_ref* olds ):s(olds->s) {}
+		surface_ref(surface_ref* olds ):s(olds->s),RefCount(olds->RefCount),TimeStamp(olds->TimeStamp) {}
 		~surface_ref();
         
     private:

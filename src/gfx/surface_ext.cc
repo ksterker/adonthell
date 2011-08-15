@@ -124,9 +124,6 @@ bool surface_ext::get_png (std::ifstream & file)
     
     clear ();
     
-    // temporary till a real method can be used to compute the size
-    size_ = l * h * (alpha ? 4 : 3);
-    
     set_data(rawdata, l, h, alpha ? 4 : 3,
              R_MASK, G_MASK, B_MASK, alpha ? A_MASK : 0);
     
