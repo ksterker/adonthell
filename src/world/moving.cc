@@ -328,8 +328,10 @@ void moving::update_position ()
 void moving::calculate_ground_pos ()
 {
     // bbox of everything below our character
-    const vector3<s_int32> min (x(), y(), Mymap.min().z());
-    const vector3<s_int32> max (min.x() + placeable::length(), min.y() + placeable::width(), z() - 1);
+    // 1 pixel in every direction less then placeable's size
+    // to avoid including objects that just barely touch it
+    const vector3<s_int32> min (x() + 1, y() + 1, Mymap.min().z());
+    const vector3<s_int32> max (min.x() + placeable::length() - 1, min.y() + placeable::width() - 1, z() - 1);
     
     // get objects below us
     std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max, OBJECT);
