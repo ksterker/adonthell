@@ -84,10 +84,11 @@ void character::jump()
     // only jump if resting on the ground. On sloped 
     // surfaces, the ground might actually be higher
     // than the characters z-position.
-	if (GroundPos >= z())
-	{
-    	VSpeed = 10;
-	}
+    // also, no double-jumping
+    if (GroundPos >= z() && VSpeed == 0)
+    {
+        VSpeed = 10;
+    }
 }
 
 // process character movement
@@ -134,7 +135,7 @@ bool character::update ()
         frames_stuck = vz() > 0 && z () == prev_z ? frames_stuck + 1 : 0;
 
         // if we're stuck for more then X frames in a row, assume we've hit the ceiling
-        VSpeed = frames_stuck > 2 ? 0 : VSpeed - 0.4;
+        VSpeed = VSpeed <= 0.4 || frames_stuck > 2 ? 0 : VSpeed - 0.4;
     }
 
     return true;
