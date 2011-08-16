@@ -22,7 +22,6 @@ set(adonthell_gui_HEADERS
 	canvas.h
 	conversation.h
     decoration.h
-	draw.h
 	font.h
     fontcache.h
 	gui.h

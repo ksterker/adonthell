@@ -7,7 +7,6 @@ using std::string;
 #include "input/input.h"
 #include "gui/gui.h"
 #include "main/adonthell.h"
-#include "gui/draw.h"
 
 class InputHandler {
 private:
@@ -162,11 +161,6 @@ class GuiTest : public adonthell::app {
 		label_with_bg.draw(10, 80, NULL, screen);
 		widgets.draw(10, 120, NULL, screen);
 		multiline_test.draw(10, 350, NULL, screen);
-		gui::box(10, 350, 400, 100, 0xff0000b0, screen);
-
-		u_int32 c = 0xff0000b0;
-		gui::box(345, 5, 30, 50, c, screen);
-		gui::border(340, 5, 40, 55, screen);
 
 		gfx::screen::update ();
     }

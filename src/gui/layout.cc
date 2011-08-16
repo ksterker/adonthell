@@ -24,7 +24,6 @@
  */
 
 #include "gui/layout.h"
-#include "gui/draw.h"
 #include "base/logging.h"
 
 using gui::layout;
