@@ -207,12 +207,16 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     
     vector3<float> newDestinationPoint = destinationPoint - slidePlaneNormal * 
         slidingPlane.signed_distance (destinationPoint);
-    
+
     // generate the slide vector, which will become our new velocity vector for the next iteration 
-    vector3<float> newVelocityVector = newDestinationPoint - slidePlaneOrigin; 
+    vector3<float> newVelocityVector = newDestinationPoint - slidePlaneOrigin;
     
+    //TODO This is just a temporary fix that prevents sliding on any slope no matter how small
+    // it should probably be set per-terrain
+    static float nvcd = 0.035f;
+
     // don't recurse if the new velocity is very small 
-    if (newVelocityVector.length() < veryCloseDistance) 
+    if (newVelocityVector.length() < nvcd)
     { 
         collisionData->set_falling (false);
         return newBasePoint; 
@@ -331,7 +335,7 @@ void moving::calculate_ground_pos ()
     // 1 pixel in every direction less then placeable's size
     // to avoid including objects that just barely touch it
     const vector3<s_int32> min (x() + 1, y() + 1, Mymap.min().z());
-    const vector3<s_int32> max (min.x() + placeable::length() - 1, min.y() + placeable::width() - 1, z() - 1);
+    const vector3<s_int32> max (min.x() + placeable::length() - 2, min.y() + placeable::width() - 2, z() - 1);
     
     // get objects below us
     std::list<chunk_info*> ground_tiles = Mymap.objects_in_bbox (min, max, OBJECT);
@@ -357,30 +361,22 @@ void moving::calculate_ground_pos ()
 
         // sort according to their z-Order
         ground_tiles.sort (z_order());
-    
-        // find object that will be our ground pos
-        for (ci = ground_tiles.begin(); ci != ground_tiles.end(); ci++)
-        {
-            // apply shadow
-            MyShadow->cast_on (*ci);
-            
-            // position of character relative to tile
-            s_int32 px = x() - (*ci)->center_min().x();
-            s_int32 py = y() - (*ci)->center_min().y();
-            
-            // is this really the object below character?
-            if (px >= 0 && px <= (*ci)->get_object()->length() &&
-                py >= 0 && py <= (*ci)->get_object()->width())
-            {
-                // get ground pos
-                GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
-                
-                // get the terrain, if any
-                Terrain = (*ci)->get_object()->get_terrain();
-                break;
-            }
-        }
-        
+
+        // the highest object will be our ground pos
+        ci = ground_tiles.begin ();
+
+        MyShadow->cast_on (*ci);
+
+        // position of character relative to tile
+        s_int32 px = x() - (*ci)->center_min().x();
+        s_int32 py = y() - (*ci)->center_min().y();
+
+        // get ground pos
+        GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+
+        // get the terrain, if any
+        Terrain = (*ci)->get_object()->get_terrain();
+
         // apply remainder of shadow
         for (ci++; ci != ground_tiles.end(); ci++)
         {

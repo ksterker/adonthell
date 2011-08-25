@@ -94,6 +94,9 @@ void character::jump()
 // process character movement
 bool character::update ()
 {
+    // the lowest negative VSpeed that can be reached during extended falling
+    static float min_vspeed = -10;
+
     // saving the vertical position before movement
     s_int32 prev_z = z ();
     static u_int32 frames_stuck = 0;
@@ -107,7 +110,8 @@ bool character::update ()
     // update character
     moving::update ();
 
-    if (GroundPos == z())
+    // only consider landing on something when the character is falling
+    if (GroundPos >= z() && VSpeed <= 0)
     {
         VSpeed = 0;
         frames_stuck = 0; // reset counter for next jump
@@ -128,14 +132,17 @@ bool character::update ()
             }
         }
     }
-    else if (VSpeed > 0)
+    else
     {
-        // if vertical velocity is positive and we're not rising, we may have hit something
+        // if vertical velocity is non-zero and we're not moving, we may have hit something
         // but if we did eventually move, reset counter
-        frames_stuck = vz() > 0 && z () == prev_z ? frames_stuck + 1 : 0;
+        frames_stuck = vz() != 0 && z () == prev_z ? frames_stuck + 1 : 0;
 
         // if we're stuck for more then X frames in a row, assume we've hit the ceiling
-        VSpeed = VSpeed <= 0.4 || frames_stuck > 2 ? 0 : VSpeed - 0.4;
+        if (frames_stuck > 2)
+            VSpeed = 0;
+        else if (VSpeed > min_vspeed)
+            VSpeed -= 0.4;
     }
 
     return true;
