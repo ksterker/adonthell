@@ -104,9 +104,9 @@ namespace events
          * @param e The time event to compare this to.
          * @return <b>True</b> if the two events equal, <b>false</b> otherwise.
          */
-        bool equals (const event * e)
+        bool equals (const event * e) const
         {
-            return Time <= ((time_event *) e)->time ();
+            return Time <= ((const time_event *) e)->time ();
         }
 
 #ifndef SWIG        

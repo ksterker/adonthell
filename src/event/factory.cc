@@ -1,6 +1,4 @@
 /*
-   $Id: factory.cc,v 1.12 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -28,6 +26,7 @@
  * 
  */
 
+#include "base/logging.h"
 #include "event/factory.h"
 #include "event/manager.h"
 #include "event/listener_cxx.h"
@@ -84,6 +83,19 @@ listener *factory::add (event* ev, int type)
     
     // finally return the listener, so a callback can be attached
     return li;
+}
+
+// connect a Python callback for the given event
+void factory::register_event (event *ev, PyObject *callback)
+{
+    factory::register_event (ev, new python::functor_1<const events::event*> (callback));
+}
+
+// connect a C++ callback for the given event
+void factory::register_event (event *ev, base::functor_1<const events::event*> * callback)
+{
+    listener *li = add (ev, LISTENER_CXX);
+    li->connect_callback (callback);
 }
 
 // Remove a listener from the list
@@ -144,8 +156,8 @@ void factory::put_state (base::flat& file) const
 bool factory::get_state (base::flat& file)
 {
     void *value;
-    listener *li;
     u_int32 size, type;
+    listener *li;
     base::flat::data_type data_type;
     
     Paused = file.get_uint16 ("fps");
@@ -157,8 +169,8 @@ bool factory::get_state (base::flat& file)
         // get listener container
         if (data_type != base::flat::T_FLAT)
         {
-            fprintf (stderr, "*** error: factory::get_state: expected list but got %s!\n", 
-                     base::flat::name_for_type (data_type));
+            LOG(ERROR) << "factory::get_state: expected list but got "
+                       << base::flat::name_for_type (data_type) << "!";
             return false;
         }
         base::flat state ((const char*) value, size);

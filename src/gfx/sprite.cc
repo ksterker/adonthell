@@ -1,6 +1,4 @@
 /*
-   $Id: sprite.cc,v 1.3 2009/04/07 21:13:16 ksterker Exp $
-
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Copyright (C) 2006/2007 Tyler Nielsen <tyler.nielsen@gmail.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -107,7 +105,7 @@ namespace gfx
     }
 
     // update state of animation
-    bool sprite::update ()
+    bool sprite::update (const events::event *evt)
     {
         // Check if the animation is valid yet
         if (!m_valid) return false;

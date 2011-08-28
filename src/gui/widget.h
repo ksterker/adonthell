@@ -26,9 +26,9 @@
 #ifndef GUI_WIDGET_H
 #define GUI_WIDGET_H
 
+#include "event/event.h"
 #include "gfx/gfx.h"
 #include "gfx/surface_cacher.h"
-
 #include "input/input.h"
 
 #include "gui/decoration.h"
@@ -39,6 +39,9 @@
 namespace gui
 {
 	class layout;
+
+    /// callback for being notified of gui events
+    typedef ::base::functor_1<const events::event*> * ui_callback;
 
 	/** 
      * The base class for displayable elements.

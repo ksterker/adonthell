@@ -28,6 +28,7 @@
 #define GUI_WINDOW_MANAGER_H
 
 #include "gui/layout.h"
+#include "gui/ui_event_manager.h"
 
 namespace gui
 {
@@ -51,6 +52,13 @@ public:
         Dy = 0;
     }
     
+    /**
+     * Destructor.
+     */
+    virtual ~manager_child()
+    {
+    }
+
     s_int32 x()
     {
         return Dx + Pos.x();
@@ -89,7 +97,7 @@ public:
      * Add a window at the topmost position of the window stack.
      * @param x x coordinate.
      * @param y y coordinate.
-     * @param window the window to newly open.
+     * @param window the window to newly open. Ownership passes to the manager.
      * @param f whether fading in is required.
      */
     static void add(const u_int16 & x, const u_int16 & y, gui::layout *window, const gui::fadetype & f = NONE);
@@ -105,10 +113,13 @@ private:
     /// forbid instantiation
     window_manager ();
     
-    static void fade(gui::manager_child & c);
+    static bool fade(gui::manager_child & c);
     
     /// the list of open windows
     static std::list<manager_child> Windows;
+
+    /// ui_event manager instance to decouple event triggering from event execution
+    static ui_event_manager EventManager;
 };
 
 } // namespace gui

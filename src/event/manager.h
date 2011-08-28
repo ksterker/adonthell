@@ -1,6 +1,4 @@
 /*
-   $Id: manager.h,v 1.6 2006/10/30 05:55:12 ksterker Exp $
-
    Copyright (C) 2000/2001/2002/2003/2004 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 

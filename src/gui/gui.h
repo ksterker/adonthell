@@ -12,6 +12,7 @@
 #include "gui/option.h"
 #include "gui/scrollview.h"
 #include "gui/textbox.h"
+#include "gui/ui_event.h"
 #include "gui/window_manager.h"
 
 #endif

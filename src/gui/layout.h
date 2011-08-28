@@ -44,6 +44,11 @@ namespace gui
          */
 		layoutchild (gui::widget *b, gfx::drawing_area & d) : Child(b), Pos(d) { }
         
+		/**
+		 * Destructor.
+		 */
+		virtual ~layoutchild() {}
+
         /// the widget
 		widget* Child;
         /// the widgets size and position

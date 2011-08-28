@@ -1,4 +1,6 @@
 #include "gui/conversation.h"
+#include "gui/ui_event.h"
+#include "event/manager.h"
 #include "base/logging.h"
 #include <iomanip>
 #include <iostream>
@@ -7,8 +9,8 @@
 
 namespace gui
 {
-	conversation::conversation(rpg::character & c, const u_int16 & w, const u_int16 & h, ::base::functor_0*e)
-	: scrollview(w, h), ct(w-30, h/3), lo(w, h), dlg(c), speaker(w-30, LINEHEIGHT), end(e)
+	conversation::conversation(rpg::character & c, const u_int16 & w, const u_int16 & h)
+	: scrollview(w, h), ct(w-30, h/3), lo(w, h), dlg(c), speaker(w-30, LINEHEIGHT)
 	{
         Look->init("window.xml");
         set_scroll_style("scrollbar.xml");
@@ -27,13 +29,19 @@ namespace gui
         update();
 	}
     
-	void conversation::selectopt(bool down, void* arg)
+	void conversation::selectopt(const events::event *evt)
 	{
-		answer* self = (answer*)arg;
+	    const ui_event *e = (const ui_event *) evt;
+		answer* self = (answer*) e->user_data();
 		self->obj->line = self->obj->dlg.run(self->which);
 		self->obj->update();
 	}
     
+	gui::ui_event *conversation::get_finished_event(void* user_data)
+	{
+	    return new ui_event(this, "finished", user_data);
+	}
+
 	bool conversation::update()
 	{
 		while (optcount)
@@ -45,13 +53,9 @@ namespace gui
 		optcount = 0;
 		if (!line) //this is null if we hit the end of the conversation
 		{
-			if (end) {
-				(*end)();
-				delete end;
-				end = NULL;
-			}
-			//speaker.setString(string(""));
-			//ct.setString("(End)");
+		    ui_event evt(this, "finished");
+		    events::manager::raise_event(&evt);
+		    window_manager::remove(this);
 			return false;
 		}
 		speaker.set_string(string(line->speaker()) + ":");
@@ -62,18 +66,13 @@ namespace gui
 		optcount = line->num_answers() > MAX_OPTS ? MAX_OPTS : line->num_answers();
          
         font *f = ct.get_font();
-		//the color from here doesnt work
-		unsigned int fc = rpg::character::get_player()->color();
-		LOG(INFO) << logging::indent() << "color changed to 0x"
-                  << std::setw(8) << std::setfill('0') << std::hex << fc;
-        f->set_color(fc);
+        f->set_color(rpg::character::get_player()->color());
 
 		for (i = 0; i < optcount; i++)
 		{
 			answers[i].which = i;
 			answers[i].obj = this;
 			options[i] = new button(length()-40, LINEHEIGHT);
-			options[i]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[i]->get_font()->set_size(LINEHEIGHT-1);
 			options[i]->set_multiline(true);
 			options[i]->set_style("list_item.xml");
@@ -82,6 +81,8 @@ namespace gui
 			options[i]->set_string(string(tmp)+line->answer(i));
 			options[i]->set_center(false, false);
             lo.add_child(*options[i]);
+
+            EventFactory.register_event (options[i]->get_activate_event( (void*)&answers[i]), ::base::make_functor(*this, &conversation::selectopt));
 		}
 		if (optcount == 0) 
 		{
@@ -89,7 +90,6 @@ namespace gui
 			answers[0].which = -1;
 			answers[0].obj = this;
 			options[0] = new button(length()-40, LINEHEIGHT);
-			options[0]->set_callback(::base::make_functor(*this, &conversation::selectopt), (void*)&answers[i]);
 			options[0]->get_font()->set_size(LINEHEIGHT-1);
 			options[0]->set_multiline(true);
 			options[0]->set_style("list_item.xml");
@@ -97,55 +97,67 @@ namespace gui
 			options[0]->set_center(false, false);
 			options[0]->set_color(0xffffffff);
 			lo.add_child(*options[0]);
+
+			EventFactory.register_event (options[0]->get_activate_event( (void*)&answers[0]), ::base::make_functor(*this, &conversation::selectopt));
 		}
 
         focus();
         reset();
         return true;
 	}
+
 	bool conversation::keyup(input::keyboard_event &k) 
 	{
+	    int i = -1;
+
 		switch (k.key())
 		{
 		case input::keyboard_event::N1_KEY:
 		case input::keyboard_event::KP1_KEY:
-			selectopt(true, &answers[0]);
+		    i = 0;
 			break;
 		case input::keyboard_event::N2_KEY:
 		case input::keyboard_event::KP2_KEY:
-			if (optcount > 0) selectopt(true, &answers[1]);
+            i = 1;
 			break;
 		case input::keyboard_event::N3_KEY:
 		case input::keyboard_event::KP3_KEY:
-			if (optcount > 1) selectopt(true, &answers[2]);
+            i = 2;
 			break;
 		case input::keyboard_event::N4_KEY:
 		case input::keyboard_event::KP4_KEY:
-			if (optcount > 2) selectopt(true, &answers[3]);
+            i = 3;
 			break;
 		case input::keyboard_event::N5_KEY:
 		case input::keyboard_event::KP5_KEY:
-			if (optcount > 3) selectopt(true, &answers[4]);
+            i = 4;
 			break;
 		case input::keyboard_event::N6_KEY:
 		case input::keyboard_event::KP6_KEY:
-			if (optcount > 4) selectopt(true, &answers[5]);
+            i = 5;
 			break;
 		case input::keyboard_event::N7_KEY:
 		case input::keyboard_event::KP7_KEY:
-			if (optcount > 5) selectopt(true, &answers[6]);
+            i = 6;
 			break;
 		case input::keyboard_event::N8_KEY:
 		case input::keyboard_event::KP8_KEY:
-			if (optcount > 6) selectopt(true, &answers[7]);
+            i = 7;
 			break;
 		case input::keyboard_event::N9_KEY:
 		case input::keyboard_event::KP9_KEY:
-			if (optcount > 7) selectopt(true, &answers[8]);
+            i = 8;
 			break;
 		default:
 			return layout::keyup(k);
 		}
-		return true;
+
+        if (optcount > i)
+        {
+            options[i]->activate();
+            return true;
+        }
+
+        return layout::keyup(k);
 	}
 };

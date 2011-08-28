@@ -18,6 +18,8 @@ pkgincludeinput_HEADERS = \
 	option.h \
 	scrollview.h \
 	textbox.h \
+	ui_event.h \
+	ui_event_manager.h \
 	widget.h \
     window_manager.h
 
@@ -37,6 +39,8 @@ libadonthell_gui_la_SOURCES = \
 	option.cpp \
     scrollview.cc \
 	textbox.cpp \
+	ui_event.cc \
+	ui_event_manager.cc \
 	widget.cpp \
     window_manager.cc
 
@@ -44,6 +48,7 @@ libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAG
 
 libadonthell_gui_la_LIBADD = $(PY_LIBS) \
     $(top_builddir)/src/base/libadonthell_base.la \
+    $(top_builddir)/src/event/libadonthell_event.la \
 	$(top_builddir)/src/input/libadonthell_input.la \
 	$(top_builddir)/src/gfx/libadonthell_gfx.la \
     $(top_builddir)/src/python/libadonthell_python.la \

@@ -13,6 +13,8 @@ set(adonthell_gui_SRCS
 	option.cpp
 	scrollview.cc
 	textbox.cpp
+	ui_event.cc
+	ui_event_manager.cc
 	widget.cpp
     window_manager.cc
 )
@@ -32,6 +34,8 @@ set(adonthell_gui_HEADERS
 	option.h
     scrollview.h
     textbox.h
+    ui_event.h
+    ui_event_manager.h
 	widget.h
     window_manager.h
 )
@@ -45,6 +49,7 @@ target_link_libraries(adonthell_gui
     ${LIBFT_LIBRARIES}
     ${PYTHON_LIBRARIES}
 	adonthell_base
+    adonthell_event
 	adonthell_gfx
 	adonthell_input	
 	adonthell_rpg	

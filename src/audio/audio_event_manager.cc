@@ -56,7 +56,9 @@ void audio_event_manager::raise_event (const event * e)
     for(idx = Listeners.begin(); idx != Listeners.end(); idx++)
     {
         if((*idx)->equals (e))
+        {
             (*idx)->raise_event(e);
+        }
     }
 }
 

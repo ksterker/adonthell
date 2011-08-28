@@ -1,8 +1,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 using std::string;
+
 #include "base/base.h"
+#include "event/factory.h"
 #include "gfx/gfx.h"
 #include "input/input.h"
 #include "gui/gui.h"
@@ -30,17 +33,22 @@ public:
 
 
 class GuiTest : public adonthell::app {
-  void changelabel(bool down, void* arg) {
-    gui::label* l = (gui::label*)arg;
-	std::stringstream s; 
-	static int count = 0;
-	count++;
-	s << "Click " << count;
-	l->set_string(s.str());
+  void changelabel(const events::event *evt) {
+      const gui::ui_event *e = (const gui::ui_event*)evt;
+      gui::label* l = (gui::label*)e->user_data();
+
+      std::stringstream s;
+      static int count = 0;
+      count++;
+      s << "Click " << count;
+      l->set_string(s.str());
   }
-  void print(bool down, void* arg) {
-    char* s = (char*) arg;
-	std::cout << s << ":" << (down?"down":"up") << "\n";
+  void print(const events::event *evt) {
+      const gui::ui_event *e = (const gui::ui_event*)evt;
+      gui::button *btn = (gui::button*) e->source();
+
+      char* s = (char *) e->user_data();
+      std::cout << s << " pressed\n";
   }
   int main () {
     
@@ -73,19 +81,24 @@ class GuiTest : public adonthell::app {
 	gui::label label_with_bg("label.xml");
 	label_with_bg.set_string("Is this readable?");
 
+
 	gui::button b("button.xml");
-	b.set_callback(base::make_functor(*this, &GuiTest::changelabel) , &l);
 	b.set_string("Click Me");
 	gui::button b2("button.xml");
-	b2.set_callback(base::make_functor(*this, &GuiTest::print), (void*)"button 2");
 	b2.set_string("Red Button");
 	gui::button b3(300,30);
-	b3.set_callback(base::make_functor(*this, &GuiTest::print), (void*)"button 3");
 	b3.set_string("Button 3");
 	b3.set_style("button.xml");
 	gui::option o1("button.xml");
-	o1.set_callback (base::make_functor(*this, &GuiTest::print), (void*)"option 1");
 	o1.set_string("Option 1");
+
+	// register callbacks
+    events::factory ftory;
+    ftory.register_event(b.get_activate_event((void*) &l), base::make_functor(*this, &GuiTest::changelabel));
+    ftory.register_event(b.get_activate_event((void*) "button 1"), base::make_functor(*this, &GuiTest::print));
+    ftory.register_event(b2.get_activate_event((void*) "button 2"), base::make_functor(*this, &GuiTest::print));
+    ftory.register_event(b3.get_activate_event((void*) "button 3"), base::make_functor(*this, &GuiTest::print));
+    ftory.register_event(o1.get_activate_event((void*) "option 1"), base::make_functor(*this, &GuiTest::print));
 
 	gui::textbox t1(400, 30);
 	

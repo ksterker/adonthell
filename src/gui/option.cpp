@@ -23,7 +23,9 @@
  * @brief  Implements the option class.
  */
 
-#include "option.h"
+#include "event/manager.h"
+#include "gui/option.h"
+#include "gui/ui_event.h"
 
 namespace gui
 {
@@ -58,11 +60,8 @@ namespace gui
 	{
 		Clicked = !Clicked;
 
-		if (OnClick)
-		{
-			// notify user of new state
-			(*OnClick)(Clicked, UserData);
-		}
+        gui::ui_event evt (this, "activate");
+        events::manager::raise_event (&evt);
 	}
 
 //no mouse support yet

@@ -73,9 +73,9 @@ namespace audio
          * @param e The audio event to compare this to.
          * @return \e True if the two events equal, \e false otherwise.
          */
-        bool equals (const events::event * e)
+        bool equals (const events::event * e) const
         {
-            return Sample == ((audio_event *)e)->Sample;
+            return Sample == ((const audio_event *)e)->Sample;
         }
 
 #ifndef SWIG

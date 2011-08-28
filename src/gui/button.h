@@ -27,12 +27,10 @@
 #define GUI_BUTTON_H
 
 #include "gui/label.h"
+#include "gui/ui_event.h"
 
 namespace gui
 {
-	/// callback for being notified of button presses
-	typedef ::base::functor_2<bool, void * > * clickevent;
-
 	/**
 	 * A widget that can receive focus and react to
 	 * user input. Otherwise it has the same functionality
@@ -53,7 +51,7 @@ namespace gui
 		 * @param height the height of the button.
 		 */
 		button(const u_int16 & width, const u_int16 & height)
-		: label (width, height), Clicked(false), OnClick(NULL), UserData(NULL)
+		: label (width, height), Clicked(false)
 		{
 			set_center (true, true);
 		}
@@ -64,7 +62,7 @@ namespace gui
          * @param style filename of widget decoration.
          */
 		button(const std::string & style)
-		: label (style), Clicked(false), OnClick(NULL), UserData(NULL)
+		: label (style), Clicked(false)
 		{
 			set_center (true, true);
 		}
@@ -74,39 +72,24 @@ namespace gui
 		 */
 		~button() 
         {
-            delete OnClick;
         }
 
 		/**
-		 * Set a callback to notify the user that the
-		 * button has been pressed. The callback will
-		 * be freed when the widget is destroyed or
-		 * a new callback is set. The argument is not.
+		 * Create an event required to register a callback that
+		 * reacts to button activation.
 		 *
-		 * @param c the callback to execute
-		 * @param arg the user data to pass to the callback.
+		 * @param user_data a user object that will be passed to
+		 *      the callback when the button is activated.
+		 * @return the ui_event for button activation.
 		 */
-		void set_callback (clickevent c, void* arg = NULL)
-		{
-			// cleanup first
-            delete OnClick;
-
-			OnClick = c;
-			UserData = arg;
-		}
+		gui::ui_event *get_activate_event (void* user_data = NULL);
 
 		/**
 		 * Called when the widget has been activated.
 		 * If present, executes the callback with the
 		 * user defined data.
 		 */
-		virtual void activate()
-		{
-			if (OnClick)
-			{
-				(*OnClick)(Clicked, UserData);
-			}
-		}
+		virtual void activate();
 
         /** 
          * Draw the object on the %screen.
@@ -168,10 +151,6 @@ namespace gui
 		//		virtual bool mouseup(SDL_MouseButtonEvent & m);
 		//		virtual bool mousedown(SDL_MouseButtonEvent & m);
 
-		/// callback to notify when user pressed the button
-		clickevent OnClick;
-		/// user data to pass to the callback
-		void* UserData;
 		/// whether the button is currently being pressed
 		bool Clicked;
 		/// the key that caused the button to be pressed

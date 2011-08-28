@@ -61,7 +61,8 @@ namespace gui
 		 */
 		//@{
 		/**
-		 * Set selection state of option widget.
+		 * Set selection state of option widget. This
+		 * does not trigger an event.
 		 * @param s true to select, false otherwise.
 		 */
 		void set_state(const bool & s) { Clicked = s; }

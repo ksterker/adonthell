@@ -23,8 +23,10 @@
  * @brief  Implements the button class.
  */
 
-#include "button.h"
 #include "base/logging.h"
+#include "event/manager.h"
+#include "gui/button.h"
+#include "gui/ui_event.h"
 
 /// offset of text in Clicked button
 #define CLICK_OFFSET 4
@@ -73,6 +75,18 @@ namespace gui
 
 		return false;
 	}
+
+    gui::ui_event* button::get_activate_event (void* user_data)
+    {
+        // create listener for button click event
+        return new ui_event(this, "activate", user_data);
+    }
+
+    void button::activate()
+    {
+        gui::ui_event evt (this, "activate");
+        events::manager::raise_event (&evt);
+    }
 
 //for if we have mouse support later
 /*

@@ -3,7 +3,9 @@
 
 %{
 #include "base/types.h"
+#include "event/event.h"
 #include "gui/gui.h"
+#include "gui/ui_event.h"
 #include "gui/conversation.h"
 #include "gui/window_manager.h"
 #include "python/callback.h"
@@ -36,6 +38,7 @@ namespace gui {
 
 %import "base/types.h"
 %import(module="gfx") "gfx/drawable.h"
+%import(module="event") "event/event.h"
 
 %include "gui/widget.h"
 %include "gui/font.h"
@@ -46,17 +49,8 @@ namespace gui {
 %include "gui/scrollview.h"
 %include "gui/option.h"
 %include "gui/textbox.h"
+%include "gui/ui_event.h"
 %include "gui/conversation.h"
 %include "gui/window_manager.h"
 
-namespace gui
-{
-    // class extension to handle Python callbacks
-    %extend conversation
-    {
-        conversation(rpg::character & d, int w, int h, PyObject *callback)
-        {
-            return new gui::conversation(d, w, h, new python::functor_0 (callback));
-        }
-    };
-}
+

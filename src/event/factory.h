@@ -1,7 +1,5 @@
 /*
-   $Id: factory.h,v 1.8 2009/04/08 21:52:09 ksterker Exp $
-
-   Copyright (C) 2000/2001/2002/2003/2004/2006 Kai Sterker <kaisterker@linuxgames.com>
+   Copyright (C) 2000/2001/2002/2003/2004/2006/2011 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
    Adonthell is free software; you can redistribute it and/or modify
@@ -69,7 +67,28 @@ namespace events
         void clear ();
     
         /**
-         * @name Factory Operations
+         * @name High level factory operations
+         */
+        //@{
+        /**
+         * Connect a Python callback for the given event.
+         *
+         * @param ev pointer to the %event to add.
+         * @param callback The method to call.
+         */
+        void register_event (event *ev, PyObject *callback);
+
+        /**
+         * Connect a C++ callback for the given event.
+         *
+         * @param ev pointer to the %event to add.
+         * @param callback The method to call.
+         */
+        void register_event (event *ev, base::functor_1<const events::event*> * callback);
+        //@}
+
+        /**
+         * @name Low level factory operations
          */
         //@{
         /** 

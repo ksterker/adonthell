@@ -1,7 +1,5 @@
 /*
- $Id: listener_python.h,v 1.2 2009/04/08 21:52:10 ksterker Exp $
- 
- Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2006/2011 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -83,7 +81,7 @@ namespace events
          *
          * @param callback The method to call.
          */
-        void connect_callback (base::functor_0 * callback);
+        void connect_callback (base::functor_1<const event*> * callback);
 #endif // SWIG
         
         /**

@@ -283,7 +283,7 @@ namespace world
         PyObject *add_schedule (PyObject *args) const;
         
         /// callback for alarm event
-        void on_alarm () { set_running (false); }
+        void on_alarm (const events::event *evt) { set_running (false); }
 
         /// whether the schedule should be executed 
         u_int16 Paused;

@@ -1,7 +1,5 @@
 /*
- $Id: listener_cxx.cc,v 1.2 2007/07/22 21:50:37 ksterker Exp $
- 
- Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2006/2011 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -23,10 +21,11 @@
  * @file   event/listener_cxx.cc
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
- * @brief  Implements a %listener with python callback attached.
+ * @brief  Implements a %listener with C++ callback attached.
  * 
  */
 
+#include "base/logging.h"
 #include "event/listener_cxx.h"
 
 using events::listener;
@@ -41,18 +40,19 @@ listener_cxx::listener_cxx (factory *f, event *e) : listener (f, e)
 // destructor
 listener_cxx::~listener_cxx ()
 {
+    delete Callback;
     Callback = NULL;
 }
 
 // set python method to be called when the event occurs
 bool listener_cxx::connect_callback (const string & file, const string & classname, const string & callback, PyObject *args)
 {
-    fprintf (stderr, "*** error: listener_cxx::connect_callback (python): unsupported operation!\n");
+    LOG(ERROR) << "listener_cxx::connect_callback (python): unsupported operation!";
     return false;
 }
 
 // set a C/C++ callback as event's action
-void listener_cxx::connect_callback (base::functor_0 * callback)
+void listener_cxx::connect_callback (base::functor_1<const event*> * callback)
 {
     Callback = callback;
 }
@@ -66,14 +66,14 @@ s_int32 listener_cxx::raise_event (const event* evnt)
         Event->do_repeat ();
         
         // execute callback
-        (*Callback) ();
+        (*Callback) (evnt);
     }
     else
     {
-        if (!Callback) fprintf (stderr, "*** warning: listener_cxx::raise_event: '%s' has no callback connected\n", Id.c_str());
+        if (!Callback) LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
         return 0;
     }
-    
+
     // return whether event needs be repeated or not
     return Event->repeat ();
 }

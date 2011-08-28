@@ -1,6 +1,4 @@
 /*
-   $Id: listener.cc,v 1.10 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2004/2005/2006/2007 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -27,6 +25,7 @@
  * 
  */
 
+#include "base/logging.h"
 #include "event/manager.h"
 #include "event/listener.h"
 
@@ -66,7 +65,7 @@ void listener::resume ()
 {
     if (Paused == 0)
     {
-        fprintf (stderr, "*** warning: listener::resume: listener '%s' was not paused!\n", Id.c_str());
+        LOG(WARNING) << "listener::resume: listener '" << Id << "' was not paused!";
         if (!Registered) manager::add (this);
     }
     else 
@@ -105,12 +104,11 @@ bool listener::get_state (base::flat & file)
         // try to load it
         if (Event == NULL || Event->get_state (file) == false)
         {
-            fprintf (stderr, "*** listener::get_state: '%s' could not load event of type '%s'!\n", Id.c_str(), type.c_str ());
+            LOG(ERROR) << "listener::get_state: '" << Id << "' could not load event of type '" << type << "'!";
             return false;
         }    
     }
 
     return file.success ();
 }
-
 

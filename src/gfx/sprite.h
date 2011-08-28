@@ -1,6 +1,4 @@
 /*
-   $Id: sprite.h,v 1.1 2008/07/10 20:19:37 ksterker Exp $
-
    Copyright (C) 1999/2000/2001/2002/2003 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -163,25 +161,26 @@ namespace gfx
 
         /**
          * Update sprite. Called once per game cycle to advance the
-         * current frame of the current sprite, if neccessary.
+         * current frame of the current sprite, if necessary.
+         * @param evt the time event triggering the update.
          * @return true.
          */
-        virtual bool update ();
+        bool update (const events::event *evt);
         
         /**
          * Start playing animation
          */
-        virtual void play ();
+        void play ();
         
         /**
          * Stop playing animation.
          */
-        virtual void stop ();
+        void stop ();
         
         /**
          * Set sprite back to first frame.
          */
-        virtual void rewind ();
+        void rewind ();
         //@}
 
         /**

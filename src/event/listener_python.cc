@@ -1,7 +1,5 @@
 /*
- $Id: listener_python.cc,v 1.3 2009/04/08 21:52:09 ksterker Exp $
- 
- Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2006/2011 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -27,6 +25,7 @@
  * 
  */
 
+#include "base/logging.h"
 #include "listener_python.h"
 #include "python/pool.h"
 
@@ -68,14 +67,14 @@ bool listener_python::connect_callback (const string & file, const string & clas
     Method = python::pool::connect (EVENTS_DIR + file, classname, callback);
     if (!Method)
     {
-        fprintf (stderr, "*** listener::connect_callback: connecting callback failed!\n");
+        LOG(ERROR) << "listener::connect_callback: connecting callback failed!";
         return false;
     }
     
     // make sure the given arguments are a tuple
     if (!args || !PyTuple_Check (args))
     {
-        if (args) fprintf (stderr, "*** warning: listener::connect_callback: argument must be a tuple!\n");
+        if (args) LOG(WARNING) << "listener::connect_callback: argument must be a tuple!";
         size = 2;
     }
     else size = PyTuple_GET_SIZE (args) + 2;
@@ -106,9 +105,9 @@ bool listener_python::connect_callback (const string & file, const string & clas
 }
 
 // set a C/C++ callback as event's action
-void listener_python::connect_callback (base::functor_0 * callback)
+void listener_python::connect_callback (base::functor_1<const event*> * callback)
 {
-    fprintf (stderr, "*** error: listener_cxx::connect_callback (cxx): unsupported operation!\n");
+    LOG(ERROR) << "listener_python::connect_callback (cxx): unsupported operation!";
 }
 
 // execute callback for given event
@@ -135,7 +134,7 @@ s_int32 listener_python::raise_event (const event* evnt)
     }
     else
     {
-        if (!Method) fprintf (stderr, "*** warning: listener::raise_event: '%s' no callback connected\n", Id.c_str());
+        if (!Method) LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
         return 0;
     }
     
@@ -176,7 +175,7 @@ bool listener_python::get_state (base::flat & file)
         Method = new python::method ();
         if (Method->get_state (file) == false)
         {
-            fprintf (stderr, "*** listener::get_state: restoring callback failed for '%s'!\n", Id.c_str());
+            LOG(ERROR) << "listener::get_state: restoring callback failed for '" << Id << "'!";
             return false;
         }
         

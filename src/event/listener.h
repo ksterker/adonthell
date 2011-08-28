@@ -1,6 +1,4 @@
 /*
-   $Id: listener.h,v 1.12 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -54,7 +52,7 @@ namespace events
 
     /**
      * %Listeners are usually created by a certain %event %factory and will
-     * be destroyed if the %factory is destroyed. That way, it's not neccessary
+     * be destroyed if the %factory is destroyed. That way, it's not necessary
      * to keep track of every single %listener. Instead, a few factories can
      * be used to create groups of listeners that can be disposed together.
      */
@@ -88,7 +86,7 @@ namespace events
         }
         
         /**
-         * Get the %event this 5listener waits for.
+         * Get the %event this %listener waits for.
          * @return %event attached to the %listener.
          */
         const event * get_event () const
@@ -165,8 +163,14 @@ namespace events
          */
         //@{  
         /**
-         * Sets a python method to be executed whenever an
-         * %event occurs that this listener listens to.
+         * Sets a python method to be executed whenever a %event occurs
+         * that this listener is registered for. Use this method if the
+         * callback is defined in a different python module, when you
+         * want to connect python callbacks from C++ or when you want to
+         * pass arbitrary data to the callback.
+         *
+         * Connecting a callback through this method is the only way to
+         * save and restore the listener completely.
          *
          * @param file Name of the script to load.
          * @param classname Name of the class containing the callback.
@@ -179,12 +183,12 @@ namespace events
 
 #ifndef SWIG
         /**
-         * Sets a C++ method to be executed whenever an
-         * %event occurs that this listener listens to.
+         * Sets a C++ method to be executed whenever a %event
+         * occurs that this listener is registered for.
          *
          * @param callback The method to call.
          */
-        virtual void connect_callback (base::functor_0 * callback) = 0;
+        virtual void connect_callback (base::functor_1<const events::event*> * callback) = 0;
 #endif // SWIG
 
         /**

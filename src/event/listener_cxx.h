@@ -1,7 +1,5 @@
 /*
- $Id: listener_cxx.h,v 1.1 2006/06/18 19:25:53 ksterker Exp $
- 
- Copyright (C) 2006 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2006/2011 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -23,7 +21,7 @@
  * @file   event/listener_cxx.h
  * @author Kai Sterker <kaisterker@linuxgames.com>
  * 
- * @brief  Declares a %listener with python callback attached.
+ * @brief  Declares a %listener with C++ callback attached.
  * 
  */
 
@@ -35,10 +33,10 @@
 namespace events
 {
     /**
-     * An %event %listener that contains a callback to a %python %method it
+     * An %event %listener that contains a callback to a C++ %method it
      * will execute when the event occurs that the %listener is waiting
      * for. A %listener is usually created by a certain %event %factory and will
-     * be destroyed if the %factory is destroyed. That way, it's not neccessary
+     * be destroyed if the %factory is destroyed. That way, it's not necessary
      * to keep track of every single %listener. Instead, a few factories can
      * be used to create groups of listeners that can be disposed together.
      */    
@@ -82,7 +80,7 @@ namespace events
          *
          * @param callback The method to call.
          */
-        void connect_callback (base::functor_0 * callback);
+        void connect_callback (base::functor_1<const event*> * callback);
 #endif // SWIG
         
         /**
@@ -124,7 +122,7 @@ namespace events
         /**
          * C++ callback that may be executed when the %event gets triggered.
          */
-        base::functor_0 * Callback;
+        base::functor_1<const event*> * Callback;
     };
 }
 

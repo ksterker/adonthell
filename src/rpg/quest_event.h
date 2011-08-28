@@ -97,7 +97,7 @@ namespace rpg
          * @param e The %quest %event to compare this to.
          * @return <b>True</b> if the two events equal, <b>false</b> otherwise.
          */
-        bool equals (const events::event * e);
+        bool equals (const events::event * e) const;
 
 		/**
 		 * Return %quest part that triggered this event.

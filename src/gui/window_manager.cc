@@ -31,14 +31,27 @@
 
 using gui::window_manager;
 
+/// the list of open windows
 std::list<gui::manager_child> window_manager::Windows;
+/// the ui event manager
+gui::ui_event_manager window_manager::EventManager;
 
 // render to screen
 void window_manager::update()
 {
+    // fire all pending events
+    EventManager.update();
+
+    // draw windows
     for (std::list<gui::manager_child>::reverse_iterator i = Windows.rbegin(); i != Windows.rend(); i++)
     {
-        if (i->Fading) fade (*i);
+        if (i->Fading && fade (*i))
+        {
+            delete i->Child;
+            Windows.remove (*i);
+            continue;
+        }
+
         i->Child->draw (i->x(), i->y(), NULL, gfx::screen::get_surface());
     }
 }
@@ -72,14 +85,15 @@ void window_manager::remove (gui::layout *window, const gui::fadetype & f)
         if (i->Child == window)
         {
             if (f) i->Fading = f;
-            else Windows.erase (i);
+            else i->Fading = PLAIN;
+            i->Showing = false;
             return;
         }
     }
 }
 
 // fade layout in or out
-void window_manager::fade (gui::manager_child & c)
+bool window_manager::fade (gui::manager_child & c)
 {
     // initial position
     if (c.Showing && c.Dx == 0 && c.Dy == 0)
@@ -118,7 +132,7 @@ void window_manager::fade (gui::manager_child & c)
                 c.Dx -= FADERATE;
                 if (c.Dx + c.Pos.x() + c.Pos.length() < 0)
                 {
-                    Windows.remove (c);
+                    return true;
                 }
             }
             break;
@@ -137,7 +151,7 @@ void window_manager::fade (gui::manager_child & c)
                 c.Dx+= FADERATE;
                 if (c.Dx + c.Pos.x() > gfx::screen::length())
                 {
-                    Windows.remove (c);
+                    return true;
                 }
             }
             break;
@@ -156,7 +170,7 @@ void window_manager::fade (gui::manager_child & c)
                 c.Dy -= FADERATE;
                 if (c.Dy + c.Pos.y() + c.Pos.height() < 0)
                 {
-                    Windows.remove (c);
+                    return true;
                 }
             }
             break;
@@ -175,9 +189,16 @@ void window_manager::fade (gui::manager_child & c)
                 c.Dy += FADERATE;
                 if (c.Dy + c.Pos.y() > gfx::screen::height())
                 {
-                    Windows.remove (c);
+                    return true;
                 }
             }
             break;
+        case PLAIN:
+        {
+            c.Fading = NONE;
+            return !c.Showing;
+        }
+
+        return false;
     }
 }

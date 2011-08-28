@@ -38,9 +38,9 @@ quest_event::quest_event (const std::string & pattern, quest_part *part)
 }
 
 // test two quest events for equality
-bool quest_event::equals (const events::event * e)
+bool quest_event::equals (const events::event * e) const
 {
-	quest_event *qevt = (quest_event *) e;
+	const quest_event *qevt = (const quest_event *) e;
 	std::vector<std::string>::const_iterator i = qevt->begin();
 	std::vector<std::string>::const_iterator j = Pattern.begin();
 	

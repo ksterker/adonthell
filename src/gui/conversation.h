@@ -2,6 +2,7 @@
 #define GUI_CONVERSATION_H
 
 #include "gui/gui.h"
+#include "event/factory.h"
 #include "rpg/dialog.h"
 #include "base/callback.h"
 #define MAX_OPTS 16
@@ -25,14 +26,17 @@ namespace gui
 		rpg::dialog dlg;
 		const rpg::dialog_line* line;
 		bool update();
-		void selectopt(bool down, void* arg);
+		void selectopt(const events::event *evt);
 		int opty;
 		int optcount;
-		::base::functor_0 * end;
 		void* arg;
 		unsigned int color;
+        /// all event listeners registered for the widget
+        events::factory EventFactory;
 	public:
-		conversation(rpg::character & d, const u_int16 & w, const u_int16 & h, ::base::functor_0* e=NULL);
+		conversation(rpg::character & d, const u_int16 & w, const u_int16 & h);
+
+	    gui::ui_event *get_finished_event(void* user_data);
 
 		virtual bool keyup(input::keyboard_event &k);
 	};

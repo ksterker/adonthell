@@ -127,7 +127,7 @@ namespace events
          * @param evnt pointer to the %event to compare with.
          * @return \e true if the events are equal, \e false otherwise.
          */
-        virtual bool equals (const event* evnt) = 0;
+        virtual bool equals (const event* evnt) const = 0;
 
         /**
          * @name Loading / Saving
