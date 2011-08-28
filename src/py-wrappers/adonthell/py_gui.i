@@ -16,6 +16,17 @@
 
 // typemap for passing a vector<textsize> as out parameter
 namespace gui {
+    %rename (_forbidden_add) window_manager::add;   
+    
+    %extend window_manager {
+        %pythoncode {
+            def add (x, y, window, fade = 0):
+                window.thisown = 0
+                return _gui.window_manager__forbidden_add (x, y, window, fade)
+            add = staticmethod(add)
+        }
+    }
+
     %typemap(in, numinputs = 0) (std::vector<gui::textsize> &, int & x, int & y) "
         std::vector<gui::textsize> v;
         int x, y;

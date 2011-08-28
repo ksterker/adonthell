@@ -23,12 +23,17 @@ using rpg::quest_part;
 namespace rpg {
     // make sure that C++ gets ownership of the item passed to item_storage::add,
     // but only if it has been actually added
-    %feature("shadow") item_storage::add {
-        def add (self, item):
-            if _rpg.item_storage_add (self, item) == 1:
-                item.thisown = 0
-                return 1
-            return 0
+    %rename (_forbidden_add) item_storage::add;   
+    
+    %extend item_storage {
+        %pythoncode {
+            def add (item):
+                if _rpg.item_storage__forbidden_add (item) == 1:
+                    item.thisown = 0
+                    return 1
+                return 0
+            add = staticmethod(add)
+        }
     }
 
     %feature("shadow") inventory::add {
@@ -37,6 +42,13 @@ namespace rpg {
                 item.thisown = 0
             return count
     }
+    
+    %feature("shadow") slot::add {
+        def add (self, item, count = 1):
+            if _rpg.slot_add (self, item, count) != count:
+                item.thisown = 0
+            return count
+    }   
 }
 
 // typemap for returning a vector<const char*> as python list

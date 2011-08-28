@@ -43,8 +43,6 @@ class action_talk (object):
         self.factory.register_event (dlg_wnd.get_finished_event(None), self.on_finished)
         # -- ... and add it to the gui manager
         gui.window_manager.add (20, 20, dlg_wnd)
-        # -- window manager takes ownership of window
-        dlg_wnd.thisown = 0
 
     def on_finished (self, ui_event):
         """

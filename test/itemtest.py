@@ -248,7 +248,7 @@ class itemtest (object):
         print "done\nCreating coins ...",
         Coin = rpg.item (0)
         Coin.get_state (self.path + "coin.item")
-        rpg.item_storage_add (Coin)
+        rpg.item_storage.add (Coin)
 
         # -- create some inventories
         print "done\nCreating inventories ...",
