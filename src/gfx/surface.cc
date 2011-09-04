@@ -86,6 +86,8 @@ namespace gfx
             Dy=y1-y2;
         }
 
+        if (!Dx && !Dy) return;
+
         // put_pix() requires locking of surface
         lock();
         
@@ -95,7 +97,7 @@ namespace gfx
             inc2=Dy<<1;
             Err=inc2-Dx;
 
-            for(i=0;i<Dx;i++)
+            for(i=0;i<=Dx;i++)
             {
                 if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
                                 y >= da.y() && y < da.y() + da.height()))
@@ -118,7 +120,7 @@ namespace gfx
             inc2=Dx<<1;
             Err=inc2-Dy;
 
-            for(i=0;i<Dy;i++)
+            for(i=0;i<=Dy;i++)
             {
                 if (!da_opt || (x >= da.x() && x < da.x() + da.length() &&
                                 y >= da.y() && y < da.y() + da.height()))
