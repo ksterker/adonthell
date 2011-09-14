@@ -204,6 +204,8 @@ public:
     {
         CurrentState = Decoration.end();
         FocusOverlay = Decoration.end();
+
+        init ();
     }
     
     /**
@@ -297,6 +299,12 @@ public:
     void draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_area * da, gfx::surface * target, const u_int32 & parts = BORDER | BACKGROUND) const;
     
 protected:
+
+    /**
+     * Set default, empty style.
+     */
+    void init ();
+
     /**
      * Reset to initial state.
      */

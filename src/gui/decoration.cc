@@ -209,6 +209,21 @@ gui::decoration_factory gui::decoration_factory::DEFAULT;
 // a border of size 0
 gfx::drawing_area decoration::EMPTY_BORDER;
 
+// initialize a default decoration
+void decoration::init ()
+{
+    base::flat record;
+    record.put_bool("has_border", false);
+
+    decoration_factory *factory = Factory ? Factory : &decoration_factory::DEFAULT;
+    std_decoration *di = factory->create_decorator("Default");
+    if (di->init (record))
+    {
+        Decoration["Default"] = di;
+        set_state ("Default");
+    }
+}
+
 // initialize decoration
 bool decoration::init (const std::string & name)
 {
