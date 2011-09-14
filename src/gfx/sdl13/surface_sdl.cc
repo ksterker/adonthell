@@ -544,7 +544,7 @@ namespace gfx
             set_length (0);
             set_height (0); 
             set_alpha (255);
-            set_mask (false);
+            is_masked_ = false;
         }
     }
 

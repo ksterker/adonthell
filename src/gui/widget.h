@@ -124,6 +124,7 @@ namespace gui
 		virtual void set_style (const std::string & style)
 		{
 			Look->init (style);
+			Look->set_size (length(), height());
 		}
 
 #ifndef SWIG
