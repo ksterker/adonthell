@@ -100,9 +100,10 @@ namespace base
              * user supplied data directory and finally the built in data directory.
              * If found, the path to the location will be prepended to location.
              * @param location file to locate within the Adonthell search path.
+             * @param log_error whether to log error if file not found. True by default.
              * @return \c true on success, \c false if the file doesn't exist.
              */
-            bool find_in_path (std::string & location) const;
+            bool find_in_path (std::string & location, const bool & log_error = true) const;
                 
             /**
              * Return the configuration data directory.

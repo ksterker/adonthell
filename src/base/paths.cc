@@ -202,7 +202,7 @@ bool paths::open (igzstream & file, const std::string & path) const
 }
 
 // find the given path in Adonthell's search paths
-bool paths::find_in_path (std::string & path) const
+bool paths::find_in_path (std::string & path, const bool & log_error) const
 {
     struct stat statbuf;
     
@@ -238,16 +238,19 @@ bool paths::find_in_path (std::string & path) const
         return true;
     }
     
-    // print search paths on failure
-    LOG(ERROR) << "*** paths::find_in_path: file '" << path << "' does not exist in search path:";
-    if (IncludeSaveDir) LOG(ERROR) << "  - " << SaveDataDir;
-    if (IncludeUserDir) LOG(ERROR) << "  - " << UserDataDir;
-    LOG(ERROR) << "  - " << GameDataDir;
+    if (log_error)
+    {
+        // print search paths on failure
+        LOG(ERROR) << "*** paths::find_in_path: file '" << path << "' does not exist in search path:";
+        if (IncludeSaveDir) LOG(ERROR) << "  - " << SaveDataDir;
+        if (IncludeUserDir) LOG(ERROR) << "  - " << UserDataDir;
+        LOG(ERROR) << "  - " << GameDataDir;
 
-    char *cwd = getcwd (NULL, 0); 
-    LOG(ERROR) << "  - " << cwd;
-    free (cwd);
-              
+        char *cwd = getcwd (NULL, 0);
+        LOG(ERROR) << "  - " << cwd;
+        free (cwd);
+    }
+
     return false;
 }
 
