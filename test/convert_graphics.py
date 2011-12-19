@@ -23,7 +23,7 @@ def convert_raw_image (img, name):
             g = img.get_uint8 ()
             b = img.get_uint8 ()
             if r == 255 and g == 0 and b == 255: a = 0
-            col = png.map_color (r, g, b, a)
+            col = png.map_color (b, g, r, a)
             png.put_pix (x, y, col)
         
     png.unlock ()
