@@ -150,8 +150,8 @@ void app::parse_args (int & argc, char *argv[])
 
     LOG(INFO) << logging::indent()
               << "Program '" << argv[0] << "' has "
-              << argc << " args:"
-        ;
+              << argc << " args:";
+
     for (int i = 1; i < argc; i++)
         LOG(INFO) << logging::indent() << "[" << i << "]: '" << argv[i] << "'";
 

@@ -94,7 +94,7 @@ def convert_character (mobj, name):
 def convert():
     """ convert either animation or mapobject """
     
-    file = sys.argv[1]
+    file = sys.argv[-1]
     
     old_gfx = base.igzstream ()
     old_gfx.open (file)
@@ -132,4 +132,4 @@ def convert():
 # -- entry point to the script
 if __name__ == '__main__':
     myApp = main.AdonthellApp ()
-    myApp.init (convert)
+    myApp.init (convert, 0)

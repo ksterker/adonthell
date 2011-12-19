@@ -50,8 +50,7 @@ libadonthell_base_la_SOURCES = \
 
 libadonthell_base_la_CXXFLAGS = $(XML_CPPFLAGS) $(XML_CFLAGS) $(libgmock_CFLAGS) \
         -DPKGLIBDIR=\"$(backenddir)\" $(AM_CXXFLAGS)
-libadonthell_base_la_LIBADD = $(XML_LIBS) $(libglog_LIBS) \
-        $(LIBLTDL) -lz -lltdl
+libadonthell_base_la_LIBADD = $(XML_LIBS) $(libglog_LIBS) $(LIBS)
 
 ## Unit tests
 test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)

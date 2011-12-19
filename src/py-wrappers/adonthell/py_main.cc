@@ -56,35 +56,36 @@ int AdonthellApp::main ()
 // init adonthell framework from python
 void AdonthellApp::init (PyObject *main_func, const bool & parse_args) 
 {
-    int argc = 0;
+    int argc = 1;
     char **argv = NULL;
     MainFunc = new python::functor_0ret<int> (main_func);
 
     // retrieve args passed to script?
-    if (parse_args == true)
+    PyObject *py_args = PySys_GetObject ((char *) "argv");
+    if (py_args && PyList_Check (py_args))
     {
-        PyObject *py_args = PySys_GetObject ((char *) "argv");
-        if (py_args && PyList_Check (py_args))
+        if (parse_args == true)
         {
             argc = PyList_GET_SIZE (py_args);
-            argv = new char*[argc];
+        }
 
-            // copy over args from python side
-            for (int i = 0; i < argc; i++)
-            {
-                // return borrowed reference to python arguments
-                PyObject *item = PyList_GET_ITEM (py_args, i);
-                if (item && PyString_Check (item))
-                    argv[i] = PyString_AsString (item);
-            }
+        argv = new char*[argc];
+
+        // copy over args from python side
+        for (int i = 0; i < argc; i++)
+        {
+            // return borrowed reference to python arguments
+            PyObject *item = PyList_GET_ITEM (py_args, i);
+            if (item && PyString_Check (item))
+                argv[i] = PyString_AsString (item);
+        }
             
-            // 'fix' argv[0]
-            if (argc > 0)
-            {
-                char *prog = new char[strlen (argv[0]) + 8];
-                sprintf (prog, "python %s", argv[0]);
-                argv[0] = prog;
-            }
+        // 'fix' argv[0]
+        if (argc > 0)
+        {
+            char *prog = new char[strlen (argv[0]) + 8];
+            sprintf (prog, "python %s", argv[0]);
+            argv[0] = prog;
         }
     }
     
