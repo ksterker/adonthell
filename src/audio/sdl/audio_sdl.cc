@@ -29,6 +29,8 @@
 #include <iostream>
 #include <map>
 
+#define SDL_NO_COMPAT 1
+
 #include "SDL.h"
 #include "SDL_mixer.h"
 

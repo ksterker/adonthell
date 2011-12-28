@@ -21,6 +21,7 @@
 #ifndef SURFACE_SDL_H_
 #define SURFACE_SDL_H_
 
+#define SDL_NO_COMPAT 1
 
 #include "gfx/surface_ext.h"
 #include "SDL.h"

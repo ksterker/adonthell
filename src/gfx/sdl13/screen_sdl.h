@@ -21,7 +21,6 @@
 #ifndef GFX_SDL_SCREEN_H_
 #define GFX_SDL_SCREEN_H_
 
-#include "SDL.h"
 #include "base/logging.h"
 #include "gfx/screen.h"
 #include "surface_sdl.h"

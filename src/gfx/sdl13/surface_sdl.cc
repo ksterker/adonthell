@@ -117,7 +117,7 @@ namespace gfx
         if (is_masked_)
         {
             u_int32 trans_col = alpha_channel_? SDL_MapRGBA(s->format, 0xFF, 0x00, 0xFF, 0xFF) : SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF);
-            SDL_SetColorKey(s, SDL_SRCCOLORKEY, trans_col);
+            SDL_SetColorKey(s, 1, trans_col);
         }
 
         if (alpha_channel_ || alpha_ != 255)

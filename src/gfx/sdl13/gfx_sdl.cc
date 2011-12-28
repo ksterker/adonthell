@@ -25,9 +25,7 @@
 #endif
 
 #include <iostream>
-#include "surface_sdl.h"
 #include "screen_sdl.h"
-#include "SDL.h"
 #include "base/logging.h"
 
 extern "C"

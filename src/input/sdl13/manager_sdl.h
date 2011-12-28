@@ -32,6 +32,8 @@
 #ifndef INPUT_MANAGER_SDL_H
 #define INPUT_MANAGER_SDL_H
 
+#define SDL_NO_COMPAT 1
+
 #include "input/input.h"
 #include "SDL.h"
 #include <vector>
