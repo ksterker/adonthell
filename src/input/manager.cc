@@ -43,8 +43,12 @@ namespace input
 
     void manager::raise_event(event & ev)
     {
-        for (std::list<listener *>::iterator it = listeners.begin(); 
-             it != listeners.end(); it++)
+        // use a copy of listener list, so add/remove/give_focus can
+        // be safely called from an event handler. Not optimal, but works.
+        std::list<listener *> localListeners (listeners);
+
+        for (std::list<listener *>::iterator it = localListeners.begin();
+             it != localListeners.end(); it++)
         {
             bool res = (*it)->raise_event(&ev);
             if (res) break;

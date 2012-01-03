@@ -69,7 +69,7 @@ namespace input
         
         /**
          * Raise an arbitrary event. This will simulate the event and
-         * will behave as if it really occured.
+         * will behave as if it really occurred.
          * 
          */
         static void raise_event(event & ev);
