@@ -16,16 +16,55 @@
 
 // typemap for passing a vector<textsize> as out parameter
 namespace gui {
-    %rename (_forbidden_add) window_manager::add;   
     
-    %extend window_manager {
-        %pythoncode {
-            def add (x, y, window, fade = 0):
-                window.thisown = 0
-                return _gui.window_manager__forbidden_add (x, y, window, fade)
-            add = staticmethod(add)
+    %apply SWIGTYPE *DISOWN { layout *window_disowned };
+    %apply SWIGTYPE *DISOWN { widget *child_disowned };
+    
+    // make sure window_manager takes ownership of windows
+    %extend window_manager 
+    { 
+        static void add(const u_int16 & x, const u_int16 & y, gui::layout *window_disowned, const gui::fadetype & f = NONE) 
+        {
+            gui::window_manager::add(x, y, window_disowned, f); 
         }
     }
+    %ignore window_manager::add; 
+    
+    // make sure layout takes ownership of children
+    %extend layout
+    {
+        void add_child (gui::widget & child_disowned, const s_int16 & x, const s_int16 & y)
+        {
+            $self->add_child (child_disowned, x, y);
+        }
+    }
+    %ignore layout::add_child; 
+
+    // make sure list_layout takes ownership of children
+    %extend list_layout
+    {
+        void add_child (gui::widget & child_disowned)
+        {
+            $self->add_child (child_disowned);
+        }
+        
+        void insert_child (widget & child_disowned, const u_int32 & pos)
+        {
+            $self->insert_child (child_disowned, pos);
+        }
+    }
+    %ignore list_layout::add_child;
+    %ignore list_layout::insert_child;
+
+    // make sure scrollview takes ownership of wrapped container
+    %extend scrollview
+    {
+        void set_child (gui::layout & window_disowned)
+        {
+            $self->set_child (window_disowned);
+        }
+    }
+    %ignore scrollview::set_child; 
 
     %typemap(in, numinputs = 0) (std::vector<gui::textsize> &, int & x, int & y) "
         std::vector<gui::textsize> v;
@@ -56,6 +95,7 @@ namespace gui {
 %include "gui/label.h"
 %include "gui/button.h"
 %include "gui/layout.h"
+%include "gui/listlayout.h"
 %include "gui/canvas.h"
 %include "gui/indicatorbar.h"
 %include "gui/scrollview.h"
