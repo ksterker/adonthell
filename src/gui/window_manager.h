@@ -66,7 +66,7 @@ public:
 
     s_int32 y()
     {
-        return Dx + Pos.x();
+        return Dy + Pos.y();
     }
 
     bool operator== (const gui::manager_child & c)
