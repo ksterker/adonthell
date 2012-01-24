@@ -31,7 +31,7 @@
  */
 
 
-#include "manager.h"
+#include "input/manager.h"
 #include <algorithm>
 
 namespace input

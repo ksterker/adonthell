@@ -2,8 +2,8 @@ AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt sdlgl/screen_sdlgl.h sdlgl/surface_sdlgl.h sdlgl/gfx_sdlgl.cc \
 	sdlgl/screen_sdlgl.cc sdlgl/surface_sdlgl.cc sdl/screen_sdl.h sdl/surface_sdl.h \
-	sdl/gfx_sdl.cc sdl/screen_sdl.cc sdl/surface_sdl.cc sdl13/screen_sdl.h sdl13/surface_sdl.h \
-	sdl13/gfx_sdl.cc sdl13/screen_sdl.cc sdl13/surface_sdl.cc
+	sdl/gfx_sdl.cc sdl/screen_sdl.cc sdl/surface_sdl.cc sdl2/screen_sdl.h sdl2/surface_sdl.h \
+	sdl2/gfx_sdl.cc sdl2/screen_sdl.cc sdl2/surface_sdl.cc
 
 
 ## Our header files

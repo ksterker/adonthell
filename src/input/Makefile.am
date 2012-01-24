@@ -1,8 +1,8 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt sdl/manager_sdl.h sdl/input_sdl.cc \
-	sdl/manager_sdl.cc sdl13/manager_sdl.h sdl13/input_sdl.cc \
-	sdl13/manager_sdl.cc
+	sdl/manager_sdl.cc sdl2/manager_sdl.h sdl2/input_sdl.cc \
+	sdl2/manager_sdl.cc
 
 
 ## Our header files

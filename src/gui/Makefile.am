@@ -44,7 +44,7 @@ libadonthell_gui_la_SOURCES = \
 	widget.cpp \
     window_manager.cc
 
-libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS) -D__BIG_ENDIAN__
+libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS)
 
 libadonthell_gui_la_LIBADD = $(PY_LIBS) \
     $(top_builddir)/src/base/libadonthell_base.la \

@@ -41,19 +41,19 @@ target_link_libraries(adonthell_gfx
 
 ################################
 # Create the SDL Backend
-IF(${SDL_VERSION} STREQUAL 1.3)
+IF(${SDL_VERSION} STREQUAL 2.0)
 set(gfx_sdl_SRCS
-	sdl13/gfx_sdl.cc
-    sdl13/screen_sdl.cc
-    sdl13/surface_sdl.cc
+	sdl2/gfx_sdl.cc
+    sdl2/screen_sdl.cc
+    sdl2/surface_sdl.cc
 )
-ELSE(${SDL_VERSION} STREQUAL 1.3)
+ELSE(${SDL_VERSION} STREQUAL 2.0)
 set(gfx_sdl_SRCS
 	sdl/gfx_sdl.cc
     sdl/screen_sdl.cc
     sdl/surface_sdl.cc
 )
-ENDIF(${SDL_VERSION} STREQUAL 1.3)
+ENDIF(${SDL_VERSION} STREQUAL 2.0)
 
 # Add specific include directory for this library.
 include_directories(${SDL_INCLUDE_DIR})
