@@ -76,11 +76,11 @@ namespace gfx
                 return false;
             }
 
-            Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED);
+            Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_TARGETTEXTURE);
             if (!Renderer)
             {
                 LOG(WARNING) << logging::indent() << "Failed creating accelerated renderer: " << SDL_GetError();
-                Renderer = SDL_CreateRenderer(Window, -1, 0);
+                Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_SOFTWARE);
                 if (!Renderer)
                 {
                     LOG(ERROR) << logging::indent() << "Failed creating renderer: " << SDL_GetError();

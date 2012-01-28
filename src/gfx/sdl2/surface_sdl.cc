@@ -29,6 +29,7 @@ namespace gfx
 {
     SDL_Rect surface_sdl::srcrect; 
     SDL_Rect surface_sdl::dstrect; 
+    SDL_Texture *surface_sdl::RenderTarget = NULL;
 
     surface_sdl::surface_sdl() : surface_ext () 
     { 
@@ -60,25 +61,18 @@ namespace gfx
         {
             is_masked_ = true;
        
-            SDL_Surface *s1 = to_sw_surface();
+            // todo
             SDL_Surface *s2 = SDL_CreateRGBSurfaceFrom(NULL, length(), height(),
                             32, 0, R_MASK, G_MASK, B_MASK, A_MASK);
-
             Info->Format = s2->format->format;
 
-            SDL_Texture *tmp = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, length(), height());
+            SDL_Texture *tmp = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, length(), height());
             if (!tmp) LOG(ERROR) << "*** surface_sdl::set_mask: " << SDL_GetError();
 
-            SDL_LockTexture(tmp, NULL, &s2->pixels, &s2->pitch);
-
-            SDL_SetSurfaceAlphaMod (s1, SDL_ALPHA_OPAQUE);
-            SDL_SetSurfaceBlendMode (s1, SDL_BLENDMODE_NONE);
-            SDL_BlitSurface (s1, NULL, s2, NULL);
-
-            SDL_UnlockTexture(tmp);
-
-            SDL_FreeSurface(s1);
-            SDL_FreeSurface(s2);
+            set_render_target (tmp);
+            SDL_SetTextureAlphaMod (Surface, SDL_ALPHA_OPAQUE);
+            SDL_SetTextureBlendMode (Surface, SDL_BLENDMODE_NONE);
+            SDL_RenderCopy (display->get_renderer(), Surface, NULL, NULL);
             SDL_DestroyTexture(Surface);
 
             Surface = tmp;
@@ -138,38 +132,24 @@ namespace gfx
         if (!dstrect.w || !dstrect.h)
             return;
 
-        if (!target || target == display)
+        SDL_Texture *render_target = target != NULL ? ((surface_sdl*) target)->Surface : NULL;
+        set_render_target (render_target);
+
+        if (alpha_channel_ || alpha_ != 255)
         {
-            // blit to screen surface (--> hardware accelerated)
-            if (alpha_channel_ || alpha_ != 255)
-            {
-                if (!alpha_channel_ || is_masked_) SDL_SetTextureAlphaMod(Surface, alpha_);
-                SDL_SetTextureBlendMode(Surface, SDL_BLENDMODE_BLEND);
-            }
-
-            if (base::Scale > 1)
-            {
-                dstrect.x *= base::Scale;
-                dstrect.y *= base::Scale;
-                dstrect.w *= base::Scale;
-                dstrect.h *= base::Scale;
-            }
-
-            SDL_RenderCopy (display->get_renderer(), Surface, &srcrect, &dstrect);
+            if (!alpha_channel_ || is_masked_) SDL_SetTextureAlphaMod(Surface, alpha_);
+            SDL_SetTextureBlendMode(Surface, SDL_BLENDMODE_BLEND);
         }
-        else
+
+        if (base::Scale > 1)
         {
-            // blit from one surface to another (--> needs to be in software)
-            SDL_Surface *source_surf = to_sw_surface ();
-            SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface ();
-
-            SDL_BlitSurface (source_surf, &srcrect, target_surf, &dstrect);
-
-            target->unlock();
-
-            SDL_FreeSurface(source_surf);
-            SDL_FreeSurface(target_surf);
+            dstrect.x *= base::Scale;
+            dstrect.y *= base::Scale;
+            dstrect.w *= base::Scale;
+            dstrect.h *= base::Scale;
         }
+
+        SDL_RenderCopy (display->get_renderer(), Surface, &srcrect, &dstrect);
     }
 
     void surface_sdl::fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h, u_int32 col, 
@@ -191,36 +171,22 @@ namespace gfx
             dstrect.h = h;
         }
 
-        if (this == display)
+        u_int8 r, g, b, a;
+        unmap_color(col, r, g, b, a);
+
+        if (base::Scale > 1)
         {
-            u_int8 r, g, b, a;
-            unmap_color(col, r, g, b, a);
-
-            if (base::Scale > 1)
-            {
-                dstrect.x *= base::Scale;
-                dstrect.y *= base::Scale;
-                dstrect.w *= base::Scale;
-                dstrect.h *= base::Scale;
-            }
-
-            SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
-            SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
-            SDL_RenderFillRect(display->get_renderer(), &dstrect);
+            dstrect.x *= base::Scale;
+            dstrect.y *= base::Scale;
+            dstrect.w *= base::Scale;
+            dstrect.h *= base::Scale;
         }
-        else
-        {
-            lock(&dstrect);
 
-            u_int32 src[dstrect.w * dstrect.h];
-            std::fill_n(src, dstrect.w * dstrect.h, col);
+        set_render_target (Surface);
 
-            SDL_ConvertPixels (dstrect.w, dstrect.h,
-                SDL_PIXELFORMAT_ARGB8888, (void*) src, dstrect.w*4,
-                Info->Format, Info->Pixels, Info->Pitch);
-
-            unlock();
-        }
+        SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
+        SDL_RenderFillRect(display->get_renderer(), &dstrect);
     }
 
     // convert RGBA color to surface format
@@ -262,93 +228,20 @@ namespace gfx
 
     void surface_sdl::put_pix (u_int16 x, u_int16 y, u_int32 col) 
     {
+        if (base::Scale > 1)
+        {
+            fillrect(x, y, 1, 1, col);
+            return;
+        }
+
         u_int8 r, g, b, a;
-
-        if (this == display)
-        {
-            unmap_color(col, r, g, b, a);
-            
-            if (base::Scale > 1)
-            {
-                fillrect(x, y, 1, 1, col);
-                return;
-            }
-
-            SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
-            SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
-            SDL_RenderDrawPoint(display->get_renderer(), x, y);
-            return;
-        }
-
-        if (!Info->Pixels) return;
-
-        u_int8 *offset = ((Uint8 *) Info->Pixels) + y * Info->Pitch + x * Info->BytesPerPixel;
-
-        if (!alpha_channel_)
-        {
-            unmap_color(col, r, g, b, a);
-            
-            switch (Info->Format)
-            {
-                case SDL_PIXELFORMAT_RGB24:
-                    *(offset) = r;
-                    *(++offset) = g;
-                    *(++offset) = b;
-                    break;
-                case SDL_PIXELFORMAT_BGR24:
-                    *(offset) = b;
-                    *(++offset) = g;
-                    *(++offset) = r;
-                    break;
-            }
-            return;
-        }
-
-#ifdef __BIG_ENDIAN__
-        unmap_color(col, b, a, g, r);
-#else
         unmap_color(col, r, g, b, a);
-#endif
-                
-        switch (Info->Format)
-        {
-            case SDL_PIXELFORMAT_BGR888:
-                *(++offset) = r;
-                *(++offset) = g;
-                *(++offset) = b;
-                break;
-            case SDL_PIXELFORMAT_RGBA8888:
-                *(offset) = a;
-                *(++offset) = r;
-                *(++offset) = g;
-                *(++offset) = b;
-                break;
-            case SDL_PIXELFORMAT_ARGB8888:
-                *(offset) = r;
-                *(++offset) = g;
-                *(++offset) = b;
-                *(++offset) = a;
-                break;
-            case SDL_PIXELFORMAT_RGB888:
-                *(++offset) = b;
-                *(++offset) = g;
-                *(++offset) = r;
-                break;
-            case SDL_PIXELFORMAT_ABGR8888:
-                *(offset) = b;
-                *(++offset) = g;
-                *(++offset) = r;
-                *(++offset) = a;
-                break;
-            case SDL_PIXELFORMAT_BGRA8888:
-                *(offset) = a;
-                *(++offset) = b;
-                *(++offset) = g;
-                *(++offset) = r;
-                break;
-            default:
-                LOG(FATAL) << "*** sdl::put_pix: Unsupported format " << SDL_GetPixelFormatName(Info->Format);
-        }
+
+        set_render_target (Surface);
+
+        SDL_SetRenderDrawBlendMode(display->get_renderer(), SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(display->get_renderer(), r, g, b, a);
+        SDL_RenderDrawPoint(display->get_renderer(), x, y);
     }
 
     u_int32 surface_sdl::get_pix (u_int16 x, u_int16 y) const
@@ -433,41 +326,11 @@ namespace gfx
     		height() * factor > target->height())
     		return;
 
-    	lock(NULL);
-        SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface ();
+    	surface_sdl *target_sdl = (surface_sdl*) target;
 
-        u_int8 *target_data = (u_int8*) target_surf->pixels;
-        s_int32 target_line_length = target_surf->format->BytesPerPixel * target->length();
-
-        for (s_int32 src_y = 0; src_y < height(); ++src_y)
-        {
-            s_int32 target_x = 0;
-            s_int32 target_x_end = 0;
-
-            // we scale one line horizontally
-            for (s_int32 src_x = 0; src_x < length(); ++src_x)
-            {
-                u_int32 px = get_pix (src_x, src_y);
-                for (target_x_end += factor; target_x < target_x_end; ++target_x)
-                {
-                    target->put_pix (target_x, src_y * factor, px);
-                }
-            }
-
-            // the next lines will be the same, so we just copy them
-            for (u_int32 i = 1; i < factor; i++)
-            {
-                u_int8 *target_next_line = target_data + target_surf->pitch;
-                memcpy (target_next_line, target_data, target_line_length);
-                target_data = target_next_line;
-            }
-
-            // goto next line
-            target_data += target_surf->pitch;
-        }
-
-        target->unlock();
-        SDL_FreeSurface(target_surf);
+    	SDL_Rect dest = { 0, 0, length() * factor, height() * factor };
+    	set_render_target (target_sdl->Surface);
+        SDL_RenderCopy(display->get_renderer(), Surface, NULL, &dest);
     }
 
     surface & surface_sdl::operator = (const surface& src)
@@ -486,26 +349,16 @@ namespace gfx
         }
         else
         {
-            int l, h, pitch;
-            void *src_pixels, *dst_pixels;
+            int l, h;
 
             SDL_QueryTexture(src_sdl.Surface, &Info->Format, NULL, &l, &h);
-            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, length(), height());
+            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, length(), height());
 
-            SDL_LockTexture(src_sdl.Surface, NULL, &src_pixels, &pitch);
-            SDL_LockTexture(Surface, NULL, &dst_pixels, &pitch);
-
-            while (h-- > 0)
-            {
-                SDL_memcpy (dst_pixels, src_pixels, pitch);
-                src_pixels = (u_int8*) src_pixels + pitch;
-                dst_pixels = (u_int8*) dst_pixels + pitch;
-            }
-
-            SDL_UnlockTexture(Surface);
+            set_render_target (Surface);
+            SDL_RenderCopy(display->get_renderer(), src_sdl.Surface, NULL, NULL);
         }
 
-        return *this; 
+        return *this;
     }
 
     void surface_sdl::resize (u_int16 l, u_int16 h)
@@ -525,7 +378,7 @@ namespace gfx
 #else
             Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
 #endif
-            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
+            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, l, h);
             if (!Surface) LOG(ERROR) << "*** surface::resize: " << SDL_GetError();
         }
         else
@@ -559,22 +412,10 @@ namespace gfx
         alpha_channel_ = alpha_mask != 0;
 
         Info->Format = SDL_MasksToPixelFormatEnum (bytes_per_pixel * 8, red_mask, green_mask, blue_mask, alpha_mask);
-        Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_STREAMING, l, h);
+        Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, l, h);
         if (!Surface) LOG(ERROR) << "*** surface_sdl::set_data: " << SDL_GetError();
 
-        lock(NULL);
-
-        int pitch = bytes_per_pixel * l;
-        void *src = data;
-
-        while (h-- > 0)
-        {
-            SDL_memcpy (Info->Pixels, src, pitch);
-            src = (u_int8*) src + pitch;
-            Info->Pixels = (u_int8*) Info->Pixels + Info->Pitch;
-        }
-
-        unlock();
+        SDL_UpdateTexture (Surface, NULL, data, Info->Pitch);
 
         free (data);
     }
@@ -641,5 +482,18 @@ namespace gfx
             dstrect.x = x;
             dstrect.y = y;
         } 
+    }
+
+    void surface_sdl::set_render_target (SDL_Texture *target) const
+    {
+        if (target == RenderTarget) return;
+        else if (target == display->Surface)
+        {
+            if (RenderTarget == NULL) return;
+            else SDL_SetRenderTarget(display->get_renderer(), NULL);
+        }
+        else SDL_SetRenderTarget(display->get_renderer(), target);
+
+        RenderTarget = target;
     }
 }

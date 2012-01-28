@@ -107,6 +107,9 @@ namespace gfx
         /// SDL_Rects used in every blitting function.
         static SDL_Rect srcrect, dstrect; 
 
+        /// The current render target
+        static SDL_Texture *RenderTarget;
+
         /// Used internally for blitting operations with drawing_areas.
         void setup_rects (u_int16 x, u_int16 y, const drawing_area * draw_to) const
         {
@@ -115,7 +118,9 @@ namespace gfx
 
         /// Used internally for blitting operations with drawing_areas.
         void setup_rects (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy,
-                          u_int16 sl, u_int16 sh, const drawing_area * draw_to) const; 
+                          u_int16 sl, u_int16 sh, const drawing_area * draw_to) const;
+
+        void set_render_target (SDL_Texture *target) const;
     };
 }
 
