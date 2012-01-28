@@ -334,7 +334,8 @@ namespace gfx
         std::string path = fname;
         if (!base::Paths().find_in_path (path))
         {
-            fprintf (stderr, "*** surface::load_png: unable to open '%s'!\n", fname.c_str());
+            LOG(ERROR) << logging::indent()
+                       << "*** surface::load_png: unable to open '" << fname << "'";
             return false; 
         }
         
@@ -348,6 +349,12 @@ namespace gfx
         }
         
         bool ret = get_png (file);
+        if (!ret)
+        {
+            LOG(ERROR) << logging::indent()
+                       << "*** surface::load_png: failed opening '" << path << "'";
+        }
+
         file.close ();
         filename_ = path;
         return ret;
