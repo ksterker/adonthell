@@ -164,8 +164,12 @@ dnl *************
 
 dnl try sdl >= 2.0.0 first
 AM_PATH_SDL([2.0.0],
-    [sdlbackenddir=sdl2],
+    [
+        sdlbackenddir=sdl2
+        sdlmixer_prefix=SDL2
+    ],
 	[
+        sdlmixer_prefix=SDL
         SDL_VERSION=1.2.0
         AM_PATH_SDL([$SDL_VERSION],
             [sdlbackenddir=sdl],
@@ -177,18 +181,20 @@ dnl *******************
 dnl Check for SDL-mixer
 dnl *******************
 
-AC_CHECK_HEADER([SDL/SDL_mixer.h],,
-	[AC_MSG_ERROR([*** Cannot find the SDL/SDL_mixer.h header
+AC_CHECK_HEADER([${sdlmixer_prefix}/SDL_mixer.h],,
+	[AC_MSG_ERROR([*** Cannot find the ${sdlmixer_prefix}/SDL_mixer.h header
 	goto http://www.libsdl.org to download or
 	check with your distibution.]
 	); exit])
-AC_CHECK_LIB([SDL_mixer],
+AC_CHECK_LIB([${sdlmixer_prefix}_mixer],
 	[Mix_OpenAudio],
 	[:],
-	[AC_MSG_ERROR([*** Cannot find the SDL_mixer library
+	[AC_MSG_ERROR([*** Cannot find the ${sdlmixer_prefix}_mixer library
 	goto http://www.libsdl.org to download or
 	check with your distibution.]
 	); exit])
+SDL_MIXER_LIBS=-l${sdlmixer_prefix}_mixer
+AC_SUBST(SDL_MIXER_LIBS)
 
 dnl *******************
 dnl Check for libpng

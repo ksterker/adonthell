@@ -3,6 +3,7 @@ project(adonthell)
 
 cmake_minimum_required(VERSION 2.4.3)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/config")
 
 # -- for CMake 2.6.x
 if(COMMAND cmake_policy)
@@ -103,7 +104,7 @@ ELSE(SDL_FOUND)
     PKGCONFIG_FOUND(sdl SDL_FOUND)
     IF(NOT SDL_FOUND)
     	find_package(SDL REQUIRED)
-	   EXECUTE_PROCESS(COMMAND sdl-config --version OUTPUT_VARIABLE SDL_VERSION)
+        EXECUTE_PROCESS(COMMAND sdl-config --version OUTPUT_VARIABLE SDL_VERSION)
     ENDIF(NOT SDL_FOUND)
 ENDIF(SDL_FOUND)
 
@@ -131,7 +132,12 @@ ENDIF(SDL_FOUND)
 # SDL_mixer
 ##########################
 
-find_package(SDL_mixer REQUIRED)
+IF(SDL_VERSION STREQUAL "2.0")
+    find_package(SDL2_mixer REQUIRED)
+ELSE(SDL_VERSION STREQUAL "2.0")
+    find_package(SDL_mixer REQUIRED)
+ENDIF(SDL_VERSION STREQUAL "2.0")
+
 if(SDLMIXER_FOUND)
 	# take a lucky guess
 	if(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
@@ -139,14 +145,14 @@ if(SDLMIXER_FOUND)
 	endif(${SDLMIXER_INCLUDE_DIR} MATCHES "NOTFOUND")
 
 	MESSAGE(STATUS
-		"SDL_mixer has been found:")
+		"SDL Mixer has been found:")
 	MESSAGE(STATUS
 		"\tCFLAGS : ${SDLMIXER_INCLUDE_DIR}")
 	MESSAGE(STATUS
 		"\tLDFLAGS: ${SDLMIXER_LIBRARY}")
 else(SDLMIXER_FOUND)
 	MESSAGE(FATAL_ERROR
-		"SDL_mixer is required")
+		"SDL Mixer is required")
 endif(SDLMIXER_FOUND)
 
 
@@ -214,30 +220,12 @@ else(PNG_FOUND)
 		"PNG is required")
 endif(PNG_FOUND)
 
-#######################
-# OpenGL
-#######################
-FIND_PACKAGE(OpenGL)
-IF(OPENGL_INCLUDE_DIR)
-	MESSAGE(STATUS
-		"OpenGL has been found:")
-	MESSAGE(STATUS
-		"\tCFLAGS : ${OPENGL_INCLUDE_DIR}")
-	MESSAGE(STATUS
-		"\tLDFLAGS: ${OPENGL_LIBRARY}")
-ELSE(OPENGL_INCLUDE_DIR)
-	SET( OPENGL_FOUND "NO" )
-	MESSAGE(STATUS
-		"OpenGL renderer will not be built")
-ENDIF(OPENGL_INCLUDE_DIR)
-
 
 #######################
 # SWIG
 #######################
 
-#find_package(SWIG REQUIRED)
-include(config/FindSWIG.cmake)
+find_package(SWIG REQUIRED)
 if(SWIG_FOUND)
 	MESSAGE(STATUS
 		"SWIG is present on the system.")
@@ -265,7 +253,7 @@ IF(LIBXML2_FOUND)
 		SET(LIBXML2_INCLUDE_PATH "${LIBXML2_INCLUDE_PATH}/libxml2")
 	ENDIF (NOT LIBXML2_INCLUDE_PATH MATCHES ".*/libxml2$")
 ELSE(LIBXML2_FOUND)
-	include(config/FindLibxml2.cmake)
+	find_package(Libxml2)
 ENDIF(LIBXML2_FOUND)
 
 if(LIBXML2_FOUND)
@@ -288,7 +276,7 @@ PKGCONFIG_FOUND(freetype2 LIBFREETYPE2_FOUND)
 IF(LIBFREETYPE2_FOUND)
 	PKGCONFIG(freetype2 LIBFT_INCLUDE_PATH LIBFT_LIBADD LIBFT_LIBRARIES LIBFT_CFLAGS)
 ELSE(LIBFREETYPE2_FOUND)
-	include(config/FindFreetype2.cmake)
+	find_package(FindFreetype2)
 ENDIF(LIBFREETYPE2_FOUND)
 
 if(LIBFREETYPE2_FOUND)

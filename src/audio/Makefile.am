@@ -44,7 +44,7 @@ _sdl_la_SOURCES = \
 
 _sdl_la_CXXFLAGS = $(SDL_CFLAGS) $(AM_CXXFLAGS)
 _sdl_la_LDFLAGS = -avoid-version -module
-_sdl_la_LIBADD = $(SDL_LIBS) -lSDL_mixer -ladonthell_audio -lstdc++
+_sdl_la_LIBADD = $(SDL_LIBS) $(SDL_MIXER_LIBS) -ladonthell_audio -lstdc++
 
 ## define dependencies in case of parallel build
 _sdl_la_DEPENDENCIES = libadonthell_audio.la

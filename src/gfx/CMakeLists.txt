@@ -65,9 +65,6 @@ target_link_libraries(gfx-backend-sdl
 	)
 set_target_properties(gfx-backend-sdl PROPERTIES PREFIX "_" OUTPUT_NAME "sdl")
 
-###########################################################
-# Create the OpenGL Backend if OpenGL and SDL are available
-
 #############################################
 # Install Stuff
 adonthell_install_lib(adonthell_gfx)
