@@ -34,13 +34,11 @@ namespace gfx
     surface_sdl::surface_sdl() : surface_ext () 
     { 
         Surface = NULL;
-        Info = new pixel_info();
         mask_changed = false; 
     }
 
     surface_sdl::~surface_sdl() 
     {
-        delete Info;
         if (Surface) SDL_DestroyTexture (Surface);
     }
 
@@ -61,12 +59,12 @@ namespace gfx
         {
             is_masked_ = true;
        
-            // todo
+            // TODO: convert pixel of mask color to transparency
             SDL_Surface *s2 = SDL_CreateRGBSurfaceFrom(NULL, length(), height(),
                             32, 0, R_MASK, G_MASK, B_MASK, A_MASK);
-            Info->Format = s2->format->format;
+            u_int32 format = s2->format->format;
 
-            SDL_Texture *tmp = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, length(), height());
+            SDL_Texture *tmp = SDL_CreateTexture (display->get_renderer(), format, SDL_TEXTUREACCESS_TARGET, length(), height());
             if (!tmp) LOG(ERROR) << "*** surface_sdl::set_mask: " << SDL_GetError();
 
             set_render_target (tmp);
@@ -95,32 +93,6 @@ namespace gfx
 
         alpha_ = t;
         alpha_channel_ = alpha_channel || is_masked_;
-    }
-
-    SDL_Surface *surface_sdl::to_sw_surface(SDL_Rect *rect) const
-    {
-        int bpp;
-        u_int32 rmask, gmask, bmask, amask;
-
-        lock(rect);
-
-        SDL_PixelFormatEnumToMasks(Info->Format, &bpp, &rmask, &gmask, &bmask, &amask);
-        SDL_Surface *s = SDL_CreateRGBSurfaceFrom(Info->Pixels, length(), height(),
-                bpp, Info->Pitch, rmask, gmask, bmask, amask);
-
-        if (is_masked_)
-        {
-            u_int32 trans_col = alpha_channel_? SDL_MapRGBA(s->format, 0xFF, 0x00, 0xFF, 0xFF) : SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF);
-            SDL_SetColorKey(s, 1, trans_col);
-        }
-
-        if (alpha_channel_ || alpha_ != 255)
-        {
-            if (!alpha_channel_ || is_masked_) SDL_SetSurfaceAlphaMod (s, alpha_);
-            SDL_SetSurfaceBlendMode (s, SDL_BLENDMODE_BLEND);
-        }
-
-        return s;
     }
 
     void surface_sdl::draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
@@ -204,28 +176,6 @@ namespace gfx
         b = (col & 0x000000FF);
     }
 
-    void surface_sdl::lock (SDL_Rect *rect) const
-    {
-        if (!length () || !height ()) return;
-
-        if (this != display)
-        {
-            SDL_LockTexture (Surface, rect, &Info->Pixels, &Info->Pitch);
-            Info->BytesPerPixel = SDL_BYTESPERPIXEL(Info->Format);
-        }
-    }
-
-    void surface_sdl::unlock () const
-    {
-        if (!length () || !height ()) return;   
-
-        if (Info->Pixels)
-        {
-            SDL_UnlockTexture (Surface);
-            Info->Pixels = NULL;
-        }
-    }
-
     void surface_sdl::put_pix (u_int16 x, u_int16 y, u_int32 col) 
     {
         if (base::Scale > 1)
@@ -246,75 +196,17 @@ namespace gfx
 
     u_int32 surface_sdl::get_pix (u_int16 x, u_int16 y) const
     {
-        if (!Info->Pixels) return 0;
-
-        u_int8 r, g, b, a = SDL_ALPHA_OPAQUE;
-        u_int8 *offset = ((Uint8 *) Info->Pixels) + y * Info->Pitch + x * Info->BytesPerPixel;
-
-        if (!alpha_channel_)
-        {
-            switch (Info->Format)
-            {
-                case SDL_PIXELFORMAT_RGB24:
-                    r = *(offset);
-                    g = *(++offset);
-                    b = *(++offset);
-                    break;
-                case SDL_PIXELFORMAT_BGR24:
-                    b = *(offset);
-                    g = *(++offset);
-                    r = *(++offset);
-                    break;
-            }
-            
-            return map_color (r, g, b, a);
-        }
-        
-        switch (Info->Format)
-        {
-            case SDL_PIXELFORMAT_BGR888:
-                r = *(++offset);
-                g = *(++offset);
-                b = *(++offset);
-                break;                
-            case SDL_PIXELFORMAT_BGRA8888:
-                a = *(offset);
-                r = *(++offset);
-                g = *(++offset);
-                b = *(++offset);
-                break;
-            case SDL_PIXELFORMAT_ABGR8888:
-                r = *(offset);
-                g = *(++offset);
-                b = *(++offset);
-                a = *(++offset);
-                break;
-            case SDL_PIXELFORMAT_RGB888:
-                b = *(++offset);
-                g = *(++offset);
-                r = *(++offset);
-                break;
-            case SDL_PIXELFORMAT_ARGB8888:
-                b = *(offset);
-                g = *(++offset);
-                r = *(++offset);
-                a = *(++offset);
-                break;
-            case SDL_PIXELFORMAT_RGBA8888:
-                a = *(offset);
-                b = *(++offset);
-                g = *(++offset);
-                r = *(++offset);
-                break;
-            default:
-                LOG(FATAL) << "sdl::get_pix: Unsupported format " << SDL_GetPixelFormatName(Info->Format);
-        }
+        u_int32 pixel;
 
 #ifdef __BIG_ENDIAN__
-        return map_color (g, r, a, b);
+        u_int32 format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_RGB24;
 #else
-        return map_color (r, g, b, a);
+        u_int32 format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
 #endif
+        const SDL_Rect rect = { x, y, 1, 1 };
+        SDL_RenderReadPixels(display->get_renderer(), &rect, format, (void*) &pixel, 4);
+
+        return pixel;
     }
 
     void surface_sdl::scale(surface *target, const u_int32 & factor) const
@@ -350,9 +242,10 @@ namespace gfx
         else
         {
             int l, h;
+            u_int32 format;
 
-            SDL_QueryTexture(src_sdl.Surface, &Info->Format, NULL, &l, &h);
-            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, length(), height());
+            SDL_QueryTexture(src_sdl.Surface, &format, NULL, &l, &h);
+            Surface = SDL_CreateTexture (display->get_renderer(), format, SDL_TEXTUREACCESS_TARGET, length(), height());
 
             set_render_target (Surface);
             SDL_RenderCopy(display->get_renderer(), src_sdl.Surface, NULL, NULL);
@@ -374,11 +267,11 @@ namespace gfx
         if (display->get_renderer())
         {
 #ifdef __BIG_ENDIAN__
-            Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_RGB24;
+            u_int32 format = has_alpha_channel() ? SDL_PIXELFORMAT_ARGB8888 : SDL_PIXELFORMAT_RGB24;
 #else
-            Info->Format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
+            u_int32 format = has_alpha_channel() ? SDL_PIXELFORMAT_ABGR8888 : SDL_PIXELFORMAT_BGR24;
 #endif
-            Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, l, h);
+            Surface = SDL_CreateTexture (display->get_renderer(), format, SDL_TEXTUREACCESS_TARGET, l, h);
             if (!Surface) LOG(ERROR) << "*** surface::resize: " << SDL_GetError();
         }
         else
@@ -411,11 +304,11 @@ namespace gfx
 
         alpha_channel_ = alpha_mask != 0;
 
-        Info->Format = SDL_MasksToPixelFormatEnum (bytes_per_pixel * 8, red_mask, green_mask, blue_mask, alpha_mask);
-        Surface = SDL_CreateTexture (display->get_renderer(), Info->Format, SDL_TEXTUREACCESS_TARGET, l, h);
+        u_int32 format = SDL_MasksToPixelFormatEnum (bytes_per_pixel * 8, red_mask, green_mask, blue_mask, alpha_mask);
+        Surface = SDL_CreateTexture (display->get_renderer(), format, SDL_TEXTUREACCESS_TARGET, l, h);
         if (!Surface) LOG(ERROR) << "*** surface_sdl::set_data: " << SDL_GetError();
 
-        SDL_UpdateTexture (Surface, NULL, data, Info->Pitch);
+        SDL_UpdateTexture (Surface, NULL, data, l*bytes_per_pixel);
 
         free (data);
     }
@@ -424,27 +317,14 @@ namespace gfx
                                   u_int32 red_mask, u_int32 green_mask,
                                   u_int32 blue_mask, u_int32 alpha_mask) const
     {
-        lock(NULL);
 
         u_int32 dst_format = SDL_MasksToPixelFormatEnum(bytes_per_pixel*8, red_mask, green_mask, blue_mask, alpha_mask);
         void *dst_pixels = SDL_calloc (bytes_per_pixel, length() * height());
         int dst_pitch = length() * bytes_per_pixel;
 
-        if (dst_format != Info->Format)
-        {
-            SDL_ConvertPixels(length(), height(), Info->Format, Info->Pixels, Info->Pitch, dst_format, dst_pixels, dst_pitch);
-        }
-        else
-        {
-            u_int8 *dest = (u_int8*) dst_pixels;
-            int h = height();
-            while (h-- > 0)
-            {
-                SDL_memcpy (dest, (u_int8*) Info->Pixels, Info->Pitch);
-                Info->Pixels = (u_int8*) Info->Pixels + Info->Pitch;
-                dest = dest + dst_pitch;
-            }
-        }
+        // TODO: FIXME does return mostly garbage
+        set_render_target(Surface);
+        SDL_RenderReadPixels(display->get_renderer(), NULL, dst_format, dst_pixels, dst_pitch);
 
         return dst_pixels;
     }
