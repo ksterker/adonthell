@@ -163,12 +163,13 @@ dnl Check for SDL
 dnl *************
 
 dnl try sdl >= 2.0.0 first
-AM_PATH_SDL([2.0.0],
+AM_PATH_SDL2([2.0.0],
     [
         sdlbackenddir=sdl2
         sdlmixer_prefix=SDL2
     ],
 	[
+    	unset ac_cv_path_SDL_CONFIG
         sdlmixer_prefix=SDL
         SDL_VERSION=1.2.0
         AM_PATH_SDL([$SDL_VERSION],
