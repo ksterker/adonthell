@@ -35,7 +35,14 @@ The available options and their default values are:
 
 * Audio
 
-  To be done.
+  <Channels>2</Channels>
+  Whether sound should be mono or stereo.
+  
+  <Format>16</Format>
+  Whether audio output should be 8 or 16 bit.
+  
+  <Rate>44100</Rate>
+  The sample rate in Hz. Valid values are 44100, 22050 and 11025.
 
 * General
 
@@ -45,13 +52,17 @@ The available options and their default values are:
 
 * Input
 
+  Map physical controls such as keyboards or gamepads to a virtual
+  controller. Multiple physical controls can be assigned to a virtual 
+  control by separating them with a pipe '|' character.
+
   <move_east>right</move_east>
   <move_north>up</move_north>
   <move_south>down</move_south>
   <move_west>left</move_west>
   Movement controls; defaults to arrow keys.
 
-  <a_button>left shift</a_button>
+  <a_button>left shift|right shift</a_button>
   Run while this key is pressed.
 
   <b_button>space</b_button>
@@ -114,12 +125,9 @@ You can reach us in various ways:
 
 IRC Channel:   #adonthell at irc.freenode.net
 Mailing list:  adonthell-general@nongnu.org
-Web site:      http://adonthell.linuxgames.com
+Web site:      http://adonthell.nongnu.org
 Wiki:          http://adonthell.berlios.de/doc/
 Tech support:  http://savannah.gnu.org/support/?group_id=702
-
-There is a Message Board for user to user discussion at
-    http://www.3dforums.com/?action=forumpage&loc=49&forum_id=158
 
 If you want to rate Adonthell, feel free to do so at
     http://www.happypenguin.org/show?Adonthell
