@@ -82,16 +82,7 @@ chunk::chunk () : Min(), Max(), Split()
 // dtor
 chunk::~chunk()
 {
-    std::list<chunk_info *>::const_iterator i;
-    for (i = Objects.begin (); i != Objects.end(); i++)
-    {
-        delete *i;
-    }
-    Objects.clear();
-    for (u_int8 i = 0; i < 8; i++)
-    {
-        delete Children[i];
-    }
+    clear();
 }
 
 // add an object to chunk
@@ -117,6 +108,26 @@ bool chunk::exists (entity *object, const coordinates & pos)
     
     chunk_info ci(object, min, max);
     return exists (ci);
+}
+
+// reset chunk to initial state
+void chunk::clear ()
+{
+    std::list<chunk_info *>::const_iterator i;
+    for (i = Objects.begin (); i != Objects.end(); i++)
+    {
+        delete *i;
+    }
+    Objects.clear();
+
+    for (u_int8 i = 0; i < 8; i++)
+    {
+        delete Children[i];
+    }
+    memset (Children, 0, 8 * sizeof(chunk*));
+
+    Resize = false;
+    Min = Max = Split = vector3<s_int32>();
 }
 
 // remove object from chunk

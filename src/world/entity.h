@@ -1,6 +1,4 @@
 /*
- $Id: entity.h,v 1.5 2009/03/22 13:53:20 ksterker Exp $
- 
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -100,6 +98,16 @@ public:
         return id () != NULL; 
     }
     
+    /**
+     * Return whether the %object representing this entity is
+     * unique or not.
+     * @return always true for anonymous entities.
+     */
+    virtual bool is_unique () const
+    {
+        return true;
+    }
+
     /**
      * Get id of the entity.
      * @return NULL if its an anonymous entity, the unique entity id otherwise.

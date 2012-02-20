@@ -1,6 +1,4 @@
 /*
- $Id: chunk.h,v 1.18 2009/04/26 18:52:59 ksterker Exp $
-
  Copyright (C) 2008 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -113,6 +111,11 @@ namespace world
          *      such object existed.
          */
         entity * remove (const chunk_info & ci);
+
+        /**
+         * Remove all objects and children from chunk.
+         */
+        void clear ();
         //@}
 
         /**
