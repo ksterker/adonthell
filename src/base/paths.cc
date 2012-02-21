@@ -104,7 +104,11 @@ bool paths::init (const std::string & game, const std::string & userdatadir)
 #elif defined (WIN32)		// Windows
     CfgDataDir = "./";
 #else						// Unix
-    CfgDataDir = string (getenv ("HOME")) + "/.adonthell/";
+    char *xdgConfigDir = getenv ("XDG_CONFIG_HOME");
+    if (xdgConfigDir != NULL && strlen (xdgConfigDir) > 0)
+        CfgDataDir = string (xdgConfigDir) + "/adonthell";
+    else
+        CfgDataDir = string (getenv ("HOME")) + "/.config/adonthell/";
 #endif
 
 #ifndef WIN32
