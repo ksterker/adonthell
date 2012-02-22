@@ -1,27 +1,14 @@
 # Define the project name.
 project(adonthell)
 
-cmake_minimum_required(VERSION 2.4.3)
+cmake_minimum_required(VERSION 2.6.0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/config")
 
-# -- for CMake 2.6.x
-if(COMMAND cmake_policy)
 # -- pass fully qualified libraries directly to linker
-    cmake_policy(SET CMP0003 NEW)
+cmake_policy(SET CMP0003 NEW)
 # -- use automatic escaping in add_definitions
-    cmake_policy(SET CMP0005 NEW)
-    set(ESCAPE "")
-else(COMMAND cmake_policy)
-
-# -- pre 2.6 needs escaping in add_definitions
-if(CMAKE_GENERATOR MATCHES ".*Makefiles")
-    set(ESCAPE "\\\"")
-else(CMAKE_GENERATOR MATCHES ".*Makefiles")
-    set(ESCAPE "\\\\\"")
-endif(CMAKE_GENERATOR MATCHES ".*Makefiles")
-
-endif(COMMAND cmake_policy)
+cmake_policy(SET CMP0005 NEW)
 
 # Set version
 set (VERSION "0.4.0" CACHE INTERNAL "")
@@ -38,7 +25,7 @@ IF(NOT DEVBUILD)
       FORCE)
 ENDIF(NOT DEVBUILD)
 
-add_definitions(-DVERSION="${ESCAPE}${VERSION}${ESCAPE}" -DHAVE_CONFIG_H=1)
+add_definitions(-DVERSION="${VERSION}" -DHAVE_CONFIG_H=1)
 
 IF(CMAKE_BUILD_TYPE MATCHES "Release")
     add_definitions(-DGOOGLE_STRIP_LOG=1)
@@ -65,11 +52,11 @@ if(NOT ADONTHELL_DATADIR)
 endif(NOT ADONTHELL_DATADIR)
 message(STATUS
 	"Adonthell data directory: ${ADONTHELL_DATADIR}")
-add_definitions(-DDATA_DIR="${ESCAPE}${ADONTHELL_DATADIR}${ESCAPE}")
+add_definitions(-DDATA_DIR="${ADONTHELL_DATADIR}")
 
 
 # FIXME: We need to manage the package lib directory for different plattforms!
-add_definitions(-DPKGLIBDIR="${ESCAPE}${CMAKE_INSTALL_PREFIX}/lib/adonthell${ESCAPE}")
+add_definitions(-DPKGLIBDIR="${CMAKE_INSTALL_PREFIX}/lib/adonthell")
 
 # the RPATH to be used when installing, but only if it's not a system directory
 LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
@@ -234,7 +221,7 @@ if(SWIG_FOUND)
 		"SWIG is present on the system.")
 else(SWIG_FOUND)
 	# try to see if we have the swig programm and assume for now that this is sufficient
-	FIND_PROGRAM(SWIG_EXECUTABLE NAMES swig PATHS /usr/local/bin )
+	FIND_PROGRAM(SWIG_EXECUTABLE NAMES swig2.0 swig PATHS /usr/local/bin )
 	if(SWIG_EXECUTABLE)
 		MESSAGE(STATUS "SWIG appears to be present on the system.")
 		set(SWIG_USE_FILE ${CMAKE_ROOT}/Modules/UseSWIG.cmake)
@@ -414,8 +401,8 @@ set(CPACK_GENERATOR "")
 set(CPACK_SOURCE_GENERATOR "TGZ")
 
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Adonthell ${VERSION}")
-set(CPACK_PACKAGE_CONTACT adonthell-general@nongun.org)
-set(CPACK_PACKAGE_VENDOR com.linuxgames.adonthell)
+set(CPACK_PACKAGE_CONTACT adonthell-general@nongnu.org)
+set(CPACK_PACKAGE_VENDOR org.nongnu.adonthell)
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README)
 set(CPACK_PACKAGE_VERSION_MAJOR 0)
 set(CPACK_PACKAGE_VERSION_MINOR 4)
@@ -427,8 +414,8 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "adonthell-${VERSION}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "adonthell-${VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES
     "~$"
-    "\\\\.cvsignore"
-    "CVS/"
+    "\\\\.gitgnore"
+    ".git/"
 )
 
 include(CPack)
