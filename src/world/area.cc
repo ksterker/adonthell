@@ -177,7 +177,7 @@ void area::remove_zone (world::zone * zone)
 }
 
 // retrieve zone with a certain name
-world::zone * area::get_zone (std::string & name)
+world::zone * area::get_zone (const std::string & name) const
 {
     std::list<world::zone *>::const_iterator i;
 

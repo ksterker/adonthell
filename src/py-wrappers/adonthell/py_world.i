@@ -9,6 +9,7 @@
 #include "world/character.h"
 #include "world/mapview.h"
 #include "world/schedule.h"
+#include "world/move_event.h"
 
 using namespace world;
 
@@ -18,7 +19,8 @@ using namespace world;
 %include "std_string.i"
 
 %import "base/types.h"
-%import "py_gfx.i"
+%import(module="event") "event/event.h"
+%import(module="gfx") "gfx/drawable.h"
 
 // typemap for returning a string pointer as python string
 %typemap(out) std::string * {
@@ -48,6 +50,7 @@ using namespace world;
 %include "world/placeable.h"
 %include "world/object.h"
 %include "world/coordinates.h"
+%include "world/move_event.h"
 %include "world/moving.h"
 %include "world/action.h"
 %include "world/character.h"

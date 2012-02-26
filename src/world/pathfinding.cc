@@ -305,12 +305,11 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
                 if (!collisions.empty())
                 {
-                    if (!((collisions.size() == 1) && (chr->uid() == (*collisions.begin())->get_object()->uid())))
+                    if (!((collisions.size() == 1) && (chr == (*collisions.begin())->get_object())))
                     {
                         ++i;
                         continue;
                     }
-
                 }
 
                 // Add node to the open list

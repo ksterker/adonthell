@@ -9,6 +9,8 @@ set(adonthell_world_SRCS
     chunk.cc
     chunk_info.cc
     mapview.cc
+    move_event.cc
+    move_event_manager.cc
     moving.cc
     object.cc
     placeable.cc
@@ -37,29 +39,31 @@ set(adonthell_world_HEADERS
     chunk_info.h
     entity.h
     mapview.h
+    move_event.h
+    move_event_manager.h
     moving.h
-	 node.h
-	 node_cache.h
-	 node_bank.h
+	node.h
+	node_cache.h
+	node_bank.h
     object.h
-	 open_list.h
+	open_list.h
     placeable.h
     placeable_model.h
     placeable_shape.h
     plane3.h
-	 pathfinding.h
-	 pathfinding_manager.h
-	 pathfinding_task.h
+	pathfinding.h
+	pathfinding_manager.h
+	pathfinding_task.h
     render_info.h
     renderer.h
-	 schedule.h
-	 schedule_data.h
+	schedule.h
+	schedule_data.h
     shadow.h
     shadow_info.h
     triangle3.h
     vector3.h
     world.h
-	 zone.h
+	zone.h
 )
 
 

@@ -15,6 +15,8 @@ pkgincludeworld_HEADERS = \
     cube3.h \
     entity.h \
     mapview.h \
+    move_event.h \
+    move_event_manager.h \
     moving.h \
     node_bank.h \
     node_cache.h \
@@ -53,6 +55,8 @@ libadonthell_world_la_SOURCES = \
     collision.cc \
     cube3.cc \
     mapview.cc \
+    move_event.cc \
+    move_event_manager.cc \
     moving.cc \
     object.cc \
     placeable.cc \

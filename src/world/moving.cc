@@ -1,6 +1,4 @@
 /*
- $Id: moving.cc,v 1.29 2009/04/09 18:37:16 ksterker Exp $
- 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2007/2009 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -37,6 +35,8 @@
 #include "world/area.h"
 #include "world/plane3.h"
 #include "world/shadow.h"
+#include "world/move_event.h"
+#include "event/manager.h"
 #include "base/logging.h"
 
 #if DEBUG_COLLISION
@@ -408,12 +408,18 @@ bool moving::update ()
     {
         // reset shadow for next frame
         MyShadow->reset ();
-                
+
+        // prepare move notification (before the move takes place!)
+        world::move_event evt (this);
+
         entity *myEntity = Mymap.remove (&e, *this);
         if (myEntity != NULL)
         {
             update_position ();
             Mymap.add (myEntity, *this);
+
+            // notify interested parties about movement on the map
+            events::manager::raise_event(&evt);
         }
 
         VLOG(1) << "Moving to " << Position;

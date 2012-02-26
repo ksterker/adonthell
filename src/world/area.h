@@ -139,7 +139,7 @@ namespace world
          * @return a pointer to the zone, or NULL on error
          * @note name is case-sensitive
          */
-        world::zone *get_zone(std::string & name);
+        world::zone *get_zone(const std::string & name) const;
         
         /**
          * Return all zones that contain the given point of given type.

@@ -148,6 +148,17 @@ namespace world
         }
 
         /**
+         * Check if the given position is contained in the zone.
+         */
+        bool contains (const world::vector3<s_int32> & pos) const
+        {
+            return
+                pos.x() >= Min.x() && pos.x() <= Max.x() &&
+                pos.y() >= Min.y() && pos.y() <= Max.y() &&
+                pos.z() >= Min.z() && pos.z() <= Max.z();
+        }
+
+        /**
          * Loading / Saving
          */
         //@{
