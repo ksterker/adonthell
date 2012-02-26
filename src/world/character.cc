@@ -122,14 +122,12 @@ bool character::update ()
     		IsRunning = ToggleRunning;
     		set_direction (current_dir());
     	}
-        else
+
+        // Update speed over different terrains
+        // But only when character is moving
+        if (vx() != 0 && vy() != 0)
         {
-            // Update speed over different terrains
-            // But only when character is moving
-            if (current_dir() != character::NONE)
-            {
-                update_velocity (current_dir());
-            }
+            update_velocity (current_dir());
         }
     }
     else
