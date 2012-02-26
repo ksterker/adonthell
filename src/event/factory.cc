@@ -55,13 +55,14 @@ void factory::clear ()
 {
     Paused = 0;
     
-    listener *li;
-    while (!Listeners.empty ())
-    {
-        // deleting the listener will remove it from our list too
-        li = Listeners.front ();
-        delete li;
-    }
+    // do not delete listeners directly, because we might be in a callback
+    // triggered by one of those listeners.
+    // instead we mark them for deletion and let the event handlers clear
+    // them up the next time an event is raised.
+    for (vector<listener*>::iterator i = Listeners.begin (); i != Listeners.end (); i++)
+        (*i)->removed_from_factory();
+
+    Listeners.clear();
 }
 
 // Add an event to the factory and register it with the event manager.

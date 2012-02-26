@@ -134,6 +134,16 @@ namespace events
         
 // these are internal methods that shouldn't be exported by SWIG!
 #ifndef SWIG
+
+        /**
+         * Used by factory to remove events.
+         */
+        void removed_from_factory ()
+        {
+            Event->set_repeat (0);
+            Factory = NULL;
+        }
+
         /**
          * Return whether the %listener is registered with the %event %manager.
          * @return \c true if this is the case, \c false otherwise.

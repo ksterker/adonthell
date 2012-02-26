@@ -70,8 +70,11 @@ s_int32 listener_cxx::raise_event (const event* evnt)
     }
     else
     {
-        if (!Callback) LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
-        return 0;
+        if (!Callback)
+        {
+            LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
+            destroy();
+        }
     }
 
     // return whether event needs be repeated or not

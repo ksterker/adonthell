@@ -31,7 +31,7 @@
 #include "event/date.h"
 #include <algorithm>
 
-using std::vector;
+using std::list;
 using events::time_event_manager;
 using events::event_type;
 
@@ -75,7 +75,7 @@ void time_event_manager::raise_event (const event * e)
 // Unregister a listener
 void time_event_manager::remove (listener *li)
 {
-    vector<listener*>::iterator i;
+    list<listener*>::iterator i;
 
     // Search for the event we want to remove
     i = find (Listeners.begin (), Listeners.end (), li);
@@ -87,12 +87,12 @@ void time_event_manager::remove (listener *li)
 // register a listener with the manager
 void time_event_manager::add (listener *li)
 {
-    vector<listener*>::iterator i = Listeners.begin ();
+    list<listener*>::iterator i = Listeners.begin ();
 
     // search for the proper place to insert new listener
     while (i != Listeners.end ())
     {
-        // FIXME: vector is sorted, using binary search would speed up insert
+        // FIXME: list is sorted, using binary search would speed up insert
         
         // skip events that are raised earlier than e
         if (((time_event *) li->get_event ())->time () > ((time_event *) (*i)->get_event ())->time ()) break;

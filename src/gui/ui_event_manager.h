@@ -28,7 +28,7 @@
 #define GUI_UI_EVENT_MANAGER_H
 
 #include "event/manager_base.h"
-#include <vector>
+#include <list>
 
 namespace gui
 {
@@ -78,9 +78,9 @@ namespace gui
 
     private:
         /// storage for registered listeners.
-        std::vector<events::listener*> Listeners;
+        std::list<events::listener*> Listeners;
         /// storage for pending events.
-        std::vector<events::listener*> Pending;
+        std::list<events::listener*> Pending;
     };
 }
 

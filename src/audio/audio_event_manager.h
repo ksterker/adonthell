@@ -30,7 +30,7 @@
 #define EVENT_AUDIO_EVENT_MANAGER_H
 
 #include "event/manager_base.h"
-#include <vector>
+#include <list>
 
 using events::manager_base;
 using events::listener;
@@ -53,7 +53,7 @@ namespace audio
 
         /**
          * Register a %listener with the %event manager. It is inserted
-         * into the vector of registered listeners depending on its "alarm"
+         * into the list of registered listeners depending on its "alarm"
          * time. The %listener needs to be removed before it can be safely
          * deleted.
          *
@@ -89,7 +89,7 @@ namespace audio
 
     private:
         /// storage for registered listeners.
-        std::vector<listener*> Listeners;
+        std::list<listener*> Listeners;
     };
 }
 

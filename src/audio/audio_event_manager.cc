@@ -30,7 +30,7 @@
 #include "audio/audio_event.h"
 #include <algorithm>
 
-using std::vector;
+using std::list;
 using audio::audio_event_manager;
 using events::event_type;
 
@@ -50,22 +50,33 @@ audio_event_manager::audio_event_manager () : manager_base (&new_audio_event)
 // according script(s)
 void audio_event_manager::raise_event (const event * e)
 {
-    vector<listener*>::iterator idx;
+    list<listener*>::iterator idx;
 
     // As long as matching events are in the list
-    for(idx = Listeners.begin(); idx != Listeners.end(); idx++)
+    for(idx = Listeners.begin(); idx != Listeners.end(); /* nothing */)
     {
+        if ((*idx)->is_destroyed())
+        {
+            events::listener *temp = *idx;
+            idx = Listeners.erase(idx);
+            delete temp;
+
+            continue;
+        }
+
         if((*idx)->equals (e))
         {
             (*idx)->raise_event(e);
         }
+
+        idx++;
     }
 }
 
 // Unregister a listener
 void audio_event_manager::remove (listener *li)
 {
-    vector<listener*>::iterator i;
+    list<listener*>::iterator i;
 
     // Search for the event we want to remove
     i = find (Listeners.begin (), Listeners.end (), li);

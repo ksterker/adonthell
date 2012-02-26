@@ -31,7 +31,7 @@
 
 #include "event/manager_base.h"
 
-#include <vector>
+#include <list>
 #include <map>
 
 using events::manager_base;
@@ -84,10 +84,10 @@ namespace rpg
 		 * @param e the triggering event.
 		 * @param listeners listeners to test whether they fit to the %event.
 		 */
-		void raise_event (const event * e, std::vector<listener*> *listeners);
+		void raise_event (const event * e, std::list<listener*> *listeners);
 	
 		/// registered quest events
-		std::map<std::string, std::vector<listener*> > Events;
+		std::map<std::string, std::list<listener*> > Events;
 	};
 	
 }

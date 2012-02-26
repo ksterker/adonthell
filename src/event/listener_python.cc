@@ -134,8 +134,11 @@ s_int32 listener_python::raise_event (const event* evnt)
     }
     else
     {
-        if (!Method) LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
-        return 0;
+        if (!Method)
+        {
+            LOG(WARNING) << "listener::raise_event: '" << Id << "' no callback connected";
+            destroy();
+        }
     }
     
     // return whether event needs be repeated or not

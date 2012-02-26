@@ -29,7 +29,7 @@
 #include "gui/ui_event_manager.h"
 #include "gui/ui_event.h"
 
-using std::vector;
+using std::list;
 using gui::ui_event_manager;
 using events::event_type;
 
@@ -46,13 +46,13 @@ ui_event_manager::ui_event_manager () : events::manager_base (&new_ui_event)
 void ui_event_manager::update()
 {
     // event handlers might fire new events, so use a copy
-    std::vector<events::listener*> copy (Pending.begin(), Pending.end());
+    std::list<events::listener*> copy (Pending.begin(), Pending.end());
 
     // clear list of pending events
     Pending.clear();
 
     // call event handlers
-    for (std::vector<events::listener*>::iterator li = copy.begin(); li != copy.end(); li++)
+    for (std::list<events::listener*>::iterator li = copy.begin(); li != copy.end(); li++)
     {
         (*li)->raise_event ((*li)->get_event());
     }
@@ -62,20 +62,31 @@ void ui_event_manager::update()
 void ui_event_manager::raise_event (const events::event * e)
 {
     // As long as matching events are in the list
-    for (std::vector<events::listener*>::iterator li = Listeners.begin(); li != Listeners.end(); li++)
+    for (std::list<events::listener*>::iterator li = Listeners.begin(); li != Listeners.end(); /* nothing */)
     {
+        if ((*li)->is_destroyed())
+        {
+            events::listener *temp = *li;
+            li = Listeners.erase(li);
+            delete temp;
+
+            continue;
+        }
+
         const events::event *evt = (*li)->get_event();
         if (evt->equals (e))
         {
             Pending.push_back(*li);
         }
+
+        li++;
     }
 }
 
 // Unregister a listener
 void ui_event_manager::remove (events::listener *li)
 {
-    vector<events::listener*>::iterator i;
+    list<events::listener*>::iterator i;
 
     // Search for the event we want to remove
     i = std::find (Listeners.begin (), Listeners.end (), li);

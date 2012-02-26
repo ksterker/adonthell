@@ -30,7 +30,7 @@
 #define EVENT_TIME_EVENT_MANAGER_H
 
 #include "event/manager_base.h"
-#include <vector>
+#include <list>
 
 namespace events
 {
@@ -51,7 +51,7 @@ namespace events
 	
         /**
          * Register a time %listener with the %event manager. It is inserted
-         * into the vector of registered listeners depending on its "alarm"
+         * into the list of registered listeners depending on its "alarm"
          * time. The %listener needs to be removed before it can be safely
          * deleted.
          *
@@ -71,7 +71,7 @@ namespace events
         /**
          * Raise one or more events in case the given time matches their
          * "alarm" time. When they need to be repeated, they are
-         * re-inserted into the %event-vector.
+         * re-inserted into the %event-list.
          *
          * @param evnt An %event structure with the current %game time in 
          *      minutes.
@@ -80,7 +80,7 @@ namespace events
 
     private:
         /// storage for registered listeners.
-        std::vector<listener*> Listeners;
+        std::list<listener*> Listeners;
     };
 }
 

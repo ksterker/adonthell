@@ -49,10 +49,10 @@ quest_event_manager::quest_event_manager () : manager_base (&new_quest_event)
 // dtor
 quest_event_manager::~quest_event_manager ()
 {
-    std::map<std::string, std::vector<listener*> >::iterator i;
+    std::map<std::string, std::list<listener*> >::iterator i;
 	for (i = Events.begin(); i != Events.end(); i++)
 	{
-		std::vector<listener*> *li = &(*i).second;
+		std::list<listener*> *li = &(*i).second;
 		li->clear();
 		// delete li; // <-- causes double free
 	}
@@ -62,7 +62,7 @@ quest_event_manager::~quest_event_manager ()
 // according script(s) 
 void quest_event_manager::raise_event (const event *e)
 {
-    std::map<std::string, std::vector<listener*> >::iterator li;
+    std::map<std::string, std::list<listener*> >::iterator li;
 	static std::string paths[] = { "", "*", ">" };
 	quest_event *ev = (quest_event *) e;
 	paths[0] = *(ev->begin());
@@ -77,22 +77,27 @@ void quest_event_manager::raise_event (const event *e)
 }
 
 // raise all matching events in given list of listeners
-void quest_event_manager::raise_event (const event *e, std::vector<listener*> *listeners)
+void quest_event_manager::raise_event (const event *e, std::list<listener*> *listeners)
 {
 	s_int32 repeat;
 
-	for (std::vector<listener*>::iterator li = listeners->end (); li != listeners->begin(); /* nothing */ )
+	for (std::list<listener*>::iterator li = listeners->begin (); li != listeners->end(); /* nothing */ )
 	{
-		li--;
+        if ((*li)->is_destroyed())
+        {
+            events::listener *temp = *li;
+            li = listeners->erase(li);
+            delete temp;
+
+            continue;
+        }
 		
-		// if events equal ...
 		if ((*li)->equals (e))
 		{
-			// .. raise event and ...
-			repeat = (*li)->raise_event (e);
-			// ... remove listener if repeat count reaches zero
-			if (repeat == 0) listeners->erase (li);
+			(*li)->raise_event (e);
 		}
+
+        li++;
 	}
 }
 
@@ -100,13 +105,13 @@ void quest_event_manager::raise_event (const event *e, std::vector<listener*> *l
 void quest_event_manager::remove (listener *li)
 {
 	quest_event *ev = (quest_event *) li->get_event();
-    std::map<std::string, std::vector<listener*> >::iterator e;
+    std::map<std::string, std::list<listener*> >::iterator e;
 	std::string path = *(ev->begin());
 	
-	// try to find vector where listener would be stored
+	// try to find list where listener would be stored
 	if ((e = Events.find (path)) != Events.end ())
     {
-		std::vector<listener*>::iterator i;
+		std::list<listener*>::iterator i;
 
 		// Search for the listener we want to remove
 		i = std::find ((*e).second.begin (), (*e).second.end (), li);
@@ -127,7 +132,7 @@ void quest_event_manager::remove (listener *li)
 void quest_event_manager::add (listener *li)
 {
 	quest_event *ev = (quest_event *) li->get_event();
-    std::map<std::string, std::vector<listener*> >::iterator e;
+    std::map<std::string, std::list<listener*> >::iterator e;
 	std::string path = *(ev->begin());
 	
 	// add listener to those with the same first path element
@@ -137,7 +142,7 @@ void quest_event_manager::add (listener *li)
     }
     else 
 	{
-		std::vector<listener*> *listeners = new std::vector<listener*>();
+		std::list<listener*> *listeners = new std::list<listener*>();
 		listeners->push_back (li);
 		Events[path] = *listeners;
 	}
