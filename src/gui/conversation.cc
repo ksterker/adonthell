@@ -44,6 +44,7 @@ namespace gui
 
 	bool conversation::update()
 	{
+	    EventFactory.clear();
 		while (optcount)
 		{
 			optcount--;
