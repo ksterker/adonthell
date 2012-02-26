@@ -125,7 +125,7 @@ bool character::update ()
 
         // Update speed over different terrains
         // But only when character is moving
-        if (vx() != 0 && vy() != 0)
+        if (vx() != 0 || vy() != 0)
         {
             update_velocity (current_dir());
         }

@@ -19,8 +19,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from adonthell import input, world
-import random
+from adonthell import input, event, world
+import random, sys
 
 class walk_random (object):
     """
@@ -36,6 +36,11 @@ class walk_random (object):
         self.schedule = schedule
         # -- The NPC map character instance ... 
         self.chr = schedule.get_owner()
+
+        self.fty = event.factory()
+        lst = self.fty.add (world.move_event (self.chr.map(), "NPC"))
+        lst.connect_callback ("move_events", "move_test", "moving")
+        
     
     def run (self):
         """
@@ -66,6 +71,9 @@ class walk_random (object):
         self.task = pathfinder.add_task (self.chr, target)
         # -- get notification when goal has been reached
         pathfinder.set_callback (self.task, self.on_arrived)
+        sys.stdout.write("Walking ")
+        sys.stdout.flush()
+
     
     def pause (self):
         """
@@ -94,9 +102,13 @@ class walk_random (object):
         """
         if goal_reached == 1:
             # -- hooray!
+            sys.stdout.write("Arrived\n")
+            sys.stdout.flush()
             self.chr.jump()
             self.chr.walk()
         else:
+            sys.stdout.write("Path blocked\n")
+            sys.stdout.flush()
             # -- now I need to hurry
             self.chr.run()
         
