@@ -215,8 +215,7 @@ std::vector<world::zone*> area::find_zones (const world::vector3<s_int32> & poin
 // save to stream
 bool area::put_state (base::flat & file) const
 {
-    u_int32 index = 0, act_idx = 0;
-    char buffer[128];
+    u_int32 act_idx = 0;
     base::flat record;
     
     // list of map(interactions)
@@ -230,16 +229,14 @@ bool area::put_state (base::flat & file) const
     for (collector::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         base::flat entity;
-        const world::placeable * data = i->first;
+        const world::placeable *data = i->first;
         data->save_model (entity);
         
-        sprintf (buffer, "%d", index++);
-        record.put_flat (buffer, entity);
+        record.put_flat (data->hash(), entity);
     }
     file.put_flat ("objects", record);
 
     // reset
-    index = 0;
     record.clear();
 
     // second pass: save entities and their positions and actions
@@ -258,12 +255,10 @@ bool area::put_state (base::flat & file) const
                 // save location action
                 if ((*j)->has_action ())
                 {
-                    sprintf (buffer, "%d", act_idx++);
-                    
                     base::flat actn_data;
                     (*j)->get_action()->put_state (actn_data);
-                    action_list.put_flat (buffer, actn_data);
-                    anonym.put_string ("action", buffer);
+                    action_list.put_flat ((*j)->get_action()->hash(), actn_data);
+                    anonym.put_string ("action", (*j)->get_action()->hash());
                 }
                 ((*j)->Min - (*j)->get_object()->entire_min()).put_state (anonym);
             }
@@ -277,6 +272,14 @@ bool area::put_state (base::flat & file) const
             base::flat named;
             for (j = data.Named.begin(); j != data.Named.end(); j++)
             {
+                // save location action
+                if ((*j)->has_action ())
+                {
+                    base::flat actn_data;
+                    (*j)->get_action()->put_state (actn_data);
+                    action_list.put_flat ((*j)->get_action()->hash(), actn_data);
+                    named.put_string ("action", (*j)->get_action()->hash());
+                }
                 named.put_string ("id", *((*j)->get_entity()->id()));
                 ((*j)->Min - (*j)->get_object()->entire_min()).put_state (named);
             }
@@ -284,14 +287,12 @@ bool area::put_state (base::flat & file) const
             entity.put_flat ("named", named);
         }
 
-        sprintf (buffer, "%d", index++);
-        record.put_flat (buffer, entity);
+        record.put_flat (i->first->hash(), entity);
     }
     file.put_flat ("actions", action_list);
     file.put_flat ("entities", record);
 
     // reset
-    index = 0;
     record.clear();
     
     // third pass: save placeable states
@@ -301,8 +302,7 @@ bool area::put_state (base::flat & file) const
         const world::placeable * data = i->first;
         data->put_state (entity);
         
-        sprintf (buffer, "%d", index++);
-        record.put_flat (buffer, entity);
+        record.put_flat (data->hash(), entity);
     }
     
     file.put_flat ("states", record);
@@ -350,12 +350,12 @@ bool area::get_state (base::flat & file)
         {
             case world::OBJECT:
             {
-                object = new world::object (*this);
+                object = new world::object (*this, id);
                 break;
             }
             case world::CHARACTER:
             {
-                object = new world::character (*this);
+                object = new world::character (*this, id);
                 break;
             }
             default:
@@ -400,7 +400,7 @@ bool area::get_state (base::flat & file)
             if (strcmp ("action", id) == 0)
             {
                 // get action id
-                actn_id = *((const char*) value);
+                actn_id = ((const char*) value);
                 
                 // read next value
                 entity_data.next (&value, &size, &id);
@@ -424,7 +424,7 @@ bool area::get_state (base::flat & file)
             if (actn_id != "")
             {
                 base::flat actn_data = action_list.get_flat (actn_id);
-                world::action *actn = ci->set_action ();
+                world::action *actn = ci->set_action (actn_id);
                 actn->get_state (actn_data);
                 actn_id = "";
             }
@@ -439,7 +439,7 @@ bool area::get_state (base::flat & file)
             if (strcmp ("action", id) == 0)
             {
                 // get action id
-                actn_id = *((const char*) value);
+                actn_id = ((const char*) value);
                 
                 // read next value
                 entity_data.next (&value, &size, &id);
@@ -461,7 +461,7 @@ bool area::get_state (base::flat & file)
             if (actn_id != "")
             {
                 base::flat actn_data = action_list.get_flat (actn_id);
-                world::action *actn = ci->set_action ();
+                world::action *actn = ci->set_action (actn_id);
                 actn->get_state (actn_data);
                 actn_id = "";
             }            

@@ -51,8 +51,9 @@ namespace world
     public:
         /**
          * Create a new, empty action.
+         * @param hash a unique, internal id.
          */
-        action ();
+        action (const std::string & hash);
         
         /**
          * Destructor.
@@ -118,6 +119,12 @@ namespace world
          * @return \e true if the %schedule was loaded successfully, \e false otherwise.
          */
         bool get_state (base::flat& file);
+
+        /**
+         * Return unique internal id for the action.
+         * @return unique internal id.
+         */
+        const std::string & hash () const { return Hash; }
         //@}
         
 #ifndef SWIG
@@ -133,6 +140,8 @@ namespace world
         
         /// Forbid copy constructor
         action (const action & a);
+        /// a unique internal id
+        const std::string Hash;
         /// the action implementation
         python::method *Action;
         /// additional arguments for the action

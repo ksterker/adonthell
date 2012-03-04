@@ -54,7 +54,8 @@ struct z_order : public std::binary_function<const world::placeable_model*, cons
 };
 
 // ctor
-placeable::placeable(world::area & mymap) : SolidMaxSize(), Mymap(mymap)
+placeable::placeable(world::area & mymap, const std::string & hash)
+: Hash(hash), SolidMaxSize(), Mymap(mymap)
 {
     Type = UNKNOWN;
     Solid = true;

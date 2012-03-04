@@ -1,6 +1,4 @@
 /*
- $Id: placeable.h,v 1.17 2009/04/26 18:53:00 ksterker Exp $
-
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2008/2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -73,8 +71,9 @@ namespace world
         /**
          * Create a thing on the map.
          * @param mymap map this thing belongs to.
+         * @param hash unique id of the model.
          */
-        placeable (area & mymap);
+        placeable (area & mymap, const std::string & hash);
 
         /**
          * Destructor.
@@ -367,6 +366,12 @@ namespace world
          * @return the models file name.
          */
         std::string modelfile () const { return ModelFile; }
+
+        /**
+         * Get the hash that is assigned to the model.
+         * @return the internal unique id of the model.
+         */
+        const std::string & hash () const { return Hash; }
         //@}
 
 #ifndef SWIG
@@ -411,6 +416,8 @@ namespace world
         area & Mymap;
 
     private:
+        /// internal, unique identifier for the model
+        const std::string Hash;
         /// forbid passing by value
         placeable (const placeable & p);
     };

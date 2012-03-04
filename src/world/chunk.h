@@ -245,8 +245,16 @@ namespace world
             std::vector<chunk_info*> Anonymous;
         } collector_data;
 
+        struct collector_order
+        {
+            bool operator()(const world::placeable *s1, const world::placeable *s2) const
+            {
+                return s1->hash() < s2->hash();
+            }
+        };
+
         /// container for gathering map objects when serializing chunk
-        typedef std::map<world::placeable *, collector_data> collector;
+        typedef std::map<world::placeable *, collector_data, collector_order> collector;
 
         /**
          * Collect all chunk contents, so that they can be easily written

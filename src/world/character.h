@@ -53,9 +53,10 @@ namespace world
         /**
          * Create a new character on given map.
          * @param mymap the place the character lives.
+         * @param hash unique id of the model.
          * @param mind representation of this character on the rpg side.
          */
-        character (area & mymap, rpg::character * mind = NULL);
+        character (area & mymap, const std::string & hash, rpg::character * mind = NULL);
 
         /**
          * Free character and associated resources.

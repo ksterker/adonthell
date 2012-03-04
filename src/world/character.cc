@@ -38,7 +38,8 @@ using world::character;
 using world::area;
 
 // ctor
-character::character (area & mymap, rpg::character * mind) : moving (mymap)
+character::character (area & mymap, const std::string & hash, rpg::character * mind)
+: moving (mymap, hash)
 {
     Type = CHARACTER;
     VSpeed = 0;

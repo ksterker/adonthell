@@ -35,7 +35,7 @@
 using world::object;
 
 // create a new scenery object
-object::object(world::area & mymap) : placeable(mymap) 
+object::object(world::area & mymap, const std::string & hash) : placeable(mymap, hash)
 {
     Type = OBJECT; 
 }

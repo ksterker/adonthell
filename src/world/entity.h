@@ -68,13 +68,14 @@ public:
     
     /** 
      * Attach an action to the entity.
+     * @param hash a unique, internal id.
      * @return the newly attached action.
      */
-    action *set_action ()
+    action *set_action (const std::string & hash)
     {
         if (Action == NULL)
         {
-            Action = new world::action();
+            Action = new world::action(hash);
         }
 
         return Action;

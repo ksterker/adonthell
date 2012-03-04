@@ -93,13 +93,14 @@ namespace world
         //@{
         /**
          * Assign an action to that location.
+         * @param hash a unique, internal id.
          * @return an empty action that must be initialized.
          */
-        world::action *set_action()
+        world::action *set_action(const std::string & hash)
         {
             if (Action == NULL)
             {
-                Action = new world::action();
+                Action = new world::action(hash);
             }
             return Action;
         }

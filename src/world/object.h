@@ -1,6 +1,4 @@
 /*
- $Id: object.h,v 1.4 2009/03/21 11:59:47 ksterker Exp $
- 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -51,8 +49,9 @@ namespace world
         /**
          * Create a new object on the given map.
          * @param mymap map the object belongs to.
+         * @param hash unique id of the model.
          */
-        object (area & mymap); 
+        object (area & mymap, const std::string & hash);
 
 		/**
 		 * Delete object.

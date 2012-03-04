@@ -34,7 +34,7 @@
 using world::action;
 
 // ctor
-action::action ()
+action::action (const std::string & hash) : Hash(hash)
 {
     Action = NULL;
     Args = NULL;

@@ -1,6 +1,4 @@
 /*
- $Id: moving.h,v 1.17 2009/02/08 13:25:53 ksterker Exp $
- 
  Copyright (C) 2002 Alexandre Courbot <alexandrecourbot@linuxgames.com>
  Copyright (C) 2009 Kai Sterker <kai.sterker@gmail.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
@@ -55,8 +53,9 @@ namespace world
         /**
          * Create a new movable object on the given map.
          * @param area the map this object belongs to.
+         * @param hash unique id of the model.
          */
-        moving (area & mymap); 
+        moving (area & mymap, const std::string & hash);
 
         /**
          * Destructor.
