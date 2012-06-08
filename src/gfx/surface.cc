@@ -371,6 +371,6 @@ namespace gfx
         
         ret = put_png (file);
         file.close();
-        return true;
+        return ret && !file.fail();
     }
 }
