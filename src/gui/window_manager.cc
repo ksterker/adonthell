@@ -201,4 +201,6 @@ bool window_manager::fade (gui::manager_child & c)
 
         return false;
     }
+
+    return false;
 }
