@@ -10,7 +10,7 @@
 namespace gui
 {
 	conversation::conversation(rpg::character & c, const u_int16 & w, const u_int16 & h)
-	: scrollview(w, h), ct(w-30, h/3), lo(w, h), dlg(c), speaker(w-30, LINEHEIGHT)
+	: scrollview(w, h), speaker(w-30, LINEHEIGHT), ct(w-30, h/3), lo(w, h), dlg(c)
 	{
         Look->init("window.xml");
         set_scroll_style("scrollbar.xml");
