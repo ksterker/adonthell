@@ -115,7 +115,7 @@ void pathfinding_costs::update_costs(const std::vector<rpg::faction *> & faction
     std::vector<rpg::faction *>::const_iterator i = factions.begin();
     for (; i != factions.end(); i++)
     {
-        if (&i != NULL)
+        if (*i != NULL)
             parse_data_file((*i)->pathfinding_costs_path());
     }
 
