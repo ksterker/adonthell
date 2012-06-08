@@ -167,6 +167,8 @@ private:
 class decoration_factory
 {
 public:
+	virtual ~decoration_factory() {}
+
 	/**
 	 * Create UI decoration for a given state.
 	 * @param state the state for which to create the decoration.
