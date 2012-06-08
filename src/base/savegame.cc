@@ -295,7 +295,7 @@ savegame_data *savegame::get (const s_int32 & slot)
     if (slot == NEW_SAVE) return NULL;
     
     s_int32 real_slot = slot + SPECIAL_SLOT_COUNT;
-    if (real_slot < 0 || real_slot >= Games.size())
+    if (real_slot < 0 || (size_t)real_slot >= Games.size())
     {
         LOG(ERROR) << "*** savegame::get: slot " << slot << " out of range [" 
                    << -SPECIAL_SLOT_COUNT << ", " << count() << "[."; 
