@@ -200,8 +200,10 @@ string script::get_attribute_string (const string &name) const
 void script::set_attribute (const string &name, PyObject *value)
 {
     if (Instance)
+    {
         if (PyObject_SetAttrString (Instance, (char *) name.c_str (), value) == -1)
             python::show_traceback ();
+    }
     else return;
 }
 
