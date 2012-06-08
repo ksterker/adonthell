@@ -126,7 +126,7 @@ namespace gui
 	void font::draw_text(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
 	{
 	    s_int16 ox = x;
-	    u_int32 current, prev = 0;
+	    u_int32 current = 0, prev = 0;
 	    FT_Vector kerning;
 
 		string::const_iterator i;
@@ -152,7 +152,7 @@ namespace gui
     void font::draw_shadow(const string& s, const s_int16 & x, const s_int16 & y, const gfx::drawing_area *da, gfx::surface* target)
     {
         s_int16 ox = x;
-        u_int32 current, prev = 0;
+        u_int32 current = 0, prev = 0;
         FT_Vector kerning;
 
         string::const_iterator i;
