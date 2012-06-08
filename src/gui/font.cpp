@@ -70,7 +70,7 @@ namespace gui
 		ref (true);
 
 		// load font
-		if (Error = FT_New_Face(library, fullpath.c_str(), 0, &Face))
+		if ((Error = FT_New_Face(library, fullpath.c_str(), 0, &Face)))
 		{
 			LOG(ERROR) << logging::indent() << "Unable to load font '" << path << "'";
 		}
@@ -96,7 +96,7 @@ namespace gui
         {
             if (!refcount)
             {
-                if (Error = FT_Init_FreeType(&library))
+                if ((Error = FT_Init_FreeType(&library)))
                 {
                     LOG(ERROR) << logging::indent() << "Unable to initialize the freetype library";
                     return;
@@ -117,7 +117,7 @@ namespace gui
 	void font::set_size(int size)
 	{
 		FontSize = size;
-		if (Error = FT_Set_Pixel_Sizes (Face, 0, FontSize))
+		if ((Error = FT_Set_Pixel_Sizes (Face, 0, FontSize)))
 		{
 			LOG(ERROR) << logging::indent() << "Unable to set the size of the font";
 		}
@@ -180,7 +180,7 @@ namespace gui
         // new glyph structure
         glyph_info *gi = new glyph_info();
 
-        if (Error = FT_Load_Char(Face, chr, FT_LOAD_RENDER))
+        if ((Error = FT_Load_Char(Face, chr, FT_LOAD_RENDER)))
         {
             LOG(ERROR) << logging::indent() << "Unable to load the glyph for character '" << chr << "'";
 
