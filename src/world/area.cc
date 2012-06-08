@@ -215,7 +215,6 @@ std::vector<world::zone*> area::find_zones (const world::vector3<s_int32> & poin
 // save to stream
 bool area::put_state (base::flat & file) const
 {
-    u_int32 act_idx = 0;
     base::flat record;
     
     // list of map(interactions)

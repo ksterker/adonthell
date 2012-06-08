@@ -328,14 +328,11 @@ void decoration::draw (const s_int16 & x, const s_int16 & y, const gfx::drawing_
 {
     if (FocusOverlay != Decoration.end())
     {
-    	s_int16 ox = 0;
-    	s_int16 oy = 0;
-
         if (CurrentState != Decoration.end())
         {
             // center widget in overlay (in case overlay is bigger than widget)
-            ox = (FocusOverlay->second->length() - CurrentState->second->length()) / 2;
-            oy = (FocusOverlay->second->height() - CurrentState->second->height()) / 2;
+    	    //s_int16 ox = (FocusOverlay->second->length() - CurrentState->second->length()) / 2;
+    	    //s_int16 oy = (FocusOverlay->second->height() - CurrentState->second->height()) / 2;
 
             // apply highlight to widget, if required
             if (FocusOverlay->second->highlight())

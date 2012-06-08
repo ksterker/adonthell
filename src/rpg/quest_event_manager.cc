@@ -79,8 +79,6 @@ void quest_event_manager::raise_event (const event *e)
 // raise all matching events in given list of listeners
 void quest_event_manager::raise_event (const event *e, std::list<listener*> *listeners)
 {
-	s_int32 repeat;
-
 	for (std::list<listener*>::iterator li = listeners->begin (); li != listeners->end(); /* nothing */ )
 	{
         if ((*li)->is_destroyed())
