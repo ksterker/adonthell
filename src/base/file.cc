@@ -285,7 +285,7 @@ const float& base::operator >> (const float& f, ogzstream& gfile)
     
     // floats saved as strings to remain independent of architecture
     snprintf (sf, 16, "%f", f);
-    sf >> gfile;
+    ((string)sf) >> gfile;
     
     return f;
 }
