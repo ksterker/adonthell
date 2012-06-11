@@ -55,6 +55,7 @@ public:
         {
             std::cout << "Button " << ev->button_symbol() << " has been pushed." << std::endl;
         }
+        return true;
     }
 };
         
