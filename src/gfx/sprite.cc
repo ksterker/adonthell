@@ -272,6 +272,11 @@ namespace gfx
             // dump it out to a file
             return animation.put_record (filename);
         }
+        else
+        {
+            // simple sprite, skip successfully
+            return true;
+        }
     }
     
     // get filename of sprite
