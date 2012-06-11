@@ -90,7 +90,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
     // paint while object remain in the queue
     while (!render_queue.empty())
     {
-        int size = render_queue.size();
+        size_t size = render_queue.size();
 
         // check each object if it can be drawn
         for (reverse_iterator it = render_queue.rbegin(); it != render_queue.rend(); /* nothing */)
@@ -423,7 +423,7 @@ void default_renderer::visualize_deadlock (std::list <world::render_info> & rend
     graph << "digraph deadlock {" << std::endl;
 
     // print all nodes
-    for (int i = 0; i < render_queue.size(); i++)
+    for (size_t i = 0; i < render_queue.size(); i++)
     {
         const render_info & ri = queue[i];
         graph << "n" << i << " [label=\"" << ri.Pos << "\\n" << ri.Shape->get_min() << " - " << ri.Shape->get_max() << "\"];" << std::endl;  
@@ -432,9 +432,9 @@ void default_renderer::visualize_deadlock (std::list <world::render_info> & rend
     graph << std::endl;
 
     // check each object if it can be drawn
-    for (int j = 0; j < render_queue.size(); j++)
+    for (size_t j = 0; j < render_queue.size(); j++)
     {
-        for (int i = 0; i < render_queue.size(); i++)
+        for (size_t i = 0; i < render_queue.size(); i++)
         {
             // ... but not with itself
             if (i == j) continue;

@@ -61,7 +61,7 @@ namespace gui
 
             int p = 0;
 
-            for (int i = 0; i < ts.size(); i++)
+            for (size_t i = 0; i < ts.size(); i++)
             {
                 // if required, center text horizontally
                 if (center_x())

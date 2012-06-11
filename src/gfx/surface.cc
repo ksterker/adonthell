@@ -172,7 +172,7 @@ namespace gfx
                 for (int h = 0; h < height(); h++)
                 {
                     u_int32 pix = get_pix (l, h);
-                    if (!is_masked() || pix != trans_col)
+                    if (!is_masked() || pix != (u_int32)trans_col)
                     {
                         unmap_color (pix, ir, ig, ib, ia);
                         if (ia != 0)
@@ -193,7 +193,7 @@ namespace gfx
                 for (int h = 0; h < height(); h++)
                 {
                     u_int32 pix = get_pix (l, h);
-                    if (!is_masked() || pix != trans_col)
+                    if (!is_masked() || pix != (u_int32)trans_col)
                     {
                         unmap_color (pix, ir, ig, ib, ia);
                         if (ia != 0)

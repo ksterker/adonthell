@@ -33,7 +33,7 @@ typedef std::vector<gui::layoutchild> vector_layoutchild;
 // select next child
 bool layout::moveright()
 {
-    int old = Selected;
+    u_int32 old = Selected;
     do
     {
         Selected = (Selected + 1) % Children.size();
@@ -53,7 +53,7 @@ bool layout::moveright()
 // select next child
 bool layout::movedown()
 {
-    int old = Selected;
+    u_int32 old = Selected;
     do
     {
         Selected = (Selected + 1) % Children.size();
@@ -73,7 +73,7 @@ bool layout::movedown()
 // select previous child
 bool layout::moveleft()
 {
-    int old = Selected;
+    u_int32 old = Selected;
     do
     {
         Selected = Selected ? Selected - 1 : Children.size() - 1;
@@ -93,7 +93,7 @@ bool layout::moveleft()
 // select previous child
 bool layout::moveup()
 {
-    int old = Selected;
+    u_int32 old = Selected;
     do
     {
         Selected = Selected ? Selected - 1 : Children.size() - 1;
@@ -123,7 +123,7 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
     client_area.assign_drawing_area (da);
     
     vector_layoutchild::const_iterator i;
-    int c = 0;
+    u_int32 c = 0;
     
     for (i = Children.begin(); i != Children.end(); ++i, c++)
     {
@@ -216,7 +216,7 @@ bool layout::focus()
     if (Visible && Children.size())
     {
         // find a child willing to accept being selected
-        s_int32 old = Selected;
+        u_int32 old = Selected;
         do
         {
             if (Children[Selected].Child->focus())
@@ -256,7 +256,10 @@ void layout::remove_child(gui::widget & c)
         if (&c == (*i).Child)
         {
             Children.erase(i);
-            if (Selected == i - Children.begin())
+
+            // we are guaranteed that i != Children.end() here, so
+            // safe to cast the math
+            if (Selected == (u_int32) (i - Children.begin()))
             {
                 //just deleted the selected item.
                 //TODO: what happens if nobody takes focus?

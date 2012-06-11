@@ -184,7 +184,7 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
 
         // don't go past edge of map
         if (Sx < start_x) Sx = start_x;
-        else if (Sx + length() > (s_int32) start_x + ml) Sx = start_x + ml - length();
+        else if (Sx + (s_int32)length() > (s_int32) start_x + (s_int32)ml) Sx = start_x + ml - length();
     }
     
     // calculate start and offset of view (y-axis)
@@ -200,7 +200,7 @@ void mapview::center_on (const s_int32 & x, const s_int32 & y)
         
         // don't go past edge of map
         if (Sy < start_y - CurZ) Sy = start_y - CurZ;
-        else if (Sy + height() > (s_int32) start_y + mh) Sy = start_y + mh - height();
+        else if (Sy + (s_int32)height() > (s_int32) start_y + (s_int32)mh) Sy = start_y + mh - height();
     }
 }
 

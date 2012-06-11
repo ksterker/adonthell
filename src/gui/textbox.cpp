@@ -40,7 +40,7 @@ namespace gui
 
     bool cursor::blink(const bool & reset)
     {
-        int now = ::base::Timer.current_time();
+        u_int32 now = ::base::Timer.current_time();
         if (reset || LastBlink + BLINKRATE*2 < now)
         {
             // turn on cursor every second
@@ -103,7 +103,7 @@ namespace gui
             }
             case input::keyboard_event::RIGHT_KEY:
             {
-                if (InsertPos > Text.size())
+                if (InsertPos >= 0 && (size_t)InsertPos > Text.size())
                 {	
                     InsertPos = Text.size();
                     return false;
@@ -127,7 +127,7 @@ namespace gui
             }
             case input::keyboard_event::DELETE_KEY:
             {
-                if (InsertPos < Text.size())
+                if (InsertPos >= 0 && (size_t)InsertPos < Text.size())
                 {
                     Text.erase(InsertPos, ::base::utf8::right(Text, InsertPos));
                     return true;
@@ -172,7 +172,7 @@ namespace gui
 		{
 			//figure out where the cursor should go
 			int x, y;
-			for (InsertPos = 1; InsertPos <= Text.size(); InsertPos++)
+			for (InsertPos = 1; (size_t)InsertPos <= Text.size(); InsertPos++)
 			{
 				f.get_text_size(Text.substr(0, InsertPos), x, y);
 				if (x-offset > m.x)

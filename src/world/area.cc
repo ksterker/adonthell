@@ -68,7 +68,7 @@ void area::clear()
 // convenience method for adding object at a known index
 world::chunk_info *area::place_entity (const s_int32 & index, coordinates & pos)
 {
-    if (index >= 0 && index < Entities.size())
+    if (index >= 0 && (size_t)index < Entities.size())
     {
         return chunk::add(Entities[index], pos);
     }
@@ -91,7 +91,7 @@ void area::update()
 // get entity at given index
 placeable * area::get_entity (const s_int32 & index) const
 {
-    if (index < Entities.size())
+    if (index >= 0 && (size_t)index < Entities.size())
     {
         return Entities[index]->get_object();
     }
