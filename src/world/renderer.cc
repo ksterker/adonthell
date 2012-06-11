@@ -225,7 +225,7 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
     // and which behind.
     
     if (obj.y() + obj.Shape->width() <= min_y)
-    {                 
+    {
         if (obj.z() + obj.Shape->height() <= min_z) // segment 0
         {
             return true;

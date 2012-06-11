@@ -145,7 +145,7 @@ void placeable::set_state (const std::string & state)
     }
 
     // resort models according to their z order
-    std:sort (Model.begin(), Model.end(), z_order());
+    std::sort (Model.begin(), Model.end(), z_order());
 }
 
 // get z position of the object's surface
