@@ -112,6 +112,10 @@ bool window_manager::fade (gui::manager_child & c)
             case BOTTOM:
                 c.Dy = gfx::screen::height() - c.Pos.y();
                 break;
+            default:
+                {
+                    // fall through
+                }
         }
     }
     
@@ -194,13 +198,13 @@ bool window_manager::fade (gui::manager_child & c)
             }
             break;
         case PLAIN:
-        {
             c.Fading = NONE;
             return !c.Showing;
-        }
 
-        return false;
+        default:
+            {
+                // fall through
+            }
     }
-
     return false;
 }
