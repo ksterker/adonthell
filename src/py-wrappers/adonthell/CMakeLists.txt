@@ -10,6 +10,7 @@ set_source_files_properties("py_debug.i" PROPERTIES CPLUSPLUS ON
 swig_add_module(debug python py_debug.i)
 swig_link_libraries(debug ${PYTHON_LIBRARIES} adonthell_py_runtime)
 set_target_properties (_debug PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
+set_target_properties (_debug PROPERTIES COMPILE_FLAGS "${ADDITIONAL_SWIG_CXXFLAGS}")
 adonthell_install_py (_debug "${CMAKE_CURRENT_BINARY_DIR}/debug.py")
 
 
@@ -32,6 +33,7 @@ foreach(name audio base event gfx gui input main rpg world)
 
   swig_link_libraries(${name} ${PYTHON_LIBRARIES} adonthell_${name})
   set_target_properties (_${name} PROPERTIES INSTALL_RPATH "${LIB_INSTALL_RPATH}")
+  set_target_properties (_${name} PROPERTIES COMPILE_FLAGS "${ADDITIONAL_SWIG_CXXFLAGS}")
   adonthell_install_py (_${name} "${CMAKE_CURRENT_BINARY_DIR}/${name}.py")
 endforeach(name)
 
