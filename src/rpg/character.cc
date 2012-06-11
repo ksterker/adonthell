@@ -187,18 +187,6 @@ character *character::get_character (const std::string & id)
 // load characters from file
 bool character::load ()
 {
-    // cleanup first
-    /*
-    std::hash_map<std::string, character*>::iterator i;
-    while (!Characters.empty())
-    {
-        i = Characters.begin();
-        character *c = i->second;
-        delete c; // this removes c from Characters and invalidates i
-    }
-    */
-    Characters.clear();
-    
     base::diskio file;
     
     // try to load character
@@ -251,6 +239,18 @@ bool character::save (const string & path)
 
     // write character to disk
     return file.put_record (path + "/" + CHARACTER_DATA);
+}
+
+void character::cleanup()
+{
+    // cleanup first
+    std::hash_map<std::string, character*>::iterator i = Characters.begin();
+    while (i != Characters.end())
+    {
+        delete i->second;
+        ++i;
+    }
+    Characters.clear();
 }
 
 // save character to stream

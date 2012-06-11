@@ -375,6 +375,11 @@ namespace rpg
             static bool save (const string & path);
 
             /**
+             * Deletes all objects in the internal Character map
+             */
+            static void cleanup();
+
+            /**
              * Loads the %character from a stream.
              * @param in stream to load the %character from.
              * @return \b true if loading successful, \b false otherwise.
