@@ -379,6 +379,8 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
             }
         }
     }
+
+    throw "This should never happen.";
 }
 
 // debug rendering
