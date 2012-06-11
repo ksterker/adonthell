@@ -49,6 +49,11 @@ public:
         std::cout << "Loading state ...\n";
         return true;
     }
+
+    static void cleanup ()
+    {
+        std::cout << "Cleaning up ...\n";
+    }
 };
 
 class calltest2
@@ -64,6 +69,11 @@ public:
     {
         std::cout << "Loading state ...\n";
         return true;
+    }
+
+    void cleanup ()
+    {
+        std::cout << "Cleaning up ...\n";
     }
 };
 

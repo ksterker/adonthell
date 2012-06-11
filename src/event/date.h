@@ -144,6 +144,10 @@ public:
      */
     static bool save (const std::string & path);
     /**
+     * Cleanup the time, resetting to startup values
+     */
+    static void cleanup ();
+    /**
      * Load the state of the %gamedate class from stream.
      * @param file stream to read the state from
      * @return \b true if the state was successfully retrieved,

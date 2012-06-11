@@ -55,6 +55,7 @@ namespace base
         {
             delete Save;
             delete Load;
+            delete Cleanup;
         }
         
         /**
@@ -80,7 +81,13 @@ namespace base
             if (!Load) return false;
             return (*Load)();
         }
-        
+
+        void cleanup ()
+        {
+            if (Cleanup)
+                (*Cleanup)();
+        }
+
 #ifndef SWIG
         /// python support
         GET_TYPE_NAME(base::serializer_base);
@@ -95,12 +102,15 @@ namespace base
         {
             Save = NULL;
             Load = NULL;
+            Cleanup = NULL;
         }
         
         /// callback for saving the wrapped object
         base::functor_1ret<const std::string &, bool> *Save;
         /// callback for loading the wrapped object
         base::functor_0ret<bool> *Load;
+        /// callback for cleanup of the wrapped object
+        base::functor_0ret<void> *Cleanup;
     };
     
     /**
@@ -120,6 +130,7 @@ namespace base
         {
             Save = base::make_functor_ret(&T::save);
             Load = base::make_functor_ret(&T::load);
+            Cleanup = base::make_functor_ret(&T::cleanup);
         }
     
         /**
@@ -133,6 +144,7 @@ namespace base
         {
             Save = base::make_functor_ret(*instance, &T::save);
             Load = base::make_functor_ret(*instance, &T::load);            
+            Cleanup = base::make_functor_ret(*instance, &T::cleanup);
         }
     };
 
