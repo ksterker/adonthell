@@ -57,16 +57,36 @@ public:
         draw_bounding_box = false;
         
         // prepare gamedata handling
+
         // TODO: should probably be integrated directly into the engine,
         // i.e. into module initialization (adonthell::init_modules),
         // in which case we need to make sure to init modules in the proper
         // order too.
         
         // note: order is important; load EVENT before RPG before WORLD
+
+        // TODO: save/load audio event. that in turn can make sure
+        // the correct background music starts playing
+        base::savegame::add (new base::serializer<audio::sound> ());
+
+        // no changes required here
         base::savegame::add (new base::serializer<events::date> ());
-        // todo: load species
-        // todo: load factions
+
+        // TODO: save/load all registered species and factions.
+        base::savegame::add (new base::serializer<rpg::specie> ());
+        base::savegame::add (new base::serializer<rpg::faction> ());
+
+        // TODO: save/load current state of quest tree.
+        base::savegame::add (new base::serializer<rpg::quest> ());
+
+        // TODO: save/load all immutable items. mutable items will be loaded
+        // with the inventory they belong to.
+        base::savegame::add (new base::serializer<rpg::item_storage> ());
+
+        // TODO: update put_state/get_state to include associated specie and factions
         base::savegame::add (new base::serializer<rpg::character> ());
+
+        // no changes required here
         base::savegame::add (new base::serializer<world::area_manager> ());
     }
 
@@ -159,46 +179,56 @@ public:
         // set mapview to proper size
         world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
 
-        LOG(INFO) << "Creating 'Human' specie... ";
-        rpg::specie human("Human");
-        human.get_state("groups/human.specie");
-        LOG(INFO) << "  done!";
+        // TODO: init species and factions from data files containing all
+        // species / all factions (see serializer stuff above).
+
+        // LOG(INFO) << "Creating 'Human' specie... ";
+        // rpg::specie human("Human");
+        // human.get_state("groups/human.specie");
+        // LOG(INFO) << "  done!";
+
+        // LOG(INFO) << "Creating 'Noble' faction... ";
+        // rpg::faction noble("Noble");
+        // noble.get_state("groups/noble.faction");
+        // LOG(INFO) << "  done!";
+
         
-        LOG(INFO) << "Creating 'Noble' faction... ";
-        rpg::faction noble("Noble");
-        noble.get_state("groups/noble.faction");
-        LOG(INFO) << "  done!";
+        // TODO: assign specie / faction in rpg::character::get_state
+        // and save them in rpg::character::put_state instead of
+        // hardcoding here. Best implement saving as a first step to
+        // update character.data file, then implement loading and
+        // finally remove the code below.
         
         // rpg character instance
-        LOG(INFO) << "Creating player character... ";
-        rpg::character *player = rpg::character::get_player();
-        player->set_specie ("Human");
-        LOG(INFO) << "  done!";
+        // LOG(INFO) << "Creating player character... ";
+        // rpg::character *player = rpg::character::get_player();
+        // player->set_specie ("Human");
+        // LOG(INFO) << "  done!";
         
-        LOG(INFO) << "Adding 'Noble' faction to player character... ";
-        player->add_faction("Noble");
-        LOG(INFO) << "  done!";
+        // LOG(INFO) << "Adding 'Noble' faction to player character... ";
+        // player->add_faction("Noble");
+        // LOG(INFO) << "  done!";
 
-        LOG(INFO) << "Setting 'Human' specie in player character... ";
-        rpg::character *npc = rpg::character::get_character("NPC");
-        npc->set_specie ("Human");
-        LOG(INFO) << "  done!";
+        // LOG(INFO) << "Setting 'Human' specie in player character... ";
+        // rpg::character *npc = rpg::character::get_character("NPC");
+        // npc->set_specie ("Human");
+        // LOG(INFO) << "  done!";
 
-        std::string sound_filename = "at-demo-2.ogg";
-        LOG(INFO) << "Loading sound file '" << sound_filename << "'";
-        audio::sound *sound = new audio::sound(sound_filename);
-        LOG(INFO) << "  done!";
 
-        LOG(INFO) << "Fading sound in...";
-        sound->fadein(3, -1);
-        LOG(INFO) << "  done!";
+        // TODO: use audio event and associated python script to start playing
+        // music. Probably need to manually trigger the event after serializer
+        // loaded state of audio subsystem
 
-        // arguments to map view schedule
-        LOG(INFO) << "Adding player character to mapview schedule... ";
-        PyObject *args = PyTuple_New (1);
-        PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
-        LOG(INFO) << "  done!";
-        
+        // std::string sound_filename = "at-demo-2.ogg";
+        // LOG(INFO) << "Loading sound file '" << sound_filename << "'";
+        // audio::sound *sound = new audio::sound(sound_filename);
+        // LOG(INFO) << "  done!";
+
+        // LOG(INFO) << "Fading sound in...";
+        // sound->fadein(3, -1);
+        // LOG(INFO) << "  done!";
+
+
         u_int32 totalFrames = 0;
         u_int32 totalTime = 0;
         u_int32 currentTime;
@@ -269,14 +299,17 @@ public:
 	    } // while (main loop)
 
         // gc.world.save ("test-world-new.xml");
-        
-        LOG(INFO) << "Cleaning up specie... ";
-        rpg::specie::cleanup();
-        LOG(INFO) << "  done!";
 
-        LOG(INFO) << "Cleaning up faction... ";
-        rpg::faction::cleanup();
-        LOG(INFO) << "  done!";
+	    // TODO: do proper cleanup using base::serializer::cleanup,
+	    // probably from inside adonthell::app::cleanup
+
+        // LOG(INFO) << "Cleaning up specie... ";
+        // rpg::specie::cleanup();
+        // LOG(INFO) << "  done!";
+
+        // LOG(INFO) << "Cleaning up faction... ";
+        // rpg::faction::cleanup();
+        // LOG(INFO) << "  done!";
         
         LOG(ERROR) << "Rendered " << totalFrames << " frames in " << totalTime << " ms.";
         LOG(ERROR) << "Average time required per frame is " << std::setprecision(4) << (double) totalTime / totalFrames  << " ms.";
