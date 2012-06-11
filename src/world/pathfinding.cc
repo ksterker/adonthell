@@ -157,11 +157,7 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     // Middle position of the goal area
     vector3<s_int32> goal ((goal1.x() + goal2.x()) / 2, (goal1.y() + goal2.y()) / 2, 0);
 
-    // Pos of the character
-    const s_int32 init_chr_x = chr->x();
-    const s_int32 init_chr_y = chr->y();
-
-    // Lenght of the character
+    // Length of the character
     const u_int8 chr_length = chr->placeable::length();
     const u_int8 chr_width = chr->placeable::width();
 
@@ -170,7 +166,6 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
     // Temporary variables
     coordinates temp_pos;
-    u_int16 temp_move_cost;
     node * temp_node;
     node * temp_node2;
     /* -------------------------------------------------------- */

@@ -84,8 +84,6 @@ s_int16 pathfinding_costs::get_cost(const std::string & name) const
             break;
     }
 
-    type_costs * actual = (*i);
-
     return (*i)->get_costs_hash()->get_cost(name);
 }
 

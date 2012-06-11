@@ -45,7 +45,6 @@ class GuiTest : public adonthell::app {
   }
   void print(const events::event *evt) {
       const gui::ui_event *e = (const gui::ui_event*)evt;
-      gui::button *btn = (gui::button*) e->source();
 
       char* s = (char *) e->user_data();
       std::cout << s << " pressed\n";
