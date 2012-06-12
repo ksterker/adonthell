@@ -160,12 +160,6 @@ public:
         // set mapview to proper size
         world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
 
-        LOG(INFO) << "Creating 'Human' specie... ";
-        rpg::specie *human = new rpg::specie("Human");
-        human->get_state("groups/human.specie");
-        rpg::specie::add(human);
-        LOG(INFO) << "  done!";
-
         LOG(INFO) << "Creating 'Noble' faction... ";
         rpg::faction noble("Noble");
         noble.get_state("groups/noble.faction");
