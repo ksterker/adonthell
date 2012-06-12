@@ -108,6 +108,11 @@ bool area_manager::save (const std::string & path)
     }
     
     // save current map
+    if (!ActiveMap)
+    {
+        LOG(ERROR) << "*** area_manager::save: no active map!";
+        return false;
+    }
     result &= ActiveMap->save (path + "/" + ActiveMap->filename());
     
     // save world data
