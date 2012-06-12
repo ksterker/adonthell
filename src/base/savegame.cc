@@ -108,7 +108,7 @@ bool savegame::load (const s_int32 & slot)
         {
             return false;
         }
-        
+
         if (ProgressCallback != NULL)
         {
             (*ProgressCallback)((s_int32)((current * 100.0) / count));

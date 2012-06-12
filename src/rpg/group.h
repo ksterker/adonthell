@@ -153,6 +153,9 @@ namespace rpg
          */
         bool put_state (base::flat & file) const;
 
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(rpg::group);
+#endif // SWIG
 
     private:
 

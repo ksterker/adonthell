@@ -65,6 +65,7 @@ public:
         // note: order is important; load EVENT before RPG before WORLD
         base::savegame::add (new base::serializer<events::date> ());
         // todo: load species
+        base::savegame::add (new base::serializer<rpg::specie> ());
         // todo: load factions
         base::savegame::add (new base::serializer<rpg::character> ());
         base::savegame::add (new base::serializer<world::area_manager> ());
@@ -160,21 +161,22 @@ public:
         world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
 
         LOG(INFO) << "Creating 'Human' specie... ";
-        rpg::specie human("Human");
-        human.get_state("groups/human.specie");
+        rpg::specie *human = new rpg::specie("Human");
+        human->get_state("groups/human.specie");
+        rpg::specie::add(human);
         LOG(INFO) << "  done!";
-        
+
         LOG(INFO) << "Creating 'Noble' faction... ";
         rpg::faction noble("Noble");
         noble.get_state("groups/noble.faction");
         LOG(INFO) << "  done!";
-        
+
         // rpg character instance
         LOG(INFO) << "Creating player character... ";
         rpg::character *player = rpg::character::get_player();
         player->set_specie ("Human");
         LOG(INFO) << "  done!";
-        
+
         LOG(INFO) << "Adding 'Noble' faction to player character... ";
         player->add_faction("Noble");
         LOG(INFO) << "  done!";
@@ -198,7 +200,7 @@ public:
         PyObject *args = PyTuple_New (1);
         PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
         LOG(INFO) << "  done!";
-        
+
         u_int32 totalFrames = 0;
         u_int32 totalTime = 0;
         u_int32 currentTime;

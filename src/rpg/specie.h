@@ -41,11 +41,10 @@ namespace rpg
     {
     public:
 
-        specie(const std::string & name) : group(name)
+        specie(const std::string & name) : group(name), Alignment(0)
         {
             // Update the path to the python modules
             set_group_package("groups.species.");
-            Species.push_back(this);
         }
 
         /**
@@ -68,9 +67,58 @@ namespace rpg
         static specie * get_specie(const std::string & name);
 
         /**
-         * Cleans everything up
+         * Save specie to file
+         * @param file object to write to
+         * @return true on success
+         */
+        bool put_state (base::flat & file);
+
+        /**
+         * Load a specie from file.  Assumes that any surrounding
+         * FLAT record has already been loaded. (see load() and
+         * get_state(filename))
+         * @param file object to read from
+         * @return true on success
+         */
+        bool get_state (base::flat & file);
+
+        /**
+         * Convenience wrapper, to load a specie from an XML file.
+         * @param XML path and filename
+         * @return true on success
+         */
+        bool get_state (const std::string & filename);
+
+#ifndef SWIG
+        GET_TYPE_NAME_VIRTUAL(rpg::specie);
+#endif // SWIG
+
+        /**
+         * Cleans everything up, and responsible for deleting all
+         * internal objects in the vector, which are only added
+         * by the load() call.
          */
         static void cleanup();
+
+        /**
+         * Load the specie. Load is responsible for adding all new
+         * objects to the static Species vector.  Not the constructor.
+         * Species is freed by cleanup().
+         * @return true on success, false otherwise.
+         */
+        static bool load ();
+
+        /**
+         * Save the specie
+         * @param path directory to save data to.
+         * @return true on success, false otherwise.
+         */
+        static bool save (const std::string & path);
+
+        /**
+         * Adds a specie to Species and takes ownership of it
+         */
+        static void add (specie *s);
 
     private:
 
