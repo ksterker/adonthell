@@ -43,6 +43,11 @@ namespace gui
     public:
 
         /**
+         * Source for listeners that want to listen to events of a given type from all sources.
+         */
+        static const int ALL_SOURCES = 0x1; // definitely not a valid pointer
+
+        /**
          * @name Initialization
          */
         //@{

@@ -55,6 +55,14 @@ target_link_libraries(adonthell_gui
 	adonthell_rpg	
 	)
 
+################################
+# Unit tests
+IF(DEVBUILD)
+  add_executable(test_ui_event_manager test_ui_event_manager.cc)
+  set_target_properties(test_ui_event_manager PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
+  target_link_libraries(test_ui_event_manager ${TEST_LIBRARIES} ${LIBFT_LIBRARIES} adonthell_gui)
+  add_test(NAME UiEventManager COMMAND test_ui_event_manager)
+ENDIF(DEVBUILD)
 
 #############################################
 # Install Stuff
