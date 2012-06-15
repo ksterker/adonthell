@@ -44,7 +44,7 @@ namespace world
     class placeable_Test : public ::testing::Test {
 
     protected:
-        placeable_Test() : object(nowhere, "unique_hash") {
+        placeable_Test() : object(nowhere, "") {
         }
 
         virtual ~placeable_Test() {
