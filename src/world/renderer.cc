@@ -337,6 +337,7 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
         switch (res)
         {
             case 0:
+            default:
             {                
                 // fprintf (stderr, "*** default_renderer::is_object_below: total intersection of objects!\n"); // E
                 // fprintf (stderr, "    [%i, %i, %i] - [%i, %i, %i]\n", min_x, min_y, min_z, max_x, max_y, max_z);
@@ -379,8 +380,6 @@ bool default_renderer::is_object_below (const render_info & obj, const render_in
             }
         }
     }
-
-    throw "This should never happen.";
 }
 
 // debug rendering
