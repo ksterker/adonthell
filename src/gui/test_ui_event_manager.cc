@@ -30,6 +30,7 @@
 #include "event/manager.h"
 #include "gui/button.h"
 #include "gui/ui_event.h"
+#include "gui/ui_event_manager.h"
 
 #include <gtest/gtest.h>
 
@@ -58,7 +59,7 @@ namespace gui
         }
     }; // class{}
 
-    TEST_F(ui_event_manager_Test, listen_for_events_from_all_sources) {
+    TEST_F(ui_event_manager_Test, listen_for_events_from_any_source) {
         int test_value = 0;
         ui_event* event = new ui_event( (widget*)ui_event::ANY_SOURCE, "activate", &test_value);
         events::factory event_factory;
@@ -67,6 +68,9 @@ namespace gui
 
         gui::button* button = new gui::button(0, 0);
         button->activate();
+
+        events::manager_base *manager = events::event_type::get_manager (((events::event *) event)->type ());
+        ((ui_event_manager *)manager)->update();
 
         EXPECT_EQ(1, test_value);
     }
