@@ -35,7 +35,7 @@
 
 namespace gui
 {
-    class ui_event_manager_Test : public ::testing::Test {
+    class ui_event_Test : public ::testing::Test {
 
     protected:
         // If the constructor and destructor are not enough for setting up
@@ -50,25 +50,13 @@ namespace gui
             // Code here will be called immediately after each test (right
             // before the destructor).
         }
-
-    public:
-        void increment_int(const events::event *event) {
-            const ui_event *e = (const ui_event *) event;
-            (*((int *)e->user_data()))++;
-        }
     }; // class{}
 
-    TEST_F(ui_event_manager_Test, listen_for_events_from_all_sources) {
-        int test_value = 0;
-        ui_event* event = new ui_event( (widget*)ui_event::ANY_SOURCE, "activate", &test_value);
-        events::factory event_factory;
+    TEST_F(ui_event_Test, event_from_all_sources_equals_any_event) {
+        ui_event* event1 = new ui_event( (widget*)ui_event::ANY_SOURCE, "activate", NULL);
+        ui_event* event2 = new ui_event( (widget*)0x2, "activate", NULL);
 
-        event_factory.register_event(event, ::base::make_functor(*this, &ui_event_manager_Test::increment_int));
-
-        gui::button* button = new gui::button(0, 0);
-        button->activate();
-
-        EXPECT_EQ(1, test_value);
+        EXPECT_TRUE(event1->equals(event2));
     }
 
 } // namespace{}

@@ -43,9 +43,9 @@ namespace gui
     public:
 
         /**
-         * Source for listeners that want to listen to events of a given type from all sources.
+         * Source for listeners that want to listen to events of a given type from any source.
          */
-        static const int ALL_SOURCES = 0x1; // definitely not a valid pointer
+        static const int ANY_SOURCE = 0x1; // definitely not a valid pointer
 
         /**
          * @name Initialization
@@ -80,7 +80,7 @@ namespace gui
         bool equals (const events::event* e) const
         {
             const ui_event *evt = (const ui_event *) e;
-            return Source == evt->source () && Action == evt->action();
+            return (Source == evt->source () || (uint64_t)Source == ANY_SOURCE) && Action == evt->action();
         }
 
 #ifndef SWIG

@@ -62,6 +62,11 @@ IF(DEVBUILD)
   set_target_properties(test_ui_event_manager PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
   target_link_libraries(test_ui_event_manager ${TEST_LIBRARIES} ${LIBFT_LIBRARIES} adonthell_gui)
   add_test(NAME UiEventManager COMMAND test_ui_event_manager)
+
+  add_executable(test_ui_event test_ui_event.cc)
+  set_target_properties(test_ui_event PROPERTIES COMPILE_FLAGS ${LIBFT_CFLAGS})
+  target_link_libraries(test_ui_event ${TEST_LIBRARIES} adonthell_gui)
+  add_test(NAME UiEvent COMMAND test_ui_event)
 ENDIF(DEVBUILD)
 
 #############################################
