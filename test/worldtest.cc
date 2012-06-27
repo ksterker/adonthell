@@ -36,6 +36,7 @@
 #include "world/character.h"
 #include "world/object.h"
 #include "world/area_manager.h"
+#include "gui/ui_event.h"
 #include "gui/window_manager.h"
 #include "base/logging.h"
 
@@ -114,6 +115,12 @@ public:
         // do not consume event
         return false;
     }
+
+    void play_sound(const events::event *event) {
+        const gui::ui_event *e = (const gui::ui_event *) event;
+        audio::sound *sound = (audio::sound *) e->user_data();
+        sound->play(0);
+    }
 };
 
 class world_test : public adonthell::app
@@ -180,7 +187,7 @@ public:
         npc->set_specie ("Human");
         LOG(INFO) << "  done!";
 
-        std::string sound_filename = "at-demo-2.ogg";
+        std::string sound_filename = "worldtest.ogg";
         LOG(INFO) << "Loading sound file '" << sound_filename << "'";
         audio::sound *sound = new audio::sound(sound_filename);
         LOG(INFO) << "  done!";
@@ -188,6 +195,15 @@ public:
         LOG(INFO) << "Fading sound in...";
         sound->fadein(3, -1);
         LOG(INFO) << "  done!";
+
+        std::string button_sound_filename = "click.ogg";
+        LOG(INFO) << "Loading button sound file '" << button_sound_filename << "'";
+        audio::sound *button_sound = new audio::sound(button_sound_filename);
+        LOG(INFO) << "  done!";
+
+        gui::ui_event *activate_event = new gui::ui_event((gui::widget*)gui::ui_event::ANY_SOURCE, "activate", button_sound);
+        events::factory event_factory;
+        event_factory.register_event(activate_event, ::base::make_functor(gc, &game_client::play_sound));
 
         // arguments to map view schedule
         LOG(INFO) << "Adding player character to mapview schedule... ";
