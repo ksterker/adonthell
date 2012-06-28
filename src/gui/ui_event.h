@@ -45,7 +45,7 @@ namespace gui
         /**
          * Source for listeners that want to listen to events of a given type from any source.
          */
-        static const int ANY_SOURCE = 0x1; // definitely not a valid pointer
+        static const unsigned int ANY_SOURCE = 0x1; // definitely not a valid pointer
 
         /**
          * @name Initialization
