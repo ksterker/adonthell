@@ -196,7 +196,7 @@ public:
         sound->fadein(3, -1);
         LOG(INFO) << "  done!";
 
-        std::string button_sound_filename = "click.ogg";
+        std::string button_sound_filename = "select.ogg";
         LOG(INFO) << "Loading button sound file '" << button_sound_filename << "'";
         audio::sound *button_sound = new audio::sound(button_sound_filename);
         LOG(INFO) << "  done!";
