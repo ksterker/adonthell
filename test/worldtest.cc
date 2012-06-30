@@ -187,21 +187,11 @@ public:
         npc->set_specie ("Human");
         LOG(INFO) << "  done!";
 
-        std::string sound_filename = "worldtest.ogg";
-        LOG(INFO) << "Loading sound file '" << sound_filename << "'";
-        audio::sound *sound = new audio::sound(sound_filename);
-        LOG(INFO) << "  done!";
-
         LOG(INFO) << "Fading sound in...";
-        sound->fadein(3, -1);
+        load_sound("worldtest.ogg")->fadein(3, -1);
         LOG(INFO) << "  done!";
 
-        std::string button_sound_filename = "select.ogg";
-        LOG(INFO) << "Loading button sound file '" << button_sound_filename << "'";
-        audio::sound *button_sound = new audio::sound(button_sound_filename);
-        LOG(INFO) << "  done!";
-
-        gui::ui_event *activate_event = new gui::ui_event((gui::widget*)gui::ui_event::ANY_SOURCE, "activate", button_sound);
+        gui::ui_event *activate_event = new gui::ui_event((gui::widget*)gui::ui_event::ANY_SOURCE, "activate", load_sound("select.ogg"));
         events::factory event_factory;
         event_factory.register_event(activate_event, ::base::make_functor(gc, &game_client::play_sound));
 
@@ -294,6 +284,15 @@ public:
         LOG(ERROR) << "Average time required per frame is " << std::setprecision(4) << (double) totalTime / totalFrames  << " ms.";
 
 	    return 0;
+	}
+
+private:
+	audio::sound * load_sound(const std::string sound_filename) {
+	    LOG(INFO) << "Loading sound file '" << sound_filename << "'";
+	    audio::sound *sound = new audio::sound(sound_filename);
+	    LOG(INFO) << "  done!";
+
+	    return sound;
 	}
 };
 
