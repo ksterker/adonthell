@@ -1,6 +1,15 @@
 AM_CXXFLAGS = -I$(top_srcdir)/src
 EXTRA_DIST = py_debug.i py_base.i py_event.i py_gfx.i py_gui.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
-CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_*_wrap.cc
+CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_debug_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_base_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_event_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_gfx_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_gui_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_input_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_audio_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_main_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_rpg_wrap.cc \
+    $(top_srcdir)/src/py-wrappers/adonthell/py_world_wrap.cc
 
 ## Python wrapper files.
 pkgpyexec_PYTHON = __init__.py debug.py base.py event.py gfx.py gui.py input.py audio.py main.py rpg.py world.py
