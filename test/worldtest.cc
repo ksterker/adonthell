@@ -138,9 +138,6 @@ public:
     	gfx::screen::set_native_mode ();
         LOG(INFO) << "  done!";
 
-		// Contains map and player controls
-	    game_client gc;
-
         LOG(INFO) << "Adding keyboard manager and listener... ";
 
 		// Add keyboard controls
@@ -191,9 +188,7 @@ public:
         load_sound("worldtest.ogg")->fadein(3, -1);
         LOG(INFO) << "  done!";
 
-        gui::ui_event *activate_event = new gui::ui_event((gui::widget*)gui::ui_event::ANY_SOURCE, "activate", load_sound("select.ogg"));
-        events::factory event_factory;
-        event_factory.register_event(activate_event, ::base::make_functor(gc, &game_client::play_sound));
+        register_ui_sound("activate", "select.ogg");
 
         // arguments to map view schedule
         LOG(INFO) << "Adding player character to mapview schedule... ";
@@ -287,12 +282,22 @@ public:
 	}
 
 private:
-	audio::sound * load_sound(const std::string sound_filename) {
-	    LOG(INFO) << "Loading sound file '" << sound_filename << "'";
-	    audio::sound *sound = new audio::sound(sound_filename);
+    // Contains map and player controls
+    game_client gc;
+
+    events::factory event_factory;
+
+	audio::sound * load_sound(const std::string filename) {
+	    LOG(INFO) << "Loading sound file '" << filename << "'";
+	    audio::sound *sound = new audio::sound(filename);
 	    LOG(INFO) << "  done!";
 
 	    return sound;
+	}
+
+	void register_ui_sound(const std::string action, const std::string filename) {
+        gui::ui_event *activate_event = new gui::ui_event((gui::widget*)gui::ui_event::ANY_SOURCE, action, load_sound(filename));
+        event_factory.register_event(activate_event, ::base::make_functor(gc, &game_client::play_sound));
 	}
 };
 
