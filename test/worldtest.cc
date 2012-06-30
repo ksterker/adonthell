@@ -201,6 +201,9 @@ public:
         u_int32 totalTime = 0;
         u_int32 currentTime;
 
+        // add mapview to window stack
+        gui::window_manager::add(0, 0, world::area_manager::get_mapview());
+
 	    while (IsRunning)
     	{
 	        currentTime = base::Timer.current_time();
@@ -228,7 +231,7 @@ public:
             }            
 
             // render mapview on screen
-            mv->draw (0, 0);
+            //mv->draw (0, 0);
 
             // stop printing queue contents
             DEBUG_RENDERER.print_queue (false);

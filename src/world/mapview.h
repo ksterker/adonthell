@@ -176,6 +176,44 @@ namespace world
         }
         
         /**
+         * Return the x coordinate of the map, from which the view starts.
+         * @return x coordinate in map's space
+         */
+        s_int32 get_view_start_x () const
+        {
+            return Sx;
+        }
+
+        /**
+         * Return the y coordinate of the map, from which the view starts.
+         * @return y coordinate in map's space
+         */
+        s_int32 get_view_start_y () const
+        {
+            return Sy;
+        }
+
+        /**
+         * Return the x offset of the rendered map within the view.
+         * This is used when map is smaller than the view.
+         * @return offset of the map in the view in x axis.
+         */
+        u_int16 get_view_offset_x () const
+        {
+            return Ox;
+        }
+
+        /**
+         * Return the x offset of the rendered map within the view.
+         * This is used when map is smaller than the view.
+         * @return offset of the map in the view in x axis.
+         */
+        u_int16 get_view_offset_y () const
+        {
+            return Oy;
+        }
+
+        /**
          * Smooth transition of the mapview to the new height.
          * @param height the new height to transition to.
          * @param speed number of pixels to scroll during each update.

@@ -48,6 +48,16 @@ extern "C" {
 
 %typemap(freearg) std::list<chunk_info*> "delete $1;"
 
+// typemap for returning a singular chunk_info pointer
+%typemap(out) chunk_info * {
+    if ($1 == NULL)
+    {
+        Py_INCREF(Py_None);
+        $result = Py_None;
+    }
+    else $result = python::pass_instance($1);
+}
+
 // object is an existing python class
 %rename(mapobject) world::object;
 

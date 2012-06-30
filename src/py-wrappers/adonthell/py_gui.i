@@ -35,6 +35,17 @@ namespace gui {
         {
             gui::window_manager::add(x, y, window_disowned, f); 
         }
+        
+        static void add(const s_int16 & x, const s_int16 & y, gui::layout *window_disowned, const std::string &entity_id)
+        {
+            gui::window_manager::add(x, y, window_disowned, entity_id);
+        }
+        
+        // no disownage problems - just same name
+        static void add(const s_int16 & x, const s_int16 & y, world::mapview *map)
+        {
+            gui::window_manager::add(x, y, map);
+        }
     }
     %ignore window_manager::add; 
     

@@ -53,6 +53,7 @@ target_link_libraries(adonthell_gui
 	adonthell_gfx
 	adonthell_input	
 	adonthell_rpg	
+    adonthell_world
 	)
 
 ################################

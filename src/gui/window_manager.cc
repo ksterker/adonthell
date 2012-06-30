@@ -24,6 +24,8 @@
  * @brief Handles window order and input.
  */
 
+#include <adonthell/world/area_manager.h>
+#include <adonthell/world/vector3.h>
 #include "window_manager.h"
 
 /// the rate of movement for disappearing layouts in pixels
@@ -33,6 +35,11 @@ using gui::window_manager;
 
 /// the list of open windows
 std::list<gui::manager_child> window_manager::Windows;
+
+std::list<gui::maprel_window> window_manager::MaprelWindows;
+
+std::list<gui::mapview_container> window_manager::Mapviews;
+
 /// the ui event manager
 gui::ui_event_manager window_manager::EventManager;
 
@@ -42,7 +49,45 @@ void window_manager::update()
     // fire all pending events
     EventManager.update();
 
-    // draw windows
+    // draw all mapviews
+    for (std::list<gui::mapview_container>::reverse_iterator i = Mapviews.rbegin(); i != Mapviews.rend(); i++)
+    {
+        i->Map->draw(i->X, i->Y);
+
+        if (!MaprelWindows.empty()) // skip retrieving mapobjects if not necessary
+        {
+            // get all objects visible in the mapview
+            std::list<world::chunk_info*> objects_in_mapview = world::area_manager::get_map()->objects_in_view(
+                i->Map->get_view_start_x(),
+                i->Map->get_view_start_y(),
+                i->Map->get_z(),
+                i->Map->length(),
+                i->Map->height()
+            );
+
+            // draw all windows that should be visible in the mapview
+            for (std::list<gui::maprel_window>::reverse_iterator w = MaprelWindows.rbegin(); w != MaprelWindows.rend(); w++)
+            {
+                // Only draw window, if the object it's bound to is visible
+                for (std::list<world::chunk_info*>::iterator ci = objects_in_mapview.begin(); ci != objects_in_mapview.end(); ci++)
+                {
+                    world::entity *en = (*ci)->get_entity();
+                    if(en->has_name() && *(en->id()) == w->Entity_id)
+                    {
+                        world::vector3<s_int32> objpos = (*ci)->center_min();
+                        // The coords: where mapview starts being displayed +
+                        // + (mapobject's coords - coords of mapview's starting map point)
+                        s_int16 coord_x = i->X + i->Map->get_view_offset_x () + objpos.x() + w->Relative_x - i->Map->get_view_start_x();
+                        s_int16 coord_y = i->Y + i->Map->get_view_offset_y () + objpos.y() + w->Relative_y - i->Map->get_view_start_y();
+                        w->Window->draw (coord_x, coord_y, NULL, gfx::screen::get_surface ());
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // draw normal windows
     for (std::list<gui::manager_child>::reverse_iterator i = Windows.rbegin(); i != Windows.rend(); i++)
     {
         if (i->Fading && fade (*i))
@@ -74,6 +119,16 @@ void window_manager::add (const u_int16 & x, const u_int16 & y, gui::layout *win
     Windows.push_back (manager_child (window, pos, f, true));
 }
 
+void window_manager::add (const s_int16 & x, const s_int16 & y, gui::layout *window, const std::string &entity_id)
+{
+    MaprelWindows.push_back(maprel_window(x, y, window, entity_id));
+}
+
+void window_manager::add (const s_int16 & x, const s_int16 & y, world::mapview *map)
+{
+    Mapviews.push_back(mapview_container(x, y, map));
+}
+
 // close window
 void window_manager::remove (gui::layout *window, const gui::fadetype & f)
 {
@@ -90,6 +145,28 @@ void window_manager::remove (gui::layout *window, const gui::fadetype & f)
             return;
         }
     }
+}
+
+void window_manager::remove (gui::layout *window, const std::string &entity_id)
+{
+    for (std::list<gui::maprel_window>::iterator i = MaprelWindows.begin(); i != MaprelWindows.end(); i++)
+    {
+        // we do not fade
+        if (i->Window == window && i->Entity_id == entity_id)
+        {
+            delete i->Window;
+            MaprelWindows.remove (*i);
+            return;
+        }
+    }
+}
+
+void window_manager::remove(world::mapview *map)
+{
+    for (std::list<gui::mapview_container>::iterator i = Mapviews.begin(); i != Mapviews.end(); i++)
+        if (i->Map == map)
+            Mapviews.remove(*i);
+    //TODO What about making the mapview invisible?
 }
 
 // fade layout in or out
