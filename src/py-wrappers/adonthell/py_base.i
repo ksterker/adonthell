@@ -170,6 +170,7 @@ namespace base {
 typedef long time_t;
 %include "base/savegame.h"
 %include "base/serializer.h"
+%include "base/logging.h"
 
 %template(py_serializer) base::serializer<PyObject>;
 

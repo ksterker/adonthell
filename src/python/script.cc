@@ -137,7 +137,7 @@ PyObject* script::call_method_ret (const string &name, PyObject *args) const
         }
         else
         {
-            fprintf (stderr, "*** script::call_method_ret: '%s' is not callable!\n", name.c_str ());
+            LOG(ERROR) << "script::call_method_ret: '" << name << "' is not callable!";
         }
     }
 

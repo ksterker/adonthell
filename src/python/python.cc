@@ -1,6 +1,4 @@
 /*
-   $Id: python.cc,v 1.15 2009/04/16 21:06:09 ksterker Exp $
-
    Copyright (C) 2003/2004 Alexandre Courbot <alexandrecourbot@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -48,7 +46,6 @@ namespace python
             // PyErr_Print will clear the error state, so it must
             // be called after the checks above.
             PyErr_Print ();
-            fflush (stderr);
         }
     }
 
@@ -57,6 +54,9 @@ namespace python
     {
         Py_Initialize ();
         pool::init ();
+
+        // make sure that PyErr_Print uses our own logging
+        run_simple_string("import sys; from adonthell.base import stderr_to_log; sys.stderr = stderr_to_log();");
     }
 
     // shutdown python interpreter
@@ -117,7 +117,7 @@ namespace python
         // make sure the given arguments are a tuple
         if (tuple && !PyTuple_Check (tuple))
         {
-            fprintf (stderr, "*** error: python::pad_tuple: argument must be a tuple!\n");
+            LOG(ERROR) << "python::pad_tuple: argument must be a tuple!";
             return NULL;
         }
         
@@ -174,8 +174,9 @@ namespace python
                 }
                 default:
                 {
-                    fprintf (stderr, "*** python::get_tuple: unsupported type: %s!\n", 
-                             base::flat::name_for_type ((base::flat::data_type) type));
+                    LOG(ERROR) << "python::get_tuple: unsupported type: "
+                               << base::flat::name_for_type ((base::flat::data_type) type)
+                               << "!";
                     break;
                 }
             }
@@ -210,7 +211,7 @@ namespace python
             else
             {
                 PyObject *repr = PyObject_Repr (item);
-                fprintf (stderr, "*** python::put_tuple: cannot save '%s'!\n", PyString_AsString (repr));
+                LOG(ERROR) << "python::put_tuple: cannot save '" << PyString_AsString (repr) << "'!";
                 Py_DECREF (repr);
             }
         }
