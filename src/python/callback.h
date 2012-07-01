@@ -93,7 +93,7 @@ namespace python
             if (pyres)
             {
                 retvalue = retrieve_instance<RT, RT>(pyres);
-                Py_XDECREF(pyres);
+                Py_DECREF(pyres);
             }
 
             return retvalue;
@@ -215,18 +215,16 @@ namespace python
 
             show_traceback();
             
-            Py_XDECREF(pyargs);
+            Py_DECREF(pyargs);
 
             if (pyres)
             {
                 retvalue = retrieve_instance<RT, RT>(pyres);
                 show_traceback();
-                Py_XDECREF(pyres);
+                Py_DECREF(pyres);
             }
 
             return retvalue;
-            
-            return 0;
         }
     };
 }
