@@ -73,7 +73,7 @@ world::chunk_info *area::place_entity (const s_int32 & index, coordinates & pos)
         return chunk::add(Entities[index], pos);
     }
 
-    fprintf (stderr, "*** area::place_entity: no entity at index %i!\n", index);
+    LOG(ERROR) << "area::place_entity: no entity at index " << index << "!";
     return NULL;
 }
 
@@ -105,10 +105,10 @@ placeable * area::get_entity (const std::string & id) const
     std::hash_map<std::string, world::named_entity*>::const_iterator entity = NamedEntities.find (id);
     if (entity == NamedEntities.end())
     {
-        fprintf (stderr, "*** area::get_entity: entity '%s' doesn't exist!\n", id.c_str());
+        LOG(WARNING) << "area::get_entity: entity '" << id << "' doesn't exist!";
         for (entity = NamedEntities.begin(); entity != NamedEntities.end(); entity++)
         {
-            fprintf (stderr, "  - '%s'\n", entity->first.c_str());
+            LOG(INFO) << "  - '" << entity->first << "'";
         }
         return NULL;
     }
@@ -127,7 +127,7 @@ s_int32 area::add_entity (entity * ety)
         // check that entity is unique
         if (id.length() == 0 || NamedEntities.find (id) != NamedEntities.end ())
         {
-            fprintf (stderr, "*** area::add_entity: entity '%s' already exists!\n", id.c_str());
+            LOG(ERROR) << "area::add_entity: entity '" << id << "' already exists!";
             return -1;
         }
         
@@ -359,7 +359,7 @@ bool area::get_state (base::flat & file)
             }
             default:
             {
-                fprintf (stderr, "*** area::get_state: unknown object type %i\n", type);
+                LOG(ERROR) << "area::get_state: unknown object type " << type;
                 break;
             }
         }
@@ -451,10 +451,10 @@ bool area::get_state (base::flat & file)
             entity_data.next (&value, &size, &id);
             pos.set_str (std::string ((const char*) value, size));
             
-            // create a named instance (that will be unique if it is the first) ...
+            // create a named instance (that will be unique if it is the first, shared otherwise) ...
             world::entity *ety = new world::named_entity (object, entity_name, ety_idx == -1);
             // ... and place it on the map
-            chunk_info *ci = place_entity (add_entity (ety), pos);
+            chunk_info *ci = place_entity ((ety_idx = add_entity (ety)), pos);
             
             // location has an action assigned
             if (actn_id != "")
@@ -474,7 +474,7 @@ bool area::get_state (base::flat & file)
                     ((world::character *) object)->set_mind (npc);
                     if (npc == NULL)
                     {
-                        fprintf (stderr, "*** area::get_state: cannot find rpg instance for '%s'.\n", entity_name.c_str());
+                        LOG(ERROR) << "area::get_state: cannot find rpg instance for '" << entity_name << "'.";
                     }
                     break;
                 }
@@ -523,7 +523,7 @@ bool area::save (const std::string & fname, const base::diskio::file_format & fo
         return true;
     }
 
-    LOG(ERROR) << "*** area::save: saving '" << fname << "' failed!";
+    LOG(ERROR) << "area::save: saving '" << fname << "' failed!";
     return false;
 }
 

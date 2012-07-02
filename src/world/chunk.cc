@@ -82,7 +82,7 @@ chunk::chunk () : Min(), Max(), Split()
 // dtor
 chunk::~chunk()
 {
-    clear();
+    // chunk::clear() already triggered by area::~area() and area::clear()
 }
 
 // add an object to chunk
