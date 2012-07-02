@@ -31,7 +31,10 @@ extern "C" {
 
 // typemap for returning a string pointer as python string
 %typemap(out) std::string * {
-    if ($1 == NULL) $result = Py_None;
+    if ($1 == NULL) {
+        Py_INCREF(Py_None);
+        $result = Py_None;
+    }
     else $result = PyString_FromString ($1->c_str ());
 }
 

@@ -130,6 +130,7 @@ namespace python
         // pad with none object
         for (u_int16 i = 0; i < len; i++)
         {
+            Py_INCREF(Py_None);
             PyTuple_SET_ITEM (new_tuple, i, Py_None);
         }
         
@@ -157,6 +158,7 @@ namespace python
             {
                 case base::flat::T_CHAR:
                 {
+                    Py_INCREF(Py_None);
                     PyTuple_SetItem (tuple, i, Py_None);
                     break;
                 }
