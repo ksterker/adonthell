@@ -33,6 +33,9 @@ typedef std::vector<gui::layoutchild> vector_layoutchild;
 // select next child
 bool layout::moveright()
 {
+    // no next child that could possibly receive the focus
+    if (Children.size() < 2) return false;
+
     u_int32 old = Selected;
     do
     {
@@ -53,6 +56,9 @@ bool layout::moveright()
 // select next child
 bool layout::movedown()
 {
+    // no next child that could possibly receive the focus
+    if (Children.size() < 2) return false;
+
     u_int32 old = Selected;
     do
     {
@@ -73,6 +79,9 @@ bool layout::movedown()
 // select previous child
 bool layout::moveleft()
 {
+    // no previous child that could possibly receive the focus
+    if (Children.size() < 2) return false;
+
     u_int32 old = Selected;
     do
     {
@@ -93,6 +102,9 @@ bool layout::moveleft()
 // select previous child
 bool layout::moveup()
 {
+    // no previous child that could possibly receive the focus
+    if (Children.size() < 2) return false;
+
     u_int32 old = Selected;
     do
     {
