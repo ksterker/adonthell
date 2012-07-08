@@ -1,7 +1,5 @@
 /*
-  $Id: node.h,v 1.1 2009/02/23 12:46:05 fr3dc3rv Exp $
-
-  Copyright (C) 2009   Frederico Cerveira
+  Copyright (C) 2009 Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
 
   Adonthell is free software; you can redistribute it and/or modify
@@ -29,6 +27,7 @@
 
 #ifndef WORLD_NODE_H
 #define WORLD_NODE_H
+
 #include "world/chunk_info.h"
 #include "world/coordinates.h"
 
@@ -37,25 +36,21 @@ namespace world
     /**
     * Container used to store Pathfinding info
     */
-
     class node
     {
     public:
         /// The total cost to move from one place to another
-        s_int16 total;
+        u_int32 total;
         /// The cost of moving from the actual node to this one
-        u_int8 moveCost;
+        u_int32 moveCost;
         /// The list to which this node is assigned
         u_int8 listAssignedTo; // 0 - None, 1 - Open List, 2 - Closed List
 
-        /// Its parent
+        /// Its predecessor
         node * parent;
         /// The pixel position of this node
         coordinates pos;
-
     };
-
 }
-
 
 #endif // WORLD_NODE_H
