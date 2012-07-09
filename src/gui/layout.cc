@@ -24,6 +24,8 @@
  */
 
 #include "gui/layout.h"
+#include "event/manager.h"
+#include "gui/ui_event.h"
 #include "base/logging.h"
 
 using gui::layout;
@@ -42,6 +44,10 @@ bool layout::moveright()
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
+
+            gui::ui_event evt (this, "layout_switch");
+            events::manager::raise_event (&evt);
+
             return true;
         }
     }
@@ -62,6 +68,10 @@ bool layout::movedown()
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
+
+            gui::ui_event evt (this, "layout_switch");
+            events::manager::raise_event (&evt);
+
             return true;
         }
     }
@@ -82,6 +92,10 @@ bool layout::moveleft()
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
+
+            gui::ui_event evt (this, "layout_switch");
+            events::manager::raise_event (&evt);
+
             return true;
         }
     }
@@ -102,6 +116,10 @@ bool layout::moveup()
         if (Children[Selected].Child->focus())
         {
             Children[old].Child->unfocus();
+
+            gui::ui_event evt (this, "layout_switch");
+            events::manager::raise_event (&evt);
+
             return true;
         }
     }
