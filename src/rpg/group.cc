@@ -49,6 +49,7 @@ s_int32 group::estimate_speed_for_pathfinding(const std::string & terrain) const
     // Convert it to an integer
     s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
 
+    Py_XDECREF(ret);
     return ret_int;
 }
 
@@ -61,6 +62,8 @@ s_int32 group::estimate_speed(const std::string & terrain) const
 
     // Convert it to an integer
     s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
+
+    Py_XDECREF(ret);
 
     // If ret_int is -1 then the specie is not valid (doesn't exists or its files don't exists
     // or are corrupted) if that happens we fallback to a default value in order to prevent strange errors.

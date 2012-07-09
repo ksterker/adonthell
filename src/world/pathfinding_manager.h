@@ -81,7 +81,7 @@ namespace world
          *         -1 on error
          */
         s_int16 add_task(character * chr, const world::vector3<s_int32> & target,
-                                const character::direction finalDir = character::NONE);
+                                const character::direction & finalDir = character::NONE);
         /**
          * Adds a task
          * @param chr the character to be moved
@@ -93,7 +93,7 @@ namespace world
          */
         s_int16 add_task(character * chr, const world::vector3<s_int32> & target1,
                                 const world::vector3<s_int32> & target2,
-                                const character::direction finalDir = character::NONE);
+                                const character::direction & finalDir = character::NONE);
         /**
          * Adds task
          * @param chr the character to be moved
@@ -103,7 +103,7 @@ namespace world
          *         -1 on error
          */
         s_int16 add_task(character * chr, character * target,
-                                const character::direction finalDir = character::NONE);
+                                const character::direction & finalDir = character::NONE);
 
         /**
          * Adds task
@@ -113,8 +113,8 @@ namespace world
          * @return the id of the task, which can then be used to pause, resume, etc it
          *         -1 on error
          */
-        s_int16 add_task(character * chr, std::string & target,
-                                const character::direction finalDir = character::NONE);
+        s_int16 add_task(character * chr, const std::string & target,
+                                const character::direction & finalDir = character::NONE);
 
         /**
          * Adds a callback to the task that will return failure or success on completion
@@ -125,26 +125,26 @@ namespace world
          * @param callback the callback to run on task completion or
          *        NULL to clear a previously set callback.
          */
-        void set_callback (const s_int16 id, base::functor_1<const s_int32> * callback);
+        void set_callback (const s_int16 & id, base::functor_1<const s_int32> * callback);
 
         /**
          * Set the direction to where the character will point after finishing moving
          * @param id the id of the task to be altered
          * @param finalDir the direction the character will point after finishing moving
          */
-         void set_final_direction(const s_int16 id, const character::direction finalDir);
+         void set_final_direction(const s_int16 & id, const character::direction finalDir);
 
         /**
          * Pauses a task
          * @param the id of the task to be paused
          */
-        void pause_task(const s_int16 id);
+        void pause_task(const s_int16 & id);
 
         /**
          * Resumes a paused task
          * @param id the id of the paused task to be resumed
          */
-        void resume_task(const s_int16 id);
+        void resume_task(const s_int16 & id);
 
         /**
          * Deletes a task. When deleting a task the slot it used will be freed and open to reuse,
@@ -152,7 +152,7 @@ namespace world
          * @param id the id of the task to be deleted
          * @return \b true on success, \b false otherwise
          */
-        bool delete_task(const s_int16 id);
+        bool delete_task(const s_int16 & id);
 
         /**
          * Returns the state of the task. Can be useful for knowing whether the target has been
@@ -160,7 +160,14 @@ namespace world
          * @param id the id of the task
          * @return the state
          */
-        state return_state(const s_int16 id);
+        state return_state(const s_int16 & id);
+
+        /**
+         * Return pathfinding task.
+         * @param id the id of the task
+         * @return the task, or NULL if id is invalid
+         */
+        const pathfinding_task* get_task(const s_int16 & id);
 
         /**
          * Updates every task as needed.
@@ -204,10 +211,10 @@ namespace world
 
         /**
          * Verify if we can add the task and in which slot
-         * @param chr the character
-         * @return a free slot where we can add the task
+         * @return a free slot where we can add the task or -1 of
+         *  no free slot available.
          */
-        s_int16 add_task_sec(const character * chr);
+        s_int16 find_free_task();
 
         /**
          * Handles the movement of the character

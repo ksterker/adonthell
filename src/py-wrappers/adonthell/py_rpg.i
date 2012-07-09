@@ -18,6 +18,14 @@
 
 using rpg::slot;
 using rpg::quest_part;
+
+extern "C" {
+    void check_module_version (const char *name, const unsigned int & module_ver);
+}
+%}
+
+%init %{
+    check_module_version (SWIG_name, SWIGVERSION);
 %}
 
 namespace rpg {

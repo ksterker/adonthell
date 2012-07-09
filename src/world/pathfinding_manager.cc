@@ -51,6 +51,9 @@ pathfinding_manager::pathfinding_manager()
 
     for (s_int16 i = 0; i < MAX_TASKS; i++)
     {
+        m_task.push_back(world::pathfinding_task());
+        m_locked.push_back(false);
+
         std::vector<world::coordinates> * coor = new std::vector<world::coordinates>;
         m_task[i].callback = NULL;
         m_task[i].path = coor;
@@ -86,7 +89,7 @@ void pathfinding_manager::clear ()
     m_locked.assign(MAX_TASKS, false);
 }
 
-s_int16 pathfinding_manager::add_task_sec(const character *chr)
+s_int16 pathfinding_manager::find_free_task()
 {
     s_int16 i = 0;
     for (;i < MAX_TASKS; i++)
@@ -133,9 +136,9 @@ bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
     }
 }
 
-s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target, const character::direction finalDir)
+s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target, const character::direction & finalDir)
 {
-    const s_int16 id = add_task_sec(chr);
+    const s_int16 id = find_free_task();
     if ((id == -1) || (add_task_ll(id, chr, target, target, PHASE_PATHFINDING, 0, character::NONE) == -1))
         return -1;
 
@@ -146,9 +149,9 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
 
 s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target1,
                                       const world::vector3<s_int32> & target2,
-                                      const character::direction finalDir)
+                                      const character::direction & finalDir)
 {
-    const s_int16 id = add_task_sec(chr);
+    const s_int16 id = find_free_task();
     if ((id == -1) || (add_task_ll(id, chr, target1, target2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
@@ -157,12 +160,12 @@ s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & 
     return id;
 }
 
-s_int16 pathfinding_manager::add_task(character * chr, character * target, const character::direction finalDir)
+s_int16 pathfinding_manager::add_task(character * chr, character * target, const character::direction & finalDir)
 {
-    world::vector3<s_int32> tempTarget1(((target->x()/20)-1)*20, ((target->y()/20)-1)*20, 0);
-    world::vector3<s_int32> tempTarget2(((target->x()/20)+1)*20, ((target->y()/20)+1)*20, 0);
+    world::vector3<s_int32> tempTarget1(((target->x()/20)-1)*20, ((target->y()/20)-1)*20, target->z());
+    world::vector3<s_int32> tempTarget2(((target->x()/20)+1)*20, ((target->y()/20)+1)*20, target->z());
 
-    const s_int16 id = add_task_sec(chr);
+    const s_int16 id = find_free_task();
     if ((id == -1) || (add_task_ll(id, chr, tempTarget1, tempTarget2, PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
@@ -171,14 +174,14 @@ s_int16 pathfinding_manager::add_task(character * chr, character * target, const
     return id;
 }
 
-s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const character::direction finalDir)
+s_int16 pathfinding_manager::add_task(character * chr, const std::string & name, const character::direction & finalDir)
 {
     zone * tempZone = chr->map().get_zone(name);
 
     if (tempZone == NULL)
         return -1;
 
-    const s_int16 id = add_task_sec(chr);
+    const s_int16 id = find_free_task();
     if ((id == -1) || (add_task_ll(id, chr, tempZone->min(), tempZone->max(), PHASE_PATHFINDING, 0, character::NONE) == false))
         return -1;
 
@@ -187,29 +190,29 @@ s_int16 pathfinding_manager::add_task(character * chr, std::string & name, const
     return id;
 }
 
-void pathfinding_manager::set_callback (const s_int16 id, base::functor_1<const s_int32> * callback)
+void pathfinding_manager::set_callback (const s_int16 & id, base::functor_1<const s_int32> * callback)
 {
     // get rid of previously set callback, if any
     delete m_task[id].callback;
     m_task[id].callback = callback;
 }
 
-void pathfinding_manager::set_final_direction(const s_int16 id, const character::direction finalDir)
+void pathfinding_manager::set_final_direction(const s_int16 & id, const character::direction finalDir)
 {
     m_task[id].finalDir = static_cast<u_int8>(finalDir);
 }
 
-void pathfinding_manager::pause_task(const s_int16 id)
+void pathfinding_manager::pause_task(const s_int16 & id)
 {
     m_task[id].phase |= PHASE_PAUSED;
 }
 
-void pathfinding_manager::resume_task(const s_int16 id)
+void pathfinding_manager::resume_task(const s_int16 & id)
 {
     m_task[id].phase &= ~PHASE_PAUSED;
 }
 
-bool pathfinding_manager::delete_task(const s_int16 id)
+bool pathfinding_manager::delete_task(const s_int16 & id)
 {
     // Deletion consists of pausing the task, unlocking it and popping out the character from the list
     if ((id >= MAX_TASKS) || (m_locked[id] == false))
@@ -250,7 +253,7 @@ bool pathfinding_manager::delete_task(const s_int16 id)
     return true;
 }
 
-pathfinding_manager::state pathfinding_manager::return_state(const s_int16 id)
+pathfinding_manager::state pathfinding_manager::return_state(const s_int16 & id)
 {
     // This might not work always
     if (m_locked[id] == true)
@@ -264,6 +267,16 @@ pathfinding_manager::state pathfinding_manager::return_state(const s_int16 id)
         } else return FAILURE;
     }
 }
+
+const world::pathfinding_task* pathfinding_manager::get_task(const s_int16 & id)
+{
+    if (id >= 0 && id < m_task.size())
+    {
+        return &m_task[id];
+    }
+    return NULL;
+}
+
 
 void pathfinding_manager::update()
 {
@@ -328,29 +341,57 @@ u_int8 pathfinding_manager::calc_distance(const world::coordinates & node, const
 
 bool pathfinding_manager::move_chr(const s_int16 id)
 {
-    s_int32 grid_x = m_task[id].chr->x() / 20;
-    s_int32 grid_y = m_task[id].chr->y() / 20;
+    s_int32 center_x = m_task[id].chr->x() + m_task[id].chr->placeable::length() / 2;
+    s_int32 center_y = m_task[id].chr->y() + m_task[id].chr->placeable::width() / 2;
+
+    s_int32 grid_x = center_x / 20;
+    s_int32 grid_y = center_y / 20;
     s_int32 target_grid_x = m_task[id].path->at(m_task[id].actualNode).x();
     s_int32 target_grid_y = m_task[id].path->at(m_task[id].actualNode).y();
     
     // Check if the direction has already been computed
     if (m_task[id].actualDir != character::NONE)
     {
-
         // Verify if we're on the intended grid
         if ((grid_x == target_grid_x) && (grid_y == target_grid_y))
         {
-            
+            // stop once  we reached the center of the current node
+            if ((m_task[id].actualDir & character::SOUTH) == character::SOUTH)
+            {
+                if (center_y >= target_grid_y * 20 + 10)
+                    m_task[id].chr->remove_direction(character::SOUTH);
+            }
+            else if ((m_task[id].actualDir & character::NORTH) == character::NORTH)
+            {
+                if (center_y <= target_grid_y * 20 + 10)
+                    m_task[id].chr->remove_direction(character::NORTH);
+            }
+
+            if ((m_task[id].actualDir & character::EAST) == character::EAST)
+            {
+                if (center_x >= target_grid_x * 20 + 10)
+                    m_task[id].chr->remove_direction(character::EAST);
+            }
+            else if ((m_task[id].actualDir & character::WEST) == character::WEST)
+            {
+                if (center_x <= target_grid_x * 20 + 10)
+                    m_task[id].chr->remove_direction(character::WEST);
+            }
+
+            m_task[id].actualDir = m_task[id].chr->current_dir();
+            if (m_task[id].actualDir == character::NONE)
+            {
+                ++m_task[id].actualNode;
+            }
+        }
+        else
+        {
             // Check if we've finished the path
-            if (m_task[id].path->size() - 1 == m_task[id].actualNode)
+            if (m_task[id].path->size() -1 <= m_task[id].actualNode)
             {
                 return true;
-            } else {
-                ++m_task[id].actualNode;
-                m_task[id].actualDir = character::NONE;
             }
-        } else {
-            
+
             // Verify if we are stuck
             if ((m_task[id].lastPos.x() == m_task[id].chr->x()) && (m_task[id].lastPos.y() == m_task[id].chr->y()))
             {
@@ -376,20 +417,19 @@ bool pathfinding_manager::move_chr(const s_int16 id)
             // Update lastPos with our actual position
             m_task[id].lastPos.set_x(m_task[id].chr->x());
             m_task[id].lastPos.set_y(m_task[id].chr->y());
-            
-            
          }
-    } else {
-
+    }
+    else
+    {
         // Calculate the next node
-     
         if (grid_y > target_grid_y)
         {
             // We have to move up
             m_task[id].actualDir |= character::NORTH;
             m_task[id].chr->set_direction(m_task[id].actualDir);
-
-        } else if (grid_y < target_grid_y) {
+        }
+        else if (grid_y < target_grid_y)
+        {
             // We have to move down
             m_task[id].actualDir |= character::SOUTH;
             m_task[id].chr->set_direction(m_task[id].actualDir);
@@ -400,13 +440,13 @@ bool pathfinding_manager::move_chr(const s_int16 id)
             // We have to move left
             m_task[id].actualDir |= character::WEST;
             m_task[id].chr->set_direction(m_task[id].actualDir);
-
-        } else if (grid_x < target_grid_x) {
+        }
+        else if (grid_x < target_grid_x)
+        {
             // We have to move right
             m_task[id].actualDir |= character::EAST;
             m_task[id].chr->set_direction(m_task[id].actualDir);
         }
-
     }
     
     return false;

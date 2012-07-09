@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<Data cs="6b7237c1">
+  <list id="model">
+    <list id="default">
+      <list id="shape">
+        <u_int16 id="num">1</u_int16>
+        <list id="cube">
+          <string id="p3d">[0, 0, 0]</string>
+          <string id="p3d">[48, 0, 0]</string>
+          <string id="p3d">[0, 36, 0]</string>
+          <string id="p3d">[48, 36, 0]</string>
+          <string id="p3d">[0, 0, 8]</string>
+          <string id="p3d">[48, 0, 8]</string>
+          <string id="p3d">[0, 36, 8]</string>
+          <string id="p3d">[48, 36, 8]</string>
+        </list>
+      </list>
+    </list>
+    <string id="sprite">gfx/map/ground/pathfinding/sand.png</string>
+  </list>
+</Data>

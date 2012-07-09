@@ -13,6 +13,13 @@
 
 using namespace world;
 
+extern "C" {
+    void check_module_version (const char *name, const unsigned int & module_ver);
+}
+%}
+
+%init %{
+    check_module_version (SWIG_name, SWIGVERSION);
 %}
 
 %include "stdint.i"
@@ -24,7 +31,10 @@ using namespace world;
 
 // typemap for returning a string pointer as python string
 %typemap(out) std::string * {
-    if ($1 == NULL) $result = Py_None;
+    if ($1 == NULL) {
+        Py_INCREF(Py_None);
+        $result = Py_None;
+    }
     else $result = PyString_FromString ($1->c_str ());
 }
 

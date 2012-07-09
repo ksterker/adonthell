@@ -88,14 +88,17 @@ void action::execute (PyObject *actor, PyObject *target)
     if (Action != NULL)
     {
         // prepare arguments
-        PyTuple_SET_ITEM (Args, 0, actor);
-        PyTuple_SET_ITEM (Args, 1, target);
+        PyTuple_SetItem (Args, 0, actor);
+        PyTuple_SetItem (Args, 1, target);
         
         Action->execute (Args);
         
         // reset
-        PyTuple_SET_ITEM (Args, 0, Py_None);
-        PyTuple_SET_ITEM (Args, 1, Py_None);
+        Py_INCREF(Py_None);
+        Py_INCREF(Py_None);
+
+        PyTuple_SetItem (Args, 0, Py_None);
+        PyTuple_SetItem (Args, 1, Py_None);
     }
 }
 

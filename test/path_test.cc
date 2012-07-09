@@ -45,6 +45,7 @@ public:
     bool draw_delay;
     bool print_queue;
 	bool screenshot;
+	s_int32 path_task;
 
     game_client()
     {
@@ -54,6 +55,7 @@ public:
         draw_delay = false;
         print_queue = false;
         screenshot = false;
+        path_task = -1;
 
         // prepare gamedata handling
         // TODO: should probably be integrated directly into the engine,
@@ -107,11 +109,10 @@ public:
             // start simple pathfinding search
             if (kev->key() == input::keyboard_event::P_KEY)
             {
-                s_int32 tX = rand() % path_char->map().length();
-                s_int32 tY = rand() % path_char->map().height();
-                printf("Rand %d %d\n", tX, tY);
-                world::vector3<s_int32> target(tX, tY, 10);
-                world::area_manager::get_pathfinder()->add_task(path_char, target);
+                const char* zones[] = { "air-1", "air-2", "air-3" };
+                s_int32 idx = rand() % 3;
+                printf("Goal is %s\n", zones[idx]);
+                path_task = world::area_manager::get_pathfinder()->add_task(path_char, zones[idx]);
             }
         }
 
@@ -234,6 +235,21 @@ public:
 				gfx::surface *screen = gfx::screen::get_surface();
                 screen->save_png("screenshot.png");
                 gc.screenshot = false;
+			}
+
+			if (gc.path_task != -1 &&
+			    world::area_manager::get_pathfinder()->return_state(gc.path_task) == world::pathfinding_manager::ACTIVE)
+			{
+			    const world::pathfinding_task *task = world::area_manager::get_pathfinder()->get_task(gc.path_task);
+                const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
+                gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
+                for (std::vector<world::coordinates>::const_iterator i = task->path->begin(); i != task->path->end(); i++)
+                {
+                    s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
+                    s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
+
+                    gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0x88FF8888 /*, &da */);
+                }
 			}
 
 #if DEBUG_COLLISION

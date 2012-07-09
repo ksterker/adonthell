@@ -90,6 +90,10 @@ bool listener_python::connect_callback (const string & file, const string & clas
         
         // first argument is the listener itself
         PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
+
+        // better than NULL
+        Py_INCREF(Py_None);
+        PyTuple_SET_ITEM(Args, 1, Py_None);
     }
     
     // second argument will be the event that triggered the callback
@@ -98,7 +102,7 @@ bool listener_python::connect_callback (const string & file, const string & clas
         // copy remaining arguments, if any
         PyObject *arg =  PyTuple_GET_ITEM (args, i-2);
         Py_INCREF (arg);
-        PyTuple_SET_ITEM (Args, i, arg);
+        PyTuple_SetItem (Args, i, arg);
     }
     
     return true;
@@ -115,22 +119,18 @@ s_int32 listener_python::raise_event (const event* evnt)
 {
     if (Method && Event->repeat ())
     {
-        // make sure that arguments remain valid while the script executes
-        PyObject *args = Args;
-        Py_INCREF (args);
-        
         // event that triggered the script is 2nd argument of callback
-        PyTuple_SET_ITEM (args, 1, python::pass_instance ((event*) evnt));
+        PyTuple_SetItem (Args, 1, python::pass_instance ((event*) evnt));
         
         // adjust repeat count
         Event->do_repeat ();
         
         // execute callback
-        Method->execute (args);
+        Method->execute (Args);
         
         // clean up
-        Py_DECREF (PyTuple_GET_ITEM (args, 1));
-        Py_DECREF (args);
+        Py_INCREF(Py_None);
+        PyTuple_SetItem(Args, 1, Py_None);
     }
     else
     {

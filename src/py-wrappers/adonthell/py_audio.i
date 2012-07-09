@@ -13,7 +13,15 @@
 
 using namespace audio;
 
+extern "C" {
+    void check_module_version (const char *name, const unsigned int & module_ver);
+}
 %}
+
+%init %{
+    check_module_version (SWIG_name, SWIGVERSION);
+%}
+
 
 %include "stdint.i"
 %include "std_string.i"

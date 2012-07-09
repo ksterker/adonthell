@@ -9,6 +9,14 @@
 #include "gui/conversation.h"
 #include "gui/window_manager.h"
 #include "python/callback.h"
+
+extern "C" {
+    void check_module_version (const char *name, const unsigned int & module_ver);
+}
+%}
+
+%init %{
+    check_module_version (SWIG_name, SWIGVERSION);
 %}
 
 %include "stdint.i"

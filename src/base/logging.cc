@@ -29,6 +29,14 @@
 
 #include <string>
 
+namespace base
+{
+    void stderr_to_log::write (const char *msg)
+    {
+        LOG(ERROR) << msg;
+    }
+}
+
 namespace google
 {
     int log_level = 3;

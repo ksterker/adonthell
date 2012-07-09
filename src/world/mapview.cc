@@ -134,7 +134,7 @@ bool mapview::set_schedule (const std::string & method, PyObject *extraArgs)
         // copy remaining arguments, if any
         PyObject *arg =  PyTuple_GET_ITEM (extraArgs, i - 1);
         Py_INCREF (arg);
-        PyTuple_SET_ITEM (Args, i, arg);
+        PyTuple_SetItem (Args, i, arg);
     }
     
     return true;

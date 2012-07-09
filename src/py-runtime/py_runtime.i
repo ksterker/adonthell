@@ -1,4 +1,7 @@
 %{
+
+#include "base/logging.h"
+
 extern "C" {
 
 #ifndef SWIGVERSION
@@ -19,7 +22,7 @@ static void print_type_info (swig_type_info **typelist)
 	for (swig_type_info *ti = *typelist; ti != NULL; ti = ti->prev)
 	{
 		const char *name = SWIG_TypePrettyName (ti);
-		fprintf (stderr, "  - %s\n", name);
+		LOG(ERROR) << "  - " << name;
 	}
 }
 
@@ -30,7 +33,7 @@ void log_py_objects ()
 	swig_type_info ** typelist = SWIG_Python_GetTypeListHandle();
 	if (*typelist != NULL)
 	{
-		fprintf (stderr, "These types are known to SWIG:\n");
+		LOG(ERROR) << "These types are known to SWIG:";
 		print_type_info (typelist);
 	}
 }
@@ -44,7 +47,7 @@ PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership)
     swig_type_info * tt = SWIG_TypeQueryTL (*typelist, name);
     if (tt) return SWIG_NewPointerObj (instance, tt, ownership);
         
-    fprintf (stderr, "*** cxx_to_py: '%s' not found in SWIGs typelist:\n", name);
+    LOG(ERROR) << "cxx_to_py: '" << name << "' not found in SWIGs typelist:";
 	print_type_info (typelist);
     exit(1);
 }
@@ -58,7 +61,7 @@ void py_to_cxx (PyObject *instance, const char *name, void **retval)
     swig_type_info * tt = SWIG_TypeQueryTL (*typelist, name);
     if (tt == NULL || SWIG_ConvertPtr (instance, retval, tt, 0) == -1)
     {
-        fprintf (stderr, "*** py_to_cxx: '%s' not found in SWIGs typelist:", name);
+        LOG(ERROR) << "py_to_cxx: '" << name << "' not found in SWIGs typelist:";
 		print_type_info (typelist);
         exit(1);
     }
@@ -93,10 +96,10 @@ struct type_collector
     // print list of types
     void print ()
     {
-        printf ("%s\n", name);
+        LOG(ERROR) << name;
         
         for (type_collector *tc = next; tc != NULL; tc = tc->next)
-            printf ("  - %s\n", tc->name);
+            LOG(ERROR) << "  - " << tc->name;
     }
     
     const char *name;
@@ -143,12 +146,12 @@ SWIGEXPORT PyObject *cxx_to_py (void *instance, const char *name, const bool & o
         swig_type_info * tt = SWIG_Python_TypeQuery (name);
         if (tt) return SWIG_NewPointerObj (instance, tt, ownership);
     
-        fprintf (stderr, "*** cxx_to_py: '%s' not found. ", name);
+        LOG(ERROR) << "cxx_to_py: '" << name << "' not found. ";
         log_py_objects ();
     }
     else
     {
-        fprintf (stderr, "*** cxx_to_py: no Python module imported!\n");
+        LOG(ERROR) << "cxx_to_py: no Python module imported!";
     }
     
     exit(1);
@@ -160,13 +163,24 @@ SWIGEXPORT void py_to_cxx (PyObject *instance, const char *name, void **retval)
     swig_type_info * tt = SWIG_Python_TypeQuery (name);
     if (tt == NULL || SWIG_ConvertPtr (instance, retval, tt, 0) == -1)
     {
-        fprintf (stderr, "*** py_to_cxx: '%s' not found. ", name);
+        LOG(ERROR) << "py_to_cxx: '" << name << "' not found. ";
         log_py_objects();
         exit(1);
     }
 }
 
 #endif // SWIGVERSION <= 0x010324
+
+SWIGEXPORT void check_module_version (const char *name, const unsigned int & module_ver)
+{
+    if (SWIGVERSION != module_ver)
+    {
+        LOG(ERROR) << "Module '" << name << "' and SWIG runtime versions are different!";
+        LOG(FATAL) << "Please make clean and recompile to resolve this issue and ensure "
+                   << "that the Adonthell engine is properly installed.";
+    }
+}
+
 }
 
 %}

@@ -230,6 +230,8 @@ bool decoration::init (const std::string & name)
     // reset in case we're called more than once
     cleanup ();
     
+    FileName = name;
+
     base::diskio file;
     if (!file.get_record (DECORATION_DIR + name))
     {
@@ -254,7 +256,7 @@ bool decoration::init (const std::string & name)
         }
         else
         {
-            LOG(ERROR) << logging::indent() << "decoration::init: error loading state '" << id << "'.";
+            LOG(ERROR) << logging::indent() << "decoration::init: error loading state '" << id << "' from '" << name << "'.";
             delete di;
         }
     }
@@ -275,6 +277,9 @@ void decoration::cleanup ()
     // make sure iterators remain valid
     CurrentState = Decoration.end();
     FocusOverlay = Decoration.end();
+
+    CurrentStateName = "";
+    HasFocus = false;
 }
 
 // set decoration size
@@ -289,8 +294,11 @@ void decoration::set_size (const u_int16 & length, const u_int16 & height)
 // set decoration state
 void decoration::set_state (const std::string & state)
 {
-    if (Decoration.size() > 0)
+    if (Decoration.size() > 0 && CurrentStateName != state)
     {
+        // this is the new state, no matter if it is valid or not
+        CurrentStateName = state;
+
         decoration_map::iterator NewState = Decoration.find (state);
         if (NewState != Decoration.end())
         {
@@ -298,7 +306,7 @@ void decoration::set_state (const std::string & state)
         }
         else
         {
-            LOG(WARNING) << logging::indent() << "decoration::set_state: unknown state '" << state << "'.";
+            LOG(WARNING) << logging::indent() << "decoration '" << FileName << "' missing state '" << state << "'.";
         }
     }
 }
@@ -306,14 +314,16 @@ void decoration::set_state (const std::string & state)
 // set focused state
 void decoration::set_focused (const bool & has_focus)
 {
-    if (Decoration.size() > 0)
+    if (Decoration.size() > 0 && HasFocus != has_focus)
     {
+        HasFocus = has_focus;
+
         if (has_focus)
         {
             FocusOverlay = Decoration.find("Focused");
             if (FocusOverlay == Decoration.end())
             {
-                LOG(WARNING) << logging::indent() << "decoration::set_state: unknown state 'Focused'.";
+                LOG(WARNING) << logging::indent() << "decoration '" << FileName << "' missing state 'Focused'.";
             }
         }
         else
