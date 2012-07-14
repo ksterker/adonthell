@@ -341,6 +341,12 @@ u_int8 pathfinding_manager::calc_distance(const world::coordinates & node, const
 
 bool pathfinding_manager::move_chr(const s_int16 id)
 {
+    // Check if we've finished the path
+    if (m_task[id].path->size() -1 <= m_task[id].actualNode)
+    {
+        return true;
+    }
+
     s_int32 center_x = m_task[id].chr->x() + m_task[id].chr->placeable::length() / 2;
     s_int32 center_y = m_task[id].chr->y() + m_task[id].chr->placeable::width() / 2;
 
@@ -392,12 +398,6 @@ bool pathfinding_manager::move_chr(const s_int16 id)
         }
         else
         {
-            // Check if we've finished the path
-            if (m_task[id].path->size() -1 <= m_task[id].actualNode)
-            {
-                return true;
-            }
-
             // Verify if we are stuck
             if ((m_task[id].lastPos.x() == m_task[id].chr->x()) && (m_task[id].lastPos.y() == m_task[id].chr->y()))
             {
