@@ -359,29 +359,35 @@ bool pathfinding_manager::move_chr(const s_int16 id)
             if ((m_task[id].actualDir & character::SOUTH) == character::SOUTH)
             {
                 if (center_y >= target_grid_y * 20 + 10)
-                    m_task[id].chr->remove_direction(character::SOUTH);
+                    m_task[id].actualDir ^= character::SOUTH;
             }
             else if ((m_task[id].actualDir & character::NORTH) == character::NORTH)
             {
                 if (center_y <= target_grid_y * 20 + 10)
-                    m_task[id].chr->remove_direction(character::NORTH);
+                    m_task[id].actualDir ^= character::NORTH;
             }
 
             if ((m_task[id].actualDir & character::EAST) == character::EAST)
             {
                 if (center_x >= target_grid_x * 20 + 10)
-                    m_task[id].chr->remove_direction(character::EAST);
+                    m_task[id].actualDir ^= character::EAST;
             }
             else if ((m_task[id].actualDir & character::WEST) == character::WEST)
             {
                 if (center_x <= target_grid_x * 20 + 10)
-                    m_task[id].chr->remove_direction(character::WEST);
+                    m_task[id].actualDir ^= character::WEST;
             }
 
-            m_task[id].actualDir = m_task[id].chr->current_dir();
-            if (m_task[id].actualDir == character::NONE)
+            if (m_task[id].actualDir != m_task[id].chr->current_dir())
             {
-                ++m_task[id].actualNode;
+                if (m_task[id].actualDir == character::NONE)
+                {
+                    ++m_task[id].actualNode;
+                }
+                else
+                {
+                    m_task[id].chr->set_direction(m_task[id].actualDir);
+                }
             }
         }
         else
@@ -426,25 +432,26 @@ bool pathfinding_manager::move_chr(const s_int16 id)
         {
             // We have to move up
             m_task[id].actualDir |= character::NORTH;
-            m_task[id].chr->set_direction(m_task[id].actualDir);
         }
         else if (grid_y < target_grid_y)
         {
             // We have to move down
             m_task[id].actualDir |= character::SOUTH;
-            m_task[id].chr->set_direction(m_task[id].actualDir);
         }
 	
         if (grid_x > target_grid_x)
         {
             // We have to move left
             m_task[id].actualDir |= character::WEST;
-            m_task[id].chr->set_direction(m_task[id].actualDir);
         }
         else if (grid_x < target_grid_x)
         {
             // We have to move right
             m_task[id].actualDir |= character::EAST;
+        }
+
+        if (m_task[id].actualDir != m_task[id].chr->current_dir())
+        {
             m_task[id].chr->set_direction(m_task[id].actualDir);
         }
     }
