@@ -34,21 +34,59 @@
 namespace world
 {
     /**
-    * Container used to store Pathfinding info
-    */
+     * A coordinate on the path grid, including the cost to
+     * move there from an adjacent position of the grid.
+     */
+    class path_coordinate : public coordinates
+    {
+    public:
+        /**
+         * Create empty path coordinate.
+         */
+        path_coordinate () : coordinates(), moveCost(0)
+        { }
+
+        /**
+         * Create a copy of the given path coordinate.
+         * @param pos coordinate to copy
+         */
+        path_coordinate (const path_coordinate & pos) :
+            coordinates(pos.x(), pos.y(), pos.z()), moveCost(pos.moveCost)
+        { }
+
+        /**
+         * Update path coordinate.
+         * @param x new x location
+         * @param y new y location
+         * @param z new z location
+         * @param cost new movement cost
+         */
+        void set (const s_int32 & x, const s_int32 & y, const s_int32 & z, const u_int16 & cost)
+        {
+            coordinates::set (x, y, z);
+            moveCost = cost;
+        }
+
+        /// cost to move to this node
+        u_int16 moveCost;
+    };
+
+    /**
+     * Container used to store Pathfinding info
+     */
     class node
     {
     public:
-        /// The total cost to move from one place to another
+        /// The total cost to move from start node to goal via this node
         u_int32 total;
-        /// The cost of moving from the actual node to this one
+        /// The cost of moving from the start node to this one
         u_int32 moveCost;
         /// The list to which this node is assigned
         u_int8 listAssignedTo; // 0 - None, 1 - Open List, 2 - Closed List
 
-        /// Its predecessor
-        node * parent;
-        /// The pixel position of this node
+        /// previous node in the path
+        node *parent;
+        /// The position of this node in the grid
         coordinates pos;
     };
 }

@@ -109,8 +109,11 @@ public:
             // start simple pathfinding search
             if (kev->key() == input::keyboard_event::P_KEY)
             {
-                const char* zones[] = { "air-1", "air-2", "air-3" };
-                s_int32 idx = rand() % 3;
+                const char* zones[] = { "air-1", "air-2", "air-3",
+                        "ground-1", "ground-2", "ground-3",
+                        "cellar-1", "cellar-3", "cellar-3" };
+
+                s_int32 idx = rand() % 9;
                 printf("Goal is %s\n", zones[idx]);
                 path_task = world::area_manager::get_pathfinder()->add_task(path_char, zones[idx]);
             }

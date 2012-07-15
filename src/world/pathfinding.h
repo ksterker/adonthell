@@ -89,7 +89,7 @@ namespace world
          * @param chr the character used in the pathfinding search
          * @return a vector with the coordinates of the adjacent nodes
          */
-        std::vector<coordinates> calc_adjacent_nodes(const coordinates & goal, const character * chr) const;
+        std::vector<path_coordinate> calc_adjacent_nodes(const coordinates & goal, const character * chr) const;
 
         /**
          * Checks if the node is acceptable for use depending on the character's pathfinding_costs
@@ -97,7 +97,25 @@ namespace world
          * @param chr the character used in the pathfinding search
          * @return \b true if the node is valid, \b false otherwise
          */
-        bool check_node(coordinates & temp, const character * chr) const;
+        bool check_node(path_coordinate & temp, const character * chr) const;
+
+        /**
+         * Removes all completely non-solid object from the given list
+         * and returns whether the list is empty afterwards.
+         * @param objects list of map objects
+         * @return true if all objects in the list were non-solid (or if
+         *  the list was empty to begin with).
+         */
+        bool discard_non_solid(std::list<chunk_info*> & objects);
+
+        /**
+         * Get the ground position from the list of tiles below the current path
+         * @param ground_tiles list of tiles at the current node of the path
+         * @param x x coordinate of nodes center
+         * @param y y coordinate of nodes center
+         * @return the ground level
+         */
+        s_int32 get_ground_pos (std::list<chunk_info*> & ground_tiles, const s_int32 & x, const s_int32 & y);
 
         /// The node bank
         node_bank m_nodeBank;
