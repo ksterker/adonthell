@@ -87,7 +87,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
         // cache this as we're going to use it a few times below: 
         float normalDotVelocity = trianglePlane.normal ().dot (Velocity);
         
-        // if sphere is travelling parallel to the plane: 
+        // if sphere is traveling parallel to the plane:
         if (normalDotVelocity == 0.0f) 
         {
             // sphere is not embedded in plane --> no collision possible: 
@@ -224,7 +224,7 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
             // It does if it's the first hit or the closest 
             if (CollisionFound == false || distToCollision < NearestDistance) 
             { 
-                // Collision information nessesary for sliding 
+                // Collision information necessary for sliding
                 NearestDistance = distToCollision;
                 IntersectionPoint = collisionPoint;
                 CollisionFound = true;
