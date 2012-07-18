@@ -251,7 +251,13 @@ namespace gui
 #endif
 
     protected:
-		/** 
+        typedef enum
+        {
+            NEXT = 0,
+            PREV = 1
+        } select_direction;
+
+        /**
          * @name Keyboard Callbacks.
          *
          * Called when a keystroke happens. returns whether or not the
@@ -318,15 +324,11 @@ namespace gui
 		virtual bool movedown();
 
         /**
-         * Select the next child.
+         * Select the next or previous child.
+         * @param direction NEXT or PREV
          * @return true if a child became the newly focused element.
          */
-        virtual bool select_next();
-        /**
-         * Select the previous child.
-         * @return true if a child became the newly focused element.
-         */
-        virtual bool select_prev();
+        virtual bool select_child(gui::layout::select_direction direction);
 
 		// void dofade(int x, int y, const SDL_Surface* s);
 		// bool mousestate[3];
