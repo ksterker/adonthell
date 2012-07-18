@@ -189,6 +189,7 @@ public:
         LOG(INFO) << "  done!";
 
         register_ui_sound("activate", "select.ogg");
+        register_ui_sound("layout_switch", "switch.ogg");
 
         // arguments to map view schedule
         LOG(INFO) << "Adding player character to mapview schedule... ";
