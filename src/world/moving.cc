@@ -133,7 +133,7 @@ bool moving::collide_with_objects (collision *collisionData)
     const vector3<s_int32> max (
         min.x() + placeable::length() + (Velocity.x () > 0 ? static_cast<s_int32>(ceil (Velocity.x())) : 0),
         min.y() + placeable::width() + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
-        min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0));
+        min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0) - 1);
 
     VLOG(3) << "   area " << min << " - " << max;
 

@@ -33,32 +33,54 @@
 #include "rpg/character.h"
 
 using world::character;
+using world::chunk_info;
 using world::pathfinding;
 using world::coordinates;
+using world::path_coordinate;
+
+/// sort chunk_info objects according to the z-position of their surface
+struct z_order : public std::binary_function<const chunk_info *, const chunk_info *, bool>
+{
+    bool operator() (const chunk_info * a, const chunk_info * b)
+    {
+        //Here we want to sort by the top of each solid.  However, if they have the same top,
+        //then we want the one with the highest bottom (which is the smallest height).  The reason
+        //for this is we have tiles and walls with the same height, but we want to prefer to draw on
+        //the tile if the player is standing on it.
+        s_int32 atop = a->center_min().z() + a->get_object()->get_surface_pos ();
+        s_int32 btop = b->center_min().z() + b->get_object()->get_surface_pos ();
+        return (atop > btop) || (atop == btop && a->get_object()->solid_height () < b->get_object()->solid_height ());
+    }
+};
 
 bool pathfinding::verify_goal(const coordinates & actual, const vector3<s_int32> & p1, const vector3<s_int32> & p2)
 {
-    vector3<s_int32> tP1(p1.x() / 20, p1.y() / 20, 0);
-    vector3<s_int32> tP2(p2.x() / 20, p2.y() / 20, 0);
+    vector3<s_int32> tP1(p1.x() / 20, p1.y() / 20, p1.z());
+    vector3<s_int32> tP2(p2.x() / 20, p2.y() / 20, p2.z());
+
     if (((actual.x() >= tP1.x()) && (actual.x() <= tP2.x())) &&
-        ((actual.y() >= tP1.y()) && (actual.y() <= tP2.y())))
+        ((actual.y() >= tP1.y()) && (actual.y() <= tP2.y())) &&
+        ((actual.z() >= tP1.z()) && (actual.z() <= tP2.z())))
         return true;
-    else return false;
+
+    return false;
 }
 
 u_int32 pathfinding::calc_heuristics(const coordinates & actual, const vector3<s_int32> & goal) const
 {
-    return  (20 * (abs(actual.x() * 20 - goal.x()) + abs(actual.y() * 20 - goal.y())));
+    s_int32 dist_x = actual.x() * 20 - goal.x();
+    s_int32 dist_y = actual.y() * 20 - goal.y();
+    return sqrt(dist_x * dist_x + dist_y * dist_y) + (20 * abs(actual.z() - goal.z()));
 }
 
-bool pathfinding::check_node(coordinates & temp, const character * chr) const
+bool pathfinding::check_node(path_coordinate & temp, const character * chr) const
 {
     // Bypass check if the character is using the Default pathfinding_type
     if (chr->mind()->get_pathfinding_type() == "Default") return true;
 
-    // Analyse the terrain
-    world::vector3<s_int32> min_pos(temp.x() * 20, temp.y() * 20, chr->z() - 10);
-    world::vector3<s_int32> max_pos(temp.x() * 20 + 20, temp.y() * 20 + 20, chr->z() + 10);
+    // Analyze the terrain
+    world::vector3<s_int32> min_pos(temp.x() * 20, temp.y() * 20, temp.z() - 10);
+    world::vector3<s_int32> max_pos(temp.x() * 20 + 20, temp.y() * 20 + 20, temp.z() + 10);
 
     const std::list<world::chunk_info *> actual_chunk = chr->map().objects_in_bbox(min_pos, max_pos);
 
@@ -77,49 +99,48 @@ bool pathfinding::check_node(coordinates & temp, const character * chr) const
         }
     }
 
-    //Update move cost
-    temp.set_z(temp.z() - temp_terrainCost);
+    // Update move cost
+    temp.moveCost -= temp_terrainCost;
     return true;
 }
 
-std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & actual, const character * chr) const
+std::vector<path_coordinate> pathfinding::calc_adjacent_nodes(const coordinates & actual, const character * chr) const
 {
-    std::vector<coordinates> temp;
-    coordinates temp_pos;
+    std::vector<path_coordinate> temp;
+    path_coordinate temp_pos;
 
     temp.reserve(8);
 
-    // TRICK: use the z as a pre-calculated cost to move
-    // Left Center
-    temp_pos.set(actual.x() - 1, actual.y(), 20);
+    // west
+    temp_pos.set(actual.x() - 1, actual.y(), actual.z(), 20);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    //Left Top
-    temp_pos.set(actual.x() - 1, actual.y() - 1, 28);
+    // north-west
+    temp_pos.set(actual.x() - 1, actual.y() - 1, actual.z(), 28);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    //Left Bottom
-    temp_pos.set(actual.x() - 1, actual.y() + 1, 28);
+    // south-west
+    temp_pos.set(actual.x() - 1, actual.y() + 1, actual.z(), 28);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // Right Bottom
-    temp_pos.set(actual.x() + 1, actual.y() - 1, 28);
+    // south-east
+    temp_pos.set(actual.x() + 1, actual.y() - 1, actual.z(), 28);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // Center Left
-    temp_pos.set(actual.x(), actual.y() - 1, 20);
+    // south
+    temp_pos.set(actual.x(), actual.y() - 1, actual.z(), 20);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // Center Right
-    temp_pos.set(actual.x(), actual.y() + 1, 20);
+    // north
+    temp_pos.set(actual.x(), actual.y() + 1, actual.z(), 20);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    //Right Center
-    temp_pos.set(actual.x() + 1, actual.y(), 20);
+    // east
+    temp_pos.set(actual.x() + 1, actual.y(), actual.z(), 20);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // Right Top
-    temp_pos.set(actual.x() + 1, actual.y() + 1, 28);
+    // north-east
+    temp_pos.set(actual.x() + 1, actual.y() + 1, actual.z(), 28);
     if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
     return temp;
@@ -128,13 +149,15 @@ std::vector<coordinates> pathfinding::calc_adjacent_nodes(const coordinates & ac
 bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2,
                             std::vector<coordinates> * path)
 {
-    // Verify pre condictions
-    if (!(((goal1.x() >= chr->map().min().x()) && (goal1.x() <= chr->map().max().x())) &&
-        (goal1.y() >= chr->map().min().y()) && (goal1.y() <= chr->map().max().y()))) {
+    // Middle position of the goal area
+    vector3<s_int32> goal ((goal1.x() + goal2.x()) / 2, (goal1.y() + goal2.y()) / 2, 0);
 
-        fprintf(stderr, "*** Goal (%i, %i) is out of the map scope (%i, %i) - (%i, %i)\n",
-                goal1.x(), goal1.y(), chr->map().min().x(), chr->map().min().y(),
-                chr->map().max().x(), chr->map().min().y());
+    // Verify preconditions
+    if (!(((goal.x() >= chr->map().min().x()) && (goal.x() <= chr->map().max().x())) &&
+        (goal.y() >= chr->map().min().y()) && (goal.y() <= chr->map().max().y()))) {
+
+        LOG(WARNING) << "goal " << goal << " is out of the map scope "
+                     << chr->map().min() << " - " << chr->map().max();
         return false;
     }
 
@@ -149,22 +172,19 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     const float rev_per_dist = 5;
     const u_int16 max_rev = 1 + rev_per_dist * (abs(chr->x() - goal1.x()) + abs(chr->y() - goal1.y()));
 
-    // Length of the character
-    const u_int8 chr_length = chr->placeable::length();
-    const u_int8 chr_width = chr->placeable::width();
+    // Half length of the character
+    const u_int8 chr_length = chr->placeable::length() / 2;
+    const u_int8 chr_width = chr->placeable::width() / 2;
 
     // Grid of the actual_node, centered on character
-    s_int32 grid_x = trunc((chr->x() + chr_length / 2) / 20);
-    s_int32 grid_y = trunc((chr->y() + chr_width / 2 ) / 20);
+    s_int32 grid_x = trunc((chr->x() + chr_length) / 20);
+    s_int32 grid_y = trunc((chr->y() + chr_width) / 20);
 
-    // Middle position of the goal area
-    vector3<s_int32> goal ((goal1.x() + goal2.x()) / 2, (goal1.y() + goal2.y()) / 2, 0);
-
-    // The node that's been choosen (with the lowest total cost)
+    // The node that's been chosen (with the lowest total cost)
     node * actual_node;
 
     // Temporary variables
-    coordinates temp_pos;
+    path_coordinate temp_pos;
     node * temp_node;
     node * temp_node2;
 
@@ -190,7 +210,7 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
         // Get the grid of the actual node
         grid_x = actual_node->pos.x();
         grid_y = actual_node->pos.y();
-        temp_pos.set(grid_x, grid_y, 0);
+        temp_pos.set(grid_x, grid_y, actual_node->pos.z(), 0);
 
         // Check if we've arrived at the target
         if (verify_goal(temp_pos, goal1, goal2) == true)
@@ -214,10 +234,10 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
         actual_node->listAssignedTo = CLOSED_LIST;
 
         // Gets a list of positions to visit
-        std::vector<coordinates> pos_to_visit = calc_adjacent_nodes(temp_pos, chr);
+        std::vector<path_coordinate> pos_to_visit = calc_adjacent_nodes(temp_pos, chr);
 
         // Add them to the open list
-        std::vector<coordinates>::iterator i = pos_to_visit.begin();
+        std::vector<path_coordinate>::iterator i = pos_to_visit.begin();
 
         while (i != pos_to_visit.end())
         {
@@ -225,9 +245,8 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
 
             temp_node->pos = *i;
             temp_node->parent = actual_node;
-            temp_node->moveCost = (*i).z() + temp_node->parent->moveCost;
+            temp_node->moveCost = (*i).moveCost + temp_node->parent->moveCost;
             temp_node->total = calc_heuristics(temp_node->pos, goal) + temp_node->moveCost;
-            temp_node->pos.set_z(chr->z());
 
             // Check if this node is already in the open or closed list
             temp_node2 = m_nodeCache.search_node(temp_node);
@@ -254,27 +273,25 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
                 vector3<s_int32> max(temp_node->pos.x() * 20 + 11, temp_node->pos.y() * 20 + 11, temp_node->pos.z());
 
                 std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max, world::OBJECT);
-
-                if (check_hole.empty())
+                if (discard_non_solid (check_hole))
                 {
                     ++i;
                     continue;
                 }
 
                 // Check if there is an obstacle in this node
-                min = vector3<s_int32>(temp_node->pos.x() * 20, temp_node->pos.y() * 20, temp_node->pos.z() + 1);
-                max = vector3<s_int32>(temp_node->pos.x() * 20 + chr_length, temp_node->pos.y() * 20 + chr_width, temp_node->pos.z() + chr->height() - 1);
+                min = vector3<s_int32>(temp_node->pos.x() * 20 + 11 - chr_length, temp_node->pos.y() * 20 + 11 - chr_width, temp_node->pos.z() + 1);
+                max = vector3<s_int32>(temp_node->pos.x() * 20 + 9 + chr_length, temp_node->pos.y() * 20 + 9 + chr_width, temp_node->pos.z() + chr->height() - 1);
 
-                std::list<chunk_info *> collisions = chr->map().objects_in_bbox(min, max);
-
-                if (!collisions.empty())
+                std::list<chunk_info *> collisions = chr->map().objects_in_bbox(min, max, world::OBJECT);
+                if (!discard_non_solid (collisions))
                 {
-                    if (!((collisions.size() == 1) && (chr == (*collisions.begin())->get_object())))
-                    {
-                        ++i;
-                        continue;
-                    }
+                    ++i;
+                    continue;
                 }
+
+                // update z-position of node
+                temp_node->pos.set_z(get_ground_pos (check_hole, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10));
 
                 // Add node to the open list
                 temp_node->listAssignedTo = OPEN_LIST;
@@ -292,3 +309,38 @@ bool pathfinding::find_path(const character * chr, const vector3<s_int32> & goal
     reset();
     return false;
 }
+
+bool pathfinding::discard_non_solid(std::list<chunk_info*> & objects)
+{
+    std::list<chunk_info*>::iterator ci = objects.begin();
+    while (ci != objects.end())
+    {
+        if ((*ci)->get_object()->is_solid())
+        {
+            ci++;
+        }
+        else
+        {
+            ci = objects.erase (ci);
+        }
+    }
+
+    return objects.empty();
+}
+
+s_int32 pathfinding::get_ground_pos (std::list<chunk_info*> & ground_tiles, const s_int32 & x, const s_int32 & y)
+{
+    // sort according to their z-Order
+    ground_tiles.sort (z_order());
+
+    // the highest object will be our ground pos
+    std::list<chunk_info*>::iterator ci = ground_tiles.begin ();
+
+    // position of character relative to tile
+    s_int32 px = x - (*ci)->center_min().x();
+    s_int32 py = y - (*ci)->center_min().y();
+
+    // calculate ground position
+    return (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+}
+

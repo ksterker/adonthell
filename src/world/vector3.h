@@ -1,6 +1,4 @@
 /*
- $Id: vector3.h,v 1.11 2009/03/22 13:53:20 ksterker Exp $
- 
  Copyright (C) Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -178,7 +176,7 @@ public:
 	}
 
 	/**
-	 * Compare two sets of vectors for differenct.
+	 * Compare two sets of vectors for difference.
 	 * @param v vector to compare with this.
 	 * @return true if at least one members differs, false otherwise.
 	 */

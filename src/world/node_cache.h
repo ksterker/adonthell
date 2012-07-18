@@ -40,7 +40,6 @@ namespace world
     /**
      * Keeps a hash map of every used node.
      */
-
     class node_cache
     {
     public:
@@ -53,29 +52,24 @@ namespace world
         {
             std::stringstream ss;
             std::string temp;
-            ss << nd->pos.x() << ":" << nd->pos.y();
+            ss << nd->pos.x() << ":" << nd->pos.y() << ":" << nd->pos.z();
             ss >> temp;
 
-            //m_usedNodes.insert(nodeHash::value_type(temp, nd));
             m_usedNodes[temp] = nd;
         }
 
        /**
-        * Checks wether a node already exists
+        * Checks whether a node already exists
         * @param the node to be checked
         * @return NULL if it doesn't exists, itself otherwise
         */
         node * search_node(const node * nd)
         {
-
             std::stringstream ss;
             std::string temp;
-            ss << nd->pos.x() << ":" << nd->pos.y();
+            ss << nd->pos.x() << ":" << nd->pos.y() << ":" << nd->pos.z();
             ss >> temp;
 
-            /*nodeHash::iterator a = m_usedNodes.find(temp);
-            return *a;
-            */
             return m_usedNodes[temp];
         }
 
@@ -90,10 +84,9 @@ namespace world
 
     private:
 
-        /// The hash map
         typedef std::hash_map<std::string, node *> nodeHash;
+        /// The hash map of nodes already in the path
         nodeHash m_usedNodes;
-
     };
 }
 
