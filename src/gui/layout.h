@@ -316,7 +316,18 @@ namespace gui
          * @return true if a child became the newly focused element.
          */
 		virtual bool movedown();
-        
+
+        /**
+         * Select the next child.
+         * @return true if a child became the newly focused element.
+         */
+        virtual bool select_next();
+        /**
+         * Select the previous child.
+         * @return true if a child became the newly focused element.
+         */
+        virtual bool select_prev();
+
 		// void dofade(int x, int y, const SDL_Surface* s);
 		// bool mousestate[3];
 	};

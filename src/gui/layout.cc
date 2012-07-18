@@ -35,33 +35,29 @@ typedef std::vector<gui::layoutchild> vector_layoutchild;
 // select next child
 bool layout::moveright()
 {
-    // no next child that could possibly receive the focus
-    if (Children.size() < 2) return false;
-
-    u_int32 old = Selected;
-    do
-    {
-        Selected = (Selected + 1) % Children.size();
-
-        // find a child willing to accept selection
-        if (Children[Selected].Child->focus())
-        {
-            Children[old].Child->unfocus();
-
-            gui::ui_event evt (this, "layout_switch");
-            events::manager::raise_event (&evt);
-
-            return true;
-        }
-    }
-    while (Selected != old);
-
-    return false;
+    return select_next();
 }
 
 // select next child
 bool layout::movedown()
 {
+    return select_next();
+}
+
+// select previous child
+bool layout::moveleft()
+{
+    return select_prev();
+}
+
+// select previous child
+bool layout::moveup()
+{
+    return select_prev();
+}
+
+bool layout::select_next()
+{
     // no next child that could possibly receive the focus
     if (Children.size() < 2) return false;
 
@@ -86,35 +82,7 @@ bool layout::movedown()
     return false;
 }
 
-// select previous child
-bool layout::moveleft()
-{
-    // no previous child that could possibly receive the focus
-    if (Children.size() < 2) return false;
-
-    u_int32 old = Selected;
-    do
-    {
-        Selected = Selected ? Selected - 1 : Children.size() - 1;
-
-        // find a child willing to accept selection
-        if (Children[Selected].Child->focus())
-        {
-            Children[old].Child->unfocus();
-
-            gui::ui_event evt (this, "layout_switch");
-            events::manager::raise_event (&evt);
-
-            return true;
-        }
-    }
-    while (Selected != old);
-    
-    return false;
-}
-
-// select previous child
-bool layout::moveup()
+bool layout::select_prev()
 {
     // no previous child that could possibly receive the focus
     if (Children.size() < 2) return false;
