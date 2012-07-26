@@ -270,7 +270,7 @@ pathfinding_manager::state pathfinding_manager::return_state(const s_int16 & id)
 
 const world::pathfinding_task* pathfinding_manager::get_task(const s_int16 & id)
 {
-    if (id >= 0 && id < m_task.size())
+    if (id >= 0 && (u_int16)id < m_task.size())
     {
         return &m_task[id];
     }
