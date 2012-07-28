@@ -27,8 +27,8 @@
  * @brief  Entry .
  */
 
-#include "rpg/log_entry.h"
-#include "event/date.h"
+#include "log_entry.h"
+#include <adonthell/event/date.h>
 
 using rpg::log_entry;
 using std::string;

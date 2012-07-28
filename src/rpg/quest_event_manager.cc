@@ -28,8 +28,8 @@
 
 #include <algorithm>
 
-#include "rpg/quest_event_manager.h"
-#include "rpg/quest_event.h"
+#include "quest_event_manager.h"
+#include "quest_event.h"
 
 using rpg::quest_event_manager;
 using rpg::quest_event;

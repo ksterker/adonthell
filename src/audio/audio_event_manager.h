@@ -29,7 +29,7 @@
 #ifndef EVENT_AUDIO_EVENT_MANAGER_H
 #define EVENT_AUDIO_EVENT_MANAGER_H
 
-#include "event/manager_base.h"
+#include <adonthell/event/manager_base.h>
 #include <list>
 
 using events::manager_base;

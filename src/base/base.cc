@@ -25,7 +25,7 @@
  * @brief  Initialization of the base module.
  */
 
-#include "base/base.h"
+#include "base.h"
 
 // global timer and path objects
 namespace base 

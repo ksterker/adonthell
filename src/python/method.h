@@ -30,7 +30,7 @@
 #ifndef PYTHON_METHOD_H
 #define PYTHON_METHOD_H
 
-#include "python/script.h"
+#include "script.h"
 
 namespace python
 {

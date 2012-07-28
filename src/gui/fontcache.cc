@@ -26,8 +26,8 @@
 
 #include <sstream>
 
-#include "gui/fontcache.h"
-#include "gui/font.h"
+#include "fontcache.h"
+#include "font.h"
 
 using gui::glyph_info;
 using gui::font_cache;

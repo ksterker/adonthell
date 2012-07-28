@@ -30,9 +30,9 @@
  */
 
 #include <cstdio>
-#include "base/logging.h"
-#include "gfx/surface_ext.h"
-#include "gfx/png_wrapper.h"
+#include <adonthell/base/logging.h>
+#include "surface_ext.h"
+#include "png_wrapper.h"
 
 using gfx::surface_ext;
 

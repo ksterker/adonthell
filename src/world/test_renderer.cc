@@ -17,10 +17,10 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 #include <gtest/gtest.h>
 
-#include "world/renderer.h"
+#include "renderer.h"
 
 namespace world
 {

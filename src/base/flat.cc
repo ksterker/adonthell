@@ -27,9 +27,9 @@
  */
 
 #include <cstdio>
-#include "base/flat.h"
-#include "base/endians.h"
-#include "base/logging.h"
+#include "flat.h"
+#include "endians.h"
+#include "logging.h"
 
 #include <zlib.h>
 

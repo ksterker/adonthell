@@ -31,7 +31,7 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#include "input/manager.h"
+#include "manager.h"
 
 /**
  * This module gives an interface to handle user input, from

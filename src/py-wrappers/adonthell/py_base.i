@@ -3,15 +3,15 @@
 
 %{
 #include <string>
-#include "base/nls.h"
-#include "base/base.h"
-#include "base/endians.h"
-#include "base/types.h"
-#include "base/diskio.h"
-#include "base/configuration.h"
-#include "base/savegame.h"
+#include <adonthell/base/nls.h>
+#include <adonthell/base/base.h>
+#include <adonthell/base/endians.h>
+#include <adonthell/base/types.h>
+#include <adonthell/base/diskio.h>
+#include <adonthell/base/configuration.h>
+#include <adonthell/base/savegame.h>
 
-#include "python/callback.h"
+#include <adonthell/python/callback.h>
 
 // partial specialization of base::serializer so it can be used from Python 
 namespace base
@@ -159,18 +159,18 @@ namespace base {
         PyList_SET_ITEM ($result, index++, PyString_FromString (*i));
 }
 
-%include "base/base.h"
-%include "base/types.h"
-%include "base/timer.h"
-%include "base/file.h"
-%include "base/flat.h"
-%include "base/diskio.h"
-%include "base/configuration.h"
-%include "base/paths.h"
+%include <adonthell/base/base.h>
+%include <adonthell/base/types.h>
+%include <adonthell/base/timer.h>
+%include <adonthell/base/file.h>
+%include <adonthell/base/flat.h>
+%include <adonthell/base/diskio.h>
+%include <adonthell/base/configuration.h>
+%include <adonthell/base/paths.h>
 typedef long time_t;
-%include "base/savegame.h"
-%include "base/serializer.h"
-%include "base/logging.h"
+%include <adonthell/base/savegame.h>
+%include <adonthell/base/serializer.h>
+%include <adonthell/base/logging.h>
 
 %template(py_serializer) base::serializer<PyObject>;
 

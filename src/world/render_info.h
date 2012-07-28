@@ -30,9 +30,9 @@
 #ifndef WORLD_RENDERINFO_H
 #define WORLD_RENDERINFO_H
 
-#include "gfx/sprite.h"
-#include "world/placeable_shape.h"
-#include "world/shadow.h"
+#include <adonthell/gfx/sprite.h>
+#include "placeable_shape.h"
+#include "shadow.h"
 
 namespace world
 {

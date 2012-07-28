@@ -28,9 +28,9 @@
 #ifndef PATHFINDING_TASK_H
 #define PATHFINDING_TASK_H
 
-#include "base/callback.h"
-#include "world/character.h"
-#include "world/coordinates.h"
+#include <adonthell/base/callback.h>
+#include "character.h"
+#include "coordinates.h"
 
 namespace world
 {

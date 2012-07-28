@@ -28,7 +28,7 @@
 #include "surface_sdl.h"
 #include "screen_sdl.h"
 #include "SDL.h"
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 
 extern "C"
 {

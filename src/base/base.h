@@ -29,9 +29,9 @@
  * 
  */
 
-#include "base/paths.h"
-#include "base/callback.h"
-#include "base/timer.h"
+#include "paths.h"
+#include "callback.h"
+#include "timer.h"
 
 /**
  * This module provides the basic stuff needed by many other modules:

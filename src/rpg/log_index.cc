@@ -29,7 +29,7 @@
 
 #include <set>
 #include <iostream>
-#include "rpg/log_index.h"
+#include "log_index.h"
 
 using rpg::log_index_entry;
 using rpg::log_index;

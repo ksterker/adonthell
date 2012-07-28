@@ -30,10 +30,10 @@
 #ifndef WORLD_NODE_CACHE_H
 #define WORLD_NODE_CACHE_H
 
-#include "world/node.h"
-#include "world/chunk_info.h"
-#include "world/coordinates.h"
-#include "base/hash_map.h"
+#include "node.h"
+#include "chunk_info.h"
+#include "coordinates.h"
+#include <adonthell/base/hash_map.h>
 
 namespace world
 {

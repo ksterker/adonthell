@@ -27,12 +27,12 @@
  * @brief  Keep track of progress in the game.
  */
  
-#include "python/python.h"
-#include "rpg/quest.h"
-#include "event/manager.h"
-#include "rpg/quest_event.h"
-#include "base/base.h"
-#include "base/diskio.h"
+#include <adonthell/python/python.h>
+#include "quest.h"
+#include <adonthell/event/manager.h>
+#include "quest_event.h"
+#include <adonthell/base/base.h>
+#include <adonthell/base/diskio.h>
 
 using rpg::quest;
 using rpg::quest_part;

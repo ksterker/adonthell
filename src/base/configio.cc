@@ -32,8 +32,8 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include "base/configio.h"
-#include "base/logging.h"
+#include "configio.h"
+#include "logging.h"
 
 using base::config_io;
 using base::cfg_option;

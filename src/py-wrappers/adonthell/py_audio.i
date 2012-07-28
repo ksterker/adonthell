@@ -4,12 +4,12 @@
 %{
 
 #include <string>
-#include "base/types.h"
-#include "audio/audio.h"
-#include "audio/sound.h"
-#include "python/callback.h"
-#include "audio/audio_event.h"
-#include "event/time_event.h"
+#include <adonthell/base/types.h>
+#include <adonthell/audio/audio.h>
+#include <adonthell/audio/sound.h>
+#include <adonthell/python/callback.h>
+#include <adonthell/audio/audio_event.h>
+#include <adonthell/event/time_event.h>
 
 using namespace audio;
 
@@ -29,6 +29,6 @@ extern "C" {
 %import "py_event.i"    // since audio_event inherits from event
 %import "base/types.h"
 
-%include "audio/audio.h"
-%include "audio/sound.h"
-%include "audio/audio_event.h"
+%include <adonthell/audio/audio.h>
+%include <adonthell/audio/sound.h>
+%include <adonthell/audio/audio_event.h>

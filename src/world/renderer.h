@@ -30,8 +30,8 @@
 #ifndef WORLD_RENDERER_H
 #define WORLD_RENDERER_H
 
-#include "world/chunk_info.h"
-#include "world/render_info.h"
+#include "chunk_info.h"
+#include "render_info.h"
 
 namespace world
 {

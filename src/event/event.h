@@ -30,7 +30,7 @@
 #ifndef EVENT_EVENT_H
 #define EVENT_EVENT_H
 
-#include "base/flat.h"
+#include <adonthell/base/flat.h>
 
 /**
  * Support for various events used to drive the game world and the plot.

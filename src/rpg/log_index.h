@@ -33,8 +33,8 @@
 #include <vector>
 #include <map>
 
-#include "base/hash_map.h"
-#include "rpg/log_entry.h"
+#include <adonthell/base/hash_map.h>
+#include "log_entry.h"
 
 namespace rpg
 {

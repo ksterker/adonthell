@@ -26,12 +26,12 @@
  *
  */
 
-#include "event/manager.h"
-#include "audio/audio.h"
-#include "audio/audio_manager.h"
-#include "audio/sound.h"
-#include "audio/audio_event.h"
-#include "base/paths.h"
+#include <adonthell/event/manager.h>
+#include "audio.h"
+#include "audio_manager.h"
+#include "sound.h"
+#include "audio_event.h"
+#include <adonthell/base/paths.h>
 
 #include <iostream>
 #include <deque>

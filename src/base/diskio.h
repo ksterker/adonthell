@@ -29,7 +29,7 @@
 #ifndef BASE_DISKIO
 #define BASE_DISKIO
 
-#include "base/diskwriter_base.h"
+#include "diskwriter_base.h"
 
 namespace base {
     /**

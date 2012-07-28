@@ -2,13 +2,13 @@
 %feature("autodoc", "1");   // enable docstrings for python wrappers
 
 %{
-#include "base/types.h"
-#include "event/event.h"
-#include "gui/gui.h"
-#include "gui/ui_event.h"
-#include "gui/conversation.h"
-#include "gui/window_manager.h"
-#include "python/callback.h"
+#include <adonthell/base/types.h>
+#include <adonthell/event/event.h>
+#include <adonthell/gui/gui.h>
+#include <adonthell/gui/ui_event.h>
+#include <adonthell/gui/conversation.h>
+#include <adonthell/gui/window_manager.h>
+#include <adonthell/python/callback.h>
 
 extern "C" {
     void check_module_version (const char *name, const unsigned int & module_ver);
@@ -98,19 +98,19 @@ namespace gui {
 %import(module="gfx") "gfx/drawable.h"
 %import(module="event") "event/event.h"
 
-%include "gui/widget.h"
-%include "gui/font.h"
-%include "gui/label.h"
-%include "gui/button.h"
-%include "gui/layout.h"
-%include "gui/listlayout.h"
-%include "gui/canvas.h"
-%include "gui/indicatorbar.h"
-%include "gui/scrollview.h"
-%include "gui/option.h"
-%include "gui/textbox.h"
-%include "gui/ui_event.h"
-%include "gui/conversation.h"
-%include "gui/window_manager.h"
+%include <adonthell/gui/widget.h>
+%include <adonthell/gui/font.h>
+%include <adonthell/gui/label.h>
+%include <adonthell/gui/button.h>
+%include <adonthell/gui/layout.h>
+%include <adonthell/gui/listlayout.h>
+%include <adonthell/gui/canvas.h>
+%include <adonthell/gui/indicatorbar.h>
+%include <adonthell/gui/scrollview.h>
+%include <adonthell/gui/option.h>
+%include <adonthell/gui/textbox.h>
+%include <adonthell/gui/ui_event.h>
+%include <adonthell/gui/conversation.h>
+%include <adonthell/gui/window_manager.h>
 
 

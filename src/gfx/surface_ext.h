@@ -31,7 +31,7 @@
 #ifndef SURFACE_EXT_H
 #define SURFACE_EXT_H
 
-#include "gfx/surface.h"
+#include "surface.h"
 
 namespace gfx
 {

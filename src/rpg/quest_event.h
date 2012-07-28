@@ -30,8 +30,8 @@
 #define QUEST_EVENT_H
 
 #include <vector>
-#include "event/event.h"
-#include "rpg/quest.h"
+#include <adonthell/event/event.h>
+#include "quest.h"
 
 namespace rpg
 {

@@ -26,8 +26,8 @@
 
 #include <algorithm>
 
-#include "world/move_event_manager.h"
-#include "world/move_event.h"
+#include "move_event_manager.h"
+#include "move_event.h"
 
 using world::move_event_manager;
 using world::move_event;

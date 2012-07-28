@@ -27,15 +27,15 @@
  */
 
 
-#include "event/manager.h"
-#include "input/keyboard_event.h"
-#include "gui/layout.h"
-#include "gui/ui_event.h"
-#include "gui/ui_event_manager.h"
-#include "gui/widget.h"
+#include <adonthell/event/manager.h>
+#include <adonthell/input/keyboard_event.h>
+#include "layout.h"
+#include "ui_event.h"
+#include "ui_event_manager.h"
+#include "widget.h"
 
 #include <gtest/gtest.h>
-#include "../input/keyboard_event.h"
+#include <adonthell/input/keyboard_event.h>
 
 namespace gui
 {

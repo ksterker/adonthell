@@ -25,9 +25,9 @@
  * 
  */
 
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 #include "listener_python.h"
-#include "python/pool.h"
+#include <adonthell/python/pool.h>
 
 using events::listener;
 using events::listener_python;

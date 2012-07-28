@@ -27,11 +27,11 @@
 #ifndef WORLD_AREA_MANAGER_H
 #define WORLD_AREA_MANAGER_H
 
-#include "base/hash_map.h"
+#include <adonthell/base/hash_map.h>
 
-#include "world/pathfinding_manager.h"
-#include "world/mapview.h"
-#include "world/area.h"
+#include "pathfinding_manager.h"
+#include "mapview.h"
+#include "area.h"
 
 namespace world
 {

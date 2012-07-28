@@ -31,11 +31,11 @@
 #ifndef WORLD_AREA_H
 #define WORLD_AREA_H
 
-#include "base/hash_map.h"
-#include "base/diskio.h"
+#include <adonthell/base/hash_map.h>
+#include <adonthell/base/diskio.h>
 
-#include "world/chunk.h"
-#include "world/zone.h"
+#include "chunk.h"
+#include "zone.h"
 
 /**
  * The graphical representation of the game %world is implemented by this module.

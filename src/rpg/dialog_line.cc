@@ -26,7 +26,7 @@
  * @brief  Class representig a line of a dialog to be displayed by the UI.
  */
 
-#include "rpg/dialog_line.h"
+#include "dialog_line.h"
 
 using rpg::dialog_line;
 

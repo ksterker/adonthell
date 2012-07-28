@@ -31,8 +31,8 @@
 #ifndef EVENT_MANAGER_BASE_H
 #define EVENT_MANAGER_BASE_H
 
-#include "event/listener.h"
-#include "event/types.h"
+#include "listener.h"
+#include "types.h"
 
 namespace events
 {

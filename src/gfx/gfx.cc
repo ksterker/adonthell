@@ -28,10 +28,10 @@
  */
 
 #include <cstdio>
-#include "base/logging.h"
-#include "base/paths.h"
-#include "gfx/gfx.h"
-#include "gfx/surface_cacher.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/base/paths.h>
+#include "gfx.h"
+#include "surface_cacher.h"
 
 /**
  * The handler of our library file.

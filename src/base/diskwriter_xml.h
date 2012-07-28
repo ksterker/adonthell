@@ -30,7 +30,7 @@
 #define BASE_DISKWRITER_XML
 
 #include <libxml/tree.h>
-#include "base/diskwriter_base.h"
+#include "diskwriter_base.h"
 
 namespace base {
     

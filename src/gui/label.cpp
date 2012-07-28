@@ -23,7 +23,7 @@
  * @brief  Implements the label class.
  */
 
-#include "gui/label.h"
+#include "label.h"
 
 namespace gui
 {

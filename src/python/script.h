@@ -33,7 +33,7 @@
 #ifndef PYTHON_SCRIPT_H
 #define PYTHON_SCRIPT_H
                    
-#include "python/python.h"
+#include "python.h"
 
 namespace python 
 {

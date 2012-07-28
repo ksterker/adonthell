@@ -31,10 +31,10 @@
 #ifndef GFX_SPRITE_H
 #define GFX_SPRITE_H
 
-#include "event/listener_cxx.h"
+#include <adonthell/event/listener_cxx.h>
 
-#include "gfx/surface_cacher.h"
-#include "gfx/surface.h"
+#include "surface_cacher.h"
+#include "surface.h"
 #include <queue>
 
 namespace gfx

@@ -26,8 +26,8 @@
 #ifndef GUI_BUTTON_H
 #define GUI_BUTTON_H
 
-#include "gui/label.h"
-#include "gui/ui_event.h"
+#include "label.h"
+#include "ui_event.h"
 
 namespace gui
 {

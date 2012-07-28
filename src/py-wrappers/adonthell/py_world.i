@@ -2,14 +2,14 @@
 %feature("autodoc", "1");   // enable docstrings for python wrappers
 
 %{
-#include "base/types.h"
-#include "python/callback.h"
-#include "world/area_manager.h"
-#include "world/object.h"
-#include "world/character.h"
-#include "world/mapview.h"
-#include "world/schedule.h"
-#include "world/move_event.h"
+#include <adonthell/base/types.h>
+#include <adonthell/python/callback.h>
+#include <adonthell/world/area_manager.h>
+#include <adonthell/world/object.h>
+#include <adonthell/world/character.h>
+#include <adonthell/world/mapview.h>
+#include <adonthell/world/schedule.h>
+#include <adonthell/world/move_event.h>
 
 using namespace world;
 
@@ -51,29 +51,29 @@ extern "C" {
 // object is an existing python class
 %rename(mapobject) world::object;
 
-%include "world/vector3.h"
+%include <adonthell/world/vector3.h>
 
 %template(vector3i) world::vector3<s_int32>;
 
-%include "python/script.h"
-%include "world/placeable_model.h"
-%include "world/placeable.h"
-%include "world/object.h"
-%include "world/coordinates.h"
-%include "world/move_event.h"
-%include "world/moving.h"
-%include "world/action.h"
-%include "world/character.h"
-%include "world/chunk.h"
-%include "world/chunk_info.h"
-%include "world/entity.h"
-%include "world/area.h"
-%include "world/area_manager.h"
-%include "world/pathfinding_manager.h"
-%include "world/placeable_shape.h"
-%include "world/renderer.h"
-%include "world/mapview.h"
-%include "world/schedule.h"
+%include <adonthell/python/script.h>
+%include <adonthell/world/placeable_model.h>
+%include <adonthell/world/placeable.h>
+%include <adonthell/world/object.h>
+%include <adonthell/world/coordinates.h>
+%include <adonthell/world/move_event.h>
+%include <adonthell/world/moving.h>
+%include <adonthell/world/action.h>
+%include <adonthell/world/character.h>
+%include <adonthell/world/chunk.h>
+%include <adonthell/world/chunk_info.h>
+%include <adonthell/world/entity.h>
+%include <adonthell/world/area.h>
+%include <adonthell/world/area_manager.h>
+%include <adonthell/world/pathfinding_manager.h>
+%include <adonthell/world/placeable_shape.h>
+%include <adonthell/world/renderer.h>
+%include <adonthell/world/mapview.h>
+%include <adonthell/world/schedule.h>
 
 %pythoncode %{
 class coordinates (vector3i):

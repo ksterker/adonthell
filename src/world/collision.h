@@ -30,7 +30,7 @@
 #ifndef WORLD_COLLISION_H
 #define WORLD_COLLISION_H
 
-#include "world/triangle3.h"
+#include "triangle3.h"
 
 namespace world
 {

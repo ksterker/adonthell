@@ -29,7 +29,7 @@
  */
 
 
-#include "world/placeable_model.h"
+#include "placeable_model.h"
 
 using namespace world;
 

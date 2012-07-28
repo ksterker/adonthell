@@ -27,11 +27,11 @@
 #ifndef WORLD_PATHFINDING_H
 #define WORLD_PATHFINDING_H
 
-#include "world/node_cache.h"
-#include "world/node_bank.h"
-#include "world/open_list.h"
-#include "world/character.h"
-#include "world/coordinates.h"
+#include "node_cache.h"
+#include "node_bank.h"
+#include "open_list.h"
+#include "character.h"
+#include "coordinates.h"
 
 namespace world
 {

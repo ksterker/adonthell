@@ -34,7 +34,7 @@
 
 #define SDL_NO_COMPAT 1
 
-#include "input/input.h"
+#include "../input.h"
 #include "SDL.h"
 #include <vector>
 

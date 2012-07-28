@@ -27,8 +27,8 @@
 #ifndef AUDIO_EVENT_H
 #define AUDIO_EVENT_H
 
-#include "event/event.h"
-#include "audio/sound.h"
+#include <adonthell/event/event.h>
+#include "sound.h"
 
 namespace audio
 {

@@ -28,7 +28,7 @@
 #ifndef EVENT_LISTENER_CXX_H
 #define EVENT_LISTENER_CXX_H
 
-#include "event/listener.h"
+#include "listener.h"
 
 namespace events
 {

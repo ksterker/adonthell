@@ -30,7 +30,7 @@
 #ifndef WORLD_PLANE3_H
 #define WORLD_PLANE3_H
 
-#include "world/triangle3.h"
+#include "triangle3.h"
 
 namespace world
 {

@@ -27,7 +27,7 @@
 #ifndef GUI_UI_EVENT_MANAGER_H
 #define GUI_UI_EVENT_MANAGER_H
 
-#include "event/manager_base.h"
+#include <adonthell/event/manager_base.h>
 #include <list>
 
 namespace gui

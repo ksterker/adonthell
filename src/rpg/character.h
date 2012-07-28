@@ -28,8 +28,8 @@
 #ifndef RPG_CHARACTER_H
 #define RPG_CHARACTER_H
 
-#include "rpg/specie.h"
-#include "rpg/pathfinding_costs.h"
+#include "specie.h"
+#include "pathfinding_costs.h"
 
 namespace rpg
 {

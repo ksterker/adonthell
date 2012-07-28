@@ -24,7 +24,7 @@
  * @brief Implements the ui_event class.
  */
 
-#include "gui/ui_event.h"
+#include "ui_event.h"
 
 using gui::ui_event;
 

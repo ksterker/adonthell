@@ -27,8 +27,8 @@
  */
 
 #include <cstdio>
-#include "event/event.h"
-#include "event/types.h"
+#include "event.h"
+#include "types.h"
 
 using events::event;
 using events::event_type;

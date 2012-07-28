@@ -26,11 +26,11 @@
  * @brief Implements the date class.
  */
 
-#include "event/manager.h"
-#include "event/date.h"
-#include "event/time_event.h"
-#include "base/base.h"
-#include "base/diskio.h"
+#include "manager.h"
+#include "date.h"
+#include "time_event.h"
+#include <adonthell/base/base.h>
+#include <adonthell/base/diskio.h>
 
 /// filename of time data file
 #define TIME_DATA "time.data"

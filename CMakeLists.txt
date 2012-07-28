@@ -383,6 +383,9 @@ install (
     COMPONENT "pkgconfig"
 )
 
+add_custom_target(headersymlink ALL)
+add_custom_command(TARGET headersymlink PRE_BUILD
+	COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/src ${CMAKE_CURRENT_BINARY_DIR}/adonthell)
 
 # Add the root of the binary distribution to the include directories !
 # Do it in order to fetch config.h, however, we may generate config.h in the

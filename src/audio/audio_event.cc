@@ -26,7 +26,7 @@
  * @brief Implements the audio_event class.
  */
 
-#include "audio/audio_event.h"
+#include "audio_event.h"
 
 using audio::audio_event;
 

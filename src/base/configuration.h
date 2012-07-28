@@ -33,7 +33,7 @@
 #include <string>
 #include <map>
 
-#include "base/types.h"
+#include "types.h"
 
 using std::string;
 #ifndef SWIG

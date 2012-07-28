@@ -27,7 +27,7 @@
 #ifndef GUI_INDICATORBAR_H
 #define GUI_INDICATORBAR_H
 
-#include "gui/widget.h"
+#include "widget.h"
 
 namespace gui
 {

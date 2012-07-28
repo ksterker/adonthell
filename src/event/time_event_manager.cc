@@ -26,9 +26,9 @@
  * @brief 	Implements the time_event_manager class.
  */
 
-#include "event/time_event_manager.h"
-#include "event/time_event.h"
-#include "event/date.h"
+#include "time_event_manager.h"
+#include "time_event.h"
+#include "date.h"
 #include <algorithm>
 
 using std::list;

@@ -16,6 +16,6 @@ extern "C" {
 
 %include "stdint.i"
 %include "std_string.i"
-%include "base/types.h"
-%include "main/adonthell.h"
+%include <adonthell/base/types.h>
+%include <adonthell/main/adonthell.h>
 %include "py_main.h"

@@ -30,7 +30,7 @@
 #ifndef RPG_LOGENTRY_H
 #define RPG_LOGENTRY_H
 
-#include "base/flat.h"
+#include <adonthell/base/flat.h>
 
 namespace rpg
 {

@@ -32,7 +32,7 @@
 #ifndef PNG_H_
 #define PNG_H_
 
-#include "base/types.h"
+#include <adonthell/base/types.h>
 #include <fstream>
 
 namespace gfx

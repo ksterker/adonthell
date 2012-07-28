@@ -30,8 +30,8 @@
 #endif
 
 #include <locale.h>
-#include "base/gettext.h"
-#include "base/nls.h"
+#include "gettext.h"
+#include "nls.h"
 
 using base::nls;
 

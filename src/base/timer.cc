@@ -30,7 +30,7 @@
 #endif
 #include <errno.h>
 
-#include "base/timer.h"
+#include "timer.h"
 
 // some OS don't have nanosleep
 #ifndef HAVE_NANOSLEEP

@@ -36,8 +36,8 @@
 #include <list>
 #include <string>
 
-#include "base/types.h"
-#include "base/serializer.h"
+#include "types.h"
+#include "serializer.h"
 
 namespace base
 {

@@ -32,7 +32,7 @@
 #include <cstdio>
 #include <string>
 #include <vector>
-#include "base/types.h"
+#include <adonthell/base/types.h>
 
 namespace rpg
 {

@@ -27,7 +27,7 @@
  * @brief  Allow sharing of python class instances between multiple objects.
  */
 
-#include "python/pool.h"
+#include "pool.h"
 
 using python::method;
 using python::pool;

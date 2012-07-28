@@ -29,7 +29,7 @@
    dynamically translating to the host machine endianness. */
 
 #include "config.h"
-#include "base/types.h"
+#include "types.h"
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus

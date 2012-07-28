@@ -29,7 +29,7 @@
  * 
  */
 
-#include "base/utf8.h"
+#include <adonthell/base/utf8.h>
 #include "manager_sdl.h"
 
 #ifdef USE_LIBTOOL

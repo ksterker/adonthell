@@ -1,7 +1,7 @@
-#include "gui/conversation.h"
-#include "gui/ui_event.h"
-#include "event/manager.h"
-#include "base/logging.h"
+#include "conversation.h"
+#include "ui_event.h"
+#include <adonthell/event/manager.h>
+#include <adonthell/base/logging.h>
 #include <iomanip>
 #include <iostream>
 

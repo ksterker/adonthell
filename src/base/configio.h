@@ -32,7 +32,7 @@
 // low-level stuff swig/python needs not know about
 #ifndef SWIG
 
-#include "base/configuration.h"
+#include "configuration.h"
 
 namespace base {
     /**

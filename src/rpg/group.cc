@@ -17,8 +17,8 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "rpg/group.h"
-#include "python/python.h"
+#include "group.h"
+#include <adonthell/python/python.h>
 
 using rpg::group;
 

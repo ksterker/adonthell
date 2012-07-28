@@ -29,9 +29,9 @@
 #ifndef WORLD_SCHEDULE_H
 #define WORLD_SCHEDULE_H
 
-#include "python/script.h"
-#include "event/factory.h"
-#include "world/schedule_data.h"
+#include <adonthell/python/script.h>
+#include <adonthell/event/factory.h>
+#include "schedule_data.h"
 
 /**
  * Path to the character schedule scripts.

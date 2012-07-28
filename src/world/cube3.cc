@@ -27,8 +27,8 @@
  * 
  */
 
-#include "world/cube3.h"
-#include "gfx/screen.h"
+#include "cube3.h"
+#include <adonthell/gfx/screen.h>
 
 using world::cube3;
 

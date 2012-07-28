@@ -1,10 +1,10 @@
 #ifndef GUI_CONVERSATION_H
 #define GUI_CONVERSATION_H
 
-#include "gui/gui.h"
-#include "event/factory.h"
-#include "rpg/dialog.h"
-#include "base/callback.h"
+#include "gui.h"
+#include <adonthell/event/factory.h>
+#include <adonthell/rpg/dialog.h>
+#include <adonthell/base/callback.h>
 #define MAX_OPTS 16
 
 namespace gui

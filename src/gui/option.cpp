@@ -23,9 +23,9 @@
  * @brief  Implements the option class.
  */
 
-#include "event/manager.h"
-#include "gui/option.h"
-#include "gui/ui_event.h"
+#include <adonthell/event/manager.h>
+#include "option.h"
+#include "ui_event.h"
 
 namespace gui
 {

@@ -29,7 +29,7 @@
 #ifndef EVENT_TIME_EVENT_MANAGER_H
 #define EVENT_TIME_EVENT_MANAGER_H
 
-#include "event/manager_base.h"
+#include "manager_base.h"
 #include <list>
 
 namespace events

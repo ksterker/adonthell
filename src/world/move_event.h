@@ -27,9 +27,9 @@
 #ifndef MOVE_EVENT_H
 #define MOVE_EVENT_H
 
-#include "event/event.h"
-#include "world/moving.h"
-#include "world/zone.h"
+#include <adonthell/event/event.h>
+#include "moving.h"
+#include "zone.h"
 
 namespace world
 {

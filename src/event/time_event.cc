@@ -27,8 +27,8 @@
  */
 
 #include <cstdio>
-#include "event/time_event.h"
-#include "event/date.h"
+#include "time_event.h"
+#include "date.h"
 
 using events::date;
 using events::time_event;

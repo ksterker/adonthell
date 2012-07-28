@@ -28,10 +28,10 @@
 
 #include <algorithm>
 
-#include "world/placeable.h"
-#include "world/placeable_shape.h"
-#include "world/area.h"
-#include "base/logging.h"
+#include "placeable.h"
+#include "placeable_shape.h"
+#include "area.h"
+#include <adonthell/base/logging.h>
 
 using world::placeable;
 

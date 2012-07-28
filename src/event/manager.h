@@ -29,8 +29,8 @@
 #ifndef EVENT_MANAGER_H
 #define EVENT_MANAGER_H
 
-#include "event/factory.h"
-#include "event/manager_base.h"
+#include "factory.h"
+#include "manager_base.h"
 
 namespace events
 {

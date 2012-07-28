@@ -26,8 +26,8 @@
  * @brief   Implements the audio_event_manager class.
  */
 
-#include "audio/audio_event_manager.h"
-#include "audio/audio_event.h"
+#include "audio_event_manager.h"
+#include "audio_event.h"
 #include <algorithm>
 
 using std::list;

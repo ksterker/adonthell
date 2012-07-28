@@ -23,7 +23,7 @@
  * @brief  Implements the list layout class.
  */
 
-#include "gui/listlayout.h"
+#include "listlayout.h"
 
 using gui::list_layout;
 using gui::layout;

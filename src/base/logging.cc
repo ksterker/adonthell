@@ -25,7 +25,7 @@
  *
  */
 
-#include "base/logging.h"
+#include "logging.h"
 
 #include <string>
 

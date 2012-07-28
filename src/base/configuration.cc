@@ -27,10 +27,10 @@
 #include <cstdio>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include "base/configuration.h"
-#include "base/configio.h"
-#include "base/base.h"
-#include "base/logging.h"
+#include "configuration.h"
+#include "configio.h"
+#include "base.h"
+#include "logging.h"
 
 using base::configuration;
 using base::cfg_choice;

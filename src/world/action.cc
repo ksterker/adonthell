@@ -25,10 +25,10 @@
  */
 
 
-#include "world/action.h"
-#include "python/pool.h"
-#include "world/character.h"
-#include "world/object.h"
+#include "action.h"
+#include <adonthell/python/pool.h>
+#include "character.h"
+#include "object.h"
 
 
 using world::action;

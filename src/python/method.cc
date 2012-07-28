@@ -27,8 +27,8 @@
  * @brief  Encapsulate Python method calls.
  */
 
-#include "python/method.h"
-#include "python/pool.h"
+#include "method.h"
+#include "pool.h"
 
 using python::method;
 

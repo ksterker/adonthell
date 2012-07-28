@@ -33,9 +33,9 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "gui/fontcache.h"
-#include "gfx/drawing_area.h"
-#include "gfx/surface_cacher.h"
+#include "fontcache.h"
+#include <adonthell/gfx/drawing_area.h>
+#include <adonthell/gfx/surface_cacher.h>
 
 #ifndef SWIG
 using std::vector;

@@ -31,7 +31,7 @@
 #ifndef WORLD_COORDINATES_H
 #define WORLD_COORDINATES_H
 
-#include "world/vector3.h"
+#include "vector3.h"
 
 namespace world
 {

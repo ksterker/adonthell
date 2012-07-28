@@ -30,9 +30,9 @@
 #ifndef WORLD_CHUNK_INFO_H
 #define WORLD_CHUNK_INFO_H
 
-#include "base/hash_map.h"
-#include "world/entity.h"
-#include "world/shadow_info.h"
+#include <adonthell/base/hash_map.h>
+#include "entity.h"
+#include "shadow_info.h"
 
 namespace world
 {

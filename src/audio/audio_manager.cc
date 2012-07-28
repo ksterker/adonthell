@@ -27,7 +27,7 @@
  */
 
 
-#include "audio/audio_manager.h"
+#include "audio_manager.h"
 
 namespace audio
 {

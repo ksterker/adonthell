@@ -29,8 +29,8 @@
 #ifndef RPG_DIALOG_H
 #define RPG_DIALOG_H
 
-#include "rpg/character.h"
-#include "rpg/dialog_line.h"
+#include "character.h"
+#include "dialog_line.h"
 
 namespace rpg
 {

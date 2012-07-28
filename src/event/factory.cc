@@ -26,11 +26,11 @@
  * 
  */
 
-#include "base/logging.h"
-#include "event/factory.h"
-#include "event/manager.h"
-#include "event/listener_cxx.h"
-#include "event/listener_python.h"
+#include <adonthell/base/logging.h>
+#include "factory.h"
+#include "manager.h"
+#include "listener_cxx.h"
+#include "listener_python.h"
 #include <algorithm>
 
 using std::vector;

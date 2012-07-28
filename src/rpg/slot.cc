@@ -27,8 +27,8 @@
  * @brief  One unit of the inventory.
  */
 
-#include "rpg/item_storage.h"
-#include "rpg/slot.h"
+#include "item_storage.h"
+#include "slot.h"
 
 using rpg::inventory;
 using rpg::item;

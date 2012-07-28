@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include "screen_sdl.h"
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 
 extern "C"
 {

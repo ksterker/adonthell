@@ -3,11 +3,11 @@
 
 %{
 #include <string>
-#include "event/date.h"
-#include "event/factory.h"
-#include "event/manager.h" 
-#include "event/time_event.h"
-#include "event/listener_python.h"
+#include <adonthell/event/date.h>
+#include <adonthell/event/factory.h>
+#include <adonthell/event/manager.h>
+#include <adonthell/event/time_event.h>
+#include <adonthell/event/listener_python.h>
 
 extern "C" {
     void check_module_version (const char *name, const unsigned int & module_ver);
@@ -32,10 +32,10 @@ namespace events {
 }
 
 %import "base/types.h"
-%include "event/date.h"
-%include "event/event.h"
-%include "event/time_event.h"
-%include "event/listener.h"
-%include "event/listener_python.h"
-%include "event/factory.h"
-%include "event/manager.h"
+%include <adonthell/event/date.h>
+%include <adonthell/event/event.h>
+%include <adonthell/event/time_event.h>
+%include <adonthell/event/listener.h>
+%include <adonthell/event/listener_python.h>
+%include <adonthell/event/factory.h>
+%include <adonthell/event/manager.h>

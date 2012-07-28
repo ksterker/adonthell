@@ -28,8 +28,8 @@
  */
 
 #include <cmath>
-#include "world/collision.h"
-#include "world/plane3.h"
+#include "collision.h"
+#include "plane3.h"
 
 using world::collision;
 using world::plane3;

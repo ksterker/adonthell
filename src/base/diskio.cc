@@ -29,11 +29,11 @@
 #include <cstdio>
 #include <fstream>
 
-#include "base/base.h"
-#include "base/diskio.h"
-#include "base/logging.h"
-#include "base/diskwriter_gz.h"
-#include "base/diskwriter_xml.h"
+#include "base.h"
+#include "diskio.h"
+#include "logging.h"
+#include "diskwriter_gz.h"
+#include "diskwriter_xml.h"
 
 using base::flat;
 using base::diskio;

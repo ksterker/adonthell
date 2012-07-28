@@ -26,8 +26,8 @@
  * @brief Module initialization.
  */
 
-#include "world/world.h"
-#include "world/area_manager.h"
+#include "world.h"
+#include "area_manager.h"
 
 // start world module
 void world::init (base::configuration & cfg)

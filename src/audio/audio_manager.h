@@ -31,9 +31,9 @@
 
 #include <string>
 
-#include "base/configuration.h"
-#include "base/logging.h"
-#include "base/types.h"
+#include <adonthell/base/configuration.h>
+#include <adonthell/base/logging.h>
+#include <adonthell/base/types.h>
 
 
 /**

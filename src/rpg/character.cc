@@ -27,8 +27,8 @@
 
 #include <algorithm>
 
-#include "base/base.h"
-#include "rpg/character.h"
+#include <adonthell/base/base.h>
+#include "character.h"
 
 using rpg::character;
 using rpg::faction;

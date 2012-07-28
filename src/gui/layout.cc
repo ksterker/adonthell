@@ -23,10 +23,10 @@
  * @brief  Implements the layout class.
  */
 
-#include "gui/layout.h"
-#include "event/manager.h"
-#include "gui/ui_event.h"
-#include "base/logging.h"
+#include "layout.h"
+#include "ui_event.h"
+#include <adonthell/event/manager.h>
+#include <adonthell/base/logging.h>
 
 using gui::layout;
 

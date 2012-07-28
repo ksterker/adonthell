@@ -27,8 +27,8 @@
  */
 
 
-#include "audio/sound.h"
-#include "audio/test_sound.h"
+#include "sound.h"
+#include "test_sound.h"
 
 #include <gtest/gtest.h>
 

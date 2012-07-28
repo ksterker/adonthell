@@ -24,7 +24,7 @@
  * @brief Handles window order and input.
  */
 
-#include "gui/window_manager.h"
+#include "window_manager.h"
 
 /// the rate of movement for disappearing layouts in pixels
 #define FADERATE 4

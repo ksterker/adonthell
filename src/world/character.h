@@ -31,9 +31,9 @@
 #ifndef WORLD_CHARACTER_H
 #define WORLD_CHARACTER_H
 
-#include "world/moving.h"
-#include "world/schedule.h"
-#include "rpg/character.h"
+#include "moving.h"
+#include "schedule.h"
+#include <adonthell/rpg/character.h>
 
 namespace world
 {

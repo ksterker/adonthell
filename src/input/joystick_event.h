@@ -31,7 +31,7 @@
  * 
  */
 
-#include "input/event.h"
+#include "event.h"
 
 namespace input
 {

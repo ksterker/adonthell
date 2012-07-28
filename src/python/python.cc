@@ -26,8 +26,8 @@
  * 
  */
 
-#include "python/python.h"
-#include "python/pool.h"
+#include "python.h"
+#include "pool.h"
 
 namespace python
 {

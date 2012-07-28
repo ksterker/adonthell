@@ -22,9 +22,9 @@
 #define GFX_SDL_SCREEN_H_
 
 #include "SDL.h"
-#include "base/logging.h"
-#include "gfx/screen.h"
-#include "gfx/sdlgl/surface_sdlgl.h"
+#include <adonthell/base/logging.h>
+#include "../screen.h"
+#include "surface_sdlgl.h"
 
 extern u_int32 trans_color;
 

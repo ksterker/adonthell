@@ -27,7 +27,7 @@
  */
 
 
-#include "base/logging.h"
+#include "logging.h"
 
 #include <gtest/gtest.h>
 

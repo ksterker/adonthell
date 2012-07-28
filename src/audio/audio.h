@@ -29,9 +29,9 @@
 #ifndef AUDIO_H_
 #define AUDIO_H_
 
-#include "audio/sound.h"
-#include "base/logging.h"
-#include "base/configuration.h"
+#include "sound.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/base/configuration.h>
 
 /**
  * This module gives an interface to handle sound output

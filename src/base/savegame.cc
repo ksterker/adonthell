@@ -31,10 +31,10 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-#include "base/savegame.h"
-#include "base/base.h"
-#include "base/diskio.h"
-#include "base/logging.h"
+#include "savegame.h"
+#include "base.h"
+#include "diskio.h"
+#include "logging.h"
 
 using base::savegame;
 using base::savegame_data;

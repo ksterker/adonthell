@@ -32,7 +32,7 @@
 #ifndef INPUT_MANAGER_SDL_H
 #define INPUT_MANAGER_SDL_H
 
-#include "input/input.h"
+#include "../input.h"
 #include "SDL.h"
 #include <vector>
 

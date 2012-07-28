@@ -27,7 +27,7 @@
 #ifndef WORLD_ACTION_H
 #define WORLD_ACTION_H
 
-#include "python/method.h"
+#include <adonthell/python/method.h>
 
 /**
  * Path to the object interaction scripts.

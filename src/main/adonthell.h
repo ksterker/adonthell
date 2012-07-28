@@ -31,8 +31,8 @@
 #define ADONTHELL_APP_H
 
 #include "ltdl.h"
-#include "base/configuration.h"
-#include "base/logging.h"
+#include <adonthell/base/configuration.h>
+#include <adonthell/base/logging.h>
 
 using std::string;
 

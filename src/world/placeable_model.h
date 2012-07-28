@@ -32,8 +32,8 @@
 #ifndef WORLD_PLACEABLE_MODEL_H
 #define WORLD_PLACEABLE_MODEL_H
 
-#include "gfx/sprite.h"
-#include "world/placeable_shape.h"
+#include <adonthell/gfx/sprite.h>
+#include "placeable_shape.h"
 
 namespace world
 {

@@ -30,8 +30,8 @@
 #ifndef RPG_ITEM_STORAGE_H
 #define RPG_ITEM_STORAGE_H
 
-#include "rpg/item.h"
-#include "base/hash_map.h"
+#include "item.h"
+#include <adonthell/base/hash_map.h>
 
 using std::string;
 

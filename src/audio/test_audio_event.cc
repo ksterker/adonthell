@@ -27,8 +27,8 @@
  */
 
 
-#include "audio/audio_event.h"
-#include "audio/test_sound.h"
+#include "audio_event.h"
+#include "test_sound.h"
 
 #include <gtest/gtest.h>
 

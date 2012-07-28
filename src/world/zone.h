@@ -28,7 +28,7 @@
 #ifndef ZONE_H
 #define ZONE_H
 
-#include "world/vector3.h"
+#include "vector3.h"
 
 namespace world
 {

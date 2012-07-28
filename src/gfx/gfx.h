@@ -31,7 +31,7 @@
 #ifndef GFX_H_
 #define GFX_H_
 
-#include "gfx/screen.h"
+#include "screen.h"
 
 /**
  * All the low-level graphical tasks are handled by this module.

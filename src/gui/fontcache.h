@@ -28,8 +28,8 @@
 #ifndef GUI_FONTCACHE_H
 #define GUI_FONTCACHE_H
 
-#include "base/hash_map.h"
-#include "gfx/surface.h"
+#include <adonthell/base/hash_map.h>
+#include <adonthell/gfx/surface.h>
 
 namespace gui
 {

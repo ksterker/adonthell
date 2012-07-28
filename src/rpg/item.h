@@ -31,9 +31,9 @@
 #ifndef RPG_ITEM_H
 #define RPG_ITEM_H
 
-#include "base/diskio.h"
-#include "python/script.h"
-#include "rpg/slot.h"
+#include <adonthell/base/diskio.h>
+#include <adonthell/python/script.h>
+#include "slot.h"
 #include <vector>
 
 using std::string;

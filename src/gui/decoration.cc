@@ -23,11 +23,11 @@
  * @brief  Defines the gui decoration class.
  */
 
-#include "gui/decoration.h"
-#include "base/logging.h"
-#include "base/diskio.h"
-#include "gfx/gfx.h"
-#include "gfx/surface_cacher.h"
+#include "decoration.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/base/diskio.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/gfx/surface_cacher.h>
 
 using gui::decoration;
 using gui::std_decoration;

@@ -27,7 +27,7 @@
 #ifndef GUI_CANVAS_H
 #define GUI_CANVAS_H
 
-#include "gui/widget.h"
+#include "widget.h"
 
 namespace gui
 {

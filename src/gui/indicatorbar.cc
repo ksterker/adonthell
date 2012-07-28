@@ -25,7 +25,7 @@
  */
 
 #include <algorithm>
-#include "gui/indicatorbar.h"
+#include "indicatorbar.h"
 
 using gui::indicator_bar;
 using gui::indicator_decoration;

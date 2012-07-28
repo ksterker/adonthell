@@ -29,8 +29,8 @@
  */
 
 
-#include "world/placeable.h"
-#include "world/area.h"
+#include "placeable.h"
+#include "area.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

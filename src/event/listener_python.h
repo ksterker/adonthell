@@ -28,8 +28,8 @@
 #ifndef EVENT_LISTENER_PYTHON_H
 #define EVENT_LISTENER_PYTHON_H
 
-#include "event/listener.h"
-#include "python/method.h"
+#include "listener.h"
+#include <adonthell/python/method.h>
 
 namespace events
 {

@@ -31,16 +31,16 @@
 #include <config.h>
 #endif
 
-#include "gfx/gfx.h"
-#include "base/nls.h"
-#include "base/base.h"
-#include "base/savegame.h"
-#include "input/input.h"
-#include "audio/audio.h"
-#include "audio/audio_manager.h"
-#include "python/python.h"
-#include "world/world.h"
-#include "main/adonthell.h"
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/base/nls.h>
+#include <adonthell/base/base.h>
+#include <adonthell/base/savegame.h>
+#include <adonthell/input/input.h>
+#include <adonthell/audio/audio.h>
+#include <adonthell/audio/audio_manager.h>
+#include <adonthell/python/python.h>
+#include <adonthell/world/world.h>
+#include "adonthell.h"
 
 using adonthell::app;
 

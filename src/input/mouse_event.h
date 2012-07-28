@@ -32,7 +32,7 @@
 #ifndef MOUSE_EVENT_H
 #define MOUSE_EVENT_H
 
-#include "input/event.h"
+#include "event.h"
 
 namespace input
 {

@@ -24,9 +24,9 @@
  * @brief 	Declares the move_event class.
  */
  
-#include "base/logging.h"
-#include "world/move_event.h"
-#include "world/area_manager.h"
+#include <adonthell/base/logging.h>
+#include "move_event.h"
+#include "area_manager.h"
 
 using world::move_event;
 

@@ -30,8 +30,8 @@
 
 
 #include <cmath>
-#include "base/base.h"
-#include "input/mouse_event.h"
+#include <adonthell/base/base.h>
+#include "mouse_event.h"
 
 namespace input
 {

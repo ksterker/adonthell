@@ -30,7 +30,7 @@
 #ifndef RPG_SLOT_H
 #define RPG_SLOT_H
 
-#include "base/flat.h"
+#include <adonthell/base/flat.h>
 
 namespace rpg
 {

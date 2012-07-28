@@ -32,7 +32,7 @@
 
 #include <map>
 #include <vector>
-#include "rpg/log_entry.h"
+#include "log_entry.h"
 
 /**
  * All the basic role playing functionality is defined here.

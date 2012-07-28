@@ -26,7 +26,7 @@
  * @brief 	Declares the quest_event class.
  */
  
-#include "rpg/quest_event.h"
+#include "quest_event.h"
 
 using rpg::quest_event;
 

@@ -27,8 +27,8 @@
  * @brief  Takes care of equipping/unequipping items.
  */
 
-#include "rpg/equipment.h"
-#include "rpg/inventory.h"
+#include "equipment.h"
+#include "inventory.h"
 #include <algorithm>
 
 using rpg::equipment;

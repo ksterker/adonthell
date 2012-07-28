@@ -27,7 +27,7 @@
  * @brief  Global storage for immutable items.
  */
 
-#include "rpg/item_storage.h"
+#include "item_storage.h"
 
 using rpg::item_storage;
 using rpg::item;

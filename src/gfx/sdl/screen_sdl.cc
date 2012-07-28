@@ -29,7 +29,7 @@
 #endif
 
 #include <sstream> 
-#include "gfx/sdl/screen_sdl.h"
+#include "screen_sdl.h"
 
 /// color mask for transparency
 u_int32 trans_color = 0;

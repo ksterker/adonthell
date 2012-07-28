@@ -27,9 +27,9 @@
  * 
  */
 
-#include "base/timer.h"
-#include "gfx/screen.h"
-#include "world/renderer.h"
+#include <adonthell/base/timer.h>
+#include <adonthell/gfx/screen.h>
+#include "renderer.h"
 
 namespace world
 {

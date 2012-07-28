@@ -28,7 +28,7 @@ macro(adonthell_install_lib libname)
 endmacro(adonthell_install_lib)
 
 macro(adonthell_install_include name headers)
-   install(FILES ${headers} DESTINATION "include/adonthell/${name}")
+   install(FILES ${headers} DESTINATION "include/adonthell-${VERSION}/adonthell/${name}")
 endmacro(adonthell_install_include)
 
 macro(adonthell_install_backend name lib)

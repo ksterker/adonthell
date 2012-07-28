@@ -24,9 +24,9 @@
  * @brief Implements the character schedule class.
  */
  
-#include "world/schedule.h"
-#include "event/date.h"
-#include "event/time_event.h"
+#include "schedule.h"
+#include <adonthell/event/date.h>
+#include <adonthell/event/time_event.h>
 
 using world::schedule;
 

@@ -23,7 +23,7 @@
 #define SURFACE_SDL_H_
 
 
-#include "gfx/surface_ext.h"
+#include "../surface_ext.h"
 #include "SDL.h"
 
 namespace gfx

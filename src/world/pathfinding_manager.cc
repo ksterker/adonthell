@@ -24,11 +24,11 @@
  * @brief  Implements the pathfinding_manager class
  */
 
-#include "base/diskio.h"
-#include "world/pathfinding_manager.h"
-#include "world/area_manager.h"
-#include "world/character.h"
-#include "world/zone.h"
+#include <adonthell/base/diskio.h>
+#include "pathfinding_manager.h"
+#include "area_manager.h"
+#include "character.h"
+#include "zone.h"
 
 using world::pathfinding_manager;
 using world::character;

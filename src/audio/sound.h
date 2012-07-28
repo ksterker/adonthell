@@ -32,8 +32,8 @@
 #include <string>
 #include <vector>
 
-#include "base/flat.h"
-#include "base/logging.h"
+#include <adonthell/base/flat.h>
+#include <adonthell/base/logging.h>
 
 namespace audio {
 

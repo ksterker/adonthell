@@ -23,10 +23,10 @@
  * @brief  Implements the button class.
  */
 
-#include "base/logging.h"
-#include "event/manager.h"
-#include "gui/button.h"
-#include "gui/ui_event.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/event/manager.h>
+#include "button.h"
+#include "ui_event.h"
 
 /// offset of text in Clicked button
 #define CLICK_OFFSET 4

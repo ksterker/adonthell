@@ -28,9 +28,9 @@
  */
 
 //#include <stdio.h>
-#include "rpg/item.h"
-#include "rpg/character.h"
-#include "base/diskio.h"
+#include "item.h"
+#include "character.h"
+#include <adonthell/base/diskio.h>
 #include <iostream>
 #include <algorithm>
 

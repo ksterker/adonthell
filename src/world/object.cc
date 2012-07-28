@@ -29,8 +29,8 @@
  * 
  */
 
-#include "base/diskio.h"
-#include "world/object.h"
+#include <adonthell/base/diskio.h>
+#include "object.h"
 
 using world::object;
 

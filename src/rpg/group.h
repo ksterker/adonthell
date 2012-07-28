@@ -27,8 +27,8 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-#include "python/script.h"
-#include "base/diskio.h"
+#include <adonthell/python/script.h>
+#include <adonthell/base/diskio.h>
 
 namespace rpg
 {

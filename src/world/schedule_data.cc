@@ -26,8 +26,8 @@
  * @brief Implements the %schedule data class.
  */
 
-#include "world/schedule.h"
-#include "world/schedule_data.h"
+#include "schedule.h"
+#include "schedule_data.h"
 
 using world::schedule;
 using world::schedule_data;

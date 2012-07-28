@@ -28,9 +28,9 @@
 
 #include <vector>
 
-#include "base/hash_map.h"
-#include "base/flat.h"
-#include "gfx/drawing_area.h"
+#include <adonthell/base/hash_map.h>
+#include <adonthell/base/flat.h>
+#include <adonthell/gfx/drawing_area.h>
 
 namespace gfx
 {

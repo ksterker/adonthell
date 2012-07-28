@@ -28,7 +28,7 @@
  * 
  */
 
-#include "world/placeable_shape.h"
+#include "placeable_shape.h"
 
 using world::placeable_shape;
 

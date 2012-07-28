@@ -31,16 +31,16 @@
 
 #include <functional>
 
-#include "world/moving.h"
-#include "world/area.h"
-#include "world/plane3.h"
-#include "world/shadow.h"
-#include "world/move_event.h"
-#include "event/manager.h"
-#include "base/logging.h"
+#include "moving.h"
+#include "area.h"
+#include "plane3.h"
+#include "shadow.h"
+#include "move_event.h"
+#include <adonthell/event/manager.h>
+#include <adonthell/base/logging.h>
 
 #if DEBUG_COLLISION
-#include "gfx/gfx.h"
+#include <adonthell/gfx/gfx.h>
 #endif
 
 using world::moving;

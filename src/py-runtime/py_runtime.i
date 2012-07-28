@@ -1,6 +1,6 @@
 %{
 
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 
 extern "C" {
 

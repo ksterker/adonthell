@@ -31,7 +31,7 @@
 
 #include <cstdio>
 #include <sstream>
-#include "gfx/gfx.h"
+#include "gfx.h"
 #include "surface_cacher.h"
 
 namespace gfx 

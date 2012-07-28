@@ -27,10 +27,10 @@
  */
 
 #include <cstdio>
-#include "base/base.h"
-#include "base/file.h"
-#include "base/diskwriter_gz.h"
-#include "base/logging.h"
+#include "base.h"
+#include "file.h"
+#include "diskwriter_gz.h"
+#include "logging.h"
 
 using base::disk_writer_gz;
 

@@ -27,7 +27,7 @@
 #ifndef MOVE_EVENT_MANAGER_H
 #define MOVE_EVENT_MANAGER_H
 
-#include "event/manager_base.h"
+#include <adonthell/event/manager_base.h>
 
 #include <list>
 

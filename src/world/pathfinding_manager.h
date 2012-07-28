@@ -34,10 +34,10 @@ using namespace __gnu_cxx;
 #include <slist>
 using namespace std;
 #endif
-#include "world/pathfinding.h"
-#include "world/pathfinding_task.h"
-#include "world/coordinates.h"
-#include "world/vector3.h"
+#include "pathfinding.h"
+#include "pathfinding_task.h"
+#include "coordinates.h"
+#include "vector3.h"
 
 namespace world
 {

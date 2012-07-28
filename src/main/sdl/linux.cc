@@ -29,7 +29,7 @@
  * 
  */
 
-#include "main/adonthell.h"
+#include "../adonthell.h"
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */

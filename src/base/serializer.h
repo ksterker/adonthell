@@ -29,8 +29,8 @@
 #ifndef BASE_SERIALIZER_H
 #define BASE_SERIALIZER_H
 
-#include "base/callback.h"
-#include "python/callback_support.h"
+#include "callback.h"
+#include <adonthell/python/callback_support.h>
 
 namespace base
 {

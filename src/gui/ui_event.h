@@ -27,8 +27,8 @@
 #ifndef GUI_UI_EVENT_H
 #define GUI_UI_EVENT_H
 
-#include "event/event.h"
-#include "gui/widget.h"
+#include <adonthell/event/event.h>
+#include "widget.h"
 
 namespace gui
 {

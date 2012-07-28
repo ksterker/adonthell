@@ -27,8 +27,8 @@
 #ifndef GUI_SCROLLVIEW_H
 #define GUI_SCROLLVIEW_H
 
-#include "gui/layout.h"
-#include "gui/indicatorbar.h"
+#include "layout.h"
+#include "indicatorbar.h"
 
 namespace gui
 {

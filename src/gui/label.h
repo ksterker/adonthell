@@ -26,8 +26,8 @@
 #ifndef GUI_LABEL_H
 #define GUI_LABEL_H
 
-#include "gui/widget.h"
-#include "gui/font.h"
+#include "widget.h"
+#include "font.h"
 
 namespace gui
 {

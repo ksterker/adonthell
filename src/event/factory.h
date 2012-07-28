@@ -30,7 +30,7 @@
 #ifndef EVENT_FACTORY_H
 #define EVENT_FACTORY_H
 
-#include "event/listener.h"
+#include "listener.h"
 #include <vector>
 
 using std::string;

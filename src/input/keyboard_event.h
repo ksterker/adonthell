@@ -32,7 +32,7 @@
 #ifndef KEYBOARD_EVENT_H
 #define KEYBOARD_EVENT_H
 
-#include "input/event.h"
+#include "event.h"
 
 namespace input
 {

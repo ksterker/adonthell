@@ -26,8 +26,8 @@
 
 #include <algorithm>
 
-#include "gui/ui_event_manager.h"
-#include "gui/ui_event.h"
+#include "ui_event_manager.h"
+#include "ui_event.h"
 
 using std::list;
 using gui::ui_event_manager;

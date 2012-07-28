@@ -32,7 +32,7 @@
 #ifndef DRAWABLE_H_
 #define DRAWABLE_H_
 
-#include "gfx/drawing_area.h"
+#include "drawing_area.h"
 
 namespace gfx
 {

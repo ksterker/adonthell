@@ -29,7 +29,7 @@
 #ifndef WORLD_OBJECT_H
 #define WORLD_OBJECT_H
 
-#include "world/placeable.h"
+#include "placeable.h"
 
 namespace world
 {

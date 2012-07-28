@@ -29,7 +29,7 @@
 #ifndef TIME_EVENT_H
 #define TIME_EVENT_H
 
-#include "event/event.h"
+#include "event.h"
 
 namespace events
 {

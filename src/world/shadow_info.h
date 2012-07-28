@@ -32,7 +32,7 @@
 #define WORLD_SHADOW_INFO_H
 
 #include <list>
-#include "gfx/surface.h"
+#include <adonthell/gfx/surface.h>
 
 namespace world
 {

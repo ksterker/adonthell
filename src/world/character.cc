@@ -28,11 +28,11 @@
 
 #include <cmath>
 
-#include "base/logging.h"
-#include "rpg/character.h"
-#include "world/area.h"
-#include "world/character.h"
-#include "world/shadow.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/rpg/character.h>
+#include "area.h"
+#include "character.h"
+#include "shadow.h"
 
 using world::character;
 using world::area;

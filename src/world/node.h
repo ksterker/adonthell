@@ -28,8 +28,8 @@
 #ifndef WORLD_NODE_H
 #define WORLD_NODE_H
 
-#include "world/chunk_info.h"
-#include "world/coordinates.h"
+#include "chunk_info.h"
+#include "coordinates.h"
 
 namespace world
 {

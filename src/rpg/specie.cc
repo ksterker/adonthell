@@ -17,7 +17,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "rpg/specie.h"
+#include "specie.h"
 
 /// filename of time data file
 #define SPECIE_DATA "specie.data"

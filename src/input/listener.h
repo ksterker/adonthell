@@ -32,8 +32,8 @@
 #ifndef INPUT_LISTENER_H
 #define INPUT_LISTENER_H
 
-#include "input/control_event.h"
-#include "base/callback.h"
+#include "control_event.h"
+#include <adonthell/base/callback.h>
 
 namespace input
 {

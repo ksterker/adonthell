@@ -25,8 +25,8 @@
  * 
  */
 
-#include "base/logging.h"
-#include "event/listener_cxx.h"
+#include <adonthell/base/logging.h>
+#include "listener_cxx.h"
 
 using events::listener;
 using events::listener_cxx;

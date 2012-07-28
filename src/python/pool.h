@@ -30,7 +30,7 @@
 #ifndef PYTHON_POOL_H
 #define PYTHON_POOL_H
 
-#include "python/method.h"
+#include "method.h"
 #include <map>
 
 namespace python

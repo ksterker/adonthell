@@ -26,8 +26,8 @@
 
 #include <fstream>
 
-#include "base/savegame.h"
-#include "world/area_manager.h"
+#include <adonthell/base/savegame.h>
+#include "area_manager.h"
 
 using world::area_manager;
 

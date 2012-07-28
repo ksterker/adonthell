@@ -1,5 +1,5 @@
-#include "rpg/pathfinding_costs.h"
-#include "base/flat.h"
+#include "pathfinding_costs.h"
+#include <adonthell/base/flat.h>
 
 using namespace rpg;
 

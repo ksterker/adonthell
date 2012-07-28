@@ -30,8 +30,8 @@
 #ifndef RPG_EQUIPMENT_H
 #define RPG_EQUIPMENT_H
 
-#include "rpg/item.h"
-#include "base/hash_map.h"
+#include "item.h"
+#include <adonthell/base/hash_map.h>
 #include <set>
 
 namespace rpg

@@ -35,7 +35,7 @@
 #include "SDL.h"
 #include "SDL_main.h"
 
-#include "main/adonthell.h"
+#include "../adonthell.h"
 
 #ifdef USE_LIBTOOL
 /* exported names for libltdl */

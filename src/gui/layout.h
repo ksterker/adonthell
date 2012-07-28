@@ -26,7 +26,7 @@
 #ifndef GUI_LAYOUT_H
 #define GUI_LAYOUT_H
 
-#include "gui/widget.h"
+#include "widget.h"
 
 namespace gui
 {

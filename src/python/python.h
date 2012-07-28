@@ -38,7 +38,7 @@
 #endif
 
 #include <Python.h>
-#include "base/flat.h"
+#include <adonthell/base/flat.h>
 
 extern "C" {
 	PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership);
@@ -355,6 +355,6 @@ namespace python
     //@}
 }
 
-#include "python/callback.h"
+#include "callback.h"
 
 #endif

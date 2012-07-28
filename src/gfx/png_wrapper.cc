@@ -28,7 +28,7 @@
  */
 
 #include "png_wrapper.h"
-#include "base/logging.h"
+#include <adonthell/base/logging.h>
 
 #include <cstdio>
 #include <cstdlib>

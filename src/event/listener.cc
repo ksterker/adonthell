@@ -25,9 +25,9 @@
  * 
  */
 
-#include "base/logging.h"
-#include "event/manager.h"
-#include "event/listener.h"
+#include <adonthell/base/logging.h>
+#include "manager.h"
+#include "listener.h"
 
 using events::factory;
 using events::listener;

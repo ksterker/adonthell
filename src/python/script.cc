@@ -31,7 +31,7 @@
  * 
  */
 
-#include "python/script.h"
+#include "script.h"
 
 using python::script;
 using std::string;

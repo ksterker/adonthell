@@ -28,8 +28,8 @@
 
 #include <algorithm>
 
-#include "rpg/dialog.h"
-#include "base/nls.h"
+#include "dialog.h"
+#include <adonthell/base/nls.h>
 
 using rpg::dialog_line;
 using rpg::dialog;

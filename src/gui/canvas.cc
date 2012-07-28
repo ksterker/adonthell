@@ -24,7 +24,7 @@
  * @brief Implements the canvas widget.
  */
 
-#include "gui/canvas.h"
+#include "canvas.h"
 
 using gui::canvas_decoration;
 

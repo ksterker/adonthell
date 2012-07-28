@@ -30,8 +30,8 @@
 #ifndef PY_ADONTHELL_MAIN_H
 #define PY_ADONTHELL_MAIN_H
 
-#include "main/adonthell.h"
-#include "python/callback.h"
+#include <adonthell/main/adonthell.h>
+#include <adonthell/python/callback.h>
 
 /**
  * To use parts of the Adonthell framework from python scripts, some initialization

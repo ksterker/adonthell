@@ -23,9 +23,9 @@
  * @brief  Implements the textbox class.
  */
 
-#include "base/logging.h"
-#include "base/utf8.h"
-#include "gui/textbox.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/base/utf8.h>
+#include "textbox.h"
 
 namespace gui
 {

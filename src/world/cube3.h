@@ -31,7 +31,7 @@
 #define WORLD_CUBE_3_H
 
 #include <vector>
-#include "world/collision.h"
+#include "collision.h"
 
 namespace world
 {

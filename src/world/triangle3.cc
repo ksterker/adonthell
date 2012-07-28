@@ -27,8 +27,8 @@
  * 
  */
 
-#include "world/triangle3.h"
-#include "gfx/screen.h"
+#include "triangle3.h"
+#include <adonthell/gfx/screen.h>
 
 namespace world
 {

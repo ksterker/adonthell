@@ -31,7 +31,7 @@
 #ifndef WORLD_PLACEABLE_H
 #define WORLD_PLACEABLE_H
 
-#include "world/placeable_model.h"
+#include "placeable_model.h"
 
 namespace world
 {

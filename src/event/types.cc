@@ -27,8 +27,8 @@
  * 
  */
 
-#include <event/manager_base.h>
-#include "event/types.h"
+#include "manager_base.h"
+#include "types.h"
 
 using events::event;
 using events::event_type;

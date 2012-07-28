@@ -31,8 +31,8 @@
 #ifndef SURFACE_H_
 #define SURFACE_H_
 
-#include "base/flat.h"
-#include "gfx/drawable.h"
+#include <adonthell/base/flat.h>
+#include "drawable.h"
 #include <fstream>
 
 #ifdef __BIG_ENDIAN__

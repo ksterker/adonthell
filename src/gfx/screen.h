@@ -31,9 +31,9 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "gfx/surface.h"
-#include "base/base.h"
-#include "base/configuration.h"
+#include "surface.h"
+#include <adonthell/base/base.h>
+#include <adonthell/base/configuration.h>
 
 namespace gfx
 {

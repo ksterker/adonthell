@@ -27,8 +27,8 @@
  * @brief  Container for items.
  */
 
-#include "rpg/item.h"
-#include "rpg/inventory.h"
+#include "item.h"
+#include "inventory.h"
 
 using rpg::inventory;
 using rpg::item;

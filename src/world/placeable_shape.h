@@ -30,7 +30,7 @@
 #ifndef WORLD_PLACEABLE_AREA_H_
 #define WORLD_PLACEABLE_AREA_H_
 
-#include "world/cube3.h"
+#include "cube3.h"
 
 namespace world
 {

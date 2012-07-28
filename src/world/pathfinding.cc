@@ -24,13 +24,13 @@
  * @brief  Implements the pathfinding class
  */
 
-#include "world/pathfinding.h"
-#include "world/character.h"
-#include "world/area.h"
-#include "world/vector3.h"
-#include "world/chunk_info.h"
-#include "world/coordinates.h"
-#include "rpg/character.h"
+#include "pathfinding.h"
+#include "character.h"
+#include "area.h"
+#include "vector3.h"
+#include "chunk_info.h"
+#include "coordinates.h"
+#include <adonthell/rpg/character.h>
 
 using world::character;
 using world::chunk_info;

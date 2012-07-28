@@ -36,8 +36,8 @@
 #endif
 
 #include <Python.h>
-#include "event/event.h"
-#include "base/callback.h"
+#include "event.h"
+#include <adonthell/base/callback.h>
 
 namespace events
 {

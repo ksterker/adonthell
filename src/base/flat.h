@@ -33,8 +33,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include "base/types.h"
-#include "python/callback_support.h"
+#include "types.h"
+#include <adonthell/python/callback_support.h>
 
 using std::string;
 

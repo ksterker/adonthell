@@ -26,13 +26,13 @@
  * 
  */
 
-#include "input/input.h"
+#include "input.h"
 
 #include "ltdl.h"
 #include <iostream>
 
-#include "base/logging.h"
-#include "base/paths.h"
+#include <adonthell/base/logging.h>
+#include <adonthell/base/paths.h>
 
 /**
  * The handler of our library file.

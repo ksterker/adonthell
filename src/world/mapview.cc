@@ -29,10 +29,10 @@
 
 #include <limits.h>
 
-#include "gfx/screen.h"
-#include "python/pool.h"
-#include "world/mapview.h"
-#include "world/area_manager.h"
+#include <adonthell/gfx/screen.h>
+#include <adonthell/python/pool.h>
+#include "mapview.h"
+#include "area_manager.h"
 
 using world::mapview;
 

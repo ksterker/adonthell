@@ -3,10 +3,10 @@
 
 %{
 #include <string>
-#include "base/types.h"
-#include "gfx/gfx.h"
-#include "gfx/drawable.h"
-#include "gfx/sprite.h"
+#include <adonthell/base/types.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/gfx/drawable.h>
+#include <adonthell/gfx/sprite.h>
 
 extern "C" {
     void check_module_version (const char *name, const unsigned int & module_ver);
@@ -21,10 +21,10 @@ extern "C" {
 %include "std_string.i"
 
 %import "base/types.h"
-%include "gfx/gfx.h"
-%include "gfx/drawing_area.h"
-%include "gfx/drawable.h"
-%include "gfx/surface.h"
-%include "gfx/screen.h"
-%include "gfx/sprite.h"
-%include "gfx/surface_cacher.h"
+%include <adonthell/gfx/gfx.h>
+%include <adonthell/gfx/drawing_area.h>
+%include <adonthell/gfx/drawable.h>
+%include <adonthell/gfx/surface.h>
+%include <adonthell/gfx/screen.h>
+%include <adonthell/gfx/sprite.h>
+%include <adonthell/gfx/surface_cacher.h>

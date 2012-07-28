@@ -26,8 +26,8 @@
  * 
  */
 
-#include "base/hash_map.h"
-#include "world/placeable_model.h"
+#include <adonthell/base/hash_map.h>
+#include "placeable_model.h"
 
 #if __GNUC__ < 4 || (__GNUG__ == 4 && __GNUC_MINOR__ < 4)
 
@@ -57,7 +57,7 @@ namespace __gnu_cxx
 
 #endif
 
-#include "world/chunk_info.h"
+#include "chunk_info.h"
 
 using world::chunk_info;
 

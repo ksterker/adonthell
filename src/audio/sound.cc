@@ -28,10 +28,10 @@
 
 #include <string>
 
-#include "base/base.h"
-#include "audio/audio.h"
-#include "audio/audio_manager.h"
-#include "audio/sound.h"
+#include <adonthell/base/base.h>
+#include "audio.h"
+#include "audio_manager.h"
+#include "sound.h"
 
 using namespace audio;
 

@@ -29,7 +29,7 @@
 #ifndef WORLD_WORLD_H
 #define WORLD_WORLD_H
 
-#include "base/configuration.h"
+#include <adonthell/base/configuration.h>
 
 namespace world
 {

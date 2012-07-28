@@ -28,7 +28,7 @@
 #ifndef BASE_NLS_H
 #define BASE_NLS_H
 
-#include "base/configuration.h"
+#include "configuration.h"
 
 namespace base
 {

@@ -114,7 +114,7 @@ namespace google
 
 #endif
 
-#include "base/types.h"
+#include "types.h"
 
 /**
  * This module defines basic logging functions

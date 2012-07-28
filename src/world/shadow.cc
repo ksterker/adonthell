@@ -25,10 +25,10 @@
  * 
  */
 
-#include "gfx/surface_cacher.h"
-#include "world/shadow.h"
-#include "world/chunk_info.h"
-#include "base/logging.h"
+#include <adonthell/gfx/surface_cacher.h>
+#include "shadow.h"
+#include "chunk_info.h"
+#include <adonthell/base/logging.h>
 
 using gfx::drawing_area;
 using world::shadow;

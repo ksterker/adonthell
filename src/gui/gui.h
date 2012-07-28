@@ -2,17 +2,17 @@
 #define GUI_H
 
 /* all of the gui based includes come here */
-#include "gui/button.h"
-#include "gui/canvas.h"
-#include "gui/font.h"
-#include "gui/indicatorbar.h"
-#include "gui/label.h"
-#include "gui/layout.h"
-#include "gui/listlayout.h"
-#include "gui/option.h"
-#include "gui/scrollview.h"
-#include "gui/textbox.h"
-#include "gui/ui_event.h"
-#include "gui/window_manager.h"
+#include "button.h"
+#include "canvas.h"
+#include "font.h"
+#include "indicatorbar.h"
+#include "label.h"
+#include "layout.h"
+#include "listlayout.h"
+#include "option.h"
+#include "scrollview.h"
+#include "textbox.h"
+#include "ui_event.h"
+#include "window_manager.h"
 
 #endif

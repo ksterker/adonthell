@@ -30,7 +30,7 @@
 #ifndef RPG_INVENTORY_H
 #define RPG_INVENTORY_H
 
-#include "rpg/slot.h"
+#include "slot.h"
 #include <vector>
 
 namespace rpg

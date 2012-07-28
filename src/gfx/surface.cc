@@ -30,9 +30,9 @@
 
 #include <cstdio>
 #include <stdlib.h>
-#include "base/base.h"
-#include "base/logging.h"
-#include "gfx/screen.h"
+#include <adonthell/base/base.h>
+#include <adonthell/base/logging.h>
+#include "screen.h"
 
 namespace gfx
 {

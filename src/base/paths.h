@@ -37,7 +37,7 @@
 
 #include "ltdl.h"
 
-#include "base/file.h"
+#include "file.h"
 
 namespace base
 {

@@ -30,7 +30,7 @@
  */
 
 #include <cstdio>
-#include "gfx/image.h"
+#include "image.h"
 
 using gfx::image;
 using gfx::surface;

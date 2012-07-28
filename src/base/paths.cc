@@ -36,8 +36,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 
-#include "base/logging.h"
-#include "base/paths.h"
+#include "logging.h"
+#include "paths.h"
 
 #define MODULES_ENV "ADONTHELL_MODULES_PATH"
 

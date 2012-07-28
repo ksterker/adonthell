@@ -24,8 +24,8 @@
  * @brief  Declares the entity class.
  */
 
-#include "world/placeable.h"
-#include "world/action.h"
+#include "placeable.h"
+#include "action.h"
 
 #ifndef WORLD_ENTITY_H
 #define WORLD_ENTITY_H

@@ -28,7 +28,7 @@
 #define gfx_screen_get_surface _sdlgl_LTX_gfx_screen_get_surface
 #endif
 
-#include "gfx/sdlgl/screen_sdlgl.h"
+#include "screen_sdlgl.h"
 
 u_int32 trans_color = 0;
 

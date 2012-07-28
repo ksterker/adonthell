@@ -23,7 +23,7 @@
  * @brief  Implements the scrollview class.
  */
 
-#include "gui/scrollview.h"
+#include "scrollview.h"
 
 using gui::scrollview;
 

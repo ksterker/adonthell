@@ -30,8 +30,8 @@
 
 #include <list>
 #include <vector>
-#include "gfx/surface.h"
-#include "world/coordinates.h"
+#include <adonthell/gfx/surface.h>
+#include "coordinates.h"
 
 namespace world
 {

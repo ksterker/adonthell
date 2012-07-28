@@ -26,12 +26,12 @@
 #ifndef GUI_WIDGET_H
 #define GUI_WIDGET_H
 
-#include "event/event.h"
-#include "gfx/gfx.h"
-#include "gfx/surface_cacher.h"
-#include "input/input.h"
+#include <adonthell/event/event.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/gfx/surface_cacher.h>
+#include <adonthell/input/input.h>
 
-#include "gui/decoration.h"
+#include "decoration.h"
 
 /**
  * Components for the graphical user interface.

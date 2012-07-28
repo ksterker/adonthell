@@ -35,7 +35,7 @@
 
 #include <list> 
 
-#include "input/listener.h"
+#include "listener.h"
 
 namespace input
 {

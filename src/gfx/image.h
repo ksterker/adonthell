@@ -33,7 +33,7 @@
 #ifndef GFX_IMAGE_H
 #define GFX_IMAGE_H
 
-#include "gfx/gfx.h"
+#include "gfx.h"
 
 namespace gfx
 {

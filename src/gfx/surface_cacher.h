@@ -32,7 +32,7 @@
 #ifndef SURFACECACHER_INCLUDED
 #define SURFACECACHER_INCLUDED
 
-#include "base/types.h"
+#include <adonthell/base/types.h>
 #include <ctime>
 #include <string>
 #include <map>

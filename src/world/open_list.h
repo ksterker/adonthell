@@ -28,7 +28,7 @@
 
 #ifndef WORLD_OPEN_LIST_H
 #define WORLD_OPEN_LIST_H
-#include "world/node.h"
+#include "node.h"
 
 using namespace std;
 

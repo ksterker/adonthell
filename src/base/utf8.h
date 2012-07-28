@@ -29,7 +29,7 @@
 #define BASE_UTF8_H
 
 #include <string>
-#include "base/types.h"
+#include "types.h"
 
 namespace base
 {

@@ -27,9 +27,9 @@
 #ifndef PATHFINDING_COSTS_H
 #define PATHFINDING_COSTS_H
 
-#include "base/hash_map.h"
-#include "rpg/specie.h"
-#include "rpg/faction.h"
+#include <adonthell/base/hash_map.h>
+#include "specie.h"
+#include "faction.h"
 
 namespace rpg
 {

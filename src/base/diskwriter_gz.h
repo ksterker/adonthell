@@ -29,7 +29,7 @@
 #ifndef BASE_DISKWRITER_GZ
 #define BASE_DISKWRITER_GZ
 
-#include "base/diskwriter_base.h"
+#include "diskwriter_base.h"
 
 namespace base {
     

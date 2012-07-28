@@ -32,8 +32,8 @@
 
 #include <vector>
 
-#include "event/event.h"	
-#include <base/hash_map.h>
+#include "event.h"	
+#include <adonthell/base/hash_map.h>
 
 namespace events {
 

@@ -29,7 +29,7 @@
 
 #ifndef WORLD_NODE_BANK_H
 #define WORLD_NODE_BANK_H
-#include "world/node.h"
+#include "node.h"
 
 using namespace std;
 

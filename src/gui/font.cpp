@@ -29,14 +29,14 @@
 #include <sstream>
 #include <ctype.h>
 
-#include "gui/font.h"
-#include "gui/fontcache.h"
+#include "font.h"
+#include "fontcache.h"
 
-#include "base/base.h"
-#include "base/endians.h"
-#include "base/logging.h"
-#include "base/utf8.h"
-#include "gfx/gfx.h"
+#include <adonthell/base/base.h>
+#include <adonthell/base/endians.h>
+#include <adonthell/base/logging.h>
+#include <adonthell/base/utf8.h>
+#include <adonthell/gfx/gfx.h>
 
 using std::string;
 

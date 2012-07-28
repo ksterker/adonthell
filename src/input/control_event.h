@@ -32,10 +32,10 @@
 #ifndef CONTROL_EVENT_H
 #define CONTROL_EVENT_H
 
-#include "base/configuration.h"
-#include "input/keyboard_event.h"
-#include "input/mouse_event.h"
-#include "input/joystick_event.h"
+#include <adonthell/base/configuration.h>
+#include "keyboard_event.h"
+#include "mouse_event.h"
+#include "joystick_event.h"
 
 namespace input
 {

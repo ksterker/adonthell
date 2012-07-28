@@ -35,9 +35,8 @@
 
 #include <string>
 
-#include "base/types.h"
-
-#include "python/callback_support.h"
+#include <adonthell/base/types.h>
+#include <adonthell/python/callback_support.h>
 
 namespace input
 {

@@ -30,9 +30,9 @@
 #include <vector>
 #include <libxml/parser.h>
 
-#include "base/base.h"
-#include "base/diskwriter_xml.h"
-#include "base/logging.h"
+#include "base.h"
+#include "diskwriter_xml.h"
+#include "logging.h"
 
 using base::disk_writer_xml;
 using base::flat;

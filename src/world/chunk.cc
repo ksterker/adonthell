@@ -27,7 +27,7 @@
  */
 
 #include <algorithm>
-#include "world/chunk.h"
+#include "chunk.h"
 
 using world::chunk;
 using world::chunk_info;

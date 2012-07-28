@@ -26,7 +26,7 @@
 #ifndef GUI_TEXTBOX_H
 #define GUI_TEXTBOX_H
 
-#include "gui/label.h"
+#include "label.h"
 
 namespace gui
 {

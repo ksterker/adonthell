@@ -31,8 +31,8 @@
 #ifndef WORLD_TRIANGLE3_H
 #define WORLD_TRIANGLE3_H
 
-#include "gfx/surface.h"
-#include "world/vector3.h"
+#include <adonthell/gfx/surface.h>
+#include "vector3.h"
 
 namespace world 
 {

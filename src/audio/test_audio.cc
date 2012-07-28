@@ -29,9 +29,9 @@
  */
 
 
-#include "audio/audio.h"
-#include "audio/audio_manager.h"
-#include "base/mock_configuration.h"
+#include "audio.h"
+#include "audio_manager.h"
+#include <adonthell/base/mock_configuration.h>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

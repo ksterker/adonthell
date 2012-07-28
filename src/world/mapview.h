@@ -33,9 +33,9 @@
 #include <cmath>
 #include <cstdlib>
 
-#include "python/method.h"
-#include "world/renderer.h"
-#include "world/zone.h"
+#include <adonthell/python/method.h>
+#include "renderer.h"
+#include "zone.h"
 
 namespace world
 {

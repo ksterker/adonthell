@@ -27,7 +27,7 @@
  */
 
 
-#include "audio/sound.h"
+#include "sound.h"
 
 // No-op to allow constructor to succeed
 void *audio_open(const char *filename) {

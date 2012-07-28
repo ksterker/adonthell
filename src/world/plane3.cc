@@ -27,7 +27,7 @@
  * 
  */
 
-#include "world/plane3.h"
+#include "plane3.h"
 
 using world::plane3;
 

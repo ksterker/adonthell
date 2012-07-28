@@ -29,7 +29,7 @@
  * 
  */
 
-#include "python/python.h"
+#include "python.h"
 
 namespace python
 {

@@ -29,7 +29,7 @@
 #define SPECIE_H
 
 #include <vector>
-#include "rpg/group.h"
+#include "group.h"
 
 namespace rpg
 {

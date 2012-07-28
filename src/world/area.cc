@@ -26,9 +26,9 @@
  *
  */
 
-#include "world/area.h"
-#include "world/character.h"
-#include "world/object.h"
+#include "area.h"
+#include "character.h"
+#include "object.h"
 
 using world::coordinates;
 using world::placeable;
