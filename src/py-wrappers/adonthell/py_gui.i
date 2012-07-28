@@ -94,9 +94,9 @@ namespace gui {
     }
 }
 
-%import "base/types.h"
-%import(module="gfx") "gfx/drawable.h"
-%import(module="event") "event/event.h"
+%import <adonthell/base/types.h>
+%import(module="gfx") <adonthell/gfx/drawable.h>
+%import(module="event") <adonthell/event/event.h>
 
 %include <adonthell/gui/widget.h>
 %include <adonthell/gui/font.h>

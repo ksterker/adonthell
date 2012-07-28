@@ -21,7 +21,7 @@ extern "C" {
 %include "stdint.i"
 %include "std_string.i"
 
-%import "base/types.h"
+%import <adonthell/base/types.h>
 %include <adonthell/input/input.h>
 %include <adonthell/input/event.h>
 %include <adonthell/input/keyboard_event.h>

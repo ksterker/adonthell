@@ -1,6 +1,6 @@
 #include <iostream>
-#include "gfx/gfx.h"
-#include "base/timer.h"
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/base/timer.h>
 
 //#include "main/adonthell.h"
 

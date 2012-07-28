@@ -4,12 +4,12 @@
 
 using std::string;
 
-#include "base/base.h"
-#include "event/factory.h"
-#include "gfx/gfx.h"
-#include "input/input.h"
-#include "gui/gui.h"
-#include "main/adonthell.h"
+#include <adonthell/base/base.h>
+#include <adonthell/event/factory.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/input/input.h>
+#include <adonthell/gui/gui.h>
+#include <adonthell/main/adonthell.h>
 
 class InputHandler {
 private:

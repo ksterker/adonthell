@@ -22,23 +22,23 @@
 
 #include <iomanip>
 
-#include "audio/sound.h"
-#include "base/base.h"
-#include "base/savegame.h"
-#include "event/date.h"
-#include "gfx/sprite.h"
-#include "gfx/screen.h"
-#include "input/manager.h"
-#include "main/adonthell.h"
-#include "rpg/character.h"
-#include "rpg/specie.h"
-#include "rpg/faction.h"
-#include "world/character.h"
-#include "world/object.h"
-#include "world/area_manager.h"
-#include "gui/ui_event.h"
-#include "gui/window_manager.h"
-#include "base/logging.h"
+#include <adonthell/audio/sound.h>
+#include <adonthell/base/base.h>
+#include <adonthell/base/savegame.h>
+#include <adonthell/event/date.h>
+#include <adonthell/gfx/sprite.h>
+#include <adonthell/gfx/screen.h>
+#include <adonthell/input/manager.h>
+#include <adonthell/main/adonthell.h>
+#include <adonthell/rpg/character.h>
+#include <adonthell/rpg/specie.h>
+#include <adonthell/rpg/faction.h>
+#include <adonthell/world/character.h>
+#include <adonthell/world/object.h>
+#include <adonthell/world/area_manager.h>
+#include <adonthell/gui/ui_event.h>
+#include <adonthell/gui/window_manager.h>
+#include <adonthell/base/logging.h>
 
 static world::debug_renderer DEBUG_RENDERER;
 

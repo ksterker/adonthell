@@ -1,9 +1,11 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir) $(FT2_CFLAGS)
+AM_CXXFLAGS = -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir) $(FT2_CFLAGS)
 EXTRA_DIST = CMakeLists.txt
 
-pkgincludeinputdir = $(pkgincludedir)/gui
-pkgincludeinput_HEADERS = \
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
+pkgincludeguidir = $(adonthellincludedir)/gui
+pkgincludegui_HEADERS = \
 	button.h \
 	canvas.h \
     conversation.h \

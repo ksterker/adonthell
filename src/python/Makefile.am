@@ -1,9 +1,11 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludepythondir = $(pkgincludedir)/python
+pkgincludepythondir = $(adonthellincludedir)/python
 pkgincludepython_HEADERS = \
 	callback_support.h \
 	callback.h \

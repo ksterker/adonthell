@@ -86,8 +86,8 @@ namespace rpg {
 
 %typemap(freearg) const std::vector<std::string> & "delete $1;"
 
-%import "base/types.h"
-%import(module="event") "event/event.h"
+%import <adonthell/base/types.h>
+%import(module="event") <adonthell/event/event.h>
 %include <adonthell/python/script.h>
 %include <adonthell/rpg/item.h>
 %include <adonthell/rpg/slot.h>

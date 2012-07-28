@@ -1,14 +1,14 @@
-#include "base/base.h"
-#include "event/date.h"
-#include "gfx/sprite.h"
-#include "gfx/screen.h"
-#include "input/manager.h"
-#include "main/adonthell.h"
-#include "python/python.h"
-#include "world/area.h"
-#include "world/character.h"
-#include "world/object.h"
-#include "world/mapview.h"
+#include <adonthell/base/base.h>
+#include <adonthell/event/date.h>
+#include <adonthell/gfx/sprite.h>
+#include <adonthell/gfx/screen.h>
+#include <adonthell/input/manager.h>
+#include <adonthell/main/adonthell.h>
+#include <adonthell/python/python.h>
+#include <adonthell/world/area.h>
+#include <adonthell/world/character.h>
+#include <adonthell/world/object.h>
+#include <adonthell/world/mapview.h>
 
 class world_test : public adonthell::app
 {

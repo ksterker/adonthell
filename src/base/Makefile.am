@@ -1,9 +1,11 @@
 backenddir = @backenddir@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludebasedir = $(pkgincludedir)/base
+pkgincludebasedir = $(adonthellincludedir)/base
 pkgincludebase_HEADERS = \
 	base.h \
 	callback.h \

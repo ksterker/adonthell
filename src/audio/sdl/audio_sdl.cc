@@ -34,9 +34,9 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 
-#include "audio/sound.h"
-#include "audio/audio.h"
-#include "base/logging.h"
+#include <adonthell/audio/sound.h>
+#include <adonthell/audio/audio.h>
+#include <adonthell/base/logging.h>
 
 //TODO These values should be gotten from a config file or something
 int audio_rate = 44100;

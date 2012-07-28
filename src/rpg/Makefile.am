@@ -1,8 +1,10 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincluderpgdir = $(pkgincludedir)/rpg
+pkgincluderpgdir = $(adonthellincludedir)/rpg
 pkgincluderpg_HEADERS = \
     character.h \
     dialog.h \

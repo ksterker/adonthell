@@ -1,8 +1,8 @@
 #include <iostream>
-#include "gfx/gfx.h"
-#include "base/base.h"
-#include "input/input.h"
-#include "main/adonthell.h"
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/base/base.h>
+#include <adonthell/input/input.h>
+#include <adonthell/main/adonthell.h>
 
 
 class myClass

@@ -1,7 +1,7 @@
-#include "audio/audio.h"
-#include "audio/audio_manager.h"
-#include "base/configuration.h"
-#include "base/logging.h"
+#include <adonthell/audio/audio.h>
+#include <adonthell/audio/audio_manager.h>
+#include <adonthell/base/configuration.h>
+#include <adonthell/base/logging.h>
 
 #include <iostream>
 

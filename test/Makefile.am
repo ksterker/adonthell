@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 
 SUBDIRS = data
 
@@ -22,7 +22,7 @@ callbacktest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
 diskiotest_SOURCES = diskiotest.cc
 diskiotest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base
 
-guitest_CXXFLAGS = $(FT2_CFLAGS) -I$(top_srcdir)/src $(PY_CFLAGS)
+guitest_CXXFLAGS = $(FT2_CFLAGS) -I$(top_builddir) $(PY_CFLAGS)
 guitest_SOURCES = guitest.cc
 guitest_LDADD = \
 	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS)\

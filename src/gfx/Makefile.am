@@ -1,13 +1,15 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+AM_CXXFLAGS = -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt sdlgl/screen_sdlgl.h sdlgl/surface_sdlgl.h sdlgl/gfx_sdlgl.cc \
 	sdlgl/screen_sdlgl.cc sdlgl/surface_sdlgl.cc sdl/screen_sdl.h sdl/surface_sdl.h \
 	sdl/gfx_sdl.cc sdl/screen_sdl.cc sdl/surface_sdl.cc sdl2/screen_sdl.h sdl2/surface_sdl.h \
 	sdl2/gfx_sdl.cc sdl2/screen_sdl.cc sdl2/surface_sdl.cc
 
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludegfxdir = $(pkgincludedir)/gfx
+pkgincludegfxdir = $(adonthellincludedir)/gfx
 pkgincludegfx_HEADERS = \
 	drawable.h \
 	drawing_area.h \

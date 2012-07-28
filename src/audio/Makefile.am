@@ -1,9 +1,11 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+AM_CXXFLAGS = -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludeaudiodir = $(pkgincludedir)/audio
+pkgincludeaudiodir = $(adonthellincludedir)/audio
 pkgincludeaudio_HEADERS = \
 	audio.h \
 	audio_event.h \
@@ -36,7 +38,7 @@ pkglibaudio_LTLIBRARIES = _sdl.la
 
 ### SDL backend
 ## Our header files
-pkgincludeaudiosdldir = $(pkgincludedir)/audio/sdl
+pkgincludeaudiosdldir = $(adonthellincludedir)/audio/sdl
 
 ## Rules to build libaudio_sdl
 _sdl_la_SOURCES = \

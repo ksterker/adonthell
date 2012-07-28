@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 EXTRA_DIST = py_runtime.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-runtime/py_runtime.cc
 

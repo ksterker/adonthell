@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
+AM_CXXFLAGS = -I$(top_builddir)
 EXTRA_DIST = py_debug.i py_base.i py_event.i py_gfx.i py_gui.i py_input.i py_audio.i py_main.i py_rpg.i py_world.i CMakeLists.txt
 CLEANFILES = $(top_srcdir)/src/py-wrappers/adonthell/py_debug_wrap.cc \
     $(top_srcdir)/src/py-wrappers/adonthell/py_base_wrap.cc \
@@ -123,7 +123,7 @@ _debug_la_LIBADD = $(PY_LIBADD) \
 	$(PY_RUNTIME)
 
 ## Swig arguments
-SWIG_ARGS = -python -modern -noexcept -I$(top_srcdir)/src
+SWIG_ARGS = -python -modern -noexcept -I$(top_builddir)
 
 ## Rules for Python wrappers generation
 base.py: py_base_wrap.cc

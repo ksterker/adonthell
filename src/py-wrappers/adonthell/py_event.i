@@ -31,7 +31,7 @@ namespace events {
     }
 }
 
-%import "base/types.h"
+%import <adonthell/base/types.h>
 %include <adonthell/event/date.h>
 %include <adonthell/event/event.h>
 %include <adonthell/event/time_event.h>

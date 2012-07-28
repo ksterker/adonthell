@@ -1,12 +1,14 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+AM_CXXFLAGS = -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt sdl/manager_sdl.h sdl/input_sdl.cc \
 	sdl/manager_sdl.cc sdl2/manager_sdl.h sdl2/input_sdl.cc \
 	sdl2/manager_sdl.cc
 
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludeinputdir = $(pkgincludedir)/input
+pkgincludeinputdir = $(adonthellincludedir)/input
 pkgincludeinput_HEADERS = \
 	input.h \
 	control_event.h \
@@ -41,7 +43,7 @@ pkglibinput_LTLIBRARIES = _sdl.la
 
 ### SDL backend
 ## Our header files
-pkgincludeinputsdldir = $(pkgincludedir)/input/sdl
+pkgincludeinputsdldir = $(adonthellincludedir)/input/sdl
 pkgincludeinputsdl_HEADERS = \
     $(sdlbackenddir)/manager_sdl.h
 

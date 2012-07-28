@@ -5,10 +5,16 @@ EXTRA_DIST = adonthell.pc.in adonthell.pc.cmake autogen.sh README.Win32 \
     config/UsePkgConfig.cmake config/PythonExtraLibs.cmake config.h.cmake \
     scripts/make-bundle.sh README.MacOSX 
 
-SUBDIRS = src doc test
+SUBDIRS = . src doc test
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = adonthell.pc
 
 $(pkgconfig_DATA): config.status
+
+all-local:
+	ln -fs $(top_srcdir)/src $(top_builddir)/adonthell
+
+clean-local:
+	rm -f $(top_builddir)/adonthell
 

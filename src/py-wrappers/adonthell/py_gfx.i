@@ -20,7 +20,7 @@ extern "C" {
 %include "stdint.i"
 %include "std_string.i"
 
-%import "base/types.h"
+%import <adonthell/base/types.h>
 %include <adonthell/gfx/gfx.h>
 %include <adonthell/gfx/drawing_area.h>
 %include <adonthell/gfx/drawable.h>

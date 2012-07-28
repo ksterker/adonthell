@@ -3,13 +3,13 @@ using std::cout;
 using std::endl;
 using std::cin;
 #include <sstream>
-#include "base/base.h"
-#include "gfx/gfx.h"
-#include "input/input.h"
-#include "gui/gui.h"
-#include "main/adonthell.h"
-#include "gui/draw.h"
-#include "rpg/dialog.h"
+#include <adonthell/base/base.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/input/input.h>
+#include <adonthell/gui/gui.h>
+#include <adonthell/main/adonthell.h>
+#include <adonthell/gui/draw.h>
+#include <adonthell/rpg/dialog.h>
 
 class InputHandler {
 private:

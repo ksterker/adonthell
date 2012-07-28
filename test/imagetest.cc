@@ -19,10 +19,10 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "base/base.h"
-#include "gfx/gfx.h"
-#include "gfx/screen.h"
-#include "main/adonthell.h"
+#include <adonthell/base/base.h>
+#include <adonthell/gfx/gfx.h>
+#include <adonthell/gfx/screen.h>
+#include <adonthell/main/adonthell.h>
 
 class image_test : public adonthell::app
 {

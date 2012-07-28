@@ -25,9 +25,9 @@ extern "C" {
 %include "stdint.i"
 %include "std_string.i"
 
-%import "base/types.h"
-%import(module="event") "event/event.h"
-%import(module="gfx") "gfx/drawable.h"
+%import <adonthell/base/types.h>
+%import(module="event") <adonthell/event/event.h>
+%import(module="gfx") <adonthell/gfx/drawable.h>
 
 // typemap for returning a string pointer as python string
 %typemap(out) std::string * {

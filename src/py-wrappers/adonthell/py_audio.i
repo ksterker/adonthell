@@ -27,7 +27,7 @@ extern "C" {
 %include "std_string.i"
 
 %import "py_event.i"    // since audio_event inherits from event
-%import "base/types.h"
+%import <adonthell/base/types.h>
 
 %include <adonthell/audio/audio.h>
 %include <adonthell/audio/sound.h>

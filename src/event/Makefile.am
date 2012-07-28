@@ -1,9 +1,11 @@
-AM_CXXFLAGS = -I$(top_srcdir)/src
-DEFAULT_INCLUDES = -I$(srcdir) -I$(top_builddir)
+AM_CXXFLAGS = -I$(top_builddir)
+DEFAULT_INCLUDES = -I$(top_builddir)
 EXTRA_DIST = CMakeLists.txt
 
+adonthellincludedir = $(pkgincludedir)-@VERSION@/adonthell
+
 ## Our header files
-pkgincludeeventdir = $(pkgincludedir)/event
+pkgincludeeventdir = $(adonthellincludedir)/event
 pkgincludeevent_HEADERS = \
 	date.h \
 	event.h \
