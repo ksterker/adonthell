@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Data cs="6d3262f">
+<Data cs="3ac34133">
   <list id="objects">
     <list id="22ad6182">
       <s_int8 id="type">1</s_int8>
@@ -1535,50 +1535,60 @@
     </list>
   </list>
   <list id="zones">
-    <list id="cellar-1">
+    <list id="stair-2">
       <u_int32 id="type">1</u_int32>
-      <string id="min">[128, 564, -72]</string>
-      <string id="max">[176, 600, -64]</string>
+      <string id="min">[189, 480, -72]</string>
+      <string id="max">[237, 516, -64]</string>
     </list>
-    <list id="cellar-2">
+    <list id="stair-1">
       <u_int32 id="type">1</u_int32>
-      <string id="min">[424, 316, -72]</string>
-      <string id="max">[472, 352, -64]</string>
+      <string id="min">[189, 392, 16]</string>
+      <string id="max">[237, 428, 24]</string>
     </list>
-    <list id="cellar-3">
+    <list id="air-3">
       <u_int32 id="type">1</u_int32>
-      <string id="min">[764, 112, -72]</string>
-      <string id="max">[812, 148, -64]</string>
-    </list>
-    <list id="ground-1">
-      <u_int32 id="type">1</u_int32>
-      <string id="min">[24, 536, 16]</string>
-      <string id="max">[72, 572, 24]</string>
-    </list>
-    <list id="ground-2">
-      <u_int32 id="type">1</u_int32>
-      <string id="min">[24, 172, 16]</string>
-      <string id="max">[72, 208, 24]</string>
-    </list>
-    <list id="ground-3">
-      <u_int32 id="type">1</u_int32>
-      <string id="min">[1078, 172, 16]</string>
-      <string id="max">[1126, 208, 24]</string>
-    </list>
-    <list id="air-1">
-      <u_int32 id="type">1</u_int32>
-      <string id="min">[8, 816, 104]</string>
-      <string id="max">[56, 852, 112]</string>
+      <string id="min">[877, 821, 104]</string>
+      <string id="max">[925, 852, 112]</string>
     </list>
     <list id="air-2">
       <u_int32 id="type">1</u_int32>
       <string id="min">[444, 386, 104]</string>
       <string id="max">[492, 422, 112]</string>
     </list>
-    <list id="air-3">
+    <list id="air-1">
       <u_int32 id="type">1</u_int32>
-      <string id="min">[877, 821, 104]</string>
-      <string id="max">[925, 852, 112]</string>
+      <string id="min">[8, 816, 104]</string>
+      <string id="max">[56, 852, 112]</string>
+    </list>
+    <list id="ground-3">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[1078, 172, 16]</string>
+      <string id="max">[1126, 208, 24]</string>
+    </list>
+    <list id="ground-2">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[24, 172, 16]</string>
+      <string id="max">[72, 208, 24]</string>
+    </list>
+    <list id="ground-1">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[24, 536, 16]</string>
+      <string id="max">[72, 572, 24]</string>
+    </list>
+    <list id="cellar-3">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[764, 112, -72]</string>
+      <string id="max">[812, 148, -64]</string>
+    </list>
+    <list id="cellar-2">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[424, 316, -72]</string>
+      <string id="max">[472, 352, -64]</string>
+    </list>
+    <list id="cellar-1">
+      <u_int32 id="type">1</u_int32>
+      <string id="min">[128, 564, -72]</string>
+      <string id="max">[176, 600, -64]</string>
     </list>
   </list>
 </Data>

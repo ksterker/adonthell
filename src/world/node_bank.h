@@ -1,6 +1,4 @@
 /*
-  $Id: node_bank.h,v 1.3 2009/04/12 09:10:37 ksterker Exp $
-
   Copyright (C) 2009   Frederico Cerveira
   Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -29,6 +27,7 @@
 
 #ifndef WORLD_NODE_BANK_H
 #define WORLD_NODE_BANK_H
+
 #include "node.h"
 
 using namespace std;
@@ -52,7 +51,8 @@ namespace world
             m_nodesTaken = 0;
             m_freeNodes.reserve(MAX_NODES);
 
-            for (u_int16 i = 0; i < MAX_NODES; i++)
+            u_int32 capacity = m_freeNodes.capacity();
+            for (u_int32 i = 0; i < capacity; i++)
             {
                 node * nd = new node;
                 m_freeNodes.push_back(nd);
@@ -93,10 +93,9 @@ namespace world
          }
 
     private:
-
         /**
-         * Verifies if the maximum capacity as been exceded and then resizes
-         * the vector to accomodate more nodes
+         * Verifies if the maximum capacity as been exceeded and then resizes
+         * the vector to accommodate more nodes
          */
          void verify_capacity()
          {
@@ -108,7 +107,7 @@ namespace world
          * Safely resizes the node vector
          * @param capacity after resize
          */
-        void safe_resize(u_int16 n)
+        void safe_resize(const u_int32 & n)
         {
             vector<node *> temp;
             vector<node *>::iterator i = m_freeNodes.begin();
@@ -123,7 +122,7 @@ namespace world
             // Do I need to clear
             m_freeNodes.clear();
 
-            for (u_int16 a = 0; a < n; a++)
+            for (u_int32 a = 0; a < n; a++)
             {
                 if (a < temp.size())
                     m_freeNodes.push_back(temp.at(a));
@@ -132,20 +131,17 @@ namespace world
                     m_freeNodes.push_back(nd);
                 }
             }
-
         }
 
-
-
         /// Constants regarding the allocation of new nodes
-        static const u_int16 REALLOC_NODES = 60;
-        static const u_int16 MAX_NODES = 20;
+        static const u_int32 REALLOC_NODES = 256;
+        static const u_int32 MAX_NODES = 512;
 
         /// A vector holding the nodes
         vector<node *> m_freeNodes;
 
         /// The last node in used
-        u_int16 m_nodesTaken;
+        u_int32 m_nodesTaken;
     };
 }
 

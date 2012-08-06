@@ -81,6 +81,8 @@ namespace world
         u_int32 total;
         /// The cost of moving from the start node to this one
         u_int32 moveCost;
+        /// The difference in height level between goal and this node
+        u_int32 levelDist;
         /// The list to which this node is assigned
         u_int8 listAssignedTo; // 0 - None, 1 - Open List, 2 - Closed List
 
@@ -88,6 +90,8 @@ namespace world
         node *parent;
         /// The position of this node in the grid
         coordinates pos;
+        /// The ground position at the center of this node
+        s_int32 groundPos;
     };
 }
 

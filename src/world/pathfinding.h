@@ -44,26 +44,37 @@ namespace world
     public:
 
         /**
-         * Finds the path, if possible, and adds it to the vector passed
+         * Inits path calculator.
          * @param chr character to move
-         * @param goal goal position
+         * @param goal1 lower position of goal area
+         * @param goal2 upper position of goal area
+         * @return number of game cycles to use for updating path
+         */
+        u_int16 init (character *chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2);
+
+        /**
+         * Calculates the path, if possible, and adds it to the vector passed
+         * @param chr character to move
+         * @param goal1 lower position of goal area
+         * @param goal2 upper position of goal area
          * @param path (empty) vector to be filled with the path
          * @return \b true on success, \b false on failure
          */
-        bool find_path(const character * chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2,
+        bool find_path(character *chr, const vector3<s_int32> & goal1, const vector3<s_int32> & goal2,
                        std::vector<coordinates> * path);
 
-    private:
-
         /**
-         * Resets the node bank, node cache and open list. So that it can be used again.
+         * Resets the node bank, node cache and open list, so that it can be used again
+         * for the next path calculation.
          */
         void reset()
         {
-            m_nodeBank.reset();
-            m_nodeCache.reset();
             m_openList.reset();
+            m_nodeCache.reset();
+            m_nodeBank.reset();
         }
+
+    private:
 
         /**
          * Verifies if the goal has been completed
@@ -109,6 +120,15 @@ namespace world
         bool discard_non_solid(std::list<chunk_info*> & objects);
 
         /**
+         * Check if the given ground tiles form a stair (or slope) in the
+         * direction the path takes.
+         * @param ground_tiles the list of ground tiles at path position
+         * @param current the node the path extends to.
+         * @return true if stairs are found, false otherwise.
+         */
+        bool check_stairs (std::list<chunk_info*> & ground_tiles, node *current);
+
+        /**
          * Get the ground position from the list of tiles below the current path
          * @param ground_tiles list of tiles at the current node of the path
          * @param x x coordinate of nodes center
@@ -124,8 +144,6 @@ namespace world
         /// The open list
         open_list m_openList;
     };
-
-
 };
 
 #endif // WORLD_PATHFINDING_H

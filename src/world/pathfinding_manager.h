@@ -202,12 +202,17 @@ namespace world
     private:
         /**
          * Handles the low-level stuff of adding tasks
-         * @param all the necessary stuff
+         * @param id the task number
+         * @param chr the character for which we find the task
+         * @param target the lower corner of the target area
+         * @param target2 the upper corner of the target area
+         * @param finalDir the direction the character should face when reaching the goal
          * @return \b false on error, \b true on success
          */
-        bool add_task_ll(const s_int16 id, character * chr, const world::vector3<s_int32> & target,
+        bool add_task_ll(const s_int16 id, character * chr,
+                         const world::vector3<s_int32> & target,
                          const world::vector3<s_int32> & target2,
-                         const u_int8 phase, const u_int8 actualNode, const u_int8 actualDir);
+                         const character::direction & finalDir);
 
         /**
          * Verify if we can add the task and in which slot
@@ -224,17 +229,10 @@ namespace world
          */
         bool move_chr(const s_int16 id);
 
-        /**
-         * Calcs the 2D euclidean distance from 2 points
-         * @param the coordinates of the a node, the character
-         * @return the distance
-         * @note the return value is of type u_int8 because the distance shouldn't
-         * exceed 29 (on a 20x20 grid)
-         */
-        u_int8 calc_distance(const world::coordinates & node, const world::character * chr);
+        bool is_blocked(const world::coordinates & pos, world::character * chr) const;
 
         /// A vector with the tasks
-        std::vector<world::pathfinding_task> m_task;
+        std::vector<world::pathfinding_task*> m_task;
 
         /// Highest slot in use
         s_int16 m_taskHighest;
@@ -244,9 +242,6 @@ namespace world
 
         /// A list containing all the characters in movement
         slist<world::character *> m_chars;
-
-        /// Executes the searchs
-        world::pathfinding m_pathfinding;
     };
 }
 

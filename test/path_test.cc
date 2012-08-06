@@ -109,11 +109,11 @@ public:
             // start simple pathfinding search
             if (kev->key() == input::keyboard_event::P_KEY)
             {
-                const char* zones[] = { "air-1", "air-2", "air-3",
+                const char* zones[] = { "stair-1", "stair-2", "air-1", "air-2", "air-3",
                         "ground-1", "ground-2", "ground-3",
                         "cellar-1", "cellar-3", "cellar-3" };
 
-                s_int32 idx = rand() % 9;
+                s_int32 idx = rand() % 11;
                 printf("Goal is %s\n", zones[idx]);
                 path_task = world::area_manager::get_pathfinder()->add_task(path_char, zones[idx]);
             }
@@ -246,12 +246,15 @@ public:
 			    const world::pathfinding_task *task = world::area_manager::get_pathfinder()->get_task(gc.path_task);
                 const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
                 gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
-                for (std::vector<world::coordinates>::const_iterator i = task->path->begin(); i != task->path->end(); i++)
+                for (std::vector<world::coordinates>::const_iterator i = task->path.begin(); i != task->path.end(); i++)
                 {
                     s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
                     s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
 
-                    gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0x88FF8888 /*, &da */);
+                    if (i == task->path.begin() + task->actualNode)
+                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0xFF880088 /*, &da */);
+                    else
+                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0x88FF8888 /*, &da */);
                 }
 			}
 

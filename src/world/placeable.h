@@ -266,6 +266,12 @@ namespace world
         bool is_solid() const { return Solid; }
         
         /**
+         * Change solid state of this object.
+         * @param solid the new solid state.
+         */
+        void set_solid (const bool & solid) { Solid = solid; }
+
+        /**
          * Return the surface of the object. Since it might be composed
          * of solid and non-solid components, this needs to be calculated
          * separately.

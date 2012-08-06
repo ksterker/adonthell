@@ -128,11 +128,11 @@ bool moving::collide_with_objects (collision *collisionData)
     const vector3<s_int32> min (
         x() + (Velocity.x() < 0 ? static_cast<s_int32>(floor (Velocity.x())) : 0), 
         y() + (Velocity.y() < 0 ? static_cast<s_int32>(floor (Velocity.y())) : 0), 
-        z() + (Velocity.z() < 0 ? static_cast<s_int32>(floor (Velocity.z())): 0));
+        z() + (Velocity.z() < 0 ? static_cast<s_int32>(floor (Velocity.z())) : 0));
                           
     const vector3<s_int32> max (
         min.x() + placeable::length() + (Velocity.x () > 0 ? static_cast<s_int32>(ceil (Velocity.x())) : 0),
-        min.y() + placeable::width() + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
+        min.y() + placeable::width()  + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
         min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0) - 1);
 
     VLOG(3) << "   area " << min << " - " << max;
@@ -319,7 +319,7 @@ void moving::update_position ()
     // update position on map, which must be in whole pixels     
     X = (s_int32) x;
     Y = (s_int32) y;
-    Z = (s_int32) floor(z);
+    Z = (s_int32) round(z);
 
     // calculate ground position and update shadow cast by ourself
     calculate_ground_pos ();

@@ -38,7 +38,10 @@ namespace world
     {
         bool operator()(node * s1, node * s2) const
         {
-            return (s1->total > s2->total);
+            if (s1->levelDist == s2->levelDist)
+                return (s1->total > s2->total);
+            else
+                return (s1->levelDist > s2->levelDist);
         }
     };
 
@@ -74,7 +77,6 @@ namespace world
          */
         node * get_top()
         {
-
             if (m_list.empty())
                 return NULL;
 
@@ -108,7 +110,6 @@ namespace world
 
                 ++i;
             }
-
         }
 
         /**
@@ -141,7 +142,6 @@ namespace world
             {
                 safe_resize(m_list.capacity() + REALLOC_SIZE);
             }
-
         }
 
         /**
