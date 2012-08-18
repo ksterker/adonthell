@@ -96,11 +96,11 @@ namespace world
 
         /**
          * Returns the 8 adjacent nodes to the one given
-         * @param goal the coordinates of the central node
+         * @param current the central node
          * @param chr the character used in the pathfinding search
          * @return a vector with the coordinates of the adjacent nodes
          */
-        std::vector<path_coordinate> calc_adjacent_nodes(const coordinates & goal, const character * chr) const;
+        std::vector<path_coordinate> calc_adjacent_nodes(const node & current, const character * chr) const;
 
         /**
          * Checks if the node is acceptable for use depending on the character's pathfinding_costs

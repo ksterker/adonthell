@@ -196,7 +196,6 @@ public:
 	        // {
             input::manager::update();
             events::date::update();
-            world::area_manager::update();
 	        //}
 
             // whether to draw bbox or not
@@ -218,6 +217,7 @@ public:
 
             // render mapview on screen
             mv->draw (0, 0);
+            world::area_manager::update();
 
             // stop printing queue contents
             rndr.print_queue (false);
@@ -245,24 +245,18 @@ public:
 			{
 			    const world::pathfinding_task *task = world::area_manager::get_pathfinder()->get_task(gc.path_task);
                 const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
-                gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
                 for (std::vector<world::coordinates>::const_iterator i = task->path.begin(); i != task->path.end(); i++)
                 {
                     s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
                     s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
 
                     if (i == task->path.begin() + task->actualNode)
-                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0xFF880088 /*, &da */);
+                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0xFF880088);
                     else
-                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0x88FF8888 /*, &da */);
+                        gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0x88FF8888);
                 }
 			}
 
-#if DEBUG_COLLISION
-            world::character *mchar = (world::character *) (gc.world.get_entity ("Player"));
-            mchar->debug_collision(160 + (320 - 160)/2, 120 + (240 - 240)/2);
-            // mchar->add_direction(gc.mchar->NORTH);
-#endif
 	        base::Timer.update ();
             gui::window_manager::update();
 	        gfx::screen::update ();

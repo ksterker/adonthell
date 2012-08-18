@@ -280,6 +280,8 @@ void pathfinding_manager::update()
                     bool pathFound = m_task[id]->m_pathfinding.find_path(m_task[id]->chr, m_task[id]->target, m_task[id]->target2, &m_task[id]->path);
                     if (pathFound)
                     {
+                        // used to check if we're stuck
+                        m_task[id]->iterations = 5;
                         // Done calculating the path
                         m_task[id]->phase = PHASE_MOVING;
                     }
@@ -414,6 +416,11 @@ bool pathfinding_manager::move_chr(const s_int16 id)
         // Verify if we are stuck
         if (m_task[id]->lastPos == *m_task[id]->chr)
         {
+            // need to be stuck for multiple frames before we take action.
+            // otherwise slow characters moving less than one pixel per frame
+            // might get in trouble
+            if (--m_task[id]->iterations > 0) return false;
+
             // We are stuck, let's find another path
             // Stop the character
             m_task[id]->chr->set_direction(character::NONE);
@@ -443,23 +450,22 @@ bool pathfinding_manager::move_chr(const s_int16 id)
                 m_task[id]->target2 = target;
                 m_task[id]->actualNode = 0;
                 m_task[id]->actualDir = character::NONE;
-                m_task[id]->lastPos.set_x(m_task[id]->lastPos.x()+1);
             }
         }
         else if (m_task[id]->path.at(m_task[id]->actualNode).z() - m_task[id]->chr->z() > 40)
         {
-            // search completely new path search towards the goal
+            // search completely new path towards the goal
             m_task[id]->path.clear();
             m_task[id]->iterations = m_task[id]->m_pathfinding.init(m_task[id]->chr, m_task[id]->target, m_task[id]->target2);
 
             m_task[id]->phase = PHASE_PATHFINDING;
             m_task[id]->actualNode = 0;
             m_task[id]->actualDir = character::NONE;
-            m_task[id]->lastPos.set_x(m_task[id]->lastPos.x()+1);
         }
         else
         {
             // Update lastPos with our actual position
+            m_task[id]->iterations = 5;
             m_task[id]->lastPos = *m_task[id]->chr;
         }
     }

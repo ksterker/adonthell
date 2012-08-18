@@ -90,8 +90,6 @@ namespace world
         node *parent;
         /// The position of this node in the grid
         coordinates pos;
-        /// The ground position at the center of this node
-        s_int32 groundPos;
     };
 }
 

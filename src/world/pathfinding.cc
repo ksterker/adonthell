@@ -32,6 +32,11 @@
 #include "coordinates.h"
 #include <adonthell/rpg/character.h>
 
+#if 0
+#include "area_manager.h"
+#include <adonthell/gfx/screen.h>
+#endif
+
 using world::character;
 using world::chunk_info;
 using world::pathfinding;
@@ -120,44 +125,90 @@ bool pathfinding::check_node(path_coordinate & temp, const character * chr) cons
     return true;
 }
 
-std::vector<path_coordinate> pathfinding::calc_adjacent_nodes(const coordinates & actual, const character * chr) const
+std::vector<path_coordinate> pathfinding::calc_adjacent_nodes(const node & actual, const character * chr) const
 {
+    const coordinates & pos = actual.pos;
     std::vector<path_coordinate> temp;
     path_coordinate temp_pos;
 
     temp.reserve(8);
 
-    // west
-    temp_pos.set(actual.x() - 1, actual.y(), actual.z(), 20);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    s_int32 dx = pos.x() - actual.parent->pos.x();
+    s_int32 dy = pos.y() - actual.parent->pos.y();
 
-    // north-west
-    temp_pos.set(actual.x() - 1, actual.y() - 1, actual.z(), 28);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    if (dx == 0 && dy == 0)
+    {
+        // north-east
+        temp_pos.set(pos.x() + 1, pos.y() + 1, pos.z(), 28);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // south-west
-    temp_pos.set(actual.x() - 1, actual.y() + 1, actual.z(), 28);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // east
+        temp_pos.set(pos.x() + 1, pos.y(), pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // south-east
-    temp_pos.set(actual.x() + 1, actual.y() - 1, actual.z(), 28);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // south-east
+        temp_pos.set(pos.x() + 1, pos.y() - 1, pos.z(), 28);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // south
-    temp_pos.set(actual.x(), actual.y() - 1, actual.z(), 20);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // south
+        temp_pos.set(pos.x(), pos.y() - 1, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // north
-    temp_pos.set(actual.x(), actual.y() + 1, actual.z(), 20);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // south-west
+        temp_pos.set(pos.x() - 1, pos.y() + 1, pos.z(), 28);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // east
-    temp_pos.set(actual.x() + 1, actual.y(), actual.z(), 20);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // west
+        temp_pos.set(pos.x() - 1, pos.y(), pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-    // north-east
-    temp_pos.set(actual.x() + 1, actual.y() + 1, actual.z(), 28);
-    if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+        // north-west
+        temp_pos.set(pos.x() - 1, pos.y() - 1, pos.z(), 28);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        // north
+        temp_pos.set(pos.x(), pos.y() + 1, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    }
+    else if (dx != 0 && dy != 0)
+    {
+        temp_pos.set(pos.x(), pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + dx, pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + dx, pos.y(), pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + dx, pos.y() - dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() - dx, pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    }
+    else if (dx != 0)
+    {
+        temp_pos.set(pos.x() + dx, pos.y() - 1, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + dx, pos.y(), pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + dx, pos.y() + 1, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    }
+    else
+    {
+        temp_pos.set(pos.x() - 1, pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x(), pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+
+        temp_pos.set(pos.x() + 1, pos.y() + dy, pos.z(), 20);
+        if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
+    }
 
     return temp;
 }
@@ -197,9 +248,8 @@ u_int16 pathfinding::init(character *chr, const vector3<s_int32> & goal1, const 
     temp_node->parent = temp_node; //Loops back to itself
     temp_node->total = 0;
     temp_node->moveCost = 0;
-    temp_node->pos.set(grid_x, grid_y, chr->z());
-    temp_node->groundPos = chr->ground_pos();
-    temp_node->levelDist = abs(goal.z() - temp_node->groundPos) / 40;
+    temp_node->pos.set(grid_x, grid_y, chr->ground_pos());
+    temp_node->levelDist = abs(goal.z() - temp_node->pos.z()) / 40;
 
     temp_node->listAssignedTo = OPEN_LIST;
     m_nodeCache.add_node(temp_node);
@@ -243,7 +293,7 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
         // Get the grid of the actual node
         grid_x = actual_node->pos.x();
         grid_y = actual_node->pos.y();
-        temp_pos.set(grid_x, grid_y, actual_node->groundPos, 0);
+        temp_pos.set(grid_x, grid_y, actual_node->pos.z(), 0);
 
         // Check if we've arrived at the target
         if (verify_goal(temp_pos, goal1, goal2) == true)
@@ -269,8 +319,21 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
         // Change it from the open list to the closed list
         actual_node->listAssignedTo = CLOSED_LIST;
 
+#if 0
+        const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
+        s_int16 x = grid_x*20 - pos.x() + gfx::screen::length ()/2;
+        s_int16 y = grid_y*20 - pos.y() + gfx::screen::height ()/2 - (actual_node->pos.z() - pos.z());
+        gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
+        gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFFFFFFFF,&da);
+        gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFFFFFFFF,&da);
+        gfx::screen::get_surface()->draw_line(x,y+20,x+20,y+20,0xFFFFFFFF,&da);
+        gfx::screen::get_surface()->draw_line(x+20,y,x+20,y+20,0xFFFFFFFF,&da);
+        base::timer::sleep (50);
+        gfx::screen::update ();
+#endif
+
         // Gets a list of positions to visit
-        std::vector<path_coordinate> pos_to_visit = calc_adjacent_nodes(temp_pos, chr);
+        std::vector<path_coordinate> pos_to_visit = calc_adjacent_nodes(*actual_node, chr);
 
         // Add them to the open list
         std::vector<path_coordinate>::iterator i = pos_to_visit.begin();
@@ -280,7 +343,6 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
             temp_node = m_nodeBank.get_node();
 
             temp_node->pos = *i;
-            temp_node->groundPos = temp_node->pos.z(); // often the same, but sometimes different
             temp_node->parent = actual_node;
             temp_node->moveCost = (*i).moveCost + temp_node->parent->moveCost;
             temp_node->total = calc_heuristics(temp_node->pos, goal) + temp_node->moveCost;
@@ -328,6 +390,19 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 {
                     if (!check_stairs (collisions, temp_node))
                     {
+#if 0
+        const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
+        s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
+        s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
+        gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
+        gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFF0000FF,&da);
+        gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFF0000FF,&da);
+        gfx::screen::get_surface()->draw_line(x,y+20,x+20,y+20,0xFF0000FF,&da);
+        gfx::screen::get_surface()->draw_line(x+20,y,x+20,y+20,0xFF0000FF,&da);
+        base::timer::sleep (50);
+        gfx::screen::update ();
+#endif
+
                         ++i;
                         continue;
                     }
@@ -335,12 +410,11 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 else
                 {
                     // update z-position of node
-                    temp_node->groundPos = get_ground_pos (check_hole, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10);
+                    temp_node->pos.set_z(get_ground_pos (check_hole, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10));
                 }
 
                 // calculate difference between node and goal level
-                temp_node->levelDist = abs(goal.z() - temp_node->groundPos) / 40;
-                temp_node->pos.set_z(temp_node->groundPos);
+                temp_node->levelDist = abs(goal.z() - temp_node->pos.z()) / 40;
 
                 // Add node to the open list
                 temp_node->listAssignedTo = OPEN_LIST;
@@ -381,7 +455,7 @@ bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *cur
 {
     ground_tiles.sort(z_order());
 
-    s_int32 level, prev_level = current->groundPos;
+    s_int32 level, prev_level = current->pos.z();
 
     // center of the tile where movement begins
     s_int32 start_x = current->parent->pos.x() * 20 + 10;
@@ -405,7 +479,7 @@ bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *cur
             s_int32 px = start_x - (*ci)->center_min().x();
             s_int32 py = start_y - (*ci)->center_min().y();
 
-            if (px >= 0 && py >= 0 && px <= (*ci)->Max.x() && py <= (*ci)->Max.y())
+            if (px >= 0 && py >= 0 && px <= (*ci)->get_object()->solid_max_length() && py <= (*ci)->get_object()->solid_max_width())
             {
                 level = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
                 break;
@@ -415,7 +489,7 @@ bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *cur
         }
         if (ci == ground_tiles.end())
         {
-            level = current->groundPos;
+            level = current->pos.z();
         }
 
         // level differences of 10 or more cannot be scaled by character
@@ -427,7 +501,7 @@ bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *cur
     }
 
     // update z-position of current node to actual ground position
-    current->groundPos = level;
+    current->pos.set_z(level);
     return true;
 }
 
