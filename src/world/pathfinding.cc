@@ -320,9 +320,8 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
         actual_node->listAssignedTo = CLOSED_LIST;
 
 #if 0
-        const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
-        s_int16 x = grid_x*20 - pos.x() + gfx::screen::length ()/2;
-        s_int16 y = grid_y*20 - pos.y() + gfx::screen::height ()/2 - (actual_node->pos.z() - pos.z());
+        s_int16 x = grid_x*20 - world::area_manager::get_mapview()->get_view_start_x();
+        s_int16 y = grid_y*20 - world::area_manager::get_mapview()->get_view_start_y() - actual_node->pos.z();
         gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
         gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFFFFFFFF,&da);
         gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFFFFFFFF,&da);
@@ -391,9 +390,8 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                     if (!check_stairs (collisions, temp_node))
                     {
 #if 0
-        const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
-        s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
-        s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
+        s_int16 x = i->x()*20 - world::area_manager::get_mapview()->get_view_start_x();
+        s_int16 y = i->y()*20 - world::area_manager::get_mapview()->get_view_start_y() - i->z();
         gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
         gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFF0000FF,&da);
         gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFF0000FF,&da);

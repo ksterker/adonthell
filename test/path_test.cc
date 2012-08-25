@@ -39,7 +39,6 @@ class game_client
 {
 public:
     world::character * path_char; // Character used for pathfinding
-    bool letsexit;
     bool draw_grid;
 	bool draw_bounding_box;
     bool draw_delay;
@@ -49,7 +48,6 @@ public:
 
     game_client()
     {
-        letsexit = false;
         draw_grid = false;
         draw_bounding_box = false;
         draw_delay = false;
@@ -79,7 +77,7 @@ public:
         	// quit
             if (kev->key() == input::keyboard_event::ESCAPE_KEY)
             {
-                letsexit = true;
+                adonthell::app::theApp->stop();
             }
             // toggle grid on|off
             if (kev->key() == input::keyboard_event::G_KEY)
@@ -187,7 +185,10 @@ public:
         world::mapview *mv = world::area_manager::get_mapview();
         mv->set_renderer (&rndr);
 
-	    while (!gc.letsexit)
+        // add mapview to window stack
+        gui::window_manager::add(0, 0, world::area_manager::get_mapview());
+
+	    while (IsRunning)
     	{
         	u_int16 i;
 
@@ -216,12 +217,14 @@ public:
             }
 
             // render mapview on screen
-            mv->draw (0, 0);
             world::area_manager::update();
 
             // stop printing queue contents
             rndr.print_queue (false);
             rndr.set_delay (0);
+
+            base::Timer.update ();
+            gui::window_manager::update();
 
             // whether to render grid
 	        if (gc.draw_grid)
@@ -244,11 +247,10 @@ public:
 			    world::area_manager::get_pathfinder()->return_state(gc.path_task) == world::pathfinding_manager::ACTIVE)
 			{
 			    const world::pathfinding_task *task = world::area_manager::get_pathfinder()->get_task(gc.path_task);
-                const world::vector3<s_int32> pos = world::area_manager::get_mapview()->get_position();
                 for (std::vector<world::coordinates>::const_iterator i = task->path.begin(); i != task->path.end(); i++)
                 {
-                    s_int16 x = i->x()*20 - pos.x() + gfx::screen::length ()/2;
-                    s_int16 y = i->y()*20 - pos.y() + gfx::screen::height ()/2 - (i->z() - pos.z());
+                    s_int16 x = i->x()*20 - mv->get_view_start_x();
+                    s_int16 y = i->y()*20 - mv->get_view_start_y() - i->z();
 
                     if (i == task->path.begin() + task->actualNode)
                         gfx::screen::get_surface()->fillrect (x, y, 20, 20, 0xFF880088);
@@ -257,8 +259,6 @@ public:
                 }
 			}
 
-	        base::Timer.update ();
-            gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear ();
 	    }

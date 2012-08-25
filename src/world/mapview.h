@@ -146,15 +146,6 @@ namespace world
         }
         
         /**
-         * Get current position of the mapview. This is the center of the view.
-         * @return the current position of the view.
-         */
-        const vector3<s_int32> get_position() const
-        {
-            return Pos;
-        }
-
-        /**
          * Resise the map view.
          * @param length the new length.
          * @param height the new height.

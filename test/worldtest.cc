@@ -230,8 +230,8 @@ public:
                 mv->set_renderer(NULL);
             }            
 
-            // render mapview on screen
-            //mv->draw (0, 0);
+            // render everything on screen
+            gui::window_manager::update();
 
             // stop printing queue contents
             DEBUG_RENDERER.print_queue (false);
@@ -259,7 +259,6 @@ public:
             // mchar->add_direction(gc.mchar->NORTH);
 #endif
 
-            gui::window_manager::update();
 	        gfx::screen::update ();
 	        gfx::screen::clear ();
 
