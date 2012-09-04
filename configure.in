@@ -86,6 +86,8 @@ AC_ARG_ENABLE(dev-build,
 [  --enable-dev-build  Enable developer build with unit tests and debug symbols (disabled by default)],
             devbuild=$enableval, devbuild=no)
 
+AC_ARG_VAR(GTEST_DIR, [path to Google Test sources (default /usr/src/gtest)])
+AC_ARG_VAR(GMOCK_DIR, [path to Google Mock sources (default /usr/src/gmock)])
 
 AC_CHECK_LIB(z, main,,echo "Adonthell requires Zlib. Exitting...";exit 1)
 
@@ -339,13 +341,32 @@ dnl ****************************************************************************
 if test x$devbuild = xyes; then
     CXXFLAGS="$CXXFLAGS -g"
 
-    PKG_CHECK_MODULES(libgtest, libgtest >= 0.4.0)
-    AC_SUBST(libgtest_LIBS)
-    AC_SUBST(libgtest_CFLAGS)
+    test "x$GTEST_DIR" = "x" && GTEST_DIR="/usr/src/gtest"
+    test "x$GMOCK_DIR" = "x" && GMOCK_DIR="/usr/src/gmock"
 
-    PKG_CHECK_MODULES(libgmock, libgmock >= 0.4.0)
-    AC_SUBST(libgmock_LIBS)
-    AC_SUBST(libgmock_CFLAGS)
+    AC_CHECK_LIB(gmock_test, main,
+        [AC_SUBST(libgtest_CFLAGS, "")
+         AC_SUBST(libgtest_LIBS, "-lgtest")
+         AM_CONDITIONAL(BUILD_GTEST, false)],
+        [AC_CHECK_FILE($GTEST_DIR/src/gtest-all.cc,
+            [AC_SUBST(GTEST_DIR)
+             AC_SUBST(libgtest_CFLAGS, "-I$GTEST_DIR/include")
+             AC_SUBST(libgtest_LIBS, '-L$(top_builddir)/src/ -lgtest')
+             AM_CONDITIONAL(BUILD_GTEST, true)],
+            [AC_MSG_FAILURE([Missing gtest library])])
+        ])  
+        
+    AC_CHECK_LIB(gmock_main, main,
+        [AC_SUBST(libgmock_CFLAGS, "")
+         AC_SUBST(libgmock_LIBS, "-lgmock")
+         AM_CONDITIONAL(BUILD_GMOCK, false)],
+        [AC_CHECK_FILE($GMOCK_DIR/src/gmock-all.cc,
+            [AC_SUBST(GMOCK_DIR)
+             AC_SUBST(libgmock_CFLAGS, "-I$GMOCK_DIR/include")
+             AC_SUBST(libgmock_LIBS, '-L$(top_builddir)/src/ -lgmock')
+             AM_CONDITIONAL(BUILD_GMOCK, true)],
+            [AC_MSG_FAILURE([Missing gmock library])])
+        ])  
 fi
 
 dnl *********************

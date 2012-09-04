@@ -55,11 +55,12 @@ libadonthell_gui_la_LIBADD = $(PY_LIBS) \
 	$(top_builddir)/src/gfx/libadonthell_gfx.la \
     $(top_builddir)/src/python/libadonthell_python.la \
     $(top_builddir)/src/rpg/libadonthell_rpg.la \
+    $(top_builddir)/src/world/libadonthell_world.la \
 	-lstdc++ $(FT2_LIBS)
 
 ## Unit tests
 test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
-test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS) $(top_builddir)/src/audio/libadonthell_gui.la
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS) $(top_builddir)/src/gui/libadonthell_gui.la
 
 test_ui_event_manager_SOURCES  = test_ui_event_manager.cc
 test_ui_event_manager_CXXFLAGS = $(libadonthell_gui_la_CXXFLAGS) $(test_CXXFLAGS)

@@ -217,11 +217,14 @@ protected:
 	/// the cube's corners
 	vector3<s_int16> Corners[8];	
 
+    /// the cube's surface
+    std::vector<triangle3<s_int16> *> Surface;
+
     /**
      * Cleanup.
      */
     void clear();
-        
+
 private:
 	/**
 	 * Split a face of the cube, specified by the indices of its four corner points,
@@ -233,9 +236,6 @@ private:
 	 */
 	void convert_face (const u_int16 & a, const u_int16 & b, const u_int16 & c, const u_int16 & d);
 
-	/// the cube's surface
-	std::vector<triangle3<s_int16> *> Surface;
-	
     /// bounding box minimum values
     vector3<s_int16> Min;
     /// bounding box maximum values
