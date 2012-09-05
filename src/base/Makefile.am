@@ -56,9 +56,9 @@ libadonthell_base_la_LIBADD = $(XML_LIBS) $(libglog_LIBS) $(LIBS)
 
 ## Unit tests
 test_CXXFLAGS = $(libgmock_CFLAGS) $(libgtest_CFLAGS)
-test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS)
+test_LDADD    = $(libgmock_LIBS)   $(libgtest_LIBS) $(top_builddir)/src/base/libadonthell_base.la
 
-test_logging_SOURCES  = $(libadonthell_base_la_SOURCES)  test_logging.cc
+test_logging_SOURCES  = test_logging.cc
 test_logging_CXXFLAGS = $(libadonthell_base_la_CXXFLAGS) $(test_CXXFLAGS)
 test_logging_LDADD    = $(libadonthell_base_la_LIBADD)   $(test_LDADD)
 
