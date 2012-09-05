@@ -344,7 +344,7 @@ if test x$devbuild = xyes; then
     test "x$GTEST_DIR" = "x" && GTEST_DIR="/usr/src/gtest"
     test "x$GMOCK_DIR" = "x" && GMOCK_DIR="/usr/src/gmock"
 
-    AC_CHECK_LIB(gmock_test, main,
+    AC_CHECK_LIB(gtest_main, main,
         [AC_SUBST(libgtest_CFLAGS, "")
          AC_SUBST(libgtest_LIBS, "-lgtest")
          AM_CONDITIONAL(BUILD_GTEST, false)],
