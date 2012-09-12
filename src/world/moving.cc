@@ -135,8 +135,6 @@ bool moving::collide_with_objects (collision *collisionData)
         min.y() + placeable::width()  + (Velocity.y () > 0 ? static_cast<s_int32>(ceil (Velocity.y())) : 0),
         min.z() + placeable::height() + (Velocity.z () > 0 ? static_cast<s_int32>(ceil (Velocity.z())) : 0) - 1);
 
-    VLOG(3) << "   area " << min << " - " << max;
-
     // get all objects in our path
     const std::list<chunk_info*> & objects = Mymap.objects_in_bbox (min, max);
     
@@ -144,14 +142,12 @@ bool moving::collide_with_objects (collision *collisionData)
     for (std::list<chunk_info*>::const_iterator i = objects.begin(); i != objects.end(); i++)
     {
         const placeable *object = (*i)->get_object();
-        
+
         // check all models the placeable consists of
         for (placeable::iterator model = object->begin(); model != object->end(); model++)
         {
             // get the model's current shape, ...
             const placeable_shape * shape = (*model)->current_shape ();
-
-            VLOG(3) << "  shape " << (*i)->center_min() + shape->get_min() << " - " << (*i)->center_min() + shape->get_max();
             
             // ... and check if collision occurs
             shape->collide (collisionData, (*i)->center_min());
@@ -178,7 +174,7 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
     // check for collision
     if (!collide_with_objects (collisionData))
     { 
-        // if no collision occured, we just move along the velocity
+        // if no collision occurred, we just move along the velocity
         return pos + vel;
     }
     
@@ -199,10 +195,10 @@ vector3<float> moving::execute_move (collision *collisionData, u_int16 depth)
         // move slightly less than collision tells us) 
         collisionData->update_intersection (v.normalize () * veryCloseDistance); 
     }
-    
+
     // determine the sliding plane 
     vector3<float> slidePlaneOrigin = collisionData->intersection (); 
-    vector3<float> slidePlaneNormal = (newBasePoint - slidePlaneOrigin).normalize (); 
+    vector3<float> slidePlaneNormal = (newBasePoint - slidePlaneOrigin).normalize ();
     plane3 slidingPlane (slidePlaneOrigin, slidePlaneNormal);
     
     vector3<float> newDestinationPoint = destinationPoint - slidePlaneNormal * 
@@ -317,8 +313,8 @@ void moving::update_position ()
 #endif
 
     // update position on map, which must be in whole pixels     
-    X = (s_int32) x;
-    Y = (s_int32) y;
+    X = (s_int32) round(x);
+    Y = (s_int32) round(y);
     Z = (s_int32) round(z);
 
     // calculate ground position and update shadow cast by ourself
@@ -367,9 +363,9 @@ void moving::calculate_ground_pos ()
 
         MyShadow->cast_on (*ci);
 
-        // position of character relative to tile
-        s_int32 px = x() - (*ci)->center_min().x();
-        s_int32 py = y() - (*ci)->center_min().y();
+        // position of character's center relative to tile
+        s_int32 px = x() + placeable::length()/2 - (*ci)->center_min().x();
+        s_int32 py = y() + placeable::width()/2 - (*ci)->center_min().y();
 
         // get ground pos
         GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
@@ -421,8 +417,6 @@ bool moving::update ()
             // notify interested parties about movement on the map
             events::manager::raise_event(&evt);
         }
-
-        VLOG(1) << "Moving to " << Position;
     }
     
     return true; 

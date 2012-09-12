@@ -96,7 +96,7 @@ void character::jump()
 bool character::update ()
 {
     // the lowest negative VSpeed that can be reached during extended falling
-    static float min_vspeed = -10;
+    static float min_vspeed = -9.6;
 
     // saving the vertical position before movement
     s_int32 prev_z = z ();
@@ -135,7 +135,7 @@ bool character::update ()
     {
         // if vertical velocity is non-zero and we're not moving, we may have hit something
         // but if we did eventually move, reset counter
-        frames_stuck = vz() != 0 && z () == prev_z ? frames_stuck + 1 : 0;
+        frames_stuck = vz() >= 0 && z () == prev_z ? frames_stuck + 1 : 0;
 
         // if we're stuck for more then X frames in a row, assume we've hit the ceiling
         if (frames_stuck > 2)

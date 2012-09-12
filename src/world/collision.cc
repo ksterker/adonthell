@@ -1,6 +1,4 @@
 /*
- $Id: collision.cc,v 1.12 2008/10/10 20:37:35 ksterker Exp $
- 
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -27,6 +25,7 @@
  * 
  */
 
+#include <adonthell/base/logging.h>
 #include <cmath>
 #include "collision.h"
 #include "plane3.h"
@@ -224,6 +223,9 @@ void collision::check_triangle (const triangle3<s_int16> & triangle, const vecto
             // It does if it's the first hit or the closest 
             if (CollisionFound == false || distToCollision < NearestDistance) 
             { 
+                VLOG(3) << "  Pos = " << BasePoint << ", Velocity = " << Velocity;
+                VLOG(3) << "  Collision @ " << collisionPoint << ", distance " << distToCollision;
+
                 // Collision information necessary for sliding
                 NearestDistance = distToCollision;
                 IntersectionPoint = collisionPoint;
