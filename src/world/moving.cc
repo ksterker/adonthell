@@ -358,25 +358,33 @@ void moving::calculate_ground_pos ()
         // sort according to their z-Order
         ground_tiles.sort (z_order());
 
-        // the highest object will be our ground pos
-        ci = ground_tiles.begin ();
-
-        MyShadow->cast_on (*ci);
-
-        // position of character's center relative to tile
-        s_int32 px = x() + placeable::length()/2 - (*ci)->center_min().x();
-        s_int32 py = y() + placeable::width()/2 - (*ci)->center_min().y();
-
-        // get ground pos
-        GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
-
-        // get the terrain, if any
-        Terrain = (*ci)->get_object()->get_terrain();
-
-        // apply remainder of shadow
-        for (ci++; ci != ground_tiles.end(); ci++)
+        // find tile beneath character
+        for (ci = ground_tiles.begin (); ci != ground_tiles.end(); ci++)
         {
             MyShadow->cast_on (*ci);
+
+            // position of character's center relative to tile
+            s_int32 px = x() + placeable::length()/2 - (*ci)->center_min().x();
+            s_int32 py = y() + placeable::width()/2 - (*ci)->center_min().y();
+
+            if (px >= 0 && py >= 0 && px <= (*ci)->get_object()->solid_max_length() && py <= (*ci)->get_object()->solid_max_width())
+            {
+                // the highest object will be our new ground pos
+                GroundPos = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+
+                // get the terrain, if any
+                Terrain = (*ci)->get_object()->get_terrain();
+
+                ci++;
+                break;
+            }
+        }
+
+        // apply remainder of shadow
+        while (ci != ground_tiles.end())
+        {
+            MyShadow->cast_on (*ci);
+            ci++;
         }
     }
     else
