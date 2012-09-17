@@ -32,7 +32,7 @@
 #include "coordinates.h"
 #include <adonthell/rpg/character.h>
 
-#if 0
+#if 1
 #include "area_manager.h"
 #include <adonthell/gfx/screen.h>
 #endif
@@ -175,38 +175,38 @@ std::vector<path_coordinate> pathfinding::calc_adjacent_nodes(const node & actua
         temp_pos.set(pos.x(), pos.y() + dy, pos.z(), 20);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-        temp_pos.set(pos.x() + dx, pos.y() + dy, pos.z(), 20);
+        temp_pos.set(pos.x() + dx, pos.y() + dy, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
         temp_pos.set(pos.x() + dx, pos.y(), pos.z(), 20);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-        temp_pos.set(pos.x() + dx, pos.y() - dy, pos.z(), 20);
+        temp_pos.set(pos.x() + dx, pos.y() - dy, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-        temp_pos.set(pos.x() - dx, pos.y() + dy, pos.z(), 20);
+        temp_pos.set(pos.x() - dx, pos.y() + dy, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
     }
     else if (dx != 0)
     {
-        temp_pos.set(pos.x() + dx, pos.y() - 1, pos.z(), 20);
+        temp_pos.set(pos.x() + dx, pos.y() - 1, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
         temp_pos.set(pos.x() + dx, pos.y(), pos.z(), 20);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-        temp_pos.set(pos.x() + dx, pos.y() + 1, pos.z(), 20);
+        temp_pos.set(pos.x() + dx, pos.y() + 1, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
     }
     else
     {
-        temp_pos.set(pos.x() - 1, pos.y() + dy, pos.z(), 20);
+        temp_pos.set(pos.x() - 1, pos.y() + dy, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
         temp_pos.set(pos.x(), pos.y() + dy, pos.z(), 20);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
 
-        temp_pos.set(pos.x() + 1, pos.y() + dy, pos.z(), 20);
+        temp_pos.set(pos.x() + 1, pos.y() + dy, pos.z(), 28);
         if (check_node(temp_pos, chr)) temp.push_back(temp_pos);
     }
 
@@ -237,8 +237,8 @@ u_int16 pathfinding::init(character *chr, const vector3<s_int32> & goal1, const 
     const u_int8 chr_width = chr->placeable::width() / 2;
 
     // Grid of the actual_node, centered on character
-    const s_int32 grid_x = trunc((chr->x() + chr_length) / 20);
-    const s_int32 grid_y = trunc((chr->y() + chr_width) / 20);
+    const s_int32 grid_x = round((chr->x() + chr_length - 10) / 20.0f);
+    const s_int32 grid_y = round((chr->y() + chr_width - 10) / 20.0f);
 
     /* -------------------------------------------------------- */
 
@@ -367,11 +367,11 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
             else
             {
                 // Check if the tile is a hole
-                vector3<s_int32> min(temp_node->pos.x() * 20 + 8, temp_node->pos.y() * 20 + 8, temp_node->pos.z() - 20);
-                vector3<s_int32> max(temp_node->pos.x() * 20 + 12, temp_node->pos.y() * 20 + 12, temp_node->pos.z());
+                vector3<s_int32> min(i->x() * 20 +  5, i->y() * 20 +  5, i->z() - 20);
+                vector3<s_int32> max(i->x() * 20 + 15, i->y() * 20 + 15, i->z() + 10);
 
-                std::list<chunk_info *> check_hole = chr->map().objects_in_bbox(min, max, world::OBJECT);
-                if (discard_non_solid (check_hole))
+                std::list<chunk_info *> ground_tiles = chr->map().objects_in_bbox(min, max, world::OBJECT);
+                if (discard_non_solid (ground_tiles) || is_hole(ground_tiles, min, max))
                 {
                     temp_node->listAssignedTo = CLOSED_LIST;
                     m_nodeCache.add_node(temp_node);
@@ -381,13 +381,13 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 }
 
                 // Check if there is an obstacle in this node
-                min = vector3<s_int32>(temp_node->pos.x() * 20 + 11 - chr_length, temp_node->pos.y() * 20 + 11 - chr_width, temp_node->pos.z() + 1);
-                max = vector3<s_int32>(temp_node->pos.x() * 20 + 9 + chr_length, temp_node->pos.y() * 20 + 9 + chr_width, temp_node->pos.z() + chr->height() - 1);
+                min = vector3<s_int32>(i->x() * 20 + 11 - chr_length, i->y() * 20 + 11 - chr_width, i->z() + 1);
+                max = vector3<s_int32>(i->x() * 20 + 9 + chr_length, i->y() * 20 + 9 + chr_width, i->z() + chr->height() - 1);
 
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(min, max, world::OBJECT | world::CHARACTER);
                 if (!discard_non_solid (collisions))
                 {
-                    if (!check_stairs (collisions, temp_node))
+                    if (!is_stairs (collisions, temp_node))
                     {
 #if 0
         s_int16 x = i->x()*20 - world::area_manager::get_mapview()->get_view_start_x();
@@ -408,7 +408,7 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 else
                 {
                     // update z-position of node
-                    temp_node->pos.set_z(get_ground_pos (check_hole, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10));
+                    temp_node->pos.set_z(get_ground_pos (ground_tiles, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10));
                 }
 
                 // calculate difference between node and goal level
@@ -449,7 +449,7 @@ bool pathfinding::discard_non_solid(std::list<chunk_info*> & objects)
     return objects.empty();
 }
 
-bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *current)
+bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, node *current) const
 {
     ground_tiles.sort(z_order());
 
@@ -501,6 +501,40 @@ bool pathfinding::check_stairs (std::list<chunk_info*> & ground_tiles, node *cur
     // update z-position of current node to actual ground position
     current->pos.set_z(level);
     return true;
+}
+
+bool pathfinding::is_hole (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & min, const vector3<s_int32> & max) const
+{
+    // probe 4 corners and center and if there's no ground under one of them, assume a hole
+    std::list< vector3<s_int32> > probes;
+
+    probes.push_back (min);
+    probes.push_back (vector3<s_int32>(min.x(), max.y(), 0));
+    probes.push_back (vector3<s_int32>((min.x() + max.x()) / 2, (min.y() + max.y()) / 2, 0));
+    probes.push_back (vector3<s_int32>(max.x(), min.y(), 0));
+    probes.push_back (max);
+
+    std::list<chunk_info*>::const_iterator ci;
+    std::list< vector3<s_int32> >::const_iterator pi;
+
+    for (pi = probes.begin (); pi != probes.end(); pi++)
+    {
+        bool solid = false;
+        for (ci = ground_tiles.begin (); ci != ground_tiles.end(); ci++)
+        {
+            if (pi->x() >= (*ci)->solid_min().x() && pi->x() <= (*ci)->solid_max().x() &&
+                pi->y() >= (*ci)->solid_min().y() && pi->y() <= (*ci)->solid_max().y())
+            {
+                // hit ground --> no hole at this probe
+                solid = true;
+                break;
+            }
+        }
+
+        if (!solid) return true;
+    }
+
+    return false;
 }
 
 s_int32 pathfinding::get_ground_pos (std::list<chunk_info*> & ground_tiles, const s_int32 & x, const s_int32 & y)

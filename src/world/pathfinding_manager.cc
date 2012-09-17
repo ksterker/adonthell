@@ -337,9 +337,6 @@ bool pathfinding_manager::move_chr(const s_int16 id)
     s_int32 center_x = m_task[id]->chr->x() + m_task[id]->chr->placeable::length() / 2;
     s_int32 center_y = m_task[id]->chr->y() + m_task[id]->chr->placeable::width() / 2;
 
-    s_int32 grid_x = center_x / 20;
-    s_int32 grid_y = center_y / 20;
-
     s_int32 target_grid_x = m_task[id]->path.at(m_task[id]->actualNode).x();
     s_int32 target_grid_y = m_task[id]->path.at(m_task[id]->actualNode).y();
     
@@ -442,6 +439,7 @@ bool pathfinding_manager::move_chr(const s_int16 id)
             else
             {
                 world::coordinates target(pos.x() * 20 + 10, pos.y() * 20 + 10, pos.z());
+                LOG(INFO) << "Path blocked need to find new path from " << *(world::coordinates*) m_task[id]->chr << " to " << target;
 
                 // add new path search with first unblocked node as the goal
                 m_task[id]->iterations = m_task[id]->m_pathfinding.init(m_task[id]->chr, target, target);
@@ -454,6 +452,8 @@ bool pathfinding_manager::move_chr(const s_int16 id)
         }
         else if (m_task[id]->path.at(m_task[id]->actualNode).z() - m_task[id]->chr->z() > 40)
         {
+            LOG(INFO) << "Fallen down, need to find new path from " << *(world::coordinates*) m_task[id]->chr;
+
             // search completely new path towards the goal
             m_task[id]->path.clear();
             m_task[id]->iterations = m_task[id]->m_pathfinding.init(m_task[id]->chr, m_task[id]->target, m_task[id]->target2);

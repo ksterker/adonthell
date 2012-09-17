@@ -126,7 +126,9 @@ namespace world
          * @param current the node the path extends to.
          * @return true if stairs are found, false otherwise.
          */
-        bool check_stairs (std::list<chunk_info*> & ground_tiles, node *current);
+        bool is_stairs (std::list<chunk_info*> & ground_tiles, node *current) const;
+
+        bool is_hole (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & pos, const vector3<s_int32> & max) const;
 
         /**
          * Get the ground position from the list of tiles below the current path

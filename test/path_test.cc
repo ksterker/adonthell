@@ -112,8 +112,11 @@ public:
                         "cellar-1", "cellar-3", "cellar-3" };
 
                 s_int32 idx = rand() % 11;
-                printf("Goal is %s\n", zones[idx]);
                 path_task = world::area_manager::get_pathfinder()->add_task(path_char, zones[idx]);
+                if (path_task >= 0)
+                {
+                    printf("Goal is %s\n", zones[idx]);
+                }
             }
         }
 
