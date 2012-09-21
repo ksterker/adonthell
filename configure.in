@@ -367,6 +367,9 @@ if test x$devbuild = xyes; then
              AM_CONDITIONAL(BUILD_GMOCK, true)],
             [AC_MSG_FAILURE([Missing gmock library])])
         ])  
+else
+    AM_CONDITIONAL(BUILD_GTEST, false)
+    AM_CONDITIONAL(BUILD_GMOCK, false)
 fi
 
 dnl *********************
