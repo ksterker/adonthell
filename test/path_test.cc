@@ -220,14 +220,13 @@ public:
             }
 
             // render mapview on screen
+            base::Timer.update ();
+            gui::window_manager::update();
             world::area_manager::update();
 
             // stop printing queue contents
             rndr.print_queue (false);
             rndr.set_delay (0);
-
-            base::Timer.update ();
-            gui::window_manager::update();
 
             // whether to render grid
 	        if (gc.draw_grid)

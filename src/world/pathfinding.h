@@ -78,13 +78,14 @@ namespace world
 
         /**
          * Verifies if the goal has been completed
+         * @param chr the character for which the path search is executed
          * @param actual coordinate with the actual position
          * @param p1 vector3 representing the left-top-most point of the goal area
          * @param p2 vector3 representing the right-bottom-most point of the goal area
          * @return \b true if the goals has been completed, \b false otherwise
          */
-         bool verify_goal(const coordinates & actual, const vector3<s_int32> & p1,
-                          const vector3<s_int32> & p2);
+         bool verify_goal(const character *chr, const coordinates & actual,
+                          const vector3<s_int32> & p1, const vector3<s_int32> & p2);
 
         /**
          * Calculates the heuristics of two points
@@ -123,21 +124,32 @@ namespace world
          * Check if the given ground tiles form a stair (or slope) in the
          * direction the path takes.
          * @param ground_tiles the list of ground tiles at path position
+         * @param min the lower left corner of the position
+         * @param max the upper right corner of the position
          * @param current the node the path extends to.
+         * @param height height of the character doing the pathfinding
          * @return true if stairs are found, false otherwise.
          */
-        bool is_stairs (std::list<chunk_info*> & ground_tiles, node *current) const;
+        bool is_stairs (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & min, const vector3<s_int32> & max, node *current, const s_int32 & height) const;
 
-        bool is_hole (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & pos, const vector3<s_int32> & max) const;
+        /**
+         * Check if there is a hole in the ground at the given position
+         * @param ground_tiles the list of ground tiles at path position
+         * @param min the lower left corner of the position
+         * @param max the upper right corner of the position
+         * @return true part of the ground is not covered
+         */
+        bool is_hole (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & min, const vector3<s_int32> & max) const;
 
         /**
          * Get the ground position from the list of tiles below the current path
          * @param ground_tiles list of tiles at the current node of the path
-         * @param x x coordinate of nodes center
-         * @param y y coordinate of nodes center
+         * @param pos coordinate of node
          * @return the ground level
          */
-        s_int32 get_ground_pos (std::list<chunk_info*> & ground_tiles, const s_int32 & x, const s_int32 & y);
+        s_int32 get_ground_pos (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & pos) const;
+
+        void paint_node(node *actual_node, const u_int32 & color) const;
 
         /// The node bank
         node_bank m_nodeBank;

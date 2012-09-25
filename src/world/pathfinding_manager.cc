@@ -119,6 +119,7 @@ bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
         m_task[id]->lastPos.set_y(m_task[id]->chr->y());
         m_task[id]->lastPos.set_z(m_task[id]->chr->z());
         m_task[id]->iterations = m_task[id]->m_pathfinding.init (chr, target, target2);
+        m_task[id]->numBlocked = 0;
 
         m_locked[id] = true;
         m_chars.push_front(chr);
@@ -329,7 +330,7 @@ void pathfinding_manager::update()
 bool pathfinding_manager::move_chr(const s_int16 id)
 {
     // Check if we've finished the path
-    if (m_task[id]->path.size() -1 <= m_task[id]->actualNode)
+    if (m_task[id]->actualNode == m_task[id]->path.size() - 1)
     {
         return true;
     }
@@ -424,16 +425,16 @@ bool pathfinding_manager::move_chr(const s_int16 id)
 
             // find first element of the path that is not blocked
             world::coordinates pos = m_task[id]->path[m_task[id]->actualNode];
-            while(!is_blocked(pos, m_task[id]->chr) && m_task[id]->actualNode < m_task[id]->path.size() - 1)
+            while(is_blocked(pos, m_task[id]->chr) && m_task[id]->actualNode < m_task[id]->path.size() - 1)
             {
                 pos = m_task[id]->path[++m_task[id]->actualNode];
             }
 
             // remove path up to and including first unblocked node
             m_task[id]->path.erase(m_task[id]->path.begin(), m_task[id]->path.begin()+m_task[id]->actualNode + 1);
-            if (m_task[id]->path.empty())
+            if (m_task[id]->path.empty() || m_task[id]->numBlocked == 10)
             {
-                // blocked all the way to the goal
+                // blocked all the way to the goal or blocked too often
                 m_task[id]->phase = PHASE_FAILED;
             }
             else
@@ -448,6 +449,7 @@ bool pathfinding_manager::move_chr(const s_int16 id)
                 m_task[id]->target2 = target;
                 m_task[id]->actualNode = 0;
                 m_task[id]->actualDir = character::NONE;
+                m_task[id]->numBlocked++;
             }
         }
         else if (m_task[id]->path.at(m_task[id]->actualNode).z() - m_task[id]->chr->z() > 40)
@@ -486,7 +488,7 @@ bool pathfinding_manager::is_blocked(const world::coordinates & pos, world::char
     std::list<chunk_info *> collisions = chr->map().objects_in_bbox(min, max, world::OBJECT | world::CHARACTER);
 
     chr->set_solid(is_solid);
-    return collisions.empty();
+    return !collisions.empty();
 }
 
 void pathfinding_manager::put_state(base::flat & file)

@@ -59,16 +59,18 @@ namespace world
         std::vector<coordinates> path;
         /// The character's position in the last frame
         world::coordinates lastPos;
-        /// The phase where this task is
-        u_int8 phase;
         /// Number of iterations left to calculate the path
         u_int16 iterations;
         /// The actual node being moved to
         u_int16 actualNode;
+        /// The phase where this task is
+        u_int8 phase;
         /// Actual Direction
         u_int8 actualDir;
         /// Final Direction to where a character points after finishing moving
         u_int8 finalDir;
+        /// Number of recalculations
+        u_int8 numBlocked;
         /// Executes the search
         world::pathfinding m_pathfinding;
     private:

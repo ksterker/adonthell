@@ -32,7 +32,8 @@
 #include "coordinates.h"
 #include <adonthell/rpg/character.h>
 
-#if 1
+#define DEBUG 0
+#if DEBUG
 #include "area_manager.h"
 #include <adonthell/gfx/screen.h>
 #endif
@@ -65,14 +66,14 @@ struct z_order : public std::binary_function<const chunk_info *, const chunk_inf
     }
 };
 
-bool pathfinding::verify_goal(const coordinates & actual, const vector3<s_int32> & p1, const vector3<s_int32> & p2)
+bool pathfinding::verify_goal(const character *chr, const coordinates & actual, const vector3<s_int32> & p1, const vector3<s_int32> & p2)
 {
     vector3<s_int32> tP1(p1.x() / 20, p1.y() / 20, p1.z());
     vector3<s_int32> tP2(p2.x() / 20, p2.y() / 20, p2.z());
 
     if (((actual.x() >= tP1.x()) && (actual.x() <= tP2.x())) &&
         ((actual.y() >= tP1.y()) && (actual.y() <= tP2.y())) &&
-        ((actual.z() >= tP1.z()) && (actual.z() <= tP2.z())))
+        ((actual.z() + chr->height() >= tP1.z()) && (actual.z() <= tP2.z())))
         return true;
 
     return false;
@@ -296,7 +297,7 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
         temp_pos.set(grid_x, grid_y, actual_node->pos.z(), 0);
 
         // Check if we've arrived at the target
-        if (verify_goal(temp_pos, goal1, goal2) == true)
+        if (verify_goal(chr, temp_pos, goal1, goal2) == true)
         {
             // Recurse through the nodes and find the path
             path->insert(path->begin(), actual_node->pos);
@@ -318,18 +319,6 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
 
         // Change it from the open list to the closed list
         actual_node->listAssignedTo = CLOSED_LIST;
-
-#if 0
-        s_int16 x = grid_x*20 - world::area_manager::get_mapview()->get_view_start_x();
-        s_int16 y = grid_y*20 - world::area_manager::get_mapview()->get_view_start_y() - actual_node->pos.z();
-        gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
-        gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFFFFFFFF,&da);
-        gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFFFFFFFF,&da);
-        gfx::screen::get_surface()->draw_line(x,y+20,x+20,y+20,0xFFFFFFFF,&da);
-        gfx::screen::get_surface()->draw_line(x+20,y,x+20,y+20,0xFFFFFFFF,&da);
-        base::timer::sleep (50);
-        gfx::screen::update ();
-#endif
 
         // Gets a list of positions to visit
         std::vector<path_coordinate> pos_to_visit = calc_adjacent_nodes(*actual_node, chr);
@@ -367,7 +356,7 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
             else
             {
                 // Check if the tile is a hole
-                vector3<s_int32> min(i->x() * 20 +  5, i->y() * 20 +  5, i->z() - 20);
+                vector3<s_int32> min(i->x() * 20 +  5, i->y() * 20 +  5, i->z() - 25);
                 vector3<s_int32> max(i->x() * 20 + 15, i->y() * 20 + 15, i->z() + 10);
 
                 std::list<chunk_info *> ground_tiles = chr->map().objects_in_bbox(min, max, world::OBJECT);
@@ -375,7 +364,9 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 {
                     temp_node->listAssignedTo = CLOSED_LIST;
                     m_nodeCache.add_node(temp_node);
-
+#if DEBUG
+                    paint_node(temp_node, 0x00000000);
+#endif
                     ++i;
                     continue;
                 }
@@ -387,28 +378,25 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                 std::list<chunk_info *> collisions = chr->map().objects_in_bbox(min, max, world::OBJECT | world::CHARACTER);
                 if (!discard_non_solid (collisions))
                 {
-                    if (!is_stairs (collisions, temp_node))
+                    if (!is_stairs (collisions, min, max, temp_node, chr->height()))
                     {
-#if 0
-        s_int16 x = i->x()*20 - world::area_manager::get_mapview()->get_view_start_x();
-        s_int16 y = i->y()*20 - world::area_manager::get_mapview()->get_view_start_y() - i->z();
-        gfx::drawing_area da(0, 0, gfx::screen::length (), gfx::screen::height ());
-        gfx::screen::get_surface()->draw_line(x,y,x+20,y,0xFF0000FF,&da);
-        gfx::screen::get_surface()->draw_line(x,y,x,y+20,0xFF0000FF,&da);
-        gfx::screen::get_surface()->draw_line(x,y+20,x+20,y+20,0xFF0000FF,&da);
-        gfx::screen::get_surface()->draw_line(x+20,y,x+20,y+20,0xFF0000FF,&da);
-        base::timer::sleep (50);
-        gfx::screen::update ();
+#if DEBUG
+                        paint_node(temp_node, 0xff000000);
 #endif
-
                         ++i;
                         continue;
                     }
+#if DEBUG
+                    paint_node(temp_node, 0x0049ff00);
+#endif
                 }
                 else
                 {
                     // update z-position of node
-                    temp_node->pos.set_z(get_ground_pos (ground_tiles, temp_node->pos.x() * 20 + 10, temp_node->pos.y() * 20 + 10));
+                    temp_node->pos.set_z(get_ground_pos (ground_tiles, temp_node->pos));
+#if DEBUG
+                    paint_node(temp_node, 0x00FFFFFF);
+#endif
                 }
 
                 // calculate difference between node and goal level
@@ -449,30 +437,73 @@ bool pathfinding::discard_non_solid(std::list<chunk_info*> & objects)
     return objects.empty();
 }
 
-bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, node *current) const
+bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & min, const vector3<s_int32> & max, node *current, const s_int32 & height) const
 {
     ground_tiles.sort(z_order());
 
     s_int32 level, prev_level = current->pos.z();
+    s_int32 start_x;
+    s_int32 start_y;
 
-    // center of the tile where movement begins
-    s_int32 start_x = current->parent->pos.x() * 20 + 10;
-    s_int32 start_y = current->parent->pos.y() * 20 + 10;
+    s_int32 ox;
+    s_int32 oy;
 
-    // center of the tile where movement ends
-    s_int32 end_x = current->pos.x() * 20 + 10;
-    s_int32 end_y = current->pos.y() * 20 + 10;
-
-    // number of probes
-    s_int8 ox = (end_x - start_x) / 5;
-    s_int8 oy = (end_y - start_y) / 5;
-
-    // we skip the start point, because we're already there
-    for (int i = 1; i < 10; i++)
+    switch (current->pos.x() - current->parent->pos.x())
     {
-        std::list<chunk_info*>::iterator ci = ground_tiles.begin ();
-        while (ci != ground_tiles.end())
+        case -1:
         {
+            start_x = max.x();
+            ox = (min.x() - start_x) / 5;
+            break;
+        }
+        case 1:
+        {
+            start_x = min.x();
+            ox = (max.x() - start_x) / 5;
+            break;
+        }
+        default:
+        {
+            start_x = (max.x() + min.x()) / 2;
+            ox = 0;
+            break;
+        }
+    }
+
+    switch (current->pos.y() - current->parent->pos.y())
+    {
+        case -1:
+        {
+            start_y = max.y();
+            oy = (min.y() - start_y) / 5;
+            break;
+        }
+        case 1:
+        {
+            start_y = min.y();
+            oy = (max.y() - start_y) / 5;
+            break;
+        }
+        default:
+        {
+            start_y = (max.y() + min.y()) / 2;
+            oy = 0;
+            break;
+        }
+    }
+
+    // make 5 probes along the extend of the collision area
+    for (int i = 0; i < 5; i++)
+    {
+        std::list<chunk_info*>::iterator ci;
+        for (ci = ground_tiles.begin (); ci != ground_tiles.end(); ci++)
+        {
+            // at the current level, character can walk under this tile
+            if ((*ci)->Min.z() - prev_level > height)
+            {
+                continue;
+            }
+
             // find the tile at given position and get its level
             s_int32 px = start_x - (*ci)->center_min().x();
             s_int32 py = start_y - (*ci)->center_min().y();
@@ -482,9 +513,8 @@ bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, node *curren
                 level = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
                 break;
             }
-
-            ci++;
         }
+
         if (ci == ground_tiles.end())
         {
             level = current->pos.z();
@@ -537,18 +567,39 @@ bool pathfinding::is_hole (std::list<chunk_info*> & ground_tiles, const vector3<
     return false;
 }
 
-s_int32 pathfinding::get_ground_pos (std::list<chunk_info*> & ground_tiles, const s_int32 & x, const s_int32 & y)
+s_int32 pathfinding::get_ground_pos (std::list<chunk_info*> & ground_tiles, const vector3<s_int32> & pos) const
 {
     // sort according to their z-Order
     ground_tiles.sort (z_order());
 
-    // the highest object will be our ground pos
-    std::list<chunk_info*>::iterator ci = ground_tiles.begin ();
-
-    // position of character relative to tile
-    s_int32 px = x - (*ci)->center_min().x();
-    s_int32 py = y - (*ci)->center_min().y();
-
     // calculate ground position
-    return (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+    std::list<chunk_info*>::iterator ci;
+    for (ci = ground_tiles.begin (); ci != ground_tiles.end(); ci++)
+    {
+        // position of character relative to tile
+        s_int32 px = pos.x() * 20 + 10 - (*ci)->center_min().x();
+        s_int32 py = pos.y() * 20 + 10 - (*ci)->center_min().y();
+
+        if (px >= 0 && py >= 0 && px <= (*ci)->get_object()->solid_max_length() && py <= (*ci)->get_object()->solid_max_width())
+        {
+            return (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+        }
+    }
+
+    return pos.z();
+}
+
+void pathfinding::paint_node(node *node, const u_int32 & color) const
+{
+#if DEBUG
+    s_int16 x = node->pos.x() * 20 - world::area_manager::get_mapview()->get_view_start_x();
+    s_int16 y = node->pos.y() * 20 - world::area_manager::get_mapview()->get_view_start_y() - node->pos.z();
+    gfx::drawing_area da(0, 0, gfx::screen::length(), gfx::screen::height());
+    gfx::screen::get_surface()->draw_line(x, y, x + 20, y, color, &da);
+    gfx::screen::get_surface()->draw_line(x, y, x, y + 20, color, &da);
+    gfx::screen::get_surface()->draw_line(x, y + 20, x + 20, y + 20, color, &da);
+    gfx::screen::get_surface()->draw_line(x + 20, y, x + 20, y + 20, color, &da);
+    base::timer::sleep(50);
+    gfx::screen::update();
+#endif
 }
