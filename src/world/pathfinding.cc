@@ -381,7 +381,7 @@ bool pathfinding::find_path(character *chr, const vector3<s_int32> & goal1, cons
                     if (!is_stairs (collisions, min, max, temp_node, chr->height()))
                     {
 #if DEBUG
-                        paint_node(temp_node, 0xff000000);
+                        paint_node(temp_node, 0xffff0000);
 #endif
                         ++i;
                         continue;
@@ -505,8 +505,8 @@ bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, const vector
             }
 
             // find the tile at given position and get its level
-            s_int32 px = start_x - (*ci)->center_min().x();
-            s_int32 py = start_y - (*ci)->center_min().y();
+            s_int32 px = ox ? start_x - (*ci)->center_min().x() : (*ci)->get_object()->length() / 2;
+            s_int32 py = oy ? start_y - (*ci)->center_min().y() : (*ci)->get_object()->width() / 2;
 
             if (px >= 0 && py >= 0 && px <= (*ci)->get_object()->solid_max_length() && py <= (*ci)->get_object()->solid_max_width())
             {
