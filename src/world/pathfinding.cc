@@ -498,19 +498,26 @@ bool pathfinding::is_stairs (std::list<chunk_info*> & ground_tiles, const vector
         std::list<chunk_info*>::iterator ci;
         for (ci = ground_tiles.begin (); ci != ground_tiles.end(); ci++)
         {
-            // at the current level, character can walk under this tile
-            if ((*ci)->Min.z() - prev_level > height)
-            {
-                continue;
-            }
-
             // find the tile at given position and get its level
             s_int32 px = ox ? start_x - (*ci)->center_min().x() : (*ci)->get_object()->length() / 2;
             s_int32 py = oy ? start_y - (*ci)->center_min().y() : (*ci)->get_object()->width() / 2;
 
             if (px >= 0 && py >= 0 && px <= (*ci)->get_object()->solid_max_length() && py <= (*ci)->get_object()->solid_max_width())
             {
-                level = (*ci)->center_min().z() + (*ci)->get_object()->get_surface_pos (px, py);
+                s_int32 z = (*ci)->center_min().z();
+
+                s_int32 x1 = min.x() - (*ci)->center_min().x();
+                s_int32 x2 = max.x() - (*ci)->center_min().x();
+                s_int32 y1 = min.y() - (*ci)->center_min().y();
+                s_int32 y2 = max.y() - (*ci)->center_min().y();
+
+                // at the current level, character can walk under this tile
+                if ((z + (*ci)->get_object()->get_ceiling_pos(x1, y1, x2, y2) - prev_level) > height)
+                {
+                    continue;
+                }
+
+                level = z + (*ci)->get_object()->get_surface_pos(px, py);
                 break;
             }
         }

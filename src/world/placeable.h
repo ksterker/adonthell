@@ -282,11 +282,23 @@ namespace world
 
         /**
          * Return the surface of the object at the given coordinate. 
-         *
-         * @return the z-position of the object at the given coordinate. 
+         * @param x x-coordinate relative to the object's origin
+         * @param y y-coordinate relative to the object's origin
+         * @return the largest z-position of the object at the given coordinate.
          */
         s_int32 get_surface_pos(const s_int32 & x, const s_int32 & y) const;
         
+        /**
+         * Return the bottom of the object at the given rectangle, i.e. the
+         * "ceiling" when seen from the perspective of an object below.
+         * @param x1 western face, relative to the object's origin
+         * @param y1 northern face, relative to the object's origin
+         * @param x2 eastern face, relative to the object's origin
+         * @param y2 southern face, relative to the object's origin
+         * @return the lowest z-position of the object at the given coordinate.
+         */
+        s_int32 get_ceiling_pos(const s_int32 & x1, const s_int32 & y1, const s_int32 & x2, const s_int32 & y2) const;
+
         /**
          * Return the terrain type of this object.
          * @return pointer to the terrain. Do not delete.

@@ -154,7 +154,7 @@ s_int32 placeable::get_surface_pos () const
     return SolidCurSize.z() + SolidCurPos.z();
 }
 
-// get z position at the given coordinate
+// get upper z position at the given coordinate
 s_int32 placeable::get_surface_pos(const s_int32 & x, const s_int32 & y) const
 {
     for (std::vector<world::placeable_model*>::const_iterator i = Model.begin(); i != Model.end(); i++)
@@ -177,6 +177,25 @@ s_int32 placeable::get_surface_pos(const s_int32 & x, const s_int32 & y) const
     // in turn. But we can probably live with this minor
     // inaccuracy for now.
     return get_surface_pos();
+}
+
+// get lower z position in the given area
+s_int32 placeable::get_ceiling_pos(const s_int32 & x1, const s_int32 & y1, const s_int32 & x2, const s_int32 & y2) const
+{
+    s_int32 result = get_surface_pos();
+
+    // find the lowest z at the given coordinate.
+    for (std::vector<world::placeable_model*>::const_reverse_iterator i = Model.rbegin(); i != Model.rend(); i++)
+    {
+        const placeable_shape *shape = (*i)->current_shape ();
+        if (shape != NULL && shape->is_solid())
+        {
+            s_int32 ceiling = shape->bottom(x1, y1, x2, y2);
+            if (ceiling < result) result = ceiling;
+        }
+    }
+
+    return result;
 }
 
 // get terrain type of placeable

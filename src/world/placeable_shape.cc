@@ -1,6 +1,4 @@
 /*
- $Id: placeable_shape.cc,v 1.5 2009/03/21 14:29:11 ksterker Exp $
- 
  Copyright (C) 2007 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
@@ -135,6 +133,23 @@ bool placeable_shape::intersects (const placeable_shape *other, const vector3<s_
     }
 
     return false;
+}
+
+s_int32 placeable_shape::bottom (const s_int32 & x1, const s_int32 & y1, const s_int32 & x2, const s_int32 & y2) const
+{
+    s_int32 result = Max.z();
+
+    for (std::vector<cube3*>::const_iterator i = Parts.begin(); i != Parts.end (); i++)
+    {
+        if ((*i)->max_x() >= x1 && (*i)->min_x() <= x2 &&
+            (*i)->max_y() >= y1 && (*i)->min_y() <= y2 &&
+            result > (*i)->min_z())
+        {
+            result = (*i)->min_z();
+        }
+    }
+
+    return result == Max.z() ? Min.z() : result;
 }
 
 // save to stream

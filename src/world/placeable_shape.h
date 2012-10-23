@@ -168,6 +168,18 @@ namespace world
             return Max.z() - Min.z();
         }
 
+
+        /**
+         * Get the lowest z coordinate in the given rectangle, relative to the
+         * object's origin.
+         * @param x1 western face
+         * @param y1 northern face
+         * @param x2 eastern face
+         * @param y2 southern face
+         * @return the z-coordinate
+         */
+        s_int32 bottom (const s_int32 & x1, const s_int32 & y1, const s_int32 & x2, const s_int32 & y2) const;
+
         /**
          * Get min base point
          * @return base point for the shape
