@@ -51,7 +51,7 @@ namespace gui
 		 * @param height the height of the button.
 		 */
 		button(const u_int16 & width, const u_int16 & height)
-		: label (width, height), Clicked(false)
+		: label (width, height), Clicked(false), DownKey(input::keyboard_event::UNKNOWN_KEY)
 		{
 			set_center (true, true);
 		}
@@ -62,7 +62,7 @@ namespace gui
          * @param style filename of widget decoration.
          */
 		button(const std::string & style)
-		: label (style), Clicked(false)
+		: label (style), Clicked(false), DownKey(input::keyboard_event::UNKNOWN_KEY)
 		{
 			set_center (true, true);
 		}
@@ -156,7 +156,7 @@ namespace gui
 		/// the key that caused the button to be pressed
 		input::keyboard_event::key_type DownKey;
 	};
-};
+}
 
 
 #endif//GUI_BUTTON_H

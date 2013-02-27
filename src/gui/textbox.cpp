@@ -217,4 +217,4 @@ namespace gui
 	}
 #endif
 
-};
+}

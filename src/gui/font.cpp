@@ -362,5 +362,5 @@ namespace gui
 
         h += drop;
 	}
-};
+}
 		

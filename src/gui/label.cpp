@@ -116,4 +116,4 @@ namespace gui
 			set_size (length(), newheight);
 		}
 	}
-};
+}

@@ -216,7 +216,7 @@ namespace gui
 	    /// text draw offset y
 	    u_int32 Oy;
 	};
-};
+}
 
 
 #endif//GUI_LABEL_H

@@ -145,7 +145,7 @@ namespace base
             NEW_SAVE = -4,
             INITIAL_SAVE = -3,
             AUTO_SAVE = -2,
-            QUICK_SAVE = -1,
+            QUICK_SAVE = -1
         };
         
         /**

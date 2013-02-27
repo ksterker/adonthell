@@ -40,6 +40,6 @@ namespace gui
 
 		virtual bool keyup(input::keyboard_event &k);
 	};
-};
+}
 
 #endif

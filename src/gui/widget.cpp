@@ -31,4 +31,4 @@ namespace gui
 	{
 		Look->draw (x, y, da, target);
 	}
-};
+}

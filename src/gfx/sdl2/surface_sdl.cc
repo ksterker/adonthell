@@ -212,13 +212,14 @@ namespace gfx
         {
             lock(&dstrect);
 
-            u_int32 src[dstrect.w * dstrect.h];
+            u_int32 *src = new u_int32[dstrect.w * dstrect.h];
             std::fill_n(src, dstrect.w * dstrect.h, col);
 
             SDL_ConvertPixels (dstrect.w, dstrect.h,
-                SDL_PIXELFORMAT_ARGB8888, (void*) src, dstrect.w*4,
+                SDL_PIXELFORMAT_ARGB8888, (const void*) src, dstrect.w*4,
                 Info->Format, Info->Pixels, Info->Pitch);
 
+            delete[] src;
             unlock();
         }
     }
@@ -348,6 +349,7 @@ namespace gfx
                 break;
             default:
                 LOG(FATAL) << "*** sdl::put_pix: Unsupported format " << SDL_GetPixelFormatName(Info->Format);
+                break;
         }
     }
 
@@ -415,6 +417,7 @@ namespace gfx
                 break;
             default:
                 LOG(FATAL) << "sdl::get_pix: Unsupported format " << SDL_GetPixelFormatName(Info->Format);
+                break;
         }
 
 #ifdef __BIG_ENDIAN__

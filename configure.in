@@ -41,7 +41,7 @@ OBJC="gcc"
 AC_SUBST(OBJC)
 
 if test x$ac_cv_cxx_compiler_gnu = xyes; then
-   CXXFLAGS="$CXXFLAGS -fno-exceptions -fno-strict-aliasing"
+   CXXFLAGS="$CXXFLAGS -std=c++0x -fno-exceptions -fno-strict-aliasing"
 fi
 
 case "$target" in
@@ -339,7 +339,7 @@ dnl ****************************************************************************
 dnl If this is a developer build, turn on debug symbols and check for gtest and gmock
 dnl *********************************************************************************
 if test x$devbuild = xyes; then
-    CXXFLAGS="$CXXFLAGS -g"
+    CXXFLAGS="$CXXFLAGS -g -Wall -pedantic"
 
     test "x$GTEST_DIR" = "x" && GTEST_DIR="/usr/src/gtest"
     test "x$GMOCK_DIR" = "x" && GMOCK_DIR="/usr/src/gmock"

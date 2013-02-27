@@ -158,6 +158,6 @@ namespace world
         /// The open list
         open_list m_openList;
     };
-};
+}
 
 #endif // WORLD_PATHFINDING_H

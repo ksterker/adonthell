@@ -130,7 +130,7 @@ namespace gui
 		/// state of option widget (selected or not)
 		bool State;
 	};
-};
+}
 
 
 #endif//GUI_LABEL_H

@@ -87,7 +87,7 @@ public:
     //@}
 
 #ifndef SWIG
-    GET_TYPE_NAME_VIRTUAL(gfx::surface_ext)
+    GET_TYPE_NAME_VIRTUAL(gfx::surface_ext);
 #endif // SWIG
     
 protected:

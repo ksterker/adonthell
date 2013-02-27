@@ -333,6 +333,6 @@ namespace gui
 		// void dofade(int x, int y, const SDL_Surface* s);
 		// bool mousestate[3];
 	};
-};
+}
 
 #endif//GUI_BASE_H

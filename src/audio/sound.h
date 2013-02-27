@@ -47,7 +47,8 @@ namespace audio {
         /**
          * Constuctors
          */
-        sound () {}
+        sound () : m_filename(""), m_sample(NULL), m_channel(-1), m_forcedhalt(false)
+        { }
 
         sound (const std::string &filename);
 
@@ -133,7 +134,7 @@ namespace audio {
         void * m_sample;
         /// the channel the sound is playing on
         int m_channel; 
-        /// Was this sound stoped by the user
+        /// Was this sound stopped by the user
         bool m_forcedhalt;
 
         //Functions from the audio backend

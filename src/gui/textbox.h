@@ -173,6 +173,6 @@ namespace gui
 		/// the cursor for text input
 		cursor *Cursor;
 	};
-};
+}
 
 #endif//GUI_TEXTBOX_H

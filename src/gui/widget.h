@@ -218,7 +218,7 @@ namespace gui
         /// forbid copy construction
         widget (const widget &);
 	};
-};
+}
 
 #endif//GUI_WIDGET_H
 

@@ -58,6 +58,10 @@ app::app ()
 {
     google::InstallFailureSignalHandler();
 	theApp = this;
+	Argc = 0;
+	Argv = NULL;
+	IsRunning = false;
+	Modules = 0;
 }
 
 // dtor

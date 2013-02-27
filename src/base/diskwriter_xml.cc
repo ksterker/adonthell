@@ -44,17 +44,35 @@ const char *disk_writer_xml::Bin2Hex = "0123456789ABCDEF";
 #define XML_ROOT_NODE "Data"
 
 // definitions for error checking when parsing ints and uints
+#ifndef INT8_MAX
 #define INT8_MAX      127
+#endif
+#ifndef INT16_MAX
 #define INT16_MAX     32767
+#endif
+#ifndef INT32_MAX
 #define INT32_MAX     2147483647
+#endif
 
+#ifndef INT8_MIN
 #define INT8_MIN      (-INT8_MAX-1)
+#endif
+#ifndef INT16_MIN
 #define INT16_MIN     (-INT16_MAX-1)
+#endif
+#ifndef INT32_MIN
 #define INT32_MIN     (-INT32_MAX-1)
+#endif
 
+#ifndef UINT8_MAX
 #define UINT8_MAX      0xFF
+#endif
+#ifndef UINT16_MAX
 #define UINT16_MAX     0xFFFF
+#endif
+#ifndef UINT32_MAX
 #define UINT32_MAX     0xFFFFFFFFU
+#endif
 
 /**
  * Context for the sax parser
@@ -67,6 +85,7 @@ struct data_sax_context
      */
     data_sax_context (base::flat *record)
     {
+        Type = flat::T_UNKNOWN;
         Id = "Root";
         Record = record;
         State = disk_writer_xml::UNDEF;
