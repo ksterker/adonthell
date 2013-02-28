@@ -31,7 +31,6 @@
 #include <adonthell/input/manager.h>
 #include <adonthell/main/adonthell.h>
 #include <adonthell/rpg/character.h>
-#include <adonthell/rpg/specie.h>
 #include <adonthell/rpg/faction.h>
 #include <adonthell/world/character.h>
 #include <adonthell/world/object.h>
@@ -65,9 +64,7 @@ public:
         
         // note: order is important; load EVENT before RPG before WORLD
         base::savegame::add (new base::serializer<events::date> ());
-        // todo: load species
-        base::savegame::add (new base::serializer<rpg::specie> ());
-        // todo: load factions
+        base::savegame::add (new base::serializer<rpg::faction> ());
         base::savegame::add (new base::serializer<rpg::character> ());
         base::savegame::add (new base::serializer<world::area_manager> ());
     }
@@ -164,38 +161,12 @@ public:
         // set mapview to proper size
         world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
 
-        LOG(INFO) << "Creating 'Noble' faction... ";
-        rpg::faction noble("Noble");
-        noble.get_state("groups/noble.faction");
-        LOG(INFO) << "  done!";
-
-        // rpg character instance
-        LOG(INFO) << "Creating player character... ";
-        rpg::character *player = rpg::character::get_player();
-        player->set_specie ("Human");
-        LOG(INFO) << "  done!";
-
-        LOG(INFO) << "Adding 'Noble' faction to player character... ";
-        player->add_faction("Noble");
-        LOG(INFO) << "  done!";
-
-        LOG(INFO) << "Setting 'Human' specie in player character... ";
-        rpg::character *npc = rpg::character::get_character("NPC");
-        npc->set_specie ("Human");
-        LOG(INFO) << "  done!";
-
         LOG(INFO) << "Fading sound in...";
         load_sound("worldtest.ogg")->fadein(3, -1);
         LOG(INFO) << "  done!";
 
         register_ui_sound("activate", "select.ogg");
         register_ui_sound("layout_switch", "switch.ogg");
-
-        // arguments to map view schedule
-        LOG(INFO) << "Adding player character to mapview schedule... ";
-        PyObject *args = PyTuple_New (1);
-        PyTuple_SetItem (args, 0, python::pass_instance ("Player"));
-        LOG(INFO) << "  done!";
 
         u_int32 totalFrames = 0;
         u_int32 totalTime = 0;
@@ -269,10 +240,6 @@ public:
 	    } // while (main loop)
 
         // gc.world.save ("test-world-new.xml");
-        
-        LOG(INFO) << "Cleaning up specie... ";
-        rpg::specie::cleanup();
-        LOG(INFO) << "  done!";
 
         LOG(INFO) << "Cleaning up faction... ";
         rpg::faction::cleanup();

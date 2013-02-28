@@ -11,9 +11,7 @@
 #include <adonthell/rpg/log_entry.h>
 #include <adonthell/rpg/log_index.h>
 #include <adonthell/rpg/quest_event.h>
-#include <adonthell/rpg/group.h>
 #include <adonthell/rpg/quest.h>
-#include <adonthell/rpg/specie.h>
 #include <adonthell/rpg/faction.h>
 
 using rpg::slot;
@@ -101,6 +99,4 @@ namespace rpg {
 %include <adonthell/rpg/log_index.h>
 %include <adonthell/rpg/quest.h>
 %include <adonthell/rpg/quest_event.h>
-%include <adonthell/rpg/group.h>
-%include <adonthell/rpg/specie.h>
 %include <adonthell/rpg/faction.h>

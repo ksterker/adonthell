@@ -28,6 +28,7 @@
 #include <algorithm>
 
 #include <adonthell/base/base.h>
+#include <adonthell/base/logging.h>
 #include "character.h"
 
 using rpg::character;
@@ -63,7 +64,7 @@ character::character (const std::string & name, const std::string & id, const rp
         }
         else
         {
-            fprintf (stderr, "*** character: '%s' is already the player character!\n", PlayerCharacterId.c_str());
+            LOG(WARNING) << "character: '" << PlayerCharacterId << "' is already the player character!";
         }
     }
 
@@ -71,7 +72,7 @@ character::character (const std::string & name, const std::string & id, const rp
     std::hash_map<std::string, character*>::iterator i = Characters.find (id);
     if (i != Characters.end ())
     {
-        fprintf (stderr, "*** character: '%s' already present in storage!\n", id.c_str());
+        LOG(ERROR) << "character: '" << id << "' already present in storage!";
     }
     else
     {
@@ -79,47 +80,24 @@ character::character (const std::string & name, const std::string & id, const rp
     }
 
     // set specie to which this character belongs
-    set_specie(specie);
+    create_instance (specie);
 }
-
 
 // dtor
 character::~character ()
 {
-    Characters.erase (Id);
     python::script::clear();
-}
-
-std::vector<faction *>::const_iterator character::begin() const
-{
-    return Factions.begin();
-}
-
-std::vector<faction *>::const_iterator character::end() const
-{
-    return Factions.end();    
-}
-
-faction * character::get_faction(const std::string & name) const
-{
-    faction * tmp = faction::get_faction(name);
-    
-    return tmp;
 }
 
 bool character::add_faction(const std::string & name)
 {
-    faction * tmp = get_faction(name);
-    
+    faction *tmp = faction::get_faction(name);
     if (tmp != NULL)
     {
         // Verify if this character conforms to the faction requirements
         if (tmp->verify_requirements() == true)
         {
             Factions.push_back(tmp);
-            
-            Pathfinding_Costs.update_costs(Factions, Specie);
-            
             return true;
         }
     }
@@ -129,17 +107,23 @@ bool character::add_faction(const std::string & name)
 
 bool character::remove_faction(const std::string & name)
 {
-    faction * tmp = get_faction(name);
-    
+    faction *tmp = faction::get_faction(name);
     std::vector<faction *>::iterator i = std::find(Factions.begin(), Factions.end(), tmp);
     
-    if (*i != NULL)
+    if (i != Factions.end())
     {
         Factions.erase(i);
-        
-        Pathfinding_Costs.update_costs(Factions, Specie);
         return true;
-    } else return false;
+    }
+
+    return false;
+}
+
+bool character::belongs_to_faction(const std::string & name)
+{
+    faction *tmp = faction::get_faction(name);
+    std::vector<faction *>::iterator i = std::find(Factions.begin(), Factions.end(), tmp);
+    return i != Factions.end();
 }
 
 s_int32 character::get_faction_estimate_speed(const std::string & name) const
@@ -155,13 +139,13 @@ s_int32 character::get_faction_estimate_speed(const std::string & name) const
     return sum;
 }
 
-// update speed base on terrain
+// update speed based on terrain
 void character::update_speed(const std::string & terrain)
 {
 	float actual_speed = base_speed();
 
 	// take the specie into consideration
-	s_int32 specie_effects = specie()->estimate_speed(terrain);
+	s_int32 specie_effects = 0; // todo
 	actual_speed += ((specie_effects * 0.01) * base_speed());
 
 	// take the various factions into consideration
@@ -180,7 +164,7 @@ character *character::get_character (const std::string & id)
         return (*i).second;
     }
 
-    fprintf (stderr, "*** character::get_character: no character with id '%s' found!\n", id.c_str());
+    LOG(ERROR) << "character::get_character: no character with id '" << id << "' found!";
     return NULL;
 }
 
@@ -211,7 +195,7 @@ bool character::load ()
             continue;
         }
 
-        fprintf (stderr, "*** character::load: loading character %s failed.\n", id);
+        LOG(ERROR) << "character::load: loading character '" << id << "' failed.";
         result = false;
         delete c;
     }
@@ -231,7 +215,7 @@ bool character::save (const string & path)
         base::flat record;
         if (!i->second->put_state (record))
         {
-            fprintf (stderr, "*** character::save: saving character '%s' failed!\n", i->first.c_str ());
+            LOG(ERROR) << "character::save: saving character '" << i->first << "' failed!";
             return false;
         }
         file.put_flat (i->first, record);
@@ -265,7 +249,16 @@ bool character::put_state (base::flat & file) const
     file.put_string ("cid", Id);
     file.put_string ("cdlg", Dialogue);
     file.put_uint32 ("ccol", Color);
+    file.put_string ("cptr", Portrait);
     file.put_float ("cspd", Base_Speed);
+
+    // save factions
+    base::flat factions;
+    for (std::vector<faction*>::const_iterator i = Factions.begin(); i != Factions.end(); i++)
+    {
+        factions.put_string("", (*i)->name());
+    }
+    file.put_flat("cfct", factions);
 
     // save the template this character uses
     file.put_string ("ccls", class_name ());
@@ -286,6 +279,7 @@ bool character::get_state (base::flat & file)
 {
     // clean up, if neccessary
     if (Instance) clear ();
+    Factions.clear();
 
     // get attributes
     Type = (char_type) file.get_uint8 ("ctyp");
@@ -293,7 +287,17 @@ bool character::get_state (base::flat & file)
     Id = file.get_string ("cid");
     Dialogue = file.get_string ("cdlg");
     Color = file.get_uint32 ("ccol");
+    Portrait = file.get_string ("cptr");
     Base_Speed = file.get_float ("cspd");
+
+    void *data;
+    base::flat factions = file.get_flat("cfct");
+    // iterate over all saved factions
+    while (factions.next ((void**) &data, NULL, NULL) == base::flat::T_STRING)
+    {
+        add_faction((const char *)data);
+    }
+
     Speed = Base_Speed;
 
     if (Type == PLAYER) PlayerCharacterId = Id;

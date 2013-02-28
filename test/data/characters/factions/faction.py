@@ -16,44 +16,47 @@
 # along with Adonthell; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
+
 from adonthell.base import flat
-from schedules.char import actions
+from adonthell.rpg import faction
 
-class group (object):
+class faction (object):
     """
-     This is the python counterpart to rpg/group.h. It contains an
-     group's most basic attributes. Any actual group should inherit
-     from this class.
+     This is the base class for any faction. Every faction should
+     inherit from this one
     """
-
+    
     def __init__ (self):
         """ctor"""
-        # -- reference to the underlying rpg.group instance
+        # -- reference to the underlying rpg.faction instance
         self.this = None
-
-        # -- Group Name
-        self.Name = ""
 
         # -- Dictionary with relation between the terrain and respective
         # -- imapct in speed
         self.Dic = {}
-
-        self.Pathfinding_Costs_Path = self.Name + ".pathfinding"
 
     def destroy (self):
         """properly delete a group"""
         if self.this != None:
             self.this.destroy ()
 
+    def requirements (self):
+        """ 
+            this function verifies if the C++ class calling this template fulfills
+            the requirements of this social_class.
+            @return 0 if any requirement fails, 1 if everything is OK
+        """
+        return 1
+        
     def estimate_speed (self, terrain):
         try:
+            # gc.collect()
             return self.Dic[terrain]
         except: return 0
 
     # -- save item to disk
     #    record needs to be of type base.flat
     def put_state (self, record):
-        record.put_string("pgpn", self.Name)
 
         terrains = flat()
         for terrain in self.Dic:
@@ -64,7 +67,6 @@ class group (object):
     # -- load item from disk
     #    record needs to be of type base.flat
     def get_state (self, record):
-        self.Name = record.get_string("pgpn")
 
         terrains = record.get_flat ("gTerr")
 
@@ -72,5 +74,3 @@ class group (object):
         while type == flat.T_SINT8:
             self.Dic[key] = value
             type, value, unused, key = terrains.next ()
-
-

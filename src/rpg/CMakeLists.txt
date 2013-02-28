@@ -5,7 +5,6 @@ set(adonthell_rpg_SRCS
 	dialog_line.cc
 	equipment.cc
 	faction.cc
-	group.cc
 	inventory.cc
 	item_storage.cc
 	item.cc
@@ -16,7 +15,6 @@ set(adonthell_rpg_SRCS
 	quest_event_manager.cc
 	pathfinding_costs.cc
 	slot.cc
-	specie.cc
 )
 
 set(adonthell_rpg_HEADERS
@@ -25,7 +23,6 @@ set(adonthell_rpg_HEADERS
 	dialog_line.h
 	equipment.h
 	faction.h
-	group.h
 	inventory.h
 	item.h
 	item_storage.h
@@ -36,7 +33,6 @@ set(adonthell_rpg_HEADERS
 	quest_event_manager.h
 	pathfinding_costs.h
 	slot.h
-	specie.h
 )
 
 

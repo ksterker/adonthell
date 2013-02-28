@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Data cs="a3717e3">
+  <list id="Default">
+    <bool id="forced_imp">0</bool>
+    <list id="costs">
+        <s_int16 id="Wood">10</s_int16>
+        <s_int16 id="Swamp">-5</s_int16>
+    </list>
+  </list>
+  <list id="OnlyOnWood">
+    <bool id="forced_imp">1</bool>
+    <list id="costs">
+        <s_int16 id="Wood">32767</s_int16>
+    </list>
+  </list>
+</Data>

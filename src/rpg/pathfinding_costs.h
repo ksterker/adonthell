@@ -27,9 +27,10 @@
 #ifndef PATHFINDING_COSTS_H
 #define PATHFINDING_COSTS_H
 
+#include <vector>
+
+#include <adonthell/base/flat.h>
 #include <adonthell/base/hash_map.h>
-#include "specie.h"
-#include "faction.h"
 
 namespace rpg
 {
@@ -53,16 +54,6 @@ namespace rpg
         */
         s_int16 get_cost(const std::string & terrain);
 
-        void show_all_data()
-        {
-            if (Terrain_Cost.empty()) return;
-            Terrain_Cost_Hash::const_iterator i = Terrain_Cost.begin();
-
-            for (; i != Terrain_Cost.end(); i++)
-            {
-                printf("%s %d\n", (*i).first.c_str(),(*i).second);
-            }
-        }
     private:
         typedef std::hash_map<std::string, s_int16> Terrain_Cost_Hash;
         /// The hash_map
@@ -70,7 +61,7 @@ namespace rpg
     };
 
    /**
-    * The class that associates the type with a hash_map.
+    * The class that associates the pathfinding type with the terrain costs.
     */
     class type_costs
     {
@@ -129,13 +120,17 @@ namespace rpg
     {
     public:
         pathfinding_costs();
+        ~pathfinding_costs();
 
        /**
         * Get the cost associated with that terrain, in the present pathfinding_type
         * @param name name of the terrain
         * @return the cost
         */
-        s_int16 get_cost(const std::string & name) const;
+        s_int16 get_cost(const std::string & name) const
+        {
+            return CurrentPathfindingType->get_costs_hash()->get_cost(name);
+        }
 
        /**
         * Set the actual pathfinding_type
@@ -147,63 +142,50 @@ namespace rpg
         * Get the actual pathfinding_type
         * @return the actual pathfinding_type
         */
-        const std::string get_pathfinding_type() const;
+        const std::string get_pathfinding_type() const
+        {
+            return CurrentPathfindingType->get_type();
+        }
 
        /**
         * Return if forced impassable is enabled
         */
-        bool has_forced_impassable() const;
+        bool has_forced_impassable() const
+        {
+            return CurrentPathfindingType->has_forced_impassable();
+        }
 
        /**
-        * Updates the internal cost/terrain/type relationships. This can happen at the beginning or
-        * when a faction is added/removed, specie altered, ...
-        * @param Factions a vector with the factions
-        * @param Specie the specie of the character
+        * Updates the internal cost/terrain/type relationships for the given specie.
+        * @param specie name of the pathfinding data file to load
         */
-        void update_costs(const std::vector<rpg::faction *> & factions, const rpg::specie * specie);
+        void init(const std::string & specie);
 
+        /**
+         * Cleanup all pathfinding costs.
+         */
+        void cleanup();
+
+    private:
        /**
         * Load necessary data from a data file
         * @param file path to the file
         * @return \b true on success, \b false otherwise
         */
-        bool parse_data_file(const std::string & file);
+        bool get_state(const std::string & file);
 
        /**
         * Load necessary data from a data file
         * @param file flat with the data
         * @return \b true on success, \b false otherwise
         */
-        bool parse_data_file(const base::flat & file);
+        bool get_state(const base::flat & file);
 
-        void show_all_data()
-        {
-            printf("Pathfinding_Costs Type:%s\n", get_pathfinding_type().c_str());
-            std::vector<type_costs *>::const_iterator i = Costs.begin();
-            ++i;
-            for (; i != Costs.end(); i++) {
-                printf("In Vector: Type:%s\n", (*i)->get_type().c_str());
-                (*i)->get_costs_hash()->show_all_data();
-            }
-        }
-    private:
-        /**
-         * Adds a type with its respective terrain/cost associations.
-         * @param type a pointer to the type
-         * @param is_default if true this type is the default type, that is used when
-         *        the character has no specific type set
-         */
-        void add_to_vector(type_costs * type, bool is_default = false);
+        /// the active path finding type
+        type_costs *CurrentPathfindingType;
 
-       /**
-        * Removes a type from the vector
-        * @param type_name the name of the type to be removed
-        */
-        void remove_from_vector(const std::string & type_name);
-
-        std::string Pathfinding_Type;
+        /// all available pathfinding types
         std::vector<type_costs *> Costs;
-
     };
 }
 

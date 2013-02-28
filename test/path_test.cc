@@ -28,7 +28,6 @@
 #include <adonthell/input/manager.h>
 #include <adonthell/main/adonthell.h>
 #include <adonthell/rpg/character.h>
-#include <adonthell/rpg/specie.h>
 #include <adonthell/rpg/faction.h>
 #include <adonthell/world/character.h>
 #include <adonthell/world/object.h>
@@ -54,17 +53,17 @@ public:
         print_queue = false;
         screenshot = false;
         path_task = -1;
+        path_char = NULL;
 
         // prepare gamedata handling
         // TODO: should probably be integrated directly into the engine,
-        // i.e. into module ialization (adonthell::init_modules),
+        // i.e. into module initialization (adonthell::init_modules),
         // in which case we need to make sure to init modules in the proper
         // order too.
 
         // note: order is important; load EVENT before RPG before WORLD
         base::savegame::add (new base::serializer<events::date> ());
-        // todo: load species
-        // todo: load factions
+        base::savegame::add (new base::serializer<rpg::faction> ());
         base::savegame::add (new base::serializer<rpg::character> ());
         base::savegame::add (new base::serializer<world::area_manager> ());
     }
@@ -113,6 +112,7 @@ public:
 
                 s_int32 idx = rand() % 11;
                 path_task = world::area_manager::get_pathfinder()->add_task(path_char, zones[idx]);
+                // path_task = world::area_manager::get_pathfinder()->add_task(path_char, "test");
                 if (path_task >= 0)
                 {
                     printf("Goal is %s\n", zones[idx]);
@@ -153,17 +153,8 @@ public:
         base::savegame game_mgr;
         game_mgr.load (base::savegame::INITIAL_SAVE);
 
-        // create a specie
-        rpg::specie human("Human");
-        human.get_state("groups/human.specie");
-
-        // create a faction
-        rpg::faction noble("Noble");
-        noble.get_state("groups/noble.faction");
-
         // rpg character instance
         rpg::character *player = rpg::character::get_player();
-        player->set_specie ("Human");
 
         // Add faction to character
         player->add_faction("Noble");
@@ -176,7 +167,6 @@ public:
         gc.path_char->mind()->set_pathfinding_type("Only_on_Wood");
 
         rpg::character *npc = rpg::character::get_character("NPC");
-        npc->set_specie ("Human");
 
         // arguments to map view schedule
         PyObject *args = PyTuple_New (1);
@@ -265,7 +255,6 @@ public:
 	        gfx::screen::clear ();
 	    }
 
-        rpg::specie::cleanup();
         rpg::faction::cleanup();
 
 	    return 0;
