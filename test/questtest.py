@@ -11,7 +11,7 @@ class App (main.AdonthellApp):
 		sys.path.insert (0, "data")
 		
 		# -- load quest tree
-		rpg.quest.get_state ()
+		rpg.quest.load ()
 		
 		# -- setup some quest events
 		factory = event.factory ()

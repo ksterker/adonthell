@@ -326,14 +326,14 @@ void quest::set_completed (const std::string & id)
 }
 
 // save quests to file
-bool quest::put_state (const std::string & path)
+bool quest::save (const std::string & path)
 {
     // save quests
-    base::diskio record (base::diskio::GZ_FILE);
+    base::diskio record;
     put_state (record);
     
     // save to file
-    return record.put_record (path + QUEST_DATA);
+    return record.put_record (path + "/" + QUEST_DATA);
 }
 
 // save quests to record
@@ -347,10 +347,10 @@ void quest::put_state (base::flat & file)
 }
 
 // load quests from file
-bool quest::get_state ()
+bool quest::load ()
 {
     // load quests
-    base::diskio record (base::diskio::GZ_FILE);
+    base::diskio record;
     
     if (record.get_record (QUEST_DATA))
     	return get_state (record);

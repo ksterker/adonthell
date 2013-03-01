@@ -43,7 +43,7 @@ namespace rpg
     /**
      * Location in which the quests are kept
      */
-    #define QUEST_DATA "data/quest.data"
+    #define QUEST_DATA "quest.data"
 #endif // SWIG
 
     /**
@@ -297,7 +297,7 @@ namespace rpg
              * determined through the search path defined in base::Paths().
              * @return \b true if loading successful, \b false otherwise.
              */
-            static bool get_state ();
+            static bool load ();
             /**
              * Save all quests to stream.
              * @param file stream to save quests to.
@@ -308,7 +308,7 @@ namespace rpg
              * will usually be a saved game directory.
              * @param path directory to save quest to. 
              */
-            static bool put_state (const std::string & path);
+            static bool save (const std::string & path);
             //@}
 
             /**

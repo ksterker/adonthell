@@ -32,6 +32,7 @@
 #include <adonthell/main/adonthell.h>
 #include <adonthell/rpg/character.h>
 #include <adonthell/rpg/faction.h>
+#include <adonthell/rpg/quest.h>
 #include <adonthell/world/character.h>
 #include <adonthell/world/object.h>
 #include <adonthell/world/area_manager.h>
@@ -64,6 +65,7 @@ public:
         
         // note: order is important; load EVENT before RPG before WORLD
         base::savegame::add (new base::serializer<events::date> ());
+        base::savegame::add (new base::serializer<rpg::quest> ());
         base::savegame::add (new base::serializer<rpg::faction> ());
         base::savegame::add (new base::serializer<rpg::character> ());
         base::savegame::add (new base::serializer<world::area_manager> ());
