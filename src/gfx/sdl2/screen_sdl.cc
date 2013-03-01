@@ -57,7 +57,11 @@ void gfx_screen_get_video_mode(u_int16 *l, u_int16 *h, u_int8 *depth)
 bool gfx_screen_set_video_mode(u_int16 nl, u_int16 nh, u_int8 depth)
 {
     u_int32 SDL_flags = SDL_WINDOW_SHOWN;
-	if (gfx::screen::is_fullscreen()) SDL_flags |= SDL_WINDOW_FULLSCREEN;
+	if (gfx::screen::is_fullscreen())
+	{
+	    SDL_flags |= SDL_WINDOW_FULLSCREEN;
+	    SDL_ShowCursor(SDL_DISABLE);
+	}
 
     if (!display->set_video_mode(nl, nh, depth, SDL_flags)) return false;
 
