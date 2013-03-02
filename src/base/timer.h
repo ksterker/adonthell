@@ -1,6 +1,4 @@
 /*
-   $Id: timer.h,v 1.7 2009/02/11 17:16:55 rians Exp $
-
    Copyright (C) 2003/2004 Alexandre Courbot.
    Part of the Adonthell Project http://adonthell.linuxgames.com
 
@@ -45,7 +43,7 @@ namespace base
      *
      * For that second purpose, a global timer instance exists that should
      * be used: base::Timer. For simple time measuring, new objects should
-     * be instanciated.
+     * be instantiated.
      */
     class timer
     {
@@ -93,6 +91,15 @@ namespace base
          * dropped to speed up the game.
          */
         void set_slice (u_int32 sl);
+
+        /**
+         * Synchronize the timer with the current time. This can be used
+         * after lengthy operations such as loading or saving that
+         * interrupt the main loop and would cause unwanted updates of
+         * the internal state, even though the delay was not caused
+         * by a game cycle taking too much time to compute.
+         */
+        void synch ();
 
         /**
          * Call this after a cycle of the game has been completed.

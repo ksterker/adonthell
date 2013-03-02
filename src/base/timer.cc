@@ -97,6 +97,12 @@ namespace base
         } while (err && (errno == EINTR));
     }
 
+    // return timer to non-elapsed state
+    void timer::synch ()
+    {
+        Lasttime = current_time ();
+    }
+
     // wait until current game cycle is over
     void timer::update ()
     {

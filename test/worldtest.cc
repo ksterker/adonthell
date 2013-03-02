@@ -22,7 +22,7 @@
 
 #include <iomanip>
 
-#include <adonthell/audio/sound.h>
+#include <adonthell/audio/audio.h>
 #include <adonthell/base/base.h>
 #include <adonthell/base/savegame.h>
 #include <adonthell/event/date.h>
@@ -41,6 +41,8 @@
 #include <adonthell/base/logging.h>
 
 static world::debug_renderer DEBUG_RENDERER;
+
+#define MAX_FRAMES_TO_SKIP 4
 
 class game_client
 {
@@ -127,6 +129,8 @@ class world_test : public adonthell::app
 public:
 	int main ()
 	{
+	    world::hw_renderer renderer;
+
         LOG(INFO) << "worldtest starting up!";
 
         LOG(INFO) << "Initialising game modules... ";
@@ -161,7 +165,9 @@ public:
         }
 
         // set mapview to proper size
-        world::area_manager::get_mapview()->resize(gfx::screen::length(), gfx::screen::height());
+        world::mapview *mv = world::area_manager::get_mapview();
+        mv->set_renderer(&renderer);
+        mv->resize(gfx::screen::length(), gfx::screen::height());
 
         LOG(INFO) << "Fading sound in...";
         load_sound("worldtest.ogg")->fadein(3, -1);
@@ -177,30 +183,29 @@ public:
         // add mapview to window stack
         gui::window_manager::add(0, 0, world::area_manager::get_mapview());
 
+        base::Timer.synch();
 	    while (IsRunning)
     	{
+            u_int16 i;
 	        currentTime = base::Timer.current_time();
 
-        	u_int16 i;
-
-        	// FIXME frames_missed is probably not what we want here
-	        // for (int i = 0; i < base::Timer.frames_missed (); i++)
-	        // {
-            input::manager::update();
-            events::date::update();
-            world::area_manager::update();
-	        //}
+        	// catch up with frames missed last time round
+        	for (int j = 0; j <= base::Timer.frames_missed () && j < MAX_FRAMES_TO_SKIP; j++)
+	        {
+        	    audio::update();
+        	    input::manager::update();
+        	    events::date::update();
+        	    world::area_manager::update();
+	        }
 
             // whether to draw bbox or not
-            world::mapview *mv = world::area_manager::get_mapview();
-            
             if (gc.draw_bounding_box || gc.delay)
             {
                 mv->set_renderer(&DEBUG_RENDERER);
             }
             else
             {
-                mv->set_renderer(NULL);
+                mv->set_renderer(&renderer);
             }            
 
             // render everything on screen
