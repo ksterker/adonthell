@@ -147,7 +147,7 @@ void factory::put_state (base::flat& file) const
     file.put_uint16 ("fps", Paused);
     
     for (i = Listeners.begin (); i != Listeners.end (); i++)
-        if (!(*i)->is_destroyed ())
+        if (!(*i)->is_destroyed () && (*i)->type() == LISTENER_PYTHON)
             (*i)->put_state (listeners);
 
     file.put_flat ("fls", listeners);
@@ -180,8 +180,8 @@ bool factory::get_state (base::flat& file)
         type = state.get_uint8 ("ltp");
 
         // create listener according to desired type
-        if (type == LISTENER_CXX) li = new events::listener_cxx (this, NULL);
-        else li = new events::listener_python (this, NULL);
+        if (type == LISTENER_PYTHON) li = new events::listener_python (this, NULL);
+        else continue;
         
         // get listener data
         if (li->get_state (state))
