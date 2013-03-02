@@ -390,17 +390,14 @@ namespace gfx
         if (draw_to)
         { 
             drawing_area im_zone (x, y, sl, sh);
-            drawing_area da_int = draw_to->setup_rects ();
+            im_zone.assign_drawing_area (draw_to);
 
-            im_zone.assign_drawing_area (&da_int);
-            da_int = im_zone.setup_rects ();
-            SDL_Rect tr;
-            tr.x = da_int.x();
-            tr.y = da_int.y();
-            tr.w = da_int.length();
-            tr.h = da_int.height();
+            drawing_area da_int = im_zone.setup_rects ();
+            dstrect.x = da_int.x();
+            dstrect.y = da_int.y();
+            dstrect.w = da_int.length();
+            dstrect.h = da_int.height();
 
-            dstrect = tr; 
             srcrect = dstrect;
             srcrect.x = x < dstrect.x ? sx + dstrect.x - x : sx;
             srcrect.y = y < dstrect.y ? sy + dstrect.y - y : sy;
@@ -416,6 +413,6 @@ namespace gfx
 
             dstrect.x = x;
             dstrect.y = y;
-        } 
+        }
     }
 }

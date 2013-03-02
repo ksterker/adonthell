@@ -145,14 +145,14 @@ namespace gfx
     void surface::tile (const drawing_area *da_opt, surface *target) const
     {
         drawing_area da;
-        
+
         if (!target) target = gfx::screen::get_surface();
 
         if (da_opt) da = da_opt->setup_rects();
         else da.resize (target->length(), target->height());
-        
-        for (u_int16 posy = 0; posy < target->height(); posy += height ())
-            for (u_int16 posx = 0; posx < target->length(); posx += length ())
+
+        for (u_int16 posy = 0; posy < da.height(); posy += height ())
+            for (u_int16 posx = 0; posx < da.length(); posx += length ())
                 draw (da.x() + posx, da.y() + posy, &da, target);
     }
 

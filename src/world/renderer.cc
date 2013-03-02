@@ -115,6 +115,7 @@ void default_renderer::render (const s_int16 & x, const s_int16 & y, std::list <
                 default:
                 {
                     it++;
+                    break;
                 }
             }
         }
@@ -184,6 +185,75 @@ u_int32 default_renderer::can_draw_object (render_info & obj, const_iterator & b
     }
     
     return result;
+}
+
+// default rendering
+void hw_renderer::render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const
+{
+    // paint while object remain in the queue
+    while (!render_queue.empty())
+    {
+        int size = render_queue.size();
+
+        // check each object if it can be drawn
+        for (iterator it = render_queue.begin(); it != render_queue.end(); /* nothing */)
+        {
+            const_iterator begin = render_queue.begin();
+            const_iterator end = render_queue.end();
+
+            // an object can be drawn if it cannot possibly collide with another object in the queue
+            if (can_draw_object (*it, begin, end))
+            {
+                // draw and remove from queue
+                draw (x, y, *it, da, target);
+                it = render_queue.erase (it);
+                continue;
+            }
+
+            it++;
+        }
+
+        // should not happen, but does lead to a deadlock
+        if (size == render_queue.size())
+        {
+            LOG(ERROR) << "*** warning: deadlock during rendering detected!";
+            for (iterator it = render_queue.begin(); it != render_queue.end(); it++)
+                VLOG(3) << " - (" << it->x() << ", " << it->y() << "," << it->z()
+                        << ") - (" << it->x() + it->Shape->length() << ", " << it->y() + it->Shape->width() << ", " << it->z() + it->Shape->height() << ")";
+
+            //visualize_deadlock (render_queue);
+            //exit(1);
+
+            draw (x, y, render_queue.front(), da, target);
+            render_queue.pop_front();
+        }
+    }
+}
+
+// check if object can be rendered
+u_int32 hw_renderer::can_draw_object (render_info & obj, const_iterator & begin, const_iterator & end) const
+{
+    // compare given object with all objects remaining in the draw queue
+    for (const_iterator it = begin; it != end; it++)
+    {
+        // ... but not with itself
+        if (&(*it) == &obj) continue;
+
+        // if objects don't overlap, we're still good
+        if (obj.min_x() >= it->max_x() ||
+            obj.min_yz() >= it->max_yz() ||
+            it->min_x() >= obj.max_x() ||
+            it->min_yz() >= obj.max_yz())
+            continue;
+
+        // objects do overlap, so we need to figure out position of objects
+        // relative to each other
+        if (is_object_below (*it, obj))
+            return CAN_SKIP;
+    }
+
+    // there are no objects in the way, so we can draw
+    return CAN_DRAW;
 }
 
 #define YT 1

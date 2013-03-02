@@ -53,8 +53,8 @@ namespace gfx
         ret.assign_drawing_area(NULL);
         for(const drawing_area* it = this->assigned_drawing_area(); it; it = it->assigned_drawing_area())
         {
-            s_int32 x = std::max(ret.x(), it->x());
-            s_int32 y = std::max(ret.y(), it->y());
+            s_int16 x = std::max(ret.x(), it->x());
+            s_int16 y = std::max(ret.y(), it->y());
             s_int32 w = std::min(it->x() + it->length(), ret.x() + ret.length()) - x;
             s_int32 h = std::min(it->y() + it->height(), ret.y() + ret.height()) - y;
             
