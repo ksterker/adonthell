@@ -56,8 +56,6 @@ namespace audio
     static const int     DEFAULT_AUDIO_MIXCHANNELS =        16;
     static const int     DEFAULT_AUDIO_RATE        =     44100;
 
-    static const std::string DEFAULT_SOUND_DIR = "game_sounds/";
-
     /** Audio access is made through this class.
      *  This static class manages audio system configuration.
      */
@@ -127,8 +125,6 @@ namespace audio
         static u_int16 audio_format_;
         static int     audio_mixchannels_;
         static int     audio_rate_;
-
-        static std::string sound_dir_;
     }; // class{}
 
 } // namespace{}

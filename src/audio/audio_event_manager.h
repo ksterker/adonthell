@@ -77,16 +77,6 @@ namespace audio
          */
         void raise_event (const event *e);
 
-        /**
-         * Register %time events with %event subsystem.
-         */
-        static void init ();
-
-        /**
-         * Remove %time events from %event subsystem.
-         */
-        static void cleanup ();
-
     private:
         /// storage for registered listeners.
         std::list<listener*> Listeners;
