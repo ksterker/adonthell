@@ -27,6 +27,7 @@
 #ifndef FACTION_H
 #define FACTION_H
 
+#include <vector>
 #include <adonthell/python/script.h>
 #include <adonthell/base/diskio.h>
 
