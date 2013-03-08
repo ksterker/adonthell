@@ -176,7 +176,7 @@ namespace base
          */
         u_int32 count () const
         {
-            return Games.size() - SPECIAL_SLOT_COUNT;
+            return Games().size() - SPECIAL_SLOT_COUNT;
         }
         
         /**
@@ -269,7 +269,7 @@ namespace base
         /// the slot the current game is running from
         static s_int32 CurrentSlot;
         /// list of available saved games
-        static std::vector<savegame_data*> Games;
+        static std::vector<savegame_data*>& Games();
         /// classes that read write game data
         static std::list<base::serializer_base*>& Serializer();
         /// notify about load/save progress
