@@ -276,7 +276,8 @@ if test "x$pylibs" = xnone; then
        AC_MSG_RESULT(found)
    else
        py_paths="$PYPREFIX/lib64/python$PYLIBVER/config $PYPREFIX/lib64 \
-	$PYPREFIX/lib/python$PYLIBVER/config $PYPREFIX/lib"
+	$PYPREFIX/lib/python$PYLIBVER/config $PYPREFIX/lib \
+	$PYPREFIX/lib/python$PYLIBVER/config-$target_cpu-$target_os"
 
        dnl Try for specific version first, then the generic version, then panic
 
