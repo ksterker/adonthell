@@ -519,7 +519,6 @@ bool area::save (const std::string & fname, const base::diskio::file_format & fo
     if (put_state (record) &&
         record.put_record (fname))
     {
-        Filename = fname;
         return true;
     }
 
