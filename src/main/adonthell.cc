@@ -259,8 +259,7 @@ bool app::init ()
         // print message if that fails, but don't panic yet ...
         LOG(ERROR) << logging::indent()
                    << "Error reading engine configuration '"
-                   << Config << ".xml'"
-            ;
+                   << Config << ".xml'";
     }
 
 	/*

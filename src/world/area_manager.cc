@@ -51,6 +51,7 @@ std::hash_set<std::string> area_manager::TaintedMaps;
 // reset area manager
 void area_manager::cleanup ()
 {
+    delete ActiveMap;
     ActiveMap = NULL;
     PathFinder.clear ();
     MapView.clear ();

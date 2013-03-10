@@ -19,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-from adonthell import base, input, world
+from adonthell import base, input, world, event
 import actions
 
 class player (object):
@@ -86,7 +86,7 @@ class player (object):
         input.manager.remove (self.il)
         self.il.disconnect_control_function ()
         self.il.disconnect_keyboard_function ()
-        self.il = none
+        self.il = None
         
     def handle_keys (self, kev):
         """
@@ -107,13 +107,16 @@ class player (object):
             # -- F5: quick save
             if kev.key() == input.keyboard_event.F5_KEY:
                 game_mgr = base.savegame()
-                game_mgr.save (base.savegame.QUICK_SAVE, "Quicksave", 0)
+                game_mgr.save (base.savegame.QUICK_SAVE, "Quicksave", event.date.time())
                 game_mgr = None
                 return 1
                 
             # -- F6: quick load
             elif kev.key() == input.keyboard_event.F6_KEY:
-                pass
+                game_mgr = base.savegame()
+                game_mgr.load (base.savegame.QUICK_SAVE)
+                game_mgr = None
+                return 1
         return 0
 
     def handle_controls (self, cev):

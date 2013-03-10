@@ -100,6 +100,8 @@ bool savegame::load (const s_int32 & slot)
     std::list<base::serializer_base*>::iterator i;
     for (i = Serializer().begin(); i != Serializer().end(); i++)
     {
+        (*i)->cleanup();
+
         if (!(*i)->load())
         {
             return false;
@@ -113,6 +115,7 @@ bool savegame::load (const s_int32 & slot)
         current++;
     }
     
+    base::Timer.synch();
     CurrentSlot = slot;
     return true;
 }
@@ -198,6 +201,7 @@ bool savegame::save (const s_int32 & slot, const std::string & desc, const u_int
     // ... and re-sort
     std::sort (Games().begin()+SPECIAL_SLOT_COUNT, Games().end());
 
+    base::Timer.synch();
     CurrentSlot = slot;
     return true;
 }

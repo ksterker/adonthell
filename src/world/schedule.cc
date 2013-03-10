@@ -42,6 +42,7 @@ schedule::schedule ()
 // destructor
 schedule::~schedule ()
 {
+    clear_schedule();
     delete QueuedSchedule;
 }
 
@@ -262,7 +263,7 @@ bool schedule::get_state (base::flat & file)
     PyTuple_SET_ITEM (args, 0, python::pass_instance (this));
     if (!Manager.create_instance (SCHEDULE_DIR + script, script, args))
     {
-        fprintf (stderr, "*** schedule::get_state: failed loading manager script '%s'.\n", script.c_str());
+        LOG(ERROR) << "failed loading manager script '" << script << "'.";
         return false;
     }
     
@@ -275,7 +276,7 @@ bool schedule::get_state (base::flat & file)
         PyTuple_SET_ITEM (args, 0, python::pass_instance (this));
         if (!Schedule.create_instance (SCHEDULE_DIR + script, script, args))
         {
-            fprintf (stderr, "*** schedule::get_state: failed loading schedule script '%s'.\n", script.c_str());
+            LOG(ERROR) << "failed loading schedule script '" << script << "'.";
             return false;
         }
         
@@ -296,7 +297,7 @@ bool schedule::get_state (base::flat & file)
         QueuedSchedule = new schedule_data;
         if (!QueuedSchedule->get_state (record))
         {
-            fprintf (stderr, "*** schedule::get_state: failed loading queued schedule\n");
+            LOG(ERROR) << "failed loading queued schedule";
             return false;
         }
     }

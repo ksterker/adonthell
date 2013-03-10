@@ -59,6 +59,7 @@ character::character (area & mymap, const std::string & hash, rpg::character * m
 // dtor
 character::~character ()
 {
+    VLOG(1) << logging::indent() << "world::character::~character() invoked";
 }
 
 // get real speed

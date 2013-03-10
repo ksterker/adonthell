@@ -41,7 +41,7 @@ bool disk_writer_gz::put_state (const std::string & name, base::flat & data) con
     base::ogzstream out (name);
     if (!out.is_open ())
     {
-        LOG(ERROR) << "*** disk_writer_gz::put_state: cannot open '" << name << "' for writing!";
+        LOG(ERROR) << "disk_writer_gz::put_state: cannot open '" << name << "' for writing!";
         return false; 
     }
     
@@ -73,13 +73,13 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // open file
     if (!in.open (name))
     {
-        LOG(ERROR) << "*** disk_writer_gz::get_state: cannot open '" << name << "' for reading!";
+        LOG(ERROR) << "disk_writer_gz::get_state: cannot open '" << name << "' for reading!";
         return false; 
     }
     
     // does file contain data
     if (in.eof ()) {
-        LOG(ERROR) << "*** disk_writer_gz::get_state: file '" << name << "' is empty!";
+        LOG(ERROR) << "disk_writer_gz::get_state: file '" << name << "' is empty!";
         return false;
     }
     
@@ -89,7 +89,7 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // check for correct format
     if (byte_order != 'L' && byte_order != 'B')
     {
-        LOG(ERROR) << "*** disk_writer_gz::get_state: unknown byte order '" << byte_order << "'!";
+        LOG(ERROR) << "disk_writer_gz::get_state: file '" << name << " has invalid byte order '" << byte_order << "'!";
         return false;
     }
     
@@ -99,7 +99,7 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     // create buffer for reading data
     char *buffer = new char[length];
     if (!buffer) {
-        LOG(FATAL) << "*** disk_writer_gz::get_state: failed to allocate " << length << " bytes. Giving up ...";
+        LOG(FATAL) << "disk_writer_gz::get_state: failed to allocate " << length << " bytes. Giving up ...";
     }
     
     // read data
@@ -111,8 +111,8 @@ bool disk_writer_gz::get_state (const std::string & name, base::flat & data) con
     
     // validate checksum
     if (checksum != data.checksum ()) {
-        LOG(ERROR) << "*** disk_writer_gz::get_state: checksum error in file '" << name << "'.";
-        LOG(ERROR) << "    Data might be corrupt.";
+        LOG(ERROR) << "disk_writer_gz::get_state: checksum error in file '" << name << "'.";
+        LOG(ERROR) << "Data might be corrupt.";
         return false;
     }
     

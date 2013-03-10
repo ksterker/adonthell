@@ -155,13 +155,12 @@ public:
         // load initial game data
         LOG(INFO) << "Loading game data... ";
         base::savegame game_mgr;
-        game_mgr.load (base::savegame::INITIAL_SAVE);
-        LOG(INFO) << "  done!";
+        bool result = game_mgr.load (base::savegame::INITIAL_SAVE);
+        LOG(INFO) << (result ? "  done!" : "  failed!");
 
         if (world::area_manager::get_map() == NULL)
         {
-            LOG(ERROR) << "No map loaded, exiting";
-            return 1;
+            LOG(FATAL) << "No map loaded, exiting";
         }
 
         // set mapview to proper size
@@ -190,7 +189,7 @@ public:
 	        currentTime = base::Timer.current_time();
 
         	// catch up with frames missed last time round
-        	for (int j = 0; j <= base::Timer.frames_missed () && j < MAX_FRAMES_TO_SKIP; j++)
+        	for (u_int32 j = 0; j <= base::Timer.frames_missed () && j < MAX_FRAMES_TO_SKIP; j++)
 	        {
         	    audio::update();
         	    input::manager::update();

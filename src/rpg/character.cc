@@ -101,7 +101,11 @@ bool character::add_faction(const std::string & name)
             return true;
         }
     }
-    
+    else
+    {
+        LOG(ERROR) << "faction '" << name << "' does not exist!";
+    }
+
     return false;
 }
 

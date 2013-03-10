@@ -31,6 +31,7 @@
 #include <cmath>
 #include <sstream>
 #include <adonthell/base/flat.h>
+#include <adonthell/base/logging.h>
 
 namespace world
 {
@@ -107,7 +108,7 @@ public:
         
         if (in.fail ())    
         {
-            fprintf (stderr, "*** vector3::set: error parsing vector '%s'", vec.c_str());
+            LOG(ERROR) << "vector3::set: error parsing vector '" << vec << "'";
             return false;
         }
         
