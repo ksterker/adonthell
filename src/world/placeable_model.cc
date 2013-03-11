@@ -36,7 +36,7 @@ using namespace world;
 // ctor
 placeable_model::placeable_model()
 {
-    CurrentShape = Shapes.begin ();
+    CurrentShape = Shapes.end ();
     Terrain = "None";
 }
 

@@ -370,6 +370,7 @@ bool area::get_state (base::flat & file)
             // load its actual data
             std::string modelfile = entity.get_string("model");
             object->load_model (modelfile);
+            object->set_state ("");
         }
         
         // also store invalid objects, to not mess up the indices
