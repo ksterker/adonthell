@@ -103,7 +103,8 @@ void schedule::set_active (const bool & a)
     }
     else
     {
-        fprintf (stderr, "*** schedule::set_active: schedule is active already!\n");
+        LOG(WARNING) << "schedule " << Schedule.file_name() << "."
+                     << Schedule.class_name() << " is active already!";
     }
 }
 
@@ -112,7 +113,7 @@ bool schedule::set_schedule (const string & file, PyObject *args)
 {
     if (Running)
     {
-        fprintf (stderr, "*** schedule::set_schedule: stop current schedule first!\n");
+        LOG(WARNING) << "stop current schedule first!";
         return false;
     }
     
@@ -191,7 +192,7 @@ void schedule::queue_alarm (const string & time, const bool & absolute)
 {
     if (!QueuedSchedule)
     {
-        fprintf (stderr, "*** schedule::queue_alarm: queue a schedule first!\n");
+        LOG(WARNING) << "queue_alarm: queue a schedule first!";
         return;
     }
     
@@ -305,7 +306,7 @@ bool schedule::get_state (base::flat & file)
     // restore alarm
     if (!Factory.get_state (file))
     {
-        fprintf (stderr, "*** schedule::get_state: failed loading alarm\n");
+        LOG(ERROR) << "failed loading alarm";
         return false;
     }
     
