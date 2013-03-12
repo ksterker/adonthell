@@ -472,11 +472,13 @@ bool area::get_state (base::flat & file)
                 case world::CHARACTER:
                 {
                     rpg::character *npc = rpg::character::get_character(entity_name);
-                    ((world::character *) object)->set_mind (npc);
                     if (npc == NULL)
                     {
                         LOG(ERROR) << "area::get_state: cannot find rpg instance for '" << entity_name << "'.";
                     }
+
+                    ((world::character *) object)->set_mind (npc);
+                    ((world::character *) object)->set (pos.x(), pos.y(), pos.z());
                     break;
                 }
                 default:

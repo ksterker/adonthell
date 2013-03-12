@@ -289,7 +289,7 @@ bool character::put_state (base::flat & file) const
     placeable::put_state (file);
 
     // save movement and direction ...
-    coordinates::put_state (file, "pos");
+    Position.put_state (file, "pos");
     file.put_sint32 ("dir", CurrentDir);
     file.put_float ("vspeed", VSpeed);
     
@@ -308,9 +308,7 @@ bool character::get_state (base::flat & file)
     placeable::get_state (file);
 
     // load movement
-    coordinates::set_str (file.get_string ("pos"));
-    set_position (x(), y());
-    set_altitude (z());
+    Position.set_str (file.get_string ("pos"));
     calculate_ground_pos ();
     
     // update direction
