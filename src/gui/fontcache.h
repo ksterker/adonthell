@@ -63,6 +63,12 @@ private:
     std::hash_map<std::string, glyph_info*> Cache;
 };
 
+/**
+ * A singleton font cache
+ */
+#ifndef SWIG
+extern font_cache* FontCache;
+#endif
 }
 
 #endif /* GUI_FONTCACHE_H */

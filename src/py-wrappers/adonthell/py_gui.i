@@ -4,7 +4,17 @@
 %{
 #include <adonthell/base/types.h>
 #include <adonthell/event/event.h>
-#include <adonthell/gui/gui.h>
+#include <adonthell/gui/widget.h>
+#include <adonthell/gui/font.h>
+#include <adonthell/gui/label.h>
+#include <adonthell/gui/button.h>
+#include <adonthell/gui/layout.h>
+#include <adonthell/gui/listlayout.h>
+#include <adonthell/gui/canvas.h>
+#include <adonthell/gui/indicatorbar.h>
+#include <adonthell/gui/scrollview.h>
+#include <adonthell/gui/option.h>
+#include <adonthell/gui/textbox.h>
 #include <adonthell/gui/ui_event.h>
 #include <adonthell/gui/conversation.h>
 #include <adonthell/gui/window_manager.h>

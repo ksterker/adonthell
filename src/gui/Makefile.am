@@ -34,10 +34,11 @@ libadonthell_gui_la_SOURCES = \
     decoration.cc \
 	font.cpp \
     fontcache.cc \
+    gui.cc \
+	indicatorbar.cc \
 	label.cpp \
 	layout.cc \
     listlayout.cc \
-	indicatorbar.cc \
 	option.cpp \
     scrollview.cc \
 	textbox.cpp \

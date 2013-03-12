@@ -33,7 +33,6 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "fontcache.h"
 #include <adonthell/gfx/drawing_area.h>
 #include <adonthell/gfx/surface_cacher.h>
 
@@ -252,9 +251,6 @@ namespace gui
         int FontSize;
         /// name of the font
         std::string Name;
-
-        /// stores information about glyphs already loaded
-        static font_cache FontCache;
 	};
 }
 

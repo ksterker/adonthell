@@ -44,8 +44,6 @@ namespace gui
 {
 	FT_Library library;
 
-	font_cache font::FontCache;
-
 	// ctor
 	font::font(const char* path, int size)
 	{
@@ -133,7 +131,7 @@ namespace gui
 		for (i = s.begin(); i != s.end(); /* nothing */)
 		{
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            const glyph_info *gi = FontCache.get (chr, this);
+            const glyph_info *gi = FontCache->get (chr, this);
 
             if (FT_HAS_KERNING (Face))
             {
@@ -159,7 +157,7 @@ namespace gui
         for (i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            const glyph_info *gi = FontCache.get (chr, this);
+            const glyph_info *gi = FontCache->get (chr, this);
 
             if (FT_HAS_KERNING (Face))
             {
@@ -305,7 +303,7 @@ namespace gui
         for (i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            const glyph_info *gi = FontCache.get (chr, this);
+            const glyph_info *gi = FontCache->get (chr, this);
 
             if (isspace(*i))
             {
@@ -355,7 +353,7 @@ namespace gui
         for (string::const_iterator i = s.begin(); i != s.end(); /* nothing */)
         {
             u_int32 chr = base::utf8::to_utf32 (s, i);
-            const glyph_info *gi = FontCache.get (chr, this);
+            const glyph_info *gi = FontCache->get (chr, this);
 
             w += gi->length;
         }

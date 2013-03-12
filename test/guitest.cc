@@ -8,7 +8,11 @@ using std::string;
 #include <adonthell/event/factory.h>
 #include <adonthell/gfx/gfx.h>
 #include <adonthell/input/input.h>
-#include <adonthell/gui/gui.h>
+#include <adonthell/gui/ui_event.h>
+#include <adonthell/gui/option.h>
+#include <adonthell/gui/textbox.h>
+#include <adonthell/gui/canvas.h>
+#include <adonthell/gui/window_manager.h>
 #include <adonthell/main/adonthell.h>
 
 class InputHandler {
@@ -52,7 +56,7 @@ class GuiTest : public adonthell::app {
   int main () {
     
     // Initialize the gfx and input systems
-    init_modules (GFX | INPUT);
+    init_modules (GFX | INPUT | GUI);
 
     InputHandler ih;
         

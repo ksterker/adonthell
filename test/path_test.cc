@@ -133,7 +133,7 @@ public:
 	    srand(time(NULL));
 
         // Initialize the gfx and input systems
-    	init_modules (GFX | INPUT | PYTHON | WORLD);
+    	init_modules (GFX | INPUT | PYTHON | WORLD | GUI);
 
     	// Set video mode
     	gfx::screen::set_fullscreen(false);

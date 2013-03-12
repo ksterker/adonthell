@@ -6,6 +6,7 @@ set(adonthell_gui_SRCS
     decoration.cc
 	font.cpp
 	fontcache.cc
+	gui.cc
 	indicatorbar.cc
 	label.cpp
 	layout.cc

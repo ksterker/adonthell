@@ -134,7 +134,7 @@ public:
         LOG(INFO) << "worldtest starting up!";
 
         LOG(INFO) << "Initialising game modules... ";
-    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD);
+    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD | GUI);
         LOG(INFO) << "  done!";
 
         LOG(INFO) << "Setting video mode... ";

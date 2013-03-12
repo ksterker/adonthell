@@ -40,6 +40,7 @@
 #include <adonthell/audio/audio_manager.h>
 #include <adonthell/python/python.h>
 #include <adonthell/world/world.h>
+#include <adonthell/gui/gui.h>
 #include "adonthell.h"
 
 using adonthell::app;
@@ -139,6 +140,18 @@ bool app::init_modules (const u_int16 & modules)
         world::init (Cfg);
     }
     
+    // startup user interface
+    if (m & GUI)
+    {
+        gui::setup (Cfg);
+        if (!gui::init ())
+        {
+           LOG(ERROR) << logging::indent() << "gui::init() failed";
+           logging::decrement_log_indent_level();
+           return false;
+       }
+    }
+
     logging::decrement_log_indent_level();
 
     return true;
@@ -314,9 +327,11 @@ void app::cleanup () const
     Cfg.write (Config);
 
     // cleanup modules
+    if (Modules & GUI) gui::cleanup();
     if (Modules & WORLD) world::cleanup ();
     if (Modules & AUDIO) audio::cleanup ();
     if (Modules & INPUT) input::cleanup ();
+    if (Modules & GUI) gui::cleanup();
     if (Modules & GFX) gfx::cleanup ();
     if (Modules & PYTHON) python::cleanup ();
 }

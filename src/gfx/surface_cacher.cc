@@ -45,18 +45,7 @@ namespace gfx
     // dtor
 	surface_cacher::~surface_cacher()
 	{
-		map<string, surface_ref>::iterator idx = Cache.begin();
-		while (idx!=Cache.end())
-		{
-			if (idx->second.s)
-            {
-				delete idx->second.s;
-			}
-            
-            map<string, surface_ref>::iterator deleteme = idx;
-			idx++;
-			Cache.erase(deleteme);
-		}
+	    purge();
 	}
     
 	// return surface reference for a dynamic image
@@ -146,8 +135,8 @@ namespace gfx
 		if (idx != Cache.end())
 		{
 			idx->second.delref();
+	        conditional_purge();
 		}
-		conditional_purge();
 	}
     
     // release reference
