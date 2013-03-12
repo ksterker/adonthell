@@ -110,6 +110,40 @@ namespace world
         EXPECT_EQ(true, is_object_below (obj1, obj2));
         EXPECT_EQ(false, is_object_below (obj2, obj1));
     }
+
+    TEST_F(renderer_Test, is_object_below_7)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 0, 0), NULL);
+        render_info obj2 (&s1, NULL, vector3<s_int32>(-256, 96, 0), NULL);
+
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
+    }
+
+    TEST_F(renderer_Test, is_object_below_8)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 91, 0), NULL);
+        render_info obj2 (&s1, NULL, vector3<s_int32>(-256, 96, 5), NULL);
+
+        EXPECT_EQ(obj1.min_yz(), obj2.min_yz());
+        EXPECT_EQ(obj1.max_yz(), obj2.max_yz());
+
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
+    }
+
+    TEST_F(renderer_Test, is_object_below_9)
+    {
+        render_info obj1 (&s1, NULL, vector3<s_int32>(-256, 91, 0), NULL);
+        render_info obj2 (&s1, NULL, vector3<s_int32>(-256, 192, 101), NULL);
+
+        EXPECT_EQ(obj1.min_yz(), obj2.min_yz());
+        EXPECT_EQ(obj1.max_yz(), obj2.max_yz());
+
+        EXPECT_EQ(true, is_object_below (obj1, obj2));
+        EXPECT_EQ(false, is_object_below (obj2, obj1));
+    }
+
 /*
     TEST_F(renderer_Test, is_object_below_7)
     {

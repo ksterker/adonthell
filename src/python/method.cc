@@ -44,8 +44,7 @@ void method::init (const std::string & mtd)
     Method = Script->get_attribute (mtd);
     if (!PyCallable_Check (Method))
     {
-        fprintf (stderr, "*** python::method::init: method %s.%s not found!\n", 
-            Script->class_name ().c_str (), mtd.c_str ());
+        LOG(ERROR) << "method::init: method " << Script->class_name() << "." << mtd << " not found!";
         Method = NULL;
     }
 }
@@ -70,7 +69,7 @@ std::string method::name () const
         }
         else
         {
-            fprintf (stderr, "*** method::name: cannot retrieve method name!\n");
+            LOG(ERROR) << "method::name: cannot retrieve method name!";
         }
     }
     

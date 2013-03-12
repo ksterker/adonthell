@@ -18,9 +18,10 @@ add_definitions(-DPYTHONSPDIR="${ESCAPE}${PYTHON_SITE_PACKAGE_DIR}${ESCAPE}")
 add_library(adonthell_main SHARED ${adonthell_main_SRCS})
 target_link_libraries(adonthell_main
 	${PYTHON_LIBRARIES}
-  ${LIBGLOG_LIBRARIES}
+    ${LIBGLOG_LIBRARIES}
 	adonthell_base
 	adonthell_gfx
+	adonthell_gui
 	adonthell_audio
 	adonthell_input
 	adonthell_python

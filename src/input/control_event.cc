@@ -29,6 +29,7 @@
  */
 
 #include <cstdio>
+#include <adonthell/base/logging.h>
 #include "control_event.h"
 
 namespace input
@@ -81,7 +82,7 @@ namespace input
     // map controls from configuration
     void control_event::map_controls (base::configuration & cfg)
     {
-        std::string key, value;
+        std::string key;
 
         // read setting for each of our controls
         for (u_int32 i = control_event::UP_BUTTON; i < control_event::NBR_BUTTONS; i++)
@@ -128,9 +129,9 @@ namespace input
                 }
 
                 // invalid control value --> use default, but don't update configuration
-                fprintf (stderr, "*** control_event::map_controls: unknown control '%s' for action '%s'!\n", value->c_str(), key.c_str());
+                LOG(WARNING) << "unknown control '" << *value << "' for action '" << key << "'!";
                 kt = default_key (btn);
-                fprintf (stderr, "    substituting default key '%s' instead!\n", keyboard_event::name_for_key (kt).c_str ());
+                LOG(WARNING) << "    substituting default key '" << keyboard_event::name_for_key (kt) << "' instead!";
                 map_keyboard_key (kt, (control_event::button_type) btn);
             }
         }

@@ -207,7 +207,7 @@ u_int32 date::parse_time (const std::string & time)
                 // error
                 default:
                 {
-                    fprintf (stderr, "*** date::parse_time: Unknown time specifier '%c'\n", time[i]);
+                    LOG(ERROR) << "Unknown time specifier '" << time[i] << "'";
                     break;
                 }
             }
@@ -217,7 +217,7 @@ u_int32 date::parse_time (const std::string & time)
     }
 
     if (number != 0)
-        fprintf (stderr, "*** date::parse_time: Time specifier missing at end of '%s'\n", time.c_str ());
+        LOG(ERROR) << "Time specifier missing at end of '" << time << "'";
         
     return secs;
 }

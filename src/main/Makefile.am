@@ -20,6 +20,7 @@ libadonthell_main_la_CXXFLAGS = $(PY_CFLAGS) -DPYTHONSPDIR=\"$(pyexecdir)\" $(AM
 libadonthell_main_la_LIBADD = $(PY_LIBS) -lltdl \
     $(top_builddir)/src/base/libadonthell_base.la \
     $(top_builddir)/src/gfx/libadonthell_gfx.la \
+    $(top_builddir)/src/gui/libadonthell_gui.la \
     $(top_builddir)/src/audio/libadonthell_audio.la \
     $(top_builddir)/src/input/libadonthell_input.la \
     $(top_builddir)/src/python/libadonthell_python.la \

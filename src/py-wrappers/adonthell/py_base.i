@@ -31,7 +31,7 @@ namespace base
         }
         else
         {
-            fprintf (stderr, "*** serializer: '%s' has no method 'save'!\n", instance->ob_type->tp_name);
+            LOG(ERROR) << "serializer: '" << instance->ob_type->tp_name << "' has no method 'save'!";
         }
         Py_XDECREF (save);
 
@@ -42,7 +42,7 @@ namespace base
         }
         else
         {
-            fprintf (stderr, "*** serializer: '%s' has no method 'load'!\n", instance->ob_type->tp_name);
+            LOG(ERROR) << "serializer: '" << instance->ob_type->tp_name << "' has no method 'load'!";
         }
         Py_XDECREF (load);
     }

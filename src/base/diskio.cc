@@ -61,7 +61,7 @@ diskio::diskio (const diskio::file_format & format) : flat (256)
         default:
         {
             Writer = NULL;
-            fprintf (stderr, "*** diskio: unknown format specified!\n");
+            LOG(ERROR) << "*** diskio: unknown format specified!";
             break;
         }
     }

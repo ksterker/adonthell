@@ -76,10 +76,10 @@ namespace rpg {
         for (int i = 0; i < size; i++) {
             PyObject *o = PyList_GetItem ($input, i);
             if (PyString_Check(o)) $1->push_back (PyString_AsString (o));
-            else fprintf (stderr, "*** $symname: expected list of strings!\n");
+            else LOG(ERROR) << "$symname: expected string item!";
         }
     }
-    else fprintf (stderr, "*** $symname: expected list of strings!\n");
+    else LOG(ERROR) << "$symname: expected list of strings!";
 }
 
 %typemap(freearg) const std::vector<std::string> & "delete $1;"

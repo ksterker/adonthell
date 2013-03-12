@@ -69,17 +69,17 @@ u_int8 event_type::get_id (const std::string & name)
     std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
     if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->id ();
     
-    fprintf (stderr, "*** event_type::get_id: event type '%s' not registered!\n", name.c_str());
+    LOG(ERROR) << "event type '" << name << "' not registered!";
     return 255;
 }
 
-// instanciate new event of given type
+// instantiate new event of given type
 event *event_type::instanciate_event (const std::string & name)
 {
     std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
     if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->instanciate ();
 
-    fprintf (stderr, "*** event_type::instanciate_event: event type '%s' not registered!\n", name.c_str());
+    LOG(ERROR) << "event type '" << name << "' not registered!";
     return NULL;
 }
 
@@ -88,8 +88,8 @@ manager_base *event_type::get_manager (const u_int8 & id)
 {
     if (id < Types().size() && Types()[id] != NULL) return Types()[id]->manager ();
 
-    fprintf (stderr, "*** event_type::get_manager: event id '%i' not registered!\n", id);
-    return NULL;    
+    LOG(ERROR) << "event id '" << id << "' not registered!";
+    return NULL;
 }
 
 // Types of events registered with the event subsystem by name

@@ -69,9 +69,7 @@ python::script *pool::reconnect (const std::string & file, const std::string & c
         // instanciate
         if (!scrpt->create_instance (file, classname, NULL))
         {
-            fprintf (stderr, "*** pool::reconnect: failed instanciating class %s in file %s!\n", 
-                classname.c_str (), file.c_str ());
-            
+            LOG(ERROR) << "pool::reconnect: failed instantiating class " << classname << " in file " << file << "!";
             delete scrpt;
             return NULL;
         }

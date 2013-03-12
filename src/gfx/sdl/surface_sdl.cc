@@ -322,7 +322,7 @@ namespace gfx
         }
         else
         {
-            fprintf (stderr, "*** surface:resize: screen surface not initialized!\n");
+            LOG(ERROR) << "screen surface not initialized!";
         }
     }
 
