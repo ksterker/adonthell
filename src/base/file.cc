@@ -41,6 +41,7 @@ using base::ogzstream;
 gz_file::gz_file ()
 {
     opened = false;
+    file = NULL;
 }
 
 gz_file::gz_file (const string & fname, gz_type t)

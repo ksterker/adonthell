@@ -29,9 +29,22 @@
 #include <cstdio>
 #include "event.h"
 #include "types.h"
+#include "date.h"
+
+#include <adonthell/base/savegame.h>
 
 using events::event;
 using events::event_type;
+
+void events::init(base::configuration & cfg)
+{
+    base::savegame::add (new base::serializer<events::date> ());
+}
+
+void events::cleanup()
+{
+    events::date::cleanup();
+}
 
 // constructor
 event::event ()

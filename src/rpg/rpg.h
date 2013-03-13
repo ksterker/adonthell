@@ -1,7 +1,5 @@
 /*
- $Id: world.cc,v 1.1 2009/04/18 21:54:59 ksterker Exp $
- 
- Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
+ Copyright (C) 2013 Kai Sterker <kaisterker@linuxgames.com>
  Part of the Adonthell Project http://adonthell.linuxgames.com
  
  Adonthell is free software; you can redistribute it and/or modify
@@ -19,26 +17,35 @@
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * @file world/world.cc
+/** 
+ * @file rpg/rpg.h
  *
  * @author Kai Sterker
- * @brief Module initialization.
+ * @brief RPG module initialization
  */
 
-#include "world.h"
-#include "area_manager.h"
+#ifndef RPG_H_
+#define RPG_H_
 
-#include <adonthell/base/savegame.h>
+#include <adonthell/base/configuration.h>
 
-// start world module
-void world::init (base::configuration & cfg)
+namespace rpg
 {
-    base::savegame::add (new base::serializer<world::area_manager> ());
+    /**
+     * @name Initialization and cleanup.
+     */
+    //@{
+    /**
+     * Initialize the RPG module.
+     * @param cfg engine configuration.
+     */
+    void init(base::configuration & cfg);
+
+    /**
+     * Shutdown the RPG module.
+     */
+    void cleanup();
+    //@}
 }
 
-// shutdown world module
-void world::cleanup ()
-{
-    area_manager::cleanup ();
-}
+#endif /* RPG_H_ */

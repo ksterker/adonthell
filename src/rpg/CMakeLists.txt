@@ -14,6 +14,7 @@ set(adonthell_rpg_SRCS
 	quest_event.cc
 	quest_event_manager.cc
 	pathfinding_costs.cc
+	rpg.cc
 	slot.cc
 )
 
@@ -32,6 +33,7 @@ set(adonthell_rpg_HEADERS
 	quest_event.h
 	quest_event_manager.h
 	pathfinding_costs.h
+	rpg.h
 	slot.h
 )
 

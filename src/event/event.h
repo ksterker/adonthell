@@ -31,6 +31,7 @@
 #define EVENT_EVENT_H
 
 #include <adonthell/base/flat.h>
+#include <adonthell/base/configuration.h>
 
 /**
  * Support for various events used to drive the game world and the plot.
@@ -42,6 +43,22 @@ namespace events
      * Directory where %event scripts reside.
      */
     #define EVENTS_DIR "game_events."
+
+    /**
+     * @name Initialization and cleanup.
+     */
+    //@{
+    /**
+     * Initialize the Event module.
+     * @param cfg engine configuration.
+     */
+    void init(base::configuration & cfg);
+
+    /**
+     * Shutdown the Event module.
+     */
+    void cleanup();
+    //@}
 #endif // SWIG
 
     /**

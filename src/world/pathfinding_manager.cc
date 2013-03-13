@@ -64,6 +64,11 @@ pathfinding_manager::~pathfinding_manager()
 {
     clear ();
 
+    for (u_int16 i = 0; i < MAX_TASKS; i++)
+    {
+        delete m_task[i];
+    }
+
     m_task.clear();
     m_locked.clear();
 }

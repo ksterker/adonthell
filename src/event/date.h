@@ -1,6 +1,4 @@
 /*
-   $Id: date.h,v 1.9 2009/04/08 21:52:09 ksterker Exp $
-
    Copyright (C) 2002/2004/2005 Kai Sterker <kaisterker@linuxgames.com>
    Part of the Adonthell Project http://adonthell.linuxgames.com
 

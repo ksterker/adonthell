@@ -221,6 +221,11 @@ namespace base
         static void init ();
 
         /**
+         * Shutdown savegame system and free all static resources..
+         */
+        static void cleanup();
+
+        /**
          * Register a serializer for saving/loading game data.
          * @param serializer the serializer to add.
          */

@@ -47,7 +47,13 @@ factory::factory ()
 // destructor
 factory::~factory ()
 {
-    clear (); 
+    for (vector<listener*>::iterator i = Listeners.begin (); i != Listeners.end (); i++)
+    {
+        (*i)->removed_from_factory();
+        delete *i;
+    }
+
+    Listeners.clear();
 }
 
 // Unregisters and deletes all listeners.

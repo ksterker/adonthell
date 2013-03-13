@@ -41,6 +41,9 @@
 #include <adonthell/python/python.h>
 #include <adonthell/world/world.h>
 #include <adonthell/gui/gui.h>
+#include <adonthell/rpg/rpg.h>
+#include <adonthell/event/event.h>
+
 #include "adonthell.h"
 
 using adonthell::app;
@@ -108,6 +111,11 @@ bool app::init_modules (const u_int16 & modules)
         python::add_search_path (base::Paths().user_data_dir());
     }
 
+    if (m & EVENT)
+    {
+        events::init(Cfg);
+    }
+
     // startup graphics
     if (m & GFX)
     {
@@ -132,6 +140,12 @@ bool app::init_modules (const u_int16 & modules)
             logging::decrement_log_indent_level();
             return false;
         }
+    }
+
+    // init role playing stuff
+    if (m & RPG)
+    {
+        rpg::init (Cfg);
     }
 
     // init map stuff
@@ -326,14 +340,21 @@ void app::cleanup () const
     // save configuration to disk
     Cfg.write (Config);
 
+    // cleanup savegame system
+    base::savegame::cleanup();
+
     // cleanup modules
-    if (Modules & GUI) gui::cleanup();
     if (Modules & WORLD) world::cleanup ();
+    if (Modules & RPG) rpg::cleanup();
     if (Modules & AUDIO) audio::cleanup ();
     if (Modules & INPUT) input::cleanup ();
     if (Modules & GUI) gui::cleanup();
     if (Modules & GFX) gfx::cleanup ();
+    if (Modules & EVENT) events::cleanup();
     if (Modules & PYTHON) python::cleanup ();
+
+    // stop logging
+    google::ShutdownGoogleLogging();
 }
 
 // display a help message

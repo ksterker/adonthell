@@ -85,6 +85,11 @@ namespace google
         }
     }
 
+    inline void ShutdownGoogleLogging()
+    {
+
+    }
+
     class LogMessageVoidify {
     public:
         LogMessageVoidify(const int & logLevel) 

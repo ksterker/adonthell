@@ -251,6 +251,21 @@ void savegame::init ()
     }
 }
 
+void savegame::cleanup()
+{
+    for (std::vector<savegame_data*>::iterator i = Games().begin(); i != Games().end(); i++)
+    {
+        delete *i;
+    }
+    Games().clear();
+
+    for (std::list<base::serializer_base*>::iterator i = Serializer().begin(); i != Serializer().end(); i++)
+    {
+        delete *i;
+    }
+    Serializer().clear();
+}
+
 // remove files from a saved game directory
 void savegame::cleanup (const std::string & name)
 {

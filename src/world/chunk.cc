@@ -82,7 +82,8 @@ chunk::chunk () : Min(), Max(), Split()
 // dtor
 chunk::~chunk()
 {
-    // chunk::clear() already triggered by area::~area() and area::clear()
+    // clear chunk recursively
+    chunk::clear();
 }
 
 // add an object to chunk
@@ -298,6 +299,7 @@ world::entity * chunk::remove (const chunk_info & ci)
             Resize = true;
         }
         
+        delete *it;
         Objects.erase (it);
     }
     

@@ -32,8 +32,8 @@ namespace base
 {
     base::paths &Paths(void)
     {
-        static base::paths * Paths = new base::paths();
-        return *Paths;
+        static base::paths Paths;
+        return Paths;
     }
     base::timer Timer;
     u_int8 Scale = 1;

@@ -30,11 +30,6 @@
 #include <adonthell/gfx/screen.h>
 #include <adonthell/input/manager.h>
 #include <adonthell/main/adonthell.h>
-#include <adonthell/rpg/character.h>
-#include <adonthell/rpg/faction.h>
-#include <adonthell/rpg/quest.h>
-#include <adonthell/world/character.h>
-#include <adonthell/world/object.h>
 #include <adonthell/world/area_manager.h>
 #include <adonthell/gui/ui_event.h>
 #include <adonthell/gui/window_manager.h>
@@ -66,11 +61,6 @@ public:
         // order too.
         
         // note: order is important; load EVENT before RPG before WORLD
-        base::savegame::add (new base::serializer<events::date> ());
-        base::savegame::add (new base::serializer<rpg::quest> ());
-        base::savegame::add (new base::serializer<rpg::faction> ());
-        base::savegame::add (new base::serializer<rpg::character> ());
-        base::savegame::add (new base::serializer<world::area_manager> ());
     }
 
     // callback for key event listener
@@ -134,7 +124,7 @@ public:
         LOG(INFO) << "worldtest starting up!";
 
         LOG(INFO) << "Initialising game modules... ";
-    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD | GUI);
+    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD | GUI | RPG | EVENT);
         LOG(INFO) << "  done!";
 
         LOG(INFO) << "Setting video mode... ";
@@ -244,8 +234,6 @@ public:
 
 	        base::Timer.update ();
 	    } // while (main loop)
-
-        // gc.world.save ("test-world-new.xml");
 
         LOG(INFO) << "Cleaning up faction... ";
         rpg::faction::cleanup();
