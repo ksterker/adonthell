@@ -51,8 +51,6 @@ listener_python::~listener_python ()
 // set python method to be called when the event occurs
 bool listener_python::connect_callback (const string & file, const string & classname, const string & callback, PyObject *args)
 {
-    u_int16 size;
-    
     // cleanup
     delete Method;
     
@@ -71,39 +69,14 @@ bool listener_python::connect_callback (const string & file, const string & clas
         return false;
     }
     
-    // make sure the given arguments are a tuple
-    if (!args || !PyTuple_Check (args))
-    {
-        if (args) LOG(WARNING) << "listener::connect_callback: argument must be a tuple!";
-        size = 2;
-    }
-    else size = PyTuple_GET_SIZE (args) + 2;
-    
-    // keep old argument tuple, if possible
-    if (!Args || PyTuple_GET_SIZE (Args) != size)
-    {
-        // free old args
-        Py_XDECREF (Args);
-        
-        // prepare callback arguments
-        Args = PyTuple_New (size);
-        
-        // first argument is the listener itself
-        PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
+    // free old args
+    Py_XDECREF(Args);
 
-        // better than NULL
-        Py_INCREF(Py_None);
-        PyTuple_SET_ITEM(Args, 1, Py_None);
-    }
-    
-    // second argument will be the event that triggered the callback
-    for (u_int16 i = 2; i < size; i++)
-    {
-        // copy remaining arguments, if any
-        PyObject *arg =  PyTuple_GET_ITEM (args, i-2);
-        Py_INCREF (arg);
-        PyTuple_SetItem (Args, i, arg);
-    }
+    // make room for additional parameters
+    Args = python::pad_tuple(args, 2);
+
+    // first parameter is the listener itself
+    PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
     
     return true;
 }
