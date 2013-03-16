@@ -66,7 +66,7 @@ python::script *pool::reconnect (const std::string & file, const std::string & c
     {
         python::script *scrpt = new python::script ();
         
-        // instanciate
+        // instantiate
         if (!scrpt->create_instance (file, classname, NULL))
         {
             LOG(ERROR) << "pool::reconnect: failed instantiating class " << classname << " in file " << file << "!";

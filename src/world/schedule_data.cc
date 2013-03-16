@@ -37,7 +37,7 @@ bool schedule_data::activate (schedule *s)
 {
     if (!s->set_schedule (File, Args))
     {
-        fprintf (stderr, "*** schedule_data::activate: activation of queued schedule '%s' failed!\n", File.c_str ());
+        LOG(ERROR) << "activation of queued schedule '" << File << "' failed!";
         return false;
     }
     

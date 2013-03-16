@@ -204,7 +204,7 @@ bool slot::get_state (base::flat & file)
     // get item(s) if any
     if (Count > 0)
     {
-        // mutable items need to be instanciated and loaded
+        // mutable items need to be instantiated and loaded
         if (file.get_bool ("sim") == true) 
         {
             Item = new item (true);

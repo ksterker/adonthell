@@ -235,7 +235,7 @@ bool item::get_state (base::flat & file)
     // get template to use for item
     std::string tmpl = record.get_string ("icn");
     
-    // instanciate
+    // instantiate
     if (!create_instance (tmpl)) return false;
 
     // pass file

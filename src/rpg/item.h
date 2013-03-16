@@ -61,9 +61,9 @@ namespace rpg {
      * the %script class.
      *
      * There are two 'classes' of items. Of immutable items, only one %object
-     * will be instanciated when loading a saved %game. All copies of such an
+     * will be instantiated when loading a saved %game. All copies of such an
      * %item are actually references to the one object. Mutable items however 
-     * will be instanciated as often as copies of that %item exist.
+     * will be instantiated as often as copies of that %item exist.
      */
     class item : public python::script 
     {
@@ -98,11 +98,11 @@ namespace rpg {
         virtual ~item ();
         
         /**
-         * Convenience method to instanciate an item template. Its usage is 
+         * Convenience method to instantiate an item template. Its usage is 
          * preferred over script::create_instance ().
          * @param templ name of the item template without .py extension
          * @param args argument tuple to pass to the template's constructor
-         * @return \b true if instanciated successful, \b false otherwise. 
+         * @return \b true if instantiated successful, \b false otherwise. 
          */
         bool create_instance (const std::string & templ, PyObject * args = NULL)
         {
@@ -194,6 +194,7 @@ namespace rpg {
         {
             PyObject *args = Py_BuildValue ("(s)", (char *) category.c_str ());
             call_method ("add_category", args);
+            Py_DECREF(args);
         }
         
         /**
@@ -204,6 +205,7 @@ namespace rpg {
         {
             PyObject *args = Py_BuildValue ("(s)", (char *) category.c_str ());
             call_method ("remove_category", args);
+            Py_DECREF(args);
         }
     
         /**
@@ -219,6 +221,7 @@ namespace rpg {
             
             if (retval && PyInt_Check (retval)) result = PyInt_AS_LONG (retval);
             Py_XDECREF (retval);
+            Py_DECREF (args);
             
             return (result != 0);
         }
@@ -326,8 +329,8 @@ namespace rpg {
         //@{
         /**
          * Load item from named file. This will first load the %item template
-         * to instanciate the underlying Python item class. Then it will
-         * restore the actual %item data. If an item is already instanciated,
+         * to instantiate the underlying Python item class. Then it will
+         * restore the actual %item data. If an item is already instantiated,
          * it will be replaced.
          *
          * @param file name of the file to load %item from.
@@ -348,8 +351,8 @@ namespace rpg {
             
         /**
          * Load %item from stream. This will first load the %item template
-         * to instanciate the underlying Python item class. Then it will
-         * restore the actual %item data. If an item is already instanciated,
+         * to instantiate the underlying Python item class. Then it will
+         * restore the actual %item data. If an item is already instantiated,
          * it will be replaced.
          *
          * @param file stream to load item from.

@@ -55,7 +55,7 @@ namespace python
             
             /**
              * Return a python method from the given script and class. If the
-             * class is not yet cached in the pool, it is instanciated.
+             * class is not yet cached in the pool, it is instantiated.
              * @param file name of the python script.
              * @param classname name of the python class to access.
              * @param callback name of the method to retrieve from that class.
@@ -67,7 +67,7 @@ namespace python
             /**
              * Return a python object from the given script. If it is not
              * yet cached, the script will be loaded and the given class
-             * will be instanciated.
+             * will be instantiated.
              * @param file name of the python script.
              * @param classname name of the python class to access.
              * @return python object from cache or \c NULL on error.

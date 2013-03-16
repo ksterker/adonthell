@@ -129,9 +129,11 @@ bool schedule::set_schedule (const string & file, PyObject *args)
         // cancel alarm
         Factory.clear ();
     
+        Py_DECREF(new_args);
         return true;
     }
-    
+
+    Py_DECREF(new_args);
     return false;
 }
 
@@ -265,8 +267,10 @@ bool schedule::get_state (base::flat & file)
     if (!Manager.create_instance (SCHEDULE_DIR + script, script, args))
     {
         LOG(ERROR) << "failed loading manager script '" << script << "'.";
+        Py_DECREF(args);
         return false;
     }
+    Py_DECREF(args);
     
     // restore schedule script, if any
     record = file.get_flat ("sdl", false);
@@ -278,8 +282,10 @@ bool schedule::get_state (base::flat & file)
         if (!Schedule.create_instance (SCHEDULE_DIR + script, script, args))
         {
             LOG(ERROR) << "failed loading schedule script '" << script << "'.";
+            Py_DECREF(args);
             return false;
         }
+        Py_DECREF(args);
         
         // restart schedule
         Schedule.call_method ("start");

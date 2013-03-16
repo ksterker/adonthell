@@ -309,7 +309,7 @@ bool character::get_state (base::flat & file)
     // get template to use for character
     std::string tmpl = file.get_string ("ccls");
 
-    // instanciate
+    // instantiate
     if (!create_instance (tmpl)) return false;
 
     // pass file

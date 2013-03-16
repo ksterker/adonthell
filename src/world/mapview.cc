@@ -94,48 +94,11 @@ bool mapview::set_schedule (const std::string & method, PyObject *extraArgs)
     Schedule = python::pool::connect (SCHEDULE_SCRIPT, "mapview", method);
     if (!Schedule) return false;
     
-    // make sure the given arguments are a tuple
-    if (extraArgs && !PyTuple_Check (extraArgs))
-    {
-        fprintf (stderr, "*** warning: mapview::set_schedule: extra args must be a tuple!\n");
-        return false;
-    }
+    // make room for mapview in arguments
+    Args = python::pad_tuple(extraArgs, 1);
     
-    // calculate size of argument tuple required
-    u_int16 size = extraArgs ? PyTuple_GET_SIZE (extraArgs) + 1 : 1;
-    
-    // free old tuple content
-    if (Args)
-    {
-        u_int16 s = PyTuple_GET_SIZE (Args);
-        for (u_int16 i = 0; i < s; i++)
-        {
-            PyObject *arg =  PyTuple_GET_ITEM (extraArgs, i);
-            Py_DECREF (arg);
-        }
-    }
-    
-    // keep old argument tuple, if possible
-    if (!Args || PyTuple_GET_SIZE (Args) != size)
-    {
-        // free old args
-        Py_XDECREF (Args);
-        
-        // prepare callback arguments
-        Args = PyTuple_New (size);
-        
-        // first argument is the mapview itself
-        PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
-    }
-    
-    // prepare arguments
-    for (u_int16 i = 1; i < size; i++)
-    {
-        // copy remaining arguments, if any
-        PyObject *arg =  PyTuple_GET_ITEM (extraArgs, i - 1);
-        Py_INCREF (arg);
-        PyTuple_SetItem (Args, i, arg);
-    }
+    // first argument is the mapview itself
+    PyTuple_SET_ITEM (Args, 0, python::pass_instance (this));
     
     return true;
 }
@@ -377,6 +340,7 @@ bool mapview::get_state (base::flat & file)
 
     // set schedule
     set_schedule(schedule_name, extraArgs);
+    Py_XDECREF(extraArgs);
     
     // loading successful?
     return record.success();

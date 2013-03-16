@@ -52,7 +52,7 @@ typedef events::event* (*new_event)();
  * while being registered.
  *
  * Each type of %event needs a unique name, a event::manager to handle
- * these types of events and a creator function to instanciate this
+ * these types of events and a creator function to instantiate this
  * type of event when restoring a saved game.
  */
 class event_type
@@ -85,7 +85,7 @@ public:
      * @param name name of %event whos instance to retrieve.
      * @return a new instance of given %event type or \c NULL on error.
      */
-    static event *instanciate_event (const std::string & name);
+    static event *instantiate_event (const std::string & name);
     
     /**
      * Return %event %manager for given %event id
@@ -105,9 +105,9 @@ public:
     
     /**
      * Instanciate a new event of this type.
-     * @return a newly instanciated event.
+     * @return a newly instantiated event.
      */
-    event *instanciate ()
+    event *instantiate ()
     {
         return InstanciateEvent ();
     }
@@ -137,7 +137,7 @@ private:
     /// Manager for this type of event 
     manager_base *Manager;
 
-    /// Function to instanciate an event of this type
+    /// Function to instantiate an event of this type
     new_event InstanciateEvent;
     
     /// Types of events registered with the event subsystem by name
@@ -151,7 +151,7 @@ private:
 /**
  * Macro for functions that return a new instance of an %event.
  * @param nsp namespace the event class lives in
- * @param evt the event class to instanciate
+ * @param evt the event class to instantiate
  */
 #define NEW_EVENT(nsp, evt)\
     events::event* new_ ## evt () { return (events::event*) new nsp::evt; }

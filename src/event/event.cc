@@ -71,7 +71,7 @@ void event::put_state (base::flat & file) const
 bool event::get_state (base::flat & file) 
 {
     // Note that 'Type' is already read by listener::get_state 
-    // to determine what event subclass to instanciate
+    // to determine what event subclass to instantiate
     Repeat = file.get_sint32 ("erp");
     
     return file.success ();

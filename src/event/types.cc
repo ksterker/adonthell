@@ -74,10 +74,10 @@ u_int8 event_type::get_id (const std::string & name)
 }
 
 // instantiate new event of given type
-event *event_type::instanciate_event (const std::string & name)
+event *event_type::instantiate_event (const std::string & name)
 {
     std::hash_map<std::string, event_type*>::iterator i = NamedTypes().find (name);   
-    if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->instanciate ();
+    if (i != NamedTypes().end() && (*i).second != NULL) return (*i).second->instantiate ();
 
     LOG(ERROR) << "event type '" << name << "' not registered!";
     return NULL;

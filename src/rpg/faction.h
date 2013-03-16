@@ -77,8 +77,8 @@ namespace rpg
         //@{
         /**
          * Load data of all factions. This will first load the %faction
-         * template to instanciate the underlying Python faction class. Then it will
-         * restore the actual %faction data. If the faction is already instanciated,
+         * template to instantiate the underlying Python faction class. Then it will
+         * restore the actual %faction data. If the faction is already instantiated,
          * it will be replaced.
          *
          * @return \b true if loading successful, \b false otherwise.
@@ -102,8 +102,8 @@ namespace rpg
 
         /**
          * Load faction from named file. This will first load the %faction template
-         * to instanciate the underlying Python faction class. Then it will
-         * restore the actual %faction data. If an faction is already instanciated,
+         * to instantiate the underlying Python faction class. Then it will
+         * restore the actual %faction data. If an faction is already instantiated,
          * it will be replaced.
          *
          * @param file name of the file to load %faction from.
@@ -137,11 +137,11 @@ namespace rpg
         virtual ~faction() {}
 
         /**
-         * Convenience method to instanciate a faction template. Its usage is
+         * Convenience method to instantiate a faction template. Its usage is
          * preferred over script::create_instance ().
          * @param templ name of the faction template without .py extension
          * @param args argument tuple to pass to the template's constructor
-         * @return \b true if instanciated successful, \b false otherwise.
+         * @return \b true if instantiated successful, \b false otherwise.
          */
         bool create_instance (const std::string & templ, PyObject * args = NULL);
 

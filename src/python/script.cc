@@ -69,8 +69,8 @@ bool script::create_instance (const string & file, const string & classname, PyO
     PyObject *module = python::import_module (file);
     if (!module) return false;
 
-    // Instanciate!
-    return instanciate (module, file, classname, args);
+    // Instantiate!
+    return instantiate (module, file, classname, args);
 }
 
 // Reload a python module in case it has changed on disk
@@ -85,11 +85,11 @@ bool script::reload_instance (const string & file, const string & classname, PyO
     Py_DECREF (module);
     if (!reload) return false;
 
-    return instanciate (reload, file, classname, args);
+    return instantiate (reload, file, classname, args);
 }
 
-// Instanciate the given class from the module
-bool script::instanciate (PyObject *module, const string & file, const string & classname, PyObject * args)
+// Instantiate the given class from the module
+bool script::instantiate (PyObject *module, const string & file, const string & classname, PyObject * args)
 {
     // Cleanup
     clear ();
@@ -133,12 +133,12 @@ PyObject* script::call_method_ret (const string &name, PyObject *args) const
         {
             result = PyObject_CallObject (tocall, args);
             if (!result) python::show_traceback ();
-            Py_DECREF (tocall);
         }
         else
         {
             LOG(ERROR) << "script::call_method_ret: '" << name << "' is not callable!";
         }
+        Py_DECREF (tocall);
     }
 
     return result;
@@ -204,7 +204,7 @@ void script::set_attribute (const string &name, PyObject *value)
         if (PyObject_SetAttrString (Instance, (char *) name.c_str (), value) == -1)
             python::show_traceback ();
     }
-    else return;
+    Py_XDECREF(value);
 }
 
 // Set an int attribute of the instance
@@ -219,7 +219,6 @@ void script::set_attribute_int (const string &name, s_int32 value)
 
         Py_DECREF (val);
     }
-    else return;
 }
 
 // Set a string attribute of the instance
@@ -234,7 +233,6 @@ void script::set_attribute_string (const string &name, const string & value)
 
         Py_DECREF (val);
     }
-    else return;
 }
 
 // save script to disk

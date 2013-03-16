@@ -99,6 +99,7 @@ s_int32 faction::estimate_speed(const std::string & terrain) const
     s_int32 ret_int = python::retrieve_instance<s_int32, s_int32>(ret);
 
     Py_XDECREF(ret);
+    Py_DECREF(args);
 
     // If ret_int is -1 then the specie is not valid (doesn't exists or its files don't exists
     // or are corrupted) if that happens we fallback to a default value in order to prevent strange errors.
@@ -198,7 +199,7 @@ bool faction::get_state(base::flat & file)
     // get template to use for faction
     std::string tmpl = file.get_string("gcn");
 
-    // instanciate
+    // instantiate
     if (!create_instance (tmpl)) return false;
 
     // pass file
@@ -208,9 +209,6 @@ bool faction::get_state(base::flat & file)
     // load actual faction data
     call_method ("get_state", args);
     Py_DECREF (args);
-
-    // add reference to item
-    set_attribute ("this", python::pass_instance (this));
 
     return file.success ();
 }

@@ -36,7 +36,7 @@ namespace base
 {
     /**
      * Wrapper for anything that can be serialized to a file on disk.
-     * It supports static classes, instanciated objects and Python
+     * It supports static classes, instantiated objects and Python
      * classes, as long as those provide the two methods
      *
      * \li bool load()
@@ -114,9 +114,9 @@ namespace base
     };
     
     /**
-     * Wrapper around static or instanciated class. Called
+     * Wrapper around static or instantiated class. Called
      * py_serializer on Python side (see base.i for specialization).
-     * This class can be instanciated to register at the savegame
+     * This class can be instantiated to register at the savegame
      * class.
      */
     template <class T>

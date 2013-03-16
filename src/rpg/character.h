@@ -67,11 +67,11 @@ namespace rpg
                        const std::string & specie);
 
             /**
-             * Convenience method to instanciate a character template. Its usage is
+             * Convenience method to instantiate a character template. Its usage is
              * preferred over script::create_instance ().
              * @param templ name of the item template without .py extension
              * @param args argument tuple to pass to the template's constructor
-             * @return \b true if instanciated successful, \b false otherwise.
+             * @return \b true if instantiated successful, \b false otherwise.
              */
             bool create_instance (const std::string & templ, PyObject * args = NULL)
             {
@@ -322,8 +322,8 @@ namespace rpg
             //@{
             /**
              * Load %character data of all characters. This will first load the %character
-             * template to instanciate the underlying Python character class. Then it will
-             * restore the actual %character data. If the character is already instanciated,
+             * template to instantiate the underlying Python character class. Then it will
+             * restore the actual %character data. If the character is already instantiated,
              * it will be replaced.
              *
              * @return \b true if loading successful, \b false otherwise.
@@ -405,7 +405,7 @@ namespace rpg
             /// Default speed of this character
             float Base_Speed;
 
-            /// list of all characters currently instanciated
+            /// list of all characters currently instantiated
             static std::hash_map<std::string, character*> Characters;
 
             /// id of the character currently controlled by the player

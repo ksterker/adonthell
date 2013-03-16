@@ -160,7 +160,8 @@ namespace python
     
         /**
          * Assign a new attribute to the module, overriding an existing
-         * attribute of the same name.
+         * attribute of the same name. Steals a reference to the passed
+         * value!
          *
          * @param name The attribute's name
          * @param value The attribute's value
@@ -229,7 +230,7 @@ namespace python
          * Returns the file name of this object. This is the name of the
          * Python module containing the wrapped class.
          *
-         * @return fiöe name of this object.
+         * @return fiï¿½e name of this object.
          */
         std::string file_name () const
         {
@@ -266,7 +267,7 @@ namespace python
     
     private:
         /// Helper for create_instance and reload_instance
-        bool instanciate (PyObject*, const std::string &, const std::string &, PyObject*);
+        bool instantiate (PyObject*, const std::string &, const std::string &, PyObject*);
     
         /// The class name of the current script
         std::string Classname;
