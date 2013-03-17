@@ -8,7 +8,7 @@ EXTRA_DIST = README audiotest.py dialogtest.py gfxsave.py itemtest.py \
     convert_quests.py inputtest.py searchtest.py serializertest.py \
     convert_graphics.py CMakeLists.txt README.worldtest smallworld.cc
 
-noinst_PROGRAMS = audiotest callbacktest diskiotest guitest inputtest gfxtest worldtest \
+noinst_PROGRAMS = audiotest callbacktest diskiotest guitest inputtest worldtest \
     imagetest path_test
 
 audiotest_SOURCES = audiotest.cc
