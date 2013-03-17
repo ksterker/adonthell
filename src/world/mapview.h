@@ -155,6 +155,28 @@ namespace world
             set_length (length);
             set_height (height);
         }
+
+        /**
+         * Return the map X position at the center of the mapview. Note that
+         * the this might not be the actual center of the view if the position
+         * is near the edge of the map.
+         * @return X position of the map in view.
+         */
+        s_int32 get_x () const
+        {
+            return Pos.x();
+        }
+
+        /**
+         * Return the map Y position at the center of the mapview. Note that
+         * the this might not be the actual center of the view if the position
+         * is near the edge of the map.
+         * @return Y position of the map in view.
+         */
+        s_int32 get_y () const
+        {
+            return Pos.y();
+        }
         
         /**
          * Return the height the mapview is going to display. It might 

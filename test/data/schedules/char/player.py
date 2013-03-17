@@ -1,6 +1,4 @@
 #
-# $Id: player.py,v 1.5 2009/05/05 18:31:53 ksterker Exp $
-#   
 # Copyright (C) 2009 Kai Sterker <kaisterker@linuxgames.com>
 # Part of the Adonthell Project http://adonthell.linuxgames.com
 #
@@ -21,6 +19,7 @@
 
 from adonthell import base, input, world, event
 import actions
+import ui.savegame
 
 class player (object):
     """
@@ -108,6 +107,10 @@ class player (object):
             if kev.key() == input.keyboard_event.F5_KEY:
                 game_mgr = base.savegame()
                 game_mgr.save (base.savegame.QUICK_SAVE, "Quicksave", event.date.time())
+                
+                game_ui = ui.savegame.savegame()
+                game_ui.save_screenshot (game_mgr.get (base.savegame.QUICK_SAVE).directory())
+                
                 game_mgr = None
                 return 1
                 
@@ -115,7 +118,7 @@ class player (object):
             elif kev.key() == input.keyboard_event.F6_KEY:
                 game_mgr = base.savegame()
                 game_mgr.load (base.savegame.QUICK_SAVE)
-                game_mgr = None
+                game_mgr = None                
                 return 1
         return 0
 
