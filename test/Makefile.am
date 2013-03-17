@@ -51,13 +51,6 @@ inputtest_LDADD = \
 	-L${top_builddir}/src/world/ -ladonthell_world              \
 	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
 
-gfxtest_SOURCES = gfxtest.cc
-gfxtest_LDADD = -L$(top_builddir)/src/base/ -ladonthell_base    \
-	-L$(top_builddir)/src/python/ -ladonthell_python $(PY_LIBS) \
-	-L$(top_builddir)/src/gfx/ -ladonthell_gfx                  \
-	-L$(top_builddir)/src/event/ -ladonthell_event              \
-	-L$(top_builddir)/src/py-runtime -ladonthell_py_runtime
-
 worldtest_CXXFLAGS = $(PY_CFLAGS) $(libglog_CFLAGS) $(AM_CXXFLAGS)
 worldtest_SOURCES = worldtest.cc
 worldtest_LDADD = $(PY_LIBS) $(libglog_LIBS) \
