@@ -33,7 +33,15 @@ namespace base
 {
     void stderr_to_log::write (const char *msg)
     {
-        LOG(ERROR) << msg;
+        if (strchr(msg, '\n') == NULL)
+        {
+            Buffer << msg;
+        }
+        else
+        {
+            LOG(ERROR) << Buffer.str() << msg;
+            Buffer.str("");
+        }
     }
 }
 
