@@ -28,6 +28,7 @@
 #include "logging.h"
 
 #include <string>
+#include <cstring>
 
 namespace base
 {
