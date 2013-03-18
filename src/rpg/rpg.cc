@@ -28,12 +28,18 @@
 #include "quest.h"
 #include "faction.h"
 #include "character.h"
+#include "quest_event_manager.h"
 
 #include <adonthell/base/savegame.h>
+
+// quest_event manager instance that is initialized when the rpg package is loaded
+static rpg::quest_event_manager *QuestEventManager = NULL;
 
 // start world module
 void rpg::init (base::configuration & cfg)
 {
+    QuestEventManager = new rpg::quest_event_manager;
+
     base::savegame::add (new base::serializer<rpg::quest> ());
     base::savegame::add (new base::serializer<rpg::faction> ());
     base::savegame::add (new base::serializer<rpg::character> ());
@@ -45,4 +51,7 @@ void rpg::cleanup ()
     rpg::character::cleanup();
     rpg::faction::cleanup();
     rpg::quest::cleanup();
+
+    delete QuestEventManager;
+    QuestEventManager = NULL;
 }

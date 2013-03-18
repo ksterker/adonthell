@@ -26,6 +26,7 @@
 
 #include <algorithm>
 
+#include "window_manager.h"
 #include "ui_event_manager.h"
 #include "ui_event.h"
 
@@ -40,22 +41,6 @@ NEW_EVENT (gui, ui_event)
 ui_event_manager::ui_event_manager () : events::manager_base (&new_ui_event)
 {
 	// nothing to do here
-}
-
-// trigger the event listeners
-void ui_event_manager::update()
-{
-    // event handlers might fire new events, so use a copy
-    std::list<events::listener*> copy (Pending.begin(), Pending.end());
-
-    // clear list of pending events
-    Pending.clear();
-
-    // call event handlers
-    for (std::list<events::listener*>::iterator li = copy.begin(); li != copy.end(); li++)
-    {
-        (*li)->raise_event ((*li)->get_event());
-    }
 }
 
 // See whether a matching event is registered
@@ -76,7 +61,7 @@ void ui_event_manager::raise_event (const events::event * e)
         const events::event *evt = (*li)->get_event();
         if (evt->equals (e))
         {
-            Pending.push_back(*li);
+            window_manager::queue_event(*li);
         }
 
         li++;

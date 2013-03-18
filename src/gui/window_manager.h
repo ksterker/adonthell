@@ -29,7 +29,6 @@
 
 #include <adonthell/world/mapview.h>
 #include "layout.h"
-#include "ui_event_manager.h"
 
 namespace gui
 {
@@ -192,12 +191,24 @@ public:
      */
     static void remove(world::mapview *map);
 
+    /**
+     * Queue an ui event to execute before the next gui update. Required to
+     * decouple ui event handling from ui event firing.
+     * @param li the listener to execute.
+     */
+    static void queue_event (events::listener* li)
+    {
+        PendingEvents.push_back (li);
+    }
+
 private:
     /// forbid instantiation
     window_manager ();
     
     static bool fade(gui::manager_child & c);
     
+    static void fire_events ();
+
     /// the list of open absolutely-positioned windows
     static std::list<manager_child> Windows;
 
@@ -207,8 +218,8 @@ private:
     /// the list of open mapviews
     static std::list<mapview_container> Mapviews;
 
-    /// ui_event manager instance to decouple event triggering from event execution
-    static ui_event_manager EventManager;
+    /// storage for pending events.
+    static std::list<events::listener*> PendingEvents;
 };
 
 } // namespace gui

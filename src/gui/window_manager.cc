@@ -40,14 +40,13 @@ std::list<gui::maprel_window> window_manager::MaprelWindows;
 
 std::list<gui::mapview_container> window_manager::Mapviews;
 
-/// the ui event manager
-gui::ui_event_manager window_manager::EventManager;
+std::list<events::listener*> window_manager::PendingEvents;
 
 // render to screen
 void window_manager::update()
 {
-    // fire all pending events
-    EventManager.update();
+    // trigger the event listeners
+    fire_events();
 
     // draw all mapviews
     for (std::list<gui::mapview_container>::reverse_iterator i = Mapviews.rbegin(); i != Mapviews.rend(); i++)
@@ -190,9 +189,7 @@ bool window_manager::fade (gui::manager_child & c)
                 c.Dy = gfx::screen::height() - c.Pos.y();
                 break;
             default:
-                {
-                    // fall through
-                }
+                break;
         }
     }
     
@@ -279,9 +276,22 @@ bool window_manager::fade (gui::manager_child & c)
             return !c.Showing;
 
         default:
-            {
-                // fall through
-            }
+            break;
     }
     return false;
+}
+
+void window_manager::fire_events()
+{
+    // event handlers might fire new events, so use a copy
+    std::list<events::listener*> copy (PendingEvents.begin(), PendingEvents.end());
+
+    // clear list of pending events
+    PendingEvents.clear();
+
+    // call event handlers
+    for (std::list<events::listener*>::iterator li = copy.begin(); li != copy.end(); li++)
+    {
+        (*li)->raise_event ((*li)->get_event());
+    }
 }

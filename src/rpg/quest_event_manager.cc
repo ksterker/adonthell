@@ -34,9 +34,6 @@
 using rpg::quest_event_manager;
 using rpg::quest_event;
 
-// quest_event manager instance that is initialized when the rpg package is loaded 
-static quest_event_manager QuestEventManager;
-
 // function returning a new quest event
 NEW_EVENT (rpg, quest_event)
 

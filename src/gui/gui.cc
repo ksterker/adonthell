@@ -26,12 +26,18 @@
 
 #include "gui.h"
 #include "fontcache.h"
+#include "ui_event_manager.h"
 
 namespace gui
 {
+    /// the UI event manager instance
+    static ui_event_manager *UiEventManager = NULL;
+
     // startup GUI
     bool init()
     {
+        UiEventManager = new ui_event_manager;
+
         FontCache = new font_cache();
         return FontCache != NULL;
     }
@@ -47,8 +53,11 @@ namespace gui
     {
         delete FontCache;
         FontCache = NULL;
+
+        delete UiEventManager;
+        UiEventManager = NULL;
     }
 
     /// a single font cache
-    font_cache *FontCache;
+    font_cache *FontCache = NULL;
 }

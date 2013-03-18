@@ -35,9 +35,6 @@ using std::list;
 using events::time_event_manager;
 using events::event_type;
 
-// time_event manager instance that is initialized when the event package is loaded 
-static time_event_manager TimeEventManager;
-
 // function returning a new time event
 NEW_EVENT (events, time_event)
 

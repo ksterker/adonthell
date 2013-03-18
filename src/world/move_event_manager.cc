@@ -32,9 +32,6 @@
 using world::move_event_manager;
 using world::move_event;
 
-// move_event manager instance that is initialized when the world package is loaded
-static move_event_manager MoveEventManager;
-
 // function returning a new move event
 NEW_EVENT (world, move_event)
 

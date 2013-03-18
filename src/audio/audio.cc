@@ -26,12 +26,13 @@
  *
  */
 
+#include <adonthell/base/paths.h>
 #include <adonthell/event/manager.h>
 #include "audio.h"
 #include "audio_manager.h"
 #include "sound.h"
 #include "audio_event.h"
-#include <adonthell/base/paths.h>
+#include "audio_event_manager.h"
 
 #include <iostream>
 #include <deque>
@@ -56,6 +57,11 @@ static void (*audiocleanup)() = 0;
 
 namespace audio
 {
+    /**
+     * time_event manager instance that is initialized when the audio package is loaded
+     */
+    static audio_event_manager *AudioEventManager = NULL;
+
     /**
      * List of sounds that have completed after the last call to update
      */
@@ -152,6 +158,7 @@ namespace audio
         return false;
 
     success:
+        AudioEventManager = new audio_event_manager;
         logging::decrement_log_indent_level();
         return audioinit();
     }
@@ -186,6 +193,9 @@ namespace audio
     {
         if (audiocleanup) audiocleanup();
         audiocleanup = NULL;
+
+        delete AudioEventManager;
+        AudioEventManager = NULL;
 
         if (dlhandle) lt_dlclose(dlhandle);
         lt_dlexit();
