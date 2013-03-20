@@ -427,7 +427,7 @@ namespace gfx
 #endif
     }
 
-    void surface_sdl::scale(surface *target, const u_int32 & factor) const
+    void surface_sdl::scale_up(surface *target, const u_int32 & factor) const
     {
         // scaling of the final result is handled in surface_sdl::draw
         if (!target || target == display) return;
@@ -467,6 +467,35 @@ namespace gfx
 
             // goto next line
             target_data += target_surf->pitch;
+        }
+
+        target->unlock();
+        SDL_FreeSurface(target_surf);
+    }
+
+    void surface_sdl::scale_down(surface *target, const u_int32 & factor) const
+    {
+        // downscaling directly to screen is not supported
+        if (!target || target == display) return;
+
+        if (length() / factor > target->length() ||
+            height() / factor > target->height())
+            return;
+
+        lock(NULL);
+        SDL_Surface *target_surf = ((surface_sdl*) target)->to_sw_surface ();
+
+        s_int32 target_y = 0;
+        for (s_int32 src_y = factor/2; src_y < height(); src_y += factor)
+        {
+            s_int32 target_x = 0;
+            for (s_int32 src_x = factor/2; src_x < length(); src_x += factor)
+            {
+                u_int32 px = get_pix (src_x, src_y);
+                target->put_pix (target_x, target_y, px);
+                target_x++;
+            }
+            target_y++;
         }
 
         target->unlock();

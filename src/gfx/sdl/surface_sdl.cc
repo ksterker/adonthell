@@ -219,7 +219,7 @@ namespace gfx
         return col;
     }
 
-    void surface_sdl::scale(surface *target, const u_int32 & factor) const
+    void surface_sdl::scale_up(surface *target, const u_int32 & factor) const
     {
     	if (length() * factor > target->length() ||
     		height() * factor > target->height())
@@ -257,6 +257,32 @@ namespace gfx
 			// goto next line
 			target_data += ((surface_sdl *)target)->vis->pitch;
 		}
+
+        target->unlock();
+        unlock();
+    }
+
+    void surface_sdl::scale_down(surface *target, const u_int32 & factor) const
+    {
+        if (length() * factor > target->length() ||
+            height() * factor > target->height())
+            return;
+
+        lock();
+        target->lock();
+
+        s_int32 target_y = 0;
+        for (s_int32 src_y = factor/2; src_y < height(); src_y += factor)
+        {
+            s_int32 target_x = 0;
+            for (s_int32 src_x = factor/2; src_x < length(); src_x += factor)
+            {
+                u_int32 px = get_pix (src_x, src_y);
+                target->put_pix (target_x, target_y, px);
+                target_x++;
+            }
+            target_y++;
+        }
 
         target->unlock();
         unlock();

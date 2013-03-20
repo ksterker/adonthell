@@ -82,7 +82,7 @@ void gfx_screen_update()
 {
     if (shadow_surface)
     {
-        shadow_surface->scale (display, base::Scale);
+        shadow_surface->scale_up (display, base::Scale);
     }
 
     SDL_Flip (display->get_vis());

@@ -51,31 +51,32 @@ namespace gfx
 
         virtual ~surface_sdl (); 
 
-        virtual void set_mask (bool m); 
+        void set_mask (bool m);
 
-        virtual void set_alpha (const u_int8 & surface_alpha, const bool & alpha_channel = false);
+        void set_alpha (const u_int8 & surface_alpha, const bool & alpha_channel = false);
 
-        virtual void draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
+        void draw (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy, u_int16 sl,
                            u_int16 sh, const drawing_area * da_opt = NULL,
                            surface * target = NULL) const;
 
-        virtual void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
+        void fillrect (s_int16 x, s_int16 y, u_int16 l, u_int16 h,
                                u_int32 col, drawing_area * da_opt = NULL);
 
-        void scale(surface *target, const u_int32 & factor) const;
+        void scale_up(surface *target, const u_int32 & factor) const;
+        void scale_down(surface *target, const u_int32 & factor) const;
 
-        virtual u_int32 map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 255) const;
-        virtual void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const;
-        virtual void lock () const { lock(NULL); };
-        virtual void unlock () const;
-        virtual void put_pix (u_int16 x, u_int16 y, u_int32 col); 
-        virtual u_int32 get_pix (u_int16 x, u_int16 y) const; 
+        u_int32 map_color(const u_int8 & r, const u_int8 & g, const u_int8 & b, const u_int8 & a = 255) const;
+        void unmap_color(u_int32 col, u_int8 & r, u_int8 & g, u_int8 & b, u_int8 & a) const;
+        void lock () const { lock(NULL); };
+        void unlock () const;
+        void put_pix (u_int16 x, u_int16 y, u_int32 col);
+        u_int32 get_pix (u_int16 x, u_int16 y) const;
 
-        virtual surface& operator = (const surface& src); 
+        surface& operator = (const surface& src);
 
-        virtual void resize (u_int16 l, u_int16 h);
+        void resize (u_int16 l, u_int16 h);
 
-        virtual void clear (); 
+        void clear ();
 
     protected:
         void set_data (void * data, u_int16 l, u_int16 h,
@@ -106,12 +107,6 @@ namespace gfx
 
         /// SDL_Rects used in every blitting function.
         static SDL_Rect srcrect, dstrect; 
-
-        /// Used internally for blitting operations with drawing_areas.
-        void setup_rects (u_int16 x, u_int16 y, const drawing_area * draw_to) const
-        {
-            setup_rects (x, y, 0, 0, length (), height (), draw_to); 
-        }
 
         /// Used internally for blitting operations with drawing_areas.
         void setup_rects (s_int16 x, s_int16 y, s_int16 sx, s_int16 sy,
