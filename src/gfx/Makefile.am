@@ -13,7 +13,6 @@ pkgincludegfx_HEADERS = \
 	drawable.h \
 	drawing_area.h \
 	gfx.h \
-    image.h \
 	png_wrapper.h \
 	screen.h \
     sprite.h \
@@ -29,7 +28,6 @@ libadonthell_gfx_la_SOURCES = \
 	drawable.cc \
 	drawing_area.cc \
 	gfx.cc \
-    image.cc \
 	png_wrapper.cc \
 	screen.cc \
     sprite.cc \

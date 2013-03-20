@@ -4,7 +4,6 @@ set(adonthell_gfx_SRCS
 	drawing_area.cc
 	png_wrapper.cc
 	gfx.cc
-    image.cc
 	screen.cc
     sprite.cc
 	surface.cc
@@ -16,7 +15,6 @@ set(adonthell_gfx_HEADERS
 	drawable.h
 	drawing_area.h
 	gfx.h
-    image.h
 	png_wrapper.h
 	screen.h
     sprite.h
