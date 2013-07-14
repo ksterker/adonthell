@@ -3,10 +3,13 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 datadir=@prefix@/share/adonthell
+pylibs=@PY_LIBS@
+pycflags=@PY_CFLAGS@
 
 Name: Adonthell
 Description: Role Playing Game Engine
 Version: @VERSION@
+URL: http://adonthell.nongnu.org
 Libs: -L${libdir} -ladonthell_py_runtime -ladonthell_base -ladonthell_python -ladonthell_gfx -ladonthell_input -ladonthell_event -ladonthell_rpg -ladonthell_world 
 Cflags: -I${includedir}/adonthell-@VERSION@
 

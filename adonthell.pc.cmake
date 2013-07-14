@@ -3,6 +3,8 @@ exec_prefix=@CMAKE_INSTALL_PREFIX@
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 datadir=${prefix}/share/adonthell
+pylibs=-L@PYTHON_LIBRARIES@
+pycflags=-I@PYTHON_INCLUDE_PATH@
 
 Name: Adonthell
 Description: Role Playing Game Engine
