@@ -29,6 +29,7 @@
 #include <adonthell/base/hash_map.h>
 #include "placeable_model.h"
 
+#ifndef __clang__
 #if __GNUC__ < 4 || (__GNUG__ == 4 && __GNUC_MINOR__ < 4)
 
 // allow to use placeable_model pointer as key in a hashmap when we do not have
@@ -55,6 +56,7 @@ namespace __gnu_cxx
     };
 }
 
+#endif
 #endif
 
 #include "chunk_info.h"

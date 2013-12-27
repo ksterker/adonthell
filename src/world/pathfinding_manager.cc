@@ -142,7 +142,7 @@ bool pathfinding_manager::add_task_ll(const s_int16 id, character * chr,
 s_int16 pathfinding_manager::add_task(character * chr, const vector3<s_int32> & target, const character::direction & finalDir)
 {
     const s_int16 id = find_free_task();
-    if ((id == -1) || (add_task_ll(id, chr, target, target, finalDir) == -1))
+    if ((id == -1) || (add_task_ll(id, chr, target, target, finalDir) == false))
         return -1;
 
     return id;
@@ -216,6 +216,9 @@ bool pathfinding_manager::delete_task(const s_int16 & id)
     pause_task(id);
     m_locked[id] = false;
 
+#ifdef __clang__
+    m_chars.remove(m_task[id]->chr);
+#else
     slist<character *>::iterator ichr = find(m_chars.begin(), m_chars.end(), m_task[id]->chr);
 
     if (ichr == m_chars.end())
@@ -225,7 +228,8 @@ bool pathfinding_manager::delete_task(const s_int16 & id)
     }
 
     m_chars.erase(ichr);
-
+#endif
+    
     // Update highest slot in use
     if (id == m_taskHighest)
     {

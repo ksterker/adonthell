@@ -403,9 +403,9 @@ namespace rpg {
         item *Next;
 
         /// This method may make changes to the item's stack. 
-        friend u_int32 slot::add (item * itm, const u_int32 & count = 1);
+        friend u_int32 slot::add (item * itm, const u_int32 & count);
         /// This method may make changes to the item's stack.
-        friend u_int32 slot::remove (item * itm, const u_int32 & count = 1);
+        friend u_int32 slot::remove (item * itm, const u_int32 & count);
     
         /**
          * Add an %item (or stack of items) to this item's stack. We assume

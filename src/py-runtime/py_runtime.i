@@ -69,7 +69,12 @@ void py_to_cxx (PyObject *instance, const char *name, void **retval)
 
 // code below is compatible with SWIG 1.3.25, up to at least 1.3.31 (or maybe not)
 #else
-
+#if (SWIGVERSION >= 0x020011)
+#define CLIENTDATA NULL
+#else
+#define CLIENTDATA
+#endif
+    
 // used to create sorted list of types without duplicates
 struct type_collector
 {
@@ -122,7 +127,7 @@ SWIGEXPORT void log_py_objects ()
     type_collector tc ("These types are known to SWIG:");
     
 	// get global typelist
-	swig_module_info *typelist = SWIG_Python_GetModule ();
+	swig_module_info *typelist = SWIG_Python_GetModule (CLIENTDATA);
 	if (typelist != NULL)
 	{
         // module info structure is organized as circular list
@@ -141,7 +146,7 @@ SWIGEXPORT void log_py_objects ()
 // pass a C++ object to Python
 SWIGEXPORT PyObject *cxx_to_py (void *instance, const char *name, const bool & ownership)
 {
-    if (SWIG_Python_GetModule())
+    if (SWIG_Python_GetModule(CLIENTDATA))
     {
         swig_type_info * tt = SWIG_Python_TypeQuery (name);
         if (tt) return SWIG_NewPointerObj (instance, tt, ownership);

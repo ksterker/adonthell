@@ -27,6 +27,11 @@
 #ifndef PATHFINDING_MANAGER_H
 #define PATHFINDING_MANAGER_H
 
+#ifdef __clang__
+#include <forward_list>
+using std::forward_list;
+#define slist forward_list
+#else
 #if __GNUG__ > 2
 #include <ext/slist>
 using namespace __gnu_cxx;
@@ -34,6 +39,8 @@ using namespace __gnu_cxx;
 #include <slist>
 using namespace std;
 #endif
+#endif // CLANG
+
 #include "pathfinding.h"
 #include "pathfinding_task.h"
 #include "coordinates.h"

@@ -218,8 +218,8 @@ namespace gfx
         static surface * (*get_surface_p)();
         static std::string (*info_p)();
 
-        friend bool gfx::init(const std::string &);
-        friend void gfx::cleanup();
+        friend bool init(const std::string &);
+        friend void cleanup();
     };
 }
 

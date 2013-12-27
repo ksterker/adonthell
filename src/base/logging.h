@@ -28,6 +28,16 @@
 #ifndef LOGGING_H_
 #define LOGGING_H_
 
+#ifdef __clang__
+#undef toupper
+#undef tolower
+#undef isupper
+#undef islower
+#undef isspace
+#undef isalpha
+#undef isalnum
+#endif
+
 #include <sstream>
 
 namespace base

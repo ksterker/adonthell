@@ -151,7 +151,7 @@ namespace audio {
 
         bool handle_channel_create(void);
 
-        friend bool audio::init(const std::string &);
+        friend bool init(const std::string &);
 
         /// Opens the sound file and sets up the object
         void open_file(void);

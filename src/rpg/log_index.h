@@ -93,6 +93,10 @@ namespace rpg
     };
 }
 
+#ifdef __clang__
+#include <functional>
+using std::hash;
+#else
 #if __GNUC__ >= 4 && __GNUC_MINOR__ >= 4
 namespace tr1
 {
@@ -116,6 +120,7 @@ namespace std
         }
     };
 }
+#endif // CLANG
 #endif
 
 namespace rpg 
