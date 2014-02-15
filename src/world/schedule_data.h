@@ -56,6 +56,7 @@ namespace world
          */
         schedule_data () 
         { 
+            Args = NULL;
             Time = "";
             Absolute = false;
         }

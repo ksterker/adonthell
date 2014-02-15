@@ -190,10 +190,10 @@ u_int32 default_renderer::can_draw_object (render_info & obj, const_iterator & b
 // default rendering
 void hw_renderer::render (const s_int16 & x, const s_int16 & y, std::list <world::render_info> & render_queue, const gfx::drawing_area & da, gfx::surface * target) const
 {
-    // paint while object remain in the queue
+    // paint while objects remain in the queue
     while (!render_queue.empty())
     {
-        int size = render_queue.size();
+        unsigned long size = render_queue.size();
 
         // check each object if it can be drawn
         for (iterator it = render_queue.begin(); it != render_queue.end(); /* nothing */)
