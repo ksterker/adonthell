@@ -321,7 +321,7 @@ void moving::update_position ()
     calculate_ground_pos ();
             
     // update precise location for next iteration
-    Position.set (x, y, z);
+    Position.set (x, y, z >= GroundPos ? z : GroundPos);
 }
 
 // calculate z position of ground
