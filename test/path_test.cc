@@ -179,7 +179,7 @@ public:
         mv->set_renderer (&rndr);
 
         // add mapview to window stack
-        gui::window_manager::add(0, 0, world::area_manager::get_mapview());
+        gui::window_manager::add(0, 0, *world::area_manager::get_mapview(), gui::fade_type::NONE, gui::window_type::WORLD_VIEW);
 
 	    while (IsRunning)
     	{

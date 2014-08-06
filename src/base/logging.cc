@@ -40,7 +40,8 @@ namespace base
         }
         else
         {
-            LOG(ERROR) << Buffer.str() << msg;
+            const std::string& buf = Buffer.str();
+            LOG(ERROR) << buf << msg;
             Buffer.str("");
         }
     }

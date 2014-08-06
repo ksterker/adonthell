@@ -35,7 +35,7 @@
 #define LT_SCOPE extern
 #endif
 
-#include "ltdl.h"
+#include <ltdl.h>
 
 #include "file.h"
 

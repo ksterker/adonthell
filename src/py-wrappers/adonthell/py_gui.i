@@ -41,23 +41,17 @@ namespace gui {
     // make sure window_manager takes ownership of windows
     %extend window_manager 
     { 
-        static void add(const u_int16 & x, const u_int16 & y, gui::layout *window_disowned, const gui::fadetype & f = NONE) 
+        static void add(const u_int16 & x, const u_int16 & y, gfx::drawable & content, const gui::fade_type & f = NONE, const gui::window_type & w = DIALOG)
         {
-            gui::window_manager::add(x, y, window_disowned, f); 
+            gui::window_manager::add(x, y, content, f, w);
         }
         
-        static void add(const s_int16 & x, const s_int16 & y, gui::layout *window_disowned, const std::string &entity_id)
+        static void add(gui::window *window_disowned, const gui::fade_type & f = NONE)
         {
-            gui::window_manager::add(x, y, window_disowned, entity_id);
-        }
-        
-        // no disownage problems - just same name
-        static void add(const s_int16 & x, const s_int16 & y, world::mapview *map)
-        {
-            gui::window_manager::add(x, y, map);
+            gui::window_manager::add(window_disowned, f);
         }
     }
-    %ignore window_manager::add; 
+    %ignore window_manager::add;
     
     // make sure layout takes ownership of children
     %extend layout
@@ -132,6 +126,7 @@ namespace gui {
 %include <adonthell/gui/textbox.h>
 %include <adonthell/gui/ui_event.h>
 %include <adonthell/gui/conversation.h>
+%include <adonthell/gui/window.h>
 %include <adonthell/gui/window_manager.h>
 
 

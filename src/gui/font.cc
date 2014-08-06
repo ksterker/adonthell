@@ -19,7 +19,7 @@
 */
 
 /**
- * @file   gui/font.cpp
+ * @file   gui/font.cc
  * @author Rian Shelley
  * @author Kai Sterker
  * @brief  Implements the font class.

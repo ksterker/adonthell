@@ -3,7 +3,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl **************************************************************
 
 AC_PREREQ(2.59)
-AC_INIT
+AC_INIT([Adonthell], [0.4.0])
 AC_CONFIG_SRCDIR([README])
 AC_CONFIG_AUX_DIR(.)
 
@@ -14,7 +14,7 @@ dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(adonthell, 0.4.0-alpha-3)
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER([config.h])
 
 dnl ********************
@@ -235,24 +235,25 @@ if test "x$pycflags" = xnone; then
    changequote([, ])
 
    dnl convert windows paths to cygwin paths
-   case "$target" in
-   *-*-cygwin* | *-*-mingw32*)
-   		PYINCLUDE=`cd $PYINCLUDE && pwd`
-     ;;
-   esac
    
-   if test -r "$PYINCLUDE/Python.h"; then
-      PY_CFLAGS="-I$PYINCLUDE"
-      AC_SUBST(PY_CFLAGS)
-   else
-      AC_MSG_ERROR([Could not find Python.h in $PYINCLUDE])
-   fi
-   AC_MSG_RESULT(found)
+    case "$target" in
+    *-*-cygwin* | *-*-mingw32*)
+        PYINCLUDE=`cd $PYINCLUDE && pwd`
+        ;;
+    esac
+   
+    if test -r "$PYINCLUDE/Python.h"; then
+        PY_CFLAGS="-I$PYINCLUDE"
+        AC_SUBST(PY_CFLAGS)
+    else
+        AC_MSG_ERROR([Could not find Python.h in $PYINCLUDE])
+    fi
+    AC_MSG_RESULT(found)
 else
-   PY_CFLAGS=${pycflags}
-   AC_MSG_CHECKING(for Python cflags)
-   AC_MSG_RESULT($PY_CFLAGS)
-   AC_SUBST(PY_CFLAGS)
+    PY_CFLAGS=${pycflags}
+    AC_MSG_CHECKING(for Python cflags)
+    AC_MSG_RESULT($PY_CFLAGS)
+    AC_SUBST(PY_CFLAGS)
 fi
 
    dnl Find the Python library
@@ -283,13 +284,11 @@ if test "x$pylibs" = xnone; then
 
        for ppath in $py_paths ; do
            echo "searching in $ppath" >&AS_MESSAGE_LOG_FD
-           if test -r "$ppath/libpython$PYLIBVER.so" -o \
-               -r "$ppath/libpython$PYLIBVER.a"; then
+           if test -r "$ppath/libpython$PYLIBVER.so" -o -r "$ppath/libpython$PYLIBVER.a"; then
                PYLIB="-L$ppath -lpython$PYLIBVER"
                break
            fi
-           if test -r "$ppath/libpython.so" -o \
-                   -r "$ppath/libpython.a"; then
+           if test -r "$ppath/libpython.so" -o -r "$ppath/libpython.a"; then
                PYLIB="-L$ppath -lpython"
                break
            fi
@@ -313,19 +312,19 @@ if test "x$pylibs" = xnone; then
 
    AC_MSG_RESULT($PY_DEPS)
 
-   dnl only GNU ld seems to know -E flag
-   if $LD -v 2>&1 </dev/null | egrep '(GNU|with BFD)' 1>&5; then
-       PY_LIBS="-Wl,-E $PY_LIBS $PY_DEPS"
-   else
-       PY_LIBS="$PY_LIBS $PY_DEPS"
-   fi
-   AC_SUBST(PY_LIBS)
-
+    dnl only GNU ld seems to know -E flag
+    
+    if $LD -v 2>&1 </dev/null | egrep '(GNU|with BFD)' 1>&5; then
+        PY_LIBS="-Wl,-E $PY_LIBS $PY_DEPS"
+    else
+        PY_LIBS="$PY_LIBS $PY_DEPS"
+    fi
+    AC_SUBST(PY_LIBS)
 else
-   PY_LIBS=${pylibs}
-   AC_MSG_CHECKING(for Python ld flags)
-   AC_MSG_RESULT($PY_LIBS)
-   AC_SUBST(PY_LIBS)
+    PY_LIBS=${pylibs}
+    AC_MSG_CHECKING(for Python ld flags)
+    AC_MSG_RESULT($PY_LIBS)
+    AC_SUBST(PY_LIBS)
 fi
 
 AM_CONDITIONAL(PY_FRAMEWORK, test x$PY_SPDIR != x$PY_FWDIR)
@@ -340,6 +339,7 @@ SWIG_ENABLE_CXX()
 dnl *********************************************************************************
 dnl If this is a developer build, turn on debug symbols and check for gtest and gmock
 dnl *********************************************************************************
+
 if test x$devbuild = xyes; then
     CXXFLAGS="$CXXFLAGS -g -Wall -pedantic"
 

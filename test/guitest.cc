@@ -141,7 +141,7 @@ class GuiTest : public adonthell::app {
 	b2.set_color(screen->map_color(0xff,0,0,0xff));
     string ls = "I am typing a very long string that will not fit all the way within the alloted space";
 
-    ::gui::window_manager::add(0, 0, &widgets);
+    ::gui::window_manager::add(0, 0, widgets);
 
     while (!ih.letsexit)
     {

@@ -124,8 +124,9 @@ public:
         LOG(INFO) << "worldtest starting up!";
 
         LOG(INFO) << "Initialising game modules... ";
-    	init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD | GUI | RPG | EVENT);
-        LOG(INFO) << "  done!";
+    	bool success = init_modules (AUDIO | GFX | INPUT | PYTHON | WORLD | GUI | RPG | EVENT);
+        LOG(INFO) << (success ? "  done!" : "  failed!");
+        if (!success) return 1;
 
         LOG(INFO) << "Setting video mode... ";
     	gfx::screen::set_native_mode ();
@@ -170,7 +171,7 @@ public:
         u_int32 currentTime;
 
         // add mapview to window stack
-        gui::window_manager::add(0, 0, world::area_manager::get_mapview());
+        gui::window_manager::add(0, 0, *world::area_manager::get_mapview(), gui::fade_type::NONE, gui::window_type::WORLD_VIEW);
 
         base::Timer.synch();
 	    while (IsRunning)

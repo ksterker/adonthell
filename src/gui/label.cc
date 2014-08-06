@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   gui/label.cpp
+ * @file   gui/label.cc
  * @author Rian Shelley
  * @brief  Implements the label class.
  */

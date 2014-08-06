@@ -76,10 +76,9 @@ _gui_la_CXXFLAGS = $(PY_CFLAGS) $(FT2_CFLAGS) $(AM_CXXFLAGS)
 _gui_la_LDFLAGS = -avoid-version -module
 _gui_la_LIBADD =  $(PY_LIBADD) \
 	$(top_builddir)/src/base/libadonthell_base.la   \
-	$(top_builddir)/src/gui//libadonthell_gui.la 	\
-	$(top_builddir)/src/gfx/libadonthell_gfx.la	\
-	$(top_builddir)/src/input/libadonthell_input.la	\
-	$(top_builddir)/src/rpg/libadonthell_rpg.la	\
+	$(top_builddir)/src/gui//libadonthell_gui.la    \
+	$(top_builddir)/src/gfx/libadonthell_gfx.la	    \
+	$(top_builddir)/src/input/libadonthell_input.la \
 	$(PY_RUNTIME) $(FT2_LIBS)
 
 ## Rules to build libpymain (libmain's Python wrapper)

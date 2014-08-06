@@ -78,7 +78,7 @@ namespace gui
          * @param l layout length
          * @param h layout height
          */
-		layout(const u_int16 & l, const u_int16 & h) : widget(l, h), Selected(0), focused(false)
+		layout(const u_int16 & l, const u_int16 & h) : widget(l, h), Selected(0), Focused(false)
         {
             Selhilite = false;
             Listener = NULL;
@@ -91,7 +91,7 @@ namespace gui
          * @param style filename of widget decoration.
          */
 		layout (const std::string & style)
-		: widget(style), Selected(0), focused(false)
+		: widget(style), Selected(0), Focused(false)
 		{
             Selhilite = false;
             Listener = NULL;
@@ -235,7 +235,7 @@ namespace gui
 		virtual void unfocus()
         {
             if (Children.size()) Children[Selected].Child->unfocus();
-            focused = false;
+            Focused = false;
         }
 
 		/**
@@ -296,7 +296,7 @@ namespace gui
 		/// child which currently is selected
         u_int32 Selected;
         /// whether this container has the focus
-		bool focused;
+		bool Focused;
         /// the input handler
         input::listener *Listener;
         /// whether to resize the layout when children are added

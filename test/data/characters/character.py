@@ -38,11 +38,11 @@ class action_talk (object):
         # -- look in the direction of the character that adressed us
         actions.face_character(self.other, self.initiator)
         # -- create conversation widget ...
-        dlg_wnd = gui.conversation (self.other.mind(), gfx.screen.length()-40, 200)
+        self.dlg_wnd = gui.conversation (self.other.mind(), gfx.screen.length()-40, 200)
         # -- connect listener for conversation end
-        self.factory.register_event (dlg_wnd.get_finished_event(None), self.on_finished)
+        self.factory.register_event (self.dlg_wnd.get_finished_event(None), self.on_finished)
         # -- ... and add it to the gui manager
-        gui.window_manager.add (20, 20, dlg_wnd)
+        gui.window_manager.add (20, 20, self.dlg_wnd)
 
     def on_finished (self, ui_event):
         """

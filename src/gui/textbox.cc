@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   gui/textbox.cpp
+ * @file   gui/textbox.cc
  * @author Rian Shelley
  * @brief  Implements the textbox class.
  */

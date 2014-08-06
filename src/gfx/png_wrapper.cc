@@ -157,6 +157,7 @@ namespace gfx
         default:
             LOG(ERROR) << logging::indent() << "[read_png_file] color_type of input file must be PNG_COLOR_TYPE_RGBA (is " << png_get_color_type(png_ptr, info_ptr) << ")";
             png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+            free(image);
             return NULL;
         }
 

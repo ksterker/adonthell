@@ -107,7 +107,7 @@ void layout::draw(const s_int16 & x, const s_int16 & y, const gfx::drawing_area 
     for (i = Children.begin(); i != Children.end(); ++i, c++)
     {
         // indicate selection of widget, if it wants us to. 
-        (*i).Child->enable_focus (c == Selected && focused);
+        (*i).Child->enable_focus (c == Selected && Focused);
         
         // draw widget at its position
         (*i).Child->draw((*i).Pos.x() + x, (*i).Pos.y() + y, &client_area, target);
@@ -200,14 +200,14 @@ bool layout::focus()
         {
             if (Children[Selected].Child->focus())
             {
-                focused = true;
+                Focused = true;
                 return true;
             }
             Selected = (Selected + 1) % Children.size();
         }
         while (Selected != old); //it will eventually wrap to where we started
     }
-    focused = false;
+    Focused = false;
     return false;
 }
 

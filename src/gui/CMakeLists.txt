@@ -1,22 +1,23 @@
 # Define the adonthell_gui_SRCS variable containing all required files.
 set(adonthell_gui_SRCS
-	button.cpp
+	button.cc
 	canvas.cc
 	conversation.cc
     decoration.cc
-	font.cpp
+	font.cc
 	fontcache.cc
 	gui.cc
 	indicatorbar.cc
-	label.cpp
+	label.cc
 	layout.cc
     listlayout.cc
-	option.cpp
+	option.cc
 	scrollview.cc
-	textbox.cpp
+	textbox.cc
 	ui_event.cc
 	ui_event_manager.cc
-	widget.cpp
+	widget.cc
+    window.cc
     window_manager.cc
 )
 
@@ -38,6 +39,7 @@ set(adonthell_gui_HEADERS
     ui_event.h
     ui_event_manager.h
 	widget.h
+    window.h
     window_manager.h
 )
 
@@ -52,8 +54,7 @@ target_link_libraries(adonthell_gui
 	adonthell_base
     adonthell_event
 	adonthell_gfx
-	adonthell_input	
-	adonthell_rpg	
+	adonthell_input
     adonthell_world
 	)
 

@@ -18,7 +18,7 @@
  */
 
 /**
- * @file   gui/widget.cpp
+ * @file   gui/widget.cc
  * @author Rian Shelley
  * @brief  Declares the widget class.
  */

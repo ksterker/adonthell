@@ -59,7 +59,7 @@ namespace gui
 		{
 		    ui_event evt(this, "finished");
 		    events::manager::raise_event(&evt);
-		    window_manager::remove(this);
+		    window_manager::remove(*this);
 			return false;
 		}
 		speaker.set_string(string(line->speaker()) + ":");

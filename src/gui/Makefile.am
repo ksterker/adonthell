@@ -23,28 +23,30 @@ pkgincludegui_HEADERS = \
 	ui_event.h \
 	ui_event_manager.h \
 	widget.h \
+	window.h \
     window_manager.h
 
 lib_LTLIBRARIES = libadonthell_gui.la
 
 libadonthell_gui_la_SOURCES = \
-	button.cpp \
+	button.cc \
 	canvas.cc \
     conversation.cc \
     decoration.cc \
-	font.cpp \
+	font.cc \
     fontcache.cc \
     gui.cc \
 	indicatorbar.cc \
-	label.cpp \
+	label.cc \
 	layout.cc \
     listlayout.cc \
-	option.cpp \
+	option.cc \
     scrollview.cc \
-	textbox.cpp \
+	textbox.cc \
 	ui_event.cc \
 	ui_event_manager.cc \
-	widget.cpp \
+	widget.cc \
+	window.cc \
     window_manager.cc
 
 libadonthell_gui_la_CXXFLAGS = -DPKGLIBDIR=\"$(pkglibdir)\" -DDEBUG $(AM_CXXFLAGS) $(PY_CFLAGS)
@@ -55,8 +57,6 @@ libadonthell_gui_la_LIBADD = $(PY_LIBS) \
 	$(top_builddir)/src/input/libadonthell_input.la \
 	$(top_builddir)/src/gfx/libadonthell_gfx.la \
     $(top_builddir)/src/python/libadonthell_python.la \
-    $(top_builddir)/src/rpg/libadonthell_rpg.la \
-    $(top_builddir)/src/world/libadonthell_world.la \
 	-lstdc++ $(FT2_LIBS)
 
 ## Unit tests

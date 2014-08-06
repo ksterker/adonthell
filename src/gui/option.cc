@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   gui/option.cpp
+ * @file   gui/option.cc
  * @author Rian Shelley
  * @brief  Implements the option class.
  */

@@ -28,18 +28,13 @@
 #include <adonthell/world/vector3.h>
 #include "window_manager.h"
 
-/// the rate of movement for disappearing layouts in pixels
-#define FADERATE 4
-
 using gui::window_manager;
 
-/// the list of open windows
-std::list<gui::manager_child> window_manager::Windows;
-
-std::list<gui::maprel_window> window_manager::MaprelWindows;
-
-std::list<gui::mapview_container> window_manager::Mapviews;
-
+/// the list of open, absolute windows
+std::list<gui::window*> window_manager::Windows;
+/// the list of open, world-relative windows
+std::list<gui::window*> window_manager::WorldRelativeWindows;
+/// storage for pending events.
 std::list<events::listener*> window_manager::PendingEvents;
 
 // render to screen
@@ -48,12 +43,12 @@ void window_manager::update()
     // trigger the event listeners
     fire_events();
 
-    // draw all mapviews
+    /* draw all mapviews
     for (std::list<gui::mapview_container>::reverse_iterator i = Mapviews.rbegin(); i != Mapviews.rend(); i++)
     {
         i->Map->draw(i->X, i->Y);
 
-        if (!MaprelWindows.empty()) // skip retrieving mapobjects if not necessary
+        if (FirstWorldRelative != Windows.end()) // skip retrieving mapobjects if not necessary
         {
             // get all objects visible in the mapview
             std::list<world::chunk_info*> objects_in_mapview = world::area_manager::get_map()->objects_in_view(
@@ -84,214 +79,139 @@ void window_manager::update()
                 }
             }
         }
-    }
+    } */
 
-    // draw normal windows
-    for (std::list<gui::manager_child>::reverse_iterator i = Windows.rbegin(); i != Windows.rend(); i++)
+    // draw all windows
+    std::list<gui::window*>::reverse_iterator i = Windows.rbegin();
+    while (i != Windows.rend())
     {
-        if (i->Fading && fade (*i))
+        if ((*i)->fading() && (*i)->fade ())
         {
-            delete i->Child;
-            Windows.remove (*i);
+            delete *i;
+            i = std::list<gui::window*>::reverse_iterator(Windows.erase (--(i.base())));
+
+            if (i != Windows.rend())
+            {
+                (*i)->receive_focus();
+            }
+
             continue;
         }
 
-        i->Child->draw (i->x(), i->y(), NULL, gfx::screen::get_surface());
+        switch ((*i)->type())
+        {
+            case WORLD_VIEW:
+            {
+                (*i)->draw();
+                
+                // draw world-relative windows, if any
+                std::list<gui::window*>::reverse_iterator j = WorldRelativeWindows.rbegin();
+                while (j != WorldRelativeWindows.rend())
+                {
+                    if ((*j)->fading() && (*j)->fade ())
+                    {
+                        delete *j;
+
+                        j = std::list<gui::window*>::reverse_iterator(WorldRelativeWindows.erase (--(j.base())));
+                        continue;
+                    }
+                    
+                    (*j)->draw((*i)->display_x(), (*i)->display_y());
+                    j++;
+                }
+                break;
+            }
+            case WORLD_RELATIVE:
+            {
+                // skip over world-relative windows in normal drawing
+                break;
+            }
+            default:
+            {
+                (*i)->draw();
+                break;
+            }
+        }
+
+        i++;
     }
 }
 
-// open window
-void window_manager::add (const u_int16 & x, const u_int16 & y, gui::layout *window, const gui::fadetype & f)
+// open widget as a new window
+void window_manager::add (const u_int16 & x, const u_int16 & y, gfx::drawable & content, const gui::fade_type & f, const gui::window_type & w)
 {
-    // add window at first position of the input queue
-    input::listener *il = new input::listener();
-    input::manager::add (il);
-    input::manager::give_focus (il);
-    
-    // assign listener to window
-    window->set_listener (il);
-
-    // give focus to new window
-    window->focus();
-
-    gfx::drawing_area pos (x, y, window->length(), window->height());
-    Windows.push_back (manager_child (window, pos, f, true));
+    gfx::drawing_area area (x, y, content.length(), content.height());
+    add(new gui::window (content, area, w), f);
 }
 
-void window_manager::add (const s_int16 & x, const s_int16 & y, gui::layout *window, const std::string &entity_id)
+// open a new window
+void window_manager::add(window *window, const gui::fade_type & f)
 {
-    MaprelWindows.push_back(maprel_window(x, y, window, entity_id));
-}
+    if (window->type() == WORLD_RELATIVE)
+    {
+        // relative windows are kept in their own list and may not get focus
+        window->fade_in(f);
+        
+        WorldRelativeWindows.push_front(window);
+    }
+    else
+    {
+        std::list<gui::window*>::iterator i = Windows.begin();
+        for (; i != Windows.end(); i++)
+        {
+            if (window->type() > (*i)->type())
+            {
+                // insert in front of all windows of lower or equal type
+                // note that window-list is sorted in reverse drawing order
+                break;
+            }
+        }
+        
+        if (i != Windows.begin() && i != Windows.end())
+        {
+            // remove focus, if required
+            (*i)->remove_focus();
+        }
+        
+        window->fade_in(f);
+        
+        // acquire focus, if required
+        window->receive_focus();
 
-void window_manager::add (const s_int16 & x, const s_int16 & y, world::mapview *map)
-{
-    Mapviews.push_back(mapview_container(x, y, map));
+        Windows.insert(i, window);
+    }
 }
 
 // close window
-void window_manager::remove (gui::layout *window, const gui::fadetype & f)
-{
-    input::listener *il = window->get_listener();
-    if (il) input::manager::remove (il);
-    
-    for (std::list<gui::manager_child>::iterator i = Windows.begin(); i != Windows.end(); i++)
+void window_manager::remove (gfx::drawable & content, const gui::fade_type & f)
+{    
+    gfx::drawing_area pos (0, 0, content.length(), content.height());
+    gui::window wnd(content, pos, window_type::INTERFACE);
+
+    for (std::list<gui::window*>::iterator i = Windows.begin(); i != Windows.end(); i++)
     {
-        if (i->Child == window)
+        if (*(*i) == wnd)
         {
-            if (f) i->Fading = f;
-            else i->Fading = PLAIN;
-            i->Showing = false;
+            remove(*i, f);
             return;
         }
     }
 }
 
-void window_manager::remove (gui::layout *window, const std::string &entity_id)
+void window_manager::remove (gui::window *window, const gui::fade_type & f)
 {
-    for (std::list<gui::maprel_window>::iterator i = MaprelWindows.begin(); i != MaprelWindows.end(); i++)
-    {
-        // we do not fade
-        if (i->Window == window && i->Entity_id == entity_id)
-        {
-            delete i->Window;
-            MaprelWindows.remove (*i);
-            return;
-        }
-    }
-}
-
-void window_manager::remove(world::mapview *map)
-{
-    for (std::list<gui::mapview_container>::iterator i = Mapviews.begin(); i != Mapviews.end(); i++)
-        if (i->Map == map)
-            Mapviews.remove(*i);
-    //TODO What about making the mapview invisible?
-}
-
-// fade layout in or out
-bool window_manager::fade (gui::manager_child & c)
-{
-    // initial position
-    if (c.Showing && c.Dx == 0 && c.Dy == 0)
-    {
-        switch (c.Fading)
-        {
-            case LEFT:
-                c.Dx = -c.Pos.length() - c.Pos.x();
-                break;
-            case RIGHT:
-                c.Dx = gfx::screen::length() - c.Pos.x();
-                break;
-            case TOP:
-                c.Dy = -c.Pos.height() - c.Pos.y();
-                break;
-            case BOTTOM:
-                c.Dy = gfx::screen::height() - c.Pos.y();
-                break;
-            default:
-                break;
-        }
-    }
-    
-    switch (c.Fading)
-    {
-        case LEFT:
-            if (c.Showing)
-            {
-                c.Dx += FADERATE;
-                if (c.Dx > 0)
-                {
-                    c.Dx = 0;
-                    c.Fading = NONE;
-                }
-            }
-            else
-            {
-                c.Dx -= FADERATE;
-                if (c.Dx + c.Pos.x() + c.Pos.length() < 0)
-                {
-                    return true;
-                }
-            }
-            break;
-        case RIGHT:
-            if (c.Showing)
-            {
-                c.Dx -= FADERATE;
-                if (c.Dx < 0)
-                {
-                    c.Dx = 0;
-                    c.Fading = NONE;
-                }
-            }
-            else
-            {
-                c.Dx+= FADERATE;
-                if (c.Dx + c.Pos.x() > gfx::screen::length())
-                {
-                    return true;
-                }
-            }
-            break;
-        case TOP:
-            if (c.Showing)
-            {
-                c.Dy += FADERATE;
-                if (c.Dy > 0)
-                {
-                    c.Fading = NONE;
-                    c.Dy = 0;
-                }
-            }
-            else
-            {
-                c.Dy -= FADERATE;
-                if (c.Dy + c.Pos.y() + c.Pos.height() < 0)
-                {
-                    return true;
-                }
-            }
-            break;
-        case BOTTOM:
-            if (c.Showing)
-            {
-                c.Dy -= FADERATE;
-                if (c.Dy < 0)
-                {
-                    c.Fading = NONE;
-                    c.Dy = 0;
-                }
-            }
-            else
-            {
-                c.Dy += FADERATE;
-                if (c.Dy + c.Pos.y() > gfx::screen::height())
-                {
-                    return true;
-                }
-            }
-            break;
-        case PLAIN:
-            c.Fading = NONE;
-            return !c.Showing;
-
-        default:
-            break;
-    }
-    return false;
+    window->remove_focus();
+    window->fade_out(f);
 }
 
 void window_manager::fire_events()
 {
-    // event handlers might fire new events, so use a copy
-    std::list<events::listener*> copy (PendingEvents.begin(), PendingEvents.end());
-
-    // clear list of pending events
-    PendingEvents.clear();
-
     // call event handlers
-    for (std::list<events::listener*>::iterator li = copy.begin(); li != copy.end(); li++)
+    for (std::list<events::listener*>::iterator li = PendingEvents.begin(); li != PendingEvents.end(); li++)
     {
         (*li)->raise_event ((*li)->get_event());
     }
+
+    // clear list of pending events
+    PendingEvents.clear();
 }

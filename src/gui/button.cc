@@ -18,7 +18,7 @@
 */
 
 /**
- * @file   gui/button.cpp
+ * @file   gui/button.cc
  * @author Rian Shelley
  * @brief  Implements the button class.
  */

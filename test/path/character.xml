@@ -1,1 +1,18 @@
-../data/character.xml
+<?xml version="1.0"?>
+<Data cs="a3717e3">
+  <list id="model">
+    <string id="name">test</string>
+    <list id="area">
+      <u_int16 id="height">2</u_int16>
+      <u_int16 id="length">1</u_int16>
+      <u_int16 id="size">0</u_int16>
+      <bool>1</bool>
+      <bool>1</bool>
+      <u_int16 id="x">0</u_int16>
+      <u_int16 id="y">1</u_int16>
+      <u_int16 id="x_off">40</u_int16>
+      <u_int16 id="y_off">40</u_int16>
+    </list>
+  </list>
+  <string id="sprite"></string>
+</Data>

@@ -12,7 +12,7 @@ noinst_PROGRAMS = audiotest callbacktest diskiotest guitest inputtest worldtest 
     imagetest path_test
 
 audiotest_SOURCES = audiotest.cc
-audiotest_LDADD   =                                \
+audiotest_LDADD   = $(libglog_LIBS) 			   \
     -L$(top_builddir)/src/base/ -ladonthell_base   \
 	-L$(top_builddir)/src/audio/ -ladonthell_audio
 
