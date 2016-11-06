@@ -1,0 +1,47 @@
+# See YAML format https://en.wikipedia.org/wiki/YAML
+# See Travis CI (Continuous Integration) https://docs.travis-ci.com/
+
+
+os:
+  - linux
+
+compiler:
+  - clang
+  - gcc
+
+addons:
+  apt:
+    packages:
+      - autoconf
+      - automake
+      - libtool
+      - python2.7-dev
+      - libsdl1.2-dev
+      - zlib1g-dev
+      - libfreetype6-dev
+      - libxml2-dev
+      - libogg-dev
+      - libvorbis-dev
+      - libsdl-mixer1.2-dev
+      - libpng12-dev
+      - cmake
+      - libc6-dev
+      - gettext
+      - doxygen
+      - graphviz
+      - libgoogle-glog0
+      - libgtest-dev
+      - google-mock
+      - libcairo2-dev
+      - libgtk2.0-dev
+
+script:
+  - mkdir build-cmake
+  - cd build-cmake
+  - cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DDEVBUILD=1 ..
+  - make
+  - cd ..
+  - mkdir build-autotools
+  - cd build-autotools
+  - ../configure --enable-dev-build --prefix=/usr/local
+  - make
