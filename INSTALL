@@ -6,7 +6,7 @@ Requirements:
 There are a number libraries Adonthell depends on. The full listing with
 links to each library can be found in our Wiki at 
 
-  http://adonthell.berlios.de/doc/index.php/Development:Dependency_Matrix
+  http://adonthell.sourceforge.net/doc/index.php/Development:Dependency_Matrix
 
 
 Installing:
@@ -15,7 +15,7 @@ Installing:
 Instructions for a typical install on a GNU/Linux or Unix System are also
 available on our Wiki. See
 
-  http://adonthell.berlios.de/doc/index.php/Development:Compiling
+  http://adonthell.sourceforge.net/doc/index.php/Development:Compiling
   
 Specific instructions for other supported platforms are available in the
 various README.<platform> files.
