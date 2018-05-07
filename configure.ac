@@ -390,12 +390,13 @@ dnl ************
 AC_CHECK_FUNCS(nanosleep,,)
 
 AC_SUBST(CXXFLAGS)
-AC_CHECK_FT2(6.0.0,
-	:,
-	AC_MSG_ERROR([*** Freetype version >= 6.0.0 not found!])
+
+PKG_CHECK_MODULES(FT2, freetype2 >= 7.0.1, [
+	AC_SUBST(FT2_LIBS)
+	AC_SUBST(FT2_CFLAGS)
+	],
+	AC_MSG_ERROR([Cannot find freetype])
 )
-AC_SUBST(FT2_LIBS)
-AC_SUBST(FT2_CFLAGS)
 
 AC_SUBST(CXXFLAGS)
 AC_SUBST(sdlbackenddir)
